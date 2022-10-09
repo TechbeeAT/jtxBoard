@@ -173,7 +173,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 // once the newId is there, the local entries can be deleted (or marked as deleted)
                 ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
                 if (icalObject.rrule != null)
-                    icalObject.recreateRecurring(database, getApplication())
+                    icalObject.recreateRecurring(getApplication())
                 changeState.value = DetailChangeState.CHANGESAVED
                 navigateToId.value = newId
             } catch (e: SQLiteConstraintException) {
@@ -251,26 +251,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     alarms.forEach { changedAlarm ->
                         changedAlarm.icalObjectId = icalObject.id
                         changedAlarm.alarmId = database.insertAlarm(changedAlarm)
-                        val triggerTime = when {
-                            changedAlarm.triggerTime != null -> changedAlarm.triggerTime
-                            changedAlarm.triggerRelativeDuration != null && changedAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> changedAlarm.getDatetimeFromTriggerDuration(
-                                icalObject.due, icalObject.dueTimezone
-                            )
-                            changedAlarm.triggerRelativeDuration != null -> changedAlarm.getDatetimeFromTriggerDuration(
-                                icalObject.dtstart,
-                                icalObject.dtstartTimezone
-                            )
-                            else -> null
-                        }
-                        triggerTime?.let {
-                            changedAlarm.scheduleNotification(
-                                _application,
-                                triggerTime = it,
-                                isReadOnly = icalEntity.value?.ICalCollection?.readonly ?: true,
-                                icalEntity.value?.property?.summary,
-                                icalEntity.value?.property?.description
-                            )
-                        }
                     }
                 }
 
@@ -282,8 +262,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
                         toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                     }
-                    icalObject.recreateRecurring(database, getApplication())
+                    icalObject.recreateRecurring(getApplication())
                 }
+                if(icalEntity.value?.alarms?.isNotEmpty() == true)
+                    Alarm.scheduleNextNotifications(getApplication())
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
@@ -408,7 +390,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                             alarmId = 0L,
                             icalObjectId = newId
                         )
-                    )   // TODO: Schedule Alarm!
+                    )
                 }
                 newEntity.attachments?.forEach { attachment ->
                     database.insertAttachment(
@@ -459,6 +441,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         )
                     }
                 }
+
+                if(newEntity.alarms?.isNotEmpty() == true)
+                    Alarm.scheduleNextNotifications(getApplication())
 
                 if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                     navigateToId.value = newId

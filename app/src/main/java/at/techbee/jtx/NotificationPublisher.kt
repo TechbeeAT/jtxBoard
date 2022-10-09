@@ -14,6 +14,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import kotlinx.coroutines.CoroutineScope
@@ -33,45 +34,51 @@ class NotificationPublisher : BroadcastReceiver() {
         if(id == 0L)
             return
 
+        val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+
         // onReceive is triggered when the Alarm Manager calls it (the initial notification, action is null)
         // but also when one of the actions is clicked in the notification (action is one of the defined actions)
-        if(intent.action == ACTION_SNOOZE_1D || intent.action == ACTION_SNOOZE_1H) {
-            notificationManager.cancel(id.toInt())
-            val nextAlarm = when(intent.action) {
-                ACTION_SNOOZE_1D -> System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)
-                ACTION_SNOOZE_1H -> System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)
-                else -> null
-            } ?: return
+        when (intent.action) {
+            ACTION_SNOOZE_1D, ACTION_SNOOZE_1H -> {
+                notificationManager.cancel(id.toInt())
+                val nextAlarm = when(intent.action) {
+                    ACTION_SNOOZE_1D -> System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)
+                    ACTION_SNOOZE_1H -> System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)
+                    else -> null
+                } ?: return
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val alarm = ICalDatabase.getInstance(context).iCalDatabaseDao.getAlarmSync(id) ?: return@launch
-                alarm.alarmId = 0L   //  we insert a new alarm
-                alarm.triggerTime = nextAlarm
-                alarm.alarmId = ICalDatabase.getInstance(context).iCalDatabaseDao.insertAlarm(alarm)
-                ICalDatabase.getInstance(context).iCalDatabaseDao.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
-                SyncUtil.notifyContentObservers(context)
-                val icalobject = ICalDatabase.getInstance(context).iCalDatabaseDao.getICalObjectByIdSync(alarm.icalObjectId) ?: return@launch
-                alarm.scheduleNotification(context, nextAlarm, false, icalobject.summary, icalobject.description)  // if we ended here, the entry cannot be read only
+                CoroutineScope(Dispatchers.IO).launch {
+                    val alarm = database.getAlarmSync(id) ?: return@launch
+                    alarm.alarmId = 0L   //  we insert a new alarm
+                    alarm.triggerTime = nextAlarm
+                    alarm.alarmId = database.insertAlarm(alarm)
+                    database.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
+                    SyncUtil.notifyContentObservers(context)
+                    Alarm.scheduleNextNotifications(context)
+                }
             }
-        } else if (intent.action == ACTION_DONE) {
-            notificationManager.cancel(id.toInt())
-            CoroutineScope(Dispatchers.IO).launch {
-                val alarm = ICalDatabase.getInstance(context).iCalDatabaseDao.getAlarmSync(id) ?: return@launch
-                val icalobject = ICalDatabase.getInstance(context).iCalDatabaseDao.getICalObjectByIdSync(alarm.icalObjectId) ?: return@launch
-                icalobject.setUpdatedProgress(100)
-                ICalDatabase.getInstance(context).iCalDatabaseDao.update(icalobject)
-                SyncUtil.notifyContentObservers(context)
+            ACTION_DONE -> {
+                notificationManager.cancel(id.toInt())
+                CoroutineScope(Dispatchers.IO).launch {
+                    val alarm = database.getAlarmSync(id) ?: return@launch
+                    val icalobject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return@launch
+                    icalobject.setUpdatedProgress(100)
+                    database.update(icalobject)
+                    SyncUtil.notifyContentObservers(context)
+                    Alarm.scheduleNextNotifications(context)
+                }
             }
-        } else {
-            // no action, so here we notify. if we offer snooze depends on the intent (this was decided already on creation of the intent)
-            CoroutineScope(Dispatchers.IO).launch {
-                val alarm = ICalDatabase.getInstance(context).iCalDatabaseDao.getAlarmSync(id)
-                if (alarm != null)     // notify only if the alarm still exists
-                    notificationManager.notify(id.toInt(), notification)
+            else -> {
+                // no action, so here we notify. if we offer snooze depends on the intent (this was decided already on creation of the intent)
+                CoroutineScope(Dispatchers.IO).launch {
+                    val alarm = database.getAlarmSync(id)
+                    if (alarm != null)     // notify only if the alarm still exists
+                        notificationManager.notify(id.toInt(), notification)
+                    Alarm.scheduleNextNotifications(context)
+                }
             }
         }
     }
-
 
     companion object {
         var NOTIFICATION_ID = "notification-id"   // identifier behind the value for alarmId

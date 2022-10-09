@@ -53,7 +53,8 @@ import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.util.DateTimeUtils
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -149,7 +150,7 @@ fun DetailScreenContent(
     // save 10 seconds after changed, then reset value
     if (changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && autosave) {
         LaunchedEffect(changeState) {
-            delay(Duration.ofSeconds(10).toMillis())
+            delay((10).seconds.inWholeMilliseconds)
             saveICalObject(
                 icalObject,
                 categories.value,
@@ -169,6 +170,25 @@ fun DetailScreenContent(
             deleteICalObject()
         else
             goBack()
+    }
+
+    /**
+     * Updates the alarms when the dates get changed
+     */
+    fun updateAlarms() {
+        alarms.value.forEach { alarm ->
+            if(alarm.triggerRelativeDuration.isNullOrEmpty())
+                return@forEach
+
+            val dur = try { Duration.parse(alarm.triggerRelativeDuration!!) } catch (e: IllegalArgumentException) { return@forEach }
+            if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) {
+                alarm.triggerTime = icalObject.due!! + dur.inWholeMilliseconds
+                alarm.triggerTimezone = icalObject.dueTimezone
+            } else {
+                alarm.triggerTime = icalObject.dtstart!! + dur.inWholeMilliseconds
+                alarm.triggerTimezone = icalObject.dtstartTimezone
+            }
+        }
     }
 
     if(goBackRequested)
@@ -296,11 +316,13 @@ fun DetailScreenContent(
                 onDtstartChanged = { datetime, timezone ->
                     icalObject.dtstart = datetime
                     icalObject.dtstartTimezone = timezone
+                    updateAlarms()
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onDueChanged = { datetime, timezone ->
                     icalObject.due = datetime
                     icalObject.dueTimezone = timezone
+                    updateAlarms()
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onCompletedChanged = { datetime, timezone ->
@@ -553,7 +575,7 @@ fun DetailScreenContent(
 
             AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableAlarms.value || showAllOptions))) {
                 DetailsCardAlarms(
-                    initialAlarms = alarms.value,
+                    alarms = alarms,
                     icalObject = icalObject,
                     isEditMode = isEditMode.value,
                     onAlarmsUpdated = { newAlarms ->

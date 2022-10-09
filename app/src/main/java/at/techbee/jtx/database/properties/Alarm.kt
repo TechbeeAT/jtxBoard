@@ -27,14 +27,15 @@ import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import kotlinx.parcelize.Parcelize
-import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeParseException
+import kotlin.time.Duration
 
 /** The name of the the table for Alarms that are linked to an ICalObject.
  * [https://tools.ietf.org/html/rfc5545#section-3.8.1.10]*/
@@ -194,6 +195,8 @@ data class Alarm (
 {
     companion object Factory {
 
+        private const val MAX_ALARMS_SCHEDULED = 5
+
         /**
          * Create a new [Alarm] Property from the specified [ContentValues].
          *
@@ -228,10 +231,9 @@ data class Alarm (
          * @param [alarmRelativeTo] a value of the Enum [AlarmRelativeTo] or null
          * @return [Alarm] with action set to AlarmAction.DISPLAY, triggerRelativeDuration set to given duration and triggerRelativeTo set to the given alarmRelativeTo or null
          */
-        fun createDisplayAlarm(dur: Duration, alarmRelativeTo: AlarmRelativeTo?) = Alarm().apply {
+        fun createDisplayAlarm(dur: Duration, alarmRelativeTo: AlarmRelativeTo?, referenceDate: Long, referenceTimezone: String?) = Alarm().apply {
             action = AlarmAction.DISPLAY.name
-            triggerRelativeDuration = dur.toString()
-            alarmRelativeTo?.let { triggerRelativeTo = it.name }
+            this.updateDuration(dur, alarmRelativeTo, referenceDate, referenceTimezone)
         }
 
         /**
@@ -242,7 +244,31 @@ data class Alarm (
         fun createDisplayAlarm(time: Long, timezone: String?) = Alarm().apply {
             action = AlarmAction.DISPLAY.name
             triggerTime = time
-            timezone?.let { triggerTimezone = it }
+            triggerTimezone = timezone
+        }
+
+
+        fun scheduleNextNotifications(context: Context) {
+
+            // Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                return
+
+            val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+            val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED)
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+            for (i in 0 until MAX_ALARMS_SCHEDULED) {
+                //cancel previous alarm on this code
+                val pendingIntent = PendingIntent.getBroadcast(context, i, Intent(context, NotificationPublisher::class.java), PendingIntent.FLAG_IMMUTABLE)
+                alarmManager.cancel(pendingIntent)
+
+                if(alarms.isNotEmpty() && alarms.size > i) {
+                    val iCalObject = database.getICalObjectByIdSync(alarms[i].icalObjectId) ?: continue
+                    val collection = database.getCollectionByIdSync(iCalObject.collectionId) ?: continue
+                    alarms[i].scheduleNotification(context = context, requestCode = i, isReadOnly = collection.readonly, notificationSummary = iCalObject.summary, notificationDescription = iCalObject.description)
+                }
+            }
         }
     }
 
@@ -276,14 +302,14 @@ data class Alarm (
         else
             0
 
-        getTriggerAsDuration()?.let { return referenceDate + it.toMillis() - offset } ?: return null
+        getTriggerAsDuration()?.let { return referenceDate + it.inWholeMilliseconds - offset } ?: return null
     }
 
     /**
      * @return The parsed triggerRelativeDuration of this alarm as Duration or null if the value cannot be parsed
      */
     fun getTriggerAsDuration() = try {
-        Duration.parse(this.triggerRelativeDuration)
+        this.triggerRelativeDuration?.let { Duration.parse(it) }
     } catch (e: DateTimeParseException) {
         Log.w(
             "triggerRelativeDuration",
@@ -302,22 +328,22 @@ data class Alarm (
         // The final structure should be "xx minutes/hours/days before/after-start/due
         // "%1$d %2$s %3$s", e.g. 7 days before start
         val param1Value = when {
-            dur.abs().toMinutes()%(24*60) == 0L -> dur.abs().toDays()      // if minutes modulo (24h * 60m) has no rest, we have full days and show days
-            dur.abs().toMinutes()%(60) == 0L -> dur.abs().toHours()      // if minutes modulo (60m) has no rest, we have full hours and show hours
-            dur.abs().toMinutes() > 0L -> dur.abs().toMinutes()      // if minutes modulo (24h * 60m) has no rest, we have full days and show days
+            dur.absoluteValue.inWholeMinutes%(24*60) == 0L -> dur.absoluteValue.inWholeDays      // if minutes modulo (24h * 60m) has no rest, we have full days and show days
+            dur.absoluteValue.inWholeMinutes%(60) == 0L -> dur.absoluteValue.inWholeHours      // if minutes modulo (60m) has no rest, we have full hours and show hours
+            dur.absoluteValue.inWholeMinutes > 0L -> dur.absoluteValue.inWholeMinutes      // if minutes modulo (24h * 60m) has no rest, we have full days and show days
             else -> null
         }
         val param2Unit = when {
-            dur.abs().toMinutes()%(24*60) == 0L -> context.getString(R.string.alarms_days)
-            dur.abs().toMinutes()%(60) == 0L -> context.getString(R.string.alarms_hours)
-            dur.abs().toMinutes() > 0L -> context.getString(R.string.alarms_minutes)
+            dur.absoluteValue.inWholeMinutes%(24*60) == 0L -> context.getString(R.string.alarms_days)
+            dur.absoluteValue.inWholeMinutes%(60) == 0L -> context.getString(R.string.alarms_hours)
+            dur.absoluteValue.inWholeMinutes > 0L -> context.getString(R.string.alarms_minutes)
             else -> null
         }
         val param3BeforeAfterStartDue = when {
-            dur.isNegative && this.triggerRelativeTo == AlarmRelativeTo.END.name -> context.getString(R.string.alarms_before_due)
-            !dur.isNegative && this.triggerRelativeTo == AlarmRelativeTo.END.name -> context.getString(R.string.alarms_after_due)
-            dur.isNegative -> context.getString(R.string.alarms_before_start)
-            !dur.isNegative -> context.getString(R.string.alarms_after_start)
+            dur.isNegative() && this.triggerRelativeTo == AlarmRelativeTo.END.name -> context.getString(R.string.alarms_before_due)
+            !dur.isNegative() && this.triggerRelativeTo == AlarmRelativeTo.END.name -> context.getString(R.string.alarms_after_due)
+            dur.isNegative() -> context.getString(R.string.alarms_before_start)
+            !dur.isNegative() -> context.getString(R.string.alarms_after_start)
             else -> null
         }
 
@@ -329,100 +355,109 @@ data class Alarm (
         }
     }
 
-    fun scheduleNotification(context: Context, triggerTime: Long, isReadOnly: Boolean, notificationSummary: String?, notificationDescription: String?) {
+    private fun scheduleNotification(context: Context, requestCode: Int, isReadOnly: Boolean, notificationSummary: String?, notificationDescription: String?) {
 
-        if(triggerTime < System.currentTimeMillis())
+        if((this.triggerTime?:0) < System.currentTimeMillis())
             return
 
         if(isReadOnly && SettingsStateHolder(context).settingDisableAlarmsReadonly.value)   // don't schedule alarm for read only if option was deactivated!
             return
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            val intent = Intent(context, MainActivity2::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                this.action = "openICalObject"
-                this.putExtra("item2show", icalObjectId)
-            }
-            val contentIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-
-            // SNOOZE OPTIONS - Alarm after one day
-            val snooze1dIntent = Intent(context, NotificationPublisher::class.java).apply {
-                action = NotificationPublisher.ACTION_SNOOZE_1D
-                putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
-            }
-            val snooze1dPendingIntent: PendingIntent =
-                PendingIntent.getBroadcast(context, alarmId.toInt(), snooze1dIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-
-            // SNOOZE OPTIONS - Alarm after one hour
-            val snooze1hIntent = Intent(context, NotificationPublisher::class.java).apply {
-                action = NotificationPublisher.ACTION_SNOOZE_1H
-                putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
-            }
-            val snooze1hPendingIntent: PendingIntent =
-                PendingIntent.getBroadcast(context, alarmId.toInt(), snooze1hIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-
-            // DONE OPTION - Set icalobject as done
-            val doneIntent = Intent(context, NotificationPublisher::class.java).apply {
-                action = NotificationPublisher.ACTION_DONE
-                putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
-            }
-            val donePendingIntent: PendingIntent =
-                PendingIntent.getBroadcast(context, alarmId.toInt(), doneIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-
-
-            // this is the notification itself that will be put as an Extra into the notificationIntent
-            val notification = NotificationCompat.Builder(context, MainActivity2.CHANNEL_REMINDER_DUE).apply {
-                setSmallIcon(R.drawable.ic_notification)
-                notificationSummary?.let { setContentTitle(it) }
-                notificationDescription?.let { setContentText(it) }
-                setContentIntent(contentIntent)
-                priority = NotificationCompat.PRIORITY_HIGH
-                setCategory(NotificationCompat.CATEGORY_ALARM)     //  CATEGORY_REMINDER might also be an alternative
-                //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
-                if(!isReadOnly) {
-                    addAction(
-                        R.drawable.ic_snooze,
-                        context.getString(R.string.notification_add_1h),
-                        snooze1hPendingIntent
-                    )
-                    addAction(
-                        R.drawable.ic_snooze,
-                        context.getString(R.string.notification_add_1d),
-                        snooze1dPendingIntent
-                    )
-                    addAction(
-                        R.drawable.ic_todo,
-                        context.getString(R.string.notification_done),
-                        donePendingIntent
-                    )
-                }
-            }
-                .build()
-            notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL
-
-            // the notificationIntent that is an Intent of the NotificationPublisher Class
-            val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
-                putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
-                putExtra(NotificationPublisher.NOTIFICATION, notification)
-            }
-
-            // the pendingIntent is initiated that is passed on to the alarm manager
-            val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                alarmId.toInt(),
-                notificationIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
-
-            // the alarmManager finally takes care, that the pendingIntent is queued to start the notification Intent that on click would start the contentIntent
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
-
-        } else {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             Log.i("scheduleNotification", "Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)")
+            return
         }
+
+        val intent = Intent(context, MainActivity2::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            this.action = "openICalObject"
+            this.putExtra("item2show", icalObjectId)
+        }
+        val contentIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+
+        // SNOOZE OPTIONS - Alarm after one day
+        val snooze1dIntent = Intent(context, NotificationPublisher::class.java).apply {
+            action = NotificationPublisher.ACTION_SNOOZE_1D
+            putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+        }
+        val snooze1dPendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(context, alarmId.toInt(), snooze1dIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+        // SNOOZE OPTIONS - Alarm after one hour
+        val snooze1hIntent = Intent(context, NotificationPublisher::class.java).apply {
+            action = NotificationPublisher.ACTION_SNOOZE_1H
+            putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+        }
+        val snooze1hPendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(context, alarmId.toInt(), snooze1hIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+        // DONE OPTION - Set icalobject as done
+        val doneIntent = Intent(context, NotificationPublisher::class.java).apply {
+            action = NotificationPublisher.ACTION_DONE
+            putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+        }
+        val donePendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(context, alarmId.toInt(), doneIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+
+        // this is the notification itself that will be put as an Extra into the notificationIntent
+        val notification = NotificationCompat.Builder(context, MainActivity2.CHANNEL_REMINDER_DUE).apply {
+            setSmallIcon(R.drawable.ic_notification)
+            notificationSummary?.let { setContentTitle(it) }
+            notificationDescription?.let { setContentText(it) }
+            setContentIntent(contentIntent)
+            priority = NotificationCompat.PRIORITY_HIGH
+            setCategory(NotificationCompat.CATEGORY_ALARM)     //  CATEGORY_REMINDER might also be an alternative
+            //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            if(!isReadOnly) {
+                addAction(
+                    R.drawable.ic_snooze,
+                    context.getString(R.string.notification_add_1h),
+                    snooze1hPendingIntent
+                )
+                addAction(
+                    R.drawable.ic_snooze,
+                    context.getString(R.string.notification_add_1d),
+                    snooze1dPendingIntent
+                )
+                addAction(
+                    R.drawable.ic_todo,
+                    context.getString(R.string.notification_done),
+                    donePendingIntent
+                )
+            }
+        }
+            .build()
+        notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL
+
+        // the notificationIntent that is an Intent of the NotificationPublisher Class
+        val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
+            putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+            putExtra(NotificationPublisher.NOTIFICATION, notification)
+        }
+
+        // the pendingIntent is initiated that is passed on to the alarm manager
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            notificationIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        // the alarmManager finally takes care, that the pendingIntent is queued to start the notification Intent that on click would start the contentIntent
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
+    }
+
+    /**
+     * Updates the duration of this entry and automatically sets the (absolute) triggerTime and triggerTimezone
+     */
+    fun updateDuration(dur: Duration, alarmRelativeTo: AlarmRelativeTo?, referenceDate: Long, referenceTimezone: String?)  {
+        triggerRelativeDuration = dur.toIsoString()
+        alarmRelativeTo?.let { triggerRelativeTo = it.name }
+        this.triggerTime = referenceDate + dur.inWholeMilliseconds
+        this.triggerTimezone = referenceTimezone
     }
 }
 

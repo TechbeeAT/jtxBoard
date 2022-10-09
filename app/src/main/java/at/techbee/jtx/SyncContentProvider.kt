@@ -25,6 +25,7 @@ import android.webkit.MimeTypeMap
 import androidx.annotation.VisibleForTesting
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.lang.NumberFormatException
+import kotlin.time.Duration
 
 
 private const val CODE_ICALOBJECTS_DIR = 1
@@ -94,7 +95,6 @@ class SyncContentProvider : ContentProvider() {
     }
 
 
-
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
 
         if (context == null)
@@ -105,7 +105,9 @@ class SyncContentProvider : ContentProvider() {
         val count: Int
         val args = arrayListOf(account.name, account.type)
         if (uri.pathSegments.size >= 2)
-            args.add(uri.pathSegments[1].toLong().toString())      // add first argument (must be Long! String is expected, toLong would make other values null
+            args.add(
+                uri.pathSegments[1].toLong().toString()
+            )      // add first argument (must be Long! String is expected, toLong would make other values null
 
         val subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
                 "FROM $TABLE_NAME_ICALOBJECT " +
@@ -164,7 +166,10 @@ class SyncContentProvider : ContentProvider() {
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
 
-        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_DIR)
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(
+                uri
+            ) == CODE_COLLECTION_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_DIR
+        )
             database.removeOrphans()    // remove orpahns (recurring instances of a deleted original item)
 
         return count
@@ -185,17 +190,28 @@ class SyncContentProvider : ContentProvider() {
         try {
 
             when (sUriMatcher.match(uri)) {
-                CODE_ICALOBJECTS_DIR -> id = ICalObject.fromContentValues(values)?.let { database.insertICalObjectSync(it) }
-                CODE_ATTENDEES_DIR -> id = Attendee.fromContentValues(values)?.let { database.insertAttendeeSync(it) }
-                CODE_CATEGORIES_DIR -> id = Category.fromContentValues(values)?.let { database.insertCategorySync(it) }
-                CODE_COMMENTS_DIR -> id = Comment.fromContentValues(values)?.let { database.insertCommentSync(it) }
-                CODE_ORGANIZER_DIR -> id = Organizer.fromContentValues(values)?.let { database.insertOrganizerSync(it) }
-                CODE_RELATEDTO_DIR -> id = Relatedto.fromContentValues(values)?.let { database.insertRelatedtoSync(it) }
-                CODE_RESOURCE_DIR -> id = Resource.fromContentValues(values)?.let { database.insertResourceSync(it) }
-                CODE_COLLECTION_DIR -> id = ICalCollection.fromContentValues(values)?.let { database.insertCollectionSync(it) }
-                CODE_ATTACHMENT_DIR -> id = Attachment.fromContentValues(values)?.let { database.insertAttachmentSync(it) }
-                CODE_ALARM_DIR -> id = Alarm.fromContentValues(values)?.let { database.insertAlarmSync(it) }
-                CODE_UNKNOWN_DIR -> id = Unknown.fromContentValues(values)?.let { database.insertUnknownSync(it) }
+                CODE_ICALOBJECTS_DIR -> id =
+                    ICalObject.fromContentValues(values)?.let { database.insertICalObjectSync(it) }
+                CODE_ATTENDEES_DIR -> id =
+                    Attendee.fromContentValues(values)?.let { database.insertAttendeeSync(it) }
+                CODE_CATEGORIES_DIR -> id =
+                    Category.fromContentValues(values)?.let { database.insertCategorySync(it) }
+                CODE_COMMENTS_DIR -> id =
+                    Comment.fromContentValues(values)?.let { database.insertCommentSync(it) }
+                CODE_ORGANIZER_DIR -> id =
+                    Organizer.fromContentValues(values)?.let { database.insertOrganizerSync(it) }
+                CODE_RELATEDTO_DIR -> id =
+                    Relatedto.fromContentValues(values)?.let { database.insertRelatedtoSync(it) }
+                CODE_RESOURCE_DIR -> id =
+                    Resource.fromContentValues(values)?.let { database.insertResourceSync(it) }
+                CODE_COLLECTION_DIR -> id = ICalCollection.fromContentValues(values)
+                    ?.let { database.insertCollectionSync(it) }
+                CODE_ATTACHMENT_DIR -> id =
+                    Attachment.fromContentValues(values)?.let { database.insertAttachmentSync(it) }
+                CODE_ALARM_DIR -> id =
+                    Alarm.fromContentValues(values)?.let { database.insertAlarmSync(it) }
+                CODE_UNKNOWN_DIR -> id =
+                    Unknown.fromContentValues(values)?.let { database.insertUnknownSync(it) }
 
                 CODE_ICALOBJECT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
                 CODE_ATTENDEE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
@@ -212,45 +228,56 @@ class SyncContentProvider : ContentProvider() {
                 else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
             }
         } catch (e: SQLiteConstraintException) {
-            Log.e("ConstraintException", "The given insert caused a SQLiteConstraintException. This entry is skipped.\nUri: $uri\nValues:${values.toString()}\n$e")
+            Log.e(
+                "ConstraintException",
+                "The given insert caused a SQLiteConstraintException. This entry is skipped.\nUri: $uri\nValues:${values.toString()}\n$e"
+            )
             //Toast.makeText(context, R.string.synccontentprovider_sync_problem, Toast.LENGTH_LONG).show()
         }
 
         if (context == null)
             return null
 
-        if(id == null)
+        if (id == null)
             return null
 
         Log.println(Log.INFO, "newContentUri", ContentUris.withAppendedId(uri, id).toString())
 
-        if(sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
+        if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
             createEmptyFileForAttachment(id)
 
-        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true))
-            database.getRecurringToPopulate(id)?.recreateRecurring(database, context!!)
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(
+                COLUMN_RDATE
+            ) == true || values?.containsKey(COLUMN_EXDATE) == true)
+        )
+            database.getRecurringToPopulate(id)?.recreateRecurring(context!!)
 
-        if(sUriMatcher.match(uri) == CODE_ALARM_DIR) {
+        if (sUriMatcher.match(uri) == CODE_ALARM_DIR) {
             val alarm = database.getAlarmSync(id) ?: return null
-            val icalobject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return null
-            val collection = database.getCollectionByIdSync(icalobject.collectionId) ?: return null
-            // take care of notifications
-            val triggerTime = when {
-                alarm.triggerTime != null -> alarm.triggerTime
-                alarm.triggerRelativeDuration != null && alarm.triggerRelativeTo == AlarmRelativeTo.END.name -> alarm.getDatetimeFromTriggerDuration(
-                    icalobject.due, icalobject.dueTimezone)
-                alarm.triggerRelativeDuration != null -> alarm.getDatetimeFromTriggerDuration(icalobject.dtstart, icalobject.dtstartTimezone)
-                else -> null
-            }
-            triggerTime?.let { trigger -> alarm.scheduleNotification(context!!, trigger, collection.readonly, icalobject.summary, icalobject.description) }
-        }
+            val iCalObject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return null
 
+            alarm.triggerRelativeDuration?.let { durString ->
+                try {
+                    val duration = Duration.parse(durString)
+                    alarm.updateDuration(
+                        dur = duration,
+                        alarmRelativeTo = try { alarm.triggerRelativeTo?.let { AlarmRelativeTo.valueOf(it) } } catch(e: IllegalArgumentException) { null },
+                        referenceDate = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.due ?: System.currentTimeMillis() else iCalObject.dtstart ?: System.currentTimeMillis(),
+                        referenceTimezone = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.dueTimezone else iCalObject.dtstartTimezone
+                    )
+                } catch (e: java.lang.IllegalArgumentException) {
+                    Log.w("Duration", "Illegal Duration detected")
+                }
+            }
+            database.updateAlarm(alarm)
+            Alarm.scheduleNextNotifications(context!!)
+        }
         return ContentUris.withAppendedId(uri, id)
     }
 
     override fun onCreate(): Boolean {
 
-        if(context?.applicationContext == null)
+        if (context?.applicationContext == null)
             return false
 
         database = ICalDatabase.getInstance(context!!).iCalDatabaseDao
@@ -259,8 +286,10 @@ class SyncContentProvider : ContentProvider() {
         return true
     }
 
-    override fun query(uri: Uri, projection: Array<String>?, selection: String?,
-                       selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
+    override fun query(
+        uri: Uri, projection: Array<String>?, selection: String?,
+        selectionArgs: Array<String>?, sortOrder: String?
+    ): Cursor? {
 
         if (context == null)
             return null
@@ -269,15 +298,17 @@ class SyncContentProvider : ContentProvider() {
         val account = getAccountFromUri(uri)
         val args = arrayListOf(account.name, account.type)
         if (uri.pathSegments.size >= 2)
-            args.add(uri.pathSegments[1].toLong().toString())      // add first argument (must be Long! String is expected, toLong would make other values null
+            args.add(
+                uri.pathSegments[1].toLong().toString()
+            )      // add first argument (must be Long! String is expected, toLong would make other values null
 
         var subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
                 "FROM $TABLE_NAME_ICALOBJECT " +
                 "INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID " +
                 "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? " +
                 "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
-        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)                 // only if we try to access single entries directly we allow access to recurring instances, for access on DIR of ICalObjects we filter recurring instances
-                subquery += "AND $TABLE_NAME_ICALOBJECT.$COLUMN_RECUR_ISLINKEDINSTANCE = 0"
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)                 // only if we try to access single entries directly we allow access to recurring instances, for access on DIR of ICalObjects we filter recurring instances
+            subquery += "AND $TABLE_NAME_ICALOBJECT.$COLUMN_RECUR_ISLINKEDINSTANCE = 0"
 
         var queryString = "SELECT "
         queryString += if (projection.isNullOrEmpty())
@@ -331,8 +362,8 @@ class SyncContentProvider : ContentProvider() {
         val result = database.getCursor(query)
 
         // if the request was for an Attachment, then allow the calling application to access the file by grantUriPermission
-        if(sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR || CODE_ATTACHMENT_DIR == CODE_ATTACHMENT_ITEM) {
-            while(result?.moveToNext() == true) {
+        if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR || CODE_ATTACHMENT_DIR == CODE_ATTACHMENT_ITEM) {
+            while (result?.moveToNext() == true) {
 
                 try {
                     val uriColumnIndex = result.getColumnIndex(COLUMN_ATTACHMENT_URI)
@@ -345,7 +376,7 @@ class SyncContentProvider : ContentProvider() {
                         attachmentUri,
                         Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                     )
-                } catch(e: NullPointerException) {
+                } catch (e: NullPointerException) {
                     Log.i("attachment", "Uri not present or could not be parsed.")
                 }
             }
@@ -354,14 +385,16 @@ class SyncContentProvider : ContentProvider() {
         return result
     }
 
-    override fun update(uri: Uri, values: ContentValues?, selection: String?,
-                        selectionArgs: Array<String>?): Int {
+    override fun update(
+        uri: Uri, values: ContentValues?, selection: String?,
+        selectionArgs: Array<String>?
+    ): Int {
 
 
         if (context == null)
             return 0
 
-        if(values == null || values.size() == 0)
+        if (values == null || values.size() == 0)
             throw java.lang.IllegalArgumentException("Cannot update without values.")
 
         isSyncAdapter(uri)
@@ -409,7 +442,9 @@ class SyncContentProvider : ContentProvider() {
         args.add(account.name)
         args.add(account.type)
         if (uri.pathSegments.size >= 2)
-            args.add(uri.pathSegments[1].toLong().toString())      // add first argument (must be Long! String is expected, toLong would make other values null
+            args.add(
+                uri.pathSegments[1].toLong().toString()
+            )      // add first argument (must be Long! String is expected, toLong would make other values null
 
         //construct WHERE icalobjectId in <subquery> and further conditions
         queryString += " WHERE "
@@ -464,41 +499,81 @@ class SyncContentProvider : ContentProvider() {
         database.updateRAW(updateQuery)
 
         // updates on recurring instances through bulk updates should not occur, only updates on single items will update the recurring instances
-        if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) || values.containsKey(COLUMN_RDATE) || values.containsKey(COLUMN_EXDATE)))
-        {
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) || values.containsKey(
+                COLUMN_RDATE
+            ) || values.containsKey(COLUMN_EXDATE))
+        ) {
             try {
-                val id: Long = uri.lastPathSegment?.toLong() ?: throw NumberFormatException("Last path segment was null")
-                database.getRecurringToPopulate(id)?.recreateRecurring(database, context!!)
+                val id: Long = uri.lastPathSegment?.toLong()
+                    ?: throw NumberFormatException("Last path segment was null")
+                database.getRecurringToPopulate(id)?.recreateRecurring(context!!)
             } catch (e: NumberFormatException) {
                 throw  java.lang.IllegalArgumentException("Could not convert path segment to Long: $uri\n$e")
             }
         }
 
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(uri) == CODE_ALARM_ITEM) {
+            val icalObjectId = if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM) {
+                uri.lastPathSegment?.toLong()
+                    ?: throw NumberFormatException("Last path segment was null")
+            } else {
+                val alarmId = uri.lastPathSegment?.toLong()
+                    ?: throw NumberFormatException("Last path segment was null")
+                database.getAlarmSync(alarmId)?.icalObjectId ?: return 1
+            }
+
+            val alarms = database.getAlarmsSync(icalObjectId) ?: emptyList()
+            val iCalObject = database.getICalObjectByIdSync(alarms.firstOrNull()?.icalObjectId ?: return 1) ?: return 1
+
+            alarms.forEach { alarm ->
+                alarm.triggerRelativeDuration?.let { durString ->
+                    try {
+                        val duration = Duration.parse(durString)
+                        alarm.updateDuration(
+                            dur = duration,
+                            alarmRelativeTo = try { alarm.triggerRelativeTo?.let { AlarmRelativeTo.valueOf(it) } } catch(e: IllegalArgumentException) { null },
+                            referenceDate = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.due ?: System.currentTimeMillis() else iCalObject.dtstart ?: System.currentTimeMillis(),
+                            referenceTimezone = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.dueTimezone else iCalObject.dtstartTimezone
+                        )
+                    } catch (e: java.lang.IllegalArgumentException) {
+                        Log.w("Duration", "Illegal Duration detected")
+                    }
+                }
+                database.updateAlarm(alarm)
+            }
+            if(alarms.isNotEmpty())
+                Alarm.scheduleNextNotifications(context!!)
+        }
         return 1
     }
 
     override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
 
-        if(sUriMatcher.match(uri) != CODE_ATTACHMENT_ITEM)
+        if (sUriMatcher.match(uri) != CODE_ATTACHMENT_ITEM)
             throw  java.lang.IllegalArgumentException("Only attachment Uris are allowed: $uri")
 
         val id: Long
         try {
-            id = uri.lastPathSegment?.toLong() ?: throw NumberFormatException("Last path segment was null")
+            id = uri.lastPathSegment?.toLong()
+                ?: throw NumberFormatException("Last path segment was null")
         } catch (e: NumberFormatException) {
             throw  java.lang.IllegalArgumentException("Could not convert path segment to Long: $uri\n$e")
         }
-        val attachment = database.getAttachmentById(id) ?: throw java.lang.IllegalArgumentException("No attachment found for the given id: $id")
-        val attachmentUri = attachment.uri ?: throw java.lang.IllegalArgumentException("No uri found for the given id: $id")
-        if(!attachmentUri.startsWith("content://"))
+        val attachment = database.getAttachmentById(id) ?: throw java.lang.IllegalArgumentException(
+            "No attachment found for the given id: $id"
+        )
+        val attachmentUri = attachment.uri
+            ?: throw java.lang.IllegalArgumentException("No uri found for the given id: $id")
+        if (!attachmentUri.startsWith("content://"))
             throw java.lang.IllegalArgumentException("Uri is not a content uri: $attachmentUri.")
 
-        val filename = Uri.parse(attachmentUri).lastPathSegment ?: throw java.lang.IllegalArgumentException("No filename found in uri: $attachmentUri")
+        val filename = Uri.parse(attachmentUri).lastPathSegment
+            ?: throw java.lang.IllegalArgumentException("No filename found in uri: $attachmentUri")
         val attachmentFile = File("${Attachment.getAttachmentDirectory(context)}/$filename")
 
         //ParcelFileDescriptor also has a Callback when it's closed, that could be interesting!
 
-        val pfdMode = if(mode == "w")
+        val pfdMode = if (mode == "w")
             ParcelFileDescriptor.MODE_READ_WRITE
         else
             ParcelFileDescriptor.MODE_READ_ONLY
@@ -515,7 +590,7 @@ class SyncContentProvider : ContentProvider() {
     private fun isSyncAdapter(uri: Uri): Boolean {
 
         val isSyncAdapter = uri.getBooleanQueryParameter(CALLER_IS_SYNCADAPTER, false)
-        if(isSyncAdapter)
+        if (isSyncAdapter)
             return true
         else
             throw java.lang.IllegalArgumentException("Currently only Syncadapters are supported. Uri: ($uri)")
@@ -529,8 +604,10 @@ class SyncContentProvider : ContentProvider() {
      */
     @VisibleForTesting
     fun getAccountFromUri(uri: Uri): Account {
-        val accountName = uri.getQueryParameter(ACCOUNT_NAME) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_NAME missing. Uri: ($uri)")
-        val accountType = uri.getQueryParameter(ACCOUNT_TYPE) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_TYPE missing. Uri: ($uri)")
+        val accountName = uri.getQueryParameter(ACCOUNT_NAME)
+            ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_NAME missing. Uri: ($uri)")
+        val accountType = uri.getQueryParameter(ACCOUNT_TYPE)
+            ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_TYPE missing. Uri: ($uri)")
         if (accountType == ICalCollection.LOCAL_ACCOUNT_TYPE && this.callingPackage != BuildConfig.APPLICATION_ID)
             throw java.lang.IllegalArgumentException("Local collections cannot be used. Uri: ($uri)")
 
@@ -546,10 +623,11 @@ class SyncContentProvider : ContentProvider() {
         val attachment = database.getAttachmentById(id) ?: return
 
         // don't continue if an uri is already present (e.g. for weblinks)
-        if(!attachment.uri.isNullOrEmpty())
+        if (!attachment.uri.isNullOrEmpty())
             return
 
-        val fileExtension = attachment.filename?.let { MimeTypeMap.getFileExtensionFromUrl(it) } ?: MimeTypeMap.getSingleton().getExtensionFromMimeType(attachment.fmttype)
+        val fileExtension = attachment.filename?.let { MimeTypeMap.getFileExtensionFromUrl(it) }
+            ?: MimeTypeMap.getSingleton().getExtensionFromMimeType(attachment.fmttype)
 
         try {
             val storageDir = Attachment.getAttachmentDirectory(context!!)
@@ -560,10 +638,11 @@ class SyncContentProvider : ContentProvider() {
             attachment.binary = null
             attachment.uri = attachmentUri.toString()
             attachment.extension = fileExtension?.let { ".$it" }
-            if(attachment.filename.isNullOrEmpty())
+            if (attachment.filename.isNullOrEmpty())
                 attachment.filename = file.name
-            if(attachment.fmttype.isNullOrEmpty())
-                attachment.fmttype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(attachment.uri))
+            if (attachment.fmttype.isNullOrEmpty())
+                attachment.fmttype = MimeTypeMap.getSingleton()
+                    .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(attachment.uri))
             attachment.filesize = file.length()
             database.updateAttachment(attachment)
         } catch (e: IOException) {
