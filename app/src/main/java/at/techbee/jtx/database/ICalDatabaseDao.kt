@@ -499,13 +499,18 @@ DELETEs by Object
     fun updateRAW(query: SupportSQLiteQuery): Int
 
 
-
-
     @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun update(icalObject: ICalObject)
 
     @Update
     fun updateAttachment(attachment: Attachment)
+
+    @Update
+    fun updateAlarm(alarm: Alarm)
+
+    @Transaction
+    @Query("SELECT $TABLE_NAME_ALARM.* FROM $TABLE_NAME_ALARM INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID WHERE $COLUMN_DELETED = 0 AND $COLUMN_ALARM_TRIGGER_TIME > :now ORDER BY $COLUMN_ALARM_TRIGGER_TIME ASC LIMIT :limit")
+    fun getNextAlarms(limit: Int, now: Long = System.currentTimeMillis()): List<Alarm>
 
     @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun updateCollection(collection: ICalCollection)

@@ -41,20 +41,20 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import java.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.minutes
 
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun DetailsCardAlarms(
-    initialAlarms: List<Alarm>,
+    alarms: MutableState<List<Alarm>>,   // can't be stateless as recomposition is needed when the dates change!
     icalObject: ICalObject,
     isEditMode: Boolean,
     onAlarmsUpdated: (List<Alarm>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    var alarms by remember { mutableStateOf(initialAlarms) }
     val headline = stringResource(id = R.string.alarms)
 
     var showDateTimePicker by rememberSaveable { mutableStateOf(false) }
@@ -72,8 +72,8 @@ fun DetailsCardAlarms(
             minDate = DateTimeUtils.getTodayAsLong(),
             onConfirm = { newDateTime, newTimeZone ->
                 val newAlarm = Alarm.createDisplayAlarm(newDateTime!!, newTimeZone)
-                alarms = alarms.plus(newAlarm)
-                onAlarmsUpdated(alarms) },
+                alarms.value = alarms.value.plus(newAlarm)
+                onAlarmsUpdated(alarms.value) },
             onDismiss = { showDateTimePicker = false }
         )
     }
@@ -81,22 +81,25 @@ fun DetailsCardAlarms(
     if(showDurationPicker) {
         DurationPickerDialog(
             alarm = Alarm.createDisplayAlarm(
-                dur = Duration.ofMinutes(-15),
-                alarmRelativeTo = if(icalObject.due != null) AlarmRelativeTo.END else AlarmRelativeTo.START
+                dur = (-15).minutes,
+                alarmRelativeTo = if(icalObject.due != null) AlarmRelativeTo.END else AlarmRelativeTo.START,
+                referenceDate = if(icalObject.due != null) icalObject.due!! else icalObject.dtstart!!,
+                referenceTimezone = if(icalObject.due != null) icalObject.dueTimezone else icalObject.dtstartTimezone
             ),
             icalObject = icalObject,
             onConfirm = { newAlarm ->
-                if(alarms.none { alarm ->
+                if(alarms.value.none { alarm ->
                         alarm.triggerRelativeDuration == newAlarm.triggerRelativeDuration
                                 && alarm.triggerRelativeTo == newAlarm.triggerRelativeTo
                                 && alarm.triggerTime == newAlarm.triggerTime
                                 && alarm.triggerTimezone == newAlarm.triggerTimezone
                 }) {
-                    alarms = alarms.plus(newAlarm)
-                    onAlarmsUpdated(alarms)
+                    alarms.value = alarms.value.plus(newAlarm)
+                    onAlarmsUpdated(alarms.value)
                 }
             },
-            onDismiss = { showDurationPicker = false })
+            onDismiss = { showDurationPicker = false }
+        )
     }
 
     ElevatedCard(modifier = modifier) {
@@ -108,27 +111,27 @@ fun DetailsCardAlarms(
 
             HeadlineWithIcon(icon = Icons.Outlined.Alarm, iconDesc = headline, text = headline)
 
-            AnimatedVisibility(alarms.isNotEmpty()) {
+            AnimatedVisibility(alarms.value.isNotEmpty()) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    alarms.forEach { alarm ->
+                    alarms.value.forEach { alarm ->
 
                         AlarmCard(
                             alarm = alarm,
                             icalObject = icalObject,
                             isEditMode = isEditMode,
                             onAlarmDeleted = {
-                                alarms = alarms.minus(alarm)
-                                onAlarmsUpdated(alarms)
+                                alarms.value = alarms.value.minus(alarm)
+                                onAlarmsUpdated(alarms.value)
                                              },
                             onAlarmChanged = { changedAlarm ->
                                 changedAlarm.alarmId = 0L
-                                alarms = alarms.minus(alarm)
-                                alarms = alarms.plus(changedAlarm)
-                                onAlarmsUpdated(alarms)
+                                alarms.value = alarms.value.minus(alarm)
+                                alarms.value = alarms.value.plus(changedAlarm)
+                                onAlarmsUpdated(alarms.value)
                             }
                         )
                     }
@@ -158,22 +161,22 @@ fun DetailsCardAlarms(
                         }
                     }
 
-                    val alarmOnStart = Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.START)
-                    AnimatedVisibility(icalObject.dtstart != null && !alarms.contains(alarmOnStart)) {
+                    val alarmOnStart = Alarm.createDisplayAlarm((0).minutes, AlarmRelativeTo.START, icalObject.dtstart ?: System.currentTimeMillis(), icalObject.dtstartTimezone)
+                    AnimatedVisibility(icalObject.dtstart != null && !alarms.value.contains(alarmOnStart)) {
                         TextButton(onClick = {
-                            alarms = alarms.plus(Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.START))
-                            onAlarmsUpdated(alarms)
+                            alarms.value = alarms.value.plus(Alarm.createDisplayAlarm((0).minutes, AlarmRelativeTo.START, icalObject.dtstart!!, icalObject.dtstartTimezone))
+                            onAlarmsUpdated(alarms.value)
                         }) {
                             Icon(Icons.Outlined.AlarmAdd, null, modifier = Modifier.padding(end = 8.dp))
                             Text(stringResource(id = R.string.alarms_onstart))
                         }
                     }
 
-                    val alarmOnDue = Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.END)
-                    AnimatedVisibility(icalObject.due != null && !alarms.contains(alarmOnDue)) {
+                    val alarmOnDue = Alarm.createDisplayAlarm((0).minutes, AlarmRelativeTo.END, icalObject.due ?: System.currentTimeMillis(), icalObject.dueTimezone)
+                    AnimatedVisibility(icalObject.due != null && !alarms.value.contains(alarmOnDue)) {
                         TextButton(onClick = {
-                            alarms = alarms.plus(Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.END))
-                            onAlarmsUpdated(alarms)
+                            alarms.value = alarms.value.plus(Alarm.createDisplayAlarm((0).minutes, AlarmRelativeTo.END, icalObject.due!!, icalObject.dueTimezone))
+                            onAlarmsUpdated(alarms.value)
                         }) {
                             Icon(Icons.Outlined.AlarmAdd, null, modifier = Modifier.padding(end = 8.dp))
                             Text(stringResource(id = R.string.alarms_ondue))
@@ -199,10 +202,11 @@ fun DetailsCardAlarms_Preview() {
     MaterialTheme {
 
         DetailsCardAlarms(
-            initialAlarms = listOf(
+            alarms = remember { mutableStateOf(mutableListOf(
                         Alarm.createDisplayAlarm(System.currentTimeMillis(), null),
-                        Alarm.createDisplayAlarm(Duration.ofDays(1), AlarmRelativeTo.START)
-            ),
+                        Alarm.createDisplayAlarm((0).days, AlarmRelativeTo.START, System.currentTimeMillis(), null)
+                )
+            )},
             icalObject = ICalObject.createTodo().apply {
                 dtstart = System.currentTimeMillis()
                 dtstartTimezone = null
@@ -221,10 +225,10 @@ fun DetailsCardAlarms_Preview() {
 fun DetailsCardAlarms_Preview_edit() {
     MaterialTheme {
         DetailsCardAlarms(
-            initialAlarms = listOf(
+            alarms = remember { mutableStateOf(listOf(
                         Alarm.createDisplayAlarm(System.currentTimeMillis(), null),
-                        Alarm.createDisplayAlarm(Duration.ofDays(1), AlarmRelativeTo.START)
-            ),
+                        Alarm.createDisplayAlarm((1).days, AlarmRelativeTo.START, System.currentTimeMillis(), null)
+            ))},
             icalObject = ICalObject.createTodo().apply {
                 dtstart = System.currentTimeMillis()
                 dtstartTimezone = null

@@ -21,7 +21,7 @@ import androidx.preference.PreferenceManager
 import androidx.room.*
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.AlarmRelativeTo
+import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.ui.settings.DropdownSetting
@@ -697,16 +697,10 @@ data class ICalObject(
                     item.alarms?.forEach {
                         it.icalObjectId = newId
                         database.insertAlarm(it)
-                        // take care of notifications
-                        val triggerTime = when {
-                            it.triggerTime != null -> it.triggerTime
-                            it.triggerRelativeDuration != null && it.triggerRelativeTo == AlarmRelativeTo.END.name -> it.getDatetimeFromTriggerDuration(
-                                item.property.due, item.property.dueTimezone)
-                            it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(item.property.dtstart, item.property.dtstartTimezone)
-                            else -> null
-                        }
-                        triggerTime?.let { trigger ->  it.scheduleNotification(context, trigger, item.ICalCollection?.readonly?: true, item.property.summary, item.property.description) }
                     }
+                    // take care of notifications
+                    if(item.alarms?.isNotEmpty() == true)
+                        Alarm.scheduleNextNotifications(context)
 
                     // relations need to be rebuilt from the new child to the parent
                     if (newParentId != null) {
@@ -717,6 +711,9 @@ data class ICalObject(
                         relParent2Child.text = parent?.property?.uid
                         database.insertRelatedto(relParent2Child)
                     }
+
+                    if(item.alarms?.isNotEmpty() == true)
+                        Alarm.scheduleNextNotifications(context)
 
                     return@withContext newId
                 }
@@ -1015,8 +1012,9 @@ data class ICalObject(
     }
 
 
-    fun recreateRecurring(database: ICalDatabaseDao, context: Context) {
+    fun recreateRecurring(context: Context) {
 
+        val database = ICalDatabase.getInstance(context).iCalDatabaseDao
         database.deleteRecurringInstances(id)
         if(dtstart == null || rrule.isNullOrEmpty())
             return
@@ -1099,21 +1097,9 @@ data class ICalObject(
             instance.alarms?.forEach {
                 it.alarmId = 0L
                 it.icalObjectId = instanceId
-                // we skip triggers with an absolute date, only triggers with a duration are relevant for
-                if(it.triggerTime == null && it.triggerRelativeDuration?.isNotEmpty() == true) {
-                    it.alarmId = database.insertAlarmSync(it)
-
-                    // take care of notifications
-                    val triggerTime = when {
-                        it.triggerTime != null -> it.triggerTime
-                        it.triggerRelativeDuration != null && it.triggerRelativeTo == AlarmRelativeTo.END.name -> it.getDatetimeFromTriggerDuration(
-                            instance.property.due, instance.property.dueTimezone)
-                        it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(instance.property.dtstart, instance.property.dtstartTimezone)
-                        else -> null
-                    }
-                    triggerTime?.let { trigger -> it.scheduleNotification(context, trigger, instance.ICalCollection?.readonly ?: true, instance.property.summary, instance.property.description) }
-                }
             }
+            if(instance.alarms?.isNotEmpty() == true)
+                Alarm.scheduleNextNotifications(context)
         }
     }
 
