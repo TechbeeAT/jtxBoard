@@ -6,13 +6,12 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.bottomsheets
+package at.techbee.jtx.ui.list
 
 import android.content.Context
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -21,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,16 +29,12 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
-import at.techbee.jtx.ui.list.ListViewModel
-import at.techbee.jtx.ui.list.OrderBy
-import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.ui.reusable.elements.FilterSection
-import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListFilterBottomSheet(
+fun ListOptionsFilter(
     module: Module,
     listSettings: ListSettings,
     allCollectionsLive: LiveData<List<ICalCollection>>,
@@ -52,11 +46,9 @@ fun ListFilterBottomSheet(
     val allCategories by allCategoriesLive.observeAsState()
     val allAccounts = allCollections?.groupBy { it.accountName ?: "" }
 
+
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(8.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
@@ -70,8 +62,10 @@ fun ListFilterBottomSheet(
                 onListSettingsChanged()
             },
             onInvertSelection = {
-                listSettings.searchAccount.value = allAccounts?.keys?.toMutableList()
-                    ?.apply { removeAll(listSettings.searchAccount.value) } ?: emptyList()
+                listSettings.searchAccount.value =
+                    allAccounts?.keys?.toMutableList()
+                        ?.apply { removeAll(listSettings.searchAccount.value) }
+                        ?: emptyList()
                 onListSettingsChanged()
             })
         {
@@ -85,7 +79,10 @@ fun ListFilterBottomSheet(
                         selected = listSettings.searchAccount.value.contains(account),
                         onClick = {
                             listSettings.searchAccount.value =
-                                if (listSettings.searchAccount.value.contains(account))
+                                if (listSettings.searchAccount.value.contains(
+                                        account
+                                    )
+                                )
                                     listSettings.searchAccount.value.minus(account)
                                 else
                                     listSettings.searchAccount.value.plus(account)
@@ -106,11 +103,14 @@ fun ListFilterBottomSheet(
             onResetSelection = {
                 listSettings.searchCollection.value = emptyList()
                 onListSettingsChanged()
-                               },
+            },
             onInvertSelection = {
-                val allCollectionsGrouped = allCollections?.groupBy { it.displayName ?: "" }
-                listSettings.searchCollection.value = allCollectionsGrouped?.keys?.toMutableList()
-                    ?.apply { removeAll(listSettings.searchCollection.value) } ?: emptyList()
+                val allCollectionsGrouped =
+                    allCollections?.groupBy { it.displayName ?: "" }
+                listSettings.searchCollection.value =
+                    allCollectionsGrouped?.keys?.toMutableList()
+                        ?.apply { removeAll(listSettings.searchCollection.value) }
+                        ?: emptyList()
                 onListSettingsChanged()
             })
         {
@@ -120,22 +120,33 @@ fun ListFilterBottomSheet(
                     .horizontalScroll(rememberScrollState())
             ) {
 
-                val allCollectionsGrouped = allCollections?.groupBy { it.displayName ?: "" }
-                allCollectionsGrouped?.keys?.sortedBy { it.lowercase() }?.forEach { collection ->
-                    FilterChip(
-                        selected = listSettings.searchCollection.value.contains(collection),
-                        onClick = {
-                            listSettings.searchCollection.value =
-                                if (listSettings.searchCollection.value.contains(collection))
-                                    listSettings.searchCollection.value.minus(collection)
-                                else
-                                    listSettings.searchCollection.value.plus(collection)
-                            onListSettingsChanged()
-                        },
-                        label = { Text(collection) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                }
+                val allCollectionsGrouped =
+                    allCollections?.groupBy { it.displayName ?: "" }
+                allCollectionsGrouped?.keys?.sortedBy { it.lowercase() }
+                    ?.forEach { collection ->
+                        FilterChip(
+                            selected = listSettings.searchCollection.value.contains(
+                                collection
+                            ),
+                            onClick = {
+                                listSettings.searchCollection.value =
+                                    if (listSettings.searchCollection.value.contains(
+                                            collection
+                                        )
+                                    )
+                                        listSettings.searchCollection.value.minus(
+                                            collection
+                                        )
+                                    else
+                                        listSettings.searchCollection.value.plus(
+                                            collection
+                                        )
+                                onListSettingsChanged()
+                            },
+                            label = { Text(collection) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
             }
         }
 
@@ -149,12 +160,18 @@ fun ListFilterBottomSheet(
                 else
                     listSettings.searchStatusTodo.value = emptyList()
                 onListSettingsChanged()
-                               },
+            },
             onInvertSelection = {
                 if (module == Module.JOURNAL || module == Module.NOTE)
-                    listSettings.searchStatusJournal.value = StatusJournal.values().filter { status -> !listSettings.searchStatusJournal.value.contains(status)  }
+                    listSettings.searchStatusJournal.value = StatusJournal.values()
+                        .filter { status ->
+                            !listSettings.searchStatusJournal.value.contains(status)
+                        }
                 else
-                    listSettings.searchStatusTodo.value = StatusTodo.values().filter { status -> !listSettings.searchStatusTodo.value.contains(status)  }
+                    listSettings.searchStatusTodo.value = StatusTodo.values()
+                        .filter { status ->
+                            !listSettings.searchStatusTodo.value.contains(status)
+                        }
                 onListSettingsChanged()
             })
         {
@@ -166,13 +183,22 @@ fun ListFilterBottomSheet(
                 ) {
                     StatusJournal.values().forEach { status ->
                         FilterChip(
-                            selected = listSettings.searchStatusJournal.value.contains(status),
+                            selected = listSettings.searchStatusJournal.value.contains(
+                                status
+                            ),
                             onClick = {
                                 listSettings.searchStatusJournal.value =
-                                    if (listSettings.searchStatusJournal.value.contains(status))
-                                        listSettings.searchStatusJournal.value.minus(status)
+                                    if (listSettings.searchStatusJournal.value.contains(
+                                            status
+                                        )
+                                    )
+                                        listSettings.searchStatusJournal.value.minus(
+                                            status
+                                        )
                                     else
-                                        listSettings.searchStatusJournal.value.plus(status)
+                                        listSettings.searchStatusJournal.value.plus(
+                                            status
+                                        )
                                 onListSettingsChanged()
                             },
                             label = { Text(stringResource(id = status.stringResource)) },
@@ -188,13 +214,22 @@ fun ListFilterBottomSheet(
                 ) {
                     StatusTodo.values().forEach { status ->
                         FilterChip(
-                            selected = listSettings.searchStatusTodo.value.contains(status),
+                            selected = listSettings.searchStatusTodo.value.contains(
+                                status
+                            ),
                             onClick = {
                                 listSettings.searchStatusTodo.value =
-                                    if (listSettings.searchStatusTodo.value.contains(status))
-                                        listSettings.searchStatusTodo.value.minus(status)
+                                    if (listSettings.searchStatusTodo.value.contains(
+                                            status
+                                        )
+                                    )
+                                        listSettings.searchStatusTodo.value.minus(
+                                            status
+                                        )
                                     else
-                                        listSettings.searchStatusTodo.value.plus(status)
+                                        listSettings.searchStatusTodo.value.plus(
+                                            status
+                                        )
                                 onListSettingsChanged()
                             },
                             label = { Text(stringResource(id = status.stringResource)) },
@@ -213,9 +248,14 @@ fun ListFilterBottomSheet(
             onResetSelection = {
                 listSettings.searchClassification.value = emptyList()
                 onListSettingsChanged()
-                               },
+            },
             onInvertSelection = {
-                listSettings.searchClassification.value = Classification.values().filter { classification -> !listSettings.searchClassification.value.contains(classification)  }
+                listSettings.searchClassification.value = Classification.values()
+                    .filter { classification ->
+                        !listSettings.searchClassification.value.contains(
+                            classification
+                        )
+                    }
                 onListSettingsChanged()
             })
         {
@@ -226,13 +266,22 @@ fun ListFilterBottomSheet(
             ) {
                 Classification.values().forEach { classification ->
                     FilterChip(
-                        selected = listSettings.searchClassification.value.contains(classification),
+                        selected = listSettings.searchClassification.value.contains(
+                            classification
+                        ),
                         onClick = {
                             listSettings.searchClassification.value =
-                                if (listSettings.searchClassification.value.contains(classification))
-                                    listSettings.searchClassification.value.minus(classification)
+                                if (listSettings.searchClassification.value.contains(
+                                        classification
+                                    )
+                                )
+                                    listSettings.searchClassification.value.minus(
+                                        classification
+                                    )
                                 else
-                                    listSettings.searchClassification.value.plus(classification)
+                                    listSettings.searchClassification.value.plus(
+                                        classification
+                                    )
                             onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = classification.stringResource)) },
@@ -243,7 +292,6 @@ fun ListFilterBottomSheet(
         }
 
 
-
         ////// CATEGORIES
         FilterSection(
             icon = Icons.Outlined.Label,
@@ -251,9 +299,12 @@ fun ListFilterBottomSheet(
             onResetSelection = {
                 listSettings.searchCategories.value = emptyList()
                 onListSettingsChanged()
-                               },
+            },
             onInvertSelection = {
-                listSettings.searchCategories.value = allCategories?.filter { category -> !listSettings.searchCategories.value.contains(category) } ?: emptyList()
+                listSettings.searchCategories.value =
+                    allCategories?.filter { category ->
+                        !listSettings.searchCategories.value.contains(category)
+                    } ?: emptyList()
                 onListSettingsChanged()
             })
         {
@@ -264,13 +315,22 @@ fun ListFilterBottomSheet(
             ) {
                 allCategories?.forEach { category ->
                     FilterChip(
-                        selected = listSettings.searchCategories.value.contains(category),
+                        selected = listSettings.searchCategories.value.contains(
+                            category
+                        ),
                         onClick = {
                             listSettings.searchCategories.value =
-                                if (listSettings.searchCategories.value.contains(category))
-                                    listSettings.searchCategories.value.minus(category)
+                                if (listSettings.searchCategories.value.contains(
+                                        category
+                                    )
+                                )
+                                    listSettings.searchCategories.value.minus(
+                                        category
+                                    )
                                 else
-                                    listSettings.searchCategories.value.plus(category)
+                                    listSettings.searchCategories.value.plus(
+                                        category
+                                    )
                             onListSettingsChanged()
                         },
                         label = { Text(category) },
@@ -278,126 +338,31 @@ fun ListFilterBottomSheet(
                     )
                 }
             }
-        }
 
 
-        Divider(
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            thickness = 1.dp,
-            modifier = Modifier
-                .alpha(0.25f)
-                .padding(top = 8.dp)
-        )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 100.dp)
+                    .fillMaxWidth()
+            ) {
+                Button(onClick = {
+                    listSettings.reset()
+                    onListSettingsChanged()
 
-        HeadlineWithIcon(
-            icon = Icons.Outlined.Sort,
-            iconDesc = stringResource(id = R.string.filter_order_by),
-            text = stringResource(id = R.string.filter_order_by),
-            modifier = Modifier.padding(top = 8.dp)
-        )
-
-        // SORT ORDER 1
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-        ) {
-            OrderBy.getValuesFor(module).forEach { orderBy ->
-                FilterChip(
-                    selected = listSettings.orderBy.value == orderBy,
-                    onClick = {
-                        if (listSettings.orderBy.value != orderBy)
-                            listSettings.orderBy.value = orderBy
-                        onListSettingsChanged()
-                    },
-                    label = { Text(stringResource(id = orderBy.stringResource)) },
-                    modifier = Modifier.padding(end = 4.dp)
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-        ) {
-            SortOrder.values().forEach { sortOrder ->
-                FilterChip(
-                    selected = listSettings.sortOrder.value == sortOrder,
-                    onClick = {
-                        if (listSettings.sortOrder.value != sortOrder)
-                            listSettings.sortOrder.value = sortOrder
-                        onListSettingsChanged()
-                    },
-                    label = { Text(stringResource(id = sortOrder.stringResource)) },
-                    modifier = Modifier.padding(end = 4.dp)
-                )
-            }
-        }
-
-
-        // SORT ORDER 2
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-                .padding(top = 8.dp)
-        ) {
-            OrderBy.getValuesFor(module).forEach { orderBy ->
-                if(orderBy == listSettings.orderBy.value) // don't show criteria that was already selected
-                    return@forEach
-
-                FilterChip(
-                    selected = listSettings.orderBy2.value == orderBy,
-                    onClick = {
-                        if (listSettings.orderBy2.value != orderBy)
-                            listSettings.orderBy2.value = orderBy
-                        onListSettingsChanged()
-                    },
-                    label = { Text(stringResource(id = orderBy.stringResource)) },
-                    modifier = Modifier.padding(end = 4.dp)
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-        ) {
-            SortOrder.values().forEach { sortOrder ->
-                FilterChip(
-                    selected = listSettings.sortOrder2.value == sortOrder,
-                    onClick = {
-                        if (listSettings.sortOrder2.value != sortOrder)
-                            listSettings.sortOrder2.value = sortOrder
-                        onListSettingsChanged()
-                    },
-                    label = { Text(stringResource(id = sortOrder.stringResource)) },
-                    modifier = Modifier.padding(end = 4.dp)
-                )
-            }
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .padding(top = 16.dp, bottom = 100.dp)
-                .fillMaxWidth()
-        ) {
-            Button(onClick = {
-                listSettings.reset()
-                onListSettingsChanged()
-
-            }) {
-                Text(stringResource(id = R.string.reset))
+                }) {
+                    Text(stringResource(id = R.string.reset))
+                }
             }
         }
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
-fun ListFilterBottomSheet_Preview_TODO() {
+fun ListOptionsFilter_Preview_TODO() {
     MaterialTheme {
 
         val application = LocalContext.current.applicationContext
@@ -408,7 +373,7 @@ fun ListFilterBottomSheet_Preview_TODO() {
 
         val listSettings = ListSettings(prefs)
 
-        ListFilterBottomSheet(
+        ListOptionsFilter(
             module = Module.TODO,
             listSettings = listSettings,
             allCollectionsLive = MutableLiveData(
@@ -434,7 +399,7 @@ fun ListFilterBottomSheet_Preview_TODO() {
 
 @Preview(showBackground = true)
 @Composable
-fun ListFilterBottomSheet_Preview_JOURNAL() {
+fun ListOptionsFilter_Preview_JOURNAL() {
     MaterialTheme {
 
         val application = LocalContext.current.applicationContext
@@ -445,7 +410,7 @@ fun ListFilterBottomSheet_Preview_JOURNAL() {
 
         val listSettings = ListSettings(prefs)
 
-        ListFilterBottomSheet(
+        ListOptionsFilter(
             module = Module.JOURNAL,
             listSettings = listSettings,
             allCollectionsLive = MutableLiveData(

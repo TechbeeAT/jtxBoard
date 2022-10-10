@@ -19,7 +19,6 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import at.techbee.jtx.ui.reusable.bottomsheets.ListFilterBottomSheet
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.screens.ListScreenCompact
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -138,7 +137,7 @@ fun ListScreen(
     ModalBottomSheetLayout(
         sheetState = filterBottomSheetState,
         sheetContent = {
-            ListFilterBottomSheet(
+            ListOptionsBottomSheet(
                 module = listViewModel.module,
                 listSettings = listViewModel.listSettings,
                 allCollectionsLive = listViewModel.allCollections,
