@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 
@@ -77,7 +76,7 @@ fun TranslatorCard(
 @Preview(showBackground = true)
 @Composable
 fun TranslatorCard_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         TranslatorCard(
             "Patrick", "German, English"
         )

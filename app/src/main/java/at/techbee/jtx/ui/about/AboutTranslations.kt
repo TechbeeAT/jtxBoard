@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,7 +34,6 @@ import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.reusable.cards.TranslatorCard
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 
@@ -99,7 +99,9 @@ fun AboutTranslations(
             TranslatorCard(
                 name = translator.first,
                 languages = translator.second,
-                modifier = Modifier.padding(top = 8.dp).animateItemPlacement()
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .animateItemPlacement()
             )
         }
     }
@@ -109,7 +111,7 @@ fun AboutTranslations(
 @Preview(showBackground = true)
 @Composable
 fun AboutTranslations_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         AboutTranslations(
             MutableLiveData(
                 mutableSetOf(
