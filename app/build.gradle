@@ -246,5 +246,6 @@ dependencies {
     // Paging Compose
     implementation "com.google.accompanist:accompanist-pager:$version_accompanist"
     implementation "com.google.accompanist:accompanist-pager-indicators:$version_accompanist"
+    implementation "com.google.accompanist:accompanist-flowlayout:$version_accompanist"
 }
 
