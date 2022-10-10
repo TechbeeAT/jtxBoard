@@ -9,9 +9,7 @@
 package at.techbee.jtx.ui.list
 
 import android.content.Context
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -30,6 +28,7 @@ import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.ui.reusable.elements.FilterSection
+import com.google.accompanist.flowlayout.FlowRow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,10 +68,9 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             })
         {
-            Row(
+            FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
             ) {
                 allAccounts?.keys?.sortedBy { it.lowercase() }?.forEach { account ->
                     FilterChip(
@@ -114,11 +112,7 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             })
         {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-            ) {
+            FlowRow(modifier = Modifier.fillMaxWidth()) {
 
                 val allCollectionsGrouped =
                     allCollections?.groupBy { it.displayName ?: "" }
@@ -176,11 +170,7 @@ fun ListOptionsFilter(
             })
         {
             if (module == Module.JOURNAL || module == Module.NOTE) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
-                ) {
+                FlowRow(modifier = Modifier.fillMaxWidth()) {
                     StatusJournal.values().forEach { status ->
                         FilterChip(
                             selected = listSettings.searchStatusJournal.value.contains(
@@ -207,11 +197,7 @@ fun ListOptionsFilter(
                     }
                 }
             } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
-                ) {
+                FlowRow(modifier = Modifier.fillMaxWidth()) {
                     StatusTodo.values().forEach { status ->
                         FilterChip(
                             selected = listSettings.searchStatusTodo.value.contains(
@@ -259,11 +245,7 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             })
         {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-            ) {
+            FlowRow(modifier = Modifier.fillMaxWidth()) {
                 Classification.values().forEach { classification ->
                     FilterChip(
                         selected = listSettings.searchClassification.value.contains(
@@ -308,11 +290,7 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             })
         {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-            ) {
+            FlowRow(modifier = Modifier.fillMaxWidth()) {
                 allCategories?.forEach { category ->
                     FilterChip(
                         selected = listSettings.searchCategories.value.contains(

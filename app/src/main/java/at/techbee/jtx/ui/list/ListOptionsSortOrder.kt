@@ -9,15 +9,17 @@
 package at.techbee.jtx.ui.list
 
 import android.content.Context
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +28,7 @@ import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
+import com.google.accompanist.flowlayout.FlowRow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,11 +52,7 @@ fun ListOptionsSortOrder(
         )
 
         // SORT ORDER 1
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-        ) {
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
             OrderBy.getValuesFor(module).forEach { orderBy ->
                 FilterChip(
                     selected = listSettings.orderBy.value == orderBy,
@@ -67,11 +66,7 @@ fun ListOptionsSortOrder(
                 )
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-        ) {
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
             SortOrder.values().forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.sortOrder.value == sortOrder,
@@ -86,14 +81,16 @@ fun ListOptionsSortOrder(
             }
         }
 
+        Divider(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            thickness = 1.dp,
+            modifier = Modifier
+                .alpha(0.25f)
+                .padding(top = 8.dp)
+        )
 
         // SORT ORDER 2
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-                .padding(top = 8.dp)
-        ) {
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
             OrderBy.getValuesFor(module).forEach { orderBy ->
                 if (orderBy == listSettings.orderBy.value) // don't show criteria that was already selected
                     return@forEach
@@ -110,11 +107,7 @@ fun ListOptionsSortOrder(
                 )
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-        ) {
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
             SortOrder.values().forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.sortOrder2.value == sortOrder,
@@ -147,7 +140,8 @@ fun ListOptionsSortOrder_Preview_TODO() {
         ListOptionsSortOrder(
             module = Module.TODO,
             listSettings = listSettings,
-            onListSettingsChanged = { }
+            onListSettingsChanged = { },
+            modifier = Modifier.fillMaxWidth()
 
         )
     }
@@ -168,7 +162,8 @@ fun ListOptionsSortOrder_Preview_JOURNAL() {
         ListOptionsSortOrder(
             module = Module.JOURNAL,
             listSettings = listSettings,
-            onListSettingsChanged = { }
+            onListSettingsChanged = { },
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
