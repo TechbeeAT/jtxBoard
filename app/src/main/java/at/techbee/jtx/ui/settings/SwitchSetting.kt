@@ -92,6 +92,12 @@ enum class SwitchSetting(
         title = R.string.settings_details_autosave_while_editing,
         default = true
     ),
+    SETTING_DETAILS_ENABLE_MARKDOWN(
+        key = "settings_details_enable_markdown",
+        icon = { Icon(Icons.Outlined.FormatSize, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_details_enable_markdown,
+        default = true
+    ),
     SETTING_DISABLE_ALARMS_FOR_READONLY(
     key = "settings_disable_alarms_for_readonly",
     icon = { Icon(Icons.Outlined.AlarmOff, contentDescription = null, modifier = Modifier.padding(16.dp)) },

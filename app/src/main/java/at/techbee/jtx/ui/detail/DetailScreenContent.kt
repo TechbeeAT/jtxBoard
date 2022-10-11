@@ -27,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -50,6 +51,7 @@ import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
@@ -85,6 +87,15 @@ fun DetailScreenContent(
     goToEdit: (itemId: Long) -> Unit,
     goBack: () -> Unit
 ) {
+
+    val context = LocalContext.current
+    val localInspectionMode = LocalInspectionMode.current
+    val isMarkdownEnabled by remember {
+        if(!localInspectionMode)
+            SettingsStateHolder(context).settingEnableMarkdownFormattting
+        else
+            mutableStateOf(false)
+    }
 
     // item was not loaded yet or was deleted in the background
     if (iCalEntity.value == null) {
@@ -345,13 +356,20 @@ fun DetailScreenContent(
                                 style = MaterialTheme.typography.titleMedium,
                                 //fontWeight = FontWeight.Bold
                             )
+
                         if (description.isNotBlank()) {
-                            MarkdownText(
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface),
-                                markdown = description,
-                                modifier = Modifier.padding(8.dp)
-                            )
+                            if(isMarkdownEnabled)
+                                MarkdownText(
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface),
+                                    markdown = description,
+                                    modifier = Modifier.padding(8.dp)
+                                )
+                            else
+                                Text(
+                                    text = description,
+                                    modifier = Modifier.padding(8.dp)
+                                )
                         }
                     }
                 }
