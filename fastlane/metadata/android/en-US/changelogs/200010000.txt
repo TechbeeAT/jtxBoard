@@ -1,0 +1,4 @@
+- improved filter bottom sheet
+- added option to deactivate Markdown formatting
+- allow import of .md files
+- bugfixes
