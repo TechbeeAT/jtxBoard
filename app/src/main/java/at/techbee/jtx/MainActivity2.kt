@@ -151,6 +151,13 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
                                 }
                             }
                         }
+                        intent.type == "text/markdown" -> {
+                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)?.let { uri ->
+                                this.contentResolver.openInputStream(uri)?.use { stream ->
+                                    globalStateHolder.icalFromIntentString.value = stream.readBytes().decodeToString()
+                                }
+                            }
+                        }
                     }
                 }
 
