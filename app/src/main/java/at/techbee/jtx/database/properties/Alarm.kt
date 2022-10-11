@@ -29,12 +29,8 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import kotlinx.parcelize.Parcelize
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeParseException
 import kotlin.time.Duration
 
 /** The name of the the table for Alarms that are linked to an ICalObject.
@@ -290,27 +286,11 @@ data class Alarm (
     }
 
     /**
-     * @param [referenceDate] to which the trigger duration should be added
-     * @param [timezone] to determine if it is an allday entry
-     * @return the timestamp of the referenceDate before/after the triggerDuration
-     */
-    fun getDatetimeFromTriggerDuration(referenceDate: Long?, timezone: String?): Long? {
-        if(referenceDate == null)
-            return null
-        val offset = if(timezone == TZ_ALLDAY)
-            ZoneId.systemDefault().rules.getOffset(Instant.ofEpochMilli(referenceDate)).totalSeconds * 1000
-        else
-            0
-
-        getTriggerAsDuration()?.let { return referenceDate + it.inWholeMilliseconds - offset } ?: return null
-    }
-
-    /**
      * @return The parsed triggerRelativeDuration of this alarm as Duration or null if the value cannot be parsed
      */
     fun getTriggerAsDuration() = try {
         this.triggerRelativeDuration?.let { Duration.parse(it) }
-    } catch (e: DateTimeParseException) {
+    } catch (e: IllegalArgumentException) {
         Log.w(
             "triggerRelativeDuration",
             "Failed parsing duration: ${this.triggerRelativeDuration}\n$e"
