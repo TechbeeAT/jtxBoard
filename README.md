@@ -46,7 +46,7 @@ For communication with the team and other people, please use the forums to get i
 
 jtx Board provides different flavors: 
 - **gplay** is the flavor for the Google Play store that comes in a standard and pro version. The pro version is paid and enables editing options for remote entries.
-- **huawei** is the flavor for the Huawei App Gallery currently comes with Ads from the Huawei Ads provider. 
+- **generic** is the flavor other app stores like Amazon. This flavor contains only open source libraries and is meant to be paid before downloading. 
 - **ose** is the open source edition. **If you would like to create build the app from source, this is the recommended flavor.** This flavor contains only open source libraries. Instead of an in app-purchase this flavor has an additional page for donations visible. As Google Maps is not open source, the ose flavor does not include Map functionalities.
 
 
