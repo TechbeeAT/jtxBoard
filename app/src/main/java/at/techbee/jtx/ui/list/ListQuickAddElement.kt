@@ -273,16 +273,15 @@ fun ListQuickAddElement(
             Text(srTextResult, modifier = Modifier.padding(vertical = 8.dp))
         }
 
-        AnimatedVisibility(currentAttachment != null) {
+        currentAttachment?.let {
             AttachmentCard(
-                attachment = currentAttachment!!,
+                attachment = it,
                 isEditMode = false,
                 isRemoteCollection = currentCollection.accountType != LOCAL_ACCOUNT_TYPE,
                 onAttachmentDeleted = { /* no editing here */ },
                 modifier = Modifier.padding(vertical = 8.dp)
             )
         }
-
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
