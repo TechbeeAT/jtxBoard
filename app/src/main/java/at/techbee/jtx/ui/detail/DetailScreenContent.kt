@@ -591,7 +591,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableAlarms.value || showAllOptions))) {
+            AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableAlarms.value || (showAllOptions && icalObject.module == Module.TODO.name)))) {
                 DetailsCardAlarms(
                     alarms = alarms,
                     icalObject = icalObject,
