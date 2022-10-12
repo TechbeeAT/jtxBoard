@@ -1218,6 +1218,10 @@ data class ICalObject(
         }
     }
 
+    /**
+     * @return The Module of the current [ICalObject] as [Module] enum.
+     * Fallback is [Module.NOTE]
+     */
     fun getModuleFromString(): Module {
         return when (this.module) {
             Module.JOURNAL.name -> Module.JOURNAL
