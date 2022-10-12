@@ -605,7 +605,7 @@ fun DetailScreenContent(
             AnimatedVisibility(icalObject.rrule != null
                     || icalObject.isRecurLinkedInstance
                     || icalObject.recurOriginalIcalObjectId != null
-                    || (isEditMode.value && (detailSettings.enableRecurrence.value || showAllOptions))
+                    || (isEditMode.value && (detailSettings.enableRecurrence.value || (showAllOptions && icalObject.module != Module.NOTE.name)))
             ) {   // only Todos have recur!
                 DetailsCardRecur(
                     icalObject = icalObject,
