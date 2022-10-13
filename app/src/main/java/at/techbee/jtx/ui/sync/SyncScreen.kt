@@ -71,8 +71,7 @@ import at.techbee.jtx.util.SyncUtil
 fun SyncScreen(
     remoteCollectionsLive: LiveData<List<ICalCollection>>,
     isSyncInProgress: State<Boolean>,
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    navController: NavHostController
 ) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)

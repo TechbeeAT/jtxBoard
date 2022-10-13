@@ -183,7 +183,7 @@ class SyncContentProvider : ContentProvider() {
 
         isSyncAdapter(uri)
         // TODO: Make sure that only the items within the collection of the given account are considered
-        val account = getAccountFromUri(uri)     // here this is used also for validation
+        getAccountFromUri(uri)     // here this is used also for validation
 
         var id: Long? = null
 

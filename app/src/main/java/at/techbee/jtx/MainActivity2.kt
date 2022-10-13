@@ -40,6 +40,7 @@ import at.techbee.jtx.ui.collections.CollectionsScreen
 import at.techbee.jtx.ui.collections.CollectionsViewModel
 import at.techbee.jtx.ui.detail.DetailViewModel
 import at.techbee.jtx.ui.detail.DetailsScreen
+import at.techbee.jtx.ui.donate.DonateScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination

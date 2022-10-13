@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.donate
 
 import android.content.Intent
 import android.net.Uri
@@ -28,13 +28,12 @@ import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DonateScreen(navController: NavHostController, modifier: Modifier = Modifier) {
+fun DonateScreen(navController: NavHostController) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
@@ -61,7 +60,7 @@ fun DonateScreen(navController: NavHostController, modifier: Modifier = Modifier
 @Preview(showBackground = true)
 @Composable
 fun DonateScreen_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         DonateScreen(rememberNavController())
     }
 }
@@ -160,7 +159,7 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun DonateScreenContent_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         DonateScreenContent()
     }
 }
