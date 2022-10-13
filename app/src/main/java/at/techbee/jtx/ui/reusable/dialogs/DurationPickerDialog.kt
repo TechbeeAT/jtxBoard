@@ -71,7 +71,6 @@ fun DurationPickerDialog(
     )}
 
 
-
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = { Text(stringResource(id = R.string.alarms_alarm)) },
@@ -158,9 +157,10 @@ fun DurationPickerDialog(
         confirmButton = {
             TextButton(
                 onClick = {
+                    durationNumber?.let {
+                        durationNumber = if(durationBefore) it.absoluteValue * (-1) else it.absoluteValue
+                    } ?: return@TextButton
                     alarm.triggerRelativeTo = durationStartEnd.name
-                    if(durationBefore && durationNumber != null)
-                        durationNumber = durationNumber!! * (-1)
                     alarm.triggerRelativeDuration = (durationNumber?:0).toDuration(durationUnit).toIsoString()
                     alarm.triggerTime =
                         if(durationStartEnd == AlarmRelativeTo.END)
