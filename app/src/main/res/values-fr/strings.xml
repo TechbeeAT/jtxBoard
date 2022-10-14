@@ -139,14 +139,14 @@ Global Strings -->
     <string name="edit_resources_helper">"Ajouter une ressource"</string>
     <string name="edit_contact_hint">"Jean Dupont, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Coordonnées du responsable ou du propriétaire de cette entrée"</string>
-    <string name="edit_comment_hint">"Votre commentaire..."</string>
+    <string name="edit_comment_hint">"Votre commentaire…"</string>
     <string name="edit_comment_helper">"Ajouter un commentaire"</string>
     <string name="edit_attachment_button_text">"Ajouter une pièce jointe"</string>
     <string name="edit_take_picture_button_text">"Prendre une photo"</string>
     <string name="edit_add_link_button_text">"Ajouter un lien vers une pièce jointe"</string>
     <string name="edit_url_helper">"URL liée à cette entrée"</string>
     <string name="edit_location_helper">"Ajouter un lieu pour cette entrée"</string>
-    <string name="edit_attachment_add_dialog_hint">"Votre URL d'attachement (https://...)"</string>
+    <string name="edit_attachment_add_dialog_hint">"Votre URL d'attachement (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Votre commentaire"</string>
     <string name="edit_attachment_beta_info">"* Veuillez noter que les pièces jointes sont considérées comme une fonctionnalité expérimentale. Actuellement, seules les petites pièces jointes (jusqu'à 100 Ko) peuvent être exportées en tant que .ics et synchronisées via DAVx⁵. Si vous rencontrez des problèmes, veuillez nous en faire part via les forums d'assistance ou une demande d'assistance sur le site web !"</string>
     <string name="edit_subtasks_add_hint">"Votre sous-tâche"</string>
@@ -292,7 +292,7 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="about_translations_contribution_info">"Si vous souhaitez modifier/ajouter des traductions ou ajouter des nouvelles langues à cette application, n'hésitez pas à rejoindre le projet jtx Board sur la plateforme de traduction POEditor :"</string>
     <string name="about_translations_contribution_button">"Rejoignez-nous sur POEditor.com"</string>
     <string name="list_welcome_entry_journal_summary">"Félicitations, c'est votre premier journal :-)"</string>
-    <string name="list_welcome_entry_journal_description">"Les journaux peuvent être utilisés pour conserver vos notes pour une date spécifique. Utilisez cette fonctionnalité par exemple pour les protocoles, les comptes rendus de réunion, les entrées d'agenda, etc. Si vous modifiez cette entrée, vous verrez les options pour ajouter des catégories, des participants, des pièces jointes, ... N'hésitez pas à supprimer cette entrée quand vous le souhaitez !"</string>
+    <string name="list_welcome_entry_journal_description">"Les journaux peuvent être utilisés pour conserver vos notes pour une date spécifique. Utilisez cette fonctionnalité par exemple pour les protocoles, les comptes rendus de réunion, les entrées d'agenda, etc. Si vous modifiez cette entrée, vous verrez les options pour ajouter des catégories, des participants, des pièces jointes, … N'hésitez pas à supprimer cette entrée quand vous le souhaitez !"</string>
     <string name="list_welcome_entry_note_summary">"Félicitations, c'est votre première note :-)"</string>
     <string name="list_welcome_entry_note_description">"Les notes sont des notes traditionnelles et ne sont pas liées à une date précise. Comme les journaux, vous pouvez ajouter des pièces jointes, des participants et bien d'autres choses encore lorsque vous modifiez ou ajoutez une entrée. Par ailleurs, vous pouvez également ajouter des sous-tâches à n'importe quelle entrée, qu'il s'agisse d'un journal, d'une note ou d'une tâche !"</string>
     <string name="list_welcome_entry_todo_summary">"Félicitations, c'est votre première tâche :-)"</string>
@@ -553,7 +553,6 @@ Thank you!"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Please purchase the Pro package to enable this feature."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="error_no_app_found_to_open_entry">"No app found to send this entry.."</string>
-    <string name="title_activity_main2">"MainActivity2"</string>
     <string name="close">"Close"</string>
     <string name="menu_view_share_mail">"Share as E-Mail"</string>
     <string name="menu_view_copy_to_clipboard">"Copy to clipboard"</string>
