@@ -43,8 +43,7 @@ fun AboutLibraries() {
             contentColor = MaterialTheme.colorScheme.onSurface,
             badgeBackgroundColor = MaterialTheme.colorScheme.primaryContainer,
             badgeContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        onLibraryClick = { }  // Workaround to avoid crash, TODO: reactivate when problem solved, see https://gitlab.com/techbeeat1/jtx/-/issues/370
+        )
     )
 }
 

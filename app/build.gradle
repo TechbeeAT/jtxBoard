@@ -155,6 +155,11 @@ def getLocales() {
     return list
 }
 
+/**
+ * Writes the available locales obtained from getLocales() in locale-config.xml
+ * @since 20221016
+ * @return A list with the language codes of the locales available.
+ */
 task updateLocalesConfig() {
     println 'Building locale config...'
     ext.outputDir = new File(projectDir, 'build/generated/res/locale/xml')
