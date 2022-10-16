@@ -115,7 +115,15 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    sourceSets {
+        main {
+            res.srcDirs += ['build/generated/res/locale']
+        }
+    }
 }
+
+
+import groovy.xml.MarkupBuilder
 
 import static groovy.io.FileType.DIRECTORIES
 
@@ -124,11 +132,11 @@ import static groovy.io.FileType.DIRECTORIES
  * @since 20220928
  * @return A list with the language codes of the locales available.
  */
-static def getLocales() {
+def getLocales() {
     // Initialize the list English, since it's available by default
     def list = ["en"]
     // Get all directories inside resources
-    def dir = new File("./app/src/main/res")
+    def dir = new File(projectDir, "src/main/res")
     dir.traverse(type: DIRECTORIES, maxDepth: 0) { file ->
         // Get only values directories
         def fileName = file.name
@@ -145,6 +153,35 @@ static def getLocales() {
     println "Supported locales: " + list.join(", ")
     // Return the built list
     return list
+}
+
+task updateLocalesConfig() {
+    println 'Building locale config...'
+    ext.outputDir = new File(projectDir, 'build/generated/res/locale/xml')
+
+    doFirst {
+        mkdir outputDir
+
+        new File(outputDir, "locales_config.xml").withWriter { writer ->
+            def destXml = new MarkupBuilder(new IndentPrinter(writer, "    ", true, true))
+            destXml.setDoubleQuotes(true)
+            def destXmlMkp = destXml.getMkp()
+            destXmlMkp.xmlDeclaration(version: "1.0", encoding: "utf-8")
+            destXmlMkp.comment("Generated at ${new Date()}")
+            destXmlMkp.yield "\r\n"
+
+            def locales = getLocales()
+            destXml."locale-config"(['xmlns:android':"http://schemas.android.com/apk/res/android"]) {
+                locales.forEach { locale ->
+                    destXml."locale"("android:name": locale)
+                }
+            }
+        }
+    }
+}
+
+gradle.projectsEvaluated {
+    preBuild.dependsOn('updateLocalesConfig')
 }
 
 
