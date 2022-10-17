@@ -118,6 +118,12 @@ data class ListSettings(
         searchClassification.value = emptyList()
         searchCollection.value = emptyList()
         searchAccount.value = emptyList()
+        isExcludeDone.value = false
+        isFilterOverdue.value = false
+        isFilterDueToday.value = false
+        isFilterDueTomorrow.value = false
+        isFilterDueFuture.value = false
+        isFilterNoDatesSet.value = false
     }
 
 }

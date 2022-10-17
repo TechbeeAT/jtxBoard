@@ -229,7 +229,6 @@ fun ListScreenTabContainer(
                 },
                 showQuickEntry = showQuickAdd,
                 listSettings = listViewModel.listSettings,
-                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) },
                 onFilterIconClicked = {
                     scope.launch {
                         if(filterBottomSheetState.isVisible)
@@ -237,9 +236,6 @@ fun ListScreenTabContainer(
                         else
                             filterBottomSheetState.show()
                     }
-                },
-                onClearFilterClicked = {
-                    listViewModel.clearFilter()
                 },
                 onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) },
                 onSearchTextClicked = {

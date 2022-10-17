@@ -52,19 +52,31 @@ fun ListOptionsFilter(
         horizontalAlignment = Alignment.Start
     ) {
 
-        ////// ACCOUNTS
+
+        ////// QuickFilters
         FilterSection(
-            icon = Icons.Outlined.AccountBalance,
-            headline = stringResource(id = R.string.account),
+            icon = Icons.Outlined.FilterAlt,
+            headline = stringResource(id = R.string.filter_special),
             onResetSelection = {
-                listSettings.searchAccount.value = emptyList()
+                listSettings.isExcludeDone.value = false
+                if (module == Module.TODO) {
+                    listSettings.isFilterOverdue.value = false
+                    listSettings.isFilterDueToday.value = false
+                    listSettings.isFilterDueTomorrow.value = false
+                    listSettings.isFilterDueFuture.value = false
+                    listSettings.isFilterNoDatesSet.value = false
+                }
                 onListSettingsChanged()
             },
             onInvertSelection = {
-                listSettings.searchAccount.value =
-                    allAccounts?.keys?.toMutableList()
-                        ?.apply { removeAll(listSettings.searchAccount.value) }
-                        ?: emptyList()
+                listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
+                if (module == Module.TODO) {
+                    listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
+                    listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
+                    listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
+                    listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
+                    listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
+                }
                 onListSettingsChanged()
             })
         {
@@ -72,207 +84,70 @@ fun ListOptionsFilter(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                allAccounts?.keys?.sortedBy { it.lowercase() }?.forEach { account ->
+
+                FilterChip(
+                    selected = listSettings.isExcludeDone.value,
+                    onClick = {
+                        listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = R.string.menu_list_todo_hide_completed)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+
+                if (module == Module.TODO) {
                     FilterChip(
-                        selected = listSettings.searchAccount.value.contains(account),
+                        selected = listSettings.isFilterOverdue.value,
                         onClick = {
-                            listSettings.searchAccount.value =
-                                if (listSettings.searchAccount.value.contains(
-                                        account
-                                    )
-                                )
-                                    listSettings.searchAccount.value.minus(account)
-                                else
-                                    listSettings.searchAccount.value.plus(account)
+                            listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
                             onListSettingsChanged()
                         },
-                        label = { Text(account) },
+                        label = { Text(stringResource(id = R.string.list_due_overdue)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    FilterChip(
+                        selected = listSettings.isFilterDueToday.value,
+                        onClick = {
+                            listSettings.isFilterDueToday.value =
+                                !listSettings.isFilterDueToday.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.list_due_today)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    FilterChip(
+                        selected = listSettings.isFilterDueTomorrow.value,
+                        onClick = {
+                            listSettings.isFilterDueTomorrow.value =
+                                !listSettings.isFilterDueTomorrow.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.list_due_tomorrow)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    FilterChip(
+                        selected = listSettings.isFilterDueFuture.value,
+                        onClick = {
+                            listSettings.isFilterDueFuture.value =
+                                !listSettings.isFilterDueFuture.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.list_due_future)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    FilterChip(
+                        selected = listSettings.isFilterNoDatesSet.value,
+                        onClick = {
+                            listSettings.isFilterNoDatesSet.value =
+                                !listSettings.isFilterNoDatesSet.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.list_no_dates_set)) },
                         modifier = Modifier.padding(end = 4.dp)
                     )
                 }
             }
         }
-
-
-        ////// COLLECTIONS
-        FilterSection(
-            icon = Icons.Outlined.FolderOpen,
-            headline = stringResource(id = R.string.collection),
-            onResetSelection = {
-                listSettings.searchCollection.value = emptyList()
-                onListSettingsChanged()
-            },
-            onInvertSelection = {
-                val allCollectionsGrouped =
-                    allCollections?.groupBy { it.displayName ?: "" }
-                listSettings.searchCollection.value =
-                    allCollectionsGrouped?.keys?.toMutableList()
-                        ?.apply { removeAll(listSettings.searchCollection.value) }
-                        ?: emptyList()
-                onListSettingsChanged()
-            })
-        {
-            FlowRow(modifier = Modifier.fillMaxWidth()) {
-
-                val allCollectionsGrouped =
-                    allCollections?.groupBy { it.displayName ?: "" }
-                allCollectionsGrouped?.keys?.sortedBy { it.lowercase() }
-                    ?.forEach { collection ->
-                        FilterChip(
-                            selected = listSettings.searchCollection.value.contains(
-                                collection
-                            ),
-                            onClick = {
-                                listSettings.searchCollection.value =
-                                    if (listSettings.searchCollection.value.contains(
-                                            collection
-                                        )
-                                    )
-                                        listSettings.searchCollection.value.minus(
-                                            collection
-                                        )
-                                    else
-                                        listSettings.searchCollection.value.plus(
-                                            collection
-                                        )
-                                onListSettingsChanged()
-                            },
-                            label = { Text(collection) },
-                            modifier = Modifier.padding(end = 4.dp)
-                        )
-                    }
-            }
-        }
-
-
-        FilterSection(
-            icon = Icons.Outlined.PublishedWithChanges,
-            headline = stringResource(id = R.string.status),
-            onResetSelection = {
-                if (module == Module.JOURNAL || module == Module.NOTE)
-                    listSettings.searchStatusJournal.value = emptyList()
-                else
-                    listSettings.searchStatusTodo.value = emptyList()
-                onListSettingsChanged()
-            },
-            onInvertSelection = {
-                if (module == Module.JOURNAL || module == Module.NOTE)
-                    listSettings.searchStatusJournal.value = StatusJournal.values()
-                        .filter { status ->
-                            !listSettings.searchStatusJournal.value.contains(status)
-                        }
-                else
-                    listSettings.searchStatusTodo.value = StatusTodo.values()
-                        .filter { status ->
-                            !listSettings.searchStatusTodo.value.contains(status)
-                        }
-                onListSettingsChanged()
-            })
-        {
-            if (module == Module.JOURNAL || module == Module.NOTE) {
-                FlowRow(modifier = Modifier.fillMaxWidth()) {
-                    StatusJournal.values().forEach { status ->
-                        FilterChip(
-                            selected = listSettings.searchStatusJournal.value.contains(
-                                status
-                            ),
-                            onClick = {
-                                listSettings.searchStatusJournal.value =
-                                    if (listSettings.searchStatusJournal.value.contains(
-                                            status
-                                        )
-                                    )
-                                        listSettings.searchStatusJournal.value.minus(
-                                            status
-                                        )
-                                    else
-                                        listSettings.searchStatusJournal.value.plus(
-                                            status
-                                        )
-                                onListSettingsChanged()
-                            },
-                            label = { Text(stringResource(id = status.stringResource)) },
-                            modifier = Modifier.padding(end = 4.dp)
-                        )
-                    }
-                }
-            } else {
-                FlowRow(modifier = Modifier.fillMaxWidth()) {
-                    StatusTodo.values().forEach { status ->
-                        FilterChip(
-                            selected = listSettings.searchStatusTodo.value.contains(
-                                status
-                            ),
-                            onClick = {
-                                listSettings.searchStatusTodo.value =
-                                    if (listSettings.searchStatusTodo.value.contains(
-                                            status
-                                        )
-                                    )
-                                        listSettings.searchStatusTodo.value.minus(
-                                            status
-                                        )
-                                    else
-                                        listSettings.searchStatusTodo.value.plus(
-                                            status
-                                        )
-                                onListSettingsChanged()
-                            },
-                            label = { Text(stringResource(id = status.stringResource)) },
-                            modifier = Modifier.padding(end = 4.dp)
-                        )
-                    }
-                }
-            }
-        }
-
-
-        ////// CLASSIFICATION
-        FilterSection(
-            icon = Icons.Outlined.PrivacyTip,
-            headline = stringResource(id = R.string.classification),
-            onResetSelection = {
-                listSettings.searchClassification.value = emptyList()
-                onListSettingsChanged()
-            },
-            onInvertSelection = {
-                listSettings.searchClassification.value = Classification.values()
-                    .filter { classification ->
-                        !listSettings.searchClassification.value.contains(
-                            classification
-                        )
-                    }
-                onListSettingsChanged()
-            })
-        {
-            FlowRow(modifier = Modifier.fillMaxWidth()) {
-                Classification.values().forEach { classification ->
-                    FilterChip(
-                        selected = listSettings.searchClassification.value.contains(
-                            classification
-                        ),
-                        onClick = {
-                            listSettings.searchClassification.value =
-                                if (listSettings.searchClassification.value.contains(
-                                        classification
-                                    )
-                                )
-                                    listSettings.searchClassification.value.minus(
-                                        classification
-                                    )
-                                else
-                                    listSettings.searchClassification.value.plus(
-                                        classification
-                                    )
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = classification.stringResource)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                }
-            }
-        }
-
 
         ////// CATEGORIES
         FilterSection(
@@ -318,6 +193,227 @@ fun ListOptionsFilter(
             }
 
 
+            ////// ACCOUNTS
+            FilterSection(
+                icon = Icons.Outlined.AccountBalance,
+                headline = stringResource(id = R.string.account),
+                onResetSelection = {
+                    listSettings.searchAccount.value = emptyList()
+                    onListSettingsChanged()
+                },
+                onInvertSelection = {
+                    listSettings.searchAccount.value =
+                        allAccounts?.keys?.toMutableList()
+                            ?.apply { removeAll(listSettings.searchAccount.value) }
+                            ?: emptyList()
+                    onListSettingsChanged()
+                })
+            {
+                FlowRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    allAccounts?.keys?.sortedBy { it.lowercase() }?.forEach { account ->
+                        FilterChip(
+                            selected = listSettings.searchAccount.value.contains(account),
+                            onClick = {
+                                listSettings.searchAccount.value =
+                                    if (listSettings.searchAccount.value.contains(
+                                            account
+                                        )
+                                    )
+                                        listSettings.searchAccount.value.minus(account)
+                                    else
+                                        listSettings.searchAccount.value.plus(account)
+                                onListSettingsChanged()
+                            },
+                            label = { Text(account) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
+                }
+            }
+
+
+            ////// COLLECTIONS
+            FilterSection(
+                icon = Icons.Outlined.FolderOpen,
+                headline = stringResource(id = R.string.collection),
+                onResetSelection = {
+                    listSettings.searchCollection.value = emptyList()
+                    onListSettingsChanged()
+                },
+                onInvertSelection = {
+                    val allCollectionsGrouped =
+                        allCollections?.groupBy { it.displayName ?: "" }
+                    listSettings.searchCollection.value =
+                        allCollectionsGrouped?.keys?.toMutableList()
+                            ?.apply { removeAll(listSettings.searchCollection.value) }
+                            ?: emptyList()
+                    onListSettingsChanged()
+                })
+            {
+                FlowRow(modifier = Modifier.fillMaxWidth()) {
+
+                    val allCollectionsGrouped =
+                        allCollections?.groupBy { it.displayName ?: "" }
+                    allCollectionsGrouped?.keys?.sortedBy { it.lowercase() }
+                        ?.forEach { collection ->
+                            FilterChip(
+                                selected = listSettings.searchCollection.value.contains(
+                                    collection
+                                ),
+                                onClick = {
+                                    listSettings.searchCollection.value =
+                                        if (listSettings.searchCollection.value.contains(
+                                                collection
+                                            )
+                                        )
+                                            listSettings.searchCollection.value.minus(
+                                                collection
+                                            )
+                                        else
+                                            listSettings.searchCollection.value.plus(
+                                                collection
+                                            )
+                                    onListSettingsChanged()
+                                },
+                                label = { Text(collection) },
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                        }
+                }
+            }
+
+
+            FilterSection(
+                icon = Icons.Outlined.PublishedWithChanges,
+                headline = stringResource(id = R.string.status),
+                onResetSelection = {
+                    if (module == Module.JOURNAL || module == Module.NOTE)
+                        listSettings.searchStatusJournal.value = emptyList()
+                    else
+                        listSettings.searchStatusTodo.value = emptyList()
+                    onListSettingsChanged()
+                },
+                onInvertSelection = {
+                    if (module == Module.JOURNAL || module == Module.NOTE)
+                        listSettings.searchStatusJournal.value = StatusJournal.values()
+                            .filter { status ->
+                                !listSettings.searchStatusJournal.value.contains(status)
+                            }
+                    else
+                        listSettings.searchStatusTodo.value = StatusTodo.values()
+                            .filter { status ->
+                                !listSettings.searchStatusTodo.value.contains(status)
+                            }
+                    onListSettingsChanged()
+                })
+            {
+                if (module == Module.JOURNAL || module == Module.NOTE) {
+                    FlowRow(modifier = Modifier.fillMaxWidth()) {
+                        StatusJournal.values().forEach { status ->
+                            FilterChip(
+                                selected = listSettings.searchStatusJournal.value.contains(
+                                    status
+                                ),
+                                onClick = {
+                                    listSettings.searchStatusJournal.value =
+                                        if (listSettings.searchStatusJournal.value.contains(
+                                                status
+                                            )
+                                        )
+                                            listSettings.searchStatusJournal.value.minus(
+                                                status
+                                            )
+                                        else
+                                            listSettings.searchStatusJournal.value.plus(
+                                                status
+                                            )
+                                    onListSettingsChanged()
+                                },
+                                label = { Text(stringResource(id = status.stringResource)) },
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                        }
+                    }
+                } else {
+                    FlowRow(modifier = Modifier.fillMaxWidth()) {
+                        StatusTodo.values().forEach { status ->
+                            FilterChip(
+                                selected = listSettings.searchStatusTodo.value.contains(
+                                    status
+                                ),
+                                onClick = {
+                                    listSettings.searchStatusTodo.value =
+                                        if (listSettings.searchStatusTodo.value.contains(
+                                                status
+                                            )
+                                        )
+                                            listSettings.searchStatusTodo.value.minus(
+                                                status
+                                            )
+                                        else
+                                            listSettings.searchStatusTodo.value.plus(
+                                                status
+                                            )
+                                    onListSettingsChanged()
+                                },
+                                label = { Text(stringResource(id = status.stringResource)) },
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+
+            ////// CLASSIFICATION
+            FilterSection(
+                icon = Icons.Outlined.PrivacyTip,
+                headline = stringResource(id = R.string.classification),
+                onResetSelection = {
+                    listSettings.searchClassification.value = emptyList()
+                    onListSettingsChanged()
+                },
+                onInvertSelection = {
+                    listSettings.searchClassification.value = Classification.values()
+                        .filter { classification ->
+                            !listSettings.searchClassification.value.contains(
+                                classification
+                            )
+                        }
+                    onListSettingsChanged()
+                })
+            {
+                FlowRow(modifier = Modifier.fillMaxWidth()) {
+                    Classification.values().forEach { classification ->
+                        FilterChip(
+                            selected = listSettings.searchClassification.value.contains(
+                                classification
+                            ),
+                            onClick = {
+                                listSettings.searchClassification.value =
+                                    if (listSettings.searchClassification.value.contains(
+                                            classification
+                                        )
+                                    )
+                                        listSettings.searchClassification.value.minus(
+                                            classification
+                                        )
+                                    else
+                                        listSettings.searchClassification.value.plus(
+                                            classification
+                                        )
+                                onListSettingsChanged()
+                            },
+                            label = { Text(stringResource(id = classification.stringResource)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
+                }
+            }
+            
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
@@ -328,7 +424,6 @@ fun ListOptionsFilter(
                 Button(onClick = {
                     listSettings.reset()
                     onListSettingsChanged()
-
                 }) {
                     Text(stringResource(id = R.string.reset))
                 }

@@ -134,6 +134,7 @@
     <string name="description">Description</string>
     <string name="search">Search</string>
     <string name="filter">Filter</string>
+    <string name="filter_special">Special filters</string>
     <string name="sync_now">Sync now</string>
 
     <string name="due">Due</string>
