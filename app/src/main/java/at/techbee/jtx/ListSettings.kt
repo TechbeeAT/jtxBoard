@@ -31,6 +31,10 @@ data class ListSettings(
     var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueTomorrow: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueFuture: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterStartInPast: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterStartToday: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterStartTomorrow: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterStartFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
     var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
@@ -57,6 +61,10 @@ data class ListSettings(
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
         private const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
         private const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
+        private const val PREFS_FILTER_START_IN_PAST = "prefsFilterStartOverdue"
+        private const val PREFS_FILTER_START_TODAY = "prefsFilterStartToday"
+        private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
+        private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
     }
 
@@ -68,6 +76,10 @@ data class ListSettings(
         isFilterDueToday.value = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
         isFilterDueTomorrow.value = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
         isFilterDueFuture.value = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
+        isFilterStartInPast.value = prefs.getBoolean(PREFS_FILTER_START_IN_PAST, false)
+        isFilterStartToday.value = prefs.getBoolean(PREFS_FILTER_START_TODAY, false)
+        isFilterStartTomorrow.value = prefs.getBoolean(PREFS_FILTER_START_TOMORROW, false)
+        isFilterStartFuture.value = prefs.getBoolean(PREFS_FILTER_START_FUTURE, false)
         isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
 
         //searchOrganizers =
@@ -85,12 +97,15 @@ data class ListSettings(
     }
 
     fun save() {
-
         prefs.edit().apply {
             putBoolean(PREFS_FILTER_OVERDUE, isFilterOverdue.value)
             putBoolean(PREFS_FILTER_DUE_TODAY, isFilterDueToday.value)
             putBoolean(PREFS_FILTER_DUE_TOMORROW, isFilterDueTomorrow.value)
             putBoolean(PREFS_FILTER_DUE_FUTURE, isFilterDueFuture.value)
+            putBoolean(PREFS_FILTER_START_IN_PAST, isFilterStartInPast.value)
+            putBoolean(PREFS_FILTER_START_TODAY, isFilterStartToday.value)
+            putBoolean(PREFS_FILTER_START_TOMORROW, isFilterStartTomorrow.value)
+            putBoolean(PREFS_FILTER_START_FUTURE, isFilterStartFuture.value)
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
             putString(PREFS_ORDERBY, orderBy.value.name)
             putString(PREFS_SORTORDER, sortOrder.value.name)
@@ -119,11 +134,14 @@ data class ListSettings(
         searchCollection.value = emptyList()
         searchAccount.value = emptyList()
         isExcludeDone.value = false
+        isFilterStartInPast.value = false
+        isFilterStartToday.value = false
+        isFilterStartTomorrow.value = false
+        isFilterStartFuture.value = false
         isFilterOverdue.value = false
         isFilterDueToday.value = false
         isFilterDueTomorrow.value = false
         isFilterDueFuture.value = false
         isFilterNoDatesSet.value = false
     }
-
 }

@@ -53,6 +53,10 @@ fun ListBottomAppBar(
             || listSettings.searchClassification.value.isNotEmpty() || listSettings.searchCollection.value.isNotEmpty()
             || listSettings.searchAccount.value.isNotEmpty()
             || listSettings.isExcludeDone.value
+            || listSettings.isFilterStartInPast.value
+            || listSettings.isFilterStartToday.value
+            || listSettings.isFilterStartTomorrow.value
+            || listSettings.isFilterStartFuture.value
             || (module == Module.TODO && listSettings.isFilterOverdue.value)
             || (module == Module.TODO && listSettings.isFilterDueToday.value)
             || (module == Module.TODO && listSettings.isFilterDueTomorrow.value)

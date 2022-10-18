@@ -202,11 +202,20 @@
 
 
     <!-- fragment_ical_list -->
+    <string name="list_date_start_in_past">Date in past</string>
+    <string name="list_date_today">Today</string>
+    <string name="list_date_tomorrow">Tomorrow</string>
+    <string name="list_date_future">Date in future</string>
+    <string name="list_start_date_in_past">Start in past</string>
+    <string name="list_start_date_today">Start today</string>
+    <string name="list_start_date_tomorrow">Start tomorrow</string>
+    <string name="list_start_date_future">Start in future</string>
     <string name="list_due_overdue">Overdue</string>
     <string name="list_due_today">Due today</string>
     <string name="list_due_tomorrow">Due tomorrow</string>
     <string name="list_due_future">Due in future</string>
     <string name="list_no_dates_set">No dates set</string>
+    <string name="list_hide_completed_tasks">Hide completed tasks</string>
     <string name="list_due_inXdays" tools:ignore="PluralsCandidate">Due in %d days</string>
     <string name="list_due_inXhours" tools:ignore="PluralsCandidate">Due in %d hours</string>
     <string name="list_start_past">Start in past</string>
@@ -477,8 +486,6 @@
     <string name="menu_list_quick_note">Quick Note</string>
     <string name="menu_list_quick_todo">Quick Todo</string>
     <string name="menu_list_delete_visible">Delete visible</string>
-    <string name="menu_list_todo_show_completed">Show completed</string>
-    <string name="menu_list_todo_hide_completed">Hide completed</string>
     <string name="menu_list_syncnow">Sync now</string>
     <string name="menu_list_viewmode_list">List view</string>
     <string name="menu_list_viewmode_grid">Grid view</string>

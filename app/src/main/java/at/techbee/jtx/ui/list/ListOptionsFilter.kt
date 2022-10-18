@@ -64,6 +64,10 @@ fun ListOptionsFilter(
                     listSettings.isFilterDueToday.value = false
                     listSettings.isFilterDueTomorrow.value = false
                     listSettings.isFilterDueFuture.value = false
+                    listSettings.isFilterStartInPast.value = false
+                    listSettings.isFilterStartToday.value = false
+                    listSettings.isFilterStartTomorrow.value = false
+                    listSettings.isFilterStartFuture.value = false
                     listSettings.isFilterNoDatesSet.value = false
                 }
                 onListSettingsChanged()
@@ -75,6 +79,10 @@ fun ListOptionsFilter(
                     listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
                     listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
                     listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
+                    listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
+                    listSettings.isFilterStartToday.value = !listSettings.isFilterStartToday.value
+                    listSettings.isFilterStartTomorrow.value = !listSettings.isFilterStartTomorrow.value
+                    listSettings.isFilterStartFuture.value = !listSettings.isFilterStartFuture.value
                     listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
                 }
                 onListSettingsChanged()
@@ -91,9 +99,51 @@ fun ListOptionsFilter(
                         listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
                         onListSettingsChanged()
                     },
-                    label = { Text(stringResource(id = R.string.menu_list_todo_hide_completed)) },
+                    label = { Text(stringResource(id = R.string.list_hide_completed_tasks)) },
                     modifier = Modifier.padding(end = 4.dp)
                 )
+
+                if (module == Module.TODO || module == Module.JOURNAL) {
+                    FilterChip(
+                        selected = listSettings.isFilterStartInPast.value,
+                        onClick = {
+                            listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_in_past else R.string.list_date_start_in_past)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    FilterChip(
+                        selected = listSettings.isFilterStartToday.value,
+                        onClick = {
+                            listSettings.isFilterStartToday.value =
+                                !listSettings.isFilterStartToday.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_today else R.string.list_date_today)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    FilterChip(
+                        selected = listSettings.isFilterStartTomorrow.value,
+                        onClick = {
+                            listSettings.isFilterStartTomorrow.value =
+                                !listSettings.isFilterStartTomorrow.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_tomorrow else R.string.list_date_tomorrow)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    FilterChip(
+                        selected = listSettings.isFilterStartFuture.value,
+                        onClick = {
+                            listSettings.isFilterStartFuture.value =
+                                !listSettings.isFilterStartFuture.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_future else R.string.list_date_future)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                }
 
                 if (module == Module.TODO) {
                     FilterChip(

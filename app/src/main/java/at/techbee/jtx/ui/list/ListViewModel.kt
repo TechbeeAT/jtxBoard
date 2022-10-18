@@ -60,7 +60,7 @@ import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getPackageInfoCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.days
 
 
 open class ListViewModel(application: Application, val module: Module) : AndroidViewModel(application) {
@@ -218,12 +218,20 @@ open class ListViewModel(application: Application, val module: Module) : Android
             queryString += "AND $COLUMN_PERCENT IS NOT 100 "
 
         val dateQuery = mutableListOf<String>()
+        if (listSettings.isFilterStartInPast.value)
+            dateQuery.add("$COLUMN_DTSTART < ${System.currentTimeMillis()}")
+        if (listSettings.isFilterStartToday.value)
+            dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds-1}")
+        if (listSettings.isFilterStartTomorrow.value)
+            dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds-1}")
+        if (listSettings.isFilterStartFuture.value)
+            dateQuery.add("$COLUMN_DTSTART > ${System.currentTimeMillis()}")
         if (listSettings.isFilterOverdue.value)
             dateQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
         if (listSettings.isFilterDueToday.value)
-            dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)-1}")
+            dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds-1}")
         if (listSettings.isFilterDueTomorrow.value)
-            dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)} AND ${DateTimeUtils.getTodayAsLong() + TimeUnit.DAYS.toMillis(2)-1}")
+            dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds-1}")
         if (listSettings.isFilterDueFuture.value)
             dateQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
         if(listSettings.isFilterNoDatesSet.value)
