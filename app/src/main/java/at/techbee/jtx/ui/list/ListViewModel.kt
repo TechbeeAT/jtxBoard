@@ -47,11 +47,7 @@ import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.TABLE_NAME_COLLECTION
-import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.COLUMN_CATEGORY_ICALOBJECT_ID
-import at.techbee.jtx.database.properties.COLUMN_CATEGORY_TEXT
-import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.properties.TABLE_NAME_CATEGORY
+import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.ui.settings.SwitchSetting
@@ -389,7 +385,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      * @param icalObject to be inserted
      * @param categories the list of categories that should be linked to the icalObject
      */
-    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) {
+    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachment: Attachment?, alarm: Alarm?, editAfterSaving: Boolean) {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -403,6 +399,11 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 attachment?.let {
                     it.icalObjectId = newId
                     database.insertAttachment(it)
+                }
+
+                alarm?.let {
+                    it.icalObjectId = newId
+                    database.insertAlarm(it)
                 }
 
                 scrollOnceId.postValue(newId)

@@ -10,10 +10,7 @@ package at.techbee.jtx.ui.settings
 
 import android.content.Context
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.EditCalendar
-import androidx.compose.material.icons.outlined.FormatPaint
-import androidx.compose.material.icons.outlined.MusicNote
-import androidx.compose.material.icons.outlined.Tune
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
@@ -98,9 +95,22 @@ enum class DropdownSetting(
             DropdownSettingOption.PROGRESS_STEP_50
         ),
         default = DropdownSettingOption.PROGRESS_STEP_1
+    ),
+    SETTING_AUTO_ALARM(
+        key = "setting_auto_alarm",
+        icon = Icons.Outlined.Alarm,
+        title = R.string.settings_auto_alarm,
+        options = listOf(
+            DropdownSettingOption.AUTO_ALARM_OFF,
+            DropdownSettingOption.AUTO_ALARM_ON_START,
+            DropdownSettingOption.AUTO_ALARM_ON_DUE
+        ),
+        default = DropdownSettingOption.AUTO_ALARM_OFF
     )
     ;
+
     fun save(newDropdownSettingOption: DropdownSettingOption, context: Context) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(key, newDropdownSettingOption.key).apply()
+        PreferenceManager.getDefaultSharedPreferences(context).edit()
+            .putString(key, newDropdownSettingOption.key).apply()
     }
 }

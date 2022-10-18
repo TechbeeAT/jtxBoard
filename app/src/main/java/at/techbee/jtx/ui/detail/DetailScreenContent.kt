@@ -51,11 +51,13 @@ import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -93,6 +95,12 @@ fun DetailScreenContent(
     val isMarkdownEnabled by remember {
         if(!localInspectionMode)
             SettingsStateHolder(context).settingEnableMarkdownFormattting
+        else
+            mutableStateOf(false)
+    }
+    val autoAlarmSetting by remember {
+        if(!localInspectionMode)
+            SettingsStateHolder(context).settingAutoAlarm
         else
             mutableStateOf(false)
     }
@@ -200,6 +208,26 @@ fun DetailScreenContent(
                 alarm.triggerTimezone = icalObject.dtstartTimezone
             }
         }
+
+        //handle autoAlarm
+        val autoAlarm = if(autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ON_DUE && icalObject.due != null) {
+            Alarm.createDisplayAlarm(
+                dur = (0).minutes,
+                alarmRelativeTo = AlarmRelativeTo.END,
+                referenceDate = icalObject.due!!,
+                referenceTimezone = icalObject.dueTimezone
+            )
+        } else if(autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ON_START && icalObject.dtstart != null) {
+            Alarm.createDisplayAlarm(
+                dur = (0).minutes,
+                alarmRelativeTo = null,
+                referenceDate = icalObject.dtstart!!,
+                referenceTimezone = icalObject.dtstartTimezone
+            )
+        } else null
+
+        if(autoAlarm != null && alarms.value.none { alarm -> alarm.triggerRelativeDuration == autoAlarm.triggerRelativeDuration && alarm.triggerRelativeTo == autoAlarm.triggerRelativeTo })
+            alarms.value = alarms.value.plus(autoAlarm)
     }
 
     if(goBackRequested)

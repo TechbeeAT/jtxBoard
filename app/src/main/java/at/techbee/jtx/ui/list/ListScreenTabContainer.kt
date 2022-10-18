@@ -39,9 +39,12 @@ import androidx.navigation.NavHostController
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.AlarmRelativeTo
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
@@ -49,12 +52,14 @@ import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.minutes
 
 
 @OptIn(
@@ -139,6 +144,41 @@ fun ListScreenTabContainer(
         lastUsedPage.value = pagerState.currentPage
     }
 
+    fun addNewEntry(newICalObject: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) {
+        settingsStateHolder.lastUsedCollection.value = newICalObject.collectionId
+        settingsStateHolder.lastUsedCollection = settingsStateHolder.lastUsedCollection
+        settingsStateHolder.lastUsedModule.value = newICalObject.getModuleFromString()
+        settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
+
+        globalStateHolder.icalFromIntentString.value = null  // origin was state from import
+        globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+
+        //handle autoAlarm
+        val autoAlarm = if(settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_DUE && newICalObject.due != null) {
+            Alarm.createDisplayAlarm(
+                dur = (0).minutes,
+                alarmRelativeTo = AlarmRelativeTo.END,
+                referenceDate = newICalObject.due!!,
+                referenceTimezone = newICalObject.dueTimezone
+            )
+        } else if(settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_START && newICalObject.dtstart != null) {
+            Alarm.createDisplayAlarm(
+                dur = (0).minutes,
+                alarmRelativeTo = null,
+                referenceDate = newICalObject.dtstart!!,
+                referenceTimezone = newICalObject.dtstartTimezone
+            )
+        } else null
+
+        getActiveViewModel().insertQuickItem(
+            newICalObject,
+            categories,
+            attachment,
+            autoAlarm,
+            editAfterSaving
+        )
+    }
+
 
     Scaffold(
         topBar = {
@@ -207,25 +247,21 @@ fun ListScreenTabContainer(
                 module = listViewModel.module,
                 iCal4ListLive = listViewModel.iCal4List,
                 onAddNewEntry = {
-                    scope.launch {
-                        val lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value
-                        val proposedCollectionId = if(allCollections.value.any {collection -> collection.collectionId == lastUsedCollectionId })
-                            lastUsedCollectionId
-                        else
-                            allCollections.value.firstOrNull()?.collectionId ?: return@launch
-                        val db = ICalDatabase.getInstance(context).iCalDatabaseDao
-                        val newICalObject = when(listViewModel.module) {
-                            Module.JOURNAL -> ICalObject.createJournal().apply { collectionId = proposedCollectionId }
-                            Module.NOTE -> ICalObject.createNote().apply { collectionId = proposedCollectionId }
-                            Module.TODO -> ICalObject.createTodo().apply {
-                                this.setDefaultDueDateFromSettings(context)
-                                this.setDefaultStartDateFromSettings(context)
-                                collectionId = proposedCollectionId
-                            }
+                    val lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value
+                    val proposedCollectionId = if(allCollections.value.any {collection -> collection.collectionId == lastUsedCollectionId })
+                        lastUsedCollectionId
+                    else
+                        allCollections.value.firstOrNull()?.collectionId ?: return@ListBottomAppBar
+                    val newICalObject = when(listViewModel.module) {
+                        Module.JOURNAL -> ICalObject.createJournal().apply { collectionId = proposedCollectionId }
+                        Module.NOTE -> ICalObject.createNote().apply { collectionId = proposedCollectionId }
+                        Module.TODO -> ICalObject.createTodo().apply {
+                            this.setDefaultDueDateFromSettings(context)
+                            this.setDefaultStartDateFromSettings(context)
+                            collectionId = proposedCollectionId
                         }
-                        val newIcalObjectId = db.insertICalObject(newICalObject)
-                        navController.navigate("details/$newIcalObjectId?isEditMode=true")
                     }
+                    addNewEntry(newICalObject, emptyList(), null, true)
                 },
                 showQuickEntry = showQuickAdd,
                 listSettings = listViewModel.listSettings,
@@ -318,20 +354,7 @@ fun ListScreenTabContainer(
                                     allCollections = allCollections.value,
                                     presetCollectionId = settingsStateHolder.lastUsedCollection.value,
                                     onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
-                                        settingsStateHolder.lastUsedCollection.value =
-                                            newICalObject.collectionId
-                                        settingsStateHolder.lastUsedCollection =
-                                            settingsStateHolder.lastUsedCollection
-                                        settingsStateHolder.lastUsedModule.value =
-                                            newICalObject.getModuleFromString()
-                                        settingsStateHolder.lastUsedModule =
-                                            settingsStateHolder.lastUsedModule
-
-                                        globalStateHolder.icalFromIntentString.value =
-                                            null  // origin was state from import
-                                        globalStateHolder.icalFromIntentAttachment.value =
-                                            null  // origin was state from import
-
+                                        addNewEntry(newICalObject, categories, attachment, editAfterSaving)
                                         scope.launch {
                                             pagerState.scrollToPage(
                                                 when (newICalObject.getModuleFromString()) {
@@ -339,12 +362,6 @@ fun ListScreenTabContainer(
                                                     Module.NOTE -> ListTabDestination.Notes.tabIndex
                                                     Module.TODO -> ListTabDestination.Tasks.tabIndex
                                                 }
-                                            )
-                                            getActiveViewModel().insertQuickItem(
-                                                newICalObject,
-                                                categories,
-                                                attachment,
-                                                editAfterSaving
                                             )
                                         }
                                     },

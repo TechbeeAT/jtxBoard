@@ -339,6 +339,14 @@ fun SettingsScreen(
                             SETTING_DISABLE_ALARMS_FOR_READONLY.save(it, context)
                         }
                     )
+                    DropdownSetting(
+                        setting = SETTING_AUTO_ALARM,
+                        preselected = settingsStateHolder.settingAutoAlarm.value,
+                        onSelectionChanged = { selection ->
+                            settingsStateHolder.settingAutoAlarm.value = selection
+                            SETTING_AUTO_ALARM.save(selection, context = context)
+                        }
+                    )
                 }
             },
             navController = navController,
