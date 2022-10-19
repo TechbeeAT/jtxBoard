@@ -32,16 +32,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.DurationPickerDialog
 import at.techbee.jtx.util.DateTimeUtils
+import java.time.ZoneId
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
 
@@ -137,7 +141,9 @@ fun AlarmCard(
                                 .padding(horizontal = 8.dp)
                                 .fillMaxWidth(),
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            overflow = TextOverflow.Ellipsis,
+                            fontStyle = FontStyle.Italic,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
@@ -189,8 +195,24 @@ fun AlarmCard(
                                 .padding(horizontal = 8.dp)
                                 .fillMaxWidth(),
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            overflow = TextOverflow.Ellipsis,
+                            fontStyle = FontStyle.Italic,
+                            fontWeight = FontWeight.Bold
                         )
+
+                        if(alarm.triggerTimezone != null && alarm.triggerTimezone != TZ_ALLDAY && alarm.triggerTimezone != ZoneId.systemDefault().id) {
+                            Text(
+                                text = DateTimeUtils.convertLongToFullDateTimeString(
+                                    alarm.triggerTime,
+                                    ZoneId.systemDefault().id
+                                ),
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .fillMaxWidth(),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     }
                 }
             }
@@ -254,6 +276,28 @@ fun AlarmCardPreview_Duration_END_view() {
     }
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun AlarmCardPreview_Duration_END_view_timezone() {
+    MaterialTheme {
+        AlarmCard(
+            alarm = Alarm.createDisplayAlarm(
+                (1).days,
+                AlarmRelativeTo.END,
+                System.currentTimeMillis(),
+                ZoneId.of("Mexico/General").id
+            ),
+            icalObject = ICalObject.createTodo().apply {
+                due = System.currentTimeMillis()
+                dueTimezone = ZoneId.of("Mexico/General").id
+            },
+            isEditMode = false,
+            onAlarmDeleted = { },
+            onAlarmChanged = { }
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
