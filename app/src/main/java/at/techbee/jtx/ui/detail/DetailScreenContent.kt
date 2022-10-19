@@ -46,6 +46,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.MarkdownText
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
@@ -54,7 +55,6 @@ import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
-import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -388,8 +388,6 @@ fun DetailScreenContent(
                         if (description.isNotBlank()) {
                             if(isMarkdownEnabled)
                                 MarkdownText(
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface),
                                     markdown = description.trim(),
                                     modifier = Modifier.padding(8.dp)
                                 )

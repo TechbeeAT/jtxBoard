@@ -255,9 +255,6 @@ dependencies {
     implementation "com.mikepenz:aboutlibraries-core:${version_about_libraries}"
     implementation "com.mikepenz:aboutlibraries-compose:${version_about_libraries}"
 
-    // Markdown support
-    implementation "com.github.jeziellago:compose-markdown:0.3.0"
-
     // Compose Color Picker
     implementation "com.godaddy.android.colorpicker:compose-color-picker-android:0.4.2"
 
