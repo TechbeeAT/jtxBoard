@@ -17,6 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+// Parameters must be kept as Google Flavor needs them.
+// In the future an open source maps solution might come that must use the same structure.
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun MapComposable(
     initialLocation: String?,
