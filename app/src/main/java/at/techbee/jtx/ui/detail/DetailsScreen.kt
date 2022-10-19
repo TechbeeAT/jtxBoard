@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
@@ -42,7 +43,7 @@ fun DetailsScreen(
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
     autosave: Boolean,
-    onLastUsedCollectionChanged: (Long) -> Unit,
+    onLastUsedCollectionChanged: (Module, Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
     //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -182,7 +183,7 @@ fun DetailsScreen(
                         changedAttachments,
                         changedAlarms
                     )
-                    onLastUsedCollectionChanged(changedICalObject.collectionId)
+                    onLastUsedCollectionChanged(detailViewModel.icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
                 },
                 deleteICalObject = { showDeleteDialog = true },
                 onProgressChanged = { itemId, newPercent, _ ->

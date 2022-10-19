@@ -19,7 +19,6 @@ class SettingsStateHolder(val context: Context) {
 
     companion object {
         private const val SETTINGS_PRO_INFO_SHOWN = "settingsProInfoShown"
-        private const val PREFS_LAST_COLLECTION = "lastUsedCollection"
         private const val PREFS_LAST_MODULE = "lastUsedModule"
     }
 
@@ -56,12 +55,6 @@ class SettingsStateHolder(val context: Context) {
     var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))
         set(newValue) {
             prefs.edit().putBoolean(SETTINGS_PRO_INFO_SHOWN, newValue.value).apply()
-            field = newValue
-        }
-
-    var lastUsedCollection = mutableStateOf(prefs.getLong(PREFS_LAST_COLLECTION, 0L))
-        set(newValue) {
-            prefs.edit().putLong(PREFS_LAST_COLLECTION, newValue.value).apply()
             field = newValue
         }
 

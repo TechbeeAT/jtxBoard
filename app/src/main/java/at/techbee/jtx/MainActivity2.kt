@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -42,6 +43,7 @@ import at.techbee.jtx.ui.detail.DetailViewModel
 import at.techbee.jtx.ui.detail.DetailsScreen
 import at.techbee.jtx.ui.donate.DonateScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
+import at.techbee.jtx.ui.list.ListViewModel
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.Jtx20ReleaseInfoDialog
@@ -242,9 +244,13 @@ fun MainNavHost(
                     else if (BuildConfig.FLAVOR == BUILD_FLAVOR_OSE)
                         showOSEDonationDialog = JtxReviewManager(activity).showIfApplicable() || BuildConfig.DEBUG
                 },
-                onLastUsedCollectionChanged = { collectionId ->
-                    settingsStateHolder.lastUsedCollection.value = collectionId
-                    settingsStateHolder.lastUsedCollection = settingsStateHolder.lastUsedCollection
+                onLastUsedCollectionChanged = { module, collectionId ->
+                    val prefs: SharedPreferences = when (module) {
+                        Module.JOURNAL -> activity.getSharedPreferences(ListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
+                        Module.NOTE -> activity.getSharedPreferences(ListViewModel.PREFS_LIST_NOTES, Context.MODE_PRIVATE)
+                        Module.TODO -> activity.getSharedPreferences(ListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
+                    }
+                    ListSettings(prefs).saveLastUsedCollectionId(collectionId)
                 }
             )
         }

@@ -145,8 +145,7 @@ fun ListScreenTabContainer(
     }
 
     fun addNewEntry(newICalObject: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) {
-        settingsStateHolder.lastUsedCollection.value = newICalObject.collectionId
-        settingsStateHolder.lastUsedCollection = settingsStateHolder.lastUsedCollection
+        listViewModel.listSettings.saveLastUsedCollectionId(newICalObject.collectionId)
         settingsStateHolder.lastUsedModule.value = newICalObject.getModuleFromString()
         settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
 
@@ -247,7 +246,7 @@ fun ListScreenTabContainer(
                 module = listViewModel.module,
                 iCal4ListLive = listViewModel.iCal4List,
                 onAddNewEntry = {
-                    val lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value
+                    val lastUsedCollectionId = listViewModel.listSettings.getLastUsedCollectionId()
                     val proposedCollectionId = if(allCollections.value.any {collection -> collection.collectionId == lastUsedCollectionId })
                         lastUsedCollectionId
                     else
@@ -352,7 +351,7 @@ fun ListScreenTabContainer(
                                         ?: "",    // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allCollections = allCollections.value,
-                                    presetCollectionId = settingsStateHolder.lastUsedCollection.value,
+                                    presetCollectionId = listViewModel.listSettings.getLastUsedCollectionId(),
                                     onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
                                         addNewEntry(newICalObject, categories, attachment, editAfterSaving)
                                         scope.launch {

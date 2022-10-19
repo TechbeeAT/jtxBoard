@@ -43,7 +43,6 @@ data class ListSettings(
         load()
     }
 
-
     companion object {
         private const val PREFS_COLLECTION = "prefsCollection"
         private const val PREFS_ACCOUNT = "prefsAccount"
@@ -66,6 +65,7 @@ data class ListSettings(
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
+        private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
     }
 
 
@@ -144,4 +144,8 @@ data class ListSettings(
         isFilterDueFuture.value = false
         isFilterNoDatesSet.value = false
     }
+
+    fun getLastUsedCollectionId() = prefs.getLong(PREFS_LAST_COLLECTION, 0L)
+    fun saveLastUsedCollectionId(collectionId: Long) = prefs.edit().putLong(PREFS_LAST_COLLECTION, collectionId).apply()
+
 }
