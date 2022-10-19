@@ -24,9 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.contract.JtxContract.JtxICalObject.TZ_ALLDAY
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.util.DateTimeUtils
+import java.time.ZoneId
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,6 +107,14 @@ fun HorizontalDateCard(
                         fontStyle = FontStyle.Italic,
                         fontWeight = FontWeight.Bold
                     )
+                    if(timezone != null && timezone != TZ_ALLDAY && timezone != ZoneId.systemDefault().id) {
+                        Text(
+                            DateTimeUtils.convertLongToFullDateTimeString(
+                                datetime,
+                                ZoneId.systemDefault().id
+                            )
+                        )
+                    }
                 } else {
                     Text(
                         text = stringResource(id = R.string.not_set2)
