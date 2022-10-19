@@ -57,28 +57,29 @@ fun VerticalDateBlock(
                 text = DateTimeUtils.convertLongToDayString(datetime, timezone),
                 style = Typography.displaySmall,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = DateTimeUtils.convertLongToWeekdayString(datetime, timezone),
+                style = Typography.labelSmall,
                 textAlign = TextAlign.Center
             )
             Text(
                 DateTimeUtils.convertLongToMonthString(datetime, timezone),
-                style = Typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
+                style = Typography.labelMedium,
                 textAlign = TextAlign.Center
             )
 
             Text(
                 DateTimeUtils.convertLongToYearString(datetime, timezone),
-                style = Typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
+                style = Typography.labelSmall,
                 textAlign = TextAlign.Center
             )
             if (timezone != ICalObject.TZ_ALLDAY)
                 Text(
                     DateTimeUtils.convertLongToTimeString(datetime, timezone),
-                    style = Typography.bodyMedium,
+                    style = Typography.labelMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
             if (timezone != ICalObject.TZ_ALLDAY && timezone?.isNotEmpty() == true && TimeZone.getTimeZone(
@@ -87,9 +88,8 @@ fun VerticalDateBlock(
             )
                 Text(
                     TimeZone.getTimeZone(timezone).getDisplayName(true, TimeZone.SHORT),
-                    style = Typography.bodySmall,
+                    style = Typography.labelSmall,
                     fontStyle = FontStyle.Italic,
-                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
         } else {

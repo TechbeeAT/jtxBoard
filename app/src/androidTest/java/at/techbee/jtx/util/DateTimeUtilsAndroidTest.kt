@@ -11,7 +11,6 @@ package at.techbee.jtx.util
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import at.techbee.jtx.util.DateTimeUtils.getLocalizedOrdinal
-import at.techbee.jtx.util.DateTimeUtils.getLocalizedWeekdays
 import at.techbee.jtx.util.DateTimeUtils.isLocalizedWeekstartMonday
 import org.junit.Assert.*
 
@@ -62,71 +61,6 @@ class DateTimeUtilsAndroidTest {
         assertEquals("3e", ordinal[3])
     }
 
-
-    @Test
-    fun getLocalizedWeekdays_GERMAN() {
-
-        Locale.setDefault(Locale.GERMAN)
-
-        val weekdays = getLocalizedWeekdays()
-
-        assertEquals("Mo.", weekdays[0])
-        assertEquals("Di.", weekdays[1])
-        assertEquals("Mi.", weekdays[2])
-        assertEquals("Do.", weekdays[3])
-        assertEquals("Fr.", weekdays[4])
-        assertEquals("Sa.", weekdays[5])
-        assertEquals("So.", weekdays[6])
-    }
-
-    @Test
-    fun getLocalizedWeekdays_ENGLISH() {
-
-        Locale.setDefault(Locale.ENGLISH)
-
-        val weekdays = getLocalizedWeekdays()
-
-        assertEquals("Sun", weekdays[0])
-        assertEquals("Mon", weekdays[1])
-        assertEquals("Tue", weekdays[2])
-        assertEquals("Wed", weekdays[3])
-        assertEquals("Thu", weekdays[4])
-        assertEquals("Fri", weekdays[5])
-        assertEquals("Sat", weekdays[6])
-    }
-
-    @Test
-    fun getLocalizedWeekdays_US() {
-
-        Locale.setDefault(Locale.US)
-
-        val weekdays = getLocalizedWeekdays()
-
-        assertEquals("Sun", weekdays[0])
-        assertEquals("Mon", weekdays[1])
-        assertEquals("Tue", weekdays[2])
-        assertEquals("Wed", weekdays[3])
-        assertEquals("Thu", weekdays[4])
-        assertEquals("Fri", weekdays[5])
-        assertEquals("Sat", weekdays[6])
-    }
-
-
-    @Test
-    fun getLocalizedWeekdays_FRENCH() {
-
-        Locale.setDefault(Locale.FRENCH)
-
-        val weekdays = getLocalizedWeekdays()
-
-        assertEquals("lun.", weekdays[0])
-        assertEquals("mar.", weekdays[1])
-        assertEquals("mer.", weekdays[2])
-        assertEquals("jeu.", weekdays[3])
-        assertEquals("ven.", weekdays[4])
-        assertEquals("sam.", weekdays[5])
-        assertEquals("dim.", weekdays[6])
-    }
 
     @Test
     fun isLocalizedWeekstartMonday_GERMAN() {

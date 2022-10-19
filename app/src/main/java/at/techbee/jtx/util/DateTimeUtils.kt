@@ -12,11 +12,9 @@ import android.icu.text.MessageFormat
 import android.os.Build
 import android.util.Log
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
-import java.lang.NumberFormatException
 import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.*
 
@@ -86,6 +84,15 @@ object DateTimeUtils {
         return zonedDateTime.toLocalDateTime().format(formatter)
     }
 
+    fun convertLongToWeekdayString(date: Long?, timezone: String?): String {
+        if (date == null || date == 0L)
+            return ""
+        val zonedDateTime =
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+        val formatter = DateTimeFormatter.ofPattern("eeee", Locale.getDefault())
+        return zonedDateTime.toLocalDateTime().format(formatter)
+    }
+
 
     fun convertLongToMonthString(date: Long?, timezone: String?): String {
         if (date == null || date == 0L)
@@ -147,20 +154,6 @@ object DateTimeUtils {
             }
     }
 
-    fun getLocalizedWeekdays(): Array<String> {
-
-        val weekdays = mutableListOf<String>()
-
-        val wf: WeekFields = WeekFields.of(Locale.getDefault())
-        val day: DayOfWeek = wf.firstDayOfWeek
-        for (i in 0L..6L) {
-            weekdays.add(
-                day.plus(i).getDisplayName(TextStyle.SHORT, Locale.getDefault())
-            )
-        }
-
-        return weekdays.toTypedArray()
-    }
 
     /**
      * @return true if the first day of the week is monday for the local device, else false
@@ -205,15 +198,6 @@ object DateTimeUtils {
             }
         }
         return longList
-    }
-
-    fun getOffsetStringFromTimezone(timezone: String?): String {
-
-        timezone?.let {
-            return TimeZone.getTimeZone(it).getDisplayName(false, TimeZone.SHORT) ?: ""
-        }
-
-        return ""
     }
 
 
