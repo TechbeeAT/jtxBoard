@@ -379,7 +379,7 @@ fun DetailScreenContent(
 
                         if (summary.isNotBlank())
                             Text(
-                                summary,
+                                summary.trim(),
                                 modifier = Modifier.padding(8.dp),
                                 style = MaterialTheme.typography.titleMedium,
                                 //fontWeight = FontWeight.Bold
@@ -390,12 +390,12 @@ fun DetailScreenContent(
                                 MarkdownText(
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface),
-                                    markdown = description,
+                                    markdown = description.trim(),
                                     modifier = Modifier.padding(8.dp)
                                 )
                             else
                                 Text(
-                                    text = description,
+                                    text = description.trim(),
                                     modifier = Modifier.padding(8.dp)
                                 )
                         }

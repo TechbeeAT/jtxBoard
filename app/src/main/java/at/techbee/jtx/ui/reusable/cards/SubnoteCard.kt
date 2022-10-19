@@ -98,7 +98,7 @@ private fun SubnoteCardContent(
 
             if (subnote.summary?.isNotBlank() == true || subnote.description?.isNotBlank() == true) {
                 Text(
-                    subnote.summary ?: subnote.description ?: "",
+                    text = subnote.summary?.trim() ?: subnote.description?.trim() ?: "",
                     modifier = Modifier.fillMaxWidth().padding(8.dp),
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
