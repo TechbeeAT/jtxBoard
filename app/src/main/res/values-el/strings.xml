@@ -207,8 +207,6 @@ Global Strings -->
     <string name="menu_list_quick_note">"Γρήγορη σημείωση"</string>
     <string name="menu_list_quick_todo">"Γρήγορη εργασία"</string>
     <string name="menu_list_delete_visible">"Διαγραφή ορατών"</string>
-    <string name="menu_list_todo_show_completed">"Εμφάνιση ολοκληρωμένων"</string>
-    <string name="menu_list_todo_hide_completed">"Απόκρυψη ολοκληρωμένων"</string>
     <string name="menu_list_syncnow">"Συγχρονισμός τώρα"</string>
     <string name="menu_view_share_text">"Κοινοποίηση"</string>
     <string name="menu_view_share_ics">"Κοινοποίησε ως .ics"</string>

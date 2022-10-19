@@ -227,8 +227,6 @@ Global Strings -->
     <string name="menu_list_quick_note">"Nota rapida"</string>
     <string name="menu_list_quick_todo">"Attività rapida"</string>
     <string name="menu_list_delete_visible">"Elimina visibile"</string>
-    <string name="menu_list_todo_show_completed">"Mostra completata"</string>
-    <string name="menu_list_todo_hide_completed">"Nascondi completato"</string>
     <string name="menu_list_syncnow">"Sincronizza ora"</string>
     <string name="menu_view_share_text">"Condividere"</string>
     <string name="menu_view_share_ics">"Condividi come .ics"</string>

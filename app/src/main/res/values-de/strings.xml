@@ -205,8 +205,6 @@ Global Strings -->
     <string name="menu_list_quick_note">"Schnell-Notiz"</string>
     <string name="menu_list_quick_todo">"Schnell-Aufgabe"</string>
     <string name="menu_list_delete_visible">"Sichtbare löschen"</string>
-    <string name="menu_list_todo_show_completed">"Abgeschlossene anzeigen"</string>
-    <string name="menu_list_todo_hide_completed">"Abgeschlossene ausblenden"</string>
     <string name="menu_list_syncnow">"Jetzt synchronisieren"</string>
     <string name="menu_view_share_text">"Teilen"</string>
     <string name="menu_view_share_ics">"Als .ics teilen"</string>

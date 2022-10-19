@@ -205,8 +205,6 @@ Global Strings -->
     <string name="menu_list_quick_note">"Быстрая заметка"</string>
     <string name="menu_list_quick_todo">"Быстрое задание"</string>
     <string name="menu_list_delete_visible">"Удаление видимых"</string>
-    <string name="menu_list_todo_show_completed">"Показать завершенные"</string>
-    <string name="menu_list_todo_hide_completed">"Скрыть завершенные"</string>
     <string name="menu_list_syncnow">"Синхронизировать сейчас"</string>
     <string name="menu_view_share_text">"Поделиться"</string>
     <string name="menu_view_share_ics">"Поделиться в виде .ics"</string>

@@ -203,8 +203,6 @@ Global Strings -->
     <string name="menu_list_quick_note">"快速笔记"</string>
     <string name="menu_list_quick_todo">"快速任务"</string>
     <string name="menu_list_delete_visible">"删除可见"</string>
-    <string name="menu_list_todo_show_completed">"显示已经完成"</string>
-    <string name="menu_list_todo_hide_completed">"隐藏已经完成"</string>
     <string name="menu_list_syncnow">"立即同步"</string>
     <string name="menu_view_share_text">"共享"</string>
     <string name="menu_view_share_ics">"共享为.ics"</string>

@@ -204,8 +204,6 @@ Jim Dolittle, +1 919 555 1234"</string>
     <string name="menu_list_quick_note">"Nota rápida"</string>
     <string name="menu_list_quick_todo">"Tarea rápida"</string>
     <string name="menu_list_delete_visible">"Eliminar elementos visibles"</string>
-    <string name="menu_list_todo_show_completed">"Mostrar completadas"</string>
-    <string name="menu_list_todo_hide_completed">"Ocultar completadas"</string>
     <string name="menu_list_syncnow">"Sincronizar ahora"</string>
     <string name="menu_view_share_text">"Compartir"</string>
     <string name="menu_view_share_ics">"Compartir como .ics"</string>
