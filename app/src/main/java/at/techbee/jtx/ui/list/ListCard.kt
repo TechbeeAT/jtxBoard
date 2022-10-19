@@ -200,7 +200,7 @@ fun ICalObjectListCard(
                         ) {
                             if (iCalObject.summary?.isNotBlank() == true)
                                 Text(
-                                    text = iCalObject.summary ?: "",
+                                    text = iCalObject.summary?.trim() ?: "",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = summarySize,
                                     textDecoration = summaryTextDecoration,
@@ -224,7 +224,7 @@ fun ICalObjectListCard(
 
                         if (iCalObject.description?.isNotBlank() == true)
                             Text(
-                                text = iCalObject.description ?: "",
+                                text = iCalObject.description?.trim() ?: "",
                                 maxLines = 6,
                                 overflow = TextOverflow.Ellipsis
                             )

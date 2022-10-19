@@ -172,7 +172,7 @@ fun ListCardCompact(
 
                         if (iCalObject.summary?.isNotBlank() == true)
                             Text(
-                                text = iCalObject.summary ?: "",
+                                text = iCalObject.summary?.trim() ?: "",
                                 textDecoration = if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
@@ -184,7 +184,7 @@ fun ListCardCompact(
 
                     if (iCalObject.description?.isNotBlank() == true)
                         Text(
-                            text = iCalObject.description ?: "",
+                            text = iCalObject.description?.trim() ?: "",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
