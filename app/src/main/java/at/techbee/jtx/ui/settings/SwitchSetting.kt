@@ -103,6 +103,12 @@ enum class SwitchSetting(
     icon = { Icon(Icons.Outlined.AlarmOff, contentDescription = null, modifier = Modifier.padding(16.dp)) },
     title = R.string.settings_disable_alarms_for_readonly,
     default = false
+    ),
+    SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE(
+        key = "settings_show_one_recur_entry_in_future",
+        icon = { Icon(Icons.Outlined.RepeatOne, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_show_one_recur_entry_in_future,
+        default = false
     )
     ;
     fun save(newSwitchValue: Boolean, context: Context) {

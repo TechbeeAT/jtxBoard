@@ -23,30 +23,8 @@ import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
-import at.techbee.jtx.database.COLUMN_CLASSIFICATION
-import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_NAME
-import at.techbee.jtx.database.COLUMN_COLLECTION_DISPLAYNAME
-import at.techbee.jtx.database.COLUMN_COLLECTION_ID
-import at.techbee.jtx.database.COLUMN_COMPLETED
-import at.techbee.jtx.database.COLUMN_CREATED
-import at.techbee.jtx.database.COLUMN_DESCRIPTION
-import at.techbee.jtx.database.COLUMN_DTSTART
-import at.techbee.jtx.database.COLUMN_DUE
-import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
-import at.techbee.jtx.database.COLUMN_ID
-import at.techbee.jtx.database.COLUMN_LAST_MODIFIED
-import at.techbee.jtx.database.COLUMN_MODULE
-import at.techbee.jtx.database.COLUMN_PERCENT
-import at.techbee.jtx.database.COLUMN_PRIORITY
-import at.techbee.jtx.database.COLUMN_STATUS
-import at.techbee.jtx.database.COLUMN_SUMMARY
-import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.ICalDatabaseDao
-import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
-import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.StatusJournal
-import at.techbee.jtx.database.TABLE_NAME_COLLECTION
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
@@ -109,6 +87,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
         get() =  settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBNOTES_IN_NOTESLIST.key, false) ?: false
     private val searchSettingShowAllSubjournalsinJournallist: Boolean
         get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.key, false) ?: false
+    private val searchSettingShowOneRecurEntryInFuture: Boolean
+        get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.key, false) ?: false
 
 
 
@@ -294,6 +274,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 if (!searchSettingShowAllSubjournalsinJournallist)
                     queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
             }
+        }
+
+        if(searchSettingShowOneRecurEntryInFuture) {
+            queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ISLINKEDINSTANCE = 0 " +
+                    "OR $VIEW_NAME_ICAL4LIST.$COLUMN_DTSTART <= " +
+                    "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_RECUR_ORIGINALICALOBJECTID = $VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ORIGINALICALOBJECTID AND recurList.$COLUMN_RECUR_ISLINKEDINSTANCE = 1 AND recurList.$COLUMN_DTSTART > ${System.currentTimeMillis()} )) "
         }
 
         queryString += "ORDER BY "

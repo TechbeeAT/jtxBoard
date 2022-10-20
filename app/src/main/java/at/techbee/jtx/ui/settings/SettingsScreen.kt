@@ -198,6 +198,14 @@ fun SettingsScreen(
                     )
 
                     SwitchSetting(
+                        setting = SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE,
+                        initiallyChecked = settingsStateHolder.settingShowOneRecurEntryInFuture.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingShowOneRecurEntryInFuture.value = it
+                            SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.save(it, context)
+                        })
+
+                    SwitchSetting(
                         setting = SETTING_AUTO_EXPAND_SUBTASKS,
                         initiallyChecked = settingsStateHolder.settingAutoExpandSubtasks.value,
                         onCheckedChanged = {

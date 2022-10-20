@@ -49,6 +49,8 @@ class SettingsStateHolder(val context: Context) {
     var settingAutoAlarm = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key) } ?: DropdownSetting.SETTING_AUTO_ALARM.default )
     var settingEnableMarkdownFormattting = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_DETAILS_ENABLE_MARKDOWN.key, SwitchSetting.SETTING_DETAILS_ENABLE_MARKDOWN.default))
+    var settingShowOneRecurEntryInFuture = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.key, SwitchSetting.SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.default))
+
 
 
     //invisible settings

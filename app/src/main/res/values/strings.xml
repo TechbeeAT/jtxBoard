@@ -575,10 +575,8 @@
     <string name="settings_progress_step_50">Increment by 50 (2 steps)</string>
     <string name="settings_progress_step">Set the step for the progress slider</string>
     <string name="settings_disable_alarms_for_readonly">Disable alarms for readonly collections</string>
+    <string name="settings_show_one_recur_entry_in_future">Show only one recurring entry in future</string>
     <string name="settings_auto_alarm">Automatic alarm</string>
-
-
-
 
 
 
