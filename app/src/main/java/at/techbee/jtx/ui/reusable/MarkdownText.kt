@@ -61,7 +61,9 @@ object MarkdownTextDefaults {
      * @author Arnau Mora
      * @since 20221019
      */
-    val linkColor = Color(0xff64B5F6)
+    val linkColor
+        @Composable
+        get() = MaterialTheme.colorScheme.primary
 
     /**
      * The character used by [MarkdownText] to mark list items.
