@@ -1,0 +1,5 @@
+- Show local date/time for dates with timezone
+- Show day of week for journal entries in list view
+- Moved quick filters into the filters section and re-arranged elements
+- Added setting to automatically create an alarm when creating a new task
+- Added option to show only one recurrence in the future for recurring entries
