@@ -481,12 +481,12 @@ Danke!"</string>
     <string name="audio_pause">"Pause"</string>
     <string name="audio_error_toast">"Entschuldung, das Playback konnte nicht gestartet werden"</string>
     <string name="sync_in_progress">"Synchronisierung läuft"</string>
-    <string name="saving">"Speichern …"</string>
-    <string name="saving_pending">"Speichern …"</string>
+    <string name="saving">"Speichern ..."</string>
+    <string name="saving_pending">"Speichern ..."</string>
     <string name="invalid_timezone_message">"Bitte wählen Sie eine gültige Zeitzone"</string>
     <string name="invalid_url_message">"Bitte geben Sie eine gültige URL ein!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spracherkennung starten"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Zuhören…"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Zuhören..."</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
     <string name="details_attendees_processing_info">"Achtung: Server könnten Teilnehmer automatisch verarbeiten und zB iMIP-Nachrichten versenden."</string>
     <string name="details_toast_entry_deleted">"Eintrag verworfen/gelöscht"</string>
@@ -554,4 +554,20 @@ Danke!"</string>
     <string name="settings_select_language">"Sprachauswahl"</string>
     <string name="settings_select_language_system">"Systemstandard"</string>
     <string name="settings_details_enable_markdown">"Markdown formattierung aktivieren"</string>
+    <string name="filter_special">"Spezialfilter"</string>
+
+    <!-- fragment_ical_list -->
+    <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
+    <string name="list_date_today">"Heute"</string>
+    <string name="list_date_tomorrow">"Morgen"</string>
+    <string name="list_date_future">"Datum in Zukunft"</string>
+    <string name="list_start_date_in_past">"Start in Vergangenheit"</string>
+    <string name="list_start_date_today">"Start heute"</string>
+    <string name="list_start_date_tomorrow">"Start morgen"</string>
+    <string name="list_start_date_future">"Start in Zukunft"</string>
+    <string name="list_hide_completed_tasks">"Fertiggestellte Aufgaben ausblenden"</string>
+    <string name="settings_auto_alarm">"Automatischer Alarm"</string>
+    <string name="alarms_always_ondue">"Immer wenn fällig"</string>
+    <string name="settings_show_one_recur_entry_in_future">"Zeige nur einen wiederkehrenden Eintrag in der Zukunft"</string>
+    <string name="settings_auto_alarm_sub">"Erstellt automatisch Alarme wenn aktiviert. \"Immer wenn fällig\" triggert immer eine Benachrichtigung wenn eine Aufgabe fällig wird, auch wenn es keinen expliziten Alarm gibt."</string>
 </resources>
