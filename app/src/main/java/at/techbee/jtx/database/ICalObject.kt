@@ -22,6 +22,7 @@ import androidx.room.*
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.ui.settings.DropdownSetting
@@ -698,9 +699,6 @@ data class ICalObject(
                         it.icalObjectId = newId
                         database.insertAlarm(it)
                     }
-                    // take care of notifications
-                    if(item.alarms?.isNotEmpty() == true)
-                        Alarm.scheduleNextNotifications(context)
 
                     // relations need to be rebuilt from the new child to the parent
                     if (newParentId != null) {
@@ -711,10 +709,7 @@ data class ICalObject(
                         relParent2Child.text = parent?.property?.uid
                         database.insertRelatedto(relParent2Child)
                     }
-
-                    if(item.alarms?.isNotEmpty() == true)
-                        Alarm.scheduleNextNotifications(context)
-
+                    Alarm.scheduleNextNotifications(context)
                     return@withContext newId
                 }
                 return@withContext 0L
@@ -1095,11 +1090,22 @@ data class ICalObject(
                 database.insertResourceSync(it)
             }
             instance.alarms?.forEach {
-                it.alarmId = 0L
-                it.icalObjectId = instanceId
+                if(it.triggerRelativeDuration != null) {    // only relative alarms are considered
+                    it.alarmId = 0L
+                    it.icalObjectId = instanceId
+
+                    val dur = try { Duration.parse(it.triggerRelativeDuration!!) } catch (e: IllegalArgumentException) { return@forEach }
+                    if(it.triggerRelativeTo == AlarmRelativeTo.END.name) {
+                        it.triggerTime = instance.property.due!! + dur.inWholeMilliseconds
+                        it.triggerTimezone = instance.property.dueTimezone
+                    } else {
+                        it.triggerTime = instance.property.dtstart!! + dur.inWholeMilliseconds
+                        it.triggerTimezone = instance.property.dtstartTimezone
+                    }
+                    database.insertAlarmSync(it)
+                }
             }
-            if(instance.alarms?.isNotEmpty() == true)
-                Alarm.scheduleNextNotifications(context)
+            Alarm.scheduleNextNotifications(context)
         }
     }
 

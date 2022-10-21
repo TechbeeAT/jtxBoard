@@ -14,11 +14,13 @@ import android.app.PendingIntent
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.preference.PreferenceManager
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -29,6 +31,8 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.ui.settings.DropdownSetting
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import kotlinx.parcelize.Parcelize
 import kotlin.time.Duration
@@ -192,6 +196,8 @@ data class Alarm (
     companion object Factory {
 
         private const val MAX_ALARMS_SCHEDULED = 5
+        private const val MAX_DUE_ALARMS_SCHEDULED = 5
+
 
         /**
          * Create a new [Alarm] Property from the specified [ContentValues].
@@ -251,18 +257,33 @@ data class Alarm (
                 return
 
             val database = ICalDatabase.getInstance(context).iCalDatabaseDao
-            val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED)
+            val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED).toMutableList()
+
+            val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+            val settingAutoAlarm = prefs.getString(DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key)
+            if(settingAutoAlarm == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_DUE.key) {
+                val dueEntries = database.getNextDueEntries(MAX_DUE_ALARMS_SCHEDULED)
+                dueEntries.forEach { dueEntry ->
+                    alarms.add(Alarm(
+                        icalObjectId = dueEntry.id,
+                        triggerTime = dueEntry.due,
+                        triggerTimezone = dueEntry.dueTimezone
+                    ))
+                }
+            }
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-            for (i in 0 until MAX_ALARMS_SCHEDULED) {
-                //cancel previous alarm on this code
+            //cancel previous alarm on this code
+            for (i in 0 until MAX_ALARMS_SCHEDULED + MAX_DUE_ALARMS_SCHEDULED) {
                 val pendingIntent = PendingIntent.getBroadcast(context, i, Intent(context, NotificationPublisher::class.java), PendingIntent.FLAG_IMMUTABLE)
                 alarmManager.cancel(pendingIntent)
+            }
 
-                if(alarms.isNotEmpty() && alarms.size > i) {
-                    val iCalObject = database.getICalObjectByIdSync(alarms[i].icalObjectId) ?: continue
-                    val collection = database.getCollectionByIdSync(iCalObject.collectionId) ?: continue
-                    alarms[i].scheduleNotification(context = context, requestCode = i, isReadOnly = collection.readonly, notificationSummary = iCalObject.summary, notificationDescription = iCalObject.description)
+            alarms.forEachIndexed { index, alarm ->
+                if(alarms.isNotEmpty() && alarms.size > index) {
+                    val iCalObject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return@forEachIndexed
+                    val collection = database.getCollectionByIdSync(iCalObject.collectionId) ?: return@forEachIndexed
+                    alarm.scheduleNotification(context = context, requestCode = index, isReadOnly = collection.readonly, notificationSummary = iCalObject.summary, notificationDescription = iCalObject.description)
                 }
             }
         }
@@ -360,6 +381,9 @@ data class Alarm (
         val snooze1dIntent = Intent(context, NotificationPublisher::class.java).apply {
             action = NotificationPublisher.ACTION_SNOOZE_1D
             putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+            putExtra(NotificationPublisher.ALARM_ID, alarmId)
+            putExtra(NotificationPublisher.IS_IMPLICIT_ALARM, alarmId == 0L)
+
         }
         val snooze1dPendingIntent: PendingIntent =
             PendingIntent.getBroadcast(context, alarmId.toInt(), snooze1dIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -368,6 +392,8 @@ data class Alarm (
         val snooze1hIntent = Intent(context, NotificationPublisher::class.java).apply {
             action = NotificationPublisher.ACTION_SNOOZE_1H
             putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+            putExtra(NotificationPublisher.ALARM_ID, alarmId)
+            putExtra(NotificationPublisher.IS_IMPLICIT_ALARM, alarmId == 0L)
         }
         val snooze1hPendingIntent: PendingIntent =
             PendingIntent.getBroadcast(context, alarmId.toInt(), snooze1hIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -376,6 +402,8 @@ data class Alarm (
         val doneIntent = Intent(context, NotificationPublisher::class.java).apply {
             action = NotificationPublisher.ACTION_DONE
             putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+            putExtra(NotificationPublisher.ALARM_ID, alarmId)
+            putExtra(NotificationPublisher.IS_IMPLICIT_ALARM, alarmId == 0L)
         }
         val donePendingIntent: PendingIntent =
             PendingIntent.getBroadcast(context, alarmId.toInt(), doneIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -390,7 +418,7 @@ data class Alarm (
             priority = NotificationCompat.PRIORITY_HIGH
             setCategory(NotificationCompat.CATEGORY_ALARM)     //  CATEGORY_REMINDER might also be an alternative
             //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
-            if(!isReadOnly) {
+            if(!isReadOnly && alarmId != 0L) {    // no alarm for readonly entries and implicit alarms that come only from the due date
                 addAction(
                     R.drawable.ic_snooze,
                     context.getString(R.string.notification_add_1h),
@@ -415,6 +443,8 @@ data class Alarm (
         val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
             putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
             putExtra(NotificationPublisher.NOTIFICATION, notification)
+            putExtra(NotificationPublisher.ALARM_ID, alarmId)
+            putExtra(NotificationPublisher.IS_IMPLICIT_ALARM, alarmId == 0L)
         }
 
         // the pendingIntent is initiated that is passed on to the alarm manager

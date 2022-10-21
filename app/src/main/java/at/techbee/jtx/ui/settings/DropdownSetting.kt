@@ -19,6 +19,7 @@ enum class DropdownSetting(
     val key: String,
     val icon: ImageVector,
     val title: Int,
+    val subtitle: Int? = null,
     val options: List<DropdownSettingOption>,
     val default: DropdownSettingOption
 ) {
@@ -100,10 +101,12 @@ enum class DropdownSetting(
         key = "setting_auto_alarm",
         icon = Icons.Outlined.Alarm,
         title = R.string.settings_auto_alarm,
+        subtitle = R.string.settings_auto_alarm_sub,
         options = listOf(
             DropdownSettingOption.AUTO_ALARM_OFF,
             DropdownSettingOption.AUTO_ALARM_ON_START,
-            DropdownSettingOption.AUTO_ALARM_ON_DUE
+            DropdownSettingOption.AUTO_ALARM_ON_DUE,
+            DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_DUE
         ),
         default = DropdownSettingOption.AUTO_ALARM_OFF
     )

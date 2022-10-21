@@ -264,8 +264,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                     icalObject.recreateRecurring(getApplication())
                 }
-                if(icalEntity.value?.alarms?.isNotEmpty() == true)
-                    Alarm.scheduleNextNotifications(getApplication())
+                Alarm.scheduleNextNotifications(getApplication())
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
@@ -442,8 +441,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                if(newEntity.alarms?.isNotEmpty() == true)
-                    Alarm.scheduleNextNotifications(getApplication())
+                Alarm.scheduleNextNotifications(getApplication())
 
                 if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                     navigateToId.value = newId

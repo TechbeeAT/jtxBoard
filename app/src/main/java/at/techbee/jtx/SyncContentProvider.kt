@@ -270,8 +270,11 @@ class SyncContentProvider : ContentProvider() {
                 }
             }
             database.updateAlarm(alarm)
-            Alarm.scheduleNextNotifications(context!!)
         }
+
+        if(sUriMatcher.match(uri) == CODE_ALARM_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)
+            Alarm.scheduleNextNotifications(context!!)
+
         return ContentUris.withAppendedId(uri, id)
     }
 
@@ -541,9 +544,14 @@ class SyncContentProvider : ContentProvider() {
                 }
                 database.updateAlarm(alarm)
             }
-            if(alarms.isNotEmpty())
-                Alarm.scheduleNextNotifications(context!!)
         }
+        if(sUriMatcher.match(uri) == CODE_ALARM_DIR
+            || sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
+            || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM
+            || sUriMatcher.match(uri) == CODE_ALARM_ITEM
+        )
+            Alarm.scheduleNextNotifications(context!!)
+
         return 1
     }
 

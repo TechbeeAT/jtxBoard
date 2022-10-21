@@ -43,7 +43,8 @@ enum class DropdownSettingOption(
 
     AUTO_ALARM_OFF("off", R.string.off),
     AUTO_ALARM_ON_START("on_start", R.string.alarms_onstart),
-    AUTO_ALARM_ON_DUE("on_due", R.string.alarms_ondue);
+    AUTO_ALARM_ON_DUE("on_due", R.string.alarms_ondue),
+    AUTO_ALARM_ALWAYS_ON_DUE("always_on_due", R.string.alarms_always_ondue);
 
     fun getProgressStepKeyAsInt(): Int {
         return try {

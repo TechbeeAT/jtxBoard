@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.ui.settings.DropdownSetting
@@ -48,6 +49,13 @@ fun DropdownSetting(
                 text = stringResource(id = setting.title),
                 style = MaterialTheme.typography.titleMedium
             )
+            setting.subtitle?.let {
+                Text(
+                    text = stringResource(id = it),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontStyle = FontStyle.Italic
+                )
+            }
             Text(
                 text = stringResource(id = selected.text),
                 style = MaterialTheme.typography.bodySmall
@@ -92,6 +100,20 @@ fun DropdownSetting_Theme() {
         DropdownSetting(
             setting = DropdownSetting.SETTING_THEME,
             preselected = DropdownSetting.SETTING_THEME.options.last(),
+            onSelectionChanged = { }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DropdownSetting_Auto_Alarm() {
+    MaterialTheme {
+
+        DropdownSetting(
+            setting = DropdownSetting.SETTING_AUTO_ALARM,
+            preselected = DropdownSetting.SETTING_AUTO_ALARM.options.last(),
             onSelectionChanged = { }
         )
     }

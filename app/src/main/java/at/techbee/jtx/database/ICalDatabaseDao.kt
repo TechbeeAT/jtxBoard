@@ -508,9 +508,27 @@ DELETEs by Object
     @Update
     fun updateAlarm(alarm: Alarm)
 
+    /**
+     * Gets the next [Alarm]s after a certain date or after now
+     * Elements that define a series are excluded.
+     * @param limit: The number of [Alarm]s that should be returned
+     * @param minDate: The date from which the [Alarm]s should be fetched (default: System.currentTimeMillis())
+     * @return a list of the next alarms
+     */
     @Transaction
-    @Query("SELECT $TABLE_NAME_ALARM.* FROM $TABLE_NAME_ALARM INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID WHERE $COLUMN_DELETED = 0 AND $COLUMN_ALARM_TRIGGER_TIME > :now ORDER BY $COLUMN_ALARM_TRIGGER_TIME ASC LIMIT :limit")
-    fun getNextAlarms(limit: Int, now: Long = System.currentTimeMillis()): List<Alarm>
+    @Query("SELECT $TABLE_NAME_ALARM.* FROM $TABLE_NAME_ALARM INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID WHERE $COLUMN_DELETED = 0 AND $COLUMN_RRULE IS NULL AND $COLUMN_ALARM_TRIGGER_TIME > :minDate ORDER BY $COLUMN_ALARM_TRIGGER_TIME ASC LIMIT :limit")
+    fun getNextAlarms(limit: Int, minDate: Long = System.currentTimeMillis()): List<Alarm>
+
+    /**
+     * Gets the next due [ICalObject]s after a certain date or after now.
+     * Elements that define a series are excluded.
+     * @param limit: The number of [ICalObject]s that should be returned
+     * @param minDate: The due date from which the [ICalObject]s should be fetched (default: System.currentTimeMillis())
+     * @return a list of the next due icalobjects
+     */
+    @Transaction
+    @Query("SELECT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0 AND $COLUMN_DUE > :minDate AND $COLUMN_RRULE IS NULL ORDER BY $COLUMN_DUE ASC LIMIT :limit")
+    fun getNextDueEntries(limit: Int, minDate: Long = System.currentTimeMillis()): List<ICalObject>
 
     @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun updateCollection(collection: ICalCollection)

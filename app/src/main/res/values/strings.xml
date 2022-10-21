@@ -389,6 +389,7 @@
     <string name="alarms_alarm">Alarm</string>
     <string name="alarms_onstart">On start</string>
     <string name="alarms_ondue">On due</string>
+    <string name="alarms_always_ondue">Always on due</string>
     <string name="alarms_custom">Custom</string>
     <string name="alarms_before">before</string>
     <string name="alarms_after">after</string>
@@ -577,6 +578,8 @@
     <string name="settings_disable_alarms_for_readonly">Disable alarms for readonly collections</string>
     <string name="settings_show_one_recur_entry_in_future">Show only one recurring entry in future</string>
     <string name="settings_auto_alarm">Automatic alarm</string>
+    <string name="settings_auto_alarm_sub">Turn on to automatically create alarms. Choose \"Always on due\" to not create an alarm but to get notified in any case when a task is due.</string>
+
 
 
 
