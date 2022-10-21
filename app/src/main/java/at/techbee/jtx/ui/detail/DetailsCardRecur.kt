@@ -188,7 +188,10 @@ fun DetailsCardRecur(
             }
 
             AnimatedVisibility(isEditMode && icalObject.dtstart == null) {
-                Text(stringResource(id = R.string.edit_recur_toast_requires_start_date))
+                Text(
+                    text = stringResource(id = R.string.edit_recur_toast_requires_start_date),
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
 
             AnimatedVisibility(isEditMode && isRecurActivated) {
@@ -510,9 +513,15 @@ fun DetailsCardRecur(
                         Text(stringResource(id = R.string.view_recurrence_go_to_original_button))
                     }
                     if(icalObject.isRecurLinkedInstance) {
-                        Text(stringResource(id = R.string.view_recurrence_note_to_original))
+                        Text(
+                            text = stringResource(id = R.string.view_recurrence_note_to_original),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     } else {
-                        Text(stringResource(id = R.string.view_reccurrence_note_is_exception))
+                        Text(
+                            text = stringResource(id = R.string.view_reccurrence_note_is_exception),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 }
             }
