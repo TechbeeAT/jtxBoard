@@ -8,12 +8,14 @@ package at.techbee.jtx.ui.reusable.dialogs
  * http://www.gnu.org/licenses/gpl.html
  */
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
 
@@ -28,7 +30,16 @@ fun DeleteVisibleDialog(
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = { Text(stringResource(id = R.string.list_dialog_delete_visible_title)) },
-        text = { Text(stringResource(id = R.string.list_dialog_delete_visible_message, numEntriesToDelete)) },
+        text = {
+            Column {
+                Text(stringResource(id = R.string.list_dialog_delete_visible_message, numEntriesToDelete))
+                Text(
+                    text = stringResource(id = R.string.list_dialog_delete_visible_message2),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontStyle = FontStyle.Italic
+                )
+            }
+               },
         confirmButton = {
             TextButton(
                 onClick = {
