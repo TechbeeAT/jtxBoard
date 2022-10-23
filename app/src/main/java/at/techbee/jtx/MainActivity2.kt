@@ -16,12 +16,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,7 +45,8 @@ import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.Jtx20ReleaseInfoDialog
 import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
-import at.techbee.jtx.ui.reusable.screens.*
+import at.techbee.jtx.ui.reusable.screens.AboutScreen
+import at.techbee.jtx.ui.reusable.screens.BuyProScreen
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -64,7 +61,7 @@ import java.time.ZonedDateTime
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
 //class MainActivity2 : ComponentActivity() {
-    class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
+class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
     // or maybe FragmentActivity() was also proposed...
 
     private var lastProcessedIntentHash: Int? = null
@@ -77,6 +74,12 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
         const val BUILD_FLAVOR_GENERIC = "generic"
+
+        const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
+        const val INTENT_ACTION_ADD_NOTE = "addNote"
+        const val INTENT_ACTION_ADD_TODO = "addTodo"
+        const val INTENT_ACTION_OPEN_ICALOBJECT = "openICalObject"
+        const val INTENT_EXTRA_ITEM2SHOW = "item2show"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +100,7 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
         setContent {
             val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
             JtxBoardTheme(
-                darkTheme = when(settingsStateHolder.settingTheme.value) {
+                darkTheme = when (settingsStateHolder.settingTheme.value) {
                     DropdownSettingOption.THEME_LIGHT -> false
                     DropdownSettingOption.THEME_DARK -> true
                     else -> isSystemInDarkTheme()
@@ -119,47 +122,52 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
         super.onResume()
 
         //handle intents, but only if it wasn't already handled
-        if(intent.hashCode() != lastProcessedIntentHash) {
-
-            intent?.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        if (intent.hashCode() != lastProcessedIntentHash) {
+            //intent?.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
 
             // handle the intents for the shortcuts
             when (intent?.action) {
-                "addJournal" -> {
+                INTENT_ACTION_ADD_JOURNAL -> {
                     globalStateHolder.icalFromIntentModule.value = Module.JOURNAL
                     globalStateHolder.icalFromIntentString.value = ""
                 }
-                "addNote" -> {
+                INTENT_ACTION_ADD_NOTE -> {
                     globalStateHolder.icalFromIntentModule.value = Module.NOTE
                     globalStateHolder.icalFromIntentString.value = ""
                 }
-                "addTodo" -> {
+                INTENT_ACTION_ADD_TODO -> {
                     globalStateHolder.icalFromIntentModule.value = Module.TODO
                     globalStateHolder.icalFromIntentString.value = ""
                 }
-                "openICalObject" -> {
-                    val id = intent.getLongExtra("item2show", 0L)
-                    if(id > 0L)
+                INTENT_ACTION_OPEN_ICALOBJECT -> {
+                    val id = intent.getLongExtra(INTENT_EXTRA_ITEM2SHOW, 0L)
+                    if (id > 0L)
                         globalStateHolder.icalObject2Open.value = id
                 }
 
                 // Take data also from other sharing intents
                 Intent.ACTION_SEND -> {
                     when {
-                        intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value = intent.getStringExtra(Intent.EXTRA_TEXT)
+                        intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value =
+                            intent.getStringExtra(Intent.EXTRA_TEXT)
                         intent.type?.startsWith("image/") == true || intent.type == "application/pdf" -> {
-                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)?.let { uri ->
-                                Attachment.getNewAttachmentFromUri(uri, this)?.let { newAttachment ->
-                                    globalStateHolder.icalFromIntentAttachment.value = newAttachment
+                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
+                                ?.let { uri ->
+                                    Attachment.getNewAttachmentFromUri(uri, this)
+                                        ?.let { newAttachment ->
+                                            globalStateHolder.icalFromIntentAttachment.value =
+                                                newAttachment
+                                        }
                                 }
-                            }
                         }
                         intent.type == "text/markdown" -> {
-                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)?.let { uri ->
-                                this.contentResolver.openInputStream(uri)?.use { stream ->
-                                    globalStateHolder.icalFromIntentString.value = stream.readBytes().decodeToString()
+                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
+                                ?.let { uri ->
+                                    this.contentResolver.openInputStream(uri)?.use { stream ->
+                                        globalStateHolder.icalFromIntentString.value =
+                                            stream.readBytes().decodeToString()
+                                    }
                                 }
-                            }
                         }
                     }
                 }
@@ -168,14 +176,14 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
                     if (intent.type == "text/calendar") {
                         val ics = intent.data ?: return
                         this.contentResolver.openInputStream(ics)?.use { stream ->
-                            globalStateHolder.icalString2Import.value = stream.readBytes().decodeToString()
+                            globalStateHolder.icalString2Import.value =
+                                stream.readBytes().decodeToString()
                         }
                     }
                 }
             }
-
-            lastProcessedIntentHash = intent.hashCode()
         }
+        lastProcessedIntentHash = intent.hashCode()
     }
 
     private fun createNotificationChannel() {
@@ -222,8 +230,10 @@ fun MainNavHost(
             arguments = DetailDestination.Detail.args
         ) { backStackEntry ->
 
-            val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId) ?: return@composable
-            val editImmediately = backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) ?: false
+            val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId)
+                ?: return@composable
+            val editImmediately =
+                backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) ?: false
 
             /*
             backStackEntry.savedStateHandle[DetailDestination.argICalObjectId] = icalObjectId
@@ -239,16 +249,26 @@ fun MainNavHost(
                 editImmediately = editImmediately,
                 autosave = settingsStateHolder.settingAutosave.value,
                 onRequestReview = {
-                    if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
+                    if (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
                         JtxReviewManager(activity).showIfApplicable()
                     else if (BuildConfig.FLAVOR == BUILD_FLAVOR_OSE)
-                        showOSEDonationDialog = JtxReviewManager(activity).showIfApplicable() || BuildConfig.DEBUG
+                        showOSEDonationDialog =
+                            JtxReviewManager(activity).showIfApplicable() || BuildConfig.DEBUG
                 },
                 onLastUsedCollectionChanged = { module, collectionId ->
                     val prefs: SharedPreferences = when (module) {
-                        Module.JOURNAL -> activity.getSharedPreferences(ListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
-                        Module.NOTE -> activity.getSharedPreferences(ListViewModel.PREFS_LIST_NOTES, Context.MODE_PRIVATE)
-                        Module.TODO -> activity.getSharedPreferences(ListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
+                        Module.JOURNAL -> activity.getSharedPreferences(
+                            ListViewModel.PREFS_LIST_JOURNALS,
+                            Context.MODE_PRIVATE
+                        )
+                        Module.NOTE -> activity.getSharedPreferences(
+                            ListViewModel.PREFS_LIST_NOTES,
+                            Context.MODE_PRIVATE
+                        )
+                        Module.TODO -> activity.getSharedPreferences(
+                            ListViewModel.PREFS_LIST_TODOS,
+                            Context.MODE_PRIVATE
+                        )
                     }
                     ListSettings(prefs).saveLastUsedCollectionId(collectionId)
                 }
@@ -268,7 +288,8 @@ fun MainNavHost(
             SyncScreen(
                 remoteCollectionsLive = viewModel.remoteCollections,
                 isSyncInProgress = globalStateHolder.isSyncInProgress,
-                navController = navController)
+                navController = navController
+            )
         }
         composable(NavigationDrawerDestination.DONATE.name) { DonateScreen(navController) }
         composable(NavigationDrawerDestination.ABOUT.name) {
@@ -308,29 +329,31 @@ fun MainNavHost(
         navController.navigate("details/$id?isEditMode=false")
     }
 
-    if(!settingsStateHolder.proInfoShown.value && isProPurchased.value == false) {
+    if (!settingsStateHolder.proInfoShown.value && isProPurchased.value == false) {
         ProInfoDialog(
             onOK = {
                 settingsStateHolder.proInfoShown.value = true
-                settingsStateHolder.proInfoShown = settingsStateHolder.proInfoShown   // triggers saving
-                        }
+                settingsStateHolder.proInfoShown =
+                    settingsStateHolder.proInfoShown   // triggers saving
+            }
         )
     }
 
-    if(showOSEDonationDialog) {
+    if (showOSEDonationDialog) {
         OSERequestDonationDialog(
             onOK = {
                 // next dialog in 90 days
-                JtxReviewManager(activity).nextRequestOn = ZonedDateTime.now().plusDays(90L).toInstant().toEpochMilli()
+                JtxReviewManager(activity).nextRequestOn =
+                    ZonedDateTime.now().plusDays(90L).toInstant().toEpochMilli()
                 showOSEDonationDialog = false
-                   },
+            },
             onMore = {
                 navController.navigate(NavigationDrawerDestination.DONATE.name)
             }
         )
     }
 
-    if(settingsStateHolder.showJtx20releaseinfo.value) {
+    if (settingsStateHolder.showJtx20releaseinfo.value) {
         Jtx20ReleaseInfoDialog(
             onOK = {
                 settingsStateHolder.showJtx20releaseinfo.value = false

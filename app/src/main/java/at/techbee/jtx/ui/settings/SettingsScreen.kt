@@ -31,12 +31,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
+import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.DropdownSetting
 import at.techbee.jtx.ui.reusable.elements.SwitchSetting
 import at.techbee.jtx.ui.settings.DropdownSetting.*
 import at.techbee.jtx.ui.settings.SwitchSetting.*
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -50,6 +52,7 @@ fun SettingsScreen(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val subSectionExpanded = remember { mutableStateOf(false) }
 
     val languageOptions = mutableListOf<Locale?>(null)
@@ -353,6 +356,7 @@ fun SettingsScreen(
                         onSelectionChanged = { selection ->
                             settingsStateHolder.settingAutoAlarm.value = selection
                             SETTING_AUTO_ALARM.save(selection, context = context)
+                            scope.launch { Alarm.scheduleNextNotifications(context) }
                         }
                     )
                 }

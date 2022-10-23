@@ -30,6 +30,7 @@ class NotificationPublisher : BroadcastReceiver() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = intent.getParcelableExtraCompat(NOTIFICATION, Notification::class)
         val alarmId = intent.getLongExtra(ALARM_ID, intent.getLongExtra(NOTIFICATION_ID, 0L))
+        val icalObjectId = intent.getLongExtra(ICALOBJECT_ID, 0L)
         val isImplicitAlarm = intent.getBooleanExtra(IS_IMPLICIT_ALARM, false)
 
         if(alarmId == 0L && !isImplicitAlarm)
@@ -72,8 +73,7 @@ class NotificationPublisher : BroadcastReceiver() {
             else -> {
                 // no action, so here we notify. if we offer snooze depends on the intent (this was decided already on creation of the intent)
                 CoroutineScope(Dispatchers.IO).launch {
-                    val alarm = database.getAlarmSync(alarmId)
-                    if (alarm != null || isImplicitAlarm)     // notify only if the alarm still exists or if it was an implicit alarm (coming from due)
+                    if(database.getAlarmSync(alarmId) != null || (isImplicitAlarm && database.getSync(icalObjectId) != null))
                         notificationManager.notify(alarmId.toInt(), notification)
                     Alarm.scheduleNextNotifications(context)
                 }
@@ -83,9 +83,10 @@ class NotificationPublisher : BroadcastReceiver() {
 
     companion object {
         @Deprecated("Use ALARM_ID instead") var NOTIFICATION_ID = "notification-id"   // identifier behind the value for alarmId
-        val ALARM_ID = "alarm-id"
-        val IS_IMPLICIT_ALARM = "isImplicitAlarm"
-        var NOTIFICATION = "alarmNotification"
+        const val ALARM_ID = "alarm-id"
+        const val ICALOBJECT_ID = "icalobject-id"
+        const val IS_IMPLICIT_ALARM = "isImplicitAlarm"
+        const val NOTIFICATION = "alarmNotification"
 
         const val ACTION_SNOOZE_1D = "actionSnooze1d"
         const val ACTION_SNOOZE_1H = "actionSnooze1h"
