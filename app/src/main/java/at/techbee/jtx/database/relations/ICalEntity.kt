@@ -12,6 +12,8 @@ import android.content.Context
 import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Relation
+import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.Component
@@ -188,8 +190,17 @@ data class ICalEntity(
         if(property.contact?.isNotEmpty() == true)
             shareText += context.getString(R.string.contact) + ": " + property.contact + System.lineSeparator()
 
-        if(property.location?.isNotEmpty() == true)
-            shareText += context.getString(R.string.location) + ": " + property.location + System.lineSeparator()
+        if (property.location?.isNotEmpty() == true)
+            shareText += context.getString(R.string.location) + ": " + (property.location?:"") + System.lineSeparator()
+
+        if(property.geoLat != null && property.geoLong != null) {
+            shareText += context.getString(R.string.map) + ": (" + property.geoLat + ", " + property.geoLong + ") - "
+            shareText += if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
+                "https://www.google.com/maps/search/?api=1&query=${property.geoLat}%2C${property.geoLong}"
+            else
+                "https://www.openstreetmap.org/#map=15/${property.geoLat}/${property.geoLong}"
+            shareText += System.lineSeparator()
+        }
 
         if(property.url?.isNotEmpty() == true)
             shareText += context.getString(R.string.url) + ": " + property.url + System.lineSeparator()
