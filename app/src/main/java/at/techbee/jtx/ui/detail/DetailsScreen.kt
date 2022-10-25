@@ -50,7 +50,7 @@ fun DetailsScreen(
     val context = LocalContext.current
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
-    var goBackRequestedByTopBar by remember { mutableStateOf(false) }
+    val goBackRequestedByTopBar = remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showRevertDialog by remember { mutableStateOf(false) }
     var navigateUp by remember { mutableStateOf(false) }
@@ -116,7 +116,7 @@ fun DetailsScreen(
             DetailsTopAppBar(
                 title = stringResource(id = R.string.details),
                 goBack = {
-                    goBackRequestedByTopBar = true
+                    goBackRequestedByTopBar.value = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 actions = {
                     if (!isEditMode.value) {

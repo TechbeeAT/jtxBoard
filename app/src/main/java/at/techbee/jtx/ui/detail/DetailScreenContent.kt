@@ -77,7 +77,7 @@ fun DetailScreenContent(
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     autosave: Boolean,
-    goBackRequested: Boolean,    // Workaround to also go Back from Top menu
+    goBackRequested: MutableState<Boolean>,    // Workaround to also go Back from Top menu
     saveICalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
     deleteICalObject: () -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
@@ -183,12 +183,13 @@ fun DetailScreenContent(
     }
 
     fun processGoBack() {
-        if(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED)
-            showUnsavedChangesDialog = true
-        else if(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && icalObject.sequence == 0L && icalObject.eTag == null && icalObject.summary.isNullOrEmpty() && icalObject.description.isNullOrEmpty())
+        if(isEditMode.value && icalObject.summary.isNullOrEmpty() && icalObject.description.isNullOrEmpty())
             deleteICalObject()
+        else if(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED)
+            showUnsavedChangesDialog = true
         else
             goBack()
+        goBackRequested.value = false
     }
 
     /**
@@ -230,7 +231,7 @@ fun DetailScreenContent(
             alarms.value = alarms.value.plus(autoAlarm)
     }
 
-    if(goBackRequested)
+    if(goBackRequested.value)
         processGoBack()
 
     BackHandler {
@@ -705,7 +706,7 @@ fun DetailScreenContent_JOURNAL() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = false,
             player = null,
-            goBackRequested = false,
+            goBackRequested = remember { mutableStateOf(false) },
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
@@ -750,7 +751,7 @@ fun DetailScreenContent_TODO_editInitially() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = false,
             player = null,
-            goBackRequested = false,
+            goBackRequested = remember { mutableStateOf(false) },
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
@@ -797,7 +798,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = true,
             player = null,
-            goBackRequested = false,
+            goBackRequested = remember { mutableStateOf(false) },
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
@@ -836,7 +837,7 @@ fun DetailScreenContent_failedLoading() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = true,
             player = null,
-            goBackRequested = false,
+            goBackRequested = remember { mutableStateOf(false) },
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
