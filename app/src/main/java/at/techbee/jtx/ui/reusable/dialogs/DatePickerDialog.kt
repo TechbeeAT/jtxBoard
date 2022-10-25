@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.reusable.dialogs
 
 import android.os.Build
+import android.text.format.DateFormat
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.compose.animation.AnimatedVisibility
@@ -229,6 +230,7 @@ fun DatePickerDialog(
                             factory = { context ->
                                 // Creates custom view
                                 val timepicker = TimePicker(context)
+                                timepicker.setIs24HourView(DateFormat.is24HourFormat(context))
                                 @Suppress("DEPRECATION")
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     timepicker.hour = dateTime.hour
