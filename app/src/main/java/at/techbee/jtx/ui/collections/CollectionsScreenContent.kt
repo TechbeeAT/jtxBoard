@@ -14,11 +14,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,7 +37,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalCollection.Factory.TEST_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.reusable.cards.CollectionCard
 
@@ -60,8 +60,10 @@ fun CollectionsScreenContent(
     val grouped = list.groupBy { Account(it.accountName, it.accountType) }
     val showProgressIndicator by isProcessing.observeAsState(false)
 
-    val foundAccounts = AccountManager.get(LocalContext.current)
-        .getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
+    val foundAccounts = if(LocalInspectionMode.current)
+        arrayOf(Account("Test Account Name", TEST_ACCOUNT_TYPE))
+    else
+        AccountManager.get(LocalContext.current).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
 
 
     Box {
@@ -71,54 +73,6 @@ fun CollectionsScreenContent(
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
         )
-
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            Text(
-                stringResource(id = R.string.collections_info),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            grouped.forEach { (account, collectionsInAccount) ->
-                CollectionsAccountHeader(
-                    account = account,
-                    isFoundInAccountmanager = foundAccounts.contains(account) || account.type == LOCAL_ACCOUNT_TYPE,
-                    onDeleteAccount = onDeleteAccount,
-                    modifier = Modifier.padding(
-                        top = 16.dp,
-                        start = 8.dp,
-                        end = 16.dp,
-                        bottom = 8.dp
-                    )
-                )
-
-                collectionsInAccount.forEach { collection ->
-
-                    CollectionCard(
-                        collection = collection,
-                        allCollections = list,
-                        onCollectionChanged = onCollectionChanged,
-                        onCollectionDeleted = onCollectionDeleted,
-                        onEntriesMoved = onEntriesMoved,
-                        onImportFromICS = onImportFromICS,
-                        onExportAsICS = onExportAsICS,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 4.dp)
-                            .combinedClickable(
-                                onClick = { onCollectionClicked(collection) })
-                    )
-                }
-            }
-        }
-
-        /*
-        // Alternative with LazyColumn caused weird scroll behaviour, observe if a better solution can be found!
-        // https://stackoverflow.com/questions/72604009/jetpack-compose-lazycolumn-items-scroll-over-stickyheader-and-does-not-scroll-to/72604421#72604421
 
         LazyColumn(
             modifier = Modifier.padding(8.dp)
@@ -134,10 +88,10 @@ fun CollectionsScreenContent(
 
             grouped.forEach { (account, collectionsInAccount) ->
                 stickyHeader {
-                    Text(
-                        account,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
+                    CollectionsAccountHeader(
+                        account = account,
+                        isFoundInAccountmanager = foundAccounts.contains(account) || account.type == ICalCollection.LOCAL_ACCOUNT_TYPE,
+                        onDeleteAccount = onDeleteAccount,
                         modifier = Modifier.padding(
                             top = 16.dp,
                             start = 8.dp,
@@ -170,8 +124,6 @@ fun CollectionsScreenContent(
                 }
             }
         }
-        */
-
     }
 }
 

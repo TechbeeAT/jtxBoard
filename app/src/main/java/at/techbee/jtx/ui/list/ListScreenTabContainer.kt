@@ -210,20 +210,23 @@ fun ListScreenTabContainer(
                                     topBarMenuExpanded = false
                                 }
                             )
+                            Divider()
                         }
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    stringResource(id = R.string.menu_list_delete_visible)
-                                )
-                            },
-                            leadingIcon = { Icon(Icons.Outlined.DeleteOutline, null) },
-                            onClick = {
-                                showDeleteAllVisibleDialog = true
-                                topBarMenuExpanded = false
-                            }
-                        )
-                        Divider()
+                        if(getActiveViewModel().iCal4List.value?.isNotEmpty() == true) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        stringResource(id = R.string.menu_list_delete_visible)
+                                    )
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.DeleteOutline, null) },
+                                onClick = {
+                                    showDeleteAllVisibleDialog = true
+                                    topBarMenuExpanded = false
+                                }
+                            )
+                            Divider()
+                        }
                         ViewMode.values().forEach { viewMode ->
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
@@ -242,53 +245,71 @@ fun ListScreenTabContainer(
             )
         },
         bottomBar = {
-            ListBottomAppBar(
-                module = listViewModel.module,
-                iCal4ListLive = listViewModel.iCal4List,
-                onAddNewEntry = {
-                    val lastUsedCollectionId = listViewModel.listSettings.getLastUsedCollectionId()
-                    val proposedCollectionId = if(allCollections.value.any {collection -> collection.collectionId == lastUsedCollectionId })
-                        lastUsedCollectionId
-                    else
-                        allCollections.value.firstOrNull()?.collectionId ?: return@ListBottomAppBar
-                    val newICalObject = when(listViewModel.module) {
-                        Module.JOURNAL -> ICalObject.createJournal().apply { collectionId = proposedCollectionId }
-                        Module.NOTE -> ICalObject.createNote().apply { collectionId = proposedCollectionId }
-                        Module.TODO -> ICalObject.createTodo().apply {
-                            this.setDefaultDueDateFromSettings(context)
-                            this.setDefaultStartDateFromSettings(context)
-                            collectionId = proposedCollectionId
+
+            // show the bottom bar only if there is any collection available that supports the component/module
+            if (allCollections.value.any { collection ->
+                    (listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
+                            || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
+                            || (listViewModel.module == Module.TODO && collection.supportsVTODO)
+                }) {
+                ListBottomAppBar(
+                    module = listViewModel.module,
+                    iCal4ListLive = listViewModel.iCal4List,
+                    onAddNewEntry = {
+                        val lastUsedCollectionId =
+                            listViewModel.listSettings.getLastUsedCollectionId()
+                        val proposedCollectionId =
+                            if (allCollections.value.any { collection -> collection.collectionId == lastUsedCollectionId })
+                                lastUsedCollectionId
+                            else
+                                allCollections.value.firstOrNull()?.collectionId
+                                    ?: return@ListBottomAppBar
+                        val newICalObject = when (listViewModel.module) {
+                            Module.JOURNAL -> ICalObject.createJournal()
+                                .apply { collectionId = proposedCollectionId }
+                            Module.NOTE -> ICalObject.createNote()
+                                .apply { collectionId = proposedCollectionId }
+                            Module.TODO -> ICalObject.createTodo().apply {
+                                this.setDefaultDueDateFromSettings(context)
+                                this.setDefaultStartDateFromSettings(context)
+                                collectionId = proposedCollectionId
+                            }
+                        }
+                        addNewEntry(newICalObject, emptyList(), null, true)
+                    },
+                    showQuickEntry = showQuickAdd,
+                    listSettings = listViewModel.listSettings,
+                    onFilterIconClicked = {
+                        scope.launch {
+                            if (filterBottomSheetState.isVisible)
+                                filterBottomSheetState.hide()
+                            else
+                                filterBottomSheetState.show()
+                        }
+                    },
+                    onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) },
+                    onSearchTextClicked = {
+                        scope.launch {
+                            if (!showSearch) {
+                                showSearch = true
+                                listViewModel.listSettings.searchText.value = ""
+                                keyboardController?.show()
+                                //focusRequesterSearchText.requestFocus()
+                            } else {
+                                showSearch = false
+                                keyboardController?.hide()
+                                listViewModel.listSettings.searchText.value =
+                                    null  // null removes color indicator for active search
+                                listViewModel.updateSearch(saveListSettings = false)
+                            }
                         }
                     }
-                    addNewEntry(newICalObject, emptyList(), null, true)
-                },
-                showQuickEntry = showQuickAdd,
-                listSettings = listViewModel.listSettings,
-                onFilterIconClicked = {
-                    scope.launch {
-                        if(filterBottomSheetState.isVisible)
-                            filterBottomSheetState.hide()
-                        else
-                            filterBottomSheetState.show()
-                    }
-                },
-                onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) },
-                onSearchTextClicked = {
-                    scope.launch {
-                        if(!showSearch) {
-                            showSearch = true
-                            listViewModel.listSettings.searchText.value = ""
-                            keyboardController?.show()
-                            //focusRequesterSearchText.requestFocus()
-                        } else {
-                            showSearch = false
-                            keyboardController?.hide()
-                            listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
-                            listViewModel.updateSearch(saveListSettings = false)
-                        }
-                    }
+                )
+            } else {
+                Snackbar(modifier = Modifier.padding(8.dp)) {
+                    Text("Please add a local collection or synchronise a remote collection that supports this module.")
                 }
-            )
+            }
         },
         content = { paddingValues ->
                 JtxNavigationDrawer(
