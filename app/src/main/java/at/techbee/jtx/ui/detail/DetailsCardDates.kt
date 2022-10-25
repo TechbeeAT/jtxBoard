@@ -90,7 +90,8 @@ fun DetailsCardDates(
                     else
                         null,
                     allowNull = icalObject.module == Module.TODO.name,
-                    dateOnly = (due != null && dueTimezone == TZ_ALLDAY) || (completed != null && completedTimezone == TZ_ALLDAY)
+                    dateOnly = (due != null && dueTimezone == TZ_ALLDAY) || (completed != null && completedTimezone == TZ_ALLDAY),
+                    enforceTime = (due != null && dueTimezone != TZ_ALLDAY) || (completed != null && completedTimezone != TZ_ALLDAY)
                 )
             }
 
@@ -123,7 +124,8 @@ fun DetailsCardDates(
                     },
                     labelTop = stringResource(id = R.string.due),
                     allowNull = icalObject.module == Module.TODO.name,
-                    dateOnly = (dtstart != null && dtstartTimezone == TZ_ALLDAY) || (completed != null && completedTimezone == TZ_ALLDAY)
+                    dateOnly = (dtstart != null && dtstartTimezone == TZ_ALLDAY) || (completed != null && completedTimezone == TZ_ALLDAY),
+                    enforceTime = (dtstart != null && dtstartTimezone != TZ_ALLDAY) || (completed != null && completedTimezone != TZ_ALLDAY)
                 )
             }
             if(icalObject.module == Module.TODO.name
@@ -142,7 +144,8 @@ fun DetailsCardDates(
                     pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone),
                     labelTop = stringResource(id = R.string.completed),
                     allowNull = icalObject.module == Module.TODO.name,
-                    dateOnly = (dtstart != null && dtstartTimezone == TZ_ALLDAY) || (due != null && dueTimezone == TZ_ALLDAY)
+                    dateOnly = (dtstart != null && dtstartTimezone == TZ_ALLDAY) || (due != null && dueTimezone == TZ_ALLDAY),
+                    enforceTime = (dtstart != null && dtstartTimezone != TZ_ALLDAY) || (due != null && dueTimezone != TZ_ALLDAY)
                 )
             }
         }
