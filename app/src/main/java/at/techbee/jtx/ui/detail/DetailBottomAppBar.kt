@@ -253,6 +253,40 @@ fun DetailBottomAppBar(
                     },
                     onClick = { detailSettings.enableCategories.value = !detailSettings.enableCategories.value }
                 )
+
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.subtasks),
+                            isChecked = detailSettings.enableSubtasks.value,
+                            onCheckedChanged = { detailSettings.enableSubtasks.value = !detailSettings.enableSubtasks.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableSubtasks.value = !detailSettings.enableSubtasks.value }
+                )
+
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.view_feedback_linked_notes),
+                            isChecked = detailSettings.enableSubnotes.value,
+                            onCheckedChanged = { detailSettings.enableSubnotes.value = !detailSettings.enableSubnotes.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableSubnotes.value = !detailSettings.enableSubnotes.value }
+                )
+
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.resources),
+                            isChecked = detailSettings.enableResources.value,
+                            onCheckedChanged = { detailSettings.enableResources.value = !detailSettings.enableResources.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableResources.value = !detailSettings.enableResources.value }
+                )
+
                 DropdownMenuItem(
                     text = {
                         LabelledCheckbox(
@@ -267,16 +301,7 @@ fun DetailBottomAppBar(
                         detailSettings.enableAttendees.value = !detailSettings.enableAttendees.value
                     }
                 )
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.resources),
-                            isChecked = detailSettings.enableResources.value,
-                            onCheckedChanged = { detailSettings.enableResources.value = !detailSettings.enableResources.value }
-                        )
-                    },
-                    onClick = { detailSettings.enableResources.value = !detailSettings.enableResources.value }
-                )
+
                 DropdownMenuItem(
                     text = {
                         LabelledCheckbox(
@@ -287,16 +312,7 @@ fun DetailBottomAppBar(
                     },
                     onClick = { detailSettings.enableContact.value = !detailSettings.enableContact.value }
                 )
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.location),
-                            isChecked = detailSettings.enableLocation.value,
-                            onCheckedChanged = { detailSettings.enableLocation.value = !detailSettings.enableLocation.value }
-                        )
-                    },
-                    onClick = { detailSettings.enableLocation.value = !detailSettings.enableLocation.value }
-                )
+
                 DropdownMenuItem(
                     text = {
                         LabelledCheckbox(
@@ -311,26 +327,29 @@ fun DetailBottomAppBar(
                         detailSettings.enableUrl.value = !detailSettings.enableUrl.value
                     }
                 )
+
                 DropdownMenuItem(
                     text = {
                         LabelledCheckbox(
-                            text = stringResource(id = R.string.subtasks),
-                            isChecked = detailSettings.enableSubtasks.value,
-                            onCheckedChanged = { detailSettings.enableSubtasks.value = !detailSettings.enableSubtasks.value }
+                            text = stringResource(id = R.string.location),
+                            isChecked = detailSettings.enableLocation.value,
+                            onCheckedChanged = { detailSettings.enableLocation.value = !detailSettings.enableLocation.value }
                         )
                     },
-                    onClick = { detailSettings.enableSubtasks.value = !detailSettings.enableSubtasks.value }
+                    onClick = { detailSettings.enableLocation.value = !detailSettings.enableLocation.value }
                 )
+
                 DropdownMenuItem(
                     text = {
                         LabelledCheckbox(
-                            text = stringResource(id = R.string.view_feedback_linked_notes),
-                            isChecked = detailSettings.enableSubnotes.value,
-                            onCheckedChanged = { detailSettings.enableSubnotes.value = !detailSettings.enableSubnotes.value }
+                            text = stringResource(id = R.string.comments),
+                            isChecked = detailSettings.enableComments.value,
+                            onCheckedChanged = { detailSettings.enableComments.value = !detailSettings.enableComments.value }
                         )
                     },
-                    onClick = { detailSettings.enableSubnotes.value = !detailSettings.enableSubnotes.value }
+                    onClick = { detailSettings.enableComments.value = !detailSettings.enableComments.value }
                 )
+
                 DropdownMenuItem(
                     text = {
                         LabelledCheckbox(
@@ -341,6 +360,20 @@ fun DetailBottomAppBar(
                     },
                     onClick = { detailSettings.enableAttachments.value = !detailSettings.enableAttachments.value }
                 )
+
+                if (icalObject.module == Module.TODO.name) {    //Never show the recurring tab for Journals and Notes, only for Todos
+                    DropdownMenuItem(
+                        text = {
+                            LabelledCheckbox(
+                                text = stringResource(id = R.string.alarms),
+                                isChecked = detailSettings.enableAlarms.value,
+                                onCheckedChanged = { detailSettings.enableAlarms.value = !detailSettings.enableAlarms.value }
+                            )
+                        },
+                        onClick = { detailSettings.enableAlarms.value = !detailSettings.enableAlarms.value }
+                    )
+                }
+
                 if (icalObject.module != Module.NOTE.name) {   //Never show the recurring tab for Notes
                     DropdownMenuItem(
                         text = {
@@ -356,28 +389,6 @@ fun DetailBottomAppBar(
                         }
                     )
                 }
-                if (icalObject.module == Module.TODO.name) {    //Never show the recurring tab for Journals and Notes, only for Todos
-                    DropdownMenuItem(
-                        text = {
-                            LabelledCheckbox(
-                                text = stringResource(id = R.string.alarms),
-                                isChecked = detailSettings.enableAlarms.value,
-                                onCheckedChanged = { detailSettings.enableAlarms.value = !detailSettings.enableAlarms.value }
-                            )
-                        },
-                        onClick = { detailSettings.enableAlarms.value = !detailSettings.enableAlarms.value }
-                    )
-                }
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.comments),
-                            isChecked = detailSettings.enableComments.value,
-                            onCheckedChanged = { detailSettings.enableComments.value = !detailSettings.enableComments.value }
-                        )
-                    },
-                    onClick = { detailSettings.enableComments.value = !detailSettings.enableComments.value }
-                )
             }
 
 

@@ -475,6 +475,18 @@ fun DetailScreenContent(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableCategories.value || showAllOptions))) {
+                DetailsCardCategories(
+                    initialCategories = categories.value,
+                    isEditMode = isEditMode.value,
+                    onCategoriesUpdated = { newCategories ->
+                        categories.value = newCategories
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    allCategories = allCategories,
+                )
+            }
+
             AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.enableSubtasks.value || showAllOptions))) {
                 DetailsCardSubtasks(
                     subtasks = subtasks.value,
@@ -518,18 +530,6 @@ fun DetailScreenContent(
                 )
             }
 
-
-            AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableCategories.value || showAllOptions))) {
-                DetailsCardCategories(
-                    initialCategories = categories.value,
-                    isEditMode = isEditMode.value,
-                    onCategoriesUpdated = { newCategories ->
-                        categories.value = newCategories
-                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                    },
-                    allCategories = allCategories,
-                )
-            }
 
             AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableResources.value || showAllOptions))) {
                 DetailsCardResources(
