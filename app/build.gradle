@@ -11,6 +11,7 @@ apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
+apply plugin: "kotlinx-serialization"
 
 
 android {
@@ -198,6 +199,8 @@ dependencies {
 
     // Android KTX
     implementation "androidx.core:core-ktx:$version_core"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
 
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$version_room"

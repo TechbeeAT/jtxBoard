@@ -96,6 +96,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "INNER JOIN $TABLE_NAME_COLLECTION collection ON main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
             "WHERE main_icalobject.$COLUMN_DELETED = 0 AND main_icalobject.$COLUMN_RRULE IS NULL"
 )           // locally deleted entries are already excluded in the view, original recur entries are also excluded
+
+@kotlinx.serialization.Serializable
 data class ICal4List(
 
     @ColumnInfo(index = true, name = COLUMN_ID) var id: Long,

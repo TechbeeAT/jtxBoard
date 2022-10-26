@@ -563,6 +563,10 @@ DELETEs by Object
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4List(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
 
+    @Transaction
+    @Query("SELECT * from $VIEW_NAME_ICAL4LIST WHERE $COLUMN_MODULE = :module")
+    fun getIcal4ListByModuleSync(module: Module): List<ICal4List>
+
 
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")
@@ -572,6 +576,7 @@ DELETEs by Object
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")
     fun getSync(key: Long): ICalEntity?
+
 
     @Transaction
     @Query("SELECT * from alarm WHERE _id = :key")

@@ -11,22 +11,40 @@ package at.techbee.jtx.widgets.elements
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceModifier
+import androidx.glance.layout.Column
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
+import androidx.glance.text.FontStyle
+import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
-import at.techbee.jtx.database.ICalObject
+import androidx.glance.text.TextStyle
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.util.DateTimeUtils
 
 @Composable
-fun JournalEntryCard(obj: ICal4List) {
+fun JournalEntryCard(
+    obj: ICal4List,
+    modifier: GlanceModifier = GlanceModifier
+) {
+
+    val textStyleDate = TextStyle(fontStyle = FontStyle.Italic)
+    val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold)
+
     Card(
-        modifier = GlanceModifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+        modifier = modifier
     ) {
-        Text(
-            text = obj.summary ?: obj.accountName ?: "N/A",
-            modifier = GlanceModifier.padding(8.dp),
-        )
+        Column(
+            modifier = GlanceModifier.fillMaxWidth().padding(4.dp)
+        ) {
+            Text(
+                text = DateTimeUtils.convertLongToFullDateTimeString(obj.dtstart, obj.dtstartTimezone),
+                style = textStyleDate
+            )
+            obj.summary?.let { Text(
+                text = it,
+                style = textStyleSummary
+            ) }
+            obj.description?.let { Text(it, maxLines = 2) }
+        }
     }
 }
