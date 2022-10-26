@@ -36,6 +36,7 @@ fun ListBottomAppBar(
     iCal4ListLive: LiveData<List<ICal4List>>,
     listSettings: ListSettings,
     showQuickEntry: MutableState<Boolean>,
+    allowNewEntries: Boolean,
     onAddNewEntry: () -> Unit,
     onFilterIconClicked: () -> Unit,
     onGoToDateSelected: (Long) -> Unit,
@@ -102,20 +103,22 @@ fun ListBottomAppBar(
                     tint = if (isFilterActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
                 )
             }
-            IconButton(onClick = { showQuickEntry.value = !showQuickEntry.value }) {
-                Icon(
-                    painterResource(
-                        id = R.drawable.ic_add_quick
-                    ),
-                    contentDescription = stringResource(
-                        id = when (module) {
-                            Module.JOURNAL -> R.string.menu_list_quick_journal
-                            Module.NOTE -> R.string.menu_list_quick_note
-                            Module.TODO -> R.string.menu_list_quick_todo
-                        }
-                    ),
-                    tint = if (showQuickEntry.value) MaterialTheme.colorScheme.primary else LocalContentColor.current
-                )
+            AnimatedVisibility(allowNewEntries) {
+                IconButton(onClick = { showQuickEntry.value = !showQuickEntry.value }) {
+                    Icon(
+                        painterResource(
+                            id = R.drawable.ic_add_quick
+                        ),
+                        contentDescription = stringResource(
+                            id = when (module) {
+                                Module.JOURNAL -> R.string.menu_list_quick_journal
+                                Module.NOTE -> R.string.menu_list_quick_note
+                                Module.TODO -> R.string.menu_list_quick_todo
+                            }
+                        ),
+                        tint = if (showQuickEntry.value) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                    )
+                }
             }
             IconButton(onClick = { onSearchTextClicked() }) {
                 Icon(
@@ -136,17 +139,18 @@ fun ListBottomAppBar(
         },
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
-            FloatingActionButton(
-                onClick = { onAddNewEntry() },
-            ) {
-                Crossfade(module) {
-                    when (it) {
-                        Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
-                        Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
-                        Module.TODO -> Icon(Icons.Outlined.AddTask, stringResource(R.string.toolbar_text_add_task))
+            AnimatedVisibility(allowNewEntries) {
+                FloatingActionButton(
+                    onClick = { onAddNewEntry() },
+                ) {
+                    Crossfade(module) {
+                        when (it) {
+                            Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
+                            Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
+                            Module.TODO -> Icon(Icons.Outlined.AddTask, stringResource(R.string.toolbar_text_add_task))
+                        }
                     }
                 }
-
             }
         }
     )
@@ -168,6 +172,7 @@ fun ListBottomAppBar_Preview_Journal() {
             module = Module.JOURNAL,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
+            allowNewEntries = true,
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
@@ -192,6 +197,7 @@ fun ListBottomAppBar_Preview_Note() {
             module = Module.NOTE,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
+            allowNewEntries = true,
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
@@ -216,6 +222,7 @@ fun ListBottomAppBar_Preview_Todo() {
             module = Module.TODO,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
+            allowNewEntries = true,
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
@@ -241,6 +248,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             module = Module.TODO,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
+            allowNewEntries = true,
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },

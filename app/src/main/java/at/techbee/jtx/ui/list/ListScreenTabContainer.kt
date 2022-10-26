@@ -255,6 +255,12 @@ fun ListScreenTabContainer(
                 ListBottomAppBar(
                     module = listViewModel.module,
                     iCal4ListLive = listViewModel.iCal4List,
+                    allowNewEntries = allCollections.value.any { collection ->
+                        ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
+                                || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
+                                || (listViewModel.module == Module.TODO && collection.supportsVTODO)
+                             && !collection.readonly)
+                    },
                     onAddNewEntry = {
                         val lastUsedCollectionId =
                             listViewModel.listSettings.getLastUsedCollectionId()
