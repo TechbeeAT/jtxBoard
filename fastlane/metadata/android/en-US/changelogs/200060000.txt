@@ -1,0 +1,3 @@
+- Open Geo-Location in another app
+- All local collections can now be deleted
+- Several improvements and bugfixes
