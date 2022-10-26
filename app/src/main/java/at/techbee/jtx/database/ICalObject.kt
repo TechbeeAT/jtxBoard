@@ -1121,15 +1121,19 @@ data class ICalObject(
                     it.alarmId = 0L
                     it.icalObjectId = instanceId
 
-                    val dur = try { Duration.parse(it.triggerRelativeDuration!!) } catch (e: IllegalArgumentException) { return@forEach }
-                    if(it.triggerRelativeTo == AlarmRelativeTo.END.name) {
-                        it.triggerTime = instance.property.due!! + dur.inWholeMilliseconds
-                        it.triggerTimezone = instance.property.dueTimezone
-                    } else {
-                        it.triggerTime = instance.property.dtstart!! + dur.inWholeMilliseconds
-                        it.triggerTimezone = instance.property.dtstartTimezone
+                    try {
+                        val dur = Duration.parse(it.triggerRelativeDuration!!)
+                        if(it.triggerRelativeTo == AlarmRelativeTo.END.name) {
+                            it.triggerTime = instance.property.due!! + dur.inWholeMilliseconds
+                            it.triggerTimezone = instance.property.dueTimezone
+                        } else {
+                            it.triggerTime = instance.property.dtstart!! + dur.inWholeMilliseconds
+                            it.triggerTimezone = instance.property.dtstartTimezone
+                        }
+                        database.insertAlarmSync(it)
+                    } catch (e: IllegalArgumentException) {
+                        Log.w("DurationParsing", "Duration could not be parsed for instance, skipping this alarm.")
                     }
-                    database.insertAlarmSync(it)
                 }
             }
             Alarm.scheduleNextNotifications(context)
