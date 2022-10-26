@@ -12,8 +12,6 @@
     <string name="app_name" translatable="false">jtx Board</string>
     <string name="app_permission_label">jtx Board sync Journals, Notes &amp; Tasks</string>
     <string name="app_permission_desc">sync jtx Board content with other applications like DAVx⁵</string>
-    <string name="widget_journals" translatable="false">Journals widget</string>
-
 
     <!-- Reusable links in different contexts -->
     <string name="link_davx5" translatable="false">https://www.davx5.com/</string>
