@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Techbee e.U.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the GNU Public License v3.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.gnu.org/licenses/gpl.html
+  -->
+
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/journals_widget_description"
+    android:minWidth="180dp"
+    android:minHeight="50dp"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="4"
+    android:targetCellHeight="2"
+    android:widgetCategory="home_screen"
+    />

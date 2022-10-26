@@ -29,6 +29,7 @@
     <string name="link_jtx_donate" translatable="false">https://jtx.techbee.at/app/donate</string>
     <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
 
+
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">Read contacts permission granted</string>
     <string name="permission_read_contacts_denied">Read contacts permission denied</string>
@@ -661,5 +662,9 @@
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again.</string>
     <string name="title_activity_list_screen">ListScreen</string>
+
+    <string name="journals_widget_description">Journals widget</string>
+    <string name="journals_widget_title">Journals</string>
+    <string name="journals_widget_new">New Journal</string>
 
 </resources>
