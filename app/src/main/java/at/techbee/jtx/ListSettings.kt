@@ -26,6 +26,10 @@ data class ListSettings(
     var sortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var orderBy2: MutableState<OrderBy> = mutableStateOf(OrderBy.SUMMARY)
     var sortOrder2: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var subtasksOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
+    var subtasksSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var subnotesOorderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
+    var subnotesSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var isExcludeDone: MutableState<Boolean> = mutableStateOf(false)
     var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
@@ -55,6 +59,10 @@ data class ListSettings(
         private const val PREFS_SORTORDER = "prefsSortOrder"
         private const val PREFS_ORDERBY2 = "prefsOrderBy2"
         private const val PREFS_SORTORDER2 = "prefsSortOrder2"
+        private const val PREFS_SUBTASKS_ORDERBY = "prefsSubtasksOrderBy"
+        private const val PREFS_SUBTASKS_SORTORDER = "prefsSubtasksSortOrder"
+        private const val PREFS_SUBNOTES_ORDERBY = "prefsSubnotesOrderBy"
+        private const val PREFS_SUBNOTES_SORTORDER = "prefsSubnotesSortOrder"
         private const val PREFS_FILTER_OVERDUE = "prefsFilterOverdue"
         private const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
@@ -92,6 +100,10 @@ data class ListSettings(
         sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
         orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
         sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+        subtasksOrderBy.value = prefs.getString(PREFS_SUBTASKS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
+        subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+        subnotesOorderBy.value = prefs.getString(PREFS_SUBNOTES_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
+        subnotesSortOrder.value = prefs.getString(PREFS_SUBNOTES_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
 
         viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
     }
@@ -109,6 +121,10 @@ data class ListSettings(
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
             putString(PREFS_ORDERBY, orderBy.value.name)
             putString(PREFS_SORTORDER, sortOrder.value.name)
+            putString(PREFS_SUBTASKS_ORDERBY, subtasksOrderBy.value.name)
+            putString(PREFS_SUBTASKS_SORTORDER, subtasksSortOrder.value.name)
+            putString(PREFS_SUBNOTES_ORDERBY, subnotesOorderBy.value.name)
+            putString(PREFS_SUBNOTES_SORTORDER, subnotesSortOrder.value.name)
             putString(PREFS_ORDERBY2, orderBy2.value.name)
             putString(PREFS_SORTORDER2, sortOrder2.value.name)
             putBoolean(PREFS_EXCLUDE_DONE, isExcludeDone.value)
@@ -121,7 +137,6 @@ data class ListSettings(
             putStringSet(PREFS_ACCOUNT, searchAccount.value.toSet())
 
             putString(PREFS_VIEWMODE, viewMode.value.name)
-
         }.apply()
     }
 

@@ -416,6 +416,12 @@
     <string name="filter_desc">Descending</string>
     <string name="filter_created">Created</string>
     <string name="filter_last_modified">Last modified</string>
+    <string name="filter_first_order_by">First order by</string>
+    <string name="filter_second_order_by">Then order by</string>
+    <string name="filter_subtasks_order_by">Order subtasks by</string>
+    <string name="filter_subnotes_order_by">Order subnotes by</string>
+
+
 
     <!-- fragment_about -->
     <string name="about_tabitem_jtx" translatable="false">jtx Board</string>

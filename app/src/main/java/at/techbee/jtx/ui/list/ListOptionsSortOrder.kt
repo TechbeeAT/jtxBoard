@@ -46,8 +46,8 @@ fun ListOptionsSortOrder(
     ) {
         HeadlineWithIcon(
             icon = Icons.Outlined.Sort,
-            iconDesc = stringResource(id = R.string.filter_order_by),
-            text = stringResource(id = R.string.filter_order_by),
+            iconDesc = stringResource(id = R.string.filter_first_order_by),
+            text = stringResource(id = R.string.filter_first_order_by),
             modifier = Modifier.padding(top = 8.dp)
         )
 
@@ -90,6 +90,107 @@ fun ListOptionsSortOrder(
         )
 
         // SORT ORDER 2
+        HeadlineWithIcon(
+            icon = Icons.Outlined.Sort,
+            iconDesc = stringResource(id = R.string.filter_second_order_by),
+            text = stringResource(id = R.string.filter_second_order_by),
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
+            OrderBy.getValuesFor(module).forEach { orderBy ->
+                if (orderBy == listSettings.orderBy.value) // don't show criteria that was already selected
+                    return@forEach
+
+                FilterChip(
+                    selected = listSettings.orderBy2.value == orderBy,
+                    onClick = {
+                        if (listSettings.orderBy2.value != orderBy)
+                            listSettings.orderBy2.value = orderBy
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = orderBy.stringResource)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
+            SortOrder.values().forEach { sortOrder ->
+                FilterChip(
+                    selected = listSettings.sortOrder2.value == sortOrder,
+                    onClick = {
+                        if (listSettings.sortOrder2.value != sortOrder)
+                            listSettings.sortOrder2.value = sortOrder
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = sortOrder.stringResource)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
+
+
+        Divider(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            thickness = 1.dp,
+            modifier = Modifier
+                .alpha(0.25f)
+                .padding(top = 8.dp)
+        )
+
+        // SORT ORDER FOR SUBTASKS
+        HeadlineWithIcon(
+            icon = Icons.Outlined.Sort,
+            iconDesc = stringResource(id = R.string.filter_subtasks_order_by),
+            text = stringResource(id = R.string.filter_subtasks_order_by),
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
+            OrderBy.getValuesFor(module).forEach { orderBy ->
+                if (orderBy == listSettings.orderBy.value) // don't show criteria that was already selected
+                    return@forEach
+
+                FilterChip(
+                    selected = listSettings.orderBy2.value == orderBy,
+                    onClick = {
+                        if (listSettings.orderBy2.value != orderBy)
+                            listSettings.orderBy2.value = orderBy
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = orderBy.stringResource)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
+            SortOrder.values().forEach { sortOrder ->
+                FilterChip(
+                    selected = listSettings.sortOrder2.value == sortOrder,
+                    onClick = {
+                        if (listSettings.sortOrder2.value != sortOrder)
+                            listSettings.sortOrder2.value = sortOrder
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = sortOrder.stringResource)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
+
+        Divider(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            thickness = 1.dp,
+            modifier = Modifier
+                .alpha(0.25f)
+                .padding(top = 8.dp)
+        )
+
+        // SORT ORDER SUBNOTES
+        HeadlineWithIcon(
+            icon = Icons.Outlined.Sort,
+            iconDesc = stringResource(id = R.string.filter_subnotes_order_by),
+            text = stringResource(id = R.string.filter_subnotes_order_by),
+            modifier = Modifier.padding(top = 8.dp)
+        )
         FlowRow(modifier = Modifier.fillMaxWidth()) {
             OrderBy.getValuesFor(module).forEach { orderBy ->
                 if (orderBy == listSettings.orderBy.value) // don't show criteria that was already selected
