@@ -38,6 +38,7 @@ import at.techbee.jtx.ui.reusable.elements.DropdownSetting
 import at.techbee.jtx.ui.reusable.elements.SwitchSetting
 import at.techbee.jtx.ui.settings.DropdownSetting.*
 import at.techbee.jtx.ui.settings.SwitchSetting.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -356,7 +357,7 @@ fun SettingsScreen(
                         onSelectionChanged = { selection ->
                             settingsStateHolder.settingAutoAlarm.value = selection
                             SETTING_AUTO_ALARM.save(selection, context = context)
-                            scope.launch { Alarm.scheduleNextNotifications(context) }
+                            scope.launch(Dispatchers.IO) { Alarm.scheduleNextNotifications(context) }
                         }
                     )
                 }
