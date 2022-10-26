@@ -11,12 +11,14 @@ package at.techbee.jtx.ui.list
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.PackageManager.PackageInfoFlags
 import android.database.sqlite.SQLiteConstraintException
-import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.ListSettings
@@ -29,9 +31,10 @@ import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.ui.settings.SwitchSetting
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
+import at.techbee.jtx.util.getPackageInfoCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.days
 
 
 open class ListViewModel(application: Application, val module: Module) : AndroidViewModel(application) {
@@ -84,6 +87,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
         get() =  settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBNOTES_IN_NOTESLIST.key, false) ?: false
     private val searchSettingShowAllSubjournalsinJournallist: Boolean
         get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.key, false) ?: false
+    private val searchSettingShowOneRecurEntryInFuture: Boolean
+        get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.key, false) ?: false
 
 
 
@@ -91,10 +96,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
         updateSearch()
 
         // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
-        val firstInstall = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            application.packageManager?.getPackageInfo(application.packageName, PackageInfoFlags.of(0))?.firstInstallTime ?: System.currentTimeMillis()
-        else
-            application.packageManager?.getPackageInfo(application.packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
+        val firstInstall = application.packageManager
+            ?.getPackageInfoCompat(application.packageName, 0)
+            ?.firstInstallTime ?: System.currentTimeMillis()
 
         if(settings.getBoolean(PREFS_ISFIRSTRUN, true)) {
             if (firstInstall > 1641596400000L)
@@ -189,20 +193,27 @@ open class ListViewModel(application: Application, val module: Module) : Android
         if (listSettings.isExcludeDone.value)
             queryString += "AND $COLUMN_PERCENT IS NOT 100 "
 
-        val dueQuery = mutableListOf<String>()
+        val dateQuery = mutableListOf<String>()
+        if (listSettings.isFilterStartInPast.value)
+            dateQuery.add("$COLUMN_DTSTART < ${System.currentTimeMillis()}")
+        if (listSettings.isFilterStartToday.value)
+            dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds-1}")
+        if (listSettings.isFilterStartTomorrow.value)
+            dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds-1}")
+        if (listSettings.isFilterStartFuture.value)
+            dateQuery.add("$COLUMN_DTSTART > ${System.currentTimeMillis()}")
         if (listSettings.isFilterOverdue.value)
-            dueQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
+            dateQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
         if (listSettings.isFilterDueToday.value)
-            dueQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)-1}")
+            dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds-1}")
         if (listSettings.isFilterDueTomorrow.value)
-            dueQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)} AND ${DateTimeUtils.getTodayAsLong() + TimeUnit.DAYS.toMillis(2)-1}")
+            dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds-1}")
         if (listSettings.isFilterDueFuture.value)
-            dueQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
-        if(dueQuery.isNotEmpty())
-            queryString += " AND (${dueQuery.joinToString(separator = " OR ")}) "
-
+            dateQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
         if(listSettings.isFilterNoDatesSet.value)
-            queryString += "AND $COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL "
+            dateQuery.add("$COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL ")
+        if(dateQuery.isNotEmpty())
+            queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
 
         // Query for the passed filter criteria from FilterFragment
         if (listSettings.searchClassification.value.isNotEmpty()) {
@@ -263,6 +274,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 if (!searchSettingShowAllSubjournalsinJournallist)
                     queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
             }
+        }
+
+        if(searchSettingShowOneRecurEntryInFuture) {
+            queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ISLINKEDINSTANCE = 0 " +
+                    "OR $VIEW_NAME_ICAL4LIST.$COLUMN_DTSTART <= " +
+                    "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_RECUR_ORIGINALICALOBJECTID = $VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ORIGINALICALOBJECTID AND recurList.$COLUMN_RECUR_ISLINKEDINSTANCE = 1 AND recurList.$COLUMN_DTSTART > ${System.currentTimeMillis()} )) "
         }
 
         queryString += "ORDER BY "
@@ -354,7 +371,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      * @param icalObject to be inserted
      * @param categories the list of categories that should be linked to the icalObject
      */
-    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) {
+    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachment: Attachment?, alarm: Alarm?, editAfterSaving: Boolean) {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -368,6 +385,11 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 attachment?.let {
                     it.icalObjectId = newId
                     database.insertAttachment(it)
+                }
+
+                alarm?.let {
+                    it.icalObjectId = newId
+                    database.insertAlarm(it)
                 }
 
                 scrollOnceId.postValue(newId)

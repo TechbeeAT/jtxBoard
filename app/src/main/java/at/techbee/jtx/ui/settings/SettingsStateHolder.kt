@@ -13,14 +13,13 @@ import android.content.SharedPreferences
 import androidx.compose.runtime.mutableStateOf
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.util.getPackageInfoCompat
 
 class SettingsStateHolder(val context: Context) {
 
     companion object {
         private const val SETTINGS_PRO_INFO_SHOWN = "settingsProInfoShown"
-        private const val PREFS_LAST_COLLECTION = "lastUsedCollection"
         private const val PREFS_LAST_MODULE = "lastUsedModule"
-        private const val PREFS_SAVE_AND_EDIT = "saveAndEdit"
     }
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -47,18 +46,17 @@ class SettingsStateHolder(val context: Context) {
     var settingStepForProgress = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_PROGRESS_STEP.key, DropdownSetting.SETTING_PROGRESS_STEP.default.key) } ?: DropdownSetting.SETTING_PROGRESS_STEP.default )
     var settingDisableAlarmsReadonly = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.key, SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.default))
+    var settingAutoAlarm = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
+        DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key) } ?: DropdownSetting.SETTING_AUTO_ALARM.default )
+    var settingEnableMarkdownFormattting = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_DETAILS_ENABLE_MARKDOWN.key, SwitchSetting.SETTING_DETAILS_ENABLE_MARKDOWN.default))
+    var settingShowOneRecurEntryInFuture = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.key, SwitchSetting.SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.default))
+
 
 
     //invisible settings
     var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))
         set(newValue) {
             prefs.edit().putBoolean(SETTINGS_PRO_INFO_SHOWN, newValue.value).apply()
-            field = newValue
-        }
-
-    var lastUsedCollection = mutableStateOf(prefs.getLong(PREFS_LAST_COLLECTION, 0L))
-        set(newValue) {
-            prefs.edit().putLong(PREFS_LAST_COLLECTION, newValue.value).apply()
             field = newValue
         }
 
@@ -70,18 +68,12 @@ class SettingsStateHolder(val context: Context) {
             field = newValue
         }
 
-    var saveAndEdit = mutableStateOf(prefs.getBoolean(PREFS_SAVE_AND_EDIT, false))
-        set(newValue) {
-            prefs.edit().putBoolean(PREFS_SAVE_AND_EDIT, newValue.value).apply()
-            field = newValue
-        }
-
-
-    var showJtx20betainfo = mutableStateOf(prefs.getBoolean("jtx_2.0_beta_info_shown", true))
+    var showJtx20releaseinfo = mutableStateOf(prefs.getBoolean("jtx_2.0_beta_info_shown", context.packageManager.getPackageInfoCompat(context.packageName, 0).firstInstallTime < 1665260058251))
         set(newValue) {
             prefs.edit().putBoolean("jtx_2.0_beta_info_shown", newValue.value).apply()
             field = newValue
         }
+
 }
 
 

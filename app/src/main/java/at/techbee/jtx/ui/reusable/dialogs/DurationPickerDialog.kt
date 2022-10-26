@@ -30,8 +30,8 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
-import java.time.Duration
 import kotlin.math.absoluteValue
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -45,31 +45,30 @@ fun DurationPickerDialog(
     onDismiss: () -> Unit
 ) {
 
-    val triggerAsDuration = alarm.getTriggerAsDuration() ?: Duration.ZERO
+    val triggerAsDuration = alarm.getTriggerAsDuration() ?: (0).minutes
 
     var durationUnit by rememberSaveable { mutableStateOf(
         when {
-            triggerAsDuration.toMillis()%(1000*60*60*24) == 0L -> DurationUnit.DAYS
-            triggerAsDuration.toMillis()%(1000*60*60) == 0L -> DurationUnit.HOURS
-            triggerAsDuration.toMillis()%(1000*60) == 0L -> DurationUnit.MINUTES
+            triggerAsDuration.inWholeMilliseconds%(1000*60*60*24) == 0L -> DurationUnit.DAYS
+            triggerAsDuration.inWholeMilliseconds%(1000*60*60) == 0L -> DurationUnit.HOURS
+            triggerAsDuration.inWholeMilliseconds%(1000*60) == 0L -> DurationUnit.MINUTES
             else -> DurationUnit.MINUTES
         }
     )}
 
     var durationNumber by rememberSaveable { mutableStateOf<Long?>(
         when {
-            triggerAsDuration.toMillis()%(1000*60*60*24) == 0L -> triggerAsDuration.toDays().absoluteValue
-            triggerAsDuration.toMillis()%(1000*60*60) == 0L -> triggerAsDuration.toHours().absoluteValue
-            triggerAsDuration.toMillis()%(1000*60) == 0L -> triggerAsDuration.toMinutes().absoluteValue
+            triggerAsDuration.inWholeMilliseconds%(1000*60*60*24) == 0L -> triggerAsDuration.inWholeDays
+            triggerAsDuration.inWholeMilliseconds%(1000*60*60) == 0L -> triggerAsDuration.inWholeHours
+            triggerAsDuration.inWholeMilliseconds%(1000*60) == 0L -> triggerAsDuration.inWholeMinutes
             else -> 0
         }
     )}
 
-    var durationBefore by rememberSaveable { mutableStateOf(triggerAsDuration.isNegative) }
+    var durationBefore by rememberSaveable { mutableStateOf(triggerAsDuration.isNegative()) }
     var durationStartEnd by rememberSaveable { mutableStateOf(
         if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) AlarmRelativeTo.END else AlarmRelativeTo.START
     )}
-
 
 
     AlertDialog(
@@ -82,15 +81,8 @@ fun DurationPickerDialog(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = durationNumber?.toString() ?:"",
-                    onValueChange = {
-                        durationNumber = if(it.isEmpty())
-                            null
-                        else if(durationBefore)
-                            (it.toLongOrNull() ?: 0L) * -1L
-                        else
-                            it.toLongOrNull() ?: 0L
-                        },
+                    value = durationNumber?.absoluteValue?.toString() ?:"",
+                    onValueChange = { durationNumber = it.toLongOrNull()  },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier
@@ -165,8 +157,21 @@ fun DurationPickerDialog(
         confirmButton = {
             TextButton(
                 onClick = {
+                    durationNumber?.let {
+                        durationNumber = if(durationBefore) it.absoluteValue * (-1) else it.absoluteValue
+                    } ?: return@TextButton
                     alarm.triggerRelativeTo = durationStartEnd.name
                     alarm.triggerRelativeDuration = (durationNumber?:0).toDuration(durationUnit).toIsoString()
+                    alarm.triggerTime =
+                        if(durationStartEnd == AlarmRelativeTo.END)
+                            icalObject.due!! + (durationNumber?:0).toDuration(durationUnit).inWholeMilliseconds
+                        else
+                            icalObject.dtstart!! + (durationNumber?:0).toDuration(durationUnit).inWholeMilliseconds
+                    alarm.triggerTimezone =
+                        if(durationStartEnd == AlarmRelativeTo.END)
+                            icalObject.dueTimezone
+                        else
+                            icalObject.dtstartTimezone
                     onConfirm(alarm)
                     onDismiss()
                 }
@@ -192,7 +197,12 @@ fun DurationPickerDialog(
 fun DurationPickerDialog_Preview() {
     MaterialTheme {
         DurationPickerDialog(
-            alarm = Alarm.createDisplayAlarm(Duration.ofMinutes(-15), AlarmRelativeTo.END),
+            alarm = Alarm.createDisplayAlarm(
+                dur = (-15).minutes,
+                alarmRelativeTo = AlarmRelativeTo.END,
+                referenceDate = System.currentTimeMillis(),
+                referenceTimezone = null
+            ),
             icalObject = ICalObject.createTodo().apply {
                 dtstart = System.currentTimeMillis()
                 dtstartTimezone = null

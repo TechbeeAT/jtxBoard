@@ -43,11 +43,6 @@ enum class NavigationDrawerDestination (
         icon = Icons.Outlined.Folder,
         navigationAction = { navHost, _ -> navHost.navigate(BUYPRO.name)}
     ),
-    ADINFO(
-        titleResource = R.string.navigation_drawer_adinfo,
-        icon = Icons.Outlined.AdsClick,
-        navigationAction = { navHost, _ -> navHost.navigate(ADINFO.name)}
-    ),
     DONATE(
         titleResource = R.string.navigation_drawer_donate,
         icon = Icons.Outlined.CardGiftcard,
@@ -119,8 +114,8 @@ enum class NavigationDrawerDestination (
         fun valuesFor(flavor: String): List<NavigationDrawerDestination> {
             return when(flavor) {
                 MainActivity2.BUILD_FLAVOR_GOOGLEPLAY -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_HUAWEI -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, ADINFO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
                 MainActivity2.BUILD_FLAVOR_OSE -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_GENERIC -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
                 else -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
             }
         }

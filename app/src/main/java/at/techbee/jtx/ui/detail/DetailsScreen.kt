@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
@@ -42,14 +43,14 @@ fun DetailsScreen(
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
     autosave: Boolean,
-    onLastUsedCollectionChanged: (Long) -> Unit,
+    onLastUsedCollectionChanged: (Module, Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
     //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
-    var goBackRequestedByTopBar by remember { mutableStateOf(false) }
+    val goBackRequestedByTopBar = remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showRevertDialog by remember { mutableStateOf(false) }
     var navigateUp by remember { mutableStateOf(false) }
@@ -114,9 +115,8 @@ fun DetailsScreen(
         topBar = {
             DetailsTopAppBar(
                 title = stringResource(id = R.string.details),
-                subtitle = detailViewModel.icalEntity.value?.property?.summary,
                 goBack = {
-                    goBackRequestedByTopBar = true
+                    goBackRequestedByTopBar.value = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 actions = {
                     if (!isEditMode.value) {
@@ -183,7 +183,7 @@ fun DetailsScreen(
                         changedAttachments,
                         changedAlarms
                     )
-                    onLastUsedCollectionChanged(changedICalObject.collectionId)
+                    onLastUsedCollectionChanged(detailViewModel.icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
                 },
                 deleteICalObject = { showDeleteDialog = true },
                 onProgressChanged = { itemId, newPercent, _ ->

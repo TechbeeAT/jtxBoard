@@ -23,41 +23,28 @@ import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.AlarmRelativeTo
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
@@ -65,12 +52,14 @@ import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.minutes
 
 
 @OptIn(
@@ -87,6 +76,7 @@ fun ListScreenTabContainer(
 ) {
 
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     val screens = listOf(ListTabDestination.Journals, ListTabDestination.Notes, ListTabDestination.Tasks)
     val pagerState = rememberPagerState(
@@ -97,12 +87,20 @@ fun ListScreenTabContainer(
         }
     )
 
-    var topBarMenuExpanded by remember { mutableStateOf(false) }
-    var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
-
     val icalListViewModelJournals: ListViewModelJournals = viewModel()
     val icalListViewModelNotes: ListViewModelNotes = viewModel()
     val icalListViewModelTodos: ListViewModelTodos = viewModel()
+
+    val listViewModel = when(pagerState.currentPage) {
+        ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
+        ListTabDestination.Notes.tabIndex -> icalListViewModelNotes
+        ListTabDestination.Tasks.tabIndex -> icalListViewModelTodos
+        else -> icalListViewModelJournals  // fallback, should not happen
+    }
+    val allCollections = listViewModel.allCollections.observeAsState(emptyList())
+
+    var topBarMenuExpanded by remember { mutableStateOf(false) }
+    var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
 
     fun getActiveViewModel() =
         when (pagerState.currentPage) {
@@ -122,11 +120,11 @@ fun ListScreenTabContainer(
     val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     var showSearch by remember { mutableStateOf(false) }
-    var showQuickAdd by remember { mutableStateOf(false) }
+    val showQuickAdd = remember { mutableStateOf(false) }
 
     if (showDeleteAllVisibleDialog) {
         DeleteVisibleDialog(
-            numEntriesToDelete = getActiveViewModel().iCal4List.value?.size ?: 0,
+            numEntriesToDelete = getActiveViewModel().iCal4List.value?.filter { entry -> !entry.isReadOnly}?.size ?: 0,
             onConfirm = { getActiveViewModel().deleteVisible() },
             onDismiss = { showDeleteAllVisibleDialog = false }
         )
@@ -136,17 +134,56 @@ fun ListScreenTabContainer(
         ErrorOnUpdateDialog(onConfirm = { getActiveViewModel().sqlConstraintException.value = false })
     }
 
+    // reset search when tab changes
+    val lastUsedPage = remember { mutableStateOf<Int?>(null) }
+    if(lastUsedPage.value != pagerState.currentPage) {
+        showSearch = false
+        keyboardController?.hide()
+        listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
+        listViewModel.updateSearch(saveListSettings = false)
+        lastUsedPage.value = pagerState.currentPage
+    }
+
+    fun addNewEntry(newICalObject: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) {
+        listViewModel.listSettings.saveLastUsedCollectionId(newICalObject.collectionId)
+        settingsStateHolder.lastUsedModule.value = newICalObject.getModuleFromString()
+        settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
+
+        globalStateHolder.icalFromIntentString.value = null  // origin was state from import
+        globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+
+        //handle autoAlarm
+        val autoAlarm = if(settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_DUE && newICalObject.due != null) {
+            Alarm.createDisplayAlarm(
+                dur = (0).minutes,
+                alarmRelativeTo = AlarmRelativeTo.END,
+                referenceDate = newICalObject.due!!,
+                referenceTimezone = newICalObject.dueTimezone
+            )
+        } else if(settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_START && newICalObject.dtstart != null) {
+            Alarm.createDisplayAlarm(
+                dur = (0).minutes,
+                alarmRelativeTo = null,
+                referenceDate = newICalObject.dtstart!!,
+                referenceTimezone = newICalObject.dtstartTimezone
+            )
+        } else null
+
+        getActiveViewModel().insertQuickItem(
+            newICalObject,
+            categories,
+            attachment,
+            autoAlarm,
+            editAfterSaving
+        )
+    }
+
+
     Scaffold(
         topBar = {
             JtxTopAppBar(
                 drawerState = drawerState,
-                title = stringResource(id = R.string.navigation_drawer_board),
-                subtitle = when(pagerState.currentPage) {
-                    ListTabDestination.Journals.tabIndex -> stringResource(id = R.string.toolbar_text_jtx_board_journals_overview)
-                    ListTabDestination.Notes.tabIndex -> stringResource(id = R.string.toolbar_text_jtx_board_notes_overview)
-                    ListTabDestination.Tasks.tabIndex -> stringResource(id = R.string.toolbar_text_jtx_board_tasks_overview)
-                    else -> stringResource(id = R.string.toolbar_text_jtx_board_journals_overview)
-                },
+                title = stringResource(id = R.string.app_name),
                 actions = {
                     IconButton(onClick = { topBarMenuExpanded = true }) {
                         Icon(
@@ -173,20 +210,23 @@ fun ListScreenTabContainer(
                                     topBarMenuExpanded = false
                                 }
                             )
+                            Divider()
                         }
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    stringResource(id = R.string.menu_list_delete_visible)
-                                )
-                            },
-                            leadingIcon = { Icon(Icons.Outlined.DeleteOutline, null) },
-                            onClick = {
-                                showDeleteAllVisibleDialog = true
-                                topBarMenuExpanded = false
-                            }
-                        )
-                        Divider()
+                        if(getActiveViewModel().iCal4List.value?.isNotEmpty() == true) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        stringResource(id = R.string.menu_list_delete_visible)
+                                    )
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.DeleteOutline, null) },
+                                onClick = {
+                                    showDeleteAllVisibleDialog = true
+                                    topBarMenuExpanded = false
+                                }
+                            )
+                            Divider()
+                        }
                         ViewMode.values().forEach { viewMode ->
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
@@ -205,75 +245,77 @@ fun ListScreenTabContainer(
             )
         },
         bottomBar = {
-            val coroutineScope = rememberCoroutineScope()
-            val listViewModel = when(pagerState.currentPage) {
-                ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
-                ListTabDestination.Notes.tabIndex -> icalListViewModelNotes
-                ListTabDestination.Tasks.tabIndex -> icalListViewModelTodos
-                else -> return@Scaffold
-            }
-            val keyboardController = LocalSoftwareKeyboardController.current
-            val allCollections = listViewModel.allCollections.observeAsState(emptyList())
 
-            ListBottomAppBar(
-                module = listViewModel.module,
-                iCal4ListLive = listViewModel.iCal4List,
-                onAddNewEntry = {
-                    coroutineScope.launch {
-                        val lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value
-                        val proposedCollectionId = if(allCollections.value.any {collection -> collection.collectionId == lastUsedCollectionId })
-                            lastUsedCollectionId
-                        else
-                            allCollections.value.firstOrNull()?.collectionId ?: return@launch
-                        val db = ICalDatabase.getInstance(context).iCalDatabaseDao
-                        val newICalObject = when(listViewModel.module) {
-                            Module.JOURNAL -> ICalObject.createJournal().apply { collectionId = proposedCollectionId }
-                            Module.NOTE -> ICalObject.createNote().apply { collectionId = proposedCollectionId }
+            // show the bottom bar only if there is any collection available that supports the component/module
+            if (allCollections.value.any { collection ->
+                    (listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
+                            || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
+                            || (listViewModel.module == Module.TODO && collection.supportsVTODO)
+                }) {
+                ListBottomAppBar(
+                    module = listViewModel.module,
+                    iCal4ListLive = listViewModel.iCal4List,
+                    allowNewEntries = allCollections.value.any { collection ->
+                        ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
+                                || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
+                                || (listViewModel.module == Module.TODO && collection.supportsVTODO)
+                             && !collection.readonly)
+                    },
+                    onAddNewEntry = {
+                        val lastUsedCollectionId =
+                            listViewModel.listSettings.getLastUsedCollectionId()
+                        val proposedCollectionId =
+                            if (allCollections.value.any { collection -> collection.collectionId == lastUsedCollectionId })
+                                lastUsedCollectionId
+                            else
+                                allCollections.value.firstOrNull()?.collectionId
+                                    ?: return@ListBottomAppBar
+                        val newICalObject = when (listViewModel.module) {
+                            Module.JOURNAL -> ICalObject.createJournal()
+                                .apply { collectionId = proposedCollectionId }
+                            Module.NOTE -> ICalObject.createNote()
+                                .apply { collectionId = proposedCollectionId }
                             Module.TODO -> ICalObject.createTodo().apply {
                                 this.setDefaultDueDateFromSettings(context)
                                 this.setDefaultStartDateFromSettings(context)
                                 collectionId = proposedCollectionId
                             }
                         }
-                        newICalObject.dirty = false
-                        val newIcalObjectId = db.insertICalObject(newICalObject)
-                        navController.navigate("details/$newIcalObjectId?isEditMode=true")
-                    }
-                },
-                showQuickEntry = {
-                    showQuickAdd = it
-                    if(it)
-                        keyboardController?.show()
-                    else
-                        keyboardController?.hide()
-                },
-                listSettings = listViewModel.listSettings,
-                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) },
-                onFilterIconClicked = {
-                    coroutineScope.launch {
-                        filterBottomSheetState.show()
-                    }
-                },
-                onClearFilterClicked = {
-                    listViewModel.clearFilter()
-                },
-                onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) },
-                onSearchTextClicked = {
-                    coroutineScope.launch {
-                        if(!showSearch) {
-                            showSearch = true
-                            listViewModel.listSettings.searchText.value = ""
-                            keyboardController?.show()
-                            //focusRequesterSearchText.requestFocus()
-                        } else {
-                            showSearch = false
-                            keyboardController?.hide()
-                            listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
-                            listViewModel.updateSearch(saveListSettings = false)
+                        addNewEntry(newICalObject, emptyList(), null, true)
+                    },
+                    showQuickEntry = showQuickAdd,
+                    listSettings = listViewModel.listSettings,
+                    onFilterIconClicked = {
+                        scope.launch {
+                            if (filterBottomSheetState.isVisible)
+                                filterBottomSheetState.hide()
+                            else
+                                filterBottomSheetState.show()
+                        }
+                    },
+                    onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) },
+                    onSearchTextClicked = {
+                        scope.launch {
+                            if (!showSearch) {
+                                showSearch = true
+                                listViewModel.listSettings.searchText.value = ""
+                                keyboardController?.show()
+                                //focusRequesterSearchText.requestFocus()
+                            } else {
+                                showSearch = false
+                                keyboardController?.hide()
+                                listViewModel.listSettings.searchText.value =
+                                    null  // null removes color indicator for active search
+                                listViewModel.updateSearch(saveListSettings = false)
+                            }
                         }
                     }
+                )
+            } else {
+                Snackbar(modifier = Modifier.padding(8.dp)) {
+                    Text("Please add a local collection or synchronise a remote collection that supports this module.")
                 }
-            )
+            }
         },
         content = { paddingValues ->
                 JtxNavigationDrawer(
@@ -298,7 +340,14 @@ fun ListScreenTabContainer(
                                             settingsStateHolder.lastUsedModule =
                                                 settingsStateHolder.lastUsedModule  // in order to save
                                         },
-                                        text = { Text(stringResource(id = screen.titleResource)) })
+                                        text = {
+                                            Text(
+                                                text = stringResource(id = screen.titleResource),
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
+                                    )
                                 }
                             }
 
@@ -318,12 +367,10 @@ fun ListScreenTabContainer(
                                 )
                             }
 
-                            AnimatedVisibility(showQuickAdd || globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
+                            AnimatedVisibility(showQuickAdd.value || globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
                                 // origin can be button click or an import through the intent
-                                val allCollections =
-                                    getActiveViewModel().allCollections.observeAsState(emptyList())
                                 ListQuickAddElement(
-                                    presetModule = if (showQuickAdd)
+                                    presetModule = if (showQuickAdd.value)
                                         getActiveViewModel().module    // coming from button
                                     else
                                         globalStateHolder.icalFromIntentModule.value,   // coming from intent
@@ -331,22 +378,9 @@ fun ListScreenTabContainer(
                                         ?: "",    // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allCollections = allCollections.value,
-                                    presetCollectionId = settingsStateHolder.lastUsedCollection.value,
+                                    presetCollectionId = listViewModel.listSettings.getLastUsedCollectionId(),
                                     onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
-                                        settingsStateHolder.lastUsedCollection.value =
-                                            newICalObject.collectionId
-                                        settingsStateHolder.lastUsedCollection =
-                                            settingsStateHolder.lastUsedCollection
-                                        settingsStateHolder.lastUsedModule.value =
-                                            newICalObject.getModuleFromString()
-                                        settingsStateHolder.lastUsedModule =
-                                            settingsStateHolder.lastUsedModule
-
-                                        globalStateHolder.icalFromIntentString.value =
-                                            null  // origin was state from import
-                                        globalStateHolder.icalFromIntentAttachment.value =
-                                            null  // origin was state from import
-
+                                        addNewEntry(newICalObject, categories, attachment, editAfterSaving)
                                         scope.launch {
                                             pagerState.scrollToPage(
                                                 when (newICalObject.getModuleFromString()) {
@@ -355,22 +389,15 @@ fun ListScreenTabContainer(
                                                     Module.TODO -> ListTabDestination.Tasks.tabIndex
                                                 }
                                             )
-                                            getActiveViewModel().insertQuickItem(
-                                                newICalObject,
-                                                categories,
-                                                attachment,
-                                                editAfterSaving
-                                            )
                                         }
                                     },
                                     onDismiss = {
-                                        showQuickAdd = false  // origin was button
+                                        showQuickAdd.value = false  // origin was button
                                         globalStateHolder.icalFromIntentString.value =
                                             null  // origin was state from import
                                         globalStateHolder.icalFromIntentAttachment.value =
                                             null  // origin was state from import
-                                    },
-                                    modifier = Modifier.shadow(1.dp).padding(8.dp)
+                                    }
                                 )
                             }
 

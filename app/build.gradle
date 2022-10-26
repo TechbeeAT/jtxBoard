@@ -21,9 +21,9 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 200000011
-        versionName "2.00.00-beta11"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
-        buildConfigField "String", "versionCodename", "\"No Putin-Bomb can destroy Humanity\""
+        versionCode 200060004
+        versionName "2.00.06-rc04"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        buildConfigField "String", "versionCodename", "\"No Putin-bomb can destroy humanity\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -83,13 +83,13 @@ android {
             dimension 'version'
             versionNameSuffix '.gplay'
         }
-        huawei {
-            dimension 'version'
-            versionNameSuffix '.huawei'
-        }
         ose {
             dimension 'version'
             versionNameSuffix '.ose'
+        }
+        generic {
+            dimension 'version'
+            versionNameSuffix '.generic'
         }
     }
 
@@ -115,7 +115,15 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    sourceSets {
+        main {
+            res.srcDirs += ['build/generated/res/locale']
+        }
+    }
 }
+
+
+import groovy.xml.MarkupBuilder
 
 import static groovy.io.FileType.DIRECTORIES
 
@@ -124,11 +132,11 @@ import static groovy.io.FileType.DIRECTORIES
  * @since 20220928
  * @return A list with the language codes of the locales available.
  */
-static def getLocales() {
+def getLocales() {
     // Initialize the list English, since it's available by default
     def list = ["en"]
     // Get all directories inside resources
-    def dir = new File("./app/src/main/res")
+    def dir = new File(projectDir, "src/main/res")
     dir.traverse(type: DIRECTORIES, maxDepth: 0) { file ->
         // Get only values directories
         def fileName = file.name
@@ -145,6 +153,40 @@ static def getLocales() {
     println "Supported locales: " + list.join(", ")
     // Return the built list
     return list
+}
+
+/**
+ * Writes the available locales obtained from getLocales() in locale-config.xml
+ * @since 20221016
+ * @return A list with the language codes of the locales available.
+ */
+task updateLocalesConfig() {
+    println 'Building locale config...'
+    ext.outputDir = new File(projectDir, 'build/generated/res/locale/xml')
+
+    doFirst {
+        mkdir outputDir
+
+        new File(outputDir, "locales_config.xml").withWriter { writer ->
+            def destXml = new MarkupBuilder(new IndentPrinter(writer, "    ", true, true))
+            destXml.setDoubleQuotes(true)
+            def destXmlMkp = destXml.getMkp()
+            destXmlMkp.xmlDeclaration(version: "1.0", encoding: "utf-8")
+            destXmlMkp.comment("Generated at ${new Date()}")
+            destXmlMkp.yield "\r\n"
+
+            def locales = getLocales()
+            destXml."locale-config"(['xmlns:android':"http://schemas.android.com/apk/res/android"]) {
+                locales.forEach { locale ->
+                    destXml."locale"("android:name": locale)
+                }
+            }
+        }
+    }
+}
+
+gradle.projectsEvaluated {
+    preBuild.dependsOn('updateLocalesConfig')
 }
 
 
@@ -182,11 +224,6 @@ dependencies {
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
     gplayImplementation "com.google.android.gms:play-services-location:20.0.0"
 
-    // Huawei Ads Lite (works only on Huawei phones)
-    huaweiImplementation "com.huawei.hms:ads:3.4.49.301"    // should be replaced by ads-lite when it can be tested with a huawei phone
-    //implementation "com.huawei.hms:ads-lite:13.4.49.301"
-    huaweiImplementation "com.huawei.hms:ads-consent:3.4.49.301"
-
     // Workmanager support
     implementation "androidx.work:work-runtime-ktx:$version_work"
     androidTestImplementation "androidx.work:work-testing:$version_work"
@@ -195,7 +232,7 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
     androidTestImplementation "androidx.test.ext:junit-ktx:1.1.3"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0-alpha07"
+    //androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0-alpha07"
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version_coroutine"
     androidTestImplementation "androidx.test:runner:1.4.0"
@@ -203,13 +240,13 @@ dependencies {
 
     // Testing-only dependencies
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
-    androidTestImplementation 'androidx.test:core-ktx:1.5.0-alpha02'
+    androidTestImplementation 'androidx.test:core-ktx:1.5.0-beta01'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.room:room-testing:$version_room"
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
-    testImplementation 'androidx.test:core-ktx:1.5.0-alpha02'
+    testImplementation 'androidx.test:core-ktx:1.5.0-beta01'
     // Required -- JUnit 4 framework
     testImplementation "androidx.test.ext:junit-ktx:1.1.3"
     testImplementation "org.mockito:mockito-core:3.9.0"
@@ -217,9 +254,6 @@ dependencies {
     //About Libraries
     implementation "com.mikepenz:aboutlibraries-core:${version_about_libraries}"
     implementation "com.mikepenz:aboutlibraries-compose:${version_about_libraries}"
-
-    // Markdown support
-    implementation "com.github.jeziellago:compose-markdown:0.3.0"
 
     // Compose Color Picker
     implementation "com.godaddy.android.colorpicker:compose-color-picker-android:0.4.2"
@@ -230,7 +264,7 @@ dependencies {
     // jetpack compose
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation "androidx.compose.material3:material3:1.0.0-beta02"
+    implementation "androidx.compose.material3:material3:1.0.0-rc01"
     //implementation "androidx.compose.material3:material3-window-size-class:1.0.0-beta02"
 
     implementation "androidx.compose.material:material:$version_compose"    // material 2 support as bottom sheet is missing in m3
@@ -241,6 +275,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
     implementation "androidx.navigation:navigation-compose:2.5.2"
+    implementation 'com.arnyminerz.markdowntext:markdowntext:1.0.1'
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
     debugImplementation "androidx.compose.ui:ui-tooling:$version_compose"
@@ -251,5 +286,6 @@ dependencies {
     // Paging Compose
     implementation "com.google.accompanist:accompanist-pager:$version_accompanist"
     implementation "com.google.accompanist:accompanist-pager-indicators:$version_accompanist"
+    implementation "com.google.accompanist:accompanist-flowlayout:$version_accompanist"
 }
 

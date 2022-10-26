@@ -2,7 +2,6 @@ package at.techbee.jtx.ui.reusable.appbars
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Favorite
@@ -10,12 +9,10 @@ import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.theme.montserratAlternates
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,7 +20,6 @@ import kotlinx.coroutines.launch
 fun JtxTopAppBar(
     drawerState: DrawerState,
     title: String,
-    subtitle: String? = null,
     actions: @Composable () -> Unit = { }
 ) {
 
@@ -31,21 +27,11 @@ fun JtxTopAppBar(
 
     CenterAlignedTopAppBar(
         title = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = title,
-                    fontFamily = montserratAlternates
-                )
-                subtitle?.let {
-                    Text(
-                        text = subtitle,
-                        fontFamily = montserratAlternates,
-                        style = MaterialTheme.typography.labelMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
+            Text(
+                text = title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         },
         navigationIcon = {
             IconButton(onClick = {
@@ -111,7 +97,6 @@ fun JtxTopAppBar_Preview_withSubtitle() {
             topBar = { JtxTopAppBar(
                 drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
                 title = "My Title comes here",
-                subtitle = "Here's my subtitle",
                 actions = {
                     IconButton(onClick = { /* doSomething() */ }) {
                         Icon(

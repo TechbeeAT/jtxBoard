@@ -143,7 +143,7 @@ fun ICalObjectListCard(
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = if(iCalObject.isOverdue() == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(end = 16.dp).weight(0.2f),
                                     maxLines = 1
                                 )
@@ -200,7 +200,7 @@ fun ICalObjectListCard(
                         ) {
                             if (iCalObject.summary?.isNotBlank() == true)
                                 Text(
-                                    text = iCalObject.summary ?: "",
+                                    text = iCalObject.summary?.trim() ?: "",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = summarySize,
                                     textDecoration = summaryTextDecoration,
@@ -224,7 +224,7 @@ fun ICalObjectListCard(
 
                         if (iCalObject.description?.isNotBlank() == true)
                             Text(
-                                text = iCalObject.description ?: "",
+                                text = iCalObject.description?.trim() ?: "",
                                 maxLines = 6,
                                 overflow = TextOverflow.Ellipsis
                             )

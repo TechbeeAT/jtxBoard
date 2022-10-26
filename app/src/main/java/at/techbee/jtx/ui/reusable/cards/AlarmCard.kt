@@ -8,26 +8,46 @@
 
 package at.techbee.jtx.ui.reusable.cards
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
+import at.techbee.jtx.ui.reusable.dialogs.DurationPickerDialog
 import at.techbee.jtx.util.DateTimeUtils
-import java.time.Duration
+import java.time.ZoneId
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.minutes
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,8 +64,9 @@ fun AlarmCard(
     val context = LocalContext.current
 
     var showDateTimePickerDialog by remember { mutableStateOf(false) }
+    var showDurationPickerDialog by remember { mutableStateOf(false) }
 
-    if(showDateTimePickerDialog && alarm.triggerTime != null) {
+    if (showDateTimePickerDialog && alarm.triggerTime != null) {
         DatePickerDialog(
             datetime = alarm.triggerTime!!,
             timezone = alarm.triggerTimezone,
@@ -53,17 +74,35 @@ fun AlarmCard(
             onConfirm = { changedDateTime, changedTimezone ->
                 alarm.triggerTime = changedDateTime
                 alarm.triggerTimezone = changedTimezone
-                onAlarmChanged(alarm) }) {
-        }
+                onAlarmChanged(alarm)
+            },
+            onDismiss = {
+                showDateTimePickerDialog = false
+            }
+        )
+    }
+
+    if (showDurationPickerDialog && alarm.triggerRelativeDuration != null) {
+        DurationPickerDialog(
+            alarm = alarm,
+            icalObject = icalObject,
+            onConfirm = { changedAlarm ->
+                onAlarmChanged(changedAlarm)
+            },
+            onDismiss = { showDurationPickerDialog = false }
+        )
     }
 
     if (isEditMode) {
         OutlinedCard(
             onClick = {
-                      if(alarm.triggerTime != null)
-                          showDateTimePickerDialog = true
-                      },
-            modifier = modifier) {
+                if (alarm.triggerRelativeDuration != null)
+                    showDurationPickerDialog = true
+                else if (alarm.triggerTime != null)
+                    showDateTimePickerDialog = true
+            },
+            modifier = modifier
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,16 +119,7 @@ fun AlarmCard(
                         .align(alignment = Alignment.CenterVertically)
                         .weight(1f)
                 ) {
-                    if(alarm.triggerTime != null) {
-                        Text(
-                            text = DateTimeUtils.convertLongToFullDateTimeString(alarm.triggerTime, alarm.triggerTimezone),
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .fillMaxWidth(),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    } else if(alarm.triggerRelativeDuration != null) {
+                    if (alarm.triggerRelativeDuration != null) {
                         alarm.getTriggerDurationAsString(context)?.let { durationText ->
                             Text(
                                 text = durationText,
@@ -100,19 +130,21 @@ fun AlarmCard(
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
-
-                        val referenceDateTime = if(alarm.triggerRelativeTo == AlarmRelativeTo.START.name) icalObject.dtstart else icalObject.due
-                        val referenceTimeZone = if(alarm.triggerRelativeTo == AlarmRelativeTo.START.name) icalObject.dtstartTimezone else icalObject.dueTimezone
-                        alarm.getDatetimeFromTriggerDuration(referenceDateTime, referenceTimeZone)?.let { durationDateTime ->
-                            Text(
-                                text = DateTimeUtils.convertLongToFullDateTimeString(durationDateTime, referenceTimeZone),
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp),
-                                //.weight(1f),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
+                    }
+                    if (alarm.triggerTime != null) {
+                        Text(
+                            text = DateTimeUtils.convertLongToFullDateTimeString(
+                                alarm.triggerTime,
+                                alarm.triggerTimezone
+                            ),
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .fillMaxWidth(),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            fontStyle = FontStyle.Italic,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
 
@@ -141,16 +173,7 @@ fun AlarmCard(
                         .align(alignment = Alignment.CenterVertically)
                         .weight(1f)
                 ) {
-                    if(alarm.triggerTime != null) {
-                        Text(
-                            text = DateTimeUtils.convertLongToFullDateTimeString(alarm.triggerTime, alarm.triggerTimezone),
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .fillMaxWidth(),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    } else if(alarm.triggerRelativeDuration != null) {
+                    if (alarm.triggerRelativeDuration != null) {
                         alarm.getTriggerDurationAsString(context)?.let { durationText ->
                             Text(
                                 text = durationText,
@@ -161,15 +184,31 @@ fun AlarmCard(
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
+                    }
+                    if (alarm.triggerTime != null) {
+                        Text(
+                            text = DateTimeUtils.convertLongToFullDateTimeString(
+                                alarm.triggerTime,
+                                alarm.triggerTimezone
+                            ),
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .fillMaxWidth(),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            fontStyle = FontStyle.Italic,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                        val referenceDateTime = if(alarm.triggerRelativeTo == AlarmRelativeTo.START.name) icalObject.dtstart else icalObject.due
-                        val referenceTimeZone = if(alarm.triggerRelativeTo == AlarmRelativeTo.START.name) icalObject.dtstartTimezone else icalObject.dueTimezone
-                        alarm.getDatetimeFromTriggerDuration(referenceDateTime, referenceTimeZone)?.let { durationDateTime ->
+                        if(alarm.triggerTimezone != null && alarm.triggerTimezone != TZ_ALLDAY && alarm.triggerTimezone != ZoneId.systemDefault().id) {
                             Text(
-                                text = DateTimeUtils.convertLongToFullDateTimeString(durationDateTime, referenceTimeZone),
+                                text = DateTimeUtils.convertLongToFullDateTimeString(
+                                    alarm.triggerTime,
+                                    ZoneId.systemDefault().id
+                                ),
                                 modifier = Modifier
-                                    .padding(horizontal = 8.dp),
-                                    //.weight(1f),
+                                    .padding(horizontal = 8.dp)
+                                    .fillMaxWidth(),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
@@ -189,8 +228,8 @@ fun AlarmCardPreview_DateTime_view() {
             alarm = Alarm.createDisplayAlarm(System.currentTimeMillis(), null),
             icalObject = ICalObject.createTodo().apply { dtstart = System.currentTimeMillis() },
             isEditMode = false,
-            onAlarmDeleted = {  },
-            onAlarmChanged = {  }
+            onAlarmDeleted = { },
+            onAlarmChanged = { }
         )
     }
 }
@@ -200,11 +239,16 @@ fun AlarmCardPreview_DateTime_view() {
 fun AlarmCardPreview_Duration_START_view() {
     MaterialTheme {
         AlarmCard(
-            alarm = Alarm.createDisplayAlarm(Duration.ofMinutes(-15), AlarmRelativeTo.START),
+            alarm = Alarm.createDisplayAlarm(
+                (-15).minutes,
+                AlarmRelativeTo.START,
+                System.currentTimeMillis(),
+                null
+            ),
             icalObject = ICalObject.createTodo().apply { dtstart = System.currentTimeMillis() },
             isEditMode = false,
-            onAlarmDeleted = {  },
-            onAlarmChanged = {  }
+            onAlarmDeleted = { },
+            onAlarmChanged = { }
         )
     }
 }
@@ -215,18 +259,45 @@ fun AlarmCardPreview_Duration_START_view() {
 fun AlarmCardPreview_Duration_END_view() {
     MaterialTheme {
         AlarmCard(
-            alarm = Alarm.createDisplayAlarm(Duration.ofDays(1), AlarmRelativeTo.END),
+            alarm = Alarm.createDisplayAlarm(
+                (1).days,
+                AlarmRelativeTo.END,
+                System.currentTimeMillis(),
+                null
+            ),
             icalObject = ICalObject.createTodo().apply {
                 due = System.currentTimeMillis()
                 dueTimezone = null
-                                                       },
+            },
             isEditMode = false,
-            onAlarmDeleted = {  },
-            onAlarmChanged = {  }
+            onAlarmDeleted = { },
+            onAlarmChanged = { }
         )
     }
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun AlarmCardPreview_Duration_END_view_timezone() {
+    MaterialTheme {
+        AlarmCard(
+            alarm = Alarm.createDisplayAlarm(
+                (1).days,
+                AlarmRelativeTo.END,
+                System.currentTimeMillis(),
+                ZoneId.of("Mexico/General").id
+            ),
+            icalObject = ICalObject.createTodo().apply {
+                due = System.currentTimeMillis()
+                dueTimezone = ZoneId.of("Mexico/General").id
+            },
+            isEditMode = false,
+            onAlarmDeleted = { },
+            onAlarmChanged = { }
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -238,8 +309,8 @@ fun AlarmCardPreview_edit() {
             ),
             icalObject = ICalObject.createTodo().apply { dtstart = System.currentTimeMillis() },
             isEditMode = true,
-            onAlarmDeleted = {  },
-            onAlarmChanged = {  }
+            onAlarmDeleted = { },
+            onAlarmChanged = { }
         )
     }
 }

@@ -63,7 +63,7 @@ Global Strings -->
     <string name="navigation_drawer_board">"Tavola"</string>
     <string name="navigation_drawer_sync">"Sincronizza con DAVx⁵"</string>
     <string name="navigation_drawer_about">"Informazioni / Licenza"</string>
-    <string name="navigation_drawer_subtitle">"Diari, Note ed Attività per Android"</string>
+    <string name="navigation_drawer_subtitle">"Diari, Note ed Attività"</string>
     <string name="navigation_drawer_beta_feedback">"Feedback beta"</string>
     <string name="navigation_drawer_settings">"Impostazioni"</string>
     <string name="navigation_drawer_news_updates">"Notizie e aggiornamenti"</string>
@@ -227,8 +227,6 @@ Global Strings -->
     <string name="menu_list_quick_note">"Nota rapida"</string>
     <string name="menu_list_quick_todo">"Attività rapida"</string>
     <string name="menu_list_delete_visible">"Elimina visibile"</string>
-    <string name="menu_list_todo_show_completed">"Mostra completata"</string>
-    <string name="menu_list_todo_hide_completed">"Nascondi completato"</string>
     <string name="menu_list_syncnow">"Sincronizza ora"</string>
     <string name="menu_view_share_text">"Condividere"</string>
     <string name="menu_view_share_ics">"Condividi come .ics"</string>

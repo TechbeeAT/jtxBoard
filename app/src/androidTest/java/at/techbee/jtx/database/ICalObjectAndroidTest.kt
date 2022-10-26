@@ -61,7 +61,6 @@ class ICalObjectAndroidTest {
                 displayName = "testcollection automated tests"
             )
         )
-
     }
 
 
@@ -78,7 +77,7 @@ class ICalObjectAndroidTest {
 
         val id = database.insertICalObject(item)
         val savedItem = database.getSync(id)
-        savedItem?.property?.recreateRecurring(database, context)
+        savedItem?.property?.recreateRecurring(context)
 
         val recurList = database.getRecurInstances(id).getOrAwaitValue()
         assertEquals(6, recurList.size)
@@ -102,7 +101,7 @@ class ICalObjectAndroidTest {
 
         val id = database.insertICalObject(item)
         val savedItem = database.getSync(id)
-        savedItem?.property?.recreateRecurring(database, context)
+        savedItem?.property?.recreateRecurring(context)
 
         val recurList = database.getRecurInstances(id).getOrAwaitValue()
         assertEquals(7, recurList.size)
@@ -370,7 +369,7 @@ class ICalObjectAndroidTest {
                     this.rrule = "FREQ=DAILY;COUNT=5;INTERVAL=1"
                 })
             val parent = database.getICalObjectById(idParent)
-            parent!!.recreateRecurring(database, context)
+            parent!!.recreateRecurring(context)
 
             val instances = database.getRecurInstances(idParent).getOrAwaitValue()
 
@@ -411,7 +410,7 @@ class ICalObjectAndroidTest {
                 })
 
             val parent = database.getICalObjectById(idParent)
-            parent!!.recreateRecurring(database, context)
+            parent!!.recreateRecurring(context)
 
             val instances = database.getRecurInstances(idParent).getOrAwaitValue()
 

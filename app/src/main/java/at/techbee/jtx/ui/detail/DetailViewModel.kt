@@ -11,13 +11,13 @@ package at.techbee.jtx.ui.detail
 import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteConstraintException
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
@@ -31,9 +31,8 @@ import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileNotFoundException
+import java.io.FileOutputStream
 
 
 class DetailViewModel(application: Application) : AndroidViewModel(application) {
@@ -55,7 +54,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var entryDeleted = mutableStateOf(false)
     var sqlConstraintException = mutableStateOf(false)
     var navigateToId = mutableStateOf<Long?>(null)
-    var changeState = mutableStateOf<DetailChangeState>(DetailChangeState.UNCHANGED)
+    var changeState = mutableStateOf(DetailChangeState.UNCHANGED)
     var toastMessage = mutableStateOf<String?>(null)
     lateinit var detailSettings: DetailSettings
 
@@ -174,7 +173,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 // once the newId is there, the local entries can be deleted (or marked as deleted)
                 ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
                 if (icalObject.rrule != null)
-                    icalObject.recreateRecurring(database, getApplication())
+                    icalObject.recreateRecurring(getApplication())
                 changeState.value = DetailChangeState.CHANGESAVED
                 navigateToId.value = newId
             } catch (e: SQLiteConstraintException) {
@@ -252,26 +251,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     alarms.forEach { changedAlarm ->
                         changedAlarm.icalObjectId = icalObject.id
                         changedAlarm.alarmId = database.insertAlarm(changedAlarm)
-                        val triggerTime = when {
-                            changedAlarm.triggerTime != null -> changedAlarm.triggerTime
-                            changedAlarm.triggerRelativeDuration != null && changedAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> changedAlarm.getDatetimeFromTriggerDuration(
-                                icalObject.due, icalObject.dueTimezone
-                            )
-                            changedAlarm.triggerRelativeDuration != null -> changedAlarm.getDatetimeFromTriggerDuration(
-                                icalObject.dtstart,
-                                icalObject.dtstartTimezone
-                            )
-                            else -> null
-                        }
-                        triggerTime?.let {
-                            changedAlarm.scheduleNotification(
-                                _application,
-                                triggerTime = it,
-                                isReadOnly = icalEntity.value?.ICalCollection?.readonly ?: true,
-                                icalEntity.value?.property?.summary,
-                                icalEntity.value?.property?.description
-                            )
-                        }
                     }
                 }
 
@@ -283,8 +262,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
                         toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                     }
-                    icalObject.recreateRecurring(database, getApplication())
+                    icalObject.recreateRecurring(getApplication())
                 }
+                Alarm.scheduleNextNotifications(getApplication())
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
@@ -296,6 +276,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * reverts the current entry back to the original values that were stored in originalEntry
+     */
     fun revert() {
 
         val originalICalObject = originalEntry?.property?: return
@@ -349,6 +332,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
 
+    /**
+     * Deletes the current entry with its children
+     */
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -403,7 +389,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                             alarmId = 0L,
                             icalObjectId = newId
                         )
-                    )   // TODO: Schedule Alarm!
+                    )
                 }
                 newEntity.attachments?.forEach { attachment ->
                     database.insertAttachment(
@@ -455,6 +441,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
+                Alarm.scheduleNextNotifications(getApplication())
+
                 if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                     navigateToId.value = newId
 
@@ -467,95 +455,131 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * Creates a share intent to share the current entry as .ics file
+     */
     fun shareAsICS(context: Context) {
 
         viewModelScope.launch(Dispatchers.IO)  {
-            val account = icalEntity.value?.ICalCollection?.getAccount() ?: return@launch
-            val collectionId = icalEntity.value?.property?.collectionId ?: return@launch
-            val iCalObjectId = icalEntity.value?.property?.id ?: return@launch
-            val ics = Ical4androidUtil.getICSFormatFromProvider(account, getApplication(), collectionId, iCalObjectId) ?: return@launch
-
-            val icsShareIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                type = "text/calendar"
-            }
+            val iCalEntity = icalEntity.value ?: return@launch
+            val icsContentUri = createContentUri(iCalEntity) ?: return@launch
 
             try {
-                val icsFileName = "${context.externalCacheDir}/ics_file.ics"
-                val icsFile = File(icsFileName).apply {
-                    this.writeBytes(ics.toByteArray())
-                    createNewFile()
-                }
-                val uri =
-                    FileProvider.getUriForFile(context, AUTHORITY_FILEPROVIDER, icsFile)
-                icsShareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                context.startActivity(Intent(icsShareIntent))
+                ShareCompat.IntentBuilder(context)
+                    .setType("text/calendar")
+                    .addStream(icsContentUri)
+                    .startChooser()
             } catch (e: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to open file.")
                 toastMessage.value = "No app found to open this file."
-            } catch (e: Exception) {
-                Log.i("fileprovider", "Failed to attach ICS File")
-                toastMessage.value = "Failed to attach ICS File."
             }
         }
     }
 
+    /**
+     * Creates a share intent to share the current entry as email.
+     * The intent sets the subject (summary), attendees (receipients),
+     * text (the contents as a text representation) and attachments
+     */
     fun shareAsText(context: Context) {
 
         viewModelScope.launch(Dispatchers.IO)  {
-            val account = icalEntity.value?.ICalCollection?.getAccount() ?: return@launch
-            val collectionId = icalEntity.value?.property?.collectionId ?: return@launch
-            val iCalObjectId = icalEntity.value?.property?.id ?: return@launch
+            val iCalEntity = icalEntity.value ?: return@launch
 
-            val shareText = icalEntity.value?.getShareText(context) ?: ""
+            val shareText = iCalEntity.getShareText(context)
+            val subject = iCalEntity.property.summary
+            val attendees = iCalEntity.attendees
+                ?.map { it.caladdress.removePrefix("mailto:") }
+                ?.toTypedArray()
+            val attachmentUris = iCalEntity.attachments.orEmpty()
+                .asSequence()
+                .mapNotNull { attachment -> attachment.uri }
+                .filter { attachmentUri ->
+                    // A share intent may only contain content: URIs in EXTRA_STREAM
+                    attachmentUri.startsWith("content:")
+                }
+                .map { attachmentUri -> Uri.parse(attachmentUri) }
+                .toList()
 
-            val attendees: MutableList<String> = mutableListOf()
-            icalEntity.value?.attendees?.forEach { attendees.add(it.caladdress.removePrefix("mailto:")) }
+            val icsContentUri = createContentUri(iCalEntity)
 
-            val shareIntent = Intent().apply {
-                action = Intent.ACTION_SEND_MULTIPLE
-                type = "message/rfc822"
-                icalEntity.value?.property?.summary?.let { putExtra(Intent.EXTRA_SUBJECT, it) }
-                putExtra(Intent.EXTRA_TEXT, shareText)
-                putExtra(Intent.EXTRA_EMAIL, attendees.toTypedArray())
-            }
-            val files = ArrayList<Uri>()
+            val shareIntentBuilder = ShareCompat.IntentBuilder(context).apply {
+                setText(shareText)
 
-            icalEntity.value?.attachments?.forEach {
-                try {
-                    files.add(Uri.parse(it.uri))
-                } catch (e: NullPointerException) {
-                    Log.i("Attachment", "Attachment Uri could not be parsed")
-                } catch (e: FileNotFoundException) {
-                    Log.i("Attachment", "Attachment-File could not be accessed.")
+                if (subject != null) {
+                    setSubject(subject)
+                }
+
+                if (attendees != null) {
+                    setEmailTo(attendees)
+                }
+
+                attachmentUris.forEach { uri ->
+                    addStream(uri)
+                }
+
+                if (icsContentUri != null) {
+                    addStream(icsContentUri)
+                }
+
+                if (attachmentUris.isNotEmpty()) {
+                    setType("*/*")
+                } else if (icsContentUri != null) {
+                    setType("text/calendar")
+                } else {
+                    setType("text/plain")
                 }
             }
 
             try {
-                val os = ByteArrayOutputStream()
-                Ical4androidUtil.writeICSFormatFromProviderToOS(account, getApplication(), collectionId, iCalObjectId, os)
-
-                val icsFileName = "${context.externalCacheDir}/ics_file.ics"
-                val icsFile = File(icsFileName).apply {
-                    this.writeBytes(os.toByteArray())
-                    createNewFile()
-                }
-                val uri = FileProvider.getUriForFile(context, AUTHORITY_FILEPROVIDER, icsFile)
-                files.add(uri)
-            } catch (e: Exception) {
-                Log.i("fileprovider", "Failed to attach ICS File")
-                toastMessage.value = "Failed to attach ICS File."
-            }
-
-            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files)
-            //Log.d("shareIntent", shareText)
-
-            try {
-                context.startActivity(Intent(shareIntent))
+                shareIntentBuilder.startChooser()
             } catch (e: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to send this entry.")
                 toastMessage.value = _application.getString(R.string.error_no_app_found_to_open_entry)
             }
+        }
+    }
+
+    /**
+     * @param [iCalEntity] for which the content should be put in a file that is returned as Uri
+     * @return the uri for the file with the [iCalEntity] content in as .ics format or null
+     */
+    private fun createContentUri(iCalEntity: ICalEntity): Uri? {
+        val icsFile = writeIcsFile(iCalEntity) ?: return null
+
+        val context = getApplication<Application>()
+        return FileProvider.getUriForFile(context, AUTHORITY_FILEPROVIDER, icsFile)
+    }
+
+    /**
+     * @param [iCalEntity] for which the content should be put in a file
+     * @return a file with the [iCalEntity] content in as .ics format or null
+     */
+    private fun writeIcsFile(iCalEntity: ICalEntity): File? {
+        val context = getApplication<Application>()
+        val account = iCalEntity.ICalCollection?.getAccount() ?: return null
+        val collectionId = iCalEntity.property.collectionId
+        val iCalObjectId = iCalEntity.property.id
+
+        return try {
+            val outputFile = File(context.externalCacheDir, "ics_file.ics")
+
+            FileOutputStream(outputFile).use { outputStream ->
+                Ical4androidUtil.writeICSFormatFromProviderToOS(
+                    account,
+                    context,
+                    collectionId,
+                    iCalObjectId,
+                    outputStream
+                )
+            }
+
+            outputFile
+        } catch (e: Exception) {
+            Log.i("fileprovider", "Failed to attach ICS File")
+            toastMessage.value = "Failed to attach ICS File."
+
+            null
         }
     }
     

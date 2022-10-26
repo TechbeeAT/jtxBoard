@@ -67,6 +67,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "collection.$COLUMN_COLLECTION_DISPLAYNAME, " +
             "main_icalobject.$COLUMN_DELETED, " +
             "CASE WHEN main_icalobject.$COLUMN_DIRTY = 1 AND collection.$COLUMN_COLLECTION_ACCOUNT_TYPE != 'LOCAL' THEN 1 else 0 END as uploadPending, " +
+            "main_icalobject.$COLUMN_RECUR_ORIGINALICALOBJECTID, " +
             "CASE WHEN main_icalobject.$COLUMN_RRULE IS NULL THEN 0 ELSE 1 END as isRecurringOriginal, " +
             "CASE WHEN main_icalobject.$COLUMN_RECURID IS NULL THEN 0 ELSE 1 END as isRecurringInstance, " +
             "main_icalobject.$COLUMN_RECUR_ISLINKEDINSTANCE, " +
@@ -141,6 +142,7 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean,
     @ColumnInfo var uploadPending: Boolean,
 
+    @ColumnInfo(name = COLUMN_RECUR_ORIGINALICALOBJECTID) var recurOriginalIcalObjectId: Long?,
     @ColumnInfo var isRecurringOriginal: Boolean,
     @ColumnInfo var isRecurringInstance: Boolean,
     @ColumnInfo(name = COLUMN_RECUR_ISLINKEDINSTANCE) var isLinkedRecurringInstance: Boolean,
@@ -209,6 +211,7 @@ data class ICal4List(
                 "myCollection",
                 deleted = false,
                 uploadPending = true,
+                recurOriginalIcalObjectId = null,
                 isRecurringOriginal = true,
                 isRecurringInstance = true,
                 isLinkedRecurringInstance = true,
@@ -262,6 +265,8 @@ data class ICal4List(
 
     fun getDueTextInfo(context: Context): String? {
 
+        if(percent == 100)
+            return context.getString(R.string.completed)
         if(due == null)
             return null
 
@@ -279,6 +284,23 @@ data class ICal4List(
             daysLeft >= 2L -> context.getString(R.string.list_due_inXdays, daysLeft)
             else -> null      //should not be possible
         }
+    }
+
+    /**
+     * @return true if the current entry is overdue and not completed,
+     * null if no due date is set and not completed, false otherwise
+     */
+    fun isOverdue(): Boolean? {
+
+        if(percent == 100)
+            return false
+        if(due == null)
+            return null
+
+        val zonedDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due!!), DateTimeUtils.requireTzId(dueTimezone)).toInstant().toEpochMilli()
+        val millisLeft = if(dueTimezone == ICalObject.TZ_ALLDAY) zonedDue - DateTimeUtils.getTodayAsLong() else zonedDue - System.currentTimeMillis()
+
+        return millisLeft < 0L
     }
 
     /**

@@ -105,7 +105,7 @@ fun SubtaskCardContent(
 
 
             Text(
-                subtaskText,
+                subtaskText.trim(),
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp)
                     .weight(1f),

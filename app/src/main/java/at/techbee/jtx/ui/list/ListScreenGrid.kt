@@ -32,7 +32,6 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.reusable.cards.ListCardGrid
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 

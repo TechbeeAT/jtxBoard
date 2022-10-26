@@ -8,9 +8,19 @@
 
 package at.techbee.jtx.ui.reusable.elements
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,6 +45,19 @@ fun ProgressElement(
     var sliderPosition by remember { mutableStateOf(
         progress?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
     ) }
+
+    /**
+     * When the Element gets reused/recycled e.g. when activating the option hide completed in the
+     * list view, the element would disappear and the next icalobject would take its place.
+     * But remember would remember the previous state and would show the wrong progress/checked state.
+     * Here we make sure, that if the icalobjectid of the current instance has changed, the progress
+     * gets reset
+     */
+    val lastICalObjectId = remember { mutableStateOf(0L) }
+    if(lastICalObjectId.value != iCalObjectId) {
+        lastICalObjectId.value = iCalObjectId
+        sliderPosition = progress?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
+    }
 
     Row(
         horizontalArrangement = Arrangement.End,
@@ -63,7 +86,7 @@ fun ProgressElement(
                         isLinkedRecurringInstance
                     )
                 },
-                modifier = Modifier.width(100.dp),
+                modifier = Modifier.weight(1f),
                 enabled = !isReadOnly
             )
             Text(

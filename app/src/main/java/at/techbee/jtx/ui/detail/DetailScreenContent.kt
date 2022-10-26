@@ -27,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -50,10 +51,14 @@ import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
+import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
-import dev.jeziellago.compose.markdowntext.MarkdownText
+import com.arnyminerz.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +77,7 @@ fun DetailScreenContent(
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     autosave: Boolean,
-    goBackRequested: Boolean,    // Workaround to also go Back from Top menu
+    goBackRequested: MutableState<Boolean>,    // Workaround to also go Back from Top menu
     saveICalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
     deleteICalObject: () -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
@@ -84,6 +89,21 @@ fun DetailScreenContent(
     goToEdit: (itemId: Long) -> Unit,
     goBack: () -> Unit
 ) {
+
+    val context = LocalContext.current
+    val localInspectionMode = LocalInspectionMode.current
+    val isMarkdownEnabled by remember {
+        if(!localInspectionMode)
+            SettingsStateHolder(context).settingEnableMarkdownFormattting
+        else
+            mutableStateOf(false)
+    }
+    val autoAlarmSetting by remember {
+        if(!localInspectionMode)
+            SettingsStateHolder(context).settingAutoAlarm
+        else
+            mutableStateOf(false)
+    }
 
     // item was not loaded yet or was deleted in the background
     if (iCalEntity.value == null) {
@@ -149,7 +169,7 @@ fun DetailScreenContent(
     // save 10 seconds after changed, then reset value
     if (changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && autosave) {
         LaunchedEffect(changeState) {
-            delay(Duration.ofSeconds(10).toMillis())
+            delay((10).seconds.inWholeMilliseconds)
             saveICalObject(
                 icalObject,
                 categories.value,
@@ -163,15 +183,55 @@ fun DetailScreenContent(
     }
 
     fun processGoBack() {
-        if(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED)
-            showUnsavedChangesDialog = true
-        else if(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && icalObject.sequence == 0L && icalObject.eTag == null && icalObject.summary.isNullOrEmpty() && icalObject.description.isNullOrEmpty())
+        if(isEditMode.value && icalObject.summary.isNullOrEmpty() && icalObject.description.isNullOrEmpty())
             deleteICalObject()
+        else if(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED)
+            showUnsavedChangesDialog = true
         else
             goBack()
+        goBackRequested.value = false
     }
 
-    if(goBackRequested)
+    /**
+     * Updates the alarms when the dates get changed
+     */
+    fun updateAlarms() {
+        alarms.value.forEach { alarm ->
+            if(alarm.triggerRelativeDuration.isNullOrEmpty())
+                return@forEach
+
+            val dur = try { Duration.parse(alarm.triggerRelativeDuration!!) } catch (e: IllegalArgumentException) { return@forEach }
+            if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) {
+                alarm.triggerTime = icalObject.due!! + dur.inWholeMilliseconds
+                alarm.triggerTimezone = icalObject.dueTimezone
+            } else {
+                alarm.triggerTime = icalObject.dtstart!! + dur.inWholeMilliseconds
+                alarm.triggerTimezone = icalObject.dtstartTimezone
+            }
+        }
+
+        //handle autoAlarm
+        val autoAlarm = if(autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ON_DUE && icalObject.due != null) {
+            Alarm.createDisplayAlarm(
+                dur = (0).minutes,
+                alarmRelativeTo = AlarmRelativeTo.END,
+                referenceDate = icalObject.due!!,
+                referenceTimezone = icalObject.dueTimezone
+            )
+        } else if(autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ON_START && icalObject.dtstart != null) {
+            Alarm.createDisplayAlarm(
+                dur = (0).minutes,
+                alarmRelativeTo = null,
+                referenceDate = icalObject.dtstart!!,
+                referenceTimezone = icalObject.dtstartTimezone
+            )
+        } else null
+
+        if(autoAlarm != null && alarms.value.none { alarm -> alarm.triggerRelativeDuration == autoAlarm.triggerRelativeDuration && alarm.triggerRelativeTo == autoAlarm.triggerRelativeTo })
+            alarms.value = alarms.value.plus(autoAlarm)
+    }
+
+    if(goBackRequested.value)
         processGoBack()
 
     BackHandler {
@@ -296,11 +356,13 @@ fun DetailScreenContent(
                 onDtstartChanged = { datetime, timezone ->
                     icalObject.dtstart = datetime
                     icalObject.dtstartTimezone = timezone
+                    updateAlarms()
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onDueChanged = { datetime, timezone ->
                     icalObject.due = datetime
                     icalObject.dueTimezone = timezone
+                    updateAlarms()
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onCompletedChanged = { datetime, timezone ->
@@ -318,18 +380,23 @@ fun DetailScreenContent(
 
                         if (summary.isNotBlank())
                             Text(
-                                summary,
+                                summary.trim(),
                                 modifier = Modifier.padding(8.dp),
                                 style = MaterialTheme.typography.titleMedium,
                                 //fontWeight = FontWeight.Bold
                             )
+
                         if (description.isNotBlank()) {
-                            MarkdownText(
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface),
-                                markdown = description,
-                                modifier = Modifier.padding(8.dp)
-                            )
+                            if(isMarkdownEnabled)
+                                MarkdownText(
+                                    markdown = description.trim(),
+                                    modifier = Modifier.padding(8.dp)
+                                )
+                            else
+                                Text(
+                                    text = description.trim(),
+                                    modifier = Modifier.padding(8.dp)
+                                )
                         }
                     }
                 }
@@ -349,7 +416,7 @@ fun DetailScreenContent(
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         label = { Text(stringResource(id = R.string.summary)) },
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
@@ -363,7 +430,7 @@ fun DetailScreenContent(
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         label = { Text(stringResource(id = R.string.description)) },
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
@@ -409,6 +476,18 @@ fun DetailScreenContent(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableCategories.value || showAllOptions))) {
+                DetailsCardCategories(
+                    initialCategories = categories.value,
+                    isEditMode = isEditMode.value,
+                    onCategoriesUpdated = { newCategories ->
+                        categories.value = newCategories
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    allCategories = allCategories,
+                )
+            }
+
             AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.enableSubtasks.value || showAllOptions))) {
                 DetailsCardSubtasks(
                     subtasks = subtasks.value,
@@ -452,18 +531,6 @@ fun DetailScreenContent(
                 )
             }
 
-
-            AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableCategories.value || showAllOptions))) {
-                DetailsCardCategories(
-                    initialCategories = categories.value,
-                    isEditMode = isEditMode.value,
-                    onCategoriesUpdated = { newCategories ->
-                        categories.value = newCategories
-                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                    },
-                    allCategories = allCategories,
-                )
-            }
 
             AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableResources.value || showAllOptions))) {
                 DetailsCardResources(
@@ -551,9 +618,9 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableAlarms.value || showAllOptions))) {
+            AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableAlarms.value || (showAllOptions && icalObject.module == Module.TODO.name)))) {
                 DetailsCardAlarms(
-                    initialAlarms = alarms.value,
+                    alarms = alarms,
                     icalObject = icalObject,
                     isEditMode = isEditMode.value,
                     onAlarmsUpdated = { newAlarms ->
@@ -565,7 +632,7 @@ fun DetailScreenContent(
             AnimatedVisibility(icalObject.rrule != null
                     || icalObject.isRecurLinkedInstance
                     || icalObject.recurOriginalIcalObjectId != null
-                    || (isEditMode.value && (detailSettings.enableRecurrence.value || showAllOptions))
+                    || (isEditMode.value && (detailSettings.enableRecurrence.value || (showAllOptions && icalObject.module != Module.NOTE.name)))
             ) {   // only Todos have recur!
                 DetailsCardRecur(
                     icalObject = icalObject,
@@ -639,7 +706,7 @@ fun DetailScreenContent_JOURNAL() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = false,
             player = null,
-            goBackRequested = false,
+            goBackRequested = remember { mutableStateOf(false) },
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
@@ -684,7 +751,7 @@ fun DetailScreenContent_TODO_editInitially() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = false,
             player = null,
-            goBackRequested = false,
+            goBackRequested = remember { mutableStateOf(false) },
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
@@ -731,7 +798,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = true,
             player = null,
-            goBackRequested = false,
+            goBackRequested = remember { mutableStateOf(false) },
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
@@ -770,7 +837,7 @@ fun DetailScreenContent_failedLoading() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = true,
             player = null,
-            goBackRequested = false,
+            goBackRequested = remember { mutableStateOf(false) },
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),

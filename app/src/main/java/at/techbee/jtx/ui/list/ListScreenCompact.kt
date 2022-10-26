@@ -33,7 +33,7 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.list.ListViewModel
-import at.techbee.jtx.ui.reusable.cards.ListCardCompact
+import at.techbee.jtx.ui.list.ListCardCompact
 
 
 @OptIn(ExperimentalFoundationApi::class)

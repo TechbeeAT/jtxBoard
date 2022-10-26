@@ -22,23 +22,20 @@ buildscript {
         version_core = "1.8.0"
         version_coroutine = "1.6.1"
         version_appcompat = "1.6.0-rc01"
-        version_gradle = '7.3.0'
+        version_gradle = '7.3.1'
         version_kotlin = "1.7.10"
         version_room = '2.4.3'
         version_work = "2.7.1"
         version_billing = "5.0.0"
         version_review = "2.0.0"
-        version_compose = "1.3.0-beta03"
-        version_about_libraries = "10.4.0"
-        version_accompanist = "0.26.4-beta"
+        version_compose = "1.3.0-rc01"
+        version_about_libraries = "10.5.1"
+        version_accompanist = "0.26.5-rc"
     }
 
     repositories {
         google()
         mavenCentral()
-
-        // Maven repository address for the HUAWEI Ads SDK.
-        maven { url 'https://developer.huawei.com/repo/' }
 
         // AboutLibraries
         maven { url "https://plugins.gradle.org/m2/" }
@@ -55,7 +52,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://developer.huawei.com/repo/' }  // Maven repository address for the HUAWEI Ads SDK.
 
         // ical4android
         maven { url 'https://jitpack.io' }

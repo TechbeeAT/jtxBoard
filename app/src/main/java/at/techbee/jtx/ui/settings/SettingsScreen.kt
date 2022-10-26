@@ -31,12 +31,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
+import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.DropdownSetting
 import at.techbee.jtx.ui.reusable.elements.SwitchSetting
 import at.techbee.jtx.ui.settings.DropdownSetting.*
 import at.techbee.jtx.ui.settings.SwitchSetting.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -50,6 +53,7 @@ fun SettingsScreen(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val subSectionExpanded = remember { mutableStateOf(false) }
 
     val languageOptions = mutableListOf<Locale?>(null)
@@ -198,6 +202,14 @@ fun SettingsScreen(
                     )
 
                     SwitchSetting(
+                        setting = SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE,
+                        initiallyChecked = settingsStateHolder.settingShowOneRecurEntryInFuture.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingShowOneRecurEntryInFuture.value = it
+                            SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.save(it, context)
+                        })
+
+                    SwitchSetting(
                         setting = SETTING_AUTO_EXPAND_SUBTASKS,
                         initiallyChecked = settingsStateHolder.settingAutoExpandSubtasks.value,
                         onCheckedChanged = {
@@ -288,6 +300,14 @@ fun SettingsScreen(
                             SETTING_DETAILS_AUTOSAVE.save(it, context)
                         })
 
+                    SwitchSetting(
+                        setting = SETTING_DETAILS_ENABLE_MARKDOWN,
+                        initiallyChecked = settingsStateHolder.settingEnableMarkdownFormattting.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingEnableMarkdownFormattting.value = it
+                            SETTING_DETAILS_ENABLE_MARKDOWN.save(it, context)
+                        })
+
                     Divider(
                         modifier = Modifier
                             .padding(top = 8.dp)
@@ -329,6 +349,15 @@ fun SettingsScreen(
                         onCheckedChanged = {
                             settingsStateHolder.settingDisableAlarmsReadonly.value = it
                             SETTING_DISABLE_ALARMS_FOR_READONLY.save(it, context)
+                        }
+                    )
+                    DropdownSetting(
+                        setting = SETTING_AUTO_ALARM,
+                        preselected = settingsStateHolder.settingAutoAlarm.value,
+                        onSelectionChanged = { selection ->
+                            settingsStateHolder.settingAutoAlarm.value = selection
+                            SETTING_AUTO_ALARM.save(selection, context = context)
+                            scope.launch(Dispatchers.IO) { Alarm.scheduleNextNotifications(context) }
                         }
                     )
                 }

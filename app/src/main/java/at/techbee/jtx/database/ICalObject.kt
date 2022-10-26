@@ -10,6 +10,7 @@ package at.techbee.jtx.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
@@ -19,8 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.util.PatternsCompat
 import androidx.preference.PreferenceManager
 import androidx.room.*
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
@@ -30,6 +33,7 @@ import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
+import at.techbee.jtx.util.UiUtil.asDayOfWeek
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
@@ -696,15 +700,6 @@ data class ICalObject(
                     item.alarms?.forEach {
                         it.icalObjectId = newId
                         database.insertAlarm(it)
-                        // take care of notifications
-                        val triggerTime = when {
-                            it.triggerTime != null -> it.triggerTime
-                            it.triggerRelativeDuration != null && it.triggerRelativeTo == AlarmRelativeTo.END.name -> it.getDatetimeFromTriggerDuration(
-                                item.property.due, item.property.dueTimezone)
-                            it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(item.property.dtstart, item.property.dtstartTimezone)
-                            else -> null
-                        }
-                        triggerTime?.let { trigger ->  it.scheduleNotification(context, trigger, item.ICalCollection?.readonly?: true, item.property.summary, item.property.description) }
                     }
 
                     // relations need to be rebuilt from the new child to the parent
@@ -716,7 +711,7 @@ data class ICalObject(
                         relParent2Child.text = parent?.property?.uid
                         database.insertRelatedto(relParent2Child)
                     }
-
+                    Alarm.scheduleNextNotifications(context)
                     return@withContext newId
                 }
                 return@withContext 0L
@@ -752,6 +747,31 @@ data class ICalObject(
                 return tz
 
             return TimeZone.getTimeZone(tz).id
+        }
+
+
+        fun getMapLink(geoLat: Double?, geoLong: Double?, flavor: String): Uri? {
+            return if(geoLat != null || geoLong != null) {
+                try {
+                    if (flavor == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY)
+                        Uri.parse("https://www.google.com/maps/search/?api=1&query=$geoLat%2C$geoLong")
+                    else
+                        Uri.parse("https://www.openstreetmap.org/#map=15/$geoLat/$geoLong")
+                } catch (e: java.lang.IllegalArgumentException) { null }
+            } else null
+        }
+
+        /**
+         * @param geoLat  Latitude as Double
+         * @param geoLong  Longitude as Double
+         * @return A textual representation of the Latitude and Logitude e.g. (1.234, 5.677)
+         */
+        fun getLatLongString(geoLat: Double?, geoLong: Double?): String? {
+            return if(geoLat != null && geoLong != null) {
+                "($geoLat, $geoLong)"
+            } else {
+               null
+            }
         }
     }
 
@@ -903,24 +923,32 @@ data class ICalObject(
             {
                 Recur.Frequency.DAILY ->
                 {
-                    for(i in 1..count) {
-                        recurList.add(zonedDtstart.toInstant().toEpochMilli())
-                        Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstart.toInstant().toEpochMilli(), dtstartTimezone))
-                        zonedDtstart = zonedDtstart.plusDays(interval)
+                    if(rRule.dayList.isEmpty()) {
+                        for (i in 1..count) {
+                            recurList.add(zonedDtstart.toInstant().toEpochMilli())
+                            Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstart.toInstant().toEpochMilli(), dtstartTimezone))
+                            zonedDtstart = zonedDtstart.plusDays(interval)
+                        }
+                    } else {
+                        // Considering a day list. This is currently not possible to be entered in jtx Board, but might come from Thunderbird
+                        var iteration = 0
+                        while (iteration < count) {
+                            if(rRule.dayList.any { weekday -> weekday.asDayOfWeek() == zonedDtstart.dayOfWeek}) {
+                                recurList.add(zonedDtstart.toInstant().toEpochMilli())
+                                Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstart.toInstant().toEpochMilli(), dtstartTimezone))
+                                iteration += 1
+                            }
+                            zonedDtstart = zonedDtstart.plusDays(interval)
+                        }
                     }
                 }
                 Recur.Frequency.WEEKLY -> {
 
                     val selectedWeekdays = mutableListOf<DayOfWeek>()
 
-                    if (rRule.dayList.any { it.day == WeekDay.Day.MO }) selectedWeekdays.add(DayOfWeek.MONDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.TU }) selectedWeekdays.add(DayOfWeek.TUESDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.WE }) selectedWeekdays.add(DayOfWeek.WEDNESDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.TH }) selectedWeekdays.add(DayOfWeek.THURSDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.FR }) selectedWeekdays.add(DayOfWeek.FRIDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.SA }) selectedWeekdays.add(DayOfWeek.SATURDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.SU }) selectedWeekdays.add(DayOfWeek.SUNDAY)
-
+                    rRule.dayList.forEach { weekDay ->
+                        weekDay.asDayOfWeek()?.let { selectedWeekdays.add(it) }
+                    }
 
                     for(i in 1..count) {
                         var zonedDtstartWeekloop = zonedDtstart
@@ -1006,8 +1034,9 @@ data class ICalObject(
     }
 
 
-    fun recreateRecurring(database: ICalDatabaseDao, context: Context) {
+    fun recreateRecurring(context: Context) {
 
+        val database = ICalDatabase.getInstance(context).iCalDatabaseDao
         database.deleteRecurringInstances(id)
         if(dtstart == null || rrule.isNullOrEmpty())
             return
@@ -1088,29 +1117,26 @@ data class ICalObject(
                 database.insertResourceSync(it)
             }
             instance.alarms?.forEach {
-                it.alarmId = 0L
-                it.icalObjectId = instanceId
-                // we skip triggers with an absolute date, only triggers with a duration are relevant for
-                if(it.triggerTime == null && it.triggerRelativeDuration?.isNotEmpty() == true) {
-                    it.alarmId = database.insertAlarmSync(it)
+                if(it.triggerRelativeDuration != null) {    // only relative alarms are considered
+                    it.alarmId = 0L
+                    it.icalObjectId = instanceId
 
-                    // take care of notifications
-                    val triggerTime = when {
-                        it.triggerTime != null -> it.triggerTime
-                        it.triggerRelativeDuration != null && it.triggerRelativeTo == AlarmRelativeTo.END.name -> it.getDatetimeFromTriggerDuration(
-                            instance.property.due, instance.property.dueTimezone)
-                        it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(instance.property.dtstart, instance.property.dtstartTimezone)
-                        else -> null
+                    try {
+                        val dur = Duration.parse(it.triggerRelativeDuration!!)
+                        if(it.triggerRelativeTo == AlarmRelativeTo.END.name) {
+                            it.triggerTime = instance.property.due!! + dur.inWholeMilliseconds
+                            it.triggerTimezone = instance.property.dueTimezone
+                        } else {
+                            it.triggerTime = instance.property.dtstart!! + dur.inWholeMilliseconds
+                            it.triggerTimezone = instance.property.dtstartTimezone
+                        }
+                        database.insertAlarmSync(it)
+                    } catch (e: IllegalArgumentException) {
+                        Log.w("DurationParsing", "Duration could not be parsed for instance, skipping this alarm.")
                     }
-                    triggerTime?.let { trigger -> it.scheduleNotification(context, trigger, instance.ICalCollection?.readonly ?: true, instance.property.summary, instance.property.description) }
                 }
             }
-
-            //TODO: How to deal with relatedTo?
-
-            //TODO Check further attributes!
-            //TODO Check also rdate
-
+            Alarm.scheduleNextNotifications(context)
         }
     }
 
@@ -1229,6 +1255,10 @@ data class ICalObject(
         }
     }
 
+    /**
+     * @return The Module of the current [ICalObject] as [Module] enum.
+     * Fallback is [Module.NOTE]
+     */
     fun getModuleFromString(): Module {
         return when (this.module) {
             Module.JOURNAL.name -> Module.JOURNAL

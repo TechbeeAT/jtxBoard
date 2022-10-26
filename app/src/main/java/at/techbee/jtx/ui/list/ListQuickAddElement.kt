@@ -29,6 +29,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -40,8 +41,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
@@ -56,7 +59,7 @@ import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import java.util.*
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ListQuickAddElement(
     presetModule: Module?,
@@ -130,186 +133,198 @@ fun ListQuickAddElement(
         }
     }
 
+    AlertDialog(
+        properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
+        onDismissRequest = onDismiss,
+        text = {
+            Column(modifier = modifier) {
+                CollectionsSpinner(
+                    collections = allCollections,
+                    preselected = allCollections.find { it == currentCollection } ?: allCollections.first(),
+                    includeReadOnly = false,
+                    includeVJOURNAL = if (currentModule == Module.JOURNAL || currentModule == Module.NOTE) true else null,
+                    includeVTODO = if (currentModule == Module.TODO) true else null,
+                    onSelectionChanged = { selected ->
+                        currentCollection = selected
+                        if ((currentModule == Module.JOURNAL || currentModule == Module.NOTE) && !currentCollection.supportsVJOURNAL)
+                            currentModule = Module.TODO
+                        else if (currentModule == Module.TODO && !currentCollection.supportsVTODO)
+                            currentModule = Module.NOTE
+                    }
+                )
 
-    Column(modifier = modifier) {
-        CollectionsSpinner(
-            collections = allCollections,
-            preselected = allCollections.find { it == currentCollection } ?: allCollections.first(),
-            includeReadOnly = false,
-            includeVJOURNAL = if (currentModule == Module.JOURNAL || currentModule == Module.NOTE) true else null,
-            includeVTODO = if (currentModule == Module.TODO) true else null,
-            onSelectionChanged = { selected ->
-                currentCollection = selected
-                if ((currentModule == Module.JOURNAL || currentModule == Module.NOTE) && !currentCollection.supportsVJOURNAL)
-                    currentModule = Module.TODO
-                else if (currentModule == Module.TODO && !currentCollection.supportsVTODO)
-                    currentModule = Module.NOTE
-            }
-        )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    FilterChip(
+                        selected = currentModule == Module.JOURNAL,
+                        onClick = { currentModule = Module.JOURNAL },
+                        label = { Text(stringResource(id = R.string.journal)) },
+                        enabled = currentCollection.supportsVJOURNAL
+                    )
+                    FilterChip(
+                        selected = currentModule == Module.NOTE,
+                        onClick = { currentModule = Module.NOTE },
+                        label = { Text(stringResource(id = R.string.note)) },
+                        enabled = currentCollection.supportsVJOURNAL
+                    )
+                    FilterChip(
+                        selected = currentModule == Module.TODO,
+                        onClick = { currentModule = Module.TODO },
+                        label = { Text(stringResource(id = R.string.task)) },
+                        enabled = currentCollection.supportsVTODO
+                    )
+                }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .horizontalScroll(rememberScrollState())
-                .align(Alignment.CenterHorizontally)
-        ) {
-            FilterChip(
-                selected = currentModule == Module.JOURNAL,
-                onClick = { currentModule = Module.JOURNAL },
-                label = { Text(stringResource(id = R.string.journal)) },
-                enabled = currentCollection.supportsVJOURNAL
-            )
-            FilterChip(
-                selected = currentModule == Module.NOTE,
-                onClick = { currentModule = Module.NOTE },
-                label = { Text(stringResource(id = R.string.note)) },
-                enabled = currentCollection.supportsVJOURNAL
-            )
-            FilterChip(
-                selected = currentModule == Module.TODO,
-                onClick = { currentModule = Module.TODO },
-                label = { Text(stringResource(id = R.string.task)) },
-                enabled = currentCollection.supportsVTODO
-            )
-        }
+                OutlinedTextField(
+                    value = currentText,
+                    onValueChange = {
+                        currentText = it
+                        noTextError = false
+                    },
+                    label = { Text(stringResource(id = R.string.list_quickadd_dialog_summary_description_hint)) },
+                    trailingIcon = {
+                        if (sr != null) {
+                            IconButton(onClick = {
 
-        OutlinedTextField(
-            value = currentText,
-            onValueChange = {
-                currentText = it
-                noTextError = false
-            },
-            label = { Text(stringResource(id = R.string.list_quickadd_dialog_summary_description_hint)) },
-            trailingIcon = {
-                if (sr != null) {
-                    IconButton(onClick = {
+                                // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
+                                if (ContextCompat.checkSelfPermission(
+                                        context,
+                                        Manifest.permission.RECORD_AUDIO
+                                    ) != PackageManager.PERMISSION_GRANTED
+                                )
+                                    showAudioPermissionDialog = true
+                                else {
+                                    val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                                    srIntent.putExtra(
+                                        RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                                    )
+                                    srIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                                    srIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
 
-                        // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
-                        if (ContextCompat.checkSelfPermission(
-                                context,
-                                Manifest.permission.RECORD_AUDIO
-                            ) != PackageManager.PERMISSION_GRANTED
-                        )
-                            showAudioPermissionDialog = true
-                        else {
-                            val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-                            srIntent.putExtra(
-                                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                            )
-                            srIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-                            srIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+                                    sr.setRecognitionListener(object : RecognitionListener {
+                                        override fun onReadyForSpeech(p0: Bundle?) {}
+                                        override fun onBeginningOfSpeech() {
+                                            srListening = true
+                                        }
 
-                            sr.setRecognitionListener(object : RecognitionListener {
-                                override fun onReadyForSpeech(p0: Bundle?) {}
-                                override fun onBeginningOfSpeech() {
-                                    srListening = true
+                                        override fun onEndOfSpeech() {
+                                            srListening = false
+                                        }
+
+                                        override fun onRmsChanged(p0: Float) {}
+                                        override fun onBufferReceived(p0: ByteArray?) {}
+                                        override fun onError(errorCode: Int) {}
+                                        override fun onPartialResults(bundle: Bundle?) {
+                                            val data: ArrayList<String>? =
+                                                bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                                            // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
+                                            if (data?.isNotEmpty() == true) {
+                                                srTextResult = data[0]
+                                            }
+                                        }
+
+                                        override fun onEvent(p0: Int, p1: Bundle?) {}
+                                        override fun onResults(bundle: Bundle?) {
+                                            srTextResult = ""
+                                            val data: ArrayList<String>? =
+                                                bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                                            if (currentText.isNotBlank())   // add a return if there is already text present to add it in a new line
+                                                currentText += "\n"
+                                            // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
+                                            if (data?.isNotEmpty() == true)
+                                                currentText += data[0]
+                                        }
+                                    })
+                                    sr.startListening(srIntent)
                                 }
-
-                                override fun onEndOfSpeech() {
-                                    srListening = false
-                                }
-
-                                override fun onRmsChanged(p0: Float) {}
-                                override fun onBufferReceived(p0: ByteArray?) {}
-                                override fun onError(errorCode: Int) {}
-                                override fun onPartialResults(bundle: Bundle?) {
-                                    val data: ArrayList<String>? =
-                                        bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                                    // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
-                                    if (data?.isNotEmpty() == true) {
-                                        srTextResult = data[0]
-                                    }
-                                }
-
-                                override fun onEvent(p0: Int, p1: Bundle?) {}
-                                override fun onResults(bundle: Bundle?) {
-                                    srTextResult = ""
-                                    val data: ArrayList<String>? =
-                                        bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                                    if (currentText.isNotBlank())   // add a return if there is already text present to add it in a new line
-                                        currentText += "\n"
-                                    // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
-                                    if (data?.isNotEmpty() == true)
-                                        currentText += data[0]
-                                }
-                            })
-                            sr.startListening(srIntent)
+                            }) {
+                                Icon(
+                                    Icons.Outlined.Mic,
+                                    stringResource(id = R.string.list_quickadd_dialog_sr_start)
+                                )
+                            }
                         }
-                    }) {
-                        Icon(
-                            Icons.Outlined.Mic,
-                            stringResource(id = R.string.list_quickadd_dialog_sr_start)
-                        )
+                    },
+                    maxLines = 3,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
+                    isError = noTextError,
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Default
+                    )
+                )
+
+                Text(
+                    stringResource(id = R.string.list_quickadd_dialog_summary_description_helper),
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                AnimatedVisibility(srListening) {
+                    Text(
+                        stringResource(id = R.string.list_quickadd_dialog_sr_listening),
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
+                AnimatedVisibility(srTextResult.isNotBlank()) {
+                    Text(srTextResult, modifier = Modifier.padding(vertical = 8.dp))
+                }
+
+                currentAttachment?.let {
+                    AttachmentCard(
+                        attachment = it,
+                        isEditMode = false,
+                        isRemoteCollection = currentCollection.accountType != LOCAL_ACCOUNT_TYPE,
+                        onAttachmentDeleted = { /* no editing here */ },
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    TextButton(
+                        onClick = {
+                            onDismiss()
+                        },
+                        modifier = Modifier.weight(0.3f)
+                    ) {
+                        Text(stringResource(id = R.string.close), textAlign = TextAlign.Center)
+                    }
+
+                    TextButton(
+                        onClick = { saveEntry(goToEdit = true) },
+                        modifier = Modifier.weight(0.4f)
+                    ) {
+                        Text(stringResource(id = R.string.save_and_edit), textAlign = TextAlign.Center)
+                    }
+
+                    TextButton(
+                        onClick = {
+                            saveEntry(goToEdit = false)
+                            onDismiss()
+                                  },
+                        modifier = Modifier.weight(0.3f)
+                    ) {
+                        Text(stringResource(id = R.string.save), textAlign = TextAlign.Center)
                     }
                 }
-            },
-            maxLines = 3,
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
-            isError = noTextError,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Sentences,
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
-            )
-        )
-
-        Text(
-            stringResource(id = R.string.list_quickadd_dialog_summary_description_helper),
-            style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-
-        AnimatedVisibility(srListening) {
-            Text(
-                stringResource(id = R.string.list_quickadd_dialog_sr_listening),
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-        }
-        AnimatedVisibility(srTextResult.isNotBlank()) {
-            Text(srTextResult, modifier = Modifier.padding(vertical = 8.dp))
-        }
-
-        AnimatedVisibility(currentAttachment != null) {
-            AttachmentCard(
-                attachment = currentAttachment!!,
-                isEditMode = false,
-                isRemoteCollection = currentCollection.accountType != LOCAL_ACCOUNT_TYPE,
-                onAttachmentDeleted = { /* no editing here */ },
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-        }
-
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-
-            TextButton(
-                onClick = {
-                    onDismiss()
-                }
-            ) {
-                Text(stringResource(id = R.string.cancel))
             }
+        },
+        confirmButton = { }
+    )
 
-            TextButton(
-                onClick = { saveEntry(goToEdit = true) }
-            ) {
-                Text(stringResource(id = R.string.save_and_edit))
-            }
-
-            TextButton(
-                onClick = { saveEntry(goToEdit = false) }
-            ) {
-                Text(stringResource(id = R.string.add))
-            }
-        }
-    }
 
     if (showAudioPermissionDialog) {
         RequestPermissionDialog(

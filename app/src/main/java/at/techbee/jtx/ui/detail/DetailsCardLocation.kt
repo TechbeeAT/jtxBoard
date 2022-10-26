@@ -9,20 +9,20 @@
 package at.techbee.jtx.ui.detail
 
 import android.Manifest
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Clear
-import androidx.compose.material.icons.outlined.EditLocation
-import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.flavored.MapComposable
 import at.techbee.jtx.ui.reusable.dialogs.LocationPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
@@ -54,6 +55,7 @@ fun DetailsCardLocation(
     modifier: Modifier = Modifier
 ) {
 
+    val context = LocalContext.current
     val headline = stringResource(id = R.string.location)
     var showLocationPickerDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -140,7 +142,7 @@ fun DetailsCardLocation(
                 }
             }
 
-            AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode) {
+            AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode && !LocalInspectionMode.current) {
                 MapComposable(
                     initialLocation = location,
                     initialGeoLat = geoLat,
@@ -154,6 +156,35 @@ fun DetailsCardLocation(
                         .padding(top = 8.dp)
                 )
             }
+
+            AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(ICalObject.getLatLongString(geoLat, geoLong) ?: "")
+
+                        IconButton(onClick = {
+                            val geoUri = if(location.isNotEmpty())
+                                Uri.parse("geo:0,0?q=$geoLat,$geoLong($location)")
+                            else
+                                Uri.parse("geo:$geoLat,$geoLong")
+
+                            val geoIntent = Intent(Intent.ACTION_VIEW).apply {
+                                data = geoUri
+                            }
+                            if (geoIntent.resolveActivity(context.packageManager) != null) {
+                                context.startActivity(geoIntent)
+                            } else {
+                                context.startActivity(Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, BuildConfig.FLAVOR)))
+                            }
+                        }) {
+                            Icon(Icons.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
+                        }
+
+                }
+            }
         }
     }
 }
@@ -166,6 +197,20 @@ fun DetailsCardLocation_Preview() {
             initialLocation = "Vienna, Stephansplatz",
             initialGeoLat = null,
             initialGeoLong = null,
+            isEditMode = false,
+            onLocationUpdated = { _, _, _ -> }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardLocation_Preview_withGEo() {
+    MaterialTheme {
+        DetailsCardLocation(
+            initialLocation = "Vienna, Stephansplatz",
+            initialGeoLat = 23.447378,
+            initialGeoLong = 73.272838,
             isEditMode = false,
             onLocationUpdated = { _, _, _ -> }
         )

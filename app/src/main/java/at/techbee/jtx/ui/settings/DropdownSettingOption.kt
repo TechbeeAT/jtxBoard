@@ -39,8 +39,12 @@ enum class DropdownSettingOption(
     PROGRESS_STEP_10("10", R.string.settings_progress_step_10),
     PROGRESS_STEP_20("20", R.string.settings_progress_step_20),
     PROGRESS_STEP_25("25", R.string.settings_progress_step_25),
-    PROGRESS_STEP_50("50", R.string.settings_progress_step_50);
+    PROGRESS_STEP_50("50", R.string.settings_progress_step_50),
 
+    AUTO_ALARM_OFF("off", R.string.off),
+    AUTO_ALARM_ON_START("on_start", R.string.alarms_onstart),
+    AUTO_ALARM_ON_DUE("on_due", R.string.alarms_ondue),
+    AUTO_ALARM_ALWAYS_ON_DUE("always_on_due", R.string.alarms_always_ondue);
 
     fun getProgressStepKeyAsInt(): Int {
         return try {

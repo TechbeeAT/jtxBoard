@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.about
 
 import android.content.Intent
 import android.net.Uri
@@ -15,15 +15,14 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.BuildConfig
@@ -32,7 +31,7 @@ import at.techbee.jtx.ui.theme.Typography
 import java.text.SimpleDateFormat
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutJtx(modifier: Modifier = Modifier) {
 
@@ -123,29 +122,36 @@ fun AboutJtx(modifier: Modifier = Modifier) {
                 style = Typography.bodyLarge,
             )
 
-            Crossfade(targetState = clickCount) { clicks ->
-                Image(
-                    painter = if (clicks < 4) painterResource(id = R.drawable.logo_techbee) else painterResource(
-                        id = R.drawable.logo_techbee_front
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(200.dp)
-                        .combinedClickable(
-                            enabled = true,
-                            onClickLabel = "Clickable image",
-                            onClick = {
-                                clickCount += 1
-                            }
-                        )
-                )
+            ElevatedCard(
+                onClick = { clickCount += 1 },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Crossfade(targetState = clickCount) { clicks ->
+                    Image(
+                        painter = if (clicks < 4) painterResource(id = R.drawable.logo_techbee) else painterResource(
+                            id = R.drawable.logo_techbee_front
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .padding(16.dp)
+                    )
+                }
+                AnimatedVisibility(visible = clickCount >= 0) {
+                    Text(
+                        text = "\"" + messages[if (clickCount > 4) 4 else clickCount] + "\"",
+                        style = Typography.bodySmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
-            AnimatedVisibility(visible = clickCount >= 0) {
-                Text(
-                    text = "\"" + messages[if (clickCount > 4) 4 else clickCount] + "\"",
-                    style = Typography.bodySmall,
-                )
-            }
+
         }
     }
 }

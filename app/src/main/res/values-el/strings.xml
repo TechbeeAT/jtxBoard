@@ -55,7 +55,7 @@ Global Strings -->
     <string name="navigation_drawer_board">"Board"</string>
     <string name="navigation_drawer_sync">"Συγχρονισμός με DAVx⁵"</string>
     <string name="navigation_drawer_about">"Σχετικά / Άδεια"</string>
-    <string name="navigation_drawer_subtitle">"Ημερολόγια, σημειώσεις &amp; εργασίες για android"</string>
+    <string name="navigation_drawer_subtitle">"Ημερολόγια, σημειώσεις &amp; εργασίες"</string>
     <string name="navigation_drawer_beta_feedback">"Beta σχόλια"</string>
     <string name="navigation_drawer_settings">"Ρυθμίσεις"</string>
     <string name="navigation_drawer_news_updates">"Νέα &amp; ενημερώσεις"</string>
@@ -207,8 +207,6 @@ Global Strings -->
     <string name="menu_list_quick_note">"Γρήγορη σημείωση"</string>
     <string name="menu_list_quick_todo">"Γρήγορη εργασία"</string>
     <string name="menu_list_delete_visible">"Διαγραφή ορατών"</string>
-    <string name="menu_list_todo_show_completed">"Εμφάνιση ολοκληρωμένων"</string>
-    <string name="menu_list_todo_hide_completed">"Απόκρυψη ολοκληρωμένων"</string>
     <string name="menu_list_syncnow">"Συγχρονισμός τώρα"</string>
     <string name="menu_view_share_text">"Κοινοποίηση"</string>
     <string name="menu_view_share_ics">"Κοινοποίησε ως .ics"</string>
@@ -433,4 +431,36 @@ Global Strings -->
     <string name="notification_done">"Ολοκληρώθηκε"</string>
     <string name="notification_add_1h">"+ 1 ώρα"</string>
     <string name="notification_add_1d">"+1 ημέρα"</string>
+    <string name="edit_recur_ends_never">"Χωρίς λήξη"</string>
+    <string name="edit_recur_ends_on">"Λήξη στις"</string>
+    <string name="edit_recur_ends_after">"Λήξη μετά από"</string>
+    <string name="collections_toast_export_all_ics_success">"Η εξαγωγή όλων των συλλογών ολοκληρώθηκε επιτυχώς"</string>
+    <string name="collections_toast_export_all_ics_error">"Εντοπίστηκε ένα πρόβλημα κατά την διαδικασία της εξαγωγής όπλων των συλλογών."</string>
+    <string name="menu_collections_export_all">"Εξαγωγή όλων"</string>
+    <string name="more">"Περισσοτερα"</string>
+    <string name="toolbar_text_buypro">"Αγορά Pro"</string>
+    <string name="navigation_drawer_buypro">"Αγορά Pro"</string>
+    <string name="settings_select_theme">"Επιλογή θέματος"</string>
+    <string name="settings_select_theme_dark">"Σκοτεινό"</string>
+    <string name="settings_select_theme_light">"Φωτεινό"</string>
+    <string name="settings_select_theme_system">"Επαναφορά αρχικού"</string>
+    <string name="donate_dialog_title">"Σας αρέσει το jtx Board;"</string>
+    <string name="donate_dialog_message">"Η δημιουργία μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μια σκληρή δουλειά.  Εάν σας αρέσει αυτή η εφαρμογή και εάν θέλετε να εξασφαλίσετε την συνεχή ανάπτυξη της, σκεφτείτε για μια δωρεά :-)
+ Ευχαριστώ!"</string>
+
+    <!-- Buy Pro fragment -->
+    <string name="buypro_text">"Η ανάπτυξη μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μία σκληρή δουλειά. Εάν θέλετε να χρησιμοποιήσετε τις λειτουργίες Pro ή εάν θέλετε να υποστηρίξετε το έργο μας, σκεφτείτε την ακόλουθη αγορά εντός της εφαρμογής:"</string>
+    <string name="buypro_purchase_header">"Αναβαθμιστείτε στο jtx Board Pro"</string>
+    <string name="buypro_purchase_description">"Σας ευχαριστούμε που αναβαθμίσατε στο jtx Board Pro. Αυτή η αναβάθμιση επιτρέπει δυνατότητες επεξεργασίας για απομακρυσμένες συλλογές, γρήγορες καταχωρήσεις, γρήγορη επεξεργασία μέσω παρατεταμένου κλικ και δυναμικά χρώματα (διαθέσιμο από το Android 12)."</string>
+    <string name="buypro_purchase_header_thankyou">"Ευχαριστούμε για την αγορά του jtx Board Pro"</string>
+    <string name="buypro_purchase_description_thankyou">"Αυτή η αναβάθμιση επιτρέπει δυνατότητες επεξεργασίας για απομακρυσμένες συλλογές, γρήγορες καταχωρήσεις, γρήγορη επεξεργασία μέσω παρατεταμένου κλικ και δυναμικά χρώματα (διαθέσιμο από το Android 12)."</string>
+    <string name="buypro_purchase_date">"Η αγορά πραγματοποιήθηκε στις %1$s"</string>
+    <string name="buypro_order_id">"Κωδικός παραγγελίας: %1$s"</string>
+    <string name="buypro_success_header">"Ευχαριστούμε που αγοράσατε το jtx Board Pro!"</string>
+    <string name="buypro_success_description">"Οι δυνατότητες επεξεργασίας για απομακρυσμένες συλλογές, γρήγορες καταχωρίσεις, γρήγορη επεξεργασία μέσω παρατεταμένου κλικ και δυναμικά χρώματα (διαθέσιμα από το Android 12) είναι πλέον ενεργοποιημένες."</string>
+    <string name="buypro_success_thankyou">"Ευχαριστούμε!"</string>
+    <string name="buypro_snackbar_remote_entries_blocked">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε τις δυνατότητες επεξεργασίας απομακρυσμένων συλλογών."</string>
+    <string name="buypro_snackbar_quick_entries_blocked">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε τις δυνατότητες γρήγορης προσθήκης."</string>
+    <string name="buypro_initial_dialog_message">"Χαίρεται! Το jtx Board έρχεται με μια τυπική και μια έκδοση Pro. Ρίξτε μια ματιά στην ενότητα \"Buy Pro\" για να μάθετε περισσότερα για το jtx Board Pro!
+ Ευχαριστώ!"</string>
 </resources>

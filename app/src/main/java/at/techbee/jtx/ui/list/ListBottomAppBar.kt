@@ -11,19 +11,15 @@ package at.techbee.jtx.ui.list
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.ListSettings
@@ -31,7 +27,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
-import at.techbee.jtx.ui.reusable.elements.LabelledCheckbox
 import at.techbee.jtx.util.DateTimeUtils
 import java.util.*
 
@@ -40,28 +35,34 @@ fun ListBottomAppBar(
     module: Module,
     iCal4ListLive: LiveData<List<ICal4List>>,
     listSettings: ListSettings,
-    showQuickEntry: (Boolean) -> Unit,
+    showQuickEntry: MutableState<Boolean>,
+    allowNewEntries: Boolean,
     onAddNewEntry: () -> Unit,
-    onListSettingsChanged: () -> Unit,
     onFilterIconClicked: () -> Unit,
-    onClearFilterClicked: () -> Unit,
     onGoToDateSelected: (Long) -> Unit,
     onSearchTextClicked: () -> Unit
 ) {
 
-    var menuExpanded by remember { mutableStateOf(false) }
     var showGoToDatePicker by remember { mutableStateOf(false) }
     val iCal4List by iCal4ListLive.observeAsState()
 
     val isFilterActive = listSettings.searchCategories.value.isNotEmpty()
                 //|| searchOrganizers.value.isNotEmpty()
-                || (module == Module.JOURNAL && listSettings.searchStatusJournal.value.isNotEmpty())
-                || (module == Module.NOTE && listSettings.searchStatusJournal.value.isNotEmpty())
-                || (module == Module.TODO && listSettings.searchStatusTodo.value.isNotEmpty())
-                || listSettings.searchClassification.value.isNotEmpty() || listSettings.searchCollection.value.isNotEmpty()
-                || listSettings.searchAccount.value.isNotEmpty()
-
-    var isShowQuickEntryActive by rememberSaveable { mutableStateOf(false) }
+            || (module == Module.JOURNAL && listSettings.searchStatusJournal.value.isNotEmpty())
+            || (module == Module.NOTE && listSettings.searchStatusJournal.value.isNotEmpty())
+            || (module == Module.TODO && listSettings.searchStatusTodo.value.isNotEmpty())
+            || listSettings.searchClassification.value.isNotEmpty() || listSettings.searchCollection.value.isNotEmpty()
+            || listSettings.searchAccount.value.isNotEmpty()
+            || listSettings.isExcludeDone.value
+            || listSettings.isFilterStartInPast.value
+            || listSettings.isFilterStartToday.value
+            || listSettings.isFilterStartTomorrow.value
+            || listSettings.isFilterStartFuture.value
+            || (module == Module.TODO && listSettings.isFilterOverdue.value)
+            || (module == Module.TODO && listSettings.isFilterDueToday.value)
+            || (module == Module.TODO && listSettings.isFilterDueTomorrow.value)
+            || (module == Module.TODO && listSettings.isFilterDueFuture.value)
+            || (module == Module.TODO && listSettings.isFilterNoDatesSet.value)
 
     if(showGoToDatePicker) {
         var dates = iCal4List?.map { it.dtstart ?: System.currentTimeMillis() }?.toList()
@@ -95,12 +96,6 @@ fun ListBottomAppBar(
 
     BottomAppBar(
         actions = {
-            IconButton(onClick = { menuExpanded = true }) {
-                Icon(
-                    Icons.Outlined.MoreVert,
-                    contentDescription = stringResource(id = R.string.more)
-                )
-            }
             IconButton(onClick = { onFilterIconClicked() }) {
                 Icon(
                     Icons.Outlined.FilterList,
@@ -108,23 +103,22 @@ fun ListBottomAppBar(
                     tint = if (isFilterActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
                 )
             }
-            IconButton(onClick = {
-                isShowQuickEntryActive = !isShowQuickEntryActive
-                showQuickEntry(isShowQuickEntryActive)
-            }) {
-                Icon(
-                    painterResource(
-                        id = R.drawable.ic_add_quick
-                    ),
-                    contentDescription = stringResource(
-                        id = when (module) {
-                            Module.JOURNAL -> R.string.menu_list_quick_journal
-                            Module.NOTE -> R.string.menu_list_quick_note
-                            Module.TODO -> R.string.menu_list_quick_todo
-                        }
-                    ),
-                    tint = if (isShowQuickEntryActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
-                )
+            AnimatedVisibility(allowNewEntries) {
+                IconButton(onClick = { showQuickEntry.value = !showQuickEntry.value }) {
+                    Icon(
+                        painterResource(
+                            id = R.drawable.ic_add_quick
+                        ),
+                        contentDescription = stringResource(
+                            id = when (module) {
+                                Module.JOURNAL -> R.string.menu_list_quick_journal
+                                Module.NOTE -> R.string.menu_list_quick_note
+                                Module.TODO -> R.string.menu_list_quick_todo
+                            }
+                        ),
+                        tint = if (showQuickEntry.value) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                    )
+                }
             }
             IconButton(onClick = { onSearchTextClicked() }) {
                 Icon(
@@ -142,133 +136,21 @@ fun ListBottomAppBar(
                     )
                 }
             }
-
-
-            // overflow menu
-            DropdownMenu(
-                expanded = menuExpanded,
-                onDismissRequest = { menuExpanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.menu_list_todo_hide_completed),
-                            isChecked = listSettings.isExcludeDone.value,
-                            onCheckedChanged = { checked ->
-                                listSettings.isExcludeDone.value = checked
-                                onListSettingsChanged()
-                            })
-                    },
-                    onClick = {
-                        listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
-                        onListSettingsChanged()
-                    }
-                )
-
-                if (module == Module.TODO) {
-                    DropdownMenuItem(
-                        text = {
-                            LabelledCheckbox(
-                                text = stringResource(id = R.string.list_due_overdue),
-                                isChecked = listSettings.isFilterOverdue.value,
-                                onCheckedChanged = { checked ->
-                                    listSettings.isFilterOverdue.value = checked
-                                    onListSettingsChanged()
-                                })
-                        },
-                        onClick = {
-                            listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
-                            onListSettingsChanged()
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            LabelledCheckbox(
-                                text = stringResource(id = R.string.list_due_today),
-                                isChecked = listSettings.isFilterDueToday.value,
-                                onCheckedChanged = { checked ->
-                                    listSettings.isFilterDueToday.value = checked
-                                    onListSettingsChanged()
-                                })
-                        },
-                        onClick = {
-                            listSettings.isFilterDueToday.value =
-                                !listSettings.isFilterDueToday.value
-                            onListSettingsChanged()
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            LabelledCheckbox(
-                                text = stringResource(id = R.string.list_due_tomorrow),
-                                isChecked = listSettings.isFilterDueTomorrow.value,
-                                onCheckedChanged = { checked ->
-                                    listSettings.isFilterDueTomorrow.value = checked
-                                    onListSettingsChanged()
-                                })
-                        },
-                        onClick = {
-                            listSettings.isFilterDueTomorrow.value =
-                                !listSettings.isFilterDueTomorrow.value
-                            onListSettingsChanged()
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            LabelledCheckbox(
-                                text = stringResource(id = R.string.list_due_future),
-                                isChecked = listSettings.isFilterDueFuture.value,
-                                onCheckedChanged = { checked ->
-                                    listSettings.isFilterDueFuture.value = checked
-                                    onListSettingsChanged()
-                                })
-                        },
-                        onClick = {
-                            listSettings.isFilterDueFuture.value =
-                                !listSettings.isFilterDueFuture.value
-                            onListSettingsChanged()
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            LabelledCheckbox(
-                                text = stringResource(id = R.string.list_no_dates_set),
-                                isChecked = listSettings.isFilterNoDatesSet.value,
-                                onCheckedChanged = { checked ->
-                                    listSettings.isFilterNoDatesSet.value = checked
-                                    onListSettingsChanged()
-                                })
-                        },
-                        onClick = {
-                            listSettings.isFilterNoDatesSet.value =
-                                !listSettings.isFilterNoDatesSet.value
-                            onListSettingsChanged()
-                        }
-                    )
-                }
-                AnimatedVisibility(visible = isFilterActive) {
-                    Divider()
-                    DropdownMenuItem(
-                        text = { Text(stringResource(id = R.string.menu_list_clearfilter))  },
-                        leadingIcon = { Icon(Icons.Outlined.FilterListOff, null, modifier = Modifier.padding(8.dp)) },
-                        onClick = { onClearFilterClicked() }
-                    )
-                }
-            }
         },
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
-            FloatingActionButton(
-                onClick = { onAddNewEntry() },
-            ) {
-                Crossfade(module) {
-                    when (it) {
-                        Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
-                        Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
-                        Module.TODO -> Icon(Icons.Outlined.AddTask, stringResource(R.string.toolbar_text_add_task))
+            AnimatedVisibility(allowNewEntries) {
+                FloatingActionButton(
+                    onClick = { onAddNewEntry() },
+                ) {
+                    Crossfade(module) {
+                        when (it) {
+                            Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
+                            Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
+                            Module.TODO -> Icon(Icons.Outlined.AddTask, stringResource(R.string.toolbar_text_add_task))
+                        }
                     }
                 }
-
             }
         }
     )
@@ -290,13 +172,12 @@ fun ListBottomAppBar_Preview_Journal() {
             module = Module.JOURNAL,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
+            allowNewEntries = true,
             onAddNewEntry = { },
-            showQuickEntry = { },
-            onListSettingsChanged = { },
+            showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
             onSearchTextClicked = { },
-            onClearFilterClicked = { }
         )
     }
 }
@@ -316,13 +197,12 @@ fun ListBottomAppBar_Preview_Note() {
             module = Module.NOTE,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
+            allowNewEntries = true,
             onAddNewEntry = { },
-            showQuickEntry = { },
-            onListSettingsChanged = { },
+            showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
             onSearchTextClicked = { },
-            onClearFilterClicked = { }
         )
     }
 }
@@ -342,13 +222,12 @@ fun ListBottomAppBar_Preview_Todo() {
             module = Module.TODO,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
+            allowNewEntries = true,
             onAddNewEntry = { },
-            showQuickEntry = { },
-            onListSettingsChanged = { },
+            showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
             onSearchTextClicked = { },
-            onClearFilterClicked = { }
         )
     }
 }
@@ -369,13 +248,12 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             module = Module.TODO,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
+            allowNewEntries = true,
             onAddNewEntry = { },
-            showQuickEntry = { },
-            onListSettingsChanged = { },
+            showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
             onSearchTextClicked = { },
-            onClearFilterClicked = { }
         )
     }
 }

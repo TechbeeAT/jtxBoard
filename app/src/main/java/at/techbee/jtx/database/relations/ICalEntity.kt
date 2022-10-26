@@ -12,10 +12,13 @@ import android.content.Context
 import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Relation
+import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
+import at.techbee.jtx.database.ICalObject.Companion.getLatLongString
+import at.techbee.jtx.database.ICalObject.Companion.getMapLink
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.database.properties.Comment
@@ -188,8 +191,14 @@ data class ICalEntity(
         if(property.contact?.isNotEmpty() == true)
             shareText += context.getString(R.string.contact) + ": " + property.contact + System.lineSeparator()
 
-        if(property.location?.isNotEmpty() == true)
-            shareText += context.getString(R.string.location) + ": " + property.location + System.lineSeparator()
+        if (property.location?.isNotEmpty() == true)
+            shareText += context.getString(R.string.location) + ": " + (property.location?:"") + System.lineSeparator()
+
+        if(property.geoLat != null && property.geoLong != null) {
+            shareText += context.getString(R.string.map) + ": ${getLatLongString(property.geoLat, property.geoLong)} - "
+            getMapLink(property.geoLat, property.geoLong, BuildConfig.FLAVOR)?.let { shareText += it }
+            shareText += System.lineSeparator()
+        }
 
         if(property.url?.isNotEmpty() == true)
             shareText += context.getString(R.string.url) + ": " + property.url + System.lineSeparator()

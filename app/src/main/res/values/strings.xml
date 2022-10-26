@@ -42,6 +42,7 @@
     <string name="save_and_edit">Save &amp; edit</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="close">Close</string>
     <string name="delete">Delete</string>
     <string name="discard">Discard</string>
     <string name="gotit">Got it</string>
@@ -118,6 +119,8 @@
     <string name="saving_pending">Saving pending…</string>
     <string name="url">URL</string>
     <string name="location">Location</string>
+    <string name="map">Map</string>
+    <string name="open_in_browser">Open in browser</string>
     <string name="attendees">Attendees</string>
     <string name="resources">Resources</string>
     <string name="organizer">Organizer</string>
@@ -133,6 +136,7 @@
     <string name="description">Description</string>
     <string name="search">Search</string>
     <string name="filter">Filter</string>
+    <string name="filter_special">Special filters</string>
     <string name="sync_now">Sync now</string>
 
     <string name="due">Due</string>
@@ -185,7 +189,7 @@
     <string name="navigation_drawer_collections">Collections</string>
     <string name="navigation_drawer_sync">Sync with DAVx⁵</string>
     <string name="navigation_drawer_about">About / License</string>
-    <string name="navigation_drawer_subtitle">journals, notes &amp; tasks for android</string>
+    <string name="navigation_drawer_subtitle">journals, notes &amp; tasks</string>
     <string name="navigation_drawer_beta_feedback">Beta feedback</string>
     <string name="navigation_drawer_settings">Settings</string>
     <string name="navigation_drawer_news_updates">News &amp; updates</string>
@@ -200,11 +204,20 @@
 
 
     <!-- fragment_ical_list -->
+    <string name="list_date_start_in_past">Date in past</string>
+    <string name="list_date_today">Today</string>
+    <string name="list_date_tomorrow">Tomorrow</string>
+    <string name="list_date_future">Date in future</string>
+    <string name="list_start_date_in_past">Start in past</string>
+    <string name="list_start_date_today">Start today</string>
+    <string name="list_start_date_tomorrow">Start tomorrow</string>
+    <string name="list_start_date_future">Start in future</string>
     <string name="list_due_overdue">Overdue</string>
     <string name="list_due_today">Due today</string>
     <string name="list_due_tomorrow">Due tomorrow</string>
     <string name="list_due_future">Due in future</string>
     <string name="list_no_dates_set">No dates set</string>
+    <string name="list_hide_completed_tasks">Hide completed tasks</string>
     <string name="list_due_inXdays" tools:ignore="PluralsCandidate">Due in %d days</string>
     <string name="list_due_inXhours" tools:ignore="PluralsCandidate">Due in %d hours</string>
     <string name="list_start_past">Start in past</string>
@@ -226,6 +239,7 @@
     <string name="list_num_comments_contentdesc">Number of comments</string>
     <string name="list_dialog_delete_visible_title">Delete all visible?</string>
     <string name="list_dialog_delete_visible_message">This action deletes all visible entries (%1$d). Are you sure that you want to proceed? This operation cannot be undone!</string>
+    <string name="list_dialog_delete_visible_message2">Attention: Instances of recurring entries are excluded.</string>
     <string name="list_quickadd_dialog_summary_description_hint">Summary/Description</string>
     <string name="list_quickadd_dialog_summary_description_helper">The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category).</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">Use speech-to-text</string>
@@ -272,7 +286,7 @@
     <string name="view_add_audio_note">Add audio</string>
     <string name="view_fab_edit_entry_contentDesc">Edit entry</string>
     <string name="view_subtasks_header">Subtasks</string>
-    <string name="view_progress_label">Progress</string>1
+    <string name="view_progress_label">Progress</string>
     <string name="view_dialog_sure_to_delete_title">Delete \"%1$s\"?</string>
     <string name="view_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
     <string name="view_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
@@ -378,6 +392,7 @@
     <string name="alarms_alarm">Alarm</string>
     <string name="alarms_onstart">On start</string>
     <string name="alarms_ondue">On due</string>
+    <string name="alarms_always_ondue">Always on due</string>
     <string name="alarms_custom">Custom</string>
     <string name="alarms_before">before</string>
     <string name="alarms_after">after</string>
@@ -469,14 +484,12 @@
 
 
     <string name="menu_list_gotodate">Go to date</string>
-    <string name="menu_list_clearfilter">Clear filter</string>>
+    <string name="menu_list_clearfilter">Clear filter</string>
 
     <string name="menu_list_quick_journal">Quick Journal</string>
     <string name="menu_list_quick_note">Quick Note</string>
     <string name="menu_list_quick_todo">Quick Todo</string>
     <string name="menu_list_delete_visible">Delete visible</string>
-    <string name="menu_list_todo_show_completed">Show completed</string>
-    <string name="menu_list_todo_hide_completed">Hide completed</string>
     <string name="menu_list_syncnow">Sync now</string>
     <string name="menu_list_viewmode_list">List view</string>
     <string name="menu_list_viewmode_grid">Grid view</string>
@@ -533,6 +546,7 @@
     <string name="settings_default_expand_attachments">Expand attachments in list by default</string>
     <string name="settings_details">Settings for the item details</string>
     <string name="settings_details_autosave_while_editing">Autosave while editing</string>
+    <string name="settings_details_enable_markdown">Enable markdown formatting</string>
 
 
     <string name="settings_show_subtasks_in_list">Show subtasks in list</string>
@@ -565,8 +579,9 @@
     <string name="settings_progress_step_50">Increment by 50 (2 steps)</string>
     <string name="settings_progress_step">Set the step for the progress slider</string>
     <string name="settings_disable_alarms_for_readonly">Disable alarms for readonly collections</string>
-
-
+    <string name="settings_show_one_recur_entry_in_future">Show only one recurring entry in future</string>
+    <string name="settings_auto_alarm">Automatic alarm</string>
+    <string name="settings_auto_alarm_sub">Turn on to automatically create alarms. Choose \"Always on due\" to not create an alarm but to get notified in any case when a task is due.</string>
 
 
 
@@ -646,6 +661,5 @@
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again.</string>
     <string name="title_activity_list_screen">ListScreen</string>
-    <string name="title_activity_main2">MainActivity2</string>
 
 </resources>
