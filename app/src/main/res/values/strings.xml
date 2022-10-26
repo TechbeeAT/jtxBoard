@@ -120,6 +120,7 @@
     <string name="url">URL</string>
     <string name="location">Location</string>
     <string name="map">Map</string>
+    <string name="open_in_browser">Open in browser</string>
     <string name="attendees">Attendees</string>
     <string name="resources">Resources</string>
     <string name="organizer">Organizer</string>

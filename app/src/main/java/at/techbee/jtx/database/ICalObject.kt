@@ -10,6 +10,7 @@ package at.techbee.jtx.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.util.PatternsCompat
 import androidx.preference.PreferenceManager
 import androidx.room.*
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.Alarm
@@ -745,6 +747,31 @@ data class ICalObject(
                 return tz
 
             return TimeZone.getTimeZone(tz).id
+        }
+
+
+        fun getMapLink(geoLat: Double?, geoLong: Double?, flavor: String): Uri? {
+            return if(geoLat != null || geoLong != null) {
+                try {
+                    if (flavor == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY)
+                        Uri.parse("https://www.google.com/maps/search/?api=1&query=$geoLat%2C$geoLong")
+                    else
+                        Uri.parse("https://www.openstreetmap.org/#map=15/$geoLat/$geoLong")
+                } catch (e: java.lang.IllegalArgumentException) { null }
+            } else null
+        }
+
+        /**
+         * @param geoLat  Latitude as Double
+         * @param geoLong  Longitude as Double
+         * @return A textual representation of the Latitude and Logitude e.g. (1.234, 5.677)
+         */
+        fun getLatLongString(geoLat: Double?, geoLong: Double?): String? {
+            return if(geoLat != null && geoLong != null) {
+                "($geoLat, $geoLong)"
+            } else {
+               null
+            }
         }
     }
 
