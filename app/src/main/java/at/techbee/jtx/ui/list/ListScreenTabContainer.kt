@@ -124,7 +124,7 @@ fun ListScreenTabContainer(
 
     if (showDeleteAllVisibleDialog) {
         DeleteVisibleDialog(
-            numEntriesToDelete = getActiveViewModel().iCal4List.value?.size ?: 0,
+            numEntriesToDelete = getActiveViewModel().iCal4List.value?.filter { entry -> !entry.isReadOnly}?.size ?: 0,
             onConfirm = { getActiveViewModel().deleteVisible() },
             onDismiss = { showDeleteAllVisibleDialog = false }
         )
