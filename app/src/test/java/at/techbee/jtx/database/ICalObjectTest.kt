@@ -9,6 +9,8 @@
 package at.techbee.jtx.database
 
 import android.content.Context
+import android.net.Uri
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import net.fortuna.ical4j.model.Recur
@@ -785,4 +787,30 @@ class ICalObjectTest {
         todo.rrule = "FREQ=MONTHLY;UNTIL=20220821T070000Z;INTERVAL=1"
         assertEquals(4, todo.retrieveCount())
     }
+
+    @Test fun getModuleFromString_journal() = assertEquals(Module.JOURNAL, ICalObject.createJournal().getModuleFromString())
+    @Test fun getModuleFromString_note() = assertEquals(Module.NOTE, ICalObject.createNote().getModuleFromString())
+    @Test fun getModuleFromString_task() = assertEquals(Module.TODO, ICalObject.createTodo().getModuleFromString())
+    @Test fun getModuleFromString_invalid() = assertEquals(Module.NOTE, ICalObject.createJournal().apply { this.module = "asdf" }.getModuleFromString())
+
+    @Test fun getMapLink_gplay() {
+        assertEquals(
+            Uri.parse("https://www.google.com/maps/search/?api=1&query=$1.111%2C$2.222"),
+            ICalObject.getMapLink(1.111, 2.222, MainActivity2.BUILD_FLAVOR_GOOGLEPLAY)
+        )
+    }
+
+    @Test fun getMapLink_ose() {
+        assertEquals(
+            Uri.parse("https://www.google.com/maps/search/?api=1&query=$1.111%2C$2.222"),
+            ICalObject.getMapLink(1.111, 2.222, MainActivity2.BUILD_FLAVOR_OSE)
+        )
+    }
+
+    @Test fun getMapLink_empty() {
+        assertNull(ICalObject.getMapLink(null, null, MainActivity2.BUILD_FLAVOR_OSE))
+    }
+
+    @Test fun getLatLongString1() = assertEquals("(1.111, 2.222)", ICalObject.getLatLongString(1.111, 2.222))
+    @Test fun getLatLongString_null() = assertNull(ICalObject.getLatLongString(null, 2.222))
 }

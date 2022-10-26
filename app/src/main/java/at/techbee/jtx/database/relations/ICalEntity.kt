@@ -13,11 +13,12 @@ import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Relation
 import at.techbee.jtx.BuildConfig
-import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
+import at.techbee.jtx.database.ICalObject.Companion.getLatLongString
+import at.techbee.jtx.database.ICalObject.Companion.getMapLink
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.database.properties.Comment
@@ -194,11 +195,8 @@ data class ICalEntity(
             shareText += context.getString(R.string.location) + ": " + (property.location?:"") + System.lineSeparator()
 
         if(property.geoLat != null && property.geoLong != null) {
-            shareText += context.getString(R.string.map) + ": (" + property.geoLat + ", " + property.geoLong + ") - "
-            shareText += if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
-                "https://www.google.com/maps/search/?api=1&query=${property.geoLat}%2C${property.geoLong}"
-            else
-                "https://www.openstreetmap.org/#map=15/${property.geoLat}/${property.geoLong}"
+            shareText += context.getString(R.string.map) + ": ${getLatLongString(property.geoLat, property.geoLong)} - "
+            getMapLink(property.geoLat, property.geoLong, BuildConfig.FLAVOR)?.let { shareText += it }
             shareText += System.lineSeparator()
         }
 
