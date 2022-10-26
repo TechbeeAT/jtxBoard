@@ -173,15 +173,14 @@ fun CollectionCard(
                                         menuExpanded = false
                                     }
                                 )
-                                if(allCollections.filter { it.accountType == LOCAL_ACCOUNT_TYPE }.size > 1)
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(id = R.string.delete)) },
-                                        leadingIcon = { Icon(Icons.Outlined.Delete, null) },
-                                        onClick = {
-                                            showCollectionsDeleteCollectionDialog = true
-                                            menuExpanded = false
-                                        }
-                                    )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(id = R.string.delete)) },
+                                    leadingIcon = { Icon(Icons.Outlined.Delete, null) },
+                                    onClick = {
+                                        showCollectionsDeleteCollectionDialog = true
+                                        menuExpanded = false
+                                    }
+                                )
                             }
                             if (collection.accountType != LOCAL_ACCOUNT_TYPE) {
                                 DropdownMenuItem(
