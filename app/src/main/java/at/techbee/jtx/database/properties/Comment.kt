@@ -11,7 +11,6 @@ package at.techbee.jtx.database.properties
 import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
-import androidx.annotation.Nullable
 import androidx.room.*
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
@@ -90,7 +89,7 @@ data class Comment (
          * @param values A [Comment] that at least contain [COLUMN_COMMENT_TEXT] and [COLUMN_COMMENT_ICALOBJECT_ID]
          * @return A newly created [Comment] instance.
          */
-        fun fromContentValues(@Nullable values: ContentValues?): Comment? {
+        fun fromContentValues(values: ContentValues?): Comment? {
 
             if (values == null)
                 return null
