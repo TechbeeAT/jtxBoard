@@ -45,7 +45,8 @@ class ICalObjectAndroidTest {
     @Before
     fun createDb() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
-        database = ICalDatabase.getInMemoryDB(context).iCalDatabaseDao
+        ICalDatabase.switchToInMemory(context)
+        database = ICalDatabase.getInstance(context).iCalDatabaseDao
 
         database.insertCollectionSync(
             ICalCollection(
@@ -79,11 +80,11 @@ class ICalObjectAndroidTest {
         val savedItem = database.getSync(id)
         savedItem?.property?.recreateRecurring(context)
 
-        val recurList = database.getRecurInstances(id).getOrAwaitValue()
+        val recurList = database.getRecurInstances(id)
         assertEquals(6, recurList.size)
 
         database.deleteRecurringInstances(id)
-        val recurListEmpty = database.getRecurInstances(id).getOrAwaitValue()
+        val recurListEmpty = database.getRecurInstances(id)
         assertEquals(0, recurListEmpty.size)
     }
 
@@ -103,14 +104,14 @@ class ICalObjectAndroidTest {
         val savedItem = database.getSync(id)
         savedItem?.property?.recreateRecurring(context)
 
-        val recurList = database.getRecurInstances(id).getOrAwaitValue()
+        val recurList = database.getRecurInstances(id)
         assertEquals(7, recurList.size)
 
         assertEquals(1663804800000L, recurList[0]?.due)
         //assertEquals(1664236800000L, recurList[1]?.due)  // TODO
 
         database.deleteRecurringInstances(id)
-        val recurListEmpty = database.getRecurInstances(id).getOrAwaitValue()
+        val recurListEmpty = database.getRecurInstances(id)
         assertEquals(0, recurListEmpty.size)
     }
 
@@ -371,7 +372,7 @@ class ICalObjectAndroidTest {
             val parent = database.getICalObjectById(idParent)
             parent!!.recreateRecurring(context)
 
-            val instances = database.getRecurInstances(idParent).getOrAwaitValue()
+            val instances = database.getRecurInstances(idParent)
 
             //make sure instances are there as expected
             assertEquals(5, instances.size)
@@ -412,7 +413,7 @@ class ICalObjectAndroidTest {
             val parent = database.getICalObjectById(idParent)
             parent!!.recreateRecurring(context)
 
-            val instances = database.getRecurInstances(idParent).getOrAwaitValue()
+            val instances = database.getRecurInstances(idParent)
 
             //make sure no instances were inserted are there as expected
             assertEquals(0, instances.size)

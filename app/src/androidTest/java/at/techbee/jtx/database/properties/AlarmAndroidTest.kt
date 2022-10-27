@@ -15,7 +15,10 @@ import at.techbee.jtx.R
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import java.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 
 class AlarmAndroidTest {
@@ -80,28 +83,22 @@ class AlarmAndroidTest {
 
     @Test
     fun getTriggerDurationAsString_onStart() {
-        val alarm = Alarm.createDisplayAlarm(Duration.ZERO, null)
+        val alarm = Alarm.createDisplayAlarm((0).seconds, AlarmRelativeTo.START, System.currentTimeMillis(), null)
         val durText = alarm.getTriggerDurationAsString(context)
         Assert.assertEquals(context.getString(R.string.alarms_onstart), durText)
     }
 
-    @Test
-    fun getTriggerDurationAsString_onStart_explicit() {
-        val alarm = Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.START)
-        val durText = alarm.getTriggerDurationAsString(context)
-        Assert.assertEquals(context.getString(R.string.alarms_onstart), durText)
-    }
 
     @Test
     fun getTriggerDurationAsString_onDue() {
-        val alarm = Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.END)
+        val alarm = Alarm.createDisplayAlarm((0).seconds, AlarmRelativeTo.END, System.currentTimeMillis(), null)
         val durText = alarm.getTriggerDurationAsString(context)
         Assert.assertEquals(context.getString(R.string.alarms_ondue), durText)
     }
 
     @Test
     fun getTriggerDurationAsString_15minBeforeStart() {
-        val alarm = Alarm.createDisplayAlarm(Duration.ofMinutes(-15), AlarmRelativeTo.START)
+        val alarm = Alarm.createDisplayAlarm((-15).minutes, AlarmRelativeTo.START, System.currentTimeMillis(), null)
         val durText = alarm.getTriggerDurationAsString(context)
         val expectedArg1 = 15
         val expectedArg2 = context.getString(R.string.alarms_minutes)
@@ -112,7 +109,7 @@ class AlarmAndroidTest {
 
     @Test
     fun getTriggerDurationAsString_12hoursAfterStart() {
-        val alarm = Alarm.createDisplayAlarm(Duration.ofHours(12), AlarmRelativeTo.START)
+        val alarm = Alarm.createDisplayAlarm((12).hours, AlarmRelativeTo.START, System.currentTimeMillis(), null)
         val durText = alarm.getTriggerDurationAsString(context)
         val expectedArg1 = 12
         val expectedArg2 = context.getString(R.string.alarms_hours)
@@ -123,7 +120,7 @@ class AlarmAndroidTest {
 
     @Test
     fun getTriggerDurationAsString_1dayAfterDue() {
-        val alarm = Alarm.createDisplayAlarm(Duration.ofDays(1), AlarmRelativeTo.END)
+        val alarm = Alarm.createDisplayAlarm((1).days, AlarmRelativeTo.END, System.currentTimeMillis(), null)
         val durText = alarm.getTriggerDurationAsString(context)
         val expectedArg1 = 1
         val expectedArg2 = context.getString(R.string.alarms_days)
@@ -131,19 +128,4 @@ class AlarmAndroidTest {
         val durTextExpected = context.getString(R.string.alarms_duration_full_string, expectedArg1, expectedArg2, expectedArg3)
         Assert.assertEquals(durTextExpected, durText)
     }
-
-    /*
-    @Test
-    fun getAlarmCardBinding() {
-
-        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val alarm = Alarm.createDisplayAlarm(Duration.ofMinutes(-15), AlarmRelativeTo.START)
-        val linLayout = LinearLayout(context)
-        val time = ZonedDateTime.now()
-        //val timeTrigger = time.minusMinutes(15)
-
-        val alarmCard = alarm.getAlarmCardBinding(inflater, linLayout, time.toInstant().toEpochMilli(), null)
-        Assert.assertNotNull(alarmCard)
-    }
-     */
 }

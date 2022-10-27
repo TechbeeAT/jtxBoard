@@ -18,7 +18,6 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -41,8 +40,8 @@ class ICalDatabaseDaoTest {
     @Before
     fun createDb() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
-        database = ICalDatabase.getInMemoryDB(context).iCalDatabaseDao
-
+        ICalDatabase.switchToInMemory(context)
+        database = ICalDatabase.getInstance(context).iCalDatabaseDao
         database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
     }
 
@@ -98,11 +97,5 @@ class ICalDatabaseDaoTest {
 
         val retrievedEntry = database.get(preparedICalObject.id).getOrAwaitValue()
         assertEquals(retrievedEntry, preparedIcalEntity)
-    }
-
-
-    @After
-    fun closeDb() {
-        ICalDatabase.getInMemoryDB(context).close()
     }
 }

@@ -8,10 +8,9 @@
 
 package at.techbee.jtx.ui.theme
 
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import at.techbee.jtx.R
 
+/*
 val montserratAlternates = FontFamily(
     Font(R.font.montserrat_alternates)
 )
+ */

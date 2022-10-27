@@ -32,6 +32,7 @@ import at.techbee.jtx.database.StatusTodo
 
 @Composable
 fun ListStatusBar(
+    modifier: Modifier = Modifier,
     numAttendees: Int? = null,
     numAttachments: Int? = null,
     numComments: Int? = null,
@@ -50,8 +51,7 @@ fun ListStatusBar(
     classification: String? = null,
     priority: Int? = null,
     numSubtasks: Int? = null,
-    numSubnotes: Int? = null,
-    modifier: Modifier = Modifier
+    numSubnotes: Int? = null
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,

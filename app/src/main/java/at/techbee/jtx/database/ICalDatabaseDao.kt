@@ -601,7 +601,7 @@ DELETEs by Object
     // This query returns all IcalObjects that have a specific ICalObjectId in the field for the OriginalIcalObjectId (ie. all generated items for a recurring entry)
     @Transaction
     @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :originalId AND $COLUMN_RECUR_ISLINKEDINSTANCE = 1")
-    fun getRecurInstances(originalId: Long): LiveData<List<ICalObject?>>
+    fun getRecurInstances(originalId: Long): List<ICalObject?>
 
     @Transaction
     @Query("SELECT $COLUMN_EXDATE from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :originalId")

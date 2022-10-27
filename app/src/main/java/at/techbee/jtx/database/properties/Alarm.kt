@@ -440,7 +440,7 @@ data class Alarm (
 
         // the alarmManager finally takes care, that the pendingIntent is queued to start the notification Intent that on click would start the contentIntent
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
     }
 
     /**
