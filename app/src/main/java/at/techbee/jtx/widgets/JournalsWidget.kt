@@ -66,6 +66,19 @@ class JournalsWidget : GlanceAppWidget() {
             night = WidgetTheme.darkColors.onPrimary.getColor(LocalContext.current),
         )
 
+    val primaryContainer: ColorProvider
+        @Composable
+        get() = androidx.glance.appwidget.unit.ColorProvider(
+            day = WidgetTheme.lightColors.primaryContainer.getColor(LocalContext.current),
+            night = WidgetTheme.darkColors.primaryContainer.getColor(LocalContext.current),
+        )
+
+    val onPrimaryContainer: ColorProvider
+        @Composable
+        get() = androidx.glance.appwidget.unit.ColorProvider(
+            day = WidgetTheme.lightColors.onPrimaryContainer.getColor(LocalContext.current),
+            night = WidgetTheme.darkColors.onPrimaryContainer.getColor(LocalContext.current),
+        )
 
 
     @Composable
@@ -121,7 +134,7 @@ class JournalsWidget : GlanceAppWidget() {
             LazyColumn(
                 modifier = GlanceModifier
                     //.defaultWeight()
-                    .padding(8.dp),
+                    .padding(8.dp).background(primaryContainer)
             ) {
 
                 items(journalsList?.toList()?: emptyList()) { entry ->

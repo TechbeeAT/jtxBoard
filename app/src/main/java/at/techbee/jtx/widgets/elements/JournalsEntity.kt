@@ -34,7 +34,6 @@ fun JournalEntry(
     val textStyleDate = TextStyle(fontStyle = FontStyle.Italic, color = textColor)
     val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, color = textColor)
     val textStyleDescription = TextStyle(color = textColor)
-    val textStyleDivider = TextStyle(color = textColor)
 
     val intent = Intent(context, MainActivity2::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -54,11 +53,6 @@ fun JournalEntry(
             style = textStyleSummary
         ) }
         obj.description?.let { Text(it, maxLines = 2, style = textStyleDescription) }
-        Text(
-            text = "____________________________________",
-            style = textStyleDivider,
-            maxLines = 1,
-            modifier = GlanceModifier.fillMaxWidth()
-        )
+        CustomWidgetDivider(color = textColor, modifier = GlanceModifier.padding(top = 4.dp))
     }
 }
