@@ -9,8 +9,6 @@
 package at.techbee.jtx.widgets
 
 import android.content.Intent
-import android.net.Uri
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
@@ -33,48 +31,41 @@ import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.widgets.elements.JournalEntryCard
+import at.techbee.jtx.widgets.elements.JournalEntry
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-private const val TAG = "JournalsWidget"
 
 class JournalsWidget : GlanceAppWidget() {
 
-    private val backgroundColor: ColorProvider
+    val surface: ColorProvider
         @Composable
         get() = androidx.glance.appwidget.unit.ColorProvider(
             day = WidgetTheme.lightColors.surface.getColor(LocalContext.current),
             night = WidgetTheme.darkColors.surface.getColor(LocalContext.current),
         )
 
-    private val foregroundColor: ColorProvider
+    val onSurface: ColorProvider
         @Composable
         get() = androidx.glance.appwidget.unit.ColorProvider(
             day = WidgetTheme.lightColors.onSurface.getColor(LocalContext.current),
             night = WidgetTheme.darkColors.onSurface.getColor(LocalContext.current),
         )
 
-    private val secondaryBackgroundColor: ColorProvider
-        @Composable
-        get() = androidx.glance.appwidget.unit.ColorProvider(
-            day = WidgetTheme.lightColors.primaryContainer.getColor(LocalContext.current),
-            night = WidgetTheme.darkColors.primaryContainer.getColor(LocalContext.current),
-        )
-
-    private val secondaryForegroundColor: ColorProvider
-        @Composable
-        get() = androidx.glance.appwidget.unit.ColorProvider(
-            day = WidgetTheme.lightColors.onPrimaryContainer.getColor(LocalContext.current),
-            night = WidgetTheme.darkColors.onPrimaryContainer.getColor(LocalContext.current),
-        )
-
-    private val accentColor: ColorProvider
+    val primary: ColorProvider
         @Composable
         get() = androidx.glance.appwidget.unit.ColorProvider(
             day = WidgetTheme.lightColors.primary.getColor(LocalContext.current),
             night = WidgetTheme.darkColors.primary.getColor(LocalContext.current),
         )
+
+    val onPrimary: ColorProvider
+        @Composable
+        get() = androidx.glance.appwidget.unit.ColorProvider(
+            day = WidgetTheme.lightColors.onPrimary.getColor(LocalContext.current),
+            night = WidgetTheme.darkColors.onPrimary.getColor(LocalContext.current),
+        )
+
 
 
     @Composable
@@ -87,7 +78,7 @@ class JournalsWidget : GlanceAppWidget() {
             modifier = GlanceModifier
                 .appWidgetBackground()
                 .fillMaxSize()
-                .background(backgroundColor),
+                .background(surface),
         ) {
             val context = LocalContext.current
             //val journals by journalsList
@@ -95,42 +86,36 @@ class JournalsWidget : GlanceAppWidget() {
             val prefs = currentState<Preferences>()
             val journalsList = prefs[JournalsWidgetReceiver.journalsList]?.map { Json.decodeFromString<ICal4List>(it) }
 
+            val addJournalIntent = Intent(context, MainActivity2::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                action = MainActivity2.INTENT_ACTION_ADD_JOURNAL
+            }
+
             Row(
                 modifier = GlanceModifier
                     .fillMaxWidth()
-                    .background(secondaryBackgroundColor),
-                verticalAlignment = Alignment.CenterVertically,
+                    .background(primary)
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = stringResource(R.string.journals_widget_title),
                     style = TextStyle(
-                        color = secondaryForegroundColor,
+                        color = onPrimary,
                         fontSize = 20.sp,
                     ),
                     modifier = GlanceModifier
-                        .defaultWeight()
-                        .padding(8.dp),
+                        .defaultWeight(),
                 )
-                val buttonSize = 32.dp
-                Log.v("Widget", "Size: ${buttonSize.px} px")
-                TintImage(
-                    resource = R.drawable.ic_add_quick,
-                    tintColor = secondaryForegroundColor,
-                    contentDescription = stringResource(R.string.journals_widget_new),
-                    imageHeight = buttonSize.px,
+                Text(
+                    text = "+",
+                    style = TextStyle(
+                        color = onPrimary,
+                        fontSize = 24.sp,
+                    ),
                     modifier = GlanceModifier
-                        .clickable(
-                            actionStartActivity(
-                                Intent(
-                                    "addJournal",
-                                    Uri.EMPTY,
-                                    context,
-                                    MainActivity2::class.java
-                                )
-                            )
-                        )
-                        .padding(8.dp)
-                        .size(buttonSize),
+                        .clickable(actionStartActivity(addJournalIntent))
+                        .padding(horizontal = 8.dp)
                 )
             }
             LazyColumn(
@@ -140,11 +125,9 @@ class JournalsWidget : GlanceAppWidget() {
             ) {
 
                 items(journalsList?.toList()?: emptyList()) { entry ->
-                    JournalEntryCard(
+                    JournalEntry(
                         obj = entry,
-                        modifier = GlanceModifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                        textColor = onSurface
                     )
                 }
             }
