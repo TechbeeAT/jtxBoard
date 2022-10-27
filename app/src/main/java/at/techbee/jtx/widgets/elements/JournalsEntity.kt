@@ -53,6 +53,6 @@ fun JournalEntry(
             style = textStyleSummary
         ) }
         obj.description?.let { Text(it, maxLines = 2, style = textStyleDescription) }
-        CustomWidgetDivider(color = textColor, modifier = GlanceModifier.padding(top = 4.dp))
+        CustomWidgetDivider(color = textColor, modifier = GlanceModifier.padding(top = 8.dp))
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceModifier
 import androidx.glance.background
 import androidx.glance.layout.Box
+import androidx.glance.layout.Column
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.unit.ColorProvider
@@ -24,10 +25,12 @@ fun CustomWidgetDivider(
     color: ColorProvider,
     modifier: GlanceModifier = GlanceModifier
 ) {
-    Box(
-        modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(color)
-    ) {}
+    Column(modifier) {
+        Box(
+            modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(color)
+        ) {}
+    }
 }

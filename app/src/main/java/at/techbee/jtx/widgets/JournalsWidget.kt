@@ -140,7 +140,7 @@ class JournalsWidget : GlanceAppWidget() {
                 items(journalsList?.toList()?: emptyList()) { entry ->
                     JournalEntry(
                         obj = entry,
-                        textColor = onSurface
+                        textColor = onPrimaryContainer
                     )
                 }
             }
