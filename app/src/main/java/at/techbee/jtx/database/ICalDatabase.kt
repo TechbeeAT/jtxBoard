@@ -204,12 +204,10 @@ abstract class ICalDatabase : RoomDatabase() {
 
         /**
          * returns an empty in-memory database.
-         *
          * @param context The context.
          * @return ICalDatabase as an in-memory database
          */
-        @VisibleForTesting
-        fun getInMemoryDB(context: Context): ICalDatabase {
+        private fun getInMemoryDB(context: Context): ICalDatabase {
 
                 return Room.inMemoryDatabaseBuilder(context, ICalDatabase::class.java)
                     .allowMainThreadQueries()
