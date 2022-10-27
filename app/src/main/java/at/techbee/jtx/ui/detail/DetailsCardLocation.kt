@@ -42,6 +42,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import java.net.URLEncoder
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
@@ -167,7 +168,7 @@ fun DetailsCardLocation(
 
                         IconButton(onClick = {
                             val geoUri = if(location.isNotEmpty())
-                                Uri.parse("geo:0,0?q=$geoLat,$geoLong($location)")
+                                Uri.parse("geo:0,0?q=$geoLat,$geoLong(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
                             else
                                 Uri.parse("geo:$geoLat,$geoLong")
 
