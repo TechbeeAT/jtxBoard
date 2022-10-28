@@ -66,13 +66,13 @@ fun ListQuickAddElement(
     modifier: Modifier = Modifier,
     presetText: String = "",
     presetAttachment: Attachment? = null,
-    allCollections: List<ICalCollection>,
+    allWriteableCollections: List<ICalCollection>,
     presetCollectionId: Long,
     onSaveEntry: (newEntry: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
 
-    if (allCollections.isEmpty())   // don't compose if there are no collections
+    if (allWriteableCollections.isEmpty())   // don't compose if there are no collections
         return
 
     val context = LocalContext.current
@@ -81,8 +81,8 @@ fun ListQuickAddElement(
     var showAudioPermissionDialog by rememberSaveable { mutableStateOf(false) }
     var currentCollection by rememberSaveable {
         mutableStateOf(
-            allCollections.find { collection -> collection.collectionId == presetCollectionId }
-                ?: allCollections.first())
+            allWriteableCollections.find { collection -> collection.collectionId == presetCollectionId }
+                ?: allWriteableCollections.first())
     }
     // TODO: Load last used collection!
 
@@ -139,8 +139,8 @@ fun ListQuickAddElement(
         text = {
             Column(modifier = modifier) {
                 CollectionsSpinner(
-                    collections = allCollections,
-                    preselected = allCollections.find { it == currentCollection } ?: allCollections.first(),
+                    collections = allWriteableCollections,
+                    preselected = allWriteableCollections.find { it == currentCollection } ?: allWriteableCollections.first(),
                     includeReadOnly = false,
                     includeVJOURNAL = if (currentModule == Module.JOURNAL || currentModule == Module.NOTE) true else null,
                     includeVTODO = if (currentModule == Module.TODO) true else null,
@@ -365,7 +365,7 @@ fun ListQuickAddElement_Preview() {
 
         ListQuickAddElement(
             presetModule = Module.JOURNAL,
-            allCollections = listOf(collection1, collection2, collection3),
+            allWriteableCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _ -> },
             presetText = "This is my preset text",

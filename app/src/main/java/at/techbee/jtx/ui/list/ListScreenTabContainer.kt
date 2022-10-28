@@ -97,7 +97,7 @@ fun ListScreenTabContainer(
         ListTabDestination.Tasks.tabIndex -> icalListViewModelTodos
         else -> icalListViewModelJournals  // fallback, should not happen
     }
-    val allCollections = listViewModel.allCollections.observeAsState(emptyList())
+    val allWriteableCollections = listViewModel.allWriteableCollections.observeAsState(emptyList())
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
@@ -247,7 +247,7 @@ fun ListScreenTabContainer(
         bottomBar = {
 
             // show the bottom bar only if there is any collection available that supports the component/module
-            if (allCollections.value.any { collection ->
+            if (allWriteableCollections.value.any { collection ->
                     (listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
                             || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
                             || (listViewModel.module == Module.TODO && collection.supportsVTODO)
@@ -255,7 +255,7 @@ fun ListScreenTabContainer(
                 ListBottomAppBar(
                     module = listViewModel.module,
                     iCal4ListLive = listViewModel.iCal4List,
-                    allowNewEntries = allCollections.value.any { collection ->
+                    allowNewEntries = allWriteableCollections.value.any { collection ->
                         ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.TODO && collection.supportsVTODO)
@@ -265,10 +265,10 @@ fun ListScreenTabContainer(
                         val lastUsedCollectionId =
                             listViewModel.listSettings.getLastUsedCollectionId()
                         val proposedCollectionId =
-                            if (allCollections.value.any { collection -> collection.collectionId == lastUsedCollectionId })
+                            if (allWriteableCollections.value.any { collection -> collection.collectionId == lastUsedCollectionId })
                                 lastUsedCollectionId
                             else
-                                allCollections.value.firstOrNull()?.collectionId
+                                allWriteableCollections.value.firstOrNull()?.collectionId
                                     ?: return@ListBottomAppBar
                         val newICalObject = when (listViewModel.module) {
                             Module.JOURNAL -> ICalObject.createJournal()
@@ -377,7 +377,7 @@ fun ListScreenTabContainer(
                                     presetText = globalStateHolder.icalFromIntentString.value
                                         ?: "",    // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
-                                    allCollections = allCollections.value,
+                                    allWriteableCollections = allWriteableCollections.value,
                                     presetCollectionId = listViewModel.listSettings.getLastUsedCollectionId(),
                                     onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
                                         addNewEntry(newICalObject, categories, attachment, editAfterSaving)

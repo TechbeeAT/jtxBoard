@@ -62,7 +62,7 @@ fun DetailsScreen(
     val isChild = detailViewModel.isChild.observeAsState(false)
     val allCategories = detailViewModel.allCategories.observeAsState(emptyList())
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
-    val allCollections = detailViewModel.allCollections.observeAsState(emptyList())
+    val allWriteableCollections = detailViewModel.allWriteableCollections.observeAsState(emptyList())
 
     if (navigateUp && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.CHANGESAVING) {
         onRequestReview()
@@ -164,7 +164,7 @@ fun DetailsScreen(
                 subtasks = subtasks,
                 subnotes = subnotes,
                 isChild = isChild.value,
-                allCollections = allCollections.value,
+                allWriteableCollections = allWriteableCollections.value,
                 allCategories = allCategories.value,
                 allResources = allResources.value,
                 detailSettings = detailViewModel.detailSettings,

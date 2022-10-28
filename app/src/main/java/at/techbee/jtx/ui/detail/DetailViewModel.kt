@@ -49,7 +49,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allResources: LiveData<List<String>>
-    lateinit var allCollections: LiveData<List<ICalCollection>>
+    lateinit var allWriteableCollections: LiveData<List<ICalCollection>>
 
     var entryDeleted = mutableStateOf(false)
     var sqlConstraintException = mutableStateOf(false)
@@ -77,7 +77,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             allCategories = database.getAllCategoriesAsText()
             allResources = database.getAllResourcesAsText()
-            allCollections = database.getAllCollections()
+            allWriteableCollections = database.getAllWriteableCollections()
 
             relatedSubnotes = MutableLiveData(emptyList())
             relatedSubtasks = MutableLiveData(emptyList())
