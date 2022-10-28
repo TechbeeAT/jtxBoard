@@ -9,23 +9,22 @@
 package at.techbee.jtx.widgets
 
 import android.content.Intent
-import android.graphics.drawable.Icon
-import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
-import androidx.glance.*
+import androidx.glance.GlanceModifier
+import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
+import androidx.glance.background
+import androidx.glance.currentState
 import androidx.glance.layout.*
-import androidx.glance.template.ButtonType.Companion.Icon
+import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
@@ -39,42 +38,42 @@ import kotlinx.serialization.json.Json
 
 class JournalsWidget : GlanceAppWidget() {
 
-    val surface: ColorProvider
+    private val surface: ColorProvider
         @Composable
         get() = androidx.glance.appwidget.unit.ColorProvider(
             day = WidgetTheme.lightColors.surface.getColor(LocalContext.current),
             night = WidgetTheme.darkColors.surface.getColor(LocalContext.current),
         )
 
-    val onSurface: ColorProvider
+    private val onSurface: ColorProvider
         @Composable
         get() = androidx.glance.appwidget.unit.ColorProvider(
             day = WidgetTheme.lightColors.onSurface.getColor(LocalContext.current),
             night = WidgetTheme.darkColors.onSurface.getColor(LocalContext.current),
         )
 
-    val primary: ColorProvider
+    private val primary: ColorProvider
         @Composable
         get() = androidx.glance.appwidget.unit.ColorProvider(
             day = WidgetTheme.lightColors.primary.getColor(LocalContext.current),
             night = WidgetTheme.darkColors.primary.getColor(LocalContext.current),
         )
 
-    val onPrimary: ColorProvider
+    private val onPrimary: ColorProvider
         @Composable
         get() = androidx.glance.appwidget.unit.ColorProvider(
             day = WidgetTheme.lightColors.onPrimary.getColor(LocalContext.current),
             night = WidgetTheme.darkColors.onPrimary.getColor(LocalContext.current),
         )
 
-    val primaryContainer: ColorProvider
+    private val primaryContainer: ColorProvider
         @Composable
         get() = androidx.glance.appwidget.unit.ColorProvider(
             day = WidgetTheme.lightColors.primaryContainer.getColor(LocalContext.current),
             night = WidgetTheme.darkColors.primaryContainer.getColor(LocalContext.current),
         )
 
-    val onPrimaryContainer: ColorProvider
+    private val onPrimaryContainer: ColorProvider
         @Composable
         get() = androidx.glance.appwidget.unit.ColorProvider(
             day = WidgetTheme.lightColors.onPrimaryContainer.getColor(LocalContext.current),
@@ -100,13 +99,50 @@ class JournalsWidget : GlanceAppWidget() {
                 action = MainActivity2.INTENT_ACTION_ADD_JOURNAL
             }
 
-            Box(
-                contentAlignment = Alignment.BottomEnd,
+            Row(
                 modifier = GlanceModifier
                     .fillMaxWidth()
-                    .background(primaryContainer)
-                    .padding(8.dp),
+                    .background(primary),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Text(
+                    text = context.getString(R.string.journals_widget_title),
+                    style = TextStyle(
+                        color = onPrimary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = GlanceModifier
+                        .defaultWeight()
+                        .padding(8.dp),
+                )
+                val buttonSize = 36.dp
+                //Log.v("Widget", "Size: ${buttonSize.px} px")
+
+                TintImage(
+                    resource = R.drawable.ic_settings,
+                    tintColor = onPrimary,
+                    contentDescription = context.getString(R.string.widget_settings),
+                    imageHeight = buttonSize.px,
+                    modifier = GlanceModifier
+                        //.clickable(actionStartActivity(addJournalIntent))
+                        .padding(8.dp)
+                        .size(buttonSize),
+                )
+
+                TintImage(
+                    resource = R.drawable.ic_edit,
+                    tintColor = onPrimary,
+                    contentDescription = context.getString(R.string.journals_widget_new),
+                    imageHeight = buttonSize.px,
+                    modifier = GlanceModifier
+                        .clickable(actionStartActivity(addJournalIntent))
+                        .padding(8.dp)
+                        .size(buttonSize),
+                )
+            }
+
 
                 LazyColumn(
                     modifier = GlanceModifier
@@ -122,26 +158,6 @@ class JournalsWidget : GlanceAppWidget() {
                     }
                 }
 
-                TintImage(
-                    resource = R.drawable.ic_add_quick,
-                    contentDescription = context.getString(R.string.shortcut_addJournal_longLabel),
-                    tintColor = primary,
-                    modifier = GlanceModifier.clickable(actionStartActivity(addJournalIntent))
-                )
-
-                /*
-                Button(
-                    text = "+",
-                    onClick = actionStartActivity(addJournalIntent),
-                    style = TextStyle(
-                        color = onPrimary,
-                        fontSize = 24.sp
-                    ),
-                    modifier = GlanceModifier.size(48.dp)
-                )
-
-                 */
-            }
         }
     }
 }
