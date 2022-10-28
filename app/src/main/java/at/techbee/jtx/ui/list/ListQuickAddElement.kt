@@ -86,7 +86,22 @@ fun ListQuickAddElement(
     }
     // TODO: Load last used collection!
 
-    var currentModule by rememberSaveable { mutableStateOf(presetModule ?: Module.JOURNAL) }
+    var currentModule by rememberSaveable {
+        mutableStateOf(
+            if(presetModule!= null
+                && ((presetModule == Module.JOURNAL && currentCollection?.supportsVJOURNAL == true)
+                        || (presetModule == Module.NOTE && currentCollection?.supportsVJOURNAL == true)
+                        || (presetModule == Module.TODO && currentCollection?.supportsVTODO == true))
+                )
+                presetModule
+            else if (currentCollection?.supportsVJOURNAL == true)
+                Module.JOURNAL
+            else if (currentCollection?.supportsVTODO == true)
+                Module.TODO
+            else
+                null
+        )
+    }
     var currentText by rememberSaveable { mutableStateOf(presetText) }
     val currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
     var noTextError by rememberSaveable { mutableStateOf(false) }
@@ -111,7 +126,7 @@ fun ListQuickAddElement(
     var srListening by remember { mutableStateOf(false) }
 
     fun saveEntry(goToEdit: Boolean) {
-        if(currentCollection == null)
+        if(currentCollection == null || currentModule == null)
             return
 
         if (currentText.isNotBlank()) {
@@ -122,6 +137,7 @@ fun ListQuickAddElement(
                     this.setDefaultDueDateFromSettings(context)
                     this.setDefaultStartDateFromSettings(context)
                 }
+                else -> ICalObject.createNote()  // Fallback, can't actually reach it
             }
             newICalObject.collectionId = currentCollection!!.collectionId
             newICalObject.parseSummaryAndDescription(currentText)
