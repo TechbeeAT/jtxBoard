@@ -141,20 +141,6 @@ fun ListQuickAddElement(
         onDismissRequest = onDismiss,
         text = {
             Column(modifier = modifier) {
-                CollectionsSpinner(
-                    collections = allWriteableCollections,
-                    preselected = allWriteableCollections.find { it == currentCollection } ?: allWriteableCollections.first(),
-                    includeReadOnly = false,
-                    includeVJOURNAL = if (currentModule == Module.JOURNAL || currentModule == Module.NOTE) true else null,
-                    includeVTODO = if (currentModule == Module.TODO) true else null,
-                    onSelectionChanged = { selected ->
-                        currentCollection = selected
-                        if ((currentModule == Module.JOURNAL || currentModule == Module.NOTE) && currentCollection?.supportsVJOURNAL == false)
-                            currentModule = Module.TODO
-                        else if (currentModule == Module.TODO && currentCollection?.supportsVTODO == false)
-                            currentModule = Module.NOTE
-                    }
-                )
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -182,6 +168,21 @@ fun ListQuickAddElement(
                         enabled = currentCollection?.supportsVTODO == true
                     )
                 }
+
+                CollectionsSpinner(
+                    collections = allWriteableCollections,
+                    preselected = allWriteableCollections.find { it == currentCollection } ?: allWriteableCollections.first(),
+                    includeReadOnly = false,
+                    includeVJOURNAL = if (currentModule == Module.JOURNAL || currentModule == Module.NOTE) true else null,
+                    includeVTODO = if (currentModule == Module.TODO) true else null,
+                    onSelectionChanged = { selected ->
+                        currentCollection = selected
+                        if ((currentModule == Module.JOURNAL || currentModule == Module.NOTE) && currentCollection?.supportsVJOURNAL == false)
+                            currentModule = Module.TODO
+                        else if (currentModule == Module.TODO && currentCollection?.supportsVTODO == false)
+                            currentModule = Module.NOTE
+                    }
+                )
 
                 OutlinedTextField(
                     value = currentText,
