@@ -9,22 +9,23 @@
 package at.techbee.jtx.widgets
 
 import android.content.Intent
+import android.graphics.drawable.Icon
 import androidx.annotation.StringRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
-import androidx.glance.GlanceModifier
-import androidx.glance.LocalContext
+import androidx.glance.*
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
-import androidx.glance.background
-import androidx.glance.currentState
 import androidx.glance.layout.*
+import androidx.glance.template.ButtonType.Companion.Icon
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
@@ -82,10 +83,6 @@ class JournalsWidget : GlanceAppWidget() {
 
 
     @Composable
-    private fun stringResource(@StringRes id: Int) =
-        LocalContext.current.getString(id)
-
-    @Composable
     override fun Content() {
         Column(
             modifier = GlanceModifier
@@ -94,7 +91,6 @@ class JournalsWidget : GlanceAppWidget() {
                 .background(surface),
         ) {
             val context = LocalContext.current
-            //val journals by journalsList
 
             val prefs = currentState<Preferences>()
             val journalsList = prefs[JournalsWidgetReceiver.journalsList]?.map { Json.decodeFromString<ICal4List>(it) }
@@ -104,45 +100,47 @@ class JournalsWidget : GlanceAppWidget() {
                 action = MainActivity2.INTENT_ACTION_ADD_JOURNAL
             }
 
-            Row(
+            Box(
+                contentAlignment = Alignment.BottomEnd,
                 modifier = GlanceModifier
                     .fillMaxWidth()
-                    .background(primary)
+                    .background(primaryContainer)
                     .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.journals_widget_title),
-                    style = TextStyle(
-                        color = onPrimary,
-                        fontSize = 20.sp,
-                    ),
-                    modifier = GlanceModifier
-                        .defaultWeight(),
-                )
-                Text(
-                    text = "+",
-                    style = TextStyle(
-                        color = onPrimary,
-                        fontSize = 24.sp,
-                    ),
-                    modifier = GlanceModifier
-                        .clickable(actionStartActivity(addJournalIntent))
-                        .padding(horizontal = 8.dp)
-                )
-            }
-            LazyColumn(
-                modifier = GlanceModifier
-                    //.defaultWeight()
-                    .padding(8.dp).background(primaryContainer)
             ) {
 
-                items(journalsList?.toList()?: emptyList()) { entry ->
-                    JournalEntry(
-                        obj = entry,
-                        textColor = onPrimaryContainer
-                    )
+                LazyColumn(
+                    modifier = GlanceModifier
+                        //.defaultWeight()
+                        .padding(8.dp).background(primaryContainer)
+                ) {
+
+                    items(journalsList?.toList() ?: emptyList()) { entry ->
+                        JournalEntry(
+                            obj = entry,
+                            textColor = onPrimaryContainer
+                        )
+                    }
                 }
+
+                TintImage(
+                    resource = R.drawable.ic_add_quick,
+                    contentDescription = context.getString(R.string.shortcut_addJournal_longLabel),
+                    tintColor = primary,
+                    modifier = GlanceModifier.clickable(actionStartActivity(addJournalIntent))
+                )
+
+                /*
+                Button(
+                    text = "+",
+                    onClick = actionStartActivity(addJournalIntent),
+                    style = TextStyle(
+                        color = onPrimary,
+                        fontSize = 24.sp
+                    ),
+                    modifier = GlanceModifier.size(48.dp)
+                )
+
+                 */
             }
         }
     }
