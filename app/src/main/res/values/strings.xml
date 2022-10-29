@@ -81,15 +81,16 @@
     <string name="category">Category</string>
 
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="status_no_status">No status</string>
     <string name="journal_status_draft">Draft</string>
     <string name="journal_status_final">Final</string>
     <string name="journal_status_cancelled">Cancelled</string>
-
     <string name="todo_status_needsaction">Needs action</string>
     <string name="todo_status_completed">Completed</string>
     <string name="todo_status_inprocess">In process</string>
     <string name="todo_status_cancelled">Cancelled</string>
 
+    <string name="classification_no_classification">No classification (public)</string>
     <string name="classification_public">Public</string>
     <string name="classification_private">Private</string>
     <string name="classification_confidential">Confidential</string>

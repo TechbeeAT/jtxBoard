@@ -31,8 +31,8 @@ import at.techbee.jtx.database.*
 fun DetailsCardStatusClassificationPriority(
     icalObject: ICalObject,
     isEditMode: Boolean,
-    onStatusChanged: (String) -> Unit,
-    onClassificationChanged: (String) -> Unit,
+    onStatusChanged: (String?) -> Unit,
+    onClassificationChanged: (String?) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -89,6 +89,17 @@ fun DetailsCardStatusClassificationPriority(
                             expanded = statusMenuExpanded,
                             onDismissRequest = { statusMenuExpanded = false }
                         ) {
+
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.status_no_status)) },
+                                onClick = {
+                                    status = null
+                                    statusMenuExpanded = false
+                                    onStatusChanged(null)
+                                    //icalObject.status = status
+                                }
+                            )
+
                             if (icalObject.component == Component.VJOURNAL.name) {
                                 StatusJournal.values().forEach { statusJournal ->
                                     DropdownMenuItem(
@@ -146,7 +157,7 @@ fun DetailsCardStatusClassificationPriority(
                 AssistChip(
                     label = {
                         Text(
-                            Classification.getStringResource(context, classification) ?: classification ?: "-",
+                            Classification.getStringResource(context, classification) ?: classification ?: stringResource(id = R.string.classification_no_classification),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -155,6 +166,17 @@ fun DetailsCardStatusClassificationPriority(
                             expanded = classificationMenuExpanded,
                             onDismissRequest = { classificationMenuExpanded = false }
                         ) {
+
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.classification_no_classification)) },
+                                onClick = {
+                                    classification = null
+                                    classificationMenuExpanded = false
+                                    onClassificationChanged(null)
+                                    //icalObject.classification = classification
+                                }
+                            )
+
                             Classification.values().forEach { clazzification ->
                                 DropdownMenuItem(
                                     text = { Text(stringResource(id = clazzification.stringResource)) },
