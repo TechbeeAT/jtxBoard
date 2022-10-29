@@ -41,7 +41,11 @@ fun DetailsCardStatusClassificationPriority(
 
     var status by rememberSaveable { mutableStateOf(icalObject.status) }
     var classification by rememberSaveable { mutableStateOf(icalObject.classification) }
-    var priority by rememberSaveable { mutableStateOf(icalObject.priority ?: 0) }
+    var priority by rememberSaveable { mutableStateOf(icalObject.priority) }
+
+    // we don't show the block in view mode if all three values are null
+    if(!isEditMode && status == null && classification == null && priority == null)
+        return
 
 
     ElevatedCard(modifier = modifier) {
@@ -56,7 +60,7 @@ fun DetailsCardStatusClassificationPriority(
             var classificationMenuExpanded by remember { mutableStateOf(false) }
             var priorityMenuExpanded by remember { mutableStateOf(false) }
 
-            if(!isEditMode) {
+            if(!isEditMode && !status.isNullOrEmpty()) {
                 ElevatedAssistChip(
                     label = {
                         if (icalObject.component == Component.VJOURNAL.name)
@@ -73,7 +77,7 @@ fun DetailsCardStatusClassificationPriority(
                     onClick = { },
                     modifier = Modifier.weight(0.33f)
                 )
-            } else {
+            } else if(isEditMode) {
                 AssistChip(
                     label = {
                         if (icalObject.component == Component.VJOURNAL.name)
@@ -124,7 +128,7 @@ fun DetailsCardStatusClassificationPriority(
             }
 
 
-            if(!isEditMode) {
+            if(!isEditMode && !classification.isNullOrEmpty()) {
                 ElevatedAssistChip(
                     label = {
                         Text( Classification.getStringResource(context, classification) ?: classification ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -138,7 +142,7 @@ fun DetailsCardStatusClassificationPriority(
                     onClick = { },
                     modifier = Modifier.weight(0.33f)
                 )
-            } else {
+            } else if(isEditMode) {
                 AssistChip(
                     label = {
                         Text(
@@ -178,12 +182,12 @@ fun DetailsCardStatusClassificationPriority(
             val priorityStrings = stringArrayResource(id = R.array.priority)
             if (icalObject.component == Component.VTODO.name) {
 
-                if(!isEditMode) {
+                if(!isEditMode && priority in 1..9) {
                     ElevatedAssistChip(
                         label = {
                             Text(
                                 if (priority in priorityStrings.indices)
-                                    stringArrayResource(id = R.array.priority)[priority]
+                                    stringArrayResource(id = R.array.priority)[priority?:0]
                                 else
                                     stringArrayResource(id = R.array.priority)[0],
                                 maxLines = 1,
@@ -199,12 +203,12 @@ fun DetailsCardStatusClassificationPriority(
                         onClick = { },
                         modifier = Modifier.weight(0.33f)
                     )
-                } else {
+                } else if(isEditMode) {
                     AssistChip(
                         label = {
                             Text(
                                 if (priority in priorityStrings.indices)
-                                    stringArrayResource(id = R.array.priority)[priority]
+                                    stringArrayResource(id = R.array.priority)[priority?:0]
                                 else
                                     stringArrayResource(id = R.array.priority)[0],
                                 maxLines = 1,
