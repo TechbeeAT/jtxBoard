@@ -419,7 +419,7 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="adinfo_adfree_purchase_date">"Acheté le %1$s"</string>
     <string name="adinfo_adfree_order_id">"ID de la commande : %1$s"</string>
     <string name="list_no_dates_set">"Aucune date n'a été fixée"</string>
-    <string name="filter_order_by">"Commander par"</string>
+    <string name="filter_order_by">"Trier par"</string>
     <string name="filter_asc">"Ascendant"</string>
     <string name="filter_desc">"Descendant"</string>
     <string name="filter_created">"Créé"</string>
