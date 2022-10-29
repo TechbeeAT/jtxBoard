@@ -43,6 +43,7 @@ import at.techbee.jtx.ui.reusable.elements.ListStatusBar
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.reusable.elements.VerticalDateBlock
 import at.techbee.jtx.ui.theme.Typography
+import com.google.accompanist.flowlayout.FlowRow
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -101,7 +102,7 @@ fun ICalObjectListCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
-                    Row(modifier = Modifier.weight(1f)) {
+                    FlowRow(modifier = Modifier.weight(1f)) {
                         Text(
                             iCalObject.collectionDisplayName ?: iCalObject.accountName ?: "",
                             style = Typography.labelMedium,
