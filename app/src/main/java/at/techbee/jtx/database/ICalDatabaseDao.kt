@@ -82,8 +82,8 @@ SELECTs (global selects without parameter)
      * @return a list of [Collection] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getAllCollections(): LiveData<List<ICalCollection>>
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_READONLY = 0 AND ($COLUMN_COLLECTION_SUPPORTSVJOURNAL = 1 OR $COLUMN_COLLECTION_SUPPORTSVTODO = 1) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getAllWriteableCollections(): LiveData<List<ICalCollection>>
 
     /**
      * Retrieve an list of all Collections ([CollectionsView]) as a LiveData-List
@@ -94,23 +94,6 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW ORDER BY $COLUMN_COLLECTION_ACCOUNT_TYPE = 'LOCAL' DESC, $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollectionsView(): LiveData<List<CollectionsView>>
 
-    /**
-     * Retrieve an list of all LOCAL Collections from the [CollectionsView] as a LiveData-List
-     * A local collection is a collection with account type LOCAL
-     * @return a list of [CollectionsView] as LiveData<List<CollectionsView>>
-     */
-    @Transaction
-    @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE IN ('LOCAL') ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getLocalCollections(): LiveData<List<CollectionsView>>
-
-    /**
-     * Retrieve an list of all REMOTE Collections from the [CollectionsView] as a LiveData-List
-     * A local collection is a collection with account type NOT LOCAL
-     * @return a list of [CollectionsView] as LiveData<List<CollectionsView>>
-     */
-    @Transaction
-    @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN ('LOCAL') ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getRemoteCollections(): LiveData<List<CollectionsView>>
 
     /**
      * Retrieve a list of ICalObjectIds that are parents within a given Collection

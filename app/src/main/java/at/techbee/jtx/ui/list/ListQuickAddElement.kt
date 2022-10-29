@@ -66,13 +66,13 @@ fun ListQuickAddElement(
     modifier: Modifier = Modifier,
     presetText: String = "",
     presetAttachment: Attachment? = null,
-    allCollections: List<ICalCollection>,
+    allWriteableCollections: List<ICalCollection>,
     presetCollectionId: Long,
     onSaveEntry: (newEntry: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
 
-    if (allCollections.isEmpty())   // don't compose if there are no collections
+    if (allWriteableCollections.isEmpty())   // don't compose if there are no collections
         return
 
     val context = LocalContext.current
@@ -81,12 +81,27 @@ fun ListQuickAddElement(
     var showAudioPermissionDialog by rememberSaveable { mutableStateOf(false) }
     var currentCollection by rememberSaveable {
         mutableStateOf(
-            allCollections.find { collection -> collection.collectionId == presetCollectionId }
-                ?: allCollections.first())
+            allWriteableCollections.find { collection -> collection.collectionId == presetCollectionId }
+                ?: allWriteableCollections.firstOrNull { collection -> !collection.readonly })
     }
     // TODO: Load last used collection!
 
-    var currentModule by rememberSaveable { mutableStateOf(presetModule ?: Module.JOURNAL) }
+    var currentModule by rememberSaveable {
+        mutableStateOf(
+            if(presetModule!= null
+                && ((presetModule == Module.JOURNAL && currentCollection?.supportsVJOURNAL == true)
+                        || (presetModule == Module.NOTE && currentCollection?.supportsVJOURNAL == true)
+                        || (presetModule == Module.TODO && currentCollection?.supportsVTODO == true))
+                )
+                presetModule
+            else if (currentCollection?.supportsVJOURNAL == true)
+                Module.JOURNAL
+            else if (currentCollection?.supportsVTODO == true)
+                Module.TODO
+            else
+                null
+        )
+    }
     var currentText by rememberSaveable { mutableStateOf(presetText) }
     val currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
     var noTextError by rememberSaveable { mutableStateOf(false) }
@@ -111,6 +126,9 @@ fun ListQuickAddElement(
     var srListening by remember { mutableStateOf(false) }
 
     fun saveEntry(goToEdit: Boolean) {
+        if(currentCollection == null || currentModule == null)
+            return
+
         if (currentText.isNotBlank()) {
             val newICalObject = when (currentModule) {
                 Module.JOURNAL -> ICalObject.createJournal()
@@ -119,8 +137,9 @@ fun ListQuickAddElement(
                     this.setDefaultDueDateFromSettings(context)
                     this.setDefaultStartDateFromSettings(context)
                 }
+                else -> ICalObject.createNote()  // Fallback, can't actually reach it
             }
-            newICalObject.collectionId = currentCollection.collectionId
+            newICalObject.collectionId = currentCollection!!.collectionId
             newICalObject.parseSummaryAndDescription(currentText)
             newICalObject.parseURL(currentText)
             val categories = Category.extractHashtagsFromText(currentText)
@@ -138,20 +157,6 @@ fun ListQuickAddElement(
         onDismissRequest = onDismiss,
         text = {
             Column(modifier = modifier) {
-                CollectionsSpinner(
-                    collections = allCollections,
-                    preselected = allCollections.find { it == currentCollection } ?: allCollections.first(),
-                    includeReadOnly = false,
-                    includeVJOURNAL = if (currentModule == Module.JOURNAL || currentModule == Module.NOTE) true else null,
-                    includeVTODO = if (currentModule == Module.TODO) true else null,
-                    onSelectionChanged = { selected ->
-                        currentCollection = selected
-                        if ((currentModule == Module.JOURNAL || currentModule == Module.NOTE) && !currentCollection.supportsVJOURNAL)
-                            currentModule = Module.TODO
-                        else if (currentModule == Module.TODO && !currentCollection.supportsVTODO)
-                            currentModule = Module.NOTE
-                    }
-                )
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -164,21 +169,36 @@ fun ListQuickAddElement(
                         selected = currentModule == Module.JOURNAL,
                         onClick = { currentModule = Module.JOURNAL },
                         label = { Text(stringResource(id = R.string.journal)) },
-                        enabled = currentCollection.supportsVJOURNAL
+                        enabled = currentCollection?.supportsVJOURNAL == true
                     )
                     FilterChip(
                         selected = currentModule == Module.NOTE,
                         onClick = { currentModule = Module.NOTE },
                         label = { Text(stringResource(id = R.string.note)) },
-                        enabled = currentCollection.supportsVJOURNAL
+                        enabled = currentCollection?.supportsVJOURNAL == true
                     )
                     FilterChip(
                         selected = currentModule == Module.TODO,
                         onClick = { currentModule = Module.TODO },
                         label = { Text(stringResource(id = R.string.task)) },
-                        enabled = currentCollection.supportsVTODO
+                        enabled = currentCollection?.supportsVTODO == true
                     )
                 }
+
+                CollectionsSpinner(
+                    collections = allWriteableCollections,
+                    preselected = allWriteableCollections.find { it == currentCollection } ?: allWriteableCollections.first(),
+                    includeReadOnly = false,
+                    includeVJOURNAL = if (currentModule == Module.JOURNAL || currentModule == Module.NOTE) true else null,
+                    includeVTODO = if (currentModule == Module.TODO) true else null,
+                    onSelectionChanged = { selected ->
+                        currentCollection = selected
+                        if ((currentModule == Module.JOURNAL || currentModule == Module.NOTE) && currentCollection?.supportsVJOURNAL == false)
+                            currentModule = Module.TODO
+                        else if (currentModule == Module.TODO && currentCollection?.supportsVTODO == false)
+                            currentModule = Module.NOTE
+                    }
+                )
 
                 OutlinedTextField(
                     value = currentText,
@@ -283,7 +303,7 @@ fun ListQuickAddElement(
                     AttachmentCard(
                         attachment = it,
                         isEditMode = false,
-                        isRemoteCollection = currentCollection.accountType != LOCAL_ACCOUNT_TYPE,
+                        isRemoteCollection = currentCollection?.accountType != LOCAL_ACCOUNT_TYPE,
                         onAttachmentDeleted = { /* no editing here */ },
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
@@ -305,6 +325,7 @@ fun ListQuickAddElement(
 
                     TextButton(
                         onClick = { saveEntry(goToEdit = true) },
+                        enabled = currentText.isNotEmpty() && currentCollection?.readonly == false,
                         modifier = Modifier.weight(0.4f)
                     ) {
                         Text(stringResource(id = R.string.save_and_edit), textAlign = TextAlign.Center)
@@ -315,6 +336,7 @@ fun ListQuickAddElement(
                             saveEntry(goToEdit = false)
                             onDismiss()
                                   },
+                        enabled = currentText.isNotEmpty() && currentCollection?.readonly == false,
                         modifier = Modifier.weight(0.3f)
                     ) {
                         Text(stringResource(id = R.string.save), textAlign = TextAlign.Center)
@@ -365,11 +387,41 @@ fun ListQuickAddElement_Preview() {
 
         ListQuickAddElement(
             presetModule = Module.JOURNAL,
-            allCollections = listOf(collection1, collection2, collection3),
+            allWriteableCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _ -> },
             presetText = "This is my preset text",
             presetAttachment = Attachment(filename = "My File.PDF"),
+            presetCollectionId = 0L,
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        )
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun ListQuickAddElement_Preview_empty() {
+    MaterialTheme {
+
+        val collection3 = ICalCollection(
+            collectionId = 3L,
+            color = Color.Cyan.toArgb(),
+            displayName = null,
+            description = "Here comes the desc",
+            accountName = "My account",
+            accountType = "LOCAL",
+            readonly = true
+        )
+
+        ListQuickAddElement(
+            presetModule = Module.JOURNAL,
+            allWriteableCollections = listOf(collection3),
+            onDismiss = { },
+            onSaveEntry = { _, _, _, _ -> },
+            presetText = "",
+            presetAttachment = null,
             presetCollectionId = 0L,
             modifier = Modifier.fillMaxWidth().padding(8.dp)
         )

@@ -31,8 +31,8 @@ import at.techbee.jtx.database.*
 fun DetailsCardStatusClassificationPriority(
     icalObject: ICalObject,
     isEditMode: Boolean,
-    onStatusChanged: (String) -> Unit,
-    onClassificationChanged: (String) -> Unit,
+    onStatusChanged: (String?) -> Unit,
+    onClassificationChanged: (String?) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -41,7 +41,11 @@ fun DetailsCardStatusClassificationPriority(
 
     var status by rememberSaveable { mutableStateOf(icalObject.status) }
     var classification by rememberSaveable { mutableStateOf(icalObject.classification) }
-    var priority by rememberSaveable { mutableStateOf(icalObject.priority ?: 0) }
+    var priority by rememberSaveable { mutableStateOf(icalObject.priority) }
+
+    // we don't show the block in view mode if all three values are null
+    if(!isEditMode && status == null && classification == null && priority == null)
+        return
 
 
     ElevatedCard(modifier = modifier) {
@@ -56,7 +60,7 @@ fun DetailsCardStatusClassificationPriority(
             var classificationMenuExpanded by remember { mutableStateOf(false) }
             var priorityMenuExpanded by remember { mutableStateOf(false) }
 
-            if(!isEditMode) {
+            if(!isEditMode && !status.isNullOrEmpty()) {
                 ElevatedAssistChip(
                     label = {
                         if (icalObject.component == Component.VJOURNAL.name)
@@ -73,7 +77,7 @@ fun DetailsCardStatusClassificationPriority(
                     onClick = { },
                     modifier = Modifier.weight(0.33f)
                 )
-            } else {
+            } else if(isEditMode) {
                 AssistChip(
                     label = {
                         if (icalObject.component == Component.VJOURNAL.name)
@@ -85,6 +89,17 @@ fun DetailsCardStatusClassificationPriority(
                             expanded = statusMenuExpanded,
                             onDismissRequest = { statusMenuExpanded = false }
                         ) {
+
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.status_no_status)) },
+                                onClick = {
+                                    status = null
+                                    statusMenuExpanded = false
+                                    onStatusChanged(null)
+                                    //icalObject.status = status
+                                }
+                            )
+
                             if (icalObject.component == Component.VJOURNAL.name) {
                                 StatusJournal.values().forEach { statusJournal ->
                                     DropdownMenuItem(
@@ -124,7 +139,7 @@ fun DetailsCardStatusClassificationPriority(
             }
 
 
-            if(!isEditMode) {
+            if(!isEditMode && !classification.isNullOrEmpty()) {
                 ElevatedAssistChip(
                     label = {
                         Text( Classification.getStringResource(context, classification) ?: classification ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -138,11 +153,11 @@ fun DetailsCardStatusClassificationPriority(
                     onClick = { },
                     modifier = Modifier.weight(0.33f)
                 )
-            } else {
+            } else if(isEditMode) {
                 AssistChip(
                     label = {
                         Text(
-                            Classification.getStringResource(context, classification) ?: classification ?: "-",
+                            Classification.getStringResource(context, classification) ?: classification ?: stringResource(id = R.string.classification_no_classification),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -151,6 +166,17 @@ fun DetailsCardStatusClassificationPriority(
                             expanded = classificationMenuExpanded,
                             onDismissRequest = { classificationMenuExpanded = false }
                         ) {
+
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.classification_no_classification)) },
+                                onClick = {
+                                    classification = null
+                                    classificationMenuExpanded = false
+                                    onClassificationChanged(null)
+                                    //icalObject.classification = classification
+                                }
+                            )
+
                             Classification.values().forEach { clazzification ->
                                 DropdownMenuItem(
                                     text = { Text(stringResource(id = clazzification.stringResource)) },
@@ -178,12 +204,12 @@ fun DetailsCardStatusClassificationPriority(
             val priorityStrings = stringArrayResource(id = R.array.priority)
             if (icalObject.component == Component.VTODO.name) {
 
-                if(!isEditMode) {
+                if(!isEditMode && priority in 1..9) {
                     ElevatedAssistChip(
                         label = {
                             Text(
                                 if (priority in priorityStrings.indices)
-                                    stringArrayResource(id = R.array.priority)[priority]
+                                    stringArrayResource(id = R.array.priority)[priority?:0]
                                 else
                                     stringArrayResource(id = R.array.priority)[0],
                                 maxLines = 1,
@@ -199,12 +225,12 @@ fun DetailsCardStatusClassificationPriority(
                         onClick = { },
                         modifier = Modifier.weight(0.33f)
                     )
-                } else {
+                } else if(isEditMode) {
                     AssistChip(
                         label = {
                             Text(
                                 if (priority in priorityStrings.indices)
-                                    stringArrayResource(id = R.array.priority)[priority]
+                                    stringArrayResource(id = R.array.priority)[priority?:0]
                                 else
                                     stringArrayResource(id = R.array.priority)[0],
                                 maxLines = 1,

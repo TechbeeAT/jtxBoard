@@ -140,7 +140,7 @@ fun ListScreen(
             ListOptionsBottomSheet(
                 module = listViewModel.module,
                 listSettings = listViewModel.listSettings,
-                allCollectionsLive = listViewModel.allCollections,
+                allCollectionsLive = listViewModel.allWriteableCollections,
                 allCategoriesLive = listViewModel.allCategories,
                 onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) }
             )

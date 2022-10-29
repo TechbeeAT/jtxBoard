@@ -768,7 +768,7 @@ data class ICalObject(
          */
         fun getLatLongString(geoLat: Double?, geoLong: Double?): String? {
             return if(geoLat != null && geoLong != null) {
-                "($geoLat, $geoLong)"
+                "(${String.format("%.5f", geoLat)}, ${String.format("%.5f", geoLong)})"
             } else {
                null
             }

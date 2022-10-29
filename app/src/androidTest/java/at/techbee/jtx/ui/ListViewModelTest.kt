@@ -309,8 +309,8 @@ class ListViewModelTest {
     @Test
     fun getAllCollections() {
         listViewModel = ListViewModelTodos(application)
-        listViewModel.allCollections.observeForever {  }
-        assertEquals(1, listViewModel.allCollections.value?.size)
+        listViewModel.allWriteableCollections.observeForever {  }
+        assertEquals(1, listViewModel.allWriteableCollections.value?.size)
     }
 
     @Test

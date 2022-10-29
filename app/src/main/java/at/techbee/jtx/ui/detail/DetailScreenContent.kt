@@ -70,7 +70,7 @@ fun DetailScreenContent(
     subtasks: State<List<ICal4List>>,
     subnotes: State<List<ICal4List>>,
     isChild: Boolean,
-    allCollections: List<ICalCollection>,
+    allWriteableCollections: List<ICalCollection>,
     allCategories: List<String>,
     allResources: List<String>,
     detailSettings: DetailSettings,
@@ -319,9 +319,9 @@ fun DetailScreenContent(
                     ) {
 
                         CollectionsSpinner(
-                            collections = allCollections,
+                            collections = allWriteableCollections,
                             preselected = iCalEntity.value?.ICalCollection
-                                ?: allCollections.first(),   // TODO: Load last used collection for new entries
+                                ?: allWriteableCollections.first(),   // TODO: Load last used collection for new entries
                             includeReadOnly = false,
                             includeVJOURNAL = if (iCalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
                             includeVTODO = if (iCalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
@@ -531,7 +531,6 @@ fun DetailScreenContent(
                 )
             }
 
-
             AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableResources.value || showAllOptions))) {
                 DetailsCardResources(
                     initialResources = resources.value,
@@ -543,7 +542,6 @@ fun DetailScreenContent(
                     allResources = allResources,
                 )
             }
-
 
             AnimatedVisibility(attendees.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableAttendees.value || showAllOptions))) {
                 DetailsCardAttendees(
@@ -566,7 +564,6 @@ fun DetailScreenContent(
                     },
                 )
             }
-
 
             AnimatedVisibility(icalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.enableUrl.value || showAllOptions))) {
                 DetailsCardUrl(
@@ -604,7 +601,6 @@ fun DetailScreenContent(
                     }
                 )
             }
-
 
             AnimatedVisibility(attachments.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableAttachments.value || showAllOptions))) {
                 DetailsCardAttachments(
@@ -707,7 +703,7 @@ fun DetailScreenContent_JOURNAL() {
             isChild = false,
             player = null,
             goBackRequested = remember { mutableStateOf(false) },
-            allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
+            allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
@@ -752,7 +748,7 @@ fun DetailScreenContent_TODO_editInitially() {
             isChild = false,
             player = null,
             goBackRequested = remember { mutableStateOf(false) },
-            allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
+            allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
@@ -799,7 +795,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             isChild = true,
             player = null,
             goBackRequested = remember { mutableStateOf(false) },
-            allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
+            allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
@@ -838,7 +834,7 @@ fun DetailScreenContent_failedLoading() {
             isChild = true,
             player = null,
             goBackRequested = remember { mutableStateOf(false) },
-            allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
+            allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
