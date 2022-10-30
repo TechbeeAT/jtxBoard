@@ -10,11 +10,9 @@
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.INTERNET" /> <!-- START remove permissions would be merged by the ical4android manifest and that are not needed -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-
-    <!-- read/write Android calendars -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- read/write Android calendars -->
     <uses-permission
         android:name="android.permission.READ_CALENDAR"
         tools:node="remove" />
@@ -80,14 +78,14 @@
 
     <application
         android:allowBackup="true"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-        android:localeConfig="@xml/locales_config"
-        android:enableOnBackInvokedCallback="true">
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
 
         <provider
             android:name=".SyncContentProvider"
@@ -113,11 +111,14 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
                 <data android:mimeType="text/markdown" />
                 <data android:mimeType="image/*" />
@@ -125,7 +126,9 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="file" />
                 <data android:scheme="content" />
                 <data android:mimeType="text/calendar" />
@@ -136,8 +139,16 @@
                 android:resource="@xml/shortcuts" />
         </activity>
 
-        <receiver android:name=".NotificationPublisher" />
+        <activity
+            android:name=".WidgetConfigActivity"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
 
+        </activity>
+
+        <receiver android:name=".NotificationPublisher" />
         <receiver
             android:name=".widgets.JournalsWidgetReceiver"
             android:enabled="true"
@@ -145,9 +156,10 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/journals_widget" />
+                android:resource="@xml/widget_list" />
         </receiver>
 
         <meta-data
@@ -155,9 +167,7 @@
             android:resource="@array/preloaded_fonts" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCaISlh2wJCX-tksqU7I3YOuf3wcmCAyfI" />
-
-        <!-- Support language selection on Android 12 and lower -->
+            android:value="AIzaSyCaISlh2wJCX-tksqU7I3YOuf3wcmCAyfI" /> <!-- Support language selection on Android 12 and lower -->
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
             android:enabled="false"

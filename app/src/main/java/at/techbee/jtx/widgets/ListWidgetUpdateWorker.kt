@@ -13,7 +13,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 
 
-class JournalsWidgetUpdateWorker(
+class ListWidgetUpdateWorker(
     private val context: Context,
     workerParameters: WorkerParameters
 ) : CoroutineWorker(

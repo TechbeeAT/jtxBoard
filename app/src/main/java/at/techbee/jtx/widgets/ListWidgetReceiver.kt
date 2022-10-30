@@ -33,7 +33,7 @@ private const val TAG = "JournalsWidgetRec"
 
 
 class JournalsWidgetReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = JournalsWidget()
+    override val glanceAppWidget: GlanceAppWidget = ListWidget()
 
     private val coroutineScope = MainScope()
 
@@ -63,7 +63,7 @@ class JournalsWidgetReceiver : GlanceAppWidgetReceiver() {
                 .iCalDatabaseDao
                 .getIcal4ListByModuleSync(Module.JOURNAL)
 
-            GlanceAppWidgetManager(context).getGlanceIds(JournalsWidget::class.java).forEach { glanceId ->
+            GlanceAppWidgetManager(context).getGlanceIds(ListWidget::class.java).forEach { glanceId ->
 
                 glanceId.let {
                     updateAppWidgetState(context, PreferencesGlanceStateDefinition, it) { pref ->
@@ -80,7 +80,7 @@ class JournalsWidgetReceiver : GlanceAppWidgetReceiver() {
 
     private fun setWork(context: Context) {
 
-        val work: PeriodicWorkRequest = PeriodicWorkRequestBuilder<JournalsWidgetUpdateWorker>(5, TimeUnit.MINUTES).build()
+        val work: PeriodicWorkRequest = PeriodicWorkRequestBuilder<ListWidgetUpdateWorker>(5, TimeUnit.MINUTES).build()
         WorkManager
             .getInstance(context)
             .enqueueUniquePeriodicWork("journalWidgetWorker", ExistingPeriodicWorkPolicy.KEEP, work)

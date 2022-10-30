@@ -30,13 +30,14 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
+import at.techbee.jtx.WidgetConfigActivity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.widgets.elements.JournalEntry
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 
-class JournalsWidget : GlanceAppWidget() {
+class ListWidget : GlanceAppWidget() {
 
     private val surface: ColorProvider
         @Composable
@@ -83,6 +84,7 @@ class JournalsWidget : GlanceAppWidget() {
 
     @Composable
     override fun Content() {
+
         Column(
             modifier = GlanceModifier
                 .appWidgetBackground()
@@ -92,12 +94,19 @@ class JournalsWidget : GlanceAppWidget() {
             val context = LocalContext.current
 
             val prefs = currentState<Preferences>()
-            val journalsList = prefs[JournalsWidgetReceiver.journalsList]?.map { Json.decodeFromString<ICal4List>(it) }
+            val journalsList = prefs[JournalsWidgetReceiver.journalsList]?.map {
+                Json.decodeFromString<ICal4List>(it)
+            }
 
             val addJournalIntent = Intent(context, MainActivity2::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 action = MainActivity2.INTENT_ACTION_ADD_JOURNAL
             }
+
+            val configIntent = Intent(context, WidgetConfigActivity::class.java)
+            // TODO
+            //configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);    //set widget id
+
 
             Row(
                 modifier = GlanceModifier
@@ -107,7 +116,7 @@ class JournalsWidget : GlanceAppWidget() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = context.getString(R.string.journals_widget_title),
+                    text = context.getString(R.string.widget_list_journals_title),
                     style = TextStyle(
                         color = onPrimary,
                         fontSize = 16.sp,
@@ -123,10 +132,10 @@ class JournalsWidget : GlanceAppWidget() {
                 TintImage(
                     resource = R.drawable.ic_settings,
                     tintColor = onPrimary,
-                    contentDescription = context.getString(R.string.widget_settings),
+                    contentDescription = context.getString(R.string.widget_list_settings),
                     imageHeight = buttonSize.px,
                     modifier = GlanceModifier
-                        //.clickable(actionStartActivity(addJournalIntent))
+                        .clickable(actionStartActivity(configIntent))
                         .padding(8.dp)
                         .size(buttonSize),
                 )
@@ -134,7 +143,7 @@ class JournalsWidget : GlanceAppWidget() {
                 TintImage(
                     resource = R.drawable.ic_edit,
                     tintColor = onPrimary,
-                    contentDescription = context.getString(R.string.journals_widget_new),
+                    contentDescription = context.getString(R.string.widget_list_journals_new),
                     imageHeight = buttonSize.px,
                     modifier = GlanceModifier
                         .clickable(actionStartActivity(addJournalIntent))
@@ -144,20 +153,19 @@ class JournalsWidget : GlanceAppWidget() {
             }
 
 
-                LazyColumn(
-                    modifier = GlanceModifier
-                        //.defaultWeight()
-                        .padding(8.dp).background(primaryContainer)
-                ) {
+            LazyColumn(
+                modifier = GlanceModifier
+                    //.defaultWeight()
+                    .padding(8.dp).background(primaryContainer)
+            ) {
 
-                    items(journalsList?.toList() ?: emptyList()) { entry ->
-                        JournalEntry(
-                            obj = entry,
-                            textColor = onPrimaryContainer
-                        )
-                    }
+                items(journalsList?.toList() ?: emptyList()) { entry ->
+                    JournalEntry(
+                        obj = entry,
+                        textColor = onPrimaryContainer
+                    )
                 }
-
+            }
         }
     }
 }

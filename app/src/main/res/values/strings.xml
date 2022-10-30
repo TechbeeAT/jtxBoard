@@ -669,10 +669,10 @@
     <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again.</string>
     <string name="title_activity_list_screen">ListScreen</string>
 
-    <string name="journals_widget_description">Journals widget</string>
-    <string name="journals_widget_title">Journals</string>
-    <string name="journals_widget_new">New Journal</string>
-    <string name="widget_settings">Widget settings</string>
+    <string name="widget_list_description">List widget</string>
+    <string name="widget_list_journals_title">Journals</string>
+    <string name="widget_list_journals_new">New Journal</string>
+    <string name="widget_list_settings">Widget settings</string>
 
 
 </resources>
