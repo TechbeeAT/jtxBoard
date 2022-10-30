@@ -43,6 +43,7 @@ import at.techbee.jtx.ui.reusable.elements.ListStatusBar
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.reusable.elements.VerticalDateBlock
 import at.techbee.jtx.ui.theme.Typography
+import com.google.accompanist.flowlayout.FlowRow
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -101,7 +102,7 @@ fun ICalObjectListCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
-                    Row(modifier = Modifier.weight(1f)) {
+                    FlowRow(modifier = Modifier.weight(1f)) {
                         Text(
                             iCalObject.collectionDisplayName ?: iCalObject.accountName ?: "",
                             style = Typography.labelMedium,
@@ -127,8 +128,7 @@ fun ICalObjectListCard(
                         if (iCalObject.module == Module.TODO.name) {
                             iCalObject.dtstart?.let {
                                 Text(
-                                    iCalObject.getDtstartTextInfo(LocalContext.current)
-                                        ?: "",
+                                    iCalObject.getDtstartTextInfo(LocalContext.current),
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
@@ -139,7 +139,7 @@ fun ICalObjectListCard(
                             }
                             iCalObject.due?.let {
                                 Text(
-                                    iCalObject.getDueTextInfo(LocalContext.current) ?: "",
+                                    iCalObject.getDueTextInfo(LocalContext.current),
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,

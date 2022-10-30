@@ -178,7 +178,10 @@ fun AudioRecordElement(
     if(showAudioPermissionDialog) {
         RequestPermissionDialog(
             text = stringResource(id = R.string.view_fragment_audio_permission_message),
-            onConfirm = { permissionLauncher.launch(Manifest.permission.RECORD_AUDIO) },
+            onConfirm = {
+                showAudioPermissionDialog = false
+                permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                        },
         )
     }
 }

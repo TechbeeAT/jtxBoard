@@ -492,6 +492,37 @@ enum class SortOrder(val stringResource: Int, val queryAppendix: String) {
     DESC(R.string.filter_desc, "DESC")
 }
 
+enum class GroupBy(val stringResource: Int) {
+    PRIORITY(R.string.priority),
+    STATUS(R.string.status),
+    CLASSIFICATION(R.string.classification),
+    DATE(R.string.date),
+    START(R.string.started),
+    DUE(R.string.due);
+
+    companion object {
+        fun getValuesFor(module: Module): Array<GroupBy> =
+            when(module) {
+                Module.JOURNAL -> arrayOf(
+                    DATE,
+                    STATUS,
+                    CLASSIFICATION
+                )
+                Module.NOTE -> arrayOf(
+                    STATUS,
+                    CLASSIFICATION
+                )
+                Module.TODO -> arrayOf(
+                    START,
+                    DUE,
+                    STATUS,
+                    CLASSIFICATION,
+                    PRIORITY
+                )
+            }
+    }
+}
+
 enum class ViewMode(val stringResource: Int) {
     LIST(R.string.menu_list_viewmode_list),
     GRID(R.string.menu_list_viewmode_grid),

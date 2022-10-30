@@ -262,7 +262,9 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="donate_header_text">"Le développement d'une application est un sujet complexe et le développement, la maintenance et le support sont des tâches difficiles. Donc si vous aimez cette application et si vous voulez assurer son développement continu, pensez à faire un don :-)"</string>
     <string name="donate_thank_you">"Merci !"</string>
     <string name="donate_donate_with">"Faites un don avec"</string>
-    <string name="donate_other_donation_methods">"Si vous souhaitez consier une autre méthode de don, veuillez consulter notre site web :"</string>
+
+    <!-- Fuzzy -->
+    <string name="donate_other_donation_methods">"Si vous souhaitez utiliser une autre méthode de don, veuillez consulter notre site web :"</string>
 
     <!-- Adinfo fragment -->
     <string name="adinfo_text">"Le développement d'une application est un sujet complexe et le développement, la maintenance et le support sont des tâches difficiles. Votre version de jtx Board est gratuite et financée par des publicités. En acceptant les publicités, vous contribuez au développement continu et au financement de ce projet."</string>
@@ -322,8 +324,8 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="alarms_onstart">"Au départ"</string>
     <string name="alarms_ondue">"En échéance"</string>
     <string name="alarms_custom">"Personnalisé"</string>
-    <string name="alarms_before_start">"avant le départ"</string>
-    <string name="alarms_after_start">"après le départ"</string>
+    <string name="alarms_before_start">"avant le début"</string>
+    <string name="alarms_after_start">"après le début"</string>
     <string name="alarms_before_due">"avant l'échéance"</string>
     <string name="alarms_after_due">"après l'échéance"</string>
     <string name="alarms_minutes">"Minute(s)"</string>
@@ -419,7 +421,7 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="adinfo_adfree_purchase_date">"Acheté le %1$s"</string>
     <string name="adinfo_adfree_order_id">"ID de la commande : %1$s"</string>
     <string name="list_no_dates_set">"Aucune date n'a été fixée"</string>
-    <string name="filter_order_by">"Commander par"</string>
+    <string name="filter_order_by">"Trier par"</string>
     <string name="filter_asc">"Ascendant"</string>
     <string name="filter_desc">"Descendant"</string>
     <string name="filter_created">"Créé"</string>

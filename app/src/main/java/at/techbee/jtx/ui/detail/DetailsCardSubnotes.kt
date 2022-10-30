@@ -11,12 +11,8 @@ package at.techbee.jtx.ui.detail
 import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -28,7 +24,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -78,7 +73,9 @@ fun DetailsCardSubnotes(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(8.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center
         ) {
 
             HeadlineWithIcon(icon = Icons.Outlined.Note, iconDesc = headline, text = headline)
@@ -109,48 +106,45 @@ fun DetailsCardSubnotes(
             }
 
             AnimatedVisibility(isEditMode.value) {
-                OutlinedTextField(
-                    value = newSubnoteText,
-                    trailingIcon = {
-                        AnimatedVisibility(newSubnoteText.isNotEmpty()) {
-                            IconButton(onClick = {
-                                if(newSubnoteText.isNotEmpty())
-                                    onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
-                                newSubnoteText = ""
-                            }) {
-                                Icon(
-                                    Icons.Outlined.EditNote,
-                                    stringResource(id = R.string.edit_subnote_add_helper)
-                                )
-                            }
-                        }
-                    },
-                    label = { Text(stringResource(id = R.string.edit_subnote_add_helper)) },
-                    onValueChange = { newValue -> newSubnoteText = newValue },
-                    isError = newSubnoteText.isNotEmpty(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(0.dp, Color.Transparent),
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        if(newSubnoteText.isNotEmpty())
-                            onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
-                        newSubnoteText = ""
-                    })
-                )
-            }
-            AnimatedVisibility(isEditMode.value) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Button(
-                        onClick = { showAddAudioNoteDialog = true },
-                        modifier = Modifier.padding(top = 4.dp)
-                    ) {
-                        Icon(Icons.Outlined.Mic, null, modifier = Modifier.padding(end = 4.dp))
-                        Text(stringResource(id = R.string.view_add_audio_note))
+                    OutlinedTextField(
+                        value = newSubnoteText,
+                        trailingIcon = {
+                            AnimatedVisibility(newSubnoteText.isNotEmpty()) {
+                                IconButton(onClick = {
+                                    if (newSubnoteText.isNotEmpty())
+                                        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+                                    newSubnoteText = ""
+                                }) {
+                                    Icon(
+                                        Icons.Outlined.EditNote,
+                                        stringResource(id = R.string.edit_subnote_add_helper)
+                                    )
+                                }
+                            }
+                        },
+                        label = { Text(stringResource(id = R.string.edit_subnote_add_helper)) },
+                        onValueChange = { newValue -> newSubnoteText = newValue },
+                        isError = newSubnoteText.isNotEmpty(),
+                        modifier = Modifier
+                            .weight(1f),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Sentences,
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            if (newSubnoteText.isNotEmpty())
+                                onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+                            newSubnoteText = ""
+                        })
+                    )
+                    IconButton(onClick = { showAddAudioNoteDialog = true }) {
+                        Icon(Icons.Outlined.Mic, stringResource(id = R.string.view_add_audio_note))
                     }
                 }
             }

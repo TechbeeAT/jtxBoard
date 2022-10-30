@@ -53,6 +53,8 @@ fun ListOptionsBottomSheet(
 
     val tabIndexFilter = 0
     val tabIndexSortOrder = 1
+    val tabIndexGroupBy = 2
+
 
     val pagerState = rememberPagerState(initialPage = tabIndexFilter)
 
@@ -83,11 +85,21 @@ fun ListOptionsBottomSheet(
                 content = { Text(stringResource(id = R.string.filter_order_by)) },
                 modifier = Modifier.height(50.dp)
             )
+            Tab(
+                selected = false,
+                onClick = {
+                    scope.launch {
+                        pagerState.scrollToPage(tabIndexGroupBy)
+                    }
+                },
+                content = { Text(stringResource(id = R.string.filter_group_by)) },
+                modifier = Modifier.height(50.dp)
+            )
         }
 
         HorizontalPager(
             state = pagerState,
-            count = 2
+            count = 3
         ) { page ->
             when (page) {
                 tabIndexFilter -> {
@@ -104,8 +116,18 @@ fun ListOptionsBottomSheet(
                     )
                 }
                 tabIndexSortOrder -> {
-
                     ListOptionsSortOrder(
+                        module = module,
+                        listSettings = listSettings,
+                        onListSettingsChanged = onListSettingsChanged,
+                        modifier = modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(8.dp),
+                    )
+                }
+                tabIndexGroupBy -> {
+                    ListOptionsGroupBy(
                         module = module,
                         listSettings = listSettings,
                         onListSettingsChanged = onListSettingsChanged,

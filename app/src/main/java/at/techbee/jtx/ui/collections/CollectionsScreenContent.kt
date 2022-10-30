@@ -87,7 +87,8 @@ fun CollectionsScreenContent(
             }
 
             grouped.forEach { (account, collectionsInAccount) ->
-                stickyHeader {
+                //stickyHeader {
+                item {
                     CollectionsAccountHeader(
                         account = account,
                         isFoundInAccountmanager = foundAccounts.contains(account) || account.type == ICalCollection.LOCAL_ACCOUNT_TYPE,

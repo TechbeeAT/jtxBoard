@@ -18,16 +18,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
@@ -38,21 +35,19 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListScreenGrid(
-    listLive: LiveData<List<ICal4List>>,
+    list: State<List<ICal4List>>,
     scrollOnceId: MutableLiveData<Long?>,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     goToView: (itemId: Long) -> Unit,
     goToEdit: (itemId: Long) -> Unit
 ) {
 
-    val list by listLive.observeAsState(emptyList())
-
     val scrollId by scrollOnceId.observeAsState(null)
     val gridState = rememberLazyGridState()
 
     if(scrollId != null) {
         LaunchedEffect(list) {
-            val index = list.indexOfFirst { iCalObject -> iCalObject.id == scrollId }
+            val index = list.value.indexOfFirst { iCalObject -> iCalObject.id == scrollId }
             if(index > -1) {
                 gridState.animateScrollToItem(index)
                 scrollOnceId.postValue(null)
@@ -70,7 +65,7 @@ fun ListScreenGrid(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(
-            items = list,
+            items = list.value,
             key = { item -> item.id }
         )
         { iCalObject ->
@@ -128,7 +123,7 @@ fun ListScreenGrid_TODO() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenGrid(
-            listLive = MutableLiveData(listOf(icalobject, icalobject2)),
+            list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
             scrollOnceId = MutableLiveData(null),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
@@ -171,7 +166,7 @@ fun ListScreenGrid_JOURNAL() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenGrid(
-            listLive = MutableLiveData(listOf(icalobject, icalobject2)),
+            list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
             scrollOnceId = MutableLiveData(null),
             onProgressChanged = { _, _, _ -> },
             goToView = { },

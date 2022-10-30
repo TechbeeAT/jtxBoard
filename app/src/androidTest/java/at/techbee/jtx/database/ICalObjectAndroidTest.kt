@@ -461,4 +461,19 @@ class ICalObjectAndroidTest {
             )
         assertTrue(item.getRecurInfo(context)?.contains(expectedString) == true)
     }
+
+    @Test
+    fun statusJournal_getStringResource_cancelled() {
+        assertEquals(context.getString(R.string.journal_status_cancelled), StatusJournal.getStringResource(context, StatusJournal.CANCELLED.name))
+    }
+
+    @Test
+    fun statusTodo_getStringResource_cancelled() {
+        assertEquals(context.getString(R.string.todo_status_needsaction), StatusTodo.getStringResource(context, StatusTodo.`NEEDS-ACTION`.name))
+    }
+
+    @Test
+    fun classification_getStringResource_confidential() {
+        assertEquals(context.getString(R.string.classification_confidential), Classification.getStringResource(context, Classification.CONFIDENTIAL.name))
+    }
 }

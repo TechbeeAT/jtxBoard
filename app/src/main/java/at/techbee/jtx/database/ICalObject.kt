@@ -1282,12 +1282,13 @@ enum class StatusJournal(val stringResource: Int) : Parcelable {
 
     companion object {
 
-        fun getStringResource(context: Context, name: String?): String? {
-            values().forEach {
-                if (it.name == name)
-                    return context.getString(it.stringResource)
-            }
-            return null
+        fun getStringResource(context: Context, name: String?): String {
+            return if(name == null)
+                context.getString(R.string.status_no_status)
+            else if(values().any { it.name == name })
+                context.getString(valueOf(name).stringResource)
+            else
+                name
         }
 
         fun getListFromStringList(stringList: Set<String>?): MutableList<StatusJournal> {
@@ -1326,12 +1327,13 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
 
     companion object {
 
-        fun getStringResource(context: Context, name: String?): String? {
-            values().forEach {
-                if (it.name == name)
-                    return context.getString(it.stringResource)
-            }
-            return null
+        fun getStringResource(context: Context, name: String?): String {
+            return if(name == null)
+                context.getString(R.string.status_no_status)
+            else if(values().any { it.name == name })
+                context.getString(valueOf(name).stringResource)
+            else
+                name
         }
 
         fun getListFromStringList(stringList: Set<String>?): MutableList<StatusTodo> {
@@ -1369,12 +1371,14 @@ enum class Classification(val stringResource: Int) : Parcelable {
 
     companion object {
 
-        fun getStringResource(context: Context, name: String?): String? {
-            values().forEach {
-                if (it.name == name)
-                    return context.getString(it.stringResource)
-            }
-            return null
+        fun getStringResource(context: Context, name: String?): String {
+
+            return if(name == null)
+                context.getString(R.string.classification_no_classification)
+            else if(values().any { it.name == name })
+                context.getString(valueOf(name).stringResource)
+            else
+                name
         }
 
         fun getListFromStringList(stringList: Set<String>?): MutableList<Classification> {
