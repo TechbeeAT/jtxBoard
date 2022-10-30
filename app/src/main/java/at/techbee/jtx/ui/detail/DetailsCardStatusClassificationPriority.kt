@@ -64,9 +64,9 @@ fun DetailsCardStatusClassificationPriority(
                 ElevatedAssistChip(
                     label = {
                         if (icalObject.component == Component.VJOURNAL.name)
-                            Text(StatusJournal.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(StatusJournal.getStringResource(context, status), maxLines = 1, overflow = TextOverflow.Ellipsis)
                         else
-                            Text(StatusTodo.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(StatusTodo.getStringResource(context, status), maxLines = 1, overflow = TextOverflow.Ellipsis)
                     },
                     leadingIcon = {
                         Icon(
@@ -81,9 +81,9 @@ fun DetailsCardStatusClassificationPriority(
                 AssistChip(
                     label = {
                         if (icalObject.component == Component.VJOURNAL.name)
-                            Text(StatusJournal.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(StatusJournal.getStringResource(context, status), maxLines = 1, overflow = TextOverflow.Ellipsis)
                         else
-                            Text(StatusTodo.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(StatusTodo.getStringResource(context, status), maxLines = 1, overflow = TextOverflow.Ellipsis)
 
                         DropdownMenu(
                             expanded = statusMenuExpanded,
@@ -142,7 +142,7 @@ fun DetailsCardStatusClassificationPriority(
             if(!isEditMode && !classification.isNullOrEmpty()) {
                 ElevatedAssistChip(
                     label = {
-                        Text( Classification.getStringResource(context, classification) ?: classification ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text( Classification.getStringResource(context, classification), maxLines = 1, overflow = TextOverflow.Ellipsis)
                             },
                     leadingIcon = {
                         Icon(
@@ -157,7 +157,7 @@ fun DetailsCardStatusClassificationPriority(
                 AssistChip(
                     label = {
                         Text(
-                            Classification.getStringResource(context, classification) ?: classification ?: stringResource(id = R.string.classification_no_classification),
+                            Classification.getStringResource(context, classification),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -173,7 +173,6 @@ fun DetailsCardStatusClassificationPriority(
                                     classification = null
                                     classificationMenuExpanded = false
                                     onClassificationChanged(null)
-                                    //icalObject.classification = classification
                                 }
                             )
 
@@ -184,7 +183,6 @@ fun DetailsCardStatusClassificationPriority(
                                         classification = clazzification.name
                                         classificationMenuExpanded = false
                                         onClassificationChanged(clazzification.name)
-                                        //icalObject.classification = classification
                                     }
                                 )
                             }
@@ -248,7 +246,6 @@ fun DetailsCardStatusClassificationPriority(
                                             priority = index
                                             priorityMenuExpanded = false
                                             onPriorityChanged(priority)
-                                            //icalObject.priority = priority
                                         }
                                     )
                                 }

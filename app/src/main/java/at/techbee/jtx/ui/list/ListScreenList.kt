@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.list
 import android.content.Context
 import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,12 +19,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -39,7 +42,7 @@ import at.techbee.jtx.ui.settings.DropdownSettingOption
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListScreenList(
-    listLive: LiveData<List<ICal4List>>,
+    groupedList: Map<String, List<ICal4List>>,
     subtasksLive: LiveData<Map<String?, List<ICal4List>>>,
     subnotesLive: LiveData<Map<String?, List<ICal4List>>>,
     attachmentsLive: LiveData<Map<Long, List<Attachment>>>,
@@ -57,7 +60,6 @@ fun ListScreenList(
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
-    val list by listLive.observeAsState(emptyList())
     val subtasks by subtasksLive.observeAsState(emptyMap())
     val subnotes by subnotesLive.observeAsState(emptyMap())
     val attachments by attachmentsLive.observeAsState(emptyMap())
@@ -68,61 +70,77 @@ fun ListScreenList(
     val mediaPlayer = remember { MediaPlayer() }   // todo: Move to viewmodel?
 
 
-    if(scrollId != null) {
-        LaunchedEffect(list) {
-            val index = list.indexOfFirst { iCalObject -> iCalObject.id == scrollId }
-            if(index > -1) {
-                listState.animateScrollToItem(index)
-                scrollOnceId.postValue(null)
-            }
-        }
-    }
-
-
     LazyColumn(
         modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
         state = listState,
     ) {
-        items(
-            items = list,
-            key = { item -> item.id }
-        ) { iCalObject ->
 
-            var currentSubtasks = subtasks[iCalObject.uid]
-            if(listSettings.isExcludeDone.value)   // exclude done if applicable
-                currentSubtasks = currentSubtasks?.filter { subtask -> subtask.percent != 100 }
+        groupedList.forEach { (groupName, group) ->
 
-            val currentSubnotes = subnotes[iCalObject.uid]
-            val currentAttachments = attachments[iCalObject.id]
-
-            ICalObjectListCard(
-                iCalObject,
-                currentSubtasks ?: emptyList(),
-                currentSubnotes ?: emptyList(),
-                attachments = currentAttachments ?: emptyList(),
-                isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
-                isSubnotesExpandedDefault = isSubnotesExpandedDefault.value,
-                isAttachmentsExpandedDefault = isAttachmentsExpandedDefault.value,
-                settingShowProgressMaintasks = settingShowProgressMaintasks.value,
-                settingShowProgressSubtasks = settingShowProgressSubtasks.value,
-                progressIncrement = settingProgressIncrement.value.getProgressStepKeyAsInt(),
-                goToView = goToView,
-                goToEdit = goToEdit,
-                onProgressChanged = onProgressChanged,
-                onExpandedChanged = onExpandedChanged,
-                player = mediaPlayer,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp)
-                    .animateItemPlacement()
-                    .combinedClickable(
-                        onClick = { goToView(iCalObject.id) },
-                        onLongClick = {
-                            if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                goToEdit(iCalObject.id)
-                        }
+            if(groupedList.keys.size > 1) {
+                stickyHeader {
+                    Text(
+                        text = groupName,
+                        modifier = Modifier.fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background)
+                            .padding(top = 8.dp, bottom = 8.dp),
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center
                     )
-            )
+                }
+            }
+
+            items(
+                items = group,
+                key = { item -> item.id }
+            ) { iCalObject ->
+
+                var currentSubtasks = subtasks[iCalObject.uid]
+                if (listSettings.isExcludeDone.value)   // exclude done if applicable
+                    currentSubtasks = currentSubtasks?.filter { subtask -> subtask.percent != 100 }
+
+                val currentSubnotes = subnotes[iCalObject.uid]
+                val currentAttachments = attachments[iCalObject.id]
+
+                if(scrollId != null) {
+                    LaunchedEffect(group) {
+                        val index = group.indexOfFirst { iCalObject -> iCalObject.id == scrollId }
+                        if(index > -1) {
+                            listState.animateScrollToItem(index)
+                            scrollOnceId.postValue(null)
+                        }
+                    }
+                }
+
+                ICalObjectListCard(
+                    iCalObject,
+                    currentSubtasks ?: emptyList(),
+                    currentSubnotes ?: emptyList(),
+                    attachments = currentAttachments ?: emptyList(),
+                    isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
+                    isSubnotesExpandedDefault = isSubnotesExpandedDefault.value,
+                    isAttachmentsExpandedDefault = isAttachmentsExpandedDefault.value,
+                    settingShowProgressMaintasks = settingShowProgressMaintasks.value,
+                    settingShowProgressSubtasks = settingShowProgressSubtasks.value,
+                    progressIncrement = settingProgressIncrement.value.getProgressStepKeyAsInt(),
+                    goToView = goToView,
+                    goToEdit = goToEdit,
+                    onProgressChanged = onProgressChanged,
+                    onExpandedChanged = onExpandedChanged,
+                    player = mediaPlayer,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                        .animateItemPlacement()
+                        .combinedClickable(
+                            onClick = { goToView(iCalObject.id) },
+                            onLongClick = {
+                                if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                    goToEdit(iCalObject.id)
+                            }
+                        )
+                )
+            }
         }
     }
 }
@@ -166,7 +184,7 @@ fun ListScreenList_TODO() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenList(
-            listLive = MutableLiveData(listOf(icalobject, icalobject2)),
+            groupedList = listOf(icalobject, icalobject2).groupBy { StatusTodo.getStringResource(application, it.status) },
             subtasksLive = MutableLiveData(emptyMap()),
             subnotesLive = MutableLiveData(emptyMap()),
             attachmentsLive = MutableLiveData(emptyMap()),
@@ -226,7 +244,7 @@ fun ListScreenList_JOURNAL() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenList(
-            listLive = MutableLiveData(listOf(icalobject, icalobject2)),
+            groupedList = listOf(icalobject, icalobject2).groupBy { StatusJournal.getStringResource(application, it.status) },
             subtasksLive = MutableLiveData(emptyMap()),
             subnotesLive = MutableLiveData(emptyMap()),
             attachmentsLive = MutableLiveData(emptyMap()),

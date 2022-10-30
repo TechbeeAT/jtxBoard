@@ -234,13 +234,12 @@ data class ICal4List(
             )
     }
 
+    fun getDtstartTextInfo(context: Context): String {
 
-
-
-    fun getDtstartTextInfo(context: Context): String? {
-
-        if(dtstart == null)
-            return null
+        if(dtstart == null && module == Module.TODO.name)
+            return context.getString(R.string.list_start_without)
+        else if(dtstart == null)
+            return context.getString(R.string.list_date_without)
 
         val zonedStart = ZonedDateTime.ofInstant(
             Instant.ofEpochMilli(dtstart!!),
@@ -251,24 +250,35 @@ data class ICal4List(
         val daysLeft = TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
         val hoursLeft = TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
 
-        return when {
-            millisLeft < 0L -> context.getString(R.string.list_start_past)
-            daysLeft == 0L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_start_today)
-            daysLeft == 1L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(
-                R.string.list_start_tomorrow)
-            daysLeft <= 1L && dtstartTimezone != ICalObject.TZ_ALLDAY -> context.getString(
-                R.string.list_start_inXhours, hoursLeft)
-            daysLeft >= 2L -> context.getString(R.string.list_start_inXdays, daysLeft)
-            else -> null      //should not be possible
+        if(module == Module.TODO.name) {
+            return when {
+                millisLeft < 0L -> context.getString(R.string.list_start_past)
+                daysLeft == 0L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_start_today)
+                daysLeft == 1L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(
+                    R.string.list_start_tomorrow)
+                daysLeft <= 1L && dtstartTimezone != ICalObject.TZ_ALLDAY -> context.getString(
+                    R.string.list_start_inXhours, hoursLeft)
+                daysLeft >= 2L -> context.getString(R.string.list_start_inXdays, daysLeft)
+                else -> context.getString(R.string.list_start_without)      //should not be possible
+            }
+        } else {
+            return when {
+                millisLeft < 0L -> context.getString(R.string.list_date_start_in_past)
+                daysLeft == 0L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_date_today)
+                daysLeft == 1L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_date_tomorrow)
+                daysLeft <= 1L && dtstartTimezone != ICalObject.TZ_ALLDAY -> context.getString(R.string.list_date_today)
+                daysLeft >= 2L -> context.getString(R.string.list_date_future)
+                else -> context.getString(R.string.list_date_without)      //should not be possible
+            }
         }
     }
 
-    fun getDueTextInfo(context: Context): String? {
+    fun getDueTextInfo(context: Context): String {
 
         if(percent == 100)
             return context.getString(R.string.completed)
         if(due == null)
-            return null
+            return context.getString(R.string.list_due_without)
 
         val zonedDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due!!), DateTimeUtils.requireTzId(dueTimezone)).toInstant().toEpochMilli()
         val millisLeft = if(dueTimezone == ICalObject.TZ_ALLDAY) zonedDue - DateTimeUtils.getTodayAsLong() else zonedDue - System.currentTimeMillis()
@@ -282,7 +292,7 @@ data class ICal4List(
             daysLeft == 1L && dueTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_tomorrow)
             daysLeft <= 1L && dueTimezone != ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_inXhours, hoursLeft)
             daysLeft >= 2L -> context.getString(R.string.list_due_inXdays, daysLeft)
-            else -> null      //should not be possible
+            else -> context.getString(R.string.list_due_without)      //should not be possible
         }
     }
 

@@ -15,6 +15,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
@@ -32,15 +33,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -49,7 +49,7 @@ import kotlin.math.roundToInt
 @Composable
 fun ListScreenKanban(
     module: Module,
-    listLive: LiveData<List<ICal4List>>,
+    list: State<List<ICal4List>>,
     scrollOnceId: MutableLiveData<Long?>,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
     onStatusChanged: (itemid: Long, status: StatusJournal, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
@@ -58,7 +58,6 @@ fun ListScreenKanban(
 ) {
 
     val context = LocalContext.current
-    val list by listLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
     val statusColumns = if(module == Module.TODO) setOf(StatusTodo.`NEEDS-ACTION`.name, StatusTodo.`IN-PROCESS`.name, StatusTodo.COMPLETED.name) else setOf(StatusJournal.DRAFT.name, StatusJournal.FINAL.name)
 
@@ -67,7 +66,7 @@ fun ListScreenKanban(
         statusColumns.forEach { status ->
 
             val listState = rememberLazyListState()
-            val listFilteredByStatus = list.filter { it.status == status      // below we handle also empty status for todos
+            val listFilteredByStatus = list.value.filter { it.status == status      // below we handle also empty status for todos
                     || (it.status == null && it.component == Component.VTODO.name && (it.percent == null || it.percent == 0) && status == StatusTodo.`NEEDS-ACTION`.name)
                     || (it.status == null && it.component == Component.VTODO.name && it.percent in 1..99 && status == StatusTodo.`IN-PROCESS`.name)
                     || (it.status == null && it.component == Component.VTODO.name && it.percent == 100 && status == StatusTodo.COMPLETED.name)
@@ -93,14 +92,15 @@ fun ListScreenKanban(
                     .weight(1F)
             ) {
 
-                item {
+                stickyHeader {
                     Text(
                         if(module == Module.TODO)
-                            StatusTodo.getStringResource(LocalContext.current, status) ?: ""
+                            StatusTodo.getStringResource(LocalContext.current, status)
                         else
-                            StatusJournal.getStringResource(LocalContext.current, status) ?: "",
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        style = MaterialTheme.typography.titleSmall
+                            StatusJournal.getStringResource(LocalContext.current, status),
+                        modifier = Modifier.align(Alignment.CenterVertically).background(MaterialTheme.colorScheme.background).fillMaxWidth(),
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center
                     )
                 }
 
@@ -177,7 +177,7 @@ fun ListScreenKanban(
 @Preview(showBackground = true)
 @Composable
 fun ListScreenKanban_TODO() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             id = 1L
@@ -207,7 +207,7 @@ fun ListScreenKanban_TODO() {
         }
         ListScreenKanban(
             module = Module.TODO,
-            listLive = MutableLiveData(listOf(icalobject, icalobject2)),
+            list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
             scrollOnceId = MutableLiveData(null),
             onProgressChanged = { _, _, _, _ -> },
             onStatusChanged = {_, _, _, _ -> },
@@ -222,7 +222,7 @@ fun ListScreenKanban_TODO() {
 @Preview(showBackground = true)
 @Composable
 fun ListScreenKanban_JOURNAL() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             id = 1L
@@ -252,7 +252,7 @@ fun ListScreenKanban_JOURNAL() {
         }
         ListScreenKanban(
             module = Module.JOURNAL,
-            listLive = MutableLiveData(listOf(icalobject, icalobject2)),
+            list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
             scrollOnceId = MutableLiveData(null),
             onProgressChanged = { _, _, _, _ -> },
             onStatusChanged = {_, _, _, _ -> },

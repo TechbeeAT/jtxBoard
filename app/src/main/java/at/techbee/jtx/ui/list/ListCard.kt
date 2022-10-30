@@ -128,8 +128,7 @@ fun ICalObjectListCard(
                         if (iCalObject.module == Module.TODO.name) {
                             iCalObject.dtstart?.let {
                                 Text(
-                                    iCalObject.getDtstartTextInfo(LocalContext.current)
-                                        ?: "",
+                                    iCalObject.getDtstartTextInfo(LocalContext.current),
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
@@ -140,7 +139,7 @@ fun ICalObjectListCard(
                             }
                             iCalObject.due?.let {
                                 Text(
-                                    iCalObject.getDueTextInfo(LocalContext.current) ?: "",
+                                    iCalObject.getDueTextInfo(LocalContext.current),
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
