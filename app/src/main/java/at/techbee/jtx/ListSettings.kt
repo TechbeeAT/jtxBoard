@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
+import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.ui.list.ViewMode
@@ -26,6 +27,7 @@ data class ListSettings(
     var sortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var orderBy2: MutableState<OrderBy> = mutableStateOf(OrderBy.SUMMARY)
     var sortOrder2: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var groupBy: MutableState<GroupBy?> = mutableStateOf(null)
     var isExcludeDone: MutableState<Boolean> = mutableStateOf(false)
     var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
@@ -55,6 +57,7 @@ data class ListSettings(
         private const val PREFS_SORTORDER = "prefsSortOrder"
         private const val PREFS_ORDERBY2 = "prefsOrderBy2"
         private const val PREFS_SORTORDER2 = "prefsSortOrder2"
+        private const val PREFS_GROUPBY = "prefsGroupBy"
         private const val PREFS_FILTER_OVERDUE = "prefsFilterOverdue"
         private const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
@@ -92,6 +95,7 @@ data class ListSettings(
         sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
         orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
         sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+        groupBy.value = prefs.getString(PREFS_GROUPBY, null)?.let { try { GroupBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } }
 
         viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
     }
@@ -111,6 +115,7 @@ data class ListSettings(
             putString(PREFS_SORTORDER, sortOrder.value.name)
             putString(PREFS_ORDERBY2, orderBy2.value.name)
             putString(PREFS_SORTORDER2, sortOrder2.value.name)
+            groupBy.value?.name?.let { putString(PREFS_GROUPBY, it) } ?: remove(PREFS_GROUPBY)
             putBoolean(PREFS_EXCLUDE_DONE, isExcludeDone.value)
 
             putStringSet(PREFS_CATEGORIES, searchCategories.value.toSet())

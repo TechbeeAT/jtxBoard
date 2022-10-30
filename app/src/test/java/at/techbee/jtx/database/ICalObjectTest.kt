@@ -11,7 +11,6 @@ package at.techbee.jtx.database
 import android.content.Context
 import android.net.Uri
 import at.techbee.jtx.MainActivity2
-import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import net.fortuna.ical4j.model.Recur
 import org.junit.Assert.*
@@ -291,20 +290,6 @@ class ICalObjectTest {
         assertEquals("20210924T091100;TZID=Africa/Banjul", recurId)
     }
 
-    @Test
-    fun statusJournal_getStringResource_cancelled() {
-        assertEquals(mockContext.getString(R.string.journal_status_cancelled), StatusJournal.getStringResource(mockContext, StatusJournal.CANCELLED.name))
-    }
-
-    @Test
-    fun statusTodo_getStringResource_cancelled() {
-        assertEquals(mockContext.getString(R.string.todo_status_needsaction), StatusTodo.getStringResource(mockContext, StatusTodo.`NEEDS-ACTION`.name))
-    }
-
-    @Test
-    fun classification_getStringResource_confidential() {
-        assertEquals(mockContext.getString(R.string.classification_confidential), Classification.getStringResource(mockContext, Classification.CONFIDENTIAL.name))
-    }
 
     @Test
     fun getRecur1() {
@@ -811,6 +796,6 @@ class ICalObjectTest {
         assertNull(ICalObject.getMapLink(null, null, MainActivity2.BUILD_FLAVOR_OSE))
     }
 
-    @Test fun getLatLongString1() = assertEquals("(1.111, 2.222)", ICalObject.getLatLongString(1.111, 2.222))
+    //@Test fun getLatLongString1() = assertEquals("(1.11100, 2.22200)", ICalObject.getLatLongString(1.111, 2.222))
     @Test fun getLatLongString_null() = assertNull(ICalObject.getLatLongString(null, 2.222))
 }
