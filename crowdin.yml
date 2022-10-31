@@ -1,4 +1,5 @@
 files:
   - source: app/src/main/res/values/
     translation: app/src/main/res/values-%two_letters_code%
-    translate_attributes: 0
+    translatable_elements:
+      - strings.xml
