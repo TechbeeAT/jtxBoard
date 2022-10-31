@@ -14,27 +14,23 @@ import android.content.SharedPreferences
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.ui.settings.SwitchSetting
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getPackageInfoCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.days
 
 
 open class ListViewModel(application: Application, val module: Module) : AndroidViewModel(application) {
@@ -116,185 +112,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
         const val PREFS_ISFIRSTRUN = "isFirstRun"
     }
 
-    private fun constructQuery(): SimpleSQLiteQuery {
-
-        val args = arrayListOf<String>()
-
-// Beginning of query string
-        var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST "
-        if(listSettings.searchCategories.value.isNotEmpty())
-            queryString += "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID "
-//        if(listSettings.value.searchOrganizer.isNotEmpty())
-//            queryString += "LEFT JOIN $TABLE_NAME_ORGANIZER ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ICALOBJECT_ID "
-        if(listSettings.searchCollection.value.isNotEmpty() || listSettings.searchAccount.value.isNotEmpty())
-            queryString += "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
-        //     "LEFT JOIN vattendees ON icalobject._id = vattendees.icalObjectId " +
-        //     "LEFT JOIN vorganizer ON icalobject._id = vorganizer.icalObjectId " +
-        //     "LEFT JOIN vRelatedto ON icalobject._id = vRelatedto.icalObjectId "
-
-        // First query parameter Component must always be present!
-        queryString += "WHERE $COLUMN_MODULE = ? "
-        args.add(module.name)
-
-        // Query for the given text search from the action bar
-        listSettings.searchText.value?.let { text ->
-            if (text.length >= 2) {
-                queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) "
-                args.add("%" + text + "%")
-                args.add("%" + text + "%")
-            }
-        }
-
-        // Query for the passed filter criteria from VJournalFilterFragment
-        if (listSettings.searchCategories.value.isNotEmpty()) {
-            queryString += "AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN ("
-            listSettings.searchCategories.value.forEach {
-                queryString += "?,"
-                args.add(it)
-            }
-            queryString = queryString.removeSuffix(",")      // remove the last comma
-            queryString += ") "
-        }
-
-        /*
-        if (listSettings.value.searchOrganizer.size > 0) {
-            queryString += "AND $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_CALADDRESS IN ("
-            listSettings.value.searchOrganizer.forEach {
-                queryString += "?,"
-                args.add(it)
-            }
-            queryString = queryString.removeSuffix(",")      // remove the last comma
-            queryString += ") "
-        }
-         */
-
-        // Query for the passed filter criteria from FilterFragment
-        if (listSettings.searchStatusJournal.value.isNotEmpty() && (module == Module.JOURNAL || module == Module.NOTE)) {
-            queryString += "AND $COLUMN_STATUS IN ("
-            listSettings.searchStatusJournal.value.forEach {
-                queryString += "?,"
-                args.add(it.toString())
-            }
-            queryString = queryString.removeSuffix(",")      // remove the last comma
-            queryString += ") "
-        }
-
-        // Query for the passed filter criteria from FilterFragment
-        if (listSettings.searchStatusTodo.value.isNotEmpty() && module == Module.TODO) {
-            queryString += "AND $COLUMN_STATUS IN ("
-            listSettings.searchStatusTodo.value.forEach {
-                queryString += "?,"
-                args.add(it.toString())
-            }
-            queryString = queryString.removeSuffix(",")      // remove the last comma
-            queryString += ") "
-        }
-
-        if (listSettings.isExcludeDone.value)
-            queryString += "AND $COLUMN_PERCENT IS NOT 100 "
-
-        val dateQuery = mutableListOf<String>()
-        if (listSettings.isFilterStartInPast.value)
-            dateQuery.add("$COLUMN_DTSTART < ${System.currentTimeMillis()}")
-        if (listSettings.isFilterStartToday.value)
-            dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds-1}")
-        if (listSettings.isFilterStartTomorrow.value)
-            dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds-1}")
-        if (listSettings.isFilterStartFuture.value)
-            dateQuery.add("$COLUMN_DTSTART > ${System.currentTimeMillis()}")
-        if (listSettings.isFilterOverdue.value)
-            dateQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
-        if (listSettings.isFilterDueToday.value)
-            dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds-1}")
-        if (listSettings.isFilterDueTomorrow.value)
-            dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds-1}")
-        if (listSettings.isFilterDueFuture.value)
-            dateQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
-        if(listSettings.isFilterNoDatesSet.value)
-            dateQuery.add("$COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL ")
-        if(dateQuery.isNotEmpty())
-            queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
-
-        // Query for the passed filter criteria from FilterFragment
-        if (listSettings.searchClassification.value.isNotEmpty()) {
-            queryString += "AND $COLUMN_CLASSIFICATION IN ("
-            listSettings.searchClassification.value.forEach {
-                queryString += "?,"
-                args.add(it.toString())
-            }
-            queryString = queryString.removeSuffix(",")      // remove the last comma
-            queryString += ") "
-        }
-
-
-        // Query for the passed filter criteria from FilterFragment
-        if (listSettings.searchCollection.value.isNotEmpty()) {
-            queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_DISPLAYNAME IN ("
-            listSettings.searchCollection.value.forEach {
-                queryString += "?,"
-                args.add(it)
-            }
-            queryString = queryString.removeSuffix(",")      // remove the last comma
-            queryString += ") "
-        }
-
-        // Query for the passed filter criteria from FilterFragment
-        if (listSettings.searchAccount.value.isNotEmpty()) {
-            queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME IN ("
-            listSettings.searchAccount.value.forEach {
-                queryString += "?,"
-                args.add(it)
-            }
-            queryString = queryString.removeSuffix(",")      // remove the last comma
-            queryString += ") "
-        }
-
-        // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
-        //queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
-        when (module) {
-            Module.TODO -> {
-                // we exclude all Children of Tasks from the List, as they never should appear as main tasks (they will later be added as subtasks in the observer)
-                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
-
-                // if the user did NOT set the option to see all tasks that are subtasks of Notes and Journals, then we exclude them here as well
-                if (!searchSettingShowAllSubtasksInTasklist)
-                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
-
-            }
-            Module.NOTE -> {
-                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
-
-                if (!searchSettingShowAllSubnotesInNoteslist)
-                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
-
-            }
-            Module.JOURNAL -> {
-                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 "
-
-                if (!searchSettingShowAllSubjournalsinJournallist)
-                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
-            }
-        }
-
-        if(searchSettingShowOneRecurEntryInFuture) {
-            queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ISLINKEDINSTANCE = 0 " +
-                    "OR $VIEW_NAME_ICAL4LIST.$COLUMN_DTSTART <= " +
-                    "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_RECUR_ORIGINALICALOBJECTID = $VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ORIGINALICALOBJECTID AND recurList.$COLUMN_RECUR_ISLINKEDINSTANCE = 1 AND recurList.$COLUMN_DTSTART > ${System.currentTimeMillis()} )) "
-        }
-
-        queryString += "ORDER BY "
-        queryString += listSettings.orderBy.value.queryAppendix
-        listSettings.sortOrder.let { queryString += it.value.queryAppendix }
-
-        queryString += ", "
-        queryString += listSettings.orderBy2.value.queryAppendix
-        listSettings.sortOrder2.let { queryString += it.value.queryAppendix }
-
-        //Log.println(Log.INFO, "queryString", queryString)
-        //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
-
-        return SimpleSQLiteQuery(queryString, args.toArray())
-    }
 
     /**
      * updates the search by constructing a new query and by posting the
@@ -302,7 +119,35 @@ open class ListViewModel(application: Application, val module: Module) : Android
      * observer in the fragment.
      */
     fun updateSearch(saveListSettings: Boolean = false) {
-        listQuery.postValue(constructQuery())
+        val query = ICal4List.constructQuery(
+            module = module,
+            searchCategories = listSettings.searchCategories.value,
+            searchStatusTodo =  listSettings.searchStatusTodo.value,
+            searchStatusJournal = listSettings.searchStatusJournal.value,
+            searchClassification = listSettings.searchClassification.value,
+            searchCollection = listSettings.searchCollection.value,
+            searchAccount = listSettings.searchAccount.value,
+            orderBy = listSettings.orderBy.value,
+            sortOrder = listSettings.sortOrder.value,
+            orderBy2 = listSettings.orderBy2.value,
+            sortOrder2 = listSettings.sortOrder2.value,
+            isExcludeDone = listSettings.isExcludeDone.value,
+            isFilterOverdue = listSettings.isFilterOverdue.value,
+            isFilterDueToday = listSettings.isFilterDueToday.value,
+            isFilterDueTomorrow = listSettings.isFilterDueTomorrow.value,
+            isFilterDueFuture = listSettings.isFilterDueFuture.value,
+            isFilterStartInPast = listSettings.isFilterStartInPast.value,
+            isFilterStartToday = listSettings.isFilterStartToday.value,
+            isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value,
+            isFilterStartFuture = listSettings.isFilterStartFuture.value,
+            isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
+            searchText = listSettings.searchText.value,
+            searchSettingShowAllSubtasksInTasklist = searchSettingShowAllSubtasksInTasklist,
+            searchSettingShowAllSubnotesInNoteslist = searchSettingShowAllSubnotesInNoteslist,
+            searchSettingShowAllSubjournalsinJournallist = searchSettingShowAllSubjournalsinJournallist,
+            searchSettingShowOneRecurEntryInFuture = searchSettingShowOneRecurEntryInFuture
+        )
+        listQuery.postValue(query)
         if(saveListSettings)
             listSettings.save()
     }
