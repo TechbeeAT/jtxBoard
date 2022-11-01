@@ -1,6 +1,5 @@
 package at.techbee.jtx.ui.reusable.elements
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
@@ -15,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.ICalCollection
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionsSpinner(
     collections: List<ICalCollection>,
@@ -30,9 +30,8 @@ fun CollectionsSpinner(
     var expanded by remember { mutableStateOf(false) } // initial value
 
     OutlinedCard(
-        modifier = modifier.clickable {
-            expanded = !expanded
-        }
+        modifier = modifier,
+        onClick =  { expanded = !expanded }
     ) {
 
         Box(

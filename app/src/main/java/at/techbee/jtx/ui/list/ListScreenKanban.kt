@@ -30,6 +30,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +42,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -117,6 +119,7 @@ fun ListScreenKanban(
                         iCalObject,
                         modifier = Modifier
                             .animateItemPlacement()
+                            .clip(jtxCardCornerShape)
                             .combinedClickable(
                                 onClick = { goToView(iCalObject.id) },
                                 onLongClick = {

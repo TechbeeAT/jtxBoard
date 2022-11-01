@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -37,6 +38,7 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -81,7 +83,8 @@ fun ListScreenList(
                 stickyHeader {
                     Text(
                         text = groupName,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.background)
                             .padding(top = 8.dp, bottom = 8.dp),
                         style = MaterialTheme.typography.titleLarge,
@@ -131,6 +134,7 @@ fun ListScreenList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)
+                        .clip(jtxCardCornerShape)
                         .animateItemPlacement()
                         .combinedClickable(
                             onClick = { goToView(iCalObject.id) },

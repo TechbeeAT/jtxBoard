@@ -46,7 +46,7 @@ import at.techbee.jtx.ui.reusable.dialogs.Jtx20ReleaseInfoDialog
 import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
 import at.techbee.jtx.ui.reusable.screens.AboutScreen
-import at.techbee.jtx.ui.reusable.screens.BuyProScreen
+import at.techbee.jtx.ui.buypro.BuyProScreen
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder

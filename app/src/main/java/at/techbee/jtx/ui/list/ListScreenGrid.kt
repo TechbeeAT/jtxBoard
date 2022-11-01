@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +31,7 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -74,6 +76,7 @@ fun ListScreenGrid(
                 iCalObject,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clip(jtxCardCornerShape)
                     .animateItemPlacement()
                     .combinedClickable(
                         onClick = { goToView(iCalObject.id) },

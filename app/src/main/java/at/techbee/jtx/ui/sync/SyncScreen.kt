@@ -45,6 +45,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -63,6 +64,7 @@ import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
+import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import at.techbee.jtx.util.SyncUtil
 
 
@@ -280,6 +282,7 @@ fun SyncScreenContent(
                     modifier = Modifier
                         .padding(vertical = 16.dp)
                         .size(200.dp, 70.dp)
+                        .clip(jtxCardCornerShape)
                         .combinedClickable(
                             enabled = true,
                             onClickLabel = "Google Play",

@@ -23,6 +23,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +36,7 @@ import at.techbee.jtx.ListSettings
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -104,6 +106,7 @@ fun ListScreenCompact(
                     .fillMaxWidth()
                     .padding(top = 4.dp, bottom = 4.dp)
                     .animateItemPlacement()
+                    .clip(jtxCardCornerShape)
                     .combinedClickable(
                         onClick = { goToView(iCalObject.id) },
                         onLongClick = {
