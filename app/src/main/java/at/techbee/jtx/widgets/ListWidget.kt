@@ -19,6 +19,7 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.appWidgetBackground
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.background
@@ -89,7 +90,8 @@ class ListWidget : GlanceAppWidget() {
             modifier = GlanceModifier
                 .appWidgetBackground()
                 .fillMaxSize()
-                .background(surface),
+                .padding(4.dp)
+                .background(primary),
         ) {
             val context = LocalContext.current
 
@@ -156,7 +158,8 @@ class ListWidget : GlanceAppWidget() {
             LazyColumn(
                 modifier = GlanceModifier
                     //.defaultWeight()
-                    .padding(8.dp).background(primaryContainer)
+                    .padding(4.dp).background(primaryContainer)
+                    .cornerRadius(16.dp)
             ) {
 
                 items(journalsList?.toList() ?: emptyList()) { entry ->
