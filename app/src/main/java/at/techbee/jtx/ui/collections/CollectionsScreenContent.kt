@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +41,7 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.TEST_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.reusable.cards.CollectionCard
+import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -118,6 +120,7 @@ fun CollectionsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
+                            .clip(jtxCardCornerShape)
                             .animateItemPlacement()
                             .combinedClickable(
                                 onClick = { onCollectionClicked(collection) })

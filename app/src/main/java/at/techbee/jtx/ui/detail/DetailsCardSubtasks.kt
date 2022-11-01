@@ -25,6 +25,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -39,6 +40,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
+import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
 
 
@@ -84,7 +86,9 @@ fun DetailsCardSubtasks(
                             onProgressChanged = onProgressChanged,
                             onDeleteClicked = { icalObjectId ->  onSubtaskDeleted(icalObjectId) },
                             onSubtaskUpdated = { newText -> onSubtaskUpdated(subtask.id, newText) },
-                            modifier = Modifier.combinedClickable(
+                            modifier = Modifier
+                                .clip(jtxCardCornerShape)
+                                .combinedClickable(
                                 onClick = { if(!isEditMode.value) goToView(subtask.id) },
                                 onLongClick = {
                                     if (!isEditMode.value &&!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)

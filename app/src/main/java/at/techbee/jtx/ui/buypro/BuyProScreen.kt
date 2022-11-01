@@ -6,11 +6,10 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.buypro
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -93,9 +92,7 @@ fun BuyProScreen(
                                 if (it == false) {
                                     BuyProCard(
                                         priceLive = priceLive,
-                                        Modifier.clickable {
-                                            launchBillingFlow()
-                                        }
+                                        onClick = { launchBillingFlow() }
                                     )
                                 } else if(it == true) {
                                     BuyProCardPurchased(

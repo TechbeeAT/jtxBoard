@@ -341,7 +341,7 @@ fun DetailScreenContent(
                             },
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = 4.dp)
+                                .padding(4.dp)
                         )
                         IconButton(onClick = { showColorPicker = true }) {
                             Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))

@@ -21,6 +21,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -43,6 +44,7 @@ import at.techbee.jtx.ui.reusable.elements.ListStatusBar
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.reusable.elements.VerticalDateBlock
 import at.techbee.jtx.ui.theme.Typography
+import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import com.google.accompanist.flowlayout.FlowRow
 
 
@@ -402,6 +404,7 @@ fun ICalObjectListCard(
                                 sliderIncrement = progressIncrement,
                                 modifier = Modifier
                                     .padding(start = 8.dp, end = 8.dp)
+                                    .clip(jtxCardCornerShape)
                                     .combinedClickable(
                                         onClick = { goToView(subtask.id)  },
                                         onLongClick = {
@@ -423,6 +426,7 @@ fun ICalObjectListCard(
                                 player = player,
                                 modifier = Modifier
                                     .padding(start = 8.dp, end = 8.dp)
+                                    .clip(jtxCardCornerShape)
                                     .combinedClickable(
                                         onClick = { goToView(subnote.id) },
                                         onLongClick = {

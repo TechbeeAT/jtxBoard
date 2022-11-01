@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -37,6 +38,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
 import at.techbee.jtx.ui.reusable.elements.ListStatusBar
 import at.techbee.jtx.ui.theme.Typography
+import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import at.techbee.jtx.util.DateTimeUtils
 
 
@@ -240,6 +242,7 @@ fun ListCardCompact(
                         onProgressChanged = onProgressChanged,
                         modifier = Modifier
                             .padding(start = 8.dp, end = 8.dp)
+                            .clip(jtxCardCornerShape)
                             .combinedClickable(
                                 onClick = { goToView(subtask.id) },
                                 onLongClick = {

@@ -24,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -39,6 +40,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioNoteDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
+import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
 
 
@@ -93,13 +95,15 @@ fun DetailsCardSubnotes(
                             onDeleteClicked = { icalObjectId ->  onSubnoteDeleted(icalObjectId) },
                             onSubnoteUpdated = { newText -> onSubnoteUpdated(subnote.id, newText) },
                             player = player,
-                            modifier = Modifier.combinedClickable(
-                                onClick = { if(!isEditMode.value) goToView(subnote.id) },
-                                onLongClick = {
-                                    if (!isEditMode.value &&!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToEdit(subnote.id)
-                                }
-                            )
+                            modifier = Modifier
+                                .clip(jtxCardCornerShape)
+                                .combinedClickable(
+                                    onClick = { if(!isEditMode.value) goToView(subnote.id) },
+                                    onLongClick = {
+                                        if (!isEditMode.value &&!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                            goToEdit(subnote.id)
+                                    }
+                                )
                         )
                     }
                 }

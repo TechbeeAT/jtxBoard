@@ -14,13 +14,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
+import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.ui.list.OrderBy
+import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.DateTimeUtils
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.days
 
 const val VIEW_NAME_ICAL4LIST = "ical4list"
 
@@ -234,6 +238,195 @@ data class ICal4List(
                 audioAttachment = null,
                 isReadOnly = true
             )
+
+        fun constructQuery(
+            module: Module,
+            searchCategories: List<String> = emptyList(),
+            searchStatusTodo: List<StatusTodo> = emptyList(),
+            searchStatusJournal: List<StatusJournal> = emptyList(),
+            searchClassification: List<Classification> = emptyList(),
+            searchCollection: List<String> = emptyList(),
+            searchAccount: List<String> = emptyList(),
+            orderBy: OrderBy = OrderBy.CREATED,
+            sortOrder: SortOrder = SortOrder.ASC,
+            orderBy2: OrderBy = OrderBy.SUMMARY,
+            sortOrder2: SortOrder = SortOrder.ASC,
+            isExcludeDone: Boolean = false,
+            isFilterOverdue: Boolean = false,
+            isFilterDueToday: Boolean = false,
+            isFilterDueTomorrow: Boolean = false,
+            isFilterDueFuture: Boolean = false,
+            isFilterStartInPast: Boolean = false,
+            isFilterStartToday: Boolean = false,
+            isFilterStartTomorrow: Boolean = false,
+            isFilterStartFuture: Boolean = false,
+            isFilterNoDatesSet: Boolean = false,
+            searchText: String? = null,
+            searchSettingShowAllSubtasksInTasklist: Boolean = false,
+            searchSettingShowAllSubnotesInNoteslist: Boolean = false,
+            searchSettingShowAllSubjournalsinJournallist: Boolean = false,
+            searchSettingShowOneRecurEntryInFuture: Boolean = false
+        ): SimpleSQLiteQuery {
+
+            val args = arrayListOf<String>()
+
+            // Beginning of query string
+            var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST "
+            if(searchCategories.isNotEmpty())
+                queryString += "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID "
+            if(searchCollection.isNotEmpty() || searchAccount.isNotEmpty())
+                queryString += "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
+
+            // First query parameter Module must always be present!
+            queryString += "WHERE $COLUMN_MODULE = ? "
+            args.add(module.name)
+
+            // Query for the given text search from the action bar
+            searchText?.let { text ->
+                if (text.length >= 2) {
+                    queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) "
+                    args.add("%" + text + "%")
+                    args.add("%" + text + "%")
+                }
+            }
+
+            // Query for the passed filter criteria from VJournalFilterFragment
+            if (searchCategories.isNotEmpty()) {
+                queryString += "AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN ("
+                searchCategories.forEach {
+                    queryString += "?,"
+                    args.add(it)
+                }
+                queryString = queryString.removeSuffix(",")      // remove the last comma
+                queryString += ") "
+            }
+
+            // Query for the passed filter criteria from FilterFragment
+            if (searchStatusJournal.isNotEmpty() && (module == Module.JOURNAL || module == Module.NOTE)) {
+                queryString += "AND $COLUMN_STATUS IN ("
+                searchStatusJournal.forEach {
+                    queryString += "?,"
+                    args.add(it.toString())
+                }
+                queryString = queryString.removeSuffix(",")      // remove the last comma
+                queryString += ") "
+            }
+
+            // Query for the passed filter criteria from FilterFragment
+            if (searchStatusTodo.isNotEmpty() && module == Module.TODO) {
+                queryString += "AND $COLUMN_STATUS IN ("
+                searchStatusTodo.forEach {
+                    queryString += "?,"
+                    args.add(it.toString())
+                }
+                queryString = queryString.removeSuffix(",")      // remove the last comma
+                queryString += ") "
+            }
+
+            if (isExcludeDone)
+                queryString += "AND $COLUMN_PERCENT IS NOT 100 "
+
+            val dateQuery = mutableListOf<String>()
+            if (isFilterStartInPast)
+                dateQuery.add("$COLUMN_DTSTART < ${System.currentTimeMillis()}")
+            if (isFilterStartToday)
+                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds-1}")
+            if (isFilterStartTomorrow)
+                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds-1}")
+            if (isFilterStartFuture)
+                dateQuery.add("$COLUMN_DTSTART > ${System.currentTimeMillis()}")
+            if (isFilterOverdue)
+                dateQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
+            if (isFilterDueToday)
+                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds-1}")
+            if (isFilterDueTomorrow)
+                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds-1}")
+            if (isFilterDueFuture)
+                dateQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
+            if(isFilterNoDatesSet)
+                dateQuery.add("$COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL ")
+            if(dateQuery.isNotEmpty())
+                queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
+
+            // Query for the passed filter criteria from FilterFragment
+            if (searchClassification.isNotEmpty()) {
+                queryString += "AND $COLUMN_CLASSIFICATION IN ("
+                searchClassification.forEach {
+                    queryString += "?,"
+                    args.add(it.toString())
+                }
+                queryString = queryString.removeSuffix(",")      // remove the last comma
+                queryString += ") "
+            }
+
+
+            // Query for the passed filter criteria from FilterFragment
+            if (searchCollection.isNotEmpty()) {
+                queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_DISPLAYNAME IN ("
+                searchCollection.forEach {
+                    queryString += "?,"
+                    args.add(it)
+                }
+                queryString = queryString.removeSuffix(",")      // remove the last comma
+                queryString += ") "
+            }
+
+            // Query for the passed filter criteria from FilterFragment
+            if (searchAccount.isNotEmpty()) {
+                queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME IN ("
+                searchAccount.forEach {
+                    queryString += "?,"
+                    args.add(it)
+                }
+                queryString = queryString.removeSuffix(",")      // remove the last comma
+                queryString += ") "
+            }
+
+            // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
+            //queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
+            when (module) {
+                Module.TODO -> {
+                    // we exclude all Children of Tasks from the List, as they never should appear as main tasks (they will later be added as subtasks in the observer)
+                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
+
+                    // if the user did NOT set the option to see all tasks that are subtasks of Notes and Journals, then we exclude them here as well
+                    if (!searchSettingShowAllSubtasksInTasklist)
+                        queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
+
+                }
+                Module.NOTE -> {
+                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
+
+                    if (!searchSettingShowAllSubnotesInNoteslist)
+                        queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
+
+                }
+                Module.JOURNAL -> {
+                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 "
+
+                    if (!searchSettingShowAllSubjournalsinJournallist)
+                        queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
+                }
+            }
+
+            if(searchSettingShowOneRecurEntryInFuture) {
+                queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ISLINKEDINSTANCE = 0 " +
+                        "OR $VIEW_NAME_ICAL4LIST.$COLUMN_DTSTART <= " +
+                        "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_RECUR_ORIGINALICALOBJECTID = $VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ORIGINALICALOBJECTID AND recurList.$COLUMN_RECUR_ISLINKEDINSTANCE = 1 AND recurList.$COLUMN_DTSTART > ${System.currentTimeMillis()} )) "
+            }
+
+            queryString += "ORDER BY "
+            queryString += orderBy.queryAppendix
+            sortOrder.let { queryString += it.queryAppendix }
+
+            queryString += ", "
+            queryString += orderBy2.queryAppendix
+            sortOrder2.let { queryString += it.queryAppendix }
+
+            //Log.println(Log.INFO, "queryString", queryString)
+            //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
+            return SimpleSQLiteQuery(queryString, args.toArray())
+        }
     }
 
     fun getDtstartTextInfo(context: Context): String {

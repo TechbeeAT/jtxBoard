@@ -28,16 +28,18 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuyProCard(
     priceLive: LiveData<String>,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val price by priceLive.observeAsState("")
 
     ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        onClick = onClick,
         modifier = modifier
     ) {
 
@@ -58,7 +60,6 @@ fun BuyProCard(
             )
 
             Column {
-
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -93,7 +94,10 @@ fun BuyProCard(
 @Composable
 fun BuyProCard_Preview() {
     MaterialTheme {
-        BuyProCard(MutableLiveData("€ 3,29"))
+        BuyProCard(
+            priceLive = MutableLiveData("€ 3,29"),
+            onClick = { },
+            )
     }
 }
 
