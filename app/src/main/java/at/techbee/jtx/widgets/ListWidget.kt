@@ -19,7 +19,6 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.appWidgetBackground
-import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.background
@@ -158,15 +157,22 @@ class ListWidget : GlanceAppWidget() {
             LazyColumn(
                 modifier = GlanceModifier
                     //.defaultWeight()
-                    .padding(4.dp).background(primaryContainer)
-                    .cornerRadius(16.dp)
+                    .padding(4.dp),
+                    //.background(primaryContainer)
+                    //.cornerRadius(16.dp)
             ) {
 
                 items(journalsList?.toList() ?: emptyList()) { entry ->
-                    JournalEntry(
-                        obj = entry,
-                        textColor = onPrimaryContainer
-                    )
+                    Column(modifier = GlanceModifier.fillMaxWidth()) {
+                        JournalEntry(
+                            obj = entry,
+                            textColor = onPrimaryContainer,
+                            containerColor = primaryContainer
+                        )
+                        Box(
+                            modifier = GlanceModifier.fillMaxWidth().height(4.dp)
+                        ) { }   // Spacer as .spacedBy is not available in Glance
+                    }
                 }
             }
         }

@@ -15,6 +15,8 @@ import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.appwidget.cornerRadius
+import androidx.glance.background
 import androidx.glance.layout.Column
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
@@ -27,7 +29,8 @@ import at.techbee.jtx.util.DateTimeUtils
 @Composable
 fun JournalEntry(
     obj: ICal4List,
-    textColor: ColorProvider
+    textColor: ColorProvider,
+    containerColor: ColorProvider
 ) {
 
     val context = LocalContext.current
@@ -42,7 +45,12 @@ fun JournalEntry(
     }
 
     Column(
-        modifier = GlanceModifier.fillMaxWidth().padding(4.dp).clickable(onClick = actionStartActivity(intent))
+        modifier = GlanceModifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .background(containerColor)
+            .cornerRadius(16.dp)
+            .clickable(onClick = actionStartActivity(intent))
     ) {
         Text(
             text = DateTimeUtils.convertLongToFullDateTimeString(obj.dtstart, obj.dtstartTimezone),
@@ -53,6 +61,6 @@ fun JournalEntry(
             style = textStyleSummary
         ) }
         obj.description?.let { Text(it, maxLines = 2, style = textStyleDescription) }
-        CustomWidgetDivider(color = textColor, modifier = GlanceModifier.padding(top = 8.dp))
+        //CustomWidgetDivider(color = textColor, modifier = GlanceModifier.padding(top = 8.dp))
     }
 }
