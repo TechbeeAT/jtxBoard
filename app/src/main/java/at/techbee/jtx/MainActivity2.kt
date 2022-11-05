@@ -189,7 +189,7 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
 
     override fun onPause() {
         super.onPause()
-        ListWidgetReceiver.updateListWidgets(this)
+        ListWidgetReceiver.setOneTimeWork(this)
     }
 
     private fun createNotificationChannel() {

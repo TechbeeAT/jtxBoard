@@ -27,7 +27,6 @@ import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.widgets.ListWidgetReceiver
-import at.techbee.jtx.widgets.ListWidget
 import at.techbee.jtx.widgets.ListWidgetConfig
 import at.techbee.jtx.widgets.ListWidgetConfigContent
 import kotlinx.coroutines.launch
@@ -81,10 +80,8 @@ class ListWidgetConfigActivity : ComponentActivity() {
                                                     Json.encodeToString(listWidgetConfig)
                                             }
                                         }
-                                        //TODO: update seems like it doesn't work, using the Broadcast instead
-                                        ListWidget().update(context, glanceId)
-                                        ListWidgetReceiver.updateListWidgets(context)
-                                        Log.d(TAG, "Widget updated")
+                                        ListWidgetReceiver.setOneTimeWork(context)
+                                        Log.d(TAG, "Widget update requested")
                                     }
 
                                     val resultValue = Intent().putExtra(
