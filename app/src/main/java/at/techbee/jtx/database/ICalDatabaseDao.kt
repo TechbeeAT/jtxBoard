@@ -545,8 +545,8 @@ DELETEs by Object
     fun getIcal4List(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
 
     @Transaction
-    @Query("SELECT * from $VIEW_NAME_ICAL4LIST WHERE $COLUMN_MODULE = :module")
-    fun getIcal4ListByModuleSync(module: Module): List<ICal4List>
+    @RawQuery(observedEntities = [ICal4List::class])
+    fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4List>
 
 
     @Transaction

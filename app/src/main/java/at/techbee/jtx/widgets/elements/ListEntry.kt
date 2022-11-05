@@ -27,7 +27,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.DateTimeUtils
 
 @Composable
-fun JournalEntry(
+fun ListEntry(
     obj: ICal4List,
     textColor: ColorProvider,
     containerColor: ColorProvider
@@ -52,10 +52,12 @@ fun JournalEntry(
             .cornerRadius(16.dp)
             .clickable(onClick = actionStartActivity(intent))
     ) {
-        Text(
-            text = DateTimeUtils.convertLongToFullDateTimeString(obj.dtstart, obj.dtstartTimezone),
-            style = textStyleDate
-        )
+        obj.dtstart?.let {
+            Text(
+                text = DateTimeUtils.convertLongToFullDateTimeString(it, obj.dtstartTimezone),
+                style = textStyleDate
+            )
+        }
         obj.summary?.let { Text(
             text = it,
             style = textStyleSummary

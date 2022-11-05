@@ -12,35 +12,39 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.state.getAppWidgetState
+import androidx.glance.appwidget.state.updateAppWidgetState
+import androidx.glance.state.PreferencesGlanceStateDefinition
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.widgets.ListWidgetReceiver
 import at.techbee.jtx.widgets.ListWidget
+import at.techbee.jtx.widgets.ListWidgetConfig
+import at.techbee.jtx.widgets.WidgetConfigContent
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+
+const val TAG = "WidgetConfigAct"
 
 class WidgetConfigActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val appWidgetId = intent?.extras?.getInt(
-            AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager.INVALID_APPWIDGET_ID
-        ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+        val appWidgetId = intent?.extras?.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+        Log.d(TAG, "appWidgetId $appWidgetId")
+        val glanceId = GlanceAppWidgetManager(this).getGlanceIdBy(appWidgetId)
+        //Log.d(TAG, "glanceId $glanceId")
 
 
         setContent {
@@ -51,81 +55,53 @@ class WidgetConfigActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-                    WidgetConfigContent(
-                        onFinish = {
-                            val resultValue = Intent().putExtra(
-                                AppWidgetManager.EXTRA_APPWIDGET_ID,
-                                appWidgetId
-                            )
-                            setResult(Activity.RESULT_OK, resultValue)
-                            finish()
-                        },
-                        onCancel = {
-                            setResult(Activity.RESULT_CANCELED)
-                        }
-                    )
+                    val scope = rememberCoroutineScope()
+                    val context = LocalContext.current
+
+                    var currentFilterConfig by remember { mutableStateOf<ListWidgetConfig?>(null)}
+
+                    LaunchedEffect(true) {
+                        currentFilterConfig = getAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId)[ListWidgetReceiver.filterConfig]?.let { filterConfig -> Json.decodeFromString<ListWidgetConfig>(filterConfig) } ?: ListWidgetConfig()
+                    }
+
+                    currentFilterConfig?.let {
+                        WidgetConfigContent(
+                            initialConfig = it,
+                            onFinish = { listWidgetConfig ->
+
+                                scope.launch {
+                                    glanceId.let { glanceId ->
+                                        updateAppWidgetState(
+                                            context,
+                                            PreferencesGlanceStateDefinition,
+                                            glanceId
+                                        ) { pref ->
+                                            pref.toMutablePreferences().apply {
+                                                this[ListWidgetReceiver.filterConfig] =
+                                                    Json.encodeToString(listWidgetConfig)
+                                            }
+                                        }
+                                        //TODO: update seems like it doesn't work, using the Broadcast instead
+                                        ListWidget().update(context, glanceId)
+                                        ListWidgetReceiver.updateListWidgets(context)
+                                        Log.d(TAG, "Widget updated")
+                                    }
+
+                                    val resultValue = Intent().putExtra(
+                                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+                                        appWidgetId
+                                    )
+                                    setResult(Activity.RESULT_OK, resultValue)
+                                    finish()
+                                }
+                            },
+                            onCancel = {
+                                setResult(Activity.RESULT_CANCELED)
+                            }
+                        )
+                    }
                 }
             }
         }
-
-    }
-}
-
-@Composable
-fun WidgetConfigContent(
-    onFinish: () -> Unit,
-    onCancel: () -> Unit
-) {
-
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Button(
-            content = { Text(stringResource(id = R.string.ok)) },
-            onClick = {
-                scope.launch {
-                    GlanceAppWidgetManager(context).getGlanceIds(ListWidget::class.java)
-                        .forEach { glanceId ->
-
-                            glanceId.let {
-                                /*
-                        updateAppWidgetState(context, PreferencesGlanceStateDefinition, it) { pref ->
-                            pref.toMutablePreferences().apply {
-                                this[JournalsWidgetReceiver.journalsList] = entries.map { entry -> Json.encodeToString(entry) }.toSet()
-                            }
-                        }
-                         */
-                                ListWidget().update(context, it)
-                                //Log.d(TAG, "Widget updated")
-
-                            }
-                        }
-                    onFinish()
-                }
-            }
-        )
-
-        Button(
-            content = { Text(stringResource(id = R.string.cancel)) },
-            onClick = { onCancel()
-            }
-        )
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun WidgetConfigContent_Preview() {
-    MaterialTheme {
-        WidgetConfigContent(
-            onFinish = { },
-            onCancel = { }
-        )
     }
 }

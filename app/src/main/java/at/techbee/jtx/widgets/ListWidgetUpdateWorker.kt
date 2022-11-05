@@ -21,7 +21,7 @@ class ListWidgetUpdateWorker(
     workerParameters
 ) {
     override suspend fun doWork(): Result {
-        JournalsWidgetReceiver.updateJournalsWidgets(context)
+        ListWidgetReceiver.updateListWidgets(context)
         return Result.success()
     }
 }

@@ -165,7 +165,7 @@ fun ListBottomAppBar_Preview_Journal() {
         val application = LocalContext.current.applicationContext
         val prefs = application.getSharedPreferences(ListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
 
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
         listSettings.searchText.value = "whatever"
 
         ListBottomAppBar(
@@ -190,7 +190,7 @@ fun ListBottomAppBar_Preview_Note() {
         val application = LocalContext.current.applicationContext
         val prefs = application.getSharedPreferences(ListViewModel.PREFS_LIST_NOTES, Context.MODE_PRIVATE)
 
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
         listSettings.searchText.value = "whatever"
 
         ListBottomAppBar(
@@ -215,7 +215,7 @@ fun ListBottomAppBar_Preview_Todo() {
         val application = LocalContext.current.applicationContext
         val prefs = application.getSharedPreferences(ListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
 
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
         listSettings.searchText.value = "whatever"
 
         ListBottomAppBar(
@@ -241,7 +241,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
         val application = LocalContext.current.applicationContext
         val prefs = application.getSharedPreferences(ListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
 
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
         listSettings.searchCategories.value = listOf("Whatever")
 
         ListBottomAppBar(

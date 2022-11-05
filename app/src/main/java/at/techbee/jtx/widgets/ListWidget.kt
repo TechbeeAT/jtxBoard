@@ -8,21 +8,20 @@
 
 package at.techbee.jtx.widgets
 
+import android.appwidget.AppWidgetManager
 import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
-import androidx.glance.GlanceModifier
-import androidx.glance.LocalContext
+import androidx.glance.*
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
-import androidx.glance.background
-import androidx.glance.currentState
 import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
@@ -31,8 +30,9 @@ import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.WidgetConfigActivity
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.widgets.elements.JournalEntry
+import at.techbee.jtx.widgets.elements.ListEntry
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -85,6 +85,18 @@ class ListWidget : GlanceAppWidget() {
     @Composable
     override fun Content() {
 
+        val context = LocalContext.current
+        val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)
+        val prefs = currentState<Preferences>()
+        val listWidgetConfig = prefs[ListWidgetReceiver.filterConfig]?.let { filterConfig ->
+            Json.decodeFromString<ListWidgetConfig>(filterConfig)
+        }
+        val list = prefs[ListWidgetReceiver.list]?.map {
+            Json.decodeFromString<ICal4List>(it)
+        } ?: emptyList()
+
+
+
         Column(
             modifier = GlanceModifier
                 .appWidgetBackground()
@@ -92,22 +104,19 @@ class ListWidget : GlanceAppWidget() {
                 .padding(4.dp)
                 .background(primary),
         ) {
-            val context = LocalContext.current
 
-            val prefs = currentState<Preferences>()
-            val journalsList = prefs[JournalsWidgetReceiver.journalsList]?.map {
-                Json.decodeFromString<ICal4List>(it)
-            }
-
-            val addJournalIntent = Intent(context, MainActivity2::class.java).apply {
+            val addNewIntent = Intent(context, MainActivity2::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                action = MainActivity2.INTENT_ACTION_ADD_JOURNAL
+                action = when (listWidgetConfig?.module) {
+                    Module.JOURNAL -> MainActivity2.INTENT_ACTION_ADD_JOURNAL
+                    Module.NOTE -> MainActivity2.INTENT_ACTION_ADD_NOTE
+                    Module.TODO -> MainActivity2.INTENT_ACTION_ADD_TODO
+                    else -> MainActivity2.INTENT_ACTION_ADD_NOTE
+                }
             }
 
             val configIntent = Intent(context, WidgetConfigActivity::class.java)
-            // TODO
-            //configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);    //set widget id
-
+            configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
             Row(
                 modifier = GlanceModifier
@@ -117,7 +126,12 @@ class ListWidget : GlanceAppWidget() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = context.getString(R.string.widget_list_journals_title),
+                    text = when (listWidgetConfig?.module) {
+                        Module.JOURNAL -> context.getString(R.string.list_tabitem_journals)
+                        Module.NOTE -> context.getString(R.string.list_tabitem_notes)
+                        Module.TODO -> context.getString(R.string.list_tabitem_todos)
+                        else -> context.getString(R.string.list_tabitem_notes)
+                    },
                     style = TextStyle(
                         color = onPrimary,
                         fontSize = 16.sp,
@@ -127,13 +141,14 @@ class ListWidget : GlanceAppWidget() {
                         .defaultWeight()
                         .padding(8.dp),
                 )
+
                 val buttonSize = 36.dp
                 //Log.v("Widget", "Size: ${buttonSize.px} px")
 
                 TintImage(
                     resource = R.drawable.ic_settings,
                     tintColor = onPrimary,
-                    contentDescription = context.getString(R.string.widget_list_settings),
+                    contentDescription = context.getString(R.string.widget_list_configuration),
                     imageHeight = buttonSize.px,
                     modifier = GlanceModifier
                         .clickable(actionStartActivity(configIntent))
@@ -147,7 +162,7 @@ class ListWidget : GlanceAppWidget() {
                     contentDescription = context.getString(R.string.widget_list_journals_new),
                     imageHeight = buttonSize.px,
                     modifier = GlanceModifier
-                        .clickable(actionStartActivity(addJournalIntent))
+                        .clickable(actionStartActivity(addNewIntent))
                         .padding(8.dp)
                         .size(buttonSize),
                 )
@@ -162,9 +177,13 @@ class ListWidget : GlanceAppWidget() {
                     //.cornerRadius(16.dp)
             ) {
 
-                items(journalsList?.toList() ?: emptyList()) { entry ->
-                    Column(modifier = GlanceModifier.fillMaxWidth()) {
-                        JournalEntry(
+                items(list) { entry ->
+
+                    Column(
+                        modifier = GlanceModifier
+                            .fillMaxWidth()
+                    ) {
+                        ListEntry(
                             obj = entry,
                             textColor = onPrimaryContainer,
                             containerColor = primaryContainer
@@ -172,6 +191,7 @@ class ListWidget : GlanceAppWidget() {
                         Box(
                             modifier = GlanceModifier.fillMaxWidth().height(4.dp)
                         ) { }   // Spacer as .spacedBy is not available in Glance
+
                     }
                 }
             }

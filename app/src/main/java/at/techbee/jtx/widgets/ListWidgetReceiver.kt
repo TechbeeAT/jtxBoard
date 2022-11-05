@@ -13,6 +13,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
@@ -22,9 +23,13 @@ import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.work.*
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.OrderBy
+import at.techbee.jtx.ui.list.SortOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.util.concurrent.TimeUnit
@@ -32,7 +37,7 @@ import java.util.concurrent.TimeUnit
 private const val TAG = "JournalsWidgetRec"
 
 
-class JournalsWidgetReceiver : GlanceAppWidgetReceiver() {
+class ListWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = ListWidget()
 
     private val coroutineScope = MainScope()
@@ -58,17 +63,43 @@ class JournalsWidgetReceiver : GlanceAppWidgetReceiver() {
     private fun observeData(context: Context) {
         coroutineScope.launch(Dispatchers.IO) {
 
-            Log.v(TAG, "Loading journals...")
-            val entries = ICalDatabase.getInstance(context)
-                .iCalDatabaseDao
-                .getIcal4ListByModuleSync(Module.JOURNAL)
-
             GlanceAppWidgetManager(context).getGlanceIds(ListWidget::class.java).forEach { glanceId ->
 
                 glanceId.let {
                     updateAppWidgetState(context, PreferencesGlanceStateDefinition, it) { pref ->
+
+                        val listWidgetConfig = pref[filterConfig]?.let { filterConfig -> Json.decodeFromString<ListWidgetConfig>(filterConfig) }
+                        Log.d(TAG, "filterConfig: $listWidgetConfig")
+                        Log.v(TAG, "Loading data ...")
+                        val entries = ICalDatabase.getInstance(context)
+                            .iCalDatabaseDao
+                            .getIcal4ListSync(ICal4List.constructQuery(
+                                module = listWidgetConfig?.module ?: Module.TODO,
+                                searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
+                                searchStatusTodo = listWidgetConfig?.searchStatusTodo ?: emptyList(),
+                                searchStatusJournal = listWidgetConfig?.searchStatusJournal ?: emptyList(),
+                                searchClassification = listWidgetConfig?.searchClassification ?: emptyList(),
+                                searchCollection = listWidgetConfig?.searchCollection ?: emptyList(),
+                                searchAccount = listWidgetConfig?.searchAccount ?: emptyList(),
+                                orderBy = listWidgetConfig?.orderBy ?: OrderBy.CREATED,
+                                sortOrder = listWidgetConfig?.sortOrder ?: SortOrder.ASC,
+                                orderBy2 = listWidgetConfig?.orderBy2 ?: OrderBy.SUMMARY,
+                                sortOrder2 = listWidgetConfig?.sortOrder2 ?: SortOrder.ASC,
+                                isExcludeDone = listWidgetConfig?.isExcludeDone ?: false,
+                                isFilterOverdue = listWidgetConfig?.isFilterOverdue ?: false,
+                                isFilterDueToday = listWidgetConfig?.isFilterDueToday ?: false,
+                                isFilterDueTomorrow = listWidgetConfig?.isFilterDueTomorrow ?: false,
+                                isFilterDueFuture = listWidgetConfig?.isFilterDueFuture ?: false,
+                                isFilterStartInPast = listWidgetConfig?.isFilterStartInPast ?: false,
+                                isFilterStartToday = listWidgetConfig?.isFilterStartToday?: false,
+                                isFilterStartTomorrow = listWidgetConfig?.isFilterStartTomorrow ?: false,
+                                isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
+                                isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false
+                            ))
+
                         pref.toMutablePreferences().apply {
-                            this[journalsList] = entries.map { entry -> Json.encodeToString(entry) }.toSet()
+                            this[list] = entries.map { entry -> Json.encodeToString(entry) }.toSet()
+                            //listWidgetConfig?.let {this[filterConfig] = Json.encodeToString(it) }
                         }
                     }
                     glanceAppWidget.update(context, it)
@@ -83,15 +114,16 @@ class JournalsWidgetReceiver : GlanceAppWidgetReceiver() {
         val work: PeriodicWorkRequest = PeriodicWorkRequestBuilder<ListWidgetUpdateWorker>(5, TimeUnit.MINUTES).build()
         WorkManager
             .getInstance(context)
-            .enqueueUniquePeriodicWork("journalWidgetWorker", ExistingPeriodicWorkPolicy.KEEP, work)
+            .enqueueUniquePeriodicWork("listWidgetWorker", ExistingPeriodicWorkPolicy.KEEP, work)
         Log.d(TAG, "Work enqueued")
     }
 
     companion object {
-        val journalsList = stringSetPreferencesKey("journalsList")
+        val list = stringSetPreferencesKey("list")
+        val filterConfig = stringPreferencesKey("filter_config")
 
-        fun updateJournalsWidgets(context: Context) {
-            val widgetProvider = JournalsWidgetReceiver::class.java
+        fun updateListWidgets(context: Context) {
+            val widgetProvider = ListWidgetReceiver::class.java
             val comp = ComponentName(context, widgetProvider)
             val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(comp)
             val intent = Intent(context, widgetProvider).apply {

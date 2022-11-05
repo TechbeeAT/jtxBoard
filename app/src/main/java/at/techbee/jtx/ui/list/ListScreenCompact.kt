@@ -140,7 +140,7 @@ fun ListScreenCompact_TODO() {
         val application = LocalContext.current.applicationContext
         val prefs = application.getSharedPreferences(ListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
 
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
 
         val icalobject = ICal4List.getSample().apply {
             id = 1L
@@ -190,7 +190,7 @@ fun ListScreenCompact_JOURNAL() {
         val application = LocalContext.current.applicationContext
         val prefs = application.getSharedPreferences(ListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
 
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
 
 
         val icalobject = ICal4List.getSample().apply {

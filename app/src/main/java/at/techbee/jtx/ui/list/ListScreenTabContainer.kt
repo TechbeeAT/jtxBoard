@@ -236,7 +236,7 @@ fun ListScreenTabContainer(
                                         Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
                                     } else {
                                         getActiveViewModel().listSettings.viewMode.value = viewMode
-                                        getActiveViewModel().listSettings.save()
+                                        getActiveViewModel().listSettings.saveToPrefs()
                                     }
                                 })
                         }

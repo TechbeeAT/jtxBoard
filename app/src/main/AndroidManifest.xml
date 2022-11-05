@@ -150,7 +150,7 @@
 
         <receiver android:name=".NotificationPublisher" />
         <receiver
-            android:name=".widgets.JournalsWidgetReceiver"
+            android:name=".widgets.ListWidgetReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

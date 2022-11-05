@@ -135,7 +135,7 @@ fun ListOptionsSortOrder_Preview_TODO() {
             ListViewModel.PREFS_LIST_JOURNALS,
             Context.MODE_PRIVATE
         )
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
 
         ListOptionsSortOrder(
             module = Module.TODO,
@@ -157,7 +157,7 @@ fun ListOptionsSortOrder_Preview_JOURNAL() {
             ListViewModel.PREFS_LIST_JOURNALS,
             Context.MODE_PRIVATE
         )
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
 
         ListOptionsSortOrder(
             module = Module.JOURNAL,
