@@ -11,6 +11,7 @@ package at.techbee.jtx.widgets.elements
 import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
@@ -34,9 +35,9 @@ fun ListEntry(
 ) {
 
     val context = LocalContext.current
-    val textStyleDate = TextStyle(fontStyle = FontStyle.Italic, color = textColor)
-    val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, color = textColor)
-    val textStyleDescription = TextStyle(color = textColor)
+    val textStyleDate = TextStyle(fontStyle = FontStyle.Italic, fontSize = 12.sp, color = textColor)
+    val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
+    val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp)
 
     val intent = Intent(context, MainActivity2::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
