@@ -29,7 +29,7 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
-import at.techbee.jtx.WidgetConfigActivity
+import at.techbee.jtx.ListWidgetConfigActivity
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.widgets.elements.ListEntry
@@ -115,7 +115,7 @@ class ListWidget : GlanceAppWidget() {
                 }
             }
 
-            val configIntent = Intent(context, WidgetConfigActivity::class.java)
+            val configIntent = Intent(context, ListWidgetConfigActivity::class.java)
             configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
             Row(

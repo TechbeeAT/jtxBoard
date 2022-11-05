@@ -15,6 +15,6 @@
     android:targetCellWidth="4"
     android:targetCellHeight="2"
     android:widgetCategory="home_screen"
-    android:configure="at.techbee.jtx.WidgetConfigActivity"
+    android:configure="at.techbee.jtx.ListWidgetConfigActivity"
     android:widgetFeatures="reconfigurable"
     />

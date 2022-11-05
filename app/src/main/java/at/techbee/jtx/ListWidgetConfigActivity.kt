@@ -29,7 +29,7 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.widgets.ListWidgetReceiver
 import at.techbee.jtx.widgets.ListWidget
 import at.techbee.jtx.widgets.ListWidgetConfig
-import at.techbee.jtx.widgets.WidgetConfigContent
+import at.techbee.jtx.widgets.ListWidgetConfigContent
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -37,7 +37,7 @@ import kotlinx.serialization.json.Json
 
 const val TAG = "WidgetConfigAct"
 
-class WidgetConfigActivity : ComponentActivity() {
+class ListWidgetConfigActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,7 +65,7 @@ class WidgetConfigActivity : ComponentActivity() {
                     }
 
                     currentFilterConfig?.let {
-                        WidgetConfigContent(
+                        ListWidgetConfigContent(
                             initialConfig = it,
                             onFinish = { listWidgetConfig ->
 

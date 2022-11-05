@@ -32,7 +32,7 @@ import com.google.accompanist.flowlayout.FlowRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WidgetConfigContent(
+fun ListWidgetConfigContent(
     initialConfig: ListWidgetConfig,
     onFinish: (ListWidgetConfig) -> Unit,
     onCancel: () -> Unit
@@ -163,7 +163,7 @@ fun WidgetConfigContent(
 @Composable
 fun WidgetConfigContent_Preview() {
     MaterialTheme {
-        WidgetConfigContent(
+        ListWidgetConfigContent(
             initialConfig = ListWidgetConfig(),
             onFinish = { },
             onCancel = { }

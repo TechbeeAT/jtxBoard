@@ -140,7 +140,7 @@
         </activity>
 
         <activity
-            android:name=".WidgetConfigActivity"
+            android:name=".ListWidgetConfigActivity"
             android:exported="false" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
