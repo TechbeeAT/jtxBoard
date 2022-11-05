@@ -144,8 +144,8 @@ class ListWidget : GlanceAppWidget() {
                         ) {
                             ListEntry(
                                 obj = entry,
-                                textColor = GlanceTheme.colors.onSecondaryContainer,
-                                containerColor = GlanceTheme.colors.secondaryContainer
+                                textColor = GlanceTheme.colors.onSurface,
+                                containerColor = GlanceTheme.colors.surface
                             )
                             Box(
                                 modifier = GlanceModifier.fillMaxWidth().height(4.dp)
