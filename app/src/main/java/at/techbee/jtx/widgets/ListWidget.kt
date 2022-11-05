@@ -81,6 +81,21 @@ class ListWidget : GlanceAppWidget() {
             night = WidgetTheme.darkColors.onPrimaryContainer.getColor(LocalContext.current),
         )
 
+    private val secondaryContainer: ColorProvider
+        @Composable
+        get() = androidx.glance.appwidget.unit.ColorProvider(
+            day = WidgetTheme.lightColors.secondaryContainer.getColor(LocalContext.current),
+            night = WidgetTheme.darkColors.secondaryContainer.getColor(LocalContext.current),
+        )
+
+    private val onSecondaryContainer: ColorProvider
+        @Composable
+        get() = androidx.glance.appwidget.unit.ColorProvider(
+            day = WidgetTheme.lightColors.onSecondaryContainer.getColor(LocalContext.current),
+            night = WidgetTheme.darkColors.onSecondaryContainer.getColor(LocalContext.current),
+        )
+
+
 
     @Composable
     override fun Content() {
@@ -102,7 +117,7 @@ class ListWidget : GlanceAppWidget() {
                 .appWidgetBackground()
                 .fillMaxSize()
                 .padding(4.dp)
-                .background(primary),
+                .background(primaryContainer),
         ) {
 
             val addNewIntent = Intent(context, MainActivity2::class.java).apply {
@@ -121,7 +136,7 @@ class ListWidget : GlanceAppWidget() {
             Row(
                 modifier = GlanceModifier
                     .fillMaxWidth()
-                    .background(primary),
+                    .background(primaryContainer),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -133,7 +148,7 @@ class ListWidget : GlanceAppWidget() {
                         else -> context.getString(R.string.list_tabitem_notes)
                     },
                     style = TextStyle(
-                        color = onPrimary,
+                        color = onPrimaryContainer,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     ),
@@ -147,7 +162,7 @@ class ListWidget : GlanceAppWidget() {
 
                 TintImage(
                     resource = R.drawable.ic_settings,
-                    tintColor = onPrimary,
+                    tintColor = onPrimaryContainer,
                     contentDescription = context.getString(R.string.widget_list_configuration),
                     imageHeight = buttonSize.px,
                     modifier = GlanceModifier
@@ -158,7 +173,7 @@ class ListWidget : GlanceAppWidget() {
 
                 TintImage(
                     resource = R.drawable.ic_edit,
-                    tintColor = onPrimary,
+                    tintColor = onPrimaryContainer,
                     contentDescription = context.getString(R.string.widget_list_journals_new),
                     imageHeight = buttonSize.px,
                     modifier = GlanceModifier
@@ -185,8 +200,8 @@ class ListWidget : GlanceAppWidget() {
                     ) {
                         ListEntry(
                             obj = entry,
-                            textColor = onPrimaryContainer,
-                            containerColor = primaryContainer
+                            textColor = onSecondaryContainer,
+                            containerColor = secondaryContainer
                         )
                         Box(
                             modifier = GlanceModifier.fillMaxWidth().height(4.dp)
