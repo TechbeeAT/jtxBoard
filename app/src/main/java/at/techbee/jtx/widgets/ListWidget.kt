@@ -53,6 +53,10 @@ class ListWidget : GlanceAppWidget() {
             Json.decodeFromString<ICal4List>(it)
         } ?: emptyList()
 
+        val configIntent = Intent(context, ListWidgetConfigActivity::class.java)
+        configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+        val imageSize = 36.dp
+
 
         GlanceTheme {
 
@@ -74,9 +78,6 @@ class ListWidget : GlanceAppWidget() {
                     }
                 }
 
-                val configIntent = Intent(context, ListWidgetConfigActivity::class.java)
-                configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-
 
                 Row(
                     modifier = GlanceModifier
@@ -85,6 +86,17 @@ class ListWidget : GlanceAppWidget() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    TintImage(
+                        resource = R.drawable.ic_jtx,
+                        tintColor = GlanceTheme.colors.onPrimaryContainer,
+                        contentDescription = context.getString(R.string.widget_list_configuration),
+                        imageHeight = imageSize.px,
+                        modifier = GlanceModifier
+                            .clickable(actionStartActivity(configIntent))
+                            .padding(8.dp)
+                            .size(imageSize),
+                    )
+
                     Text(
                         text = when (listWidgetConfig?.module) {
                             Module.JOURNAL -> context.getString(R.string.list_tabitem_journals)
@@ -99,32 +111,28 @@ class ListWidget : GlanceAppWidget() {
                         ),
                         modifier = GlanceModifier
                             .defaultWeight()
-                            .padding(8.dp),
                     )
-
-                    val buttonSize = 36.dp
-                    //Log.v("Widget", "Size: ${buttonSize.px} px")
 
                     TintImage(
                         resource = R.drawable.ic_settings,
                         tintColor = GlanceTheme.colors.onPrimaryContainer,
                         contentDescription = context.getString(R.string.widget_list_configuration),
-                        imageHeight = buttonSize.px,
+                        imageHeight = imageSize.px,
                         modifier = GlanceModifier
                             .clickable(actionStartActivity(configIntent))
                             .padding(8.dp)
-                            .size(buttonSize),
+                            .size(imageSize),
                     )
 
                     TintImage(
                         resource = R.drawable.ic_edit,
                         tintColor = GlanceTheme.colors.onPrimaryContainer,
                         contentDescription = context.getString(R.string.add),
-                        imageHeight = buttonSize.px,
+                        imageHeight = imageSize.px,
                         modifier = GlanceModifier
                             .clickable(actionStartActivity(addNewIntent))
                             .padding(8.dp)
-                            .size(buttonSize),
+                            .size(imageSize),
                     )
                 }
 
