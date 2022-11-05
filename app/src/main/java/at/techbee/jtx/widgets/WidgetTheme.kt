@@ -8,27 +8,55 @@
 
 package at.techbee.jtx.widgets
 
-import android.annotation.SuppressLint
+/*
+ * Copyright (C) 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.R
 
 /**
  * Temporary implementation of theme object for Glance-appwidgets.
- *
+ * Based on the example here: https://github.com/android/user-interface-samples/blob/main/AppWidget/app/src/main/java/com/example/android/appwidget/glance/GlanceTheme.kt
+ * ATTENTION: Also the glance_color.xml files were introduced in order to get the colors for the glance widget!
  * Important: It will change!
  */
-object WidgetTheme {
-    val lightColors: ColorProviders
+object GlanceTheme {
+    val colors: ColorProviders
         @Composable
         @ReadOnlyComposable
-        get() = dynamicLightThemeColorProviders()
+        get() = LocalColorProviders.current
+}
 
-    val darkColors: ColorProviders
-        @Composable
-        @ReadOnlyComposable
-        get() = dynamicDarkThemeColorProviders()
+internal val LocalColorProviders = staticCompositionLocalOf { dynamicThemeColorProviders() }
+
+/**
+ * Temporary implementation of Material3 theme for Glance.
+ *
+ * Note: This still requires manually setting the colors for all Glance components.
+ */
+@Composable
+fun GlanceTheme(colors: ColorProviders = GlanceTheme.colors, content: @Composable () -> Unit) {
+    CompositionLocalProvider(LocalColorProviders provides colors) {
+        content()
+    }
 }
 
 /**
@@ -72,74 +100,37 @@ data class ColorProviders(
  * devices that support it, the theme is derived from the user specific platform colors, on other
  * devices this falls back to the Material3 baseline theme.
  */
-@SuppressLint("PrivateResource")
-fun dynamicLightThemeColorProviders(): ColorProviders {
+fun dynamicThemeColorProviders(): ColorProviders {
     return ColorProviders(
-        primary = ColorProvider(R.color.m3_sys_color_dynamic_light_primary),
-        onPrimary = ColorProvider(R.color.m3_sys_color_dynamic_light_on_primary),
-        primaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_light_primary_container),
-        onPrimaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_light_on_primary_container),
-        secondary = ColorProvider(R.color.m3_sys_color_dynamic_light_secondary),
-        onSecondary = ColorProvider(R.color.m3_sys_color_dynamic_light_on_secondary),
-        secondaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_light_secondary_container),
-        onSecondaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_light_on_secondary_container),
-        tertiary = ColorProvider(R.color.m3_sys_color_dynamic_light_tertiary),
-        onTertiary = ColorProvider(R.color.m3_sys_color_dynamic_light_on_tertiary),
-        tertiaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_light_tertiary_container),
-        onTertiaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_light_on_tertiary_container),
-        error = ColorProvider(R.color.m3_sys_color_light_error),
-        errorContainer = ColorProvider(R.color.m3_sys_color_light_error_container),
-        onError = ColorProvider(R.color.m3_sys_color_light_on_error),
-        onErrorContainer = ColorProvider(R.color.m3_sys_color_light_on_error_container),
-        background = ColorProvider(R.color.m3_sys_color_dynamic_light_background),
-        onBackground = ColorProvider(R.color.m3_sys_color_dynamic_light_on_background),
-        surface = ColorProvider(R.color.m3_sys_color_dynamic_light_surface),
-        onSurface = ColorProvider(R.color.m3_sys_color_dynamic_light_on_surface),
-        surfaceVariant = ColorProvider(R.color.m3_sys_color_dynamic_light_surface_variant),
-        onSurfaceVariant = ColorProvider(R.color.m3_sys_color_dynamic_light_on_surface_variant),
-        outline = ColorProvider(R.color.m3_sys_color_dynamic_light_outline),
-        textColorPrimary = ColorProvider(R.color.m3_sys_color_dynamic_light_primary),
-        textColorSecondary = ColorProvider(R.color.m3_sys_color_dynamic_light_secondary),
-        inverseOnSurface = ColorProvider(R.color.m3_sys_color_dynamic_light_inverse_on_surface),
-        inverseSurface = ColorProvider(R.color.m3_sys_color_dynamic_light_inverse_surface),
-        inversePrimary = ColorProvider(R.color.m3_sys_color_dynamic_light_inverse_primary),
-        inverseTextColorPrimary = ColorProvider(R.color.m3_sys_color_dynamic_light_inverse_primary),
-        inverseTextColorSecondary = ColorProvider(R.color.m3_sys_color_dynamic_light_inverse_primary),
-    )
-}
-
-@SuppressLint("PrivateResource")
-fun dynamicDarkThemeColorProviders(): ColorProviders {
-    return ColorProviders(
-        primary = ColorProvider(R.color.m3_sys_color_dynamic_dark_primary),
-        onPrimary = ColorProvider(R.color.m3_sys_color_dynamic_dark_on_primary),
-        primaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_dark_primary_container),
-        onPrimaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_dark_on_primary_container),
-        secondary = ColorProvider(R.color.m3_sys_color_dynamic_dark_secondary),
-        onSecondary = ColorProvider(R.color.m3_sys_color_dynamic_dark_on_secondary),
-        secondaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_dark_secondary_container),
-        onSecondaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_dark_on_secondary_container),
-        tertiary = ColorProvider(R.color.m3_sys_color_dynamic_dark_tertiary),
-        onTertiary = ColorProvider(R.color.m3_sys_color_dynamic_dark_on_tertiary),
-        tertiaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_dark_tertiary_container),
-        onTertiaryContainer = ColorProvider(R.color.m3_sys_color_dynamic_dark_on_tertiary_container),
-        error = ColorProvider(R.color.m3_sys_color_dark_error),
-        errorContainer = ColorProvider(R.color.m3_sys_color_dark_error_container),
-        onError = ColorProvider(R.color.m3_sys_color_dark_on_error),
-        onErrorContainer = ColorProvider(R.color.m3_sys_color_dark_on_error_container),
-        background = ColorProvider(R.color.m3_sys_color_dynamic_dark_background),
-        onBackground = ColorProvider(R.color.m3_sys_color_dynamic_dark_on_background),
-        surface = ColorProvider(R.color.m3_sys_color_dynamic_dark_surface),
-        onSurface = ColorProvider(R.color.m3_sys_color_dynamic_dark_on_surface),
-        surfaceVariant = ColorProvider(R.color.m3_sys_color_dynamic_dark_surface_variant),
-        onSurfaceVariant = ColorProvider(R.color.m3_sys_color_dynamic_dark_on_surface_variant),
-        outline = ColorProvider(R.color.m3_sys_color_dynamic_dark_outline),
-        textColorPrimary = ColorProvider(R.color.m3_sys_color_dynamic_dark_primary),
-        textColorSecondary = ColorProvider(R.color.m3_sys_color_dynamic_dark_secondary),
-        inverseOnSurface = ColorProvider(R.color.m3_sys_color_dynamic_dark_inverse_on_surface),
-        inverseSurface = ColorProvider(R.color.m3_sys_color_dynamic_dark_inverse_surface),
-        inversePrimary = ColorProvider(R.color.m3_sys_color_dynamic_dark_inverse_primary),
-        inverseTextColorPrimary = ColorProvider(R.color.m3_sys_color_dynamic_dark_inverse_primary),
-        inverseTextColorSecondary = ColorProvider(R.color.m3_sys_color_dynamic_dark_inverse_primary),
+        primary = ColorProvider(R.color.colorPrimary),
+        onPrimary = ColorProvider(R.color.colorOnPrimary),
+        primaryContainer = ColorProvider(R.color.colorPrimaryContainer),
+        onPrimaryContainer = ColorProvider(R.color.colorOnPrimaryContainer),
+        secondary = ColorProvider(R.color.colorSecondary),
+        onSecondary = ColorProvider(R.color.colorOnSecondary),
+        secondaryContainer = ColorProvider(R.color.colorSecondaryContainer),
+        onSecondaryContainer = ColorProvider(R.color.colorOnSecondaryContainer),
+        tertiary = ColorProvider(R.color.colorTertiary),
+        onTertiary = ColorProvider(R.color.colorOnTertiary),
+        tertiaryContainer = ColorProvider(R.color.colorTertiaryContainer),
+        onTertiaryContainer = ColorProvider(R.color.colorOnTertiaryContainer),
+        error = ColorProvider(R.color.colorError),
+        errorContainer = ColorProvider(R.color.colorErrorContainer),
+        onError = ColorProvider(R.color.colorOnError),
+        onErrorContainer = ColorProvider(R.color.colorOnErrorContainer),
+        background = ColorProvider(R.color.colorBackground),
+        onBackground = ColorProvider(R.color.colorOnBackground),
+        surface = ColorProvider(R.color.colorSurface),
+        onSurface = ColorProvider(R.color.colorOnSurface),
+        surfaceVariant = ColorProvider(R.color.colorSurfaceVariant),
+        onSurfaceVariant = ColorProvider(R.color.colorOnSurfaceVariant),
+        outline = ColorProvider(R.color.colorOutline),
+        textColorPrimary = ColorProvider(R.color.textColorPrimary),
+        textColorSecondary = ColorProvider(R.color.textColorSecondary),
+        inverseOnSurface = ColorProvider(R.color.colorOnSurfaceInverse),
+        inverseSurface = ColorProvider(R.color.colorSurfaceInverse),
+        inversePrimary = ColorProvider(R.color.colorPrimaryInverse),
+        inverseTextColorPrimary = ColorProvider(R.color.textColorPrimaryInverse),
+        inverseTextColorSecondary = ColorProvider(R.color.textColorSecondaryInverse),
     )
 }

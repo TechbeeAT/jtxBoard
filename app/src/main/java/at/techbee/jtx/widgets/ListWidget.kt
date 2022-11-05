@@ -20,13 +20,13 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.appWidgetBackground
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.ListWidgetConfigActivity
@@ -38,63 +38,6 @@ import kotlinx.serialization.json.Json
 
 
 class ListWidget : GlanceAppWidget() {
-
-    private val surface: ColorProvider
-        @Composable
-        get() = androidx.glance.appwidget.unit.ColorProvider(
-            day = WidgetTheme.lightColors.surface.getColor(LocalContext.current),
-            night = WidgetTheme.darkColors.surface.getColor(LocalContext.current),
-        )
-
-    private val onSurface: ColorProvider
-        @Composable
-        get() = androidx.glance.appwidget.unit.ColorProvider(
-            day = WidgetTheme.lightColors.onSurface.getColor(LocalContext.current),
-            night = WidgetTheme.darkColors.onSurface.getColor(LocalContext.current),
-        )
-
-    private val primary: ColorProvider
-        @Composable
-        get() = androidx.glance.appwidget.unit.ColorProvider(
-            day = WidgetTheme.lightColors.primary.getColor(LocalContext.current),
-            night = WidgetTheme.darkColors.primary.getColor(LocalContext.current),
-        )
-
-    private val onPrimary: ColorProvider
-        @Composable
-        get() = androidx.glance.appwidget.unit.ColorProvider(
-            day = WidgetTheme.lightColors.onPrimary.getColor(LocalContext.current),
-            night = WidgetTheme.darkColors.onPrimary.getColor(LocalContext.current),
-        )
-
-    private val primaryContainer: ColorProvider
-        @Composable
-        get() = androidx.glance.appwidget.unit.ColorProvider(
-            day = WidgetTheme.lightColors.primaryContainer.getColor(LocalContext.current),
-            night = WidgetTheme.darkColors.primaryContainer.getColor(LocalContext.current),
-        )
-
-    private val onPrimaryContainer: ColorProvider
-        @Composable
-        get() = androidx.glance.appwidget.unit.ColorProvider(
-            day = WidgetTheme.lightColors.onPrimaryContainer.getColor(LocalContext.current),
-            night = WidgetTheme.darkColors.onPrimaryContainer.getColor(LocalContext.current),
-        )
-
-    private val secondaryContainer: ColorProvider
-        @Composable
-        get() = androidx.glance.appwidget.unit.ColorProvider(
-            day = WidgetTheme.lightColors.secondaryContainer.getColor(LocalContext.current),
-            night = WidgetTheme.darkColors.secondaryContainer.getColor(LocalContext.current),
-        )
-
-    private val onSecondaryContainer: ColorProvider
-        @Composable
-        get() = androidx.glance.appwidget.unit.ColorProvider(
-            day = WidgetTheme.lightColors.onSecondaryContainer.getColor(LocalContext.current),
-            night = WidgetTheme.darkColors.onSecondaryContainer.getColor(LocalContext.current),
-        )
-
 
 
     @Composable
@@ -111,102 +54,104 @@ class ListWidget : GlanceAppWidget() {
         } ?: emptyList()
 
 
+        GlanceTheme {
 
-        Column(
-            modifier = GlanceModifier
-                .appWidgetBackground()
-                .fillMaxSize()
-                .padding(4.dp)
-                .background(primaryContainer),
-        ) {
+            Column(
+                modifier = GlanceModifier
+                    .appWidgetBackground()
+                    .fillMaxSize()
+                    .padding(4.dp)
+                    .background(GlanceTheme.colors.primaryContainer),
+            ) {
 
-            val addNewIntent = Intent(context, MainActivity2::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                action = when (listWidgetConfig?.module) {
-                    Module.JOURNAL -> MainActivity2.INTENT_ACTION_ADD_JOURNAL
-                    Module.NOTE -> MainActivity2.INTENT_ACTION_ADD_NOTE
-                    Module.TODO -> MainActivity2.INTENT_ACTION_ADD_TODO
-                    else -> MainActivity2.INTENT_ACTION_ADD_NOTE
+                val addNewIntent = Intent(context, MainActivity2::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    action = when (listWidgetConfig?.module) {
+                        Module.JOURNAL -> MainActivity2.INTENT_ACTION_ADD_JOURNAL
+                        Module.NOTE -> MainActivity2.INTENT_ACTION_ADD_NOTE
+                        Module.TODO -> MainActivity2.INTENT_ACTION_ADD_TODO
+                        else -> MainActivity2.INTENT_ACTION_ADD_NOTE
+                    }
                 }
-            }
 
-            val configIntent = Intent(context, ListWidgetConfigActivity::class.java)
-            configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                val configIntent = Intent(context, ListWidgetConfigActivity::class.java)
+                configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
-            Row(
-                modifier = GlanceModifier
-                    .fillMaxWidth()
-                    .background(primaryContainer),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = when (listWidgetConfig?.module) {
-                        Module.JOURNAL -> context.getString(R.string.list_tabitem_journals)
-                        Module.NOTE -> context.getString(R.string.list_tabitem_notes)
-                        Module.TODO -> context.getString(R.string.list_tabitem_todos)
-                        else -> context.getString(R.string.list_tabitem_notes)
-                    },
-                    style = TextStyle(
-                        color = onPrimaryContainer,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
+
+                Row(
                     modifier = GlanceModifier
-                        .defaultWeight()
-                        .padding(8.dp),
-                )
-
-                val buttonSize = 36.dp
-                //Log.v("Widget", "Size: ${buttonSize.px} px")
-
-                TintImage(
-                    resource = R.drawable.ic_settings,
-                    tintColor = onPrimaryContainer,
-                    contentDescription = context.getString(R.string.widget_list_configuration),
-                    imageHeight = buttonSize.px,
-                    modifier = GlanceModifier
-                        .clickable(actionStartActivity(configIntent))
-                        .padding(8.dp)
-                        .size(buttonSize),
-                )
-
-                TintImage(
-                    resource = R.drawable.ic_edit,
-                    tintColor = onPrimaryContainer,
-                    contentDescription = context.getString(R.string.widget_list_journals_new),
-                    imageHeight = buttonSize.px,
-                    modifier = GlanceModifier
-                        .clickable(actionStartActivity(addNewIntent))
-                        .padding(8.dp)
-                        .size(buttonSize),
-                )
-            }
-
-
-            LazyColumn(
-                modifier = GlanceModifier
-                    //.defaultWeight()
-                    .padding(4.dp),
-                    //.background(primaryContainer)
-                    //.cornerRadius(16.dp)
-            ) {
-
-                items(list) { entry ->
-
-                    Column(
+                        .fillMaxWidth()
+                        .background(GlanceTheme.colors.primaryContainer),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = when (listWidgetConfig?.module) {
+                            Module.JOURNAL -> context.getString(R.string.list_tabitem_journals)
+                            Module.NOTE -> context.getString(R.string.list_tabitem_notes)
+                            Module.TODO -> context.getString(R.string.list_tabitem_todos)
+                            else -> context.getString(R.string.list_tabitem_notes)
+                        },
+                        style = TextStyle(
+                            color = GlanceTheme.colors.onPrimaryContainer,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
                         modifier = GlanceModifier
-                            .fillMaxWidth()
-                    ) {
-                        ListEntry(
-                            obj = entry,
-                            textColor = onSecondaryContainer,
-                            containerColor = secondaryContainer
-                        )
-                        Box(
-                            modifier = GlanceModifier.fillMaxWidth().height(4.dp)
-                        ) { }   // Spacer as .spacedBy is not available in Glance
+                            .defaultWeight()
+                            .padding(8.dp),
+                    )
 
+                    val buttonSize = 36.dp
+                    //Log.v("Widget", "Size: ${buttonSize.px} px")
+
+                    TintImage(
+                        resource = R.drawable.ic_settings,
+                        tintColor = GlanceTheme.colors.onPrimaryContainer,
+                        contentDescription = context.getString(R.string.widget_list_configuration),
+                        imageHeight = buttonSize.px,
+                        modifier = GlanceModifier
+                            .clickable(actionStartActivity(configIntent))
+                            .padding(8.dp)
+                            .size(buttonSize),
+                    )
+
+                    TintImage(
+                        resource = R.drawable.ic_edit,
+                        tintColor = GlanceTheme.colors.onPrimaryContainer,
+                        contentDescription = context.getString(R.string.add),
+                        imageHeight = buttonSize.px,
+                        modifier = GlanceModifier
+                            .clickable(actionStartActivity(addNewIntent))
+                            .padding(8.dp)
+                            .size(buttonSize),
+                    )
+                }
+
+                LazyColumn(
+                    modifier = GlanceModifier
+                        //.defaultWeight()
+                        .padding(4.dp)
+                        .background(GlanceTheme.colors.primaryContainer)
+                        .cornerRadius(16.dp)
+                ) {
+
+                    items(list) { entry ->
+
+                        Column(
+                            modifier = GlanceModifier
+                                .fillMaxWidth()
+                        ) {
+                            ListEntry(
+                                obj = entry,
+                                textColor = GlanceTheme.colors.onSecondaryContainer,
+                                containerColor = GlanceTheme.colors.secondaryContainer
+                            )
+                            Box(
+                                modifier = GlanceModifier.fillMaxWidth().height(4.dp)
+                            ) { }   // Spacer as .spacedBy is not available in Glance
+
+                        }
                     }
                 }
             }
