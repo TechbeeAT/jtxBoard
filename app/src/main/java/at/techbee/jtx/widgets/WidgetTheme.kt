@@ -8,6 +8,13 @@
 
 package at.techbee.jtx.widgets
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.glance.unit.ColorProvider
+import at.techbee.jtx.R
+
 /*
  * Copyright (C) 2021 The Android Open Source Project
  *
@@ -25,17 +32,9 @@ package at.techbee.jtx.widgets
  */
 
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.glance.unit.ColorProvider
-import at.techbee.jtx.R
-
 /**
  * Temporary implementation of theme object for Glance-appwidgets.
- * Based on the example here: https://github.com/android/user-interface-samples/blob/main/AppWidget/app/src/main/java/com/example/android/appwidget/glance/GlanceTheme.kt
- * ATTENTION: Also the glance_color.xml files were introduced in order to get the colors for the glance widget!
+ *
  * Important: It will change!
  */
 object GlanceTheme {
