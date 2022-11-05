@@ -54,6 +54,7 @@ import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.getParcelableExtraCompat
+import at.techbee.jtx.widgets.ListWidgetReceiver
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.time.ZonedDateTime
 
@@ -184,6 +185,11 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
             }
         }
         lastProcessedIntentHash = intent.hashCode()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        ListWidgetReceiver.updateListWidgets(this)
     }
 
     private fun createNotificationChannel() {
