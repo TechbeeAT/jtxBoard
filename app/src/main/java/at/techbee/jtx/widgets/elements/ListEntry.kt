@@ -18,14 +18,17 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
-import androidx.glance.layout.Column
-import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.padding
+import androidx.glance.layout.*
 import androidx.glance.text.*
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.R
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.DateTimeUtils
+import at.techbee.jtx.widgets.GlanceTheme
+import at.techbee.jtx.widgets.TintImage
+import at.techbee.jtx.widgets.px
 
 @Composable
 fun ListEntry(
@@ -45,6 +48,9 @@ fun ListEntry(
         this.putExtra(MainActivity2.INTENT_EXTRA_ITEM2SHOW, obj.id)
     }
 
+    val imageSize = 18.dp
+
+
     Column(
         modifier = GlanceModifier
             .fillMaxWidth()
@@ -53,11 +59,47 @@ fun ListEntry(
             .cornerRadius(16.dp)
             .clickable(onClick = actionStartActivity(intent))
     ) {
-        obj.dtstart?.let {
-            Text(
-                text = DateTimeUtils.convertLongToFullDateTimeString(it, obj.dtstartTimezone),
-                style = textStyleDate
-            )
+
+        if(obj.dtstart != null || obj.due != null) {
+            Row(
+                modifier = GlanceModifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if(obj.dtstart != null) {
+                    TintImage(
+                        resource = if(obj.module == Module.TODO.name) R.drawable.ic_start else R.drawable.ic_start2,
+                        tintColor = GlanceTheme.colors.onPrimaryContainer,
+                        contentDescription = context.getString(R.string.started),
+                        imageHeight = imageSize.px,
+                        modifier = GlanceModifier.size(imageSize).padding(horizontal = 4.dp),
+                    )
+                    Text(
+                        text = DateTimeUtils.convertLongToMediumDateString(
+                            obj.dtstart,
+                            obj.dtstartTimezone
+                        ),
+                        style = textStyleDate
+                    )
+                } else {
+                    Spacer()
+                }
+                Spacer(modifier = GlanceModifier.defaultWeight())
+                    if(obj.due != null) {
+                    TintImage(
+                        resource = R.drawable.ic_due,
+                        tintColor = GlanceTheme.colors.onPrimaryContainer,
+                        contentDescription = context.getString(R.string.due),
+                        imageHeight = imageSize.px,
+                        modifier = GlanceModifier.size(imageSize).padding(horizontal = 4.dp),
+                    )
+                    Text(
+                        text = DateTimeUtils.convertLongToMediumDateString(obj.due, obj.dueTimezone),
+                        style = textStyleDate
+                    )
+                } else {
+                    Spacer()
+                }
+            }
         }
         obj.summary?.let { Text(
             text = it,
