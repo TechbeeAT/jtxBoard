@@ -61,9 +61,9 @@ fun ListEntry(
     Row(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
             .background(containerColor)
-            .cornerRadius(16.dp)
+            .cornerRadius(8.dp)
             .clickable(onClick = actionStartActivity(intent)),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -117,8 +117,10 @@ fun ListEntry(
             }
 
             Column(modifier = GlanceModifier.defaultWeight()) {
-                obj.summary?.let { Text(text = it, style = textStyleSummary) }
-                obj.description?.let { Text(it, maxLines = 2, style = textStyleDescription) }
+                if(!obj.summary.isNullOrEmpty())
+                    Text(text = obj.summary!!, style = textStyleSummary)
+                if(!obj.description.isNullOrEmpty())
+                    Text(obj.description!!, maxLines = 2, style = textStyleDescription)
             }
         }
         if (obj.module == Module.TODO.name) {

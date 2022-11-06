@@ -64,7 +64,7 @@ class ListWidget : GlanceAppWidget() {
                 modifier = GlanceModifier
                     .appWidgetBackground()
                     .fillMaxSize()
-                    .padding(4.dp)
+                    .padding(horizontal = 4.dp)
                     .background(GlanceTheme.colors.primaryContainer),
             ) {
 
@@ -139,7 +139,7 @@ class ListWidget : GlanceAppWidget() {
                 LazyColumn(
                     modifier = GlanceModifier
                         //.defaultWeight()
-                        .padding(4.dp)
+                        .padding(bottom = 2.dp, start = 2.dp, end = 2.dp, top = 0.dp)
                         .background(GlanceTheme.colors.primaryContainer)
                         .cornerRadius(16.dp)
                 ) {
@@ -149,16 +149,13 @@ class ListWidget : GlanceAppWidget() {
                         Column(
                             modifier = GlanceModifier
                                 .fillMaxWidth()
+                                .padding(bottom = 4.dp)
                         ) {
                             ListEntry(
                                 obj = entry,
                                 textColor = GlanceTheme.colors.onSurface,
                                 containerColor = GlanceTheme.colors.surface
                             )
-                            Box(
-                                modifier = GlanceModifier.fillMaxWidth().height(4.dp)
-                            ) { }   // Spacer as .spacedBy is not available in Glance
-
                         }
                     }
                 }
