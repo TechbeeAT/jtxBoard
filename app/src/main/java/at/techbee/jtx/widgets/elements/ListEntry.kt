@@ -123,7 +123,7 @@ fun ListEntry(
                     Text(obj.description!!, maxLines = 2, style = textStyleDescription)
             }
         }
-        if (obj.module == Module.TODO.name) {
+        if (obj.module == Module.TODO.name && !obj.isReadOnly) {
             CheckBox(
                 checked = obj.percent == 100,
                 onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
