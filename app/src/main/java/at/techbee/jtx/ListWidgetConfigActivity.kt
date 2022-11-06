@@ -94,6 +94,7 @@ class ListWidgetConfigActivity : ComponentActivity() {
                             },
                             onCancel = {
                                 setResult(Activity.RESULT_CANCELED)
+                                finish()
                             }
                         )
                     }
