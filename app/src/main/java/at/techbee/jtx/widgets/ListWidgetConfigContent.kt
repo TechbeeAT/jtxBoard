@@ -101,7 +101,6 @@ fun ListWidgetConfigContent(
                     }
                 }
 
-
                 ListOptionsFilter(
                     module = selectedModule,
                     listSettings = listSettings,
@@ -111,6 +110,13 @@ fun ListWidgetConfigContent(
                     isWidgetConfig = true
                 )
 
+                Divider()
+
+                ListOptionsSortOrder(
+                    module = selectedModule,
+                    listSettings = listSettings,
+                    onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ }
+                )
             }
         },
         bottomBar = {
