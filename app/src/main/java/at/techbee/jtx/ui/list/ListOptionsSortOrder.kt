@@ -19,7 +19,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -81,15 +80,14 @@ fun ListOptionsSortOrder(
             }
         }
 
-        Divider(
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            thickness = 1.dp,
-            modifier = Modifier
-                .alpha(0.25f)
-                .padding(top = 8.dp)
+        // SORT ORDER 2
+        HeadlineWithIcon(
+            icon = Icons.Outlined.Sort,
+            iconDesc = stringResource(id = R.string.filter_second_order_by),
+            text = stringResource(id = R.string.filter_second_order_by),
+            modifier = Modifier.padding(top = 8.dp)
         )
 
-        // SORT ORDER 2
         FlowRow(modifier = Modifier.fillMaxWidth()) {
             OrderBy.getValuesFor(module).forEach { orderBy ->
                 if (orderBy == listSettings.orderBy.value) // don't show criteria that was already selected
