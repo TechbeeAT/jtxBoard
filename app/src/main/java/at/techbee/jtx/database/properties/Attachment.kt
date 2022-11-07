@@ -220,7 +220,11 @@ data class Attachment (
          */
         fun getNewAttachmentFromUri(uri: Uri, context: Context): Attachment? {
             try {
-                val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+                val extension =
+                    if(uri.toString().startsWith("content://"))
+                        MimeTypeMap.getSingleton().getExtensionFromMimeType(context.contentResolver.getType(uri))
+                    else
+                        MimeTypeMap.getFileExtensionFromUrl(uri.toString())
                 val filename = "${System.currentTimeMillis()}.$extension"
                 val newFile = File(getAttachmentDirectory(context), filename)
                 newFile.createNewFile()
