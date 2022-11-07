@@ -1,0 +1,2 @@
+- New option to group list entries
+- Bugfixes
