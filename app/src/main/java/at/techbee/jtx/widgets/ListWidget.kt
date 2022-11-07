@@ -141,7 +141,7 @@ class ListWidget : GlanceAppWidget() {
                         //.defaultWeight()
                         .padding(bottom = 2.dp, start = 2.dp, end = 2.dp, top = 0.dp)
                         .background(GlanceTheme.colors.primaryContainer)
-                        .cornerRadius(16.dp)
+                        .cornerRadius(8.dp)
                 ) {
 
                     items(list) { entry ->

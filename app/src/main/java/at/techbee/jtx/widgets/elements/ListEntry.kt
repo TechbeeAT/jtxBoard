@@ -61,7 +61,7 @@ fun ListEntry(
     Row(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(horizontal = 6.dp, vertical = 3.dp)
             .background(containerColor)
             .cornerRadius(8.dp)
             .clickable(onClick = actionStartActivity(intent)),
