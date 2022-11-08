@@ -67,6 +67,18 @@ fun ListEntry(
             .clickable(onClick = actionStartActivity(intent)),
         verticalAlignment = Alignment.CenterVertically
     ) {
+
+        if (obj.module == Module.TODO.name && !obj.isReadOnly) {
+            CheckBox(
+                checked = obj.percent == 100,
+                onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
+                    parameters = actionParametersOf(
+                        ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
+                    )
+                )
+            )
+        }
+
         Column(
             modifier = GlanceModifier.defaultWeight()
         ) {
@@ -82,26 +94,24 @@ fun ListEntry(
                             tintColor = GlanceTheme.colors.onPrimaryContainer,
                             contentDescription = context.getString(R.string.started),
                             imageHeight = imageSize.px,
-                            modifier = GlanceModifier.size(imageSize).padding(horizontal = 4.dp),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
                         )
                         Text(
                             text = DateTimeUtils.convertLongToMediumDateString(
                                 obj.dtstart,
                                 obj.dtstartTimezone
                             ),
-                            style = textStyleDate
+                            style = textStyleDate,
+                            modifier = GlanceModifier.padding(end = 8.dp)
                         )
-                    } else {
-                        Spacer()
                     }
-                    Spacer(modifier = GlanceModifier.defaultWeight())
                     if (obj.due != null) {
                         TintImage(
                             resource = R.drawable.ic_due,
                             tintColor = GlanceTheme.colors.onPrimaryContainer,
                             contentDescription = context.getString(R.string.due),
                             imageHeight = imageSize.px,
-                            modifier = GlanceModifier.size(imageSize).padding(horizontal = 4.dp),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
                         )
                         Text(
                             text = DateTimeUtils.convertLongToMediumDateString(
@@ -110,8 +120,6 @@ fun ListEntry(
                             ),
                             style = textStyleDate
                         )
-                    } else {
-                        Spacer()
                     }
                 }
             }
@@ -122,16 +130,6 @@ fun ListEntry(
                 if(!obj.description.isNullOrEmpty())
                     Text(obj.description!!, maxLines = 2, style = textStyleDescription)
             }
-        }
-        if (obj.module == Module.TODO.name && !obj.isReadOnly) {
-            CheckBox(
-                checked = obj.percent == 100,
-                onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
-                    parameters = actionParametersOf(
-                        ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
-                    )
-                )
-            )
         }
     }
 }
