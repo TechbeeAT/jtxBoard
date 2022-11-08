@@ -304,6 +304,7 @@ fun ListQuickAddElement(
                         attachment = it,
                         isEditMode = false,
                         isRemoteCollection = currentCollection?.accountType != LOCAL_ACCOUNT_TYPE,
+                        withPreview = false,
                         onAttachmentDeleted = { /* no editing here */ },
                         modifier = Modifier.padding(vertical = 8.dp)
                     )

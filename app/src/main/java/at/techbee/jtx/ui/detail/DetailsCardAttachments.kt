@@ -94,16 +94,38 @@ fun DetailsCardAttachments(
 
             AnimatedVisibility(attachments.isNotEmpty()) {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(1.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    attachments.asReversed().forEach { attachment ->
 
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        attachments.asReversed().filter { it.fmttype?.startsWith("image/") == true }
+                            .forEach { attachment ->
+                                AttachmentCard(
+                                    attachment = attachment,
+                                    isEditMode = isEditMode,
+                                    isRemoteCollection = isRemoteCollection,
+                                    withPreview = true,
+                                    onAttachmentDeleted = {
+                                        attachments = attachments.minus(attachment)
+                                        onAttachmentsUpdated(attachments)
+                                    },
+                                    modifier = Modifier.size(100.dp, 140.dp)
+                                )
+                            }
+                    }
+
+                    attachments.asReversed().filter { it.fmttype == null || it.fmttype?.startsWith("image/") == false }.forEach { attachment ->
                         AttachmentCard(
                             attachment = attachment,
                             isEditMode = isEditMode,
                             isRemoteCollection = isRemoteCollection,
+                            withPreview = false,
                             onAttachmentDeleted = {
                                 attachments = attachments.minus(attachment)
                                 onAttachmentsUpdated(attachments)
@@ -173,6 +195,20 @@ fun DetailsCardAttachments_Preview() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardAttachments_Preview_Images() {
+    MaterialTheme {
+
+        DetailsCardAttachments(
+            initialAttachments = listOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")),
+            isEditMode = false,
+            isRemoteCollection = true,
+            onAttachmentsUpdated = { }
+        )
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -180,6 +216,21 @@ fun DetailsCardAttachments_Preview_edit() {
     MaterialTheme {
         DetailsCardAttachments(
             initialAttachments = listOf(Attachment(filename = "test.pdf")),
+            isEditMode = true,
+            isRemoteCollection = true,
+            onAttachmentsUpdated = { }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardAttachments_Preview_Images_edit() {
+    MaterialTheme {
+
+        DetailsCardAttachments(
+            initialAttachments = listOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")),
             isEditMode = true,
             isRemoteCollection = true,
             onAttachmentsUpdated = { }

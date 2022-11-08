@@ -13,6 +13,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.ParcelFileDescriptor
@@ -20,6 +22,7 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import android.provider.OpenableColumns
 import android.util.Log
+import android.util.Size
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.FileProvider
@@ -35,6 +38,7 @@ import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
 import kotlinx.parcelize.Parcelize
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
 
 
@@ -197,8 +201,6 @@ data class Attachment (
             WorkManager
                 .getInstance(context)
                 .enqueueUniqueWork("fileCleanupWorkRequest", ExistingWorkPolicy.KEEP, fileCleanupWorkRequest)
-
-            Log.d("IcalEditFragment", "enqueued fileCleanupWorkRequest")
         }
 
         fun getSample() = Attachment(
@@ -366,12 +368,12 @@ data class Attachment (
         }
     }
 
-/*
+
     fun getPreview(context: Context): Bitmap? {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && uri != null) {
             try {
-                val thumbSize = Size(50, 50)
+                val thumbSize = Size(100, 100)
                 val thumbUri = Uri.parse(uri)
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -388,7 +390,6 @@ data class Attachment (
         }
         return null
     }
- */
 }
 
 
