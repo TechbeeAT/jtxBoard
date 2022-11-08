@@ -12,7 +12,9 @@ import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material.icons.outlined.Forum
@@ -366,14 +368,33 @@ fun ICalObjectListCard(
                 }
 
                 AnimatedVisibility(visible = isAttachmentsExpanded) {
-                    Column(modifier = Modifier.padding(bottom = 4.dp)) {
-                        attachments.forEach { attachment ->
+                    Column(modifier = Modifier.padding(bottom = 4.dp, start = 8.dp, end = 8.dp), verticalArrangement = Arrangement.spacedBy(1.dp)) {
+
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            attachments.asReversed().filter { it.fmttype?.startsWith("image/") == true }
+                                .forEach { attachment ->
+                                    AttachmentCard(
+                                        attachment = attachment,
+                                        isEditMode = false,
+                                        isRemoteCollection = false,   // ATTENTION: We pass false here, because the warning for large file sizes is only relevant for edit mode
+                                        withPreview = true,
+                                        onAttachmentDeleted = { /* nothing to do, no edit here */ },
+                                        modifier = Modifier.size(100.dp, 140.dp)
+                                    )
+                                }
+                        }
+
+                        attachments.asReversed().filter { it.fmttype == null || it.fmttype?.startsWith("image/") == false }.forEach { attachment ->
                             AttachmentCard(
                                 attachment = attachment,
                                 isEditMode = false,
                                 isRemoteCollection = false,   // ATTENTION: We pass false here, because the warning for large file sizes is only relevant for edit mode
+                                withPreview = false,
                                 onAttachmentDeleted = { /* nothing to do, no edit here */ },
-                                modifier = Modifier.padding(horizontal = 8.dp)
                             )
                         }
                     }
