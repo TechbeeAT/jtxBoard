@@ -503,6 +503,10 @@
     <string name="menu_list_viewmode_grid">Grid view</string>
     <string name="menu_list_viewmode_compact">Compact view</string>
     <string name="menu_list_viewmode_kanban">Kanban view</string>
+    <string name="menu_list_flat_view">Flat view</string>
+    <string name="menu_list_flat_view_sub">Always show child-entries on top level in list</string>
+    <string name="menu_list_limit_recur_entries">Limit recurring</string>
+    <string name="menu_list_limit_recur_entries_sub">Show only one recurring entry in future</string>
 
 
     <string name="menu_view_share_text">Share</string>
@@ -514,6 +518,9 @@
     <string name="menu_view_copy_as_todo">Copy as Todo</string>
     <string name="menu_view_copy_as_note">Copy as Note</string>
     <string name="menu_view_copy_item">Create copy</string>
+    <string name="menu_view_markdown_formatting">Markdown formatting</string>
+    <string name="menu_view_autosave">Autosave</string>
+
 
     <string name="menu_collection_popup_show_in_davx5">Show in DAVx⁵</string>
     <string name="menu_collection_popup_export_as_ics">Export as .ics</string>

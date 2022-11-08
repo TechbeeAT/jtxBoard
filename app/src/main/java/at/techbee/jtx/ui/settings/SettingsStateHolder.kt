@@ -33,9 +33,6 @@ class SettingsStateHolder(val context: Context) {
 
     var settingShowProgressForMainTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.key, SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.default))
     var settingShowProgressForSubTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS.key, SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS.default))
-    var settingShowSubtasksInTasklist = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_SUBTASKS_IN_TASKLIST.key, SwitchSetting.SETTING_SHOW_SUBTASKS_IN_TASKLIST.default))
-    var settingShowSubnotesInNoteslist = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_SUBNOTES_IN_NOTESLIST.key, SwitchSetting.SETTING_SHOW_SUBNOTES_IN_NOTESLIST.default))
-    var settingShowSubjournalsInJournallist = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.key, SwitchSetting.SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.default))
 
     var settingAutosave = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_DETAILS_AUTOSAVE.key, SwitchSetting.SETTING_DETAILS_AUTOSAVE.default))
 
@@ -49,8 +46,6 @@ class SettingsStateHolder(val context: Context) {
     var settingAutoAlarm = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key) } ?: DropdownSetting.SETTING_AUTO_ALARM.default )
     var settingEnableMarkdownFormattting = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_DETAILS_ENABLE_MARKDOWN.key, SwitchSetting.SETTING_DETAILS_ENABLE_MARKDOWN.default))
-    var settingShowOneRecurEntryInFuture = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.key, SwitchSetting.SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.default))
-
 
 
     //invisible settings
