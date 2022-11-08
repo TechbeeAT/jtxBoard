@@ -17,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
-import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
@@ -25,7 +24,6 @@ import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.settings.SwitchSetting
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getPackageInfoCompat
@@ -75,17 +73,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val scrollOnceId = MutableLiveData<Long?>(null)
     var goToEdit = MutableLiveData<Long?>(null)
     var toastMessage = mutableStateOf<String?>(null)
-
-
-    private val searchSettingShowAllSubtasksInTasklist: Boolean
-        get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBTASKS_IN_TASKLIST.key, false) ?: false
-    private val searchSettingShowAllSubnotesInNoteslist: Boolean
-        get() =  settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBNOTES_IN_NOTESLIST.key, false) ?: false
-    private val searchSettingShowAllSubjournalsinJournallist: Boolean
-        get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.key, false) ?: false
-    private val searchSettingShowOneRecurEntryInFuture: Boolean
-        get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.key, false) ?: false
-
 
 
     init {
@@ -142,10 +129,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterStartFuture = listSettings.isFilterStartFuture.value,
             isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
             searchText = listSettings.searchText.value,
-            searchSettingShowAllSubtasksInTasklist = searchSettingShowAllSubtasksInTasklist,
-            searchSettingShowAllSubnotesInNoteslist = searchSettingShowAllSubnotesInNoteslist,
-            searchSettingShowAllSubjournalsinJournallist = searchSettingShowAllSubjournalsinJournallist,
-            searchSettingShowOneRecurEntryInFuture = searchSettingShowOneRecurEntryInFuture
+            flatView = listSettings.flatView.value,
+            searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
         )
         listQuery.postValue(query)
         if(saveListSettings)
@@ -374,4 +359,3 @@ enum class ViewMode(val stringResource: Int) {
     COMPACT(R.string.menu_list_viewmode_compact),
     KANBAN(R.string.menu_list_viewmode_kanban)
 }
-

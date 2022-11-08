@@ -2,7 +2,9 @@ package at.techbee.jtx.ui.reusable.elements
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,21 +13,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RadiobuttonWithText(
+fun CheckboxWithText(
     text: String,
     isSelected: Boolean,
-    onClick: () -> Unit,
+    onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     subtext: String? = null,
 ) {
     Row(
         modifier = modifier.clickable {
-             onClick()
+            onCheckedChange(!isSelected)
         },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
 
-        RadioButton(selected = isSelected, onClick = { onClick() })
+        Checkbox(
+            checked = isSelected,
+            onCheckedChange = onCheckedChange
+        )
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(text = text, modifier = Modifier.padding(end = 16.dp))
             subtext?.let {
@@ -44,24 +49,24 @@ fun RadiobuttonWithText(
 
 @Preview(showBackground = true)
 @Composable
-fun RadiobuttonWithText_Preview() {
+fun CheckboxWithText_Preview() {
     MaterialTheme {
-        RadiobuttonWithText(
+        CheckboxWithText(
             text = "Radio Text",
-            isSelected = true,
-            onClick = { }
+            isSelected = false,
+            onCheckedChange = { }
         )    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun RadiobuttonWithText_Subtext_Preview() {
+fun CheckboxWithText_Subtext_Preview() {
     MaterialTheme {
-        RadiobuttonWithText(
+        CheckboxWithText(
             text = "Radio Text",
             isSelected = true,
-            onClick = { },
-            subtext = "Subtext with explanation"
+            onCheckedChange = { },
+            subtext = "Subtext with explanation",
         )
     }
 }

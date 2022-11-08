@@ -21,7 +21,6 @@ import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
-import at.techbee.jtx.DetailSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*

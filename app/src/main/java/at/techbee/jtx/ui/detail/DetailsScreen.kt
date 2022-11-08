@@ -15,9 +15,7 @@ import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ContentPaste
-import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.Mail
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -34,6 +32,7 @@ import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
+import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +41,6 @@ fun DetailsScreen(
     navController: NavHostController,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
-    autosave: Boolean,
     onLastUsedCollectionChanged: (Module, Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
@@ -150,6 +148,29 @@ fun DetailsScreen(
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.ContentPaste, null) }
                             )
+
+                            Divider()
+
+                            CheckboxWithText(
+                                text = stringResource(id = R.string.menu_view_markdown_formatting),
+                                onCheckedChange = {
+                                    detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] = it
+                                    detailViewModel.detailSettings.save()
+                                },
+                                isSelected = detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] ?: true,
+                            )
+                        }
+                    } else {
+                        val menuExpanded = remember { mutableStateOf(false) }
+                        OverflowMenu(menuExpanded = menuExpanded) {
+                            CheckboxWithText(
+                                text = stringResource(id = R.string.menu_view_autosave),
+                                onCheckedChange = {
+                                    detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_AUTOSAVE] = it
+                                    detailViewModel.detailSettings.save()
+                                },
+                                isSelected = detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_AUTOSAVE] ?: true,
+                            )
                         }
                     }
                 }
@@ -168,7 +189,6 @@ fun DetailsScreen(
                 allCategories = allCategories.value,
                 allResources = allResources.value,
                 detailSettings = detailViewModel.detailSettings,
-                autosave = autosave,
                 goBackRequested = goBackRequestedByTopBar,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                     if (changedICalObject.isRecurLinkedInstance)

@@ -28,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
