@@ -10,7 +10,6 @@ package at.techbee.jtx.ui.settings
 
 import android.content.Context
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.outlined.Save
@@ -68,24 +67,6 @@ enum class SwitchSetting(
         title = R.string.settings_show_progress_for_subtasks_in_list,
         default = false
     ),
-    SETTING_SHOW_SUBTASKS_IN_TASKLIST(
-        key = "settings_show_subtasks_of_journals_and_todos_in_tasklist",
-        icon = { androidx.compose.foundation.layout.Box(modifier = Modifier.size(24.dp).padding(16.dp))  },
-        title = R.string.settings_show_subtasks_of_journals_and_todos_in_tasklist,
-        default = false
-    ),
-    SETTING_SHOW_SUBNOTES_IN_NOTESLIST(
-        key = "settings_show_subnotes_of_journals_and_tasks_in_noteslist",
-        icon = { androidx.compose.foundation.layout.Box(modifier = Modifier.size(24.dp).padding(16.dp))  },
-        title = R.string.settings_show_subnotes_of_journals_and_tasks_in_noteslist,
-        default = false
-    ),
-    SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST(
-        key = "settings_show_subjournals_of_notes_and_tasks_in_journallist",
-        icon = { androidx.compose.foundation.layout.Box(modifier = Modifier.size(24.dp).padding(16.dp))  },
-        title = R.string.settings_show_subjournals_of_notes_and_tasks_in_journallist,
-        default = false
-    ),
     SETTING_DETAILS_AUTOSAVE(
         key = "settings_details_autosave",
         icon = { Icon(Icons.Outlined.Save, contentDescription = null, modifier = Modifier.padding(16.dp)) },
@@ -103,12 +84,6 @@ enum class SwitchSetting(
     icon = { Icon(Icons.Outlined.AlarmOff, contentDescription = null, modifier = Modifier.padding(16.dp)) },
     title = R.string.settings_disable_alarms_for_readonly,
     default = false
-    ),
-    SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE(
-        key = "settings_show_one_recur_entry_in_future",
-        icon = { Icon(Icons.Outlined.RepeatOne, contentDescription = null, modifier = Modifier.padding(16.dp)) },
-        title = R.string.settings_show_one_recur_entry_in_future,
-        default = false
     )
     ;
     fun save(newSwitchValue: Boolean, context: Context) {

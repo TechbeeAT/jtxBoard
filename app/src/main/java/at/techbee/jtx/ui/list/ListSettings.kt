@@ -1,4 +1,13 @@
-package at.techbee.jtx
+/*
+ * Copyright (c) Techbee e.U.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ */
+
+package at.techbee.jtx.ui.list
+
 
 import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
@@ -6,10 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
-import at.techbee.jtx.ui.list.GroupBy
-import at.techbee.jtx.ui.list.OrderBy
-import at.techbee.jtx.ui.list.SortOrder
-import at.techbee.jtx.ui.list.ViewMode
 import at.techbee.jtx.widgets.ListWidgetConfig
 
 
@@ -41,6 +46,9 @@ class ListSettings {
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
     var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
+    var flatView: MutableState<Boolean> = mutableStateOf(false)
+    var showOneRecurEntryInFuture: MutableState<Boolean> = mutableStateOf(false)
+
 
 
     companion object {
@@ -67,6 +75,8 @@ class ListSettings {
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
+        private const val PREFS_FLAT_VIEW = "prefsFlatView"
+        private const val PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE = "prefsShowOneRecurEntryInFuture"
 
 
         fun fromPrefs(prefs: SharedPreferences) = ListSettings().apply {
@@ -95,6 +105,9 @@ class ListSettings {
             groupBy.value = prefs.getString(PREFS_GROUPBY, null)?.let { try { GroupBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } }
 
             viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
+            flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
+
+            showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
         }
 
         fun fromListWidgetConfig(listWidgetConfig: ListWidgetConfig) = ListSettings().apply {
@@ -150,6 +163,9 @@ class ListSettings {
             putStringSet(PREFS_ACCOUNT, searchAccount.value.toSet())
 
             putString(PREFS_VIEWMODE, viewMode.value.name)
+            putBoolean(PREFS_FLAT_VIEW, flatView.value)
+
+            putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
 
         }?.apply()
     }

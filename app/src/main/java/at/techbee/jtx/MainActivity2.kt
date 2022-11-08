@@ -47,6 +47,7 @@ import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
 import at.techbee.jtx.ui.reusable.screens.AboutScreen
 import at.techbee.jtx.ui.buypro.BuyProScreen
+import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -253,7 +254,6 @@ fun MainNavHost(
                 navController = navController,
                 detailViewModel = detailViewModel,
                 editImmediately = editImmediately,
-                autosave = settingsStateHolder.settingAutosave.value,
                 onRequestReview = {
                     if (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
                         JtxReviewManager(activity).showIfApplicable()

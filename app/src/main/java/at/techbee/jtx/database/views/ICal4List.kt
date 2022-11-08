@@ -262,9 +262,7 @@ data class ICal4List(
             isFilterStartFuture: Boolean = false,
             isFilterNoDatesSet: Boolean = false,
             searchText: String? = null,
-            searchSettingShowAllSubtasksInTasklist: Boolean = false,
-            searchSettingShowAllSubnotesInNoteslist: Boolean = false,
-            searchSettingShowAllSubjournalsinJournallist: Boolean = false,
+            flatView: Boolean = false,
             searchSettingShowOneRecurEntryInFuture: Boolean = false
         ): SimpleSQLiteQuery {
 
@@ -384,35 +382,13 @@ data class ICal4List(
 
             // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
             //queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
-            when (module) {
-                Module.TODO -> {
-                    // we exclude all Children of Tasks from the List, as they never should appear as main tasks (they will later be added as subtasks in the observer)
-                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
-
-                    // if the user did NOT set the option to see all tasks that are subtasks of Notes and Journals, then we exclude them here as well
-                    if (!searchSettingShowAllSubtasksInTasklist)
-                        queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
-
-                }
-                Module.NOTE -> {
-                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
-
-                    if (!searchSettingShowAllSubnotesInNoteslist)
-                        queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
-
-                }
-                Module.JOURNAL -> {
-                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 "
-
-                    if (!searchSettingShowAllSubjournalsinJournallist)
-                        queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
-                }
-            }
+            if(!flatView)
+                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
 
             if(searchSettingShowOneRecurEntryInFuture) {
                 queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ISLINKEDINSTANCE = 0 " +
                         "OR $VIEW_NAME_ICAL4LIST.$COLUMN_DTSTART <= " +
-                        "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_RECUR_ORIGINALICALOBJECTID = $VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ORIGINALICALOBJECTID AND recurList.$COLUMN_RECUR_ISLINKEDINSTANCE = 1 AND recurList.$COLUMN_DTSTART > ${System.currentTimeMillis()} )) "
+                        "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_RECUR_ORIGINALICALOBJECTID = $VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ORIGINALICALOBJECTID AND recurList.$COLUMN_RECUR_ISLINKEDINSTANCE = 1 AND recurList.$COLUMN_DTSTART >= ${DateTimeUtils.getTodayAsLong()} )) "
             }
 
             queryString += "ORDER BY "

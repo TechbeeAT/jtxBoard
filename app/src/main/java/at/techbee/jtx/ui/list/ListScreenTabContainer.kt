@@ -51,6 +51,7 @@ import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
+import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -238,8 +239,29 @@ fun ListScreenTabContainer(
                                         getActiveViewModel().listSettings.viewMode.value = viewMode
                                         getActiveViewModel().listSettings.saveToPrefs()
                                     }
-                                })
+                                }
+                            )
                         }
+                        Divider()
+                        CheckboxWithText(
+                            text = stringResource(R.string.menu_list_flat_view),
+                            subtext = stringResource(R.string.menu_list_flat_view_sub),
+                            isSelected = getActiveViewModel().listSettings.flatView.value,
+                            onCheckedChange = {
+                                getActiveViewModel().listSettings.flatView.value = it
+                                getActiveViewModel().updateSearch(saveListSettings = true)
+                            }
+                        )
+                        Divider()
+                        CheckboxWithText(
+                            text = stringResource(R.string.menu_list_limit_recur_entries),
+                            subtext = stringResource(R.string.menu_list_limit_recur_entries_sub),
+                            isSelected = getActiveViewModel().listSettings.showOneRecurEntryInFuture.value,
+                            onCheckedChange = {
+                                getActiveViewModel().listSettings.showOneRecurEntryInFuture.value = it
+                                getActiveViewModel().updateSearch(saveListSettings = true)
+                            }
+                        )
                     }
                 }
             )

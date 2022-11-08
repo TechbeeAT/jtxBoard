@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.settings
 
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -54,7 +53,6 @@ fun SettingsScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val subSectionExpanded = remember { mutableStateOf(false) }
 
     val languageOptions = mutableListOf<Locale?>(null)
     for (language in BuildConfig.TRANSLATION_ARRAY) {
@@ -202,14 +200,6 @@ fun SettingsScreen(
                     )
 
                     SwitchSetting(
-                        setting = SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE,
-                        initiallyChecked = settingsStateHolder.settingShowOneRecurEntryInFuture.value,
-                        onCheckedChanged = {
-                            settingsStateHolder.settingShowOneRecurEntryInFuture.value = it
-                            SETTING_SHOW_ONE_RECUR_ENTRY_IN_FUTURE.save(it, context)
-                        })
-
-                    SwitchSetting(
                         setting = SETTING_AUTO_EXPAND_SUBTASKS,
                         initiallyChecked = settingsStateHolder.settingAutoExpandSubtasks.value,
                         onCheckedChanged = {
@@ -237,48 +227,13 @@ fun SettingsScreen(
                             settingsStateHolder.settingShowProgressForMainTasks.value = it
                             SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.save(it, context)
                         })
-
-
-                    AnimatedVisibility(subSectionExpanded.value.not()) {
-                        TextButton(onClick = { subSectionExpanded.value = true }) {
-                            Text(stringResource(id = R.string.list_expand))
-                        }
-                    }
-
-                    AnimatedVisibility(subSectionExpanded.value) {
-                        Column {
-                            SwitchSetting(
-                                setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
-                                initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
-                                onCheckedChanged = {
-                                    settingsStateHolder.settingShowProgressForSubTasks.value = it
-                                    SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
-                                })
-                            SwitchSetting(
-                                setting = SETTING_SHOW_SUBTASKS_IN_TASKLIST,
-                                initiallyChecked = settingsStateHolder.settingShowSubtasksInTasklist.value,
-                                onCheckedChanged = {
-                                    settingsStateHolder.settingShowSubtasksInTasklist.value = it
-                                    SETTING_SHOW_SUBTASKS_IN_TASKLIST.save(it, context)
-                                })
-                            SwitchSetting(
-                                setting = SETTING_SHOW_SUBNOTES_IN_NOTESLIST,
-                                initiallyChecked = settingsStateHolder.settingShowSubnotesInNoteslist.value,
-                                onCheckedChanged = {
-                                    settingsStateHolder.settingShowSubnotesInNoteslist.value = it
-                                    SETTING_SHOW_SUBNOTES_IN_NOTESLIST.save(it, context)
-                                })
-                            SwitchSetting(
-                                setting = SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST,
-                                initiallyChecked = settingsStateHolder.settingShowSubjournalsInJournallist.value,
-                                onCheckedChanged = {
-                                    settingsStateHolder.settingShowSubjournalsInJournallist.value = it
-                                    SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.save(it, context)
-                                })
-                        }
-
-                    }
-
+                    SwitchSetting(
+                        setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
+                        initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingShowProgressForSubTasks.value = it
+                            SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
+                        })
 
 
                     Divider(
@@ -299,7 +254,6 @@ fun SettingsScreen(
                             settingsStateHolder.settingAutosave.value = it
                             SETTING_DETAILS_AUTOSAVE.save(it, context)
                         })
-
                     SwitchSetting(
                         setting = SETTING_DETAILS_ENABLE_MARKDOWN,
                         initiallyChecked = settingsStateHolder.settingEnableMarkdownFormattting.value,
