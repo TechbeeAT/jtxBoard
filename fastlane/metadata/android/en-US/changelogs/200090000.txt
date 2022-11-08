@@ -1,0 +1,2 @@
+- Introduced flat view option to show all child entries on top level
+- Large preview of image attachments
