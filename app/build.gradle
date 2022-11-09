@@ -222,7 +222,7 @@ dependencies {
     // Google Maps
     gplayImplementation "com.google.maps.android:maps-compose:2.2.0"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
-    gplayImplementation "com.google.android.gms:play-services-location:20.0.0"
+    gplayImplementation "com.google.android.gms:play-services-location:21.0.1"
 
     // Workmanager support
     implementation "androidx.work:work-runtime-ktx:$version_work"
