@@ -26,9 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -113,20 +115,20 @@ fun ICalObjectListCard(
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(end = 16.dp).weight(0.2f)
+                            modifier = Modifier.padding(end = 16.dp).weight(0.2f),
                         )
 
                         iCalObject.categories?.let {
                             Text(
                                 it,
-                                style = Typography.labelMedium,
+                                style = MaterialTheme.typography.labelMedium,
                                 fontStyle = FontStyle.Italic,
                                 modifier = Modifier
                                     .padding(end = 16.dp)
                                     .weight(0.2f),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
                             )
                         }
                         if (iCalObject.module == Module.TODO.name) {
@@ -210,7 +212,8 @@ fun ICalObjectListCard(
                                     textDecoration = summaryTextDecoration,
                                     modifier = Modifier
                                         .padding(top = 4.dp)
-                                        .weight(1f)
+                                        .weight(1f),
+                                    style = TextStyle(textDirection = TextDirection.Content)
                                 )
 
                             if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
@@ -230,7 +233,9 @@ fun ICalObjectListCard(
                             Text(
                                 text = iCalObject.description?.trim() ?: "",
                                 maxLines = 6,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.fillMaxWidth(),
+                                style = TextStyle(textDirection = TextDirection.Content)
                             )
 
                         if (iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0

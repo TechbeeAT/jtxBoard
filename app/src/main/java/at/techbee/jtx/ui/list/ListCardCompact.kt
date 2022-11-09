@@ -26,9 +26,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -179,7 +181,8 @@ fun ListCardCompact(
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight = FontWeight.Bold,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
+                                style = TextStyle(textDirection = TextDirection.Content)
                             )
 
                     }
@@ -189,7 +192,9 @@ fun ListCardCompact(
                             text = iCalObject.description?.trim() ?: "",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.fillMaxWidth(),
+                            style = TextStyle(textDirection = TextDirection.Content)
                         )
                 }
 

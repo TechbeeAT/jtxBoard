@@ -25,9 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.BuildConfig
@@ -102,7 +104,11 @@ fun DetailsCardLocation(
                 if(!it) {
                     Column {
                         HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
-                        Text(location)
+                        Text(
+                            text = location,
+                            modifier = Modifier.fillMaxWidth(),
+                            style = TextStyle(textDirection = TextDirection.Content)
+                        )
                     }
                 } else {
                     Row(
@@ -131,7 +137,8 @@ fun DetailsCardLocation(
                             },
                             //colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            textStyle = TextStyle(textDirection = TextDirection.Content)
                         )
 
                         if(BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY) {

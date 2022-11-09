@@ -18,9 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -149,6 +151,7 @@ fun ListCardGrid(
                                     maxLines = 4,
                                     overflow = TextOverflow.Ellipsis,
                                     fontWeight = FontWeight.Bold,
+                                    style = TextStyle(textDirection = TextDirection.Content),
                                     modifier = Modifier
                                         .padding(top = 4.dp)
                                         .weight(1f)
@@ -174,7 +177,9 @@ fun ListCardGrid(
                                 text = iCalObject.description?.trim() ?: "",
                                 maxLines = 4,
                                 overflow = TextOverflow.Ellipsis,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = TextStyle(textDirection = TextDirection.Content),
+                                modifier = Modifier.fillMaxWidth()
                             )
                     }
                 }
