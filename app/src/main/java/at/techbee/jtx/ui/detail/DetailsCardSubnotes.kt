@@ -26,9 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -145,7 +147,8 @@ fun DetailsCardSubnotes(
                             if (newSubnoteText.isNotEmpty())
                                 onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
                             newSubnoteText = ""
-                        })
+                        }),
+                        textStyle = TextStyle(textDirection = TextDirection.Content)
                     )
                     IconButton(onClick = { showAddAudioNoteDialog = true }) {
                         Icon(Icons.Outlined.Mic, stringResource(id = R.string.view_add_audio_note))

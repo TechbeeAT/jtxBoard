@@ -22,6 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
 
@@ -55,6 +57,7 @@ fun EditSubnoteDialog(
                     },
                     maxLines = 4,
                     leadingIcon = { Icon(Icons.Outlined.Note, null) },
+                    textStyle = TextStyle(textDirection = TextDirection.Content)
                 )
             }
         },

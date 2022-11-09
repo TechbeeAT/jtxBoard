@@ -27,7 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -83,7 +85,8 @@ fun CollectionsAddOrEditDialog(
                             }
                         ),
                         modifier = Modifier.weight(1f),
-                        isError = noCollectionNameError
+                        isError = noCollectionNameError,
+                        textStyle = TextStyle(textDirection = TextDirection.Content)
                     )
                 }
 

@@ -22,6 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Comment
@@ -56,6 +58,7 @@ fun EditCommentDialog(
                     },
                     maxLines = 4,
                     leadingIcon = { Icon(Icons.Outlined.Comment, null) },
+                    textStyle = TextStyle(textDirection = TextDirection.Content)
                 )
             }
         },
