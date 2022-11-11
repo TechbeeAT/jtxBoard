@@ -81,9 +81,9 @@ fun ListScreen(
                     else -> it.priority.toString()
                 }
             }
-            GroupBy.DATE -> it.getDtstartTextInfo(context)
-            GroupBy.START -> it.getDtstartTextInfo(context)
-            GroupBy.DUE -> it.getDueTextInfo(context)
+            GroupBy.DATE -> it.getDtstartTextInfo(context, true)
+            GroupBy.START -> it.getDtstartTextInfo(context, true)
+            GroupBy.DUE -> it.getDueTextInfo(context, true)
             else -> { it.module }
         }
     }
