@@ -110,8 +110,16 @@ fun DetailScreenContent(
             mutableStateOf(false)
     }
 
+    var timeout by remember { mutableStateOf(false) }
+    LaunchedEffect(timeout, iCalEntity.value) {
+        if (iCalEntity.value == null && !timeout) {
+            delay((1).seconds)
+            timeout = true
+        }
+    }
+
     // item was not loaded yet or was deleted in the background
-    if (iCalEntity.value == null) {
+    if (iCalEntity.value == null && timeout) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -124,6 +132,17 @@ fun DetailScreenContent(
             Button(onClick = { goBack() }) {
                 Text(stringResource(id = R.string.back))
             }
+        }
+        return
+    } else if(iCalEntity.value == null && !timeout) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+        ) {
+            CircularProgressIndicator()
         }
         return
     }
@@ -386,7 +405,9 @@ fun DetailScreenContent(
                         if (summary.isNotBlank())
                             Text(
                                 summary.trim(),
-                                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
                                 style = MaterialTheme.typography.titleMedium.copy(textDirection = TextDirection.Content)
                                 //fontWeight = FontWeight.Bold
                             )
