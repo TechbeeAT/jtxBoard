@@ -467,7 +467,7 @@ fun ListOptionsFilter(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .padding(top = 16.dp, bottom = 100.dp)
+                    .padding(vertical = 16.dp)
                     .fillMaxWidth()
             ) {
                 Button(onClick = {
