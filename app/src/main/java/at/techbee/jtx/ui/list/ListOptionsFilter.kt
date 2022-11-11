@@ -262,7 +262,13 @@ fun ListOptionsFilter(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    allAccounts?.keys?.sortedBy { it.lowercase() }?.forEach { account ->
+                    allAccounts
+                        ?.filterValues { collections ->
+                            (module == Module.JOURNAL && collections.any { it.supportsVJOURNAL })
+                                    || (module == Module.NOTE && collections.any { it.supportsVJOURNAL })
+                                    || (module == Module.TODO && collections.any { it.supportsVTODO })
+                        }
+                        ?.keys?.sortedBy { it.lowercase() }?.forEach { account ->
                         FilterChip(
                             selected = listSettings.searchAccount.value.contains(account),
                             onClick = {
@@ -304,8 +310,13 @@ fun ListOptionsFilter(
             {
                 FlowRow(modifier = Modifier.fillMaxWidth()) {
 
-                    val allCollectionsGrouped =
-                        allCollections?.groupBy { it.displayName ?: "" }
+                    val allCollectionsGrouped = allCollections
+                        ?.filter { collection ->
+                            (module == Module.JOURNAL && collection.supportsVJOURNAL)
+                                    || (module == Module.NOTE && collection.supportsVJOURNAL)
+                                    || (module == Module.TODO && collection.supportsVTODO)
+                        }
+                        ?.groupBy { it.displayName ?: "" }
                     allCollectionsGrouped?.keys?.sortedBy { it.lowercase() }
                         ?.forEach { collection ->
                             FilterChip(
@@ -390,9 +401,7 @@ fun ListOptionsFilter(
                     FlowRow(modifier = Modifier.fillMaxWidth()) {
                         StatusTodo.values().forEach { status ->
                             FilterChip(
-                                selected = listSettings.searchStatusTodo.value.contains(
-                                    status
-                                ),
+                                selected = listSettings.searchStatusTodo.value.contains(status),
                                 onClick = {
                                     listSettings.searchStatusTodo.value =
                                         if (listSettings.searchStatusTodo.value.contains(
