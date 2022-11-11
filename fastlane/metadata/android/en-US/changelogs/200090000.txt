@@ -1,2 +1,11 @@
 - Introduced flat view option to show all child entries on top level
 - Large preview of image attachments
+
+ATTENTION:
+In this release some settings were removed from the settings screen and put into other places:
+- The new flat view option in the list replaces the setting to show subtasks of journals and notes in tasklist and the setting to show subnotes of journals and tasks in the noteslist
+- Markdown can now be enabled/disabled within the detail view of an entry
+- Autosave can now be enabled/disabled within the edit view of an entry
+- The setting to show only one recurring in the future is now available in the list view as "limit recurring"
+
+Due to those changes those specific settings have been restored to the default values.
