@@ -12,7 +12,6 @@ import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -66,18 +65,6 @@ enum class SwitchSetting(
         ))  },
         title = R.string.settings_show_progress_for_subtasks_in_list,
         default = false
-    ),
-    SETTING_DETAILS_AUTOSAVE(
-        key = "settings_details_autosave",
-        icon = { Icon(Icons.Outlined.Save, contentDescription = null, modifier = Modifier.padding(16.dp)) },
-        title = R.string.settings_details_autosave_while_editing,
-        default = true
-    ),
-    SETTING_DETAILS_ENABLE_MARKDOWN(
-        key = "settings_details_enable_markdown",
-        icon = { Icon(Icons.Outlined.FormatSize, contentDescription = null, modifier = Modifier.padding(16.dp)) },
-        title = R.string.settings_details_enable_markdown,
-        default = true
     ),
     SETTING_DISABLE_ALARMS_FOR_READONLY(
     key = "settings_disable_alarms_for_readonly",
