@@ -29,11 +29,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -108,8 +110,16 @@ fun DetailScreenContent(
             mutableStateOf(false)
     }
 
+    var timeout by remember { mutableStateOf(false) }
+    LaunchedEffect(timeout, iCalEntity.value) {
+        if (iCalEntity.value == null && !timeout) {
+            delay((1).seconds)
+            timeout = true
+        }
+    }
+
     // item was not loaded yet or was deleted in the background
-    if (iCalEntity.value == null) {
+    if (iCalEntity.value == null && timeout) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -122,6 +132,17 @@ fun DetailScreenContent(
             Button(onClick = { goBack() }) {
                 Text(stringResource(id = R.string.back))
             }
+        }
+        return
+    } else if(iCalEntity.value == null && !timeout) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+        ) {
+            CircularProgressIndicator()
         }
         return
     }
@@ -384,8 +405,10 @@ fun DetailScreenContent(
                         if (summary.isNotBlank())
                             Text(
                                 summary.trim(),
-                                modifier = Modifier.padding(8.dp),
-                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                style = MaterialTheme.typography.titleMedium.copy(textDirection = TextDirection.Content)
                                 //fontWeight = FontWeight.Bold
                             )
 
@@ -393,12 +416,14 @@ fun DetailScreenContent(
                             if(detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] != false)
                                 MarkdownText(
                                     markdown = description.trim(),
-                                    modifier = Modifier.padding(8.dp)
+                                    modifier = Modifier.padding(8.dp),
+                                    bodyStyle = TextStyle(textDirection = TextDirection.Content)
                                 )
                             else
                                 Text(
                                     text = description.trim(),
-                                    modifier = Modifier.padding(8.dp)
+                                    modifier = Modifier.padding(8.dp),
+                                    style = TextStyle(textDirection = TextDirection.Content)
                                 )
                         }
                     }
@@ -422,8 +447,9 @@ fun DetailScreenContent(
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
-                    )
+                            .padding(8.dp),
+                        textStyle = TextStyle(textDirection = TextDirection.Content)
+                        )
 
                     OutlinedTextField(
                         value = description,
@@ -436,7 +462,8 @@ fun DetailScreenContent(
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        textStyle = TextStyle(textDirection = TextDirection.Content)
                     )
                 }
             }

@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -59,8 +60,10 @@ import at.techbee.jtx.util.SyncUtil
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(
@@ -99,6 +102,14 @@ fun ListScreenTabContainer(
         else -> icalListViewModelJournals  // fallback, should not happen
     }
     val allWriteableCollections = listViewModel.allWriteableCollections.observeAsState(emptyList())
+
+    var timeout by remember { mutableStateOf(false) }
+    LaunchedEffect(timeout, allWriteableCollections.value) {
+        if (!timeout) {
+            delay((1).seconds)
+            timeout = true
+        }
+    }
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
@@ -333,9 +344,13 @@ fun ListScreenTabContainer(
                         }
                     }
                 )
-            } else {
-                Snackbar(modifier = Modifier.padding(8.dp)) {
-                    Text("Please add a local collection or synchronise a remote collection that supports this module.")
+            } else if(timeout) {
+                BottomAppBar {
+                    Text(
+                        text = stringResource(R.string.list_snackbar_no_collection),
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         },

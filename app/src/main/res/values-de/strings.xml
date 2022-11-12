@@ -570,4 +570,24 @@ Danke!"</string>
     <string name="alarms_always_ondue">"Immer wenn fällig"</string>
     <string name="settings_show_one_recur_entry_in_future">"Zeige nur einen wiederkehrenden Eintrag in der Zukunft"</string>
     <string name="settings_auto_alarm_sub">"Erstellt automatisch Alarme wenn aktiviert. \"Immer wenn fällig\" triggert immer eine Benachrichtigung wenn eine Aufgabe fällig wird, auch wenn es keinen expliziten Alarm gibt."</string>
+
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="status_no_status">"Kein Status"</string>
+    <string name="classification_no_classification">"Keine Klassifizierung"</string>
+    <string name="map">"Karte"</string>
+    <string name="open_in_browser">"Im Browser öffnen"</string>
+    <string name="list_date_without">"Ohne Datum"</string>
+    <string name="list_start_without">"Ohne Start"</string>
+    <string name="list_due_without">"Ohne Fälligkeit"</string>
+    <string name="list_dialog_delete_visible_message2">"Achtung: Exklusive Serienelemente!"</string>
+    <string name="list_snackbar_no_collection">"Bitte fügen Sie eine lokale Collection oder synchronisieren Sie eine Collection, die dieses Modul unterstützt."</string>
+    <string name="filter_second_order_by">"Danach sortieren nach"</string>
+    <string name="filter_group_by">"Gruppieren nach"</string>
+    <string name="filter_group_by_info">"Gruppierung ist verfügbar für Listen- und Kompakt-Ansicht"</string>
+    <string name="menu_list_flat_view">"Flache Ansicht"</string>
+    <string name="menu_list_flat_view_sub">"Zeige Untereinträge immer auf höchster Ebene"</string>
+    <string name="menu_list_limit_recur_entries">"Wiederkehrende Einträge limitieren"</string>
+    <string name="menu_list_limit_recur_entries_sub">"Zeige nur einen Eintrag in der Zukunft"</string>
+    <string name="menu_view_markdown_formatting">"Markdown-Formatierung"</string>
+    <string name="menu_view_autosave">"Autosave"</string>
 </resources>

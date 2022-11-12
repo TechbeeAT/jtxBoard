@@ -254,6 +254,7 @@
     <string name="list_quickadd_dialog_sr_start">Start speech recognition</string>
     <string name="list_quickadd_dialog_sr_listening">Listening…</string>
     <string name="list_quickadd_toast_no_summary_description">Entry without summary/description cannot be created.</string>
+    <string name="list_snackbar_no_collection">Please add a local collection or synchronise a remote collection that supports this module.</string>
 
     <string name="list_item_upload_pending">Upload pending</string>
     <string name="list_item_recurring">Recurring entry</string>

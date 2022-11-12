@@ -247,21 +247,6 @@ fun SettingsScreen(
                         modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
                     )
 
-                    SwitchSetting(
-                        setting = SETTING_DETAILS_AUTOSAVE,
-                        initiallyChecked = settingsStateHolder.settingAutosave.value,
-                        onCheckedChanged = {
-                            settingsStateHolder.settingAutosave.value = it
-                            SETTING_DETAILS_AUTOSAVE.save(it, context)
-                        })
-                    SwitchSetting(
-                        setting = SETTING_DETAILS_ENABLE_MARKDOWN,
-                        initiallyChecked = settingsStateHolder.settingEnableMarkdownFormattting.value,
-                        onCheckedChanged = {
-                            settingsStateHolder.settingEnableMarkdownFormattting.value = it
-                            SETTING_DETAILS_ENABLE_MARKDOWN.save(it, context)
-                        })
-
                     Divider(
                         modifier = Modifier
                             .padding(top = 8.dp)

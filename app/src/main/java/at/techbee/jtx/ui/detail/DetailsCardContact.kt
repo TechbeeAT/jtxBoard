@@ -31,9 +31,11 @@ import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -79,7 +81,11 @@ fun DetailsCardContact(
 
                     Column {
                         HeadlineWithIcon(icon = Icons.Outlined.ContactMail, iconDesc = headline, text = headline)
-                        Text(contact)
+                        Text(
+                            text = contact,
+                            modifier = Modifier.fillMaxWidth(),
+                            style = TextStyle(textDirection = TextDirection.Content)
+                        )
                     }
                 } else {
 
@@ -148,7 +154,8 @@ fun DetailsCardContact(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .border(0.dp, Color.Transparent)
-                                .bringIntoViewRequester(bringIntoViewRequester)
+                                .bringIntoViewRequester(bringIntoViewRequester),
+                            textStyle = TextStyle(textDirection = TextDirection.Content)
                         )
                     }
                 }

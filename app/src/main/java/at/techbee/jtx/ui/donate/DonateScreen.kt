@@ -140,7 +140,8 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
                 Text(
                     text = stringResource(id = R.string.link_jtx_donate),
                     style = Typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
                 )
             },
             modifier = Modifier.padding(top = 8.dp),

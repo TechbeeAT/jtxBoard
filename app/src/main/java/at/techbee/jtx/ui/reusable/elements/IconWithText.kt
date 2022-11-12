@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 @Composable
@@ -50,7 +49,7 @@ fun IconWithText(icon: ImageVector, iconDesc: String, text: String, modifier: Mo
 @Preview(showBackground = true)
 @Composable
 fun IconWithText_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         IconWithText(Icons.Outlined.Group, "test", "4")
     }
 }

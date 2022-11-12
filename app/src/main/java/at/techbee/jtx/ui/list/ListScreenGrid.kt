@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -30,7 +31,6 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
@@ -82,7 +82,7 @@ fun ListScreenGrid(
                         onClick = { goToView(iCalObject.id) },
                         onLongClick = {
                             if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                              goToEdit(iCalObject.id)
+                                goToEdit(iCalObject.id)
                         }
                     )
                     .height(150.dp),
@@ -97,7 +97,7 @@ fun ListScreenGrid(
 @Preview(showBackground = true)
 @Composable
 fun ListScreenGrid_TODO() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             id = 1L
@@ -140,7 +140,7 @@ fun ListScreenGrid_TODO() {
 @Preview(showBackground = true)
 @Composable
 fun ListScreenGrid_JOURNAL() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             id = 1L

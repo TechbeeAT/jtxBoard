@@ -25,9 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -167,7 +169,8 @@ fun DetailsCardCategories(
                                 categories = categories.plus(Category(text = newCategory))
                             newCategory = ""
                             onCategoriesUpdated(categories)
-                        })
+                        }),
+                        textStyle = TextStyle(textDirection = TextDirection.Content)
                     )
                 }
             }
