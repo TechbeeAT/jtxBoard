@@ -15,15 +15,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.list.*
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -42,6 +46,10 @@ fun ListWidgetConfigContent(
 
     var selectedModule by remember { mutableStateOf(initialConfig.module) }
     val listSettings = ListSettings.fromListWidgetConfig(initialConfig)
+    val isPurchased = if(LocalInspectionMode.current)
+        remember { mutableStateOf(true) }
+    else
+        BillingManager.getInstance().isProPurchased.observeAsState(false)
 
 
     Scaffold(
@@ -100,30 +108,41 @@ fun ListWidgetConfigContent(
                     }
                 }
 
-                ListOptionsFilter(
-                    module = selectedModule,
-                    listSettings = listSettings,
-                    allCollectionsLive = database.getAllWriteableCollections(),
-                    allCategoriesLive = database.getAllCategoriesAsText(),
-                    onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
-                    isWidgetConfig = true
-                )
+                if(isPurchased.value) {
 
-                Divider()
+                    ListOptionsFilter(
+                        module = selectedModule,
+                        listSettings = listSettings,
+                        allCollectionsLive = database.getAllWriteableCollections(),
+                        allCategoriesLive = database.getAllCategoriesAsText(),
+                        onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
+                        isWidgetConfig = true
+                    )
 
-                ListOptionsSortOrder(
-                    module = selectedModule,
-                    listSettings = listSettings,
-                    onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ }
-                )
+                    Divider()
+
+                    ListOptionsSortOrder(
+                        module = selectedModule,
+                        listSettings = listSettings,
+                        onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ }
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.widget_list_configuration_pro_info),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         },
         bottomBar = {
             BottomAppBar(
                 actions = {
-                          TextButton(onClick = { listSettings.reset() }) {
-                              Text(stringResource(id = R.string.reset))
-                          }
+                    if(isPurchased.value) {
+                        TextButton(onClick = { listSettings.reset() }) {
+                            Text(stringResource(id = R.string.reset))
+                        }
+                    }
                 },
                 floatingActionButton = {
                     FloatingActionButton(
