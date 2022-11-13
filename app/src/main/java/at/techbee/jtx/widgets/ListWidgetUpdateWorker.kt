@@ -44,28 +44,30 @@ class ListWidgetUpdateWorker(
                             .iCalDatabaseDao
                             .getIcal4ListSync(
                                 ICal4List.constructQuery(
-                                module = listWidgetConfig?.module ?: Module.TODO,
-                                searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
-                                searchStatusTodo = listWidgetConfig?.searchStatusTodo ?: emptyList(),
-                                searchStatusJournal = listWidgetConfig?.searchStatusJournal ?: emptyList(),
-                                searchClassification = listWidgetConfig?.searchClassification ?: emptyList(),
-                                searchCollection = listWidgetConfig?.searchCollection ?: emptyList(),
-                                searchAccount = listWidgetConfig?.searchAccount ?: emptyList(),
-                                orderBy = listWidgetConfig?.orderBy ?: OrderBy.CREATED,
-                                sortOrder = listWidgetConfig?.sortOrder ?: SortOrder.ASC,
-                                orderBy2 = listWidgetConfig?.orderBy2 ?: OrderBy.SUMMARY,
-                                sortOrder2 = listWidgetConfig?.sortOrder2 ?: SortOrder.ASC,
-                                isExcludeDone = listWidgetConfig?.isExcludeDone ?: false,
-                                isFilterOverdue = listWidgetConfig?.isFilterOverdue ?: false,
-                                isFilterDueToday = listWidgetConfig?.isFilterDueToday ?: false,
-                                isFilterDueTomorrow = listWidgetConfig?.isFilterDueTomorrow ?: false,
-                                isFilterDueFuture = listWidgetConfig?.isFilterDueFuture ?: false,
-                                isFilterStartInPast = listWidgetConfig?.isFilterStartInPast ?: false,
-                                isFilterStartToday = listWidgetConfig?.isFilterStartToday?: false,
-                                isFilterStartTomorrow = listWidgetConfig?.isFilterStartTomorrow ?: false,
-                                isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
-                                isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false
-                            ))
+                                    module = listWidgetConfig?.module ?: Module.TODO,
+                                    searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
+                                    searchStatusTodo = listWidgetConfig?.searchStatusTodo ?: emptyList(),
+                                    searchStatusJournal = listWidgetConfig?.searchStatusJournal ?: emptyList(),
+                                    searchClassification = listWidgetConfig?.searchClassification ?: emptyList(),
+                                    searchCollection = listWidgetConfig?.searchCollection ?: emptyList(),
+                                    searchAccount = listWidgetConfig?.searchAccount ?: emptyList(),
+                                    orderBy = listWidgetConfig?.orderBy ?: OrderBy.CREATED,
+                                    sortOrder = listWidgetConfig?.sortOrder ?: SortOrder.ASC,
+                                    orderBy2 = listWidgetConfig?.orderBy2 ?: OrderBy.SUMMARY,
+                                    sortOrder2 = listWidgetConfig?.sortOrder2 ?: SortOrder.ASC,
+                                    isExcludeDone = listWidgetConfig?.isExcludeDone ?: false,
+                                    isFilterOverdue = listWidgetConfig?.isFilterOverdue ?: false,
+                                    isFilterDueToday = listWidgetConfig?.isFilterDueToday ?: false,
+                                    isFilterDueTomorrow = listWidgetConfig?.isFilterDueTomorrow ?: false,
+                                    isFilterDueFuture = listWidgetConfig?.isFilterDueFuture ?: false,
+                                    isFilterStartInPast = listWidgetConfig?.isFilterStartInPast ?: false,
+                                    isFilterStartToday = listWidgetConfig?.isFilterStartToday?: false,
+                                    isFilterStartTomorrow = listWidgetConfig?.isFilterStartTomorrow ?: false,
+                                    isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
+                                    isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false,
+                                    flatView = listWidgetConfig?.flatView ?: true,
+                                )
+                            )
 
                         pref.toMutablePreferences().apply {
                             this[ListWidgetReceiver.list] = entries.map { entry -> Json.encodeToString(entry) }.toSet()

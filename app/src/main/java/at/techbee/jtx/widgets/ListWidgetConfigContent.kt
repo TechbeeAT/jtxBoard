@@ -29,6 +29,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.list.*
+import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -46,6 +47,7 @@ fun ListWidgetConfigContent(
 
     var selectedModule by remember { mutableStateOf(initialConfig.module) }
     val listSettings = ListSettings.fromListWidgetConfig(initialConfig)
+    BillingManager.getInstance().initialise(context)
     val isPurchased = if(LocalInspectionMode.current)
         remember { mutableStateOf(true) }
     else
@@ -126,6 +128,27 @@ fun ListWidgetConfigContent(
                         listSettings = listSettings,
                         onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ }
                     )
+
+                    Divider()
+
+                    HeadlineWithIcon(
+                        icon = Icons.Outlined.Settings,
+                        iconDesc = stringResource(id = R.string.menu_list_flat_view),
+                        text = stringResource(id = R.string.menu_list_flat_view),
+                        modifier = Modifier.padding(top = 8.dp).fillMaxWidth()
+                    )
+                    FlowRow(modifier = Modifier.fillMaxWidth()) {
+
+                        FilterChip(
+                            selected = listSettings.flatView.value,
+                            onClick = {
+                                listSettings.flatView.value = !listSettings.flatView.value
+                            },
+                            label = { Text(stringResource(id = R.string.menu_list_flat_view)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
+
                 } else {
                     Text(
                         text = stringResource(R.string.widget_list_configuration_pro_info),
@@ -161,6 +184,7 @@ fun ListWidgetConfigContent(
                                     orderBy2 = listSettings.orderBy2.value
                                     sortOrder2 = listSettings.sortOrder2.value
                                     groupBy = listSettings.groupBy.value
+                                    flatView = listSettings.flatView.value
 
                                     isExcludeDone = listSettings.isExcludeDone.value
                                     isFilterOverdue = listSettings.isFilterOverdue.value
@@ -221,5 +245,6 @@ data class ListWidgetConfig(
     var isFilterStartFuture: Boolean = false,
     var isFilterNoDatesSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!
-    var viewMode: ViewMode = ViewMode.LIST
+    var viewMode: ViewMode = ViewMode.LIST,
+    var flatView: Boolean = true
 )

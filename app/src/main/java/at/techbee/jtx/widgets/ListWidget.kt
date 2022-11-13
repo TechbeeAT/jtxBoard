@@ -54,7 +54,8 @@ class ListWidget : GlanceAppWidget() {
         } ?: emptyList()
 
         val configIntent = Intent(context, ListWidgetConfigActivity::class.java)
-        configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val imageSize = 36.dp
 
 

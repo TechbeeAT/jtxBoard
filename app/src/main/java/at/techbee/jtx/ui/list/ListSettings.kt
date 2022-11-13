@@ -133,6 +133,7 @@ class ListSettings {
             sortOrder2.value = listWidgetConfig.sortOrder2
             groupBy.value = listWidgetConfig.groupBy
 
+            flatView.value = listWidgetConfig.flatView
             viewMode.value = listWidgetConfig.viewMode
         }
     }
