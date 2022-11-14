@@ -305,14 +305,15 @@ enum class OrderBy(val stringResource: Int, val queryAppendix: String) {
     CREATED(R.string.filter_created, "$COLUMN_CREATED "),
     LAST_MODIFIED(R.string.filter_last_modified, "$COLUMN_LAST_MODIFIED "),
     SUMMARY(R.string.summary, "UPPER($COLUMN_SUMMARY) "),
-    PRIORITY(R.string.priority, "$COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY ");
+    PRIORITY(R.string.priority, "$COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY "),
+    PROGRESS(R.string.progress, "$COLUMN_PERCENT ");
 
     companion object {
         fun getValuesFor(module: Module): Array<OrderBy> =
             when(module) {
                 Module.JOURNAL -> arrayOf(START_VJOURNAL, CREATED, LAST_MODIFIED, SUMMARY)
                 Module.NOTE -> arrayOf(CREATED, LAST_MODIFIED, SUMMARY)
-                Module.TODO -> arrayOf(START_VTODO, DUE, COMPLETED, CREATED, LAST_MODIFIED, SUMMARY, PRIORITY)
+                Module.TODO -> arrayOf(START_VTODO, DUE, COMPLETED, CREATED, LAST_MODIFIED, SUMMARY, PRIORITY, PROGRESS)
             }
     }
 }

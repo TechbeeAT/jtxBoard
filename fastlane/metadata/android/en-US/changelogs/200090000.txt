@@ -2,7 +2,6 @@
 - Markdown can now be enabled/disabled within the detail view of an entry
 - Autosave can now be enabled/disabled within the edit view of an entry
 - The setting to show only one recurring in the future is now available in the list view as "limit recurring"
-Due to those changes those specific settings have been restored to the default values.
 - Larger preview of image attachments
 
 Due to changes in the settings the changed options might have been restored to default values.
