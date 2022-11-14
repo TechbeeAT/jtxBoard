@@ -48,6 +48,7 @@ import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
 import at.techbee.jtx.ui.reusable.screens.AboutScreen
 import at.techbee.jtx.ui.buypro.BuyProScreen
 import at.techbee.jtx.ui.list.ListSettings
+import at.techbee.jtx.ui.reusable.dialogs.Jtx20009ReleaseInfoDialog
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -358,6 +359,15 @@ fun MainNavHost(
             onOK = {
                 settingsStateHolder.showJtx20releaseinfo.value = false
                 settingsStateHolder.showJtx20releaseinfo = settingsStateHolder.showJtx20releaseinfo
+            }
+        )
+    }
+
+    if (settingsStateHolder.showV20009releaseInfo.value) {
+        Jtx20009ReleaseInfoDialog(
+            onOK = {
+                settingsStateHolder.showV20009releaseInfo.value = false
+                settingsStateHolder.showV20009releaseInfo = settingsStateHolder.showV20009releaseInfo
             }
         )
     }

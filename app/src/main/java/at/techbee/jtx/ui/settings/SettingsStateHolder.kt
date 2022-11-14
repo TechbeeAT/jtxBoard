@@ -66,6 +66,11 @@ class SettingsStateHolder(val context: Context) {
             field = newValue
         }
 
+    var showV20009releaseInfo = mutableStateOf(prefs.getBoolean("showV20009releaseInfo", context.packageManager.getPackageInfoCompat(context.packageName, 0).firstInstallTime < 1668463407363))
+        set(newValue) {
+            prefs.edit().putBoolean("showV20009releaseInfo", newValue.value).apply()
+            field = newValue
+        }
 }
 
 
