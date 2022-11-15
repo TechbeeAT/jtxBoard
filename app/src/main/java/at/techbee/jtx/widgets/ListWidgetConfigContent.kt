@@ -133,8 +133,8 @@ fun ListWidgetConfigContent(
 
                     HeadlineWithIcon(
                         icon = Icons.Outlined.Settings,
-                        iconDesc = stringResource(id = R.string.menu_list_flat_view),
-                        text = stringResource(id = R.string.menu_list_flat_view),
+                        iconDesc = stringResource(id = R.string.widget_list_view_settings),
+                        text = stringResource(id = R.string.widget_list_view_settings),
                         modifier = Modifier.padding(top = 8.dp).fillMaxWidth()
                     )
                     FlowRow(modifier = Modifier.fillMaxWidth()) {
@@ -147,7 +147,27 @@ fun ListWidgetConfigContent(
                             label = { Text(stringResource(id = R.string.menu_list_flat_view)) },
                             modifier = Modifier.padding(end = 4.dp)
                         )
+
+                        if(selectedModule == Module.TODO) {
+                            FilterChip(
+                                selected = listSettings.checkboxPositionEnd.value,
+                                onClick = {
+                                    listSettings.checkboxPositionEnd.value = !listSettings.checkboxPositionEnd.value
+                                },
+                                label = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        if(!listSettings.checkboxPositionEnd.value)
+                                            Icon(Icons.Outlined.CheckBox, "Start", modifier = Modifier.padding(end = 4.dp))
+                                        Text(stringResource(id = R.string.widget_list_configuration_checkbox_position))
+                                        if(listSettings.checkboxPositionEnd.value)
+                                            Icon(Icons.Outlined.CheckBox, "End", modifier = Modifier.padding(start = 4.dp))
+                                        }
+                                    },
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                        }
                     }
+
 
                 } else {
                     Text(
@@ -185,6 +205,7 @@ fun ListWidgetConfigContent(
                                     sortOrder2 = listSettings.sortOrder2.value
                                     groupBy = listSettings.groupBy.value
                                     flatView = listSettings.flatView.value
+                                    checkboxPositionEnd = listSettings.checkboxPositionEnd.value
 
                                     isExcludeDone = listSettings.isExcludeDone.value
                                     isFilterOverdue = listSettings.isFilterOverdue.value
@@ -246,5 +267,6 @@ data class ListWidgetConfig(
     var isFilterNoDatesSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!
     var viewMode: ViewMode = ViewMode.LIST,
-    var flatView: Boolean = true
+    var flatView: Boolean = true,
+    var checkboxPositionEnd: Boolean = false
 )

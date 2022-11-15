@@ -49,6 +49,8 @@ class ListSettings {
     var flatView: MutableState<Boolean> = mutableStateOf(false)
     var showOneRecurEntryInFuture: MutableState<Boolean> = mutableStateOf(false)
 
+    var checkboxPositionEnd: MutableState<Boolean> = mutableStateOf(false)  // widget only
+
 
 
     companion object {
@@ -77,6 +79,8 @@ class ListSettings {
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
         private const val PREFS_FLAT_VIEW = "prefsFlatView"
         private const val PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE = "prefsShowOneRecurEntryInFuture"
+        private const val PREFS_CHECKBOX_POSITION_END = "prefsCheckboxPosition"
+
 
 
         fun fromPrefs(prefs: SharedPreferences) = ListSettings().apply {
@@ -106,6 +110,8 @@ class ListSettings {
 
             viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
+            checkboxPositionEnd.value = prefs.getBoolean(PREFS_CHECKBOX_POSITION_END, false)
+
 
             showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
         }
@@ -135,6 +141,7 @@ class ListSettings {
 
             flatView.value = listWidgetConfig.flatView
             viewMode.value = listWidgetConfig.viewMode
+            checkboxPositionEnd.value = listWidgetConfig.checkboxPositionEnd
         }
     }
 
@@ -165,6 +172,7 @@ class ListSettings {
 
             putString(PREFS_VIEWMODE, viewMode.value.name)
             putBoolean(PREFS_FLAT_VIEW, flatView.value)
+            putBoolean(PREFS_CHECKBOX_POSITION_END, checkboxPositionEnd.value)
 
             putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
 

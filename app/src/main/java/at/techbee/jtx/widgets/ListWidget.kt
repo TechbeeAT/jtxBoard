@@ -154,7 +154,8 @@ class ListWidget : GlanceAppWidget() {
                                 ListEntry(
                                     obj = entry,
                                     textColor = GlanceTheme.colors.onSurface,
-                                    containerColor = GlanceTheme.colors.surface
+                                    containerColor = GlanceTheme.colors.surface,
+                                    checkboxEnd = listWidgetConfig?.checkboxPositionEnd ?: false
                                 )
                             }
                         }

@@ -38,7 +38,8 @@ import at.techbee.jtx.widgets.px
 fun ListEntry(
     obj: ICal4List,
     textColor: ColorProvider,
-    containerColor: ColorProvider
+    containerColor: ColorProvider,
+    checkboxEnd: Boolean
 ) {
 
     if(obj.summary.isNullOrEmpty() && obj.description.isNullOrEmpty())
@@ -68,7 +69,7 @@ fun ListEntry(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        if (obj.module == Module.TODO.name && !obj.isReadOnly) {
+        if (obj.module == Module.TODO.name && !obj.isReadOnly && !checkboxEnd) {
             CheckBox(
                 checked = obj.percent == 100,
                 onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
@@ -130,6 +131,17 @@ fun ListEntry(
                 if(!obj.description.isNullOrEmpty())
                     Text(obj.description!!, maxLines = 2, style = textStyleDescription, modifier = GlanceModifier.fillMaxWidth())
             }
+        }
+
+        if (obj.module == Module.TODO.name && !obj.isReadOnly && checkboxEnd) {
+            CheckBox(
+                checked = obj.percent == 100,
+                onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
+                    parameters = actionParametersOf(
+                        ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
+                    )
+                )
+            )
         }
     }
 }
