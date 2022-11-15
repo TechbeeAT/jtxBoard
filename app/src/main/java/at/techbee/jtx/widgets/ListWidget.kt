@@ -24,9 +24,7 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.layout.*
-import androidx.glance.text.FontWeight
-import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
+import androidx.glance.text.*
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.ListWidgetConfigActivity
@@ -137,27 +135,44 @@ class ListWidget : GlanceAppWidget() {
                     )
                 }
 
-                LazyColumn(
-                    modifier = GlanceModifier
-                        //.defaultWeight()
-                        .padding(bottom = 2.dp, start = 2.dp, end = 2.dp, top = 0.dp)
-                        .background(GlanceTheme.colors.primaryContainer)
-                        .cornerRadius(8.dp)
-                ) {
+                if(list.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = GlanceModifier
+                            //.defaultWeight()
+                            .padding(bottom = 2.dp, start = 2.dp, end = 2.dp, top = 0.dp)
+                            .background(GlanceTheme.colors.primaryContainer)
+                            .cornerRadius(8.dp)
+                    ) {
 
-                    items(list) { entry ->
+                        items(list) { entry ->
 
-                        Column(
-                            modifier = GlanceModifier
-                                .fillMaxWidth()
-                                .padding(bottom = 4.dp)
-                        ) {
-                            ListEntry(
-                                obj = entry,
-                                textColor = GlanceTheme.colors.onSurface,
-                                containerColor = GlanceTheme.colors.surface
-                            )
+                            Column(
+                                modifier = GlanceModifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 4.dp)
+                            ) {
+                                ListEntry(
+                                    obj = entry,
+                                    textColor = GlanceTheme.colors.onSurface,
+                                    containerColor = GlanceTheme.colors.surface
+                                )
+                            }
                         }
+                    }
+                } else {
+                    Column(
+                        modifier = GlanceModifier.padding(8.dp).fillMaxWidth().fillMaxHeight(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = context.getString(R.string.widget_list_no_entries_found),
+                            style = TextStyle(
+                                color = GlanceTheme.colors.onPrimaryContainer,
+                                fontSize = 14.sp,
+                                fontStyle = FontStyle.Italic
+                            )
+                        )
                     }
                 }
             }

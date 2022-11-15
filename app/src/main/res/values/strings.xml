@@ -680,11 +680,9 @@
     <string name="title_activity_list_screen">ListScreen</string>
 
     <string name="widget_list_description">List widget</string>
-    <string name="widget_list_journals_title">Journals</string>
-    <string name="widget_list_journals_new">New Journal</string>
     <string name="widget_list_configuration">Widget configuration</string>
     <string name="widget_list_configuration_pro_info">Please purchase the Pro package to enable further configuration options.</string>
-
+    <string name="widget_list_no_entries_found">No entries found that match your filter criteria</string>
 
 
 </resources>
