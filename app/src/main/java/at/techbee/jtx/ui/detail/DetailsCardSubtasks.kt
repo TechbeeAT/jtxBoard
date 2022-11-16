@@ -55,8 +55,7 @@ fun DetailsCardSubtasks(
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubtaskDeleted: (subtaskId: Long) -> Unit,
-    goToView: (itemId: Long) -> Unit,
-    goToEdit: (itemId: Long) -> Unit,
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -91,10 +90,10 @@ fun DetailsCardSubtasks(
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
-                                onClick = { if(!isEditMode.value) goToView(subtask.id) },
+                                onClick = { if(!isEditMode.value) goToDetail(subtask.id, false, subtasks.map { it.id }) },
                                 onLongClick = {
                                     if (!isEditMode.value &&!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToEdit(subtask.id)
+                                        goToDetail(subtask.id, true, subtasks.map { it.id })
                                 }
                             )
                         )
@@ -157,8 +156,7 @@ fun DetailsCardSubtasks_Preview() {
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -181,8 +179,7 @@ fun DetailsCardSubtasks_Preview_edit() {
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }

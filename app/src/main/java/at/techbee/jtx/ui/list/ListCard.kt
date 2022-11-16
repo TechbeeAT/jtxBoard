@@ -67,8 +67,7 @@ fun ICalObjectListCard(
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
     progressIncrement: Int,
-    goToView: (itemId: Long) -> Unit,
-    goToEdit: (itemId: Long) -> Unit,
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
@@ -432,10 +431,10 @@ fun ICalObjectListCard(
                                     .padding(start = 8.dp, end = 8.dp)
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
-                                        onClick = { goToView(subtask.id)  },
+                                        onClick = { goToDetail(subtask.id, false, subtasks)  },
                                         onLongClick = {
                                             if (!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                                goToEdit(subtask.id)
+                                                goToDetail(subtask.id, true, subtasks)
                                         }
                                     )
                             )
@@ -454,10 +453,10 @@ fun ICalObjectListCard(
                                     .padding(start = 8.dp, end = 8.dp)
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
-                                        onClick = { goToView(subnote.id) },
+                                        onClick = { goToDetail(subnote.id, false, subnotes) },
                                         onLongClick = {
                                             if (!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                                goToEdit(subnote.id)
+                                                goToDetail(subnote.id, true, subnotes)
                                         },
                                     ),
                                 isEditMode = false, //no editing here
@@ -496,8 +495,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
             }),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
@@ -530,8 +528,7 @@ fun ICalObjectListCardPreview_NOTE() {
             }),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
@@ -568,8 +565,7 @@ fun ICalObjectListCardPreview_TODO() {
                 this.module = Module.NOTE.name
             }),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             settingShowProgressMaintasks = true,
             progressIncrement = 1,
             onProgressChanged = { _, _, _ -> },
@@ -608,8 +604,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
             settingShowProgressMaintasks = false,
@@ -650,8 +645,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
@@ -693,8 +687,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             icalobject,
             emptyList(),
             emptyList(),
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             attachments = listOf(),
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
