@@ -41,6 +41,7 @@ fun DetailsScreen(
     navController: NavHostController,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
+    icalObjectIdList: List<Long>,
     onLastUsedCollectionChanged: (Module, Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
@@ -86,7 +87,7 @@ fun DetailsScreen(
 
     detailViewModel.navigateToId.value?.let {
         detailViewModel.navigateToId.value = null
-        navController.navigate(DetailDestination.Detail.getRoute(it, true))
+        navController.navigate(DetailDestination.Detail.getRoute(it, icalObjectIdList, true))
     }
 
     if (showDeleteDialog) {
@@ -189,6 +190,7 @@ fun DetailsScreen(
                 allCategories = allCategories.value,
                 allResources = allResources.value,
                 detailSettings = detailViewModel.detailSettings,
+                icalObjectIdList = icalObjectIdList,
                 goBackRequested = goBackRequestedByTopBar,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                     if (changedICalObject.isRecurLinkedInstance)
@@ -227,8 +229,7 @@ fun DetailsScreen(
                     )
                 },
                 player = detailViewModel.mediaPlayer,
-                goToView = { icalObjectId -> navController.navigate(DetailDestination.Detail.getRoute(icalObjectId, false)) },
-                goToEdit = { icalObjectId -> navController.navigate(DetailDestination.Detail.getRoute(icalObjectId, true)) },
+                goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },
                 modifier = Modifier.padding(paddingValues)
             )

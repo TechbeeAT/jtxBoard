@@ -55,8 +55,7 @@ fun ListScreenKanban(
     scrollOnceId: MutableLiveData<Long?>,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
     onStatusChanged: (itemid: Long, status: StatusJournal, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
-    goToView: (itemId: Long) -> Unit,
-    goToEdit: (itemId: Long) -> Unit
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -121,10 +120,10 @@ fun ListScreenKanban(
                             .animateItemPlacement()
                             .clip(jtxCardCornerShape)
                             .combinedClickable(
-                                onClick = { goToView(iCalObject.id) },
+                                onClick = { goToDetail(iCalObject.id, false, list.value) },
                                 onLongClick = {
                                     if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToEdit(iCalObject.id)
+                                        goToDetail(iCalObject.id, true, list.value)
                                 }
                             )
                             .height(150.dp)
@@ -214,8 +213,7 @@ fun ListScreenKanban_TODO() {
             scrollOnceId = MutableLiveData(null),
             onProgressChanged = { _, _, _, _ -> },
             onStatusChanged = {_, _, _, _ -> },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -259,8 +257,7 @@ fun ListScreenKanban_JOURNAL() {
             scrollOnceId = MutableLiveData(null),
             onProgressChanged = { _, _, _, _ -> },
             onStatusChanged = {_, _, _, _ -> },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }

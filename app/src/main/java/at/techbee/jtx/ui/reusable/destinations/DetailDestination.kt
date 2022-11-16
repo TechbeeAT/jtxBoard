@@ -1,8 +1,9 @@
 package at.techbee.jtx.ui.reusable.destinations
 
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
+import androidx.navigation.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+
 
 sealed class DetailDestination (
     val route: String,
@@ -12,18 +13,20 @@ sealed class DetailDestination (
     companion object {
         const val argICalObjectId = "icalObjectId"
         const val argIsEditMode = "isEditMode"
+        const val argICalObjectIdList = "icalObjectIdList"
     }
 
     object Detail: DetailDestination(
-        route = "details/{$argICalObjectId}?$argIsEditMode={$argIsEditMode}",
+        route = "details/{$argICalObjectId}/{$argICalObjectIdList}/{$argIsEditMode}",
         args = listOf(
             navArgument(argICalObjectId) { type = NavType.LongType },
+            navArgument(argICalObjectIdList) { type = NavType.StringType },
             navArgument(argIsEditMode) {
                 type = NavType.BoolType
                 defaultValue = false
-            }
+            },
         )
     ) {
-        fun getRoute(iCalObjectId: Long, isEditMode: Boolean = false) = "details/$iCalObjectId?$argIsEditMode=$isEditMode"
+        fun getRoute(iCalObjectId: Long, icalObjectIdList: List<Long>, isEditMode: Boolean = false) = "details/$iCalObjectId/${Json.encodeToString(icalObjectIdList)}/$isEditMode"
     }
 }

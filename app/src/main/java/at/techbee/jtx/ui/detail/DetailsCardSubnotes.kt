@@ -55,8 +55,7 @@ fun DetailsCardSubnotes(
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     player: MediaPlayer?,
-    goToView: (itemId: Long) -> Unit,
-    goToEdit: (itemId: Long) -> Unit,
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -100,10 +99,10 @@ fun DetailsCardSubnotes(
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
-                                    onClick = { if(!isEditMode.value) goToView(subnote.id) },
+                                    onClick = { if(!isEditMode.value) goToDetail(subnote.id, false, subnotes.map { it.id }) },
                                     onLongClick = {
                                         if (!isEditMode.value &&!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            goToEdit(subnote.id)
+                                            goToDetail(subnote.id, true, subnotes.map { it.id })
                                     }
                                 )
                         )
@@ -177,8 +176,7 @@ fun DetailsCardSubnotes_Preview() {
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             player = null,
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -201,8 +199,7 @@ fun DetailsCardSubnotes_Preview_edit() {
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             player = null,
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }

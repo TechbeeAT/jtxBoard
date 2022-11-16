@@ -47,7 +47,7 @@ fun DetailsCardRecur(
     icalObject: ICalObject,
     isEditMode: Boolean,
     onRecurUpdated: (Recur?) -> Unit,
-    goToView: (itemId: Long) -> Unit,
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -141,7 +141,7 @@ fun DetailsCardRecur(
         ) {
             UnsupportedRRuleDialog(
                 onConfirm = {  },
-                onDismiss = { goToView(icalObject.id) }
+                onDismiss = { goToDetail(icalObject.id, false, emptyList()) }
             )
         }
     }
@@ -508,7 +508,7 @@ fun DetailsCardRecur(
             ) {
                 if(icalObject.recurOriginalIcalObjectId != null) {
                     Button(
-                        onClick = { icalObject.recurOriginalIcalObjectId?.let { goToView(it) } }
+                        onClick = { icalObject.recurOriginalIcalObjectId?.let { goToDetail(it, false, emptyList()) } }
                     ) {
                         Text(stringResource(id = R.string.view_recurrence_go_to_original_button))
                     }
@@ -603,7 +603,7 @@ fun DetailsCardRecur_Preview() {
             },
             isEditMode = false,
             onRecurUpdated = { },
-            goToView = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -630,7 +630,7 @@ fun DetailsCardRecur_Preview_edit() {
             },
             isEditMode = true,
             onRecurUpdated = { },
-            goToView = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -651,7 +651,7 @@ fun DetailsCardRecur_Preview_linked_instance() {
             },
             isEditMode = false,
             onRecurUpdated = { },
-            goToView = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -672,7 +672,7 @@ fun DetailsCardRecur_Preview_linked_exception() {
             },
             isEditMode = false,
             onRecurUpdated = { },
-            goToView = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -693,7 +693,7 @@ fun DetailsCardRecur_Preview_off() {
             },
             isEditMode = false,
             onRecurUpdated = { },
-            goToView = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -712,7 +712,7 @@ fun DetailsCardRecur_Preview_edit_off() {
             },
             isEditMode = true,
             onRecurUpdated = { },
-            goToView = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -731,7 +731,7 @@ fun DetailsCardRecur_Preview_edit_no_dtstart() {
             },
             isEditMode = true,
             onRecurUpdated = { },
-            goToView = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -750,7 +750,7 @@ fun DetailsCardRecur_Preview_view_no_dtstart() {
             },
             isEditMode = false,
             onRecurUpdated = { },
-            goToView = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }

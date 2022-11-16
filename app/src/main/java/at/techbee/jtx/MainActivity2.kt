@@ -56,6 +56,8 @@ import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.getParcelableExtraCompat
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.time.ZonedDateTime
 
@@ -234,8 +236,8 @@ fun MainNavHost(
 
             val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId)
                 ?: return@composable
-            val editImmediately =
-                backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) ?: false
+            val icalObjectIdList = backStackEntry.arguments?.getString(DetailDestination.argICalObjectIdList)?.let { Json.decodeFromString<List<Long>>(it)} ?: listOf(icalObjectId)
+            val editImmediately = backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) ?: false
 
             /*
             backStackEntry.savedStateHandle[DetailDestination.argICalObjectId] = icalObjectId
@@ -249,6 +251,7 @@ fun MainNavHost(
                 navController = navController,
                 detailViewModel = detailViewModel,
                 editImmediately = editImmediately,
+                icalObjectIdList = icalObjectIdList,
                 onRequestReview = {
                     if (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
                         JtxReviewManager(activity).showIfApplicable()
