@@ -50,6 +50,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
+import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
@@ -125,7 +126,7 @@ fun ListScreenTabContainer(
     val goToEdit = getActiveViewModel().goToEdit.observeAsState()
     goToEdit.value?.let { icalObjectId ->
         getActiveViewModel().goToEdit.value = null
-        navController.navigate("details/$icalObjectId?isEditMode=true")
+        navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = icalObjectId, icalObjectIdList = getActiveViewModel().iCal4List.value?.map { it.id } ?: emptyList(), isEditMode = true))
     }
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
