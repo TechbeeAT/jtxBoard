@@ -127,9 +127,9 @@ fun ListEntry(
 
             Column(modifier = GlanceModifier.defaultWeight()) {
                 if(!obj.summary.isNullOrEmpty())
-                    Text(text = obj.summary!!, style = textStyleSummary, modifier = GlanceModifier.fillMaxWidth())
+                    Text(text = obj.summary!!, style = textStyleSummary, modifier = GlanceModifier.fillMaxWidth().clickable(onClick = actionStartActivity(intent)))
                 if(!obj.description.isNullOrEmpty())
-                    Text(obj.description!!, maxLines = 2, style = textStyleDescription, modifier = GlanceModifier.fillMaxWidth())
+                    Text(obj.description!!, maxLines = 2, style = textStyleDescription, modifier = GlanceModifier.fillMaxWidth().clickable(onClick = actionStartActivity(intent)))
             }
         }
 
