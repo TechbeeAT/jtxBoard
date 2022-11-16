@@ -336,7 +336,7 @@ fun MainNavHost(
 
     globalStateHolder.icalObject2Open.value?.let { id ->
         globalStateHolder.icalObject2Open.value = null
-        navController.navigate("details/$id?isEditMode=false")
+        navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false))
     }
 
     if (!settingsStateHolder.proInfoShown.value && isProPurchased.value == false) {
