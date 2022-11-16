@@ -46,8 +46,7 @@ fun ListScreenCompact(
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
-    goToView: (itemId: Long) -> Unit,
-    goToEdit: (itemId: Long) -> Unit
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit
 ) {
 
     val subtasks by subtasksLive.observeAsState(emptyMap())
@@ -107,16 +106,15 @@ fun ListScreenCompact(
                     .animateItemPlacement()
                     .clip(jtxCardCornerShape)
                     .combinedClickable(
-                        onClick = { goToView(iCalObject.id) },
+                        onClick = { goToDetail(iCalObject.id, false, groupedList.flatMap { it.value }) },
                         onLongClick = {
                             if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                goToEdit(iCalObject.id)
+                                goToDetail(iCalObject.id, false, groupedList.flatMap { it.value })
                         }
                     ),
                 onProgressChanged = onProgressChanged,
-                goToView = goToView,
-                goToEdit = goToEdit
-                )
+                goToDetail = goToDetail
+            )
 
             if (iCalObject != group.last())
                 Divider(
@@ -173,8 +171,7 @@ fun ListScreenCompact_TODO() {
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
             onProgressChanged = { _, _, _ -> },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -224,8 +221,7 @@ fun ListScreenCompact_JOURNAL() {
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
             onProgressChanged = { _, _, _ -> },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }

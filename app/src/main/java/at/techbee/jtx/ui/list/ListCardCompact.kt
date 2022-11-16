@@ -51,8 +51,7 @@ fun ListCardCompact(
     subtasks: List<ICal4List>,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
-    goToView: (itemId: Long) -> Unit,
-    goToEdit: (itemId: Long) -> Unit
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit
 ) {
 
     val statusBarVisible by remember {
@@ -249,10 +248,10 @@ fun ListCardCompact(
                             .padding(start = 8.dp, end = 8.dp)
                             .clip(jtxCardCornerShape)
                             .combinedClickable(
-                                onClick = { goToView(subtask.id) },
+                                onClick = { goToDetail(subtask.id, false, subtasks) },
                                 onLongClick = {
                                     if (!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToEdit(subtask.id)
+                                        goToDetail(subtask.id, true, subtasks)
                                 }
                             )
                     )
@@ -283,8 +282,7 @@ fun ListCardCompact_JOURNAL() {
             icalobject,
             emptyList(),
             onProgressChanged = { _, _, _ -> },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -304,8 +302,7 @@ fun ListCardCompact_JOURNAL2() {
             icalobject,
             emptyList(),
             onProgressChanged = { _, _, _ -> },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -326,8 +323,7 @@ fun ListCardCompact_NOTE() {
             icalobject,
             emptyList(),
             onProgressChanged = { _, _, _ -> },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -352,8 +348,7 @@ fun ListCardCompact_TODO() {
             icalobject,
             subtasks = listOf(icalobject, icalobject),
             onProgressChanged = { _, _, _ -> },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }

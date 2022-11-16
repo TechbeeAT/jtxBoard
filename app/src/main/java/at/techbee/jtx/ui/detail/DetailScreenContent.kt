@@ -21,6 +21,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.NavigateBefore
+import androidx.compose.material.icons.outlined.NavigateNext
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -85,6 +87,7 @@ fun DetailScreenContent(
     allCategories: List<String>,
     allResources: List<String>,
     detailSettings: DetailSettings,
+    icalObjectIdList: List<Long>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     goBackRequested: MutableState<Boolean>,    // Workaround to also go Back from Top menu
@@ -95,8 +98,7 @@ fun DetailScreenContent(
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
-    goToView: (itemId: Long) -> Unit,
-    goToEdit: (itemId: Long) -> Unit,
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     goBack: () -> Unit
 ) {
 
@@ -533,8 +535,7 @@ fun DetailScreenContent(
                         )
                     },
                     onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                    goToView = goToView,
-                    goToEdit = goToEdit
+                    goToDetail = goToDetail
                 )
             }
 
@@ -556,8 +557,7 @@ fun DetailScreenContent(
                     },
                     onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
                     player = player,
-                    goToView = goToView,
-                    goToEdit = goToEdit
+                    goToDetail = goToDetail
                 )
             }
 
@@ -667,7 +667,7 @@ fun DetailScreenContent(
                         icalObject.rrule = updatedRRule?.toString()
                         changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
-                    goToView = goToView
+                    goToDetail = goToDetail
                 )
             }
 
@@ -696,6 +696,42 @@ fun DetailScreenContent(
                         style = MaterialTheme.typography.bodySmall,
                         fontStyle = FontStyle.Italic
                     )
+                }
+            }
+
+            AnimatedVisibility(!isEditMode.value) {
+                val curIndex = icalObjectIdList.indexOf(iCalEntity.value?.property?.id?: 0)
+                if(icalObjectIdList.size > 1 && curIndex >=0) {
+                    Row(
+                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp).fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        if (curIndex > 0) {
+                            IconButton(onClick = {
+                                goToDetail(
+                                    icalObjectIdList[curIndex-1],
+                                    false,
+                                    icalObjectIdList
+                                )
+                            }) {
+                                Icon(Icons.Outlined.NavigateBefore, stringResource(id = R.string.previous))
+                            }
+                        } else { Spacer(modifier = Modifier.size(48.dp)) }
+                        Text(text = "${icalObjectIdList.indexOf(iCalEntity.value?.property?.id ?: 0) + 1}/${icalObjectIdList.size}")
+                        if(curIndex != icalObjectIdList.lastIndex) {
+                            IconButton(onClick = {
+                                goToDetail(
+                                    icalObjectIdList[curIndex+1],
+                                    false,
+                                    icalObjectIdList
+                                )
+                            }) {
+                                Icon(Icons.Outlined.NavigateNext, stringResource(id = R.string.next))
+                            }
+                        } else { Spacer(modifier = Modifier.size(48.dp)) }
+                    }
                 }
             }
         }
@@ -737,6 +773,7 @@ fun DetailScreenContent_JOURNAL() {
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
+            icalObjectIdList = emptyList(),
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
@@ -744,8 +781,7 @@ fun DetailScreenContent_JOURNAL() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             goBack = { }
         )
     }
@@ -781,6 +817,7 @@ fun DetailScreenContent_TODO_editInitially() {
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
+            icalObjectIdList = emptyList(),
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
@@ -788,8 +825,7 @@ fun DetailScreenContent_TODO_editInitially() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             goBack = { }
         )
     }
@@ -827,6 +863,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
+            icalObjectIdList = emptyList(),
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
@@ -834,8 +871,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             goBack = { }
         )
     }
@@ -865,6 +901,7 @@ fun DetailScreenContent_failedLoading() {
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
+            icalObjectIdList = emptyList(),
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
@@ -872,8 +909,7 @@ fun DetailScreenContent_failedLoading() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             goBack = { }
         )
     }

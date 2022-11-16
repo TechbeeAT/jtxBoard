@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.list
 
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.ExperimentalMaterialApi
@@ -105,8 +106,7 @@ fun ListScreen(
                     settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks,
                     settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
                     settingProgressIncrement = settingsStateHolder.settingStepForProgress,
-                    goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
-                    goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                    goToDetail = { itemId, editMode, ical4list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, editMode))},
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                         listViewModel.updateProgress(
                             itemId,
@@ -135,8 +135,7 @@ fun ListScreen(
                             isLinkedRecurringInstance
                         )
                     },
-                    goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
-                    goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                    goToDetail = { itemId, editMode, ical4list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, editMode))},
                 )
             }
             ViewMode.COMPACT -> {
@@ -152,8 +151,7 @@ fun ListScreen(
                             isLinkedRecurringInstance
                         )
                     },
-                    goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
-                    goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                    goToDetail = { itemId, editMode, ical4list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, editMode))},
                 )
             }
             ViewMode.KANBAN -> {
@@ -177,8 +175,7 @@ fun ListScreen(
                             scrollOnce
                         )
                     },
-                    goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
-                    goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                    goToDetail = { itemId, editMode, ical4list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, editMode))},
                 )
             }
         }

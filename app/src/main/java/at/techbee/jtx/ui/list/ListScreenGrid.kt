@@ -40,8 +40,7 @@ fun ListScreenGrid(
     list: State<List<ICal4List>>,
     scrollOnceId: MutableLiveData<Long?>,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
-    goToView: (itemId: Long) -> Unit,
-    goToEdit: (itemId: Long) -> Unit
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit
 ) {
 
     val scrollId by scrollOnceId.observeAsState(null)
@@ -79,10 +78,10 @@ fun ListScreenGrid(
                     .clip(jtxCardCornerShape)
                     .animateItemPlacement()
                     .combinedClickable(
-                        onClick = { goToView(iCalObject.id) },
+                        onClick = { goToDetail(iCalObject.id, false, list.value) },
                         onLongClick = {
                             if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                goToEdit(iCalObject.id)
+                                goToDetail(iCalObject.id, true, list.value)
                         }
                     )
                     .height(150.dp),
@@ -129,8 +128,7 @@ fun ListScreenGrid_TODO() {
             list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
             scrollOnceId = MutableLiveData(null),
             onProgressChanged = { _, _, _ -> },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }
@@ -172,8 +170,7 @@ fun ListScreenGrid_JOURNAL() {
             list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
             scrollOnceId = MutableLiveData(null),
             onProgressChanged = { _, _, _ -> },
-            goToView = { },
-            goToEdit = { }
+            goToDetail = { _, _, _ -> }
         )
     }
 }

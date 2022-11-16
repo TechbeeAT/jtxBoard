@@ -55,8 +55,7 @@ fun ListScreenList(
     settingShowProgressMaintasks: MutableState<Boolean>,
     settingShowProgressSubtasks: MutableState<Boolean>,
     settingProgressIncrement: MutableState<DropdownSettingOption>,
-    goToView: (itemId: Long) -> Unit,
-    goToEdit: (itemId: Long) -> Unit,
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
@@ -125,8 +124,7 @@ fun ListScreenList(
                     settingShowProgressMaintasks = settingShowProgressMaintasks.value,
                     settingShowProgressSubtasks = settingShowProgressSubtasks.value,
                     progressIncrement = settingProgressIncrement.value.getProgressStepKeyAsInt(),
-                    goToView = goToView,
-                    goToEdit = goToEdit,
+                    goToDetail = goToDetail,
                     onProgressChanged = onProgressChanged,
                     onExpandedChanged = onExpandedChanged,
                     player = mediaPlayer,
@@ -136,10 +134,11 @@ fun ListScreenList(
                         .clip(jtxCardCornerShape)
                         .animateItemPlacement()
                         .combinedClickable(
-                            onClick = { goToView(iCalObject.id) },
+                            onClick = {
+                                goToDetail(iCalObject.id, false, groupedList.flatMap { it.value }) },
                             onLongClick = {
                                 if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                    goToEdit(iCalObject.id)
+                                    goToDetail(iCalObject.id, true, groupedList.flatMap { it.value })
                             }
                         )
                 )
@@ -199,8 +198,7 @@ fun ListScreenList_TODO() {
             settingShowProgressSubtasks = remember { mutableStateOf(true) },
             settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             onProgressChanged = { _, _, _ -> },
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _ -> }
         )
@@ -259,8 +257,7 @@ fun ListScreenList_JOURNAL() {
             settingShowProgressSubtasks = remember { mutableStateOf(false) },
             settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             onProgressChanged = { _, _, _ -> },
-            goToView = { },
-            goToEdit = { },
+            goToDetail = { _, _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _ -> }
         )
