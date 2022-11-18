@@ -14,8 +14,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,9 +43,10 @@ fun ListOptionsFilter(
     modifier: Modifier = Modifier,
     isWidgetConfig: Boolean = false
 ) {
-    val allCollections by allCollectionsLive.observeAsState()
-    val allCategories by allCategoriesLive.observeAsState()
-    val allAccounts = allCollections?.groupBy { it.accountName ?: "" }
+    val allCollectionsState = allCollectionsLive.observeAsState(emptyList())
+    val allCategories by allCategoriesLive.observeAsState(emptyList())
+    val allCollections by remember { derivedStateOf { allCollectionsState.value.map { it.displayName ?: "" }.sortedBy { it.lowercase() } }}
+    val allAccounts by remember { derivedStateOf { allCollectionsState.value.map {  it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } }}
 
 
     Column(
@@ -212,14 +215,14 @@ fun ListOptionsFilter(
             },
             onInvertSelection = {
                 listSettings.searchCategories.value =
-                    allCategories?.filter { category ->
+                    allCategories.filter { category ->
                         !listSettings.searchCategories.value.contains(category)
-                    } ?: emptyList()
+                    }
                 onListSettingsChanged()
             })
         {
             FlowRow(modifier = Modifier.fillMaxWidth()) {
-                allCategories?.forEach { category ->
+                allCategories.forEach { category ->
                     FilterChip(
                         selected = listSettings.searchCategories.value.contains(
                             category
@@ -255,10 +258,7 @@ fun ListOptionsFilter(
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    listSettings.searchAccount.value =
-                        allAccounts?.keys?.toMutableList()
-                            ?.apply { removeAll(listSettings.searchAccount.value) }
-                            ?: emptyList()
+                    listSettings.searchAccount.value = allAccounts.toMutableList().apply { removeAll(listSettings.searchAccount.value) }
                     onListSettingsChanged()
                 })
             {
@@ -266,13 +266,7 @@ fun ListOptionsFilter(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    allAccounts
-                        ?.filterValues { collections ->
-                            (module == Module.JOURNAL && collections.any { it.supportsVJOURNAL })
-                                    || (module == Module.NOTE && collections.any { it.supportsVJOURNAL })
-                                    || (module == Module.TODO && collections.any { it.supportsVTODO })
-                        }
-                        ?.keys?.sortedBy { it.lowercase() }?.forEach { account ->
+                    allAccounts.forEach { account ->
                         FilterChip(
                             selected = listSettings.searchAccount.value.contains(account),
                             onClick = {
@@ -303,26 +297,15 @@ fun ListOptionsFilter(
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    val allCollectionsGrouped =
-                        allCollections?.groupBy { it.displayName ?: "" }
                     listSettings.searchCollection.value =
-                        allCollectionsGrouped?.keys?.toMutableList()
-                            ?.apply { removeAll(listSettings.searchCollection.value) }
-                            ?: emptyList()
+                        allCollections
+                            .toMutableList()
+                            .apply { removeAll(listSettings.searchCollection.value) }
                     onListSettingsChanged()
                 })
             {
                 FlowRow(modifier = Modifier.fillMaxWidth()) {
-
-                    val allCollectionsGrouped = allCollections
-                        ?.filter { collection ->
-                            (module == Module.JOURNAL && collection.supportsVJOURNAL)
-                                    || (module == Module.NOTE && collection.supportsVJOURNAL)
-                                    || (module == Module.TODO && collection.supportsVTODO)
-                        }
-                        ?.groupBy { it.displayName ?: "" }
-                    allCollectionsGrouped?.keys?.sortedBy { it.lowercase() }
-                        ?.forEach { collection ->
+                    allCollections.forEach { collection ->
                             FilterChip(
                                 selected = listSettings.searchCollection.value.contains(
                                     collection
