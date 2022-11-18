@@ -77,11 +77,21 @@ SELECTs (global selects without parameter)
     /**
      * Retrieve an list of all Collections ([Collection]) as a LiveData-List
      *
-     * @return a list of [Collection] as LiveData<List<String>>
+     * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
     @Transaction
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_READONLY = 0 AND ($COLUMN_COLLECTION_SUPPORTSVJOURNAL = 1 OR $COLUMN_COLLECTION_SUPPORTSVTODO = 1) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllWriteableCollections(): LiveData<List<ICalCollection>>
+
+    /**
+     * Retrieve an list of all Collections ([Collection]) that have entries for a given module as a LiveData-List
+     * @param module (Module.name) for which there are existing entries for a collection
+     * @return a list of [Collection] as LiveData<List<ICalCollection>>
+     */
+    @Transaction
+    @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID IN (SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getAllCollections(module: String): LiveData<List<ICalCollection>>
+
 
     /**
      * Retrieve an list of all Collections ([CollectionsView]) as a LiveData-List

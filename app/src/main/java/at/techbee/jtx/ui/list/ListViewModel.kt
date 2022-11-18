@@ -68,6 +68,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
     val allCategories = database.getAllCategoriesAsText()   // filter FragmentDialog
     val allWriteableCollections = database.getAllWriteableCollections()
+    val allCollections = database.getAllCollections(module = module.name)
+
 
     var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)

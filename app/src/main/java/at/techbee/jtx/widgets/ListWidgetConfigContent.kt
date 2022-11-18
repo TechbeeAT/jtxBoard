@@ -115,7 +115,7 @@ fun ListWidgetConfigContent(
                     ListOptionsFilter(
                         module = selectedModule,
                         listSettings = listSettings,
-                        allCollectionsLive = database.getAllWriteableCollections(),
+                        allCollectionsLive = database.getAllCollections(module = selectedModule.name),
                         allCategoriesLive = database.getAllCategoriesAsText(),
                         onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
                         isWidgetConfig = true
