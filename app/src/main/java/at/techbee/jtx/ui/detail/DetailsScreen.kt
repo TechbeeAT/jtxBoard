@@ -33,6 +33,7 @@ import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +48,7 @@ fun DetailsScreen(
 ) {
     //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
+    val settingsStateHolder = SettingsStateHolder(context)
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     val goBackRequestedByTopBar = remember { mutableStateOf(false) }
@@ -191,6 +193,7 @@ fun DetailsScreen(
                 allResources = allResources.value,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
+                sliderIncrement = settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
                 goBackRequested = goBackRequestedByTopBar,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                     if (changedICalObject.isRecurLinkedInstance)

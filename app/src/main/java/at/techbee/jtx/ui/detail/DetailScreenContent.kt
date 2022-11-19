@@ -88,6 +88,7 @@ fun DetailScreenContent(
     allResources: List<String>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
+    sliderIncrement: Int,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     goBackRequested: MutableState<Boolean>,    // Workaround to also go Back from Top menu
@@ -476,7 +477,7 @@ fun DetailScreenContent(
                         progress = icalObject.percent,
                         isReadOnly = iCalEntity.value?.ICalCollection?.readonly == true,
                         isLinkedRecurringInstance = icalObject.isRecurLinkedInstance,
-                        sliderIncrement = 1,   // TODO: Load the right slider increment
+                        sliderIncrement = sliderIncrement,
                         onProgressChanged = { itemId, newPercent, isLinked ->
                             onProgressChanged(itemId, newPercent, isLinked)
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
@@ -523,6 +524,7 @@ fun DetailScreenContent(
                 DetailsCardSubtasks(
                     subtasks = subtasks.value,
                     isEditMode = isEditMode,
+                    sliderIncrement = sliderIncrement,
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                         onProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
                     },
@@ -767,6 +769,7 @@ fun DetailScreenContent_JOURNAL() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = false,
             player = null,
+            sliderIncrement = 10,
             goBackRequested = remember { mutableStateOf(false) },
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
@@ -817,6 +820,7 @@ fun DetailScreenContent_TODO_editInitially() {
             allResources = emptyList(),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
+            sliderIncrement = 10,
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
@@ -863,6 +867,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             allResources = emptyList(),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
+            sliderIncrement = 10,
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
@@ -901,6 +906,7 @@ fun DetailScreenContent_failedLoading() {
             allResources = emptyList(),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
+            sliderIncrement = 10,
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },

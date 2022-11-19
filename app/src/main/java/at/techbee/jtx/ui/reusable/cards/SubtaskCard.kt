@@ -125,7 +125,7 @@ fun SubtaskCardContent(
                 showProgressLabel = false,
                 showSlider = showProgress,
                 onProgressChanged = onProgressChanged,
-                modifier = Modifier.width(if(showProgress) 200.dp else 50.dp),
+                modifier = Modifier.weight(1f),
             )
 
             if (isEditMode) {

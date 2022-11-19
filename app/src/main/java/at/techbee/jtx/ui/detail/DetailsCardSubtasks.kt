@@ -51,6 +51,7 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubtasks(
     subtasks: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
+    sliderIncrement: Int,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
@@ -83,7 +84,7 @@ fun DetailsCardSubtasks(
                             subtask = subtask,
                             isEditMode = isEditMode.value,
                             showProgress = true, /* TODO */
-                            sliderIncrement = 1, /* TODO */
+                            sliderIncrement = sliderIncrement,
                             onProgressChanged = onProgressChanged,
                             onDeleteClicked = { icalObjectId ->  onSubtaskDeleted(icalObjectId) },
                             onSubtaskUpdated = { newText -> onSubtaskUpdated(subtask.id, newText) },
@@ -152,6 +153,7 @@ fun DetailsCardSubtasks_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
+            sliderIncrement = 25,
             onSubtaskAdded = { },
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
@@ -175,6 +177,7 @@ fun DetailsCardSubtasks_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
+            sliderIncrement = 25,
             onSubtaskAdded = { },
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
