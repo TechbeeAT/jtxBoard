@@ -52,8 +52,9 @@ fun AboutJtx(modifier: Modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Top,
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
@@ -75,7 +76,6 @@ fun AboutJtx(modifier: Modifier = Modifier) {
                     BuildConfig.VERSION_NAME,
                     BuildConfig.VERSION_CODE
                 ),
-                modifier = Modifier.padding(top = 4.dp),
                 style = Typography.bodyLarge,
             )
             Text(
@@ -83,20 +83,19 @@ fun AboutJtx(modifier: Modifier = Modifier) {
                     id = R.string.about_app_codename,
                     BuildConfig.versionCodename
                 ),
-                modifier = Modifier.padding(top = 4.dp),
                 style = Typography.bodyLarge,
+                textAlign = TextAlign.Center
             )
             Text(
                 text = stringResource(
                     id = R.string.about_app_build_date,
                     SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime)
                 ),
-                modifier = Modifier.padding(top = 4.dp),
                 style = Typography.bodyLarge,
             )
             Text(
                 text = stringResource(id = R.string.about_app_terms),
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(top = 12.dp),
                 style = Typography.titleMedium,
             )
             TextButton(
@@ -106,7 +105,6 @@ fun AboutJtx(modifier: Modifier = Modifier) {
                         style = Typography.bodyLarge,
                     )
                 },
-                modifier = Modifier.padding(top = 4.dp),
                 onClick = {
                     context.startActivity(
                         Intent(
@@ -118,7 +116,7 @@ fun AboutJtx(modifier: Modifier = Modifier) {
             )
             Text(
                 text = stringResource(id = R.string.about_app_copyright),
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(top = 12.dp),
                 style = Typography.bodyLarge,
             )
 
