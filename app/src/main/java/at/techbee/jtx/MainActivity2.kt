@@ -33,22 +33,20 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.JtxReviewManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.about.AboutViewModel
+import at.techbee.jtx.ui.buypro.BuyProScreen
 import at.techbee.jtx.ui.collections.CollectionsScreen
 import at.techbee.jtx.ui.collections.CollectionsViewModel
 import at.techbee.jtx.ui.detail.DetailViewModel
 import at.techbee.jtx.ui.detail.DetailsScreen
 import at.techbee.jtx.ui.donate.DonateScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
+import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.ListViewModel
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
-import at.techbee.jtx.ui.reusable.dialogs.Jtx20ReleaseInfoDialog
 import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
 import at.techbee.jtx.ui.reusable.screens.AboutScreen
-import at.techbee.jtx.ui.buypro.BuyProScreen
-import at.techbee.jtx.ui.list.ListSettings
-import at.techbee.jtx.ui.reusable.dialogs.Jtx20009ReleaseInfoDialog
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -363,6 +361,7 @@ fun MainNavHost(
         )
     }
 
+    /*
     if (settingsStateHolder.showJtx20releaseinfo.value) {
         Jtx20ReleaseInfoDialog(
             onOK = {
@@ -380,6 +379,7 @@ fun MainNavHost(
             }
         )
     }
+     */
 }
 
 @Preview(showBackground = true)
