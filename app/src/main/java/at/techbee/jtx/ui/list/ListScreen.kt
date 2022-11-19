@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.list
 
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.ExperimentalMaterialApi
@@ -187,7 +186,7 @@ fun ListScreen(
             ListOptionsBottomSheet(
                 module = listViewModel.module,
                 listSettings = listViewModel.listSettings,
-                allCollectionsLive = listViewModel.allWriteableCollections,
+                allCollectionsLive = listViewModel.allCollections,
                 allCategoriesLive = listViewModel.allCategories,
                 onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) }
             )

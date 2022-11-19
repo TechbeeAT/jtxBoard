@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.reusable.elements
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -28,8 +27,7 @@ import at.techbee.jtx.ui.theme.Typography
 fun HeadlineWithIcon(icon: ImageVector, iconDesc: String, text: String, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             icon,

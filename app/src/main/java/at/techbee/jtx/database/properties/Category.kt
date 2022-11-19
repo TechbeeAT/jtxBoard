@@ -51,7 +51,6 @@ const val COLUMN_CATEGORY_LANGUAGE = "language"
  */
 const val COLUMN_CATEGORY_OTHER = "other"
 
-
 @Parcelize
 @Entity(tableName = TABLE_NAME_CATEGORY,
         foreignKeys = [ForeignKey(entity = ICalObject::class,

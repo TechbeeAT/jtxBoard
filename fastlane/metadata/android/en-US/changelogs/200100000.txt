@@ -1,0 +1,1 @@
+- The detail view now comes with pagination to quickly move on to the previous or next entry in the list

@@ -346,8 +346,7 @@ fun DetailScreenContent(
 
                         CollectionsSpinner(
                             collections = allWriteableCollections,
-                            preselected = iCalEntity.value?.ICalCollection
-                                ?: allWriteableCollections.first(),   // TODO: Load last used collection for new entries
+                            preselected = iCalEntity.value?.ICalCollection ?: allWriteableCollections.first(),
                             includeReadOnly = false,
                             includeVJOURNAL = if (iCalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
                             includeVTODO = if (iCalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
@@ -477,7 +476,7 @@ fun DetailScreenContent(
                         progress = icalObject.percent,
                         isReadOnly = iCalEntity.value?.ICalCollection?.readonly == true,
                         isLinkedRecurringInstance = icalObject.isRecurLinkedInstance,
-                        sliderIncrement = 1,   // TODO
+                        sliderIncrement = 1,   // TODO: Load the right slider increment
                         onProgressChanged = { itemId, newPercent, isLinked ->
                             onProgressChanged(itemId, newPercent, isLinked)
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED

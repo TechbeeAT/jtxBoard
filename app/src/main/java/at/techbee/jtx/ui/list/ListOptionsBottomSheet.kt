@@ -151,7 +151,7 @@ fun ListOptionsBottomSheet_Preview_TODO() {
             Context.MODE_PRIVATE
         )
 
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
 
         ListOptionsBottomSheet(
             module = Module.TODO,
@@ -188,7 +188,7 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
             Context.MODE_PRIVATE
         )
 
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
 
         ListOptionsBottomSheet(
             module = Module.JOURNAL,

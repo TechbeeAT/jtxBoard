@@ -8,17 +8,20 @@
 
 package at.techbee.jtx.ui.list
 
+
 import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
+import at.techbee.jtx.widgets.ListWidgetConfig
 
 
-data class ListSettings(
-    val prefs: SharedPreferences
-) {
+class ListSettings {
+
+    var prefs: SharedPreferences? = null
+
     var searchCategories: MutableState<List<String>> = mutableStateOf(emptyList())
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
     var searchStatusTodo: MutableState<List<StatusTodo>> = mutableStateOf(emptyList())
@@ -46,10 +49,9 @@ data class ListSettings(
     var flatView: MutableState<Boolean> = mutableStateOf(false)
     var showOneRecurEntryInFuture: MutableState<Boolean> = mutableStateOf(false)
 
+    var checkboxPositionEnd: MutableState<Boolean> = mutableStateOf(false)  // widget only
 
-    init {
-        load()
-    }
+
 
     companion object {
         private const val PREFS_COLLECTION = "prefsCollection"
@@ -74,47 +76,77 @@ data class ListSettings(
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
-        private const val PREFS_FLAT_VIEW = "prefsFlatView"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
+        private const val PREFS_FLAT_VIEW = "prefsFlatView"
         private const val PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE = "prefsShowOneRecurEntryInFuture"
+        private const val PREFS_CHECKBOX_POSITION_END = "prefsCheckboxPosition"
+
+
+
+        fun fromPrefs(prefs: SharedPreferences) = ListSettings().apply {
+
+            isExcludeDone.value = prefs.getBoolean(PREFS_EXCLUDE_DONE, false)
+            isFilterOverdue.value = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
+            isFilterDueToday.value = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
+            isFilterDueTomorrow.value = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
+            isFilterDueFuture.value = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
+            isFilterStartInPast.value = prefs.getBoolean(PREFS_FILTER_START_IN_PAST, false)
+            isFilterStartToday.value = prefs.getBoolean(PREFS_FILTER_START_TODAY, false)
+            isFilterStartTomorrow.value = prefs.getBoolean(PREFS_FILTER_START_TOMORROW, false)
+            isFilterStartFuture.value = prefs.getBoolean(PREFS_FILTER_START_FUTURE, false)
+            isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
+
+            //searchOrganizers =
+            searchCategories.value = prefs.getStringSet(PREFS_CATEGORIES, null)?.toList() ?: emptyList()
+            searchStatusJournal.value = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_STATUS_JOURNAL, null))
+            searchStatusTodo.value = StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_STATUS_TODO, null))
+            searchCollection.value = prefs.getStringSet(PREFS_COLLECTION, null)?.toList() ?: emptyList()
+            searchAccount.value = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
+            orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
+            sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+            orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
+            sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+            groupBy.value = prefs.getString(PREFS_GROUPBY, null)?.let { try { GroupBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } }
+
+            viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
+            flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
+            checkboxPositionEnd.value = prefs.getBoolean(PREFS_CHECKBOX_POSITION_END, false)
+
+
+            showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
+        }
+
+        fun fromListWidgetConfig(listWidgetConfig: ListWidgetConfig) = ListSettings().apply {
+            isExcludeDone.value = listWidgetConfig.isExcludeDone
+            isFilterOverdue.value = listWidgetConfig.isFilterOverdue
+            isFilterDueToday.value = listWidgetConfig.isFilterDueToday
+            isFilterDueTomorrow.value = listWidgetConfig.isFilterDueTomorrow
+            isFilterDueFuture.value = listWidgetConfig.isFilterDueFuture
+            isFilterStartInPast.value = listWidgetConfig.isFilterStartInPast
+            isFilterStartToday.value = listWidgetConfig.isFilterStartToday
+            isFilterStartTomorrow.value = listWidgetConfig.isFilterStartTomorrow
+            isFilterStartFuture.value = listWidgetConfig.isFilterStartFuture
+            isFilterNoDatesSet.value = listWidgetConfig.isFilterNoDatesSet
+
+            searchCategories.value = listWidgetConfig.searchCategories
+            searchStatusJournal.value = listWidgetConfig.searchStatusJournal
+            searchStatusTodo.value = listWidgetConfig.searchStatusTodo
+            searchCollection.value = listWidgetConfig.searchCollection
+            searchAccount.value = listWidgetConfig.searchAccount
+            orderBy.value = listWidgetConfig.orderBy
+            sortOrder.value = listWidgetConfig.sortOrder
+            orderBy2.value = listWidgetConfig.orderBy2
+            sortOrder2.value = listWidgetConfig.sortOrder2
+            groupBy.value = listWidgetConfig.groupBy
+
+            flatView.value = listWidgetConfig.flatView
+            viewMode.value = listWidgetConfig.viewMode
+            checkboxPositionEnd.value = listWidgetConfig.checkboxPositionEnd
+        }
     }
 
-
-    private fun load() {
-
-        isExcludeDone.value = prefs.getBoolean(PREFS_EXCLUDE_DONE, false)
-        isFilterOverdue.value = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
-        isFilterDueToday.value = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
-        isFilterDueTomorrow.value = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
-        isFilterDueFuture.value = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
-        isFilterStartInPast.value = prefs.getBoolean(PREFS_FILTER_START_IN_PAST, false)
-        isFilterStartToday.value = prefs.getBoolean(PREFS_FILTER_START_TODAY, false)
-        isFilterStartTomorrow.value = prefs.getBoolean(PREFS_FILTER_START_TOMORROW, false)
-        isFilterStartFuture.value = prefs.getBoolean(PREFS_FILTER_START_FUTURE, false)
-        isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
-
-        //searchOrganizers =
-        searchCategories.value = prefs.getStringSet(PREFS_CATEGORIES, null)?.toList() ?: emptyList()
-        searchStatusJournal.value = StatusJournal.getListFromStringList(prefs.getStringSet(
-            PREFS_STATUS_JOURNAL, null))
-        searchStatusTodo.value = StatusTodo.getListFromStringList(prefs.getStringSet(
-            PREFS_STATUS_TODO, null))
-        searchCollection.value = prefs.getStringSet(PREFS_COLLECTION, null)?.toList() ?: emptyList()
-        searchAccount.value = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
-        orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
-        sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
-        orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
-        sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
-        groupBy.value = prefs.getString(PREFS_GROUPBY, null)?.let { try { GroupBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } }
-
-        viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
-        flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
-
-        showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
-    }
-
-    fun save() {
-        prefs.edit().apply {
+    fun saveToPrefs() {
+        prefs?.edit()?.apply {
             putBoolean(PREFS_FILTER_OVERDUE, isFilterOverdue.value)
             putBoolean(PREFS_FILTER_DUE_TODAY, isFilterDueToday.value)
             putBoolean(PREFS_FILTER_DUE_TOMORROW, isFilterDueTomorrow.value)
@@ -140,9 +172,11 @@ data class ListSettings(
 
             putString(PREFS_VIEWMODE, viewMode.value.name)
             putBoolean(PREFS_FLAT_VIEW, flatView.value)
+            putBoolean(PREFS_CHECKBOX_POSITION_END, checkboxPositionEnd.value)
 
             putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
-        }.apply()
+
+        }?.apply()
     }
 
     fun reset() {
@@ -165,7 +199,6 @@ data class ListSettings(
         isFilterNoDatesSet.value = false
     }
 
-    fun getLastUsedCollectionId() = prefs.getLong(PREFS_LAST_COLLECTION, 0L)
-    fun saveLastUsedCollectionId(collectionId: Long) = prefs.edit().putLong(PREFS_LAST_COLLECTION, collectionId).apply()
-
+    fun getLastUsedCollectionId() = prefs?.getLong(PREFS_LAST_COLLECTION, 0L) ?: 0L
+    fun saveLastUsedCollectionId(collectionId: Long) = prefs?.edit()?.putLong(PREFS_LAST_COLLECTION, collectionId)?.apply()
 }

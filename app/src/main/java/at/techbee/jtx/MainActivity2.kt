@@ -56,6 +56,7 @@ import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.getParcelableExtraCompat
+import at.techbee.jtx.widgets.ListWidgetReceiver
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
@@ -190,6 +191,11 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
         lastProcessedIntentHash = intent.hashCode()
     }
 
+    override fun onPause() {
+        super.onPause()
+        ListWidgetReceiver.setOneTimeWork(this)
+    }
+
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -274,7 +280,7 @@ fun MainNavHost(
                             Context.MODE_PRIVATE
                         )
                     }
-                    ListSettings(prefs).saveLastUsedCollectionId(collectionId)
+                    ListSettings.fromPrefs(prefs).saveLastUsedCollectionId(collectionId)
                 }
             )
         }
