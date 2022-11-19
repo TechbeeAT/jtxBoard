@@ -16,7 +16,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -93,9 +92,11 @@ fun CollectionCard(
                     .fillMaxWidth()
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
-                Column {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(
                         collection.displayName ?: collection.accountName ?: collection.accountType
                         ?: "",
@@ -144,17 +145,23 @@ fun CollectionCard(
 
 
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.End
+                ) {
                     if (collection.readonly)
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_readonly),
-                            contentDescription = stringResource(id = R.string.readyonly),
-                            modifier = Modifier.size(20.dp).alpha(0.4f),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        IconButton(
+                            onClick = {  },
+                            enabled = false
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_readonly),
+                                contentDescription = stringResource(id = R.string.readyonly),
+                            )
+                        }
+
 
                     IconButton(onClick = { menuExpanded = true }) {
-
                         Icon(
                             Icons.Outlined.MoreVert,
                             stringResource(R.string.collections_collection_menu)
@@ -261,8 +268,8 @@ fun CollectionCardPreview2() {
     MaterialTheme {
 
         val collection = CollectionsView().apply {
-            this.displayName = "My collection name"
-            this.description = "My collection description"
+            this.displayName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi sem, sollicitudin tristique leo eget, iaculis pharetra lacus."
+            this.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi sem, sollicitudin tristique leo eget, iaculis pharetra lacus. In ex mi, sollicitudin sit amet hendrerit vitae, egestas vitae tortor. Sed dui mi, consequat vel felis sit amet, sagittis mollis urna. Donec varius nec diam et faucibus. Suspendisse potenti. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce eget condimentum justo, at finibus dolor. Quisque posuere erat vel tellus fringilla iaculis. Nullam massa mauris, sodales sit amet scelerisque maximus, interdum in ex."
             this.color = Color.CYAN
             this.numJournals = 0
             this.numNotes = 0

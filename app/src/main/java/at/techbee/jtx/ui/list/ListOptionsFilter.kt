@@ -14,8 +14,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,11 +40,13 @@ fun ListOptionsFilter(
     allCollectionsLive: LiveData<List<ICalCollection>>,
     allCategoriesLive: LiveData<List<String>>,
     onListSettingsChanged: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isWidgetConfig: Boolean = false
 ) {
-    val allCollections by allCollectionsLive.observeAsState()
-    val allCategories by allCategoriesLive.observeAsState()
-    val allAccounts = allCollections?.groupBy { it.accountName ?: "" }
+    val allCollectionsState = allCollectionsLive.observeAsState(emptyList())
+    val allCategories by allCategoriesLive.observeAsState(emptyList())
+    val allCollections by remember { derivedStateOf { allCollectionsState.value.map { it.displayName ?: "" }.sortedBy { it.lowercase() } }}
+    val allAccounts by remember { derivedStateOf { allCollectionsState.value.map {  it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } }}
 
 
     Column(
@@ -53,147 +57,150 @@ fun ListOptionsFilter(
 
 
         ////// QuickFilters
-        FilterSection(
-            icon = Icons.Outlined.FilterAlt,
-            headline = stringResource(id = R.string.filter_special),
-            onResetSelection = {
-                listSettings.isExcludeDone.value = false
-                if (module == Module.TODO) {
-                    listSettings.isFilterOverdue.value = false
-                    listSettings.isFilterDueToday.value = false
-                    listSettings.isFilterDueTomorrow.value = false
-                    listSettings.isFilterDueFuture.value = false
-                    listSettings.isFilterStartInPast.value = false
-                    listSettings.isFilterStartToday.value = false
-                    listSettings.isFilterStartTomorrow.value = false
-                    listSettings.isFilterStartFuture.value = false
-                    listSettings.isFilterNoDatesSet.value = false
-                }
-                onListSettingsChanged()
-            },
-            onInvertSelection = {
-                listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
-                if (module == Module.TODO) {
-                    listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
-                    listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
-                    listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
-                    listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
-                    listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
-                    listSettings.isFilterStartToday.value = !listSettings.isFilterStartToday.value
-                    listSettings.isFilterStartTomorrow.value = !listSettings.isFilterStartTomorrow.value
-                    listSettings.isFilterStartFuture.value = !listSettings.isFilterStartFuture.value
-                    listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
-                }
-                onListSettingsChanged()
-            })
-        {
-            FlowRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
+        if (module == Module.TODO || !isWidgetConfig) {
 
-                FilterChip(
-                    selected = listSettings.isExcludeDone.value,
-                    onClick = {
-                        listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
-                        onListSettingsChanged()
-                    },
-                    label = { Text(stringResource(id = R.string.list_hide_completed_tasks)) },
-                    modifier = Modifier.padding(end = 4.dp)
-                )
+            FilterSection(
+                icon = Icons.Outlined.FilterAlt,
+                headline = stringResource(id = R.string.filter_special),
+                onResetSelection = {
+                    listSettings.isExcludeDone.value = false
+                    if (module == Module.TODO) {
+                        listSettings.isFilterOverdue.value = false
+                        listSettings.isFilterDueToday.value = false
+                        listSettings.isFilterDueTomorrow.value = false
+                        listSettings.isFilterDueFuture.value = false
+                        listSettings.isFilterStartInPast.value = false
+                        listSettings.isFilterStartToday.value = false
+                        listSettings.isFilterStartTomorrow.value = false
+                        listSettings.isFilterStartFuture.value = false
+                        listSettings.isFilterNoDatesSet.value = false
+                    }
+                    onListSettingsChanged()
+                },
+                onInvertSelection = {
+                    listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
+                    if (module == Module.TODO) {
+                        listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
+                        listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
+                        listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
+                        listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
+                        listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
+                        listSettings.isFilterStartToday.value = !listSettings.isFilterStartToday.value
+                        listSettings.isFilterStartTomorrow.value = !listSettings.isFilterStartTomorrow.value
+                        listSettings.isFilterStartFuture.value = !listSettings.isFilterStartFuture.value
+                        listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
+                    }
+                    onListSettingsChanged()
+                })
+            {
+                FlowRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
 
-                if (module == Module.TODO || module == Module.JOURNAL) {
                     FilterChip(
-                        selected = listSettings.isFilterStartInPast.value,
+                        selected = listSettings.isExcludeDone.value,
                         onClick = {
-                            listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
+                            listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
                             onListSettingsChanged()
                         },
-                        label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_in_past else R.string.list_date_start_in_past)) },
+                        label = { Text(stringResource(id = R.string.list_hide_completed_tasks)) },
                         modifier = Modifier.padding(end = 4.dp)
                     )
-                    FilterChip(
-                        selected = listSettings.isFilterStartToday.value,
-                        onClick = {
-                            listSettings.isFilterStartToday.value =
-                                !listSettings.isFilterStartToday.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_today else R.string.list_date_today)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    FilterChip(
-                        selected = listSettings.isFilterStartTomorrow.value,
-                        onClick = {
-                            listSettings.isFilterStartTomorrow.value =
-                                !listSettings.isFilterStartTomorrow.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_tomorrow else R.string.list_date_tomorrow)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    FilterChip(
-                        selected = listSettings.isFilterStartFuture.value,
-                        onClick = {
-                            listSettings.isFilterStartFuture.value =
-                                !listSettings.isFilterStartFuture.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_future else R.string.list_date_future)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                }
 
-                if (module == Module.TODO) {
-                    FilterChip(
-                        selected = listSettings.isFilterOverdue.value,
-                        onClick = {
-                            listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = R.string.list_due_overdue)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    FilterChip(
-                        selected = listSettings.isFilterDueToday.value,
-                        onClick = {
-                            listSettings.isFilterDueToday.value =
-                                !listSettings.isFilterDueToday.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = R.string.list_due_today)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    FilterChip(
-                        selected = listSettings.isFilterDueTomorrow.value,
-                        onClick = {
-                            listSettings.isFilterDueTomorrow.value =
-                                !listSettings.isFilterDueTomorrow.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = R.string.list_due_tomorrow)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    FilterChip(
-                        selected = listSettings.isFilterDueFuture.value,
-                        onClick = {
-                            listSettings.isFilterDueFuture.value =
-                                !listSettings.isFilterDueFuture.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = R.string.list_due_future)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    FilterChip(
-                        selected = listSettings.isFilterNoDatesSet.value,
-                        onClick = {
-                            listSettings.isFilterNoDatesSet.value =
-                                !listSettings.isFilterNoDatesSet.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = R.string.list_no_dates_set)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
+                    if (module == Module.TODO || module == Module.JOURNAL) {
+                        FilterChip(
+                            selected = listSettings.isFilterStartInPast.value,
+                            onClick = {
+                                listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
+                                onListSettingsChanged()
+                            },
+                            label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_in_past else R.string.list_date_start_in_past)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        FilterChip(
+                            selected = listSettings.isFilterStartToday.value,
+                            onClick = {
+                                listSettings.isFilterStartToday.value =
+                                    !listSettings.isFilterStartToday.value
+                                onListSettingsChanged()
+                            },
+                            label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_today else R.string.list_date_today)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        FilterChip(
+                            selected = listSettings.isFilterStartTomorrow.value,
+                            onClick = {
+                                listSettings.isFilterStartTomorrow.value =
+                                    !listSettings.isFilterStartTomorrow.value
+                                onListSettingsChanged()
+                            },
+                            label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_tomorrow else R.string.list_date_tomorrow)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        FilterChip(
+                            selected = listSettings.isFilterStartFuture.value,
+                            onClick = {
+                                listSettings.isFilterStartFuture.value =
+                                    !listSettings.isFilterStartFuture.value
+                                onListSettingsChanged()
+                            },
+                            label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_future else R.string.list_date_future)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
+
+                    if (module == Module.TODO) {
+                        FilterChip(
+                            selected = listSettings.isFilterOverdue.value,
+                            onClick = {
+                                listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
+                                onListSettingsChanged()
+                            },
+                            label = { Text(stringResource(id = R.string.list_due_overdue)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        FilterChip(
+                            selected = listSettings.isFilterDueToday.value,
+                            onClick = {
+                                listSettings.isFilterDueToday.value =
+                                    !listSettings.isFilterDueToday.value
+                                onListSettingsChanged()
+                            },
+                            label = { Text(stringResource(id = R.string.list_due_today)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        FilterChip(
+                            selected = listSettings.isFilterDueTomorrow.value,
+                            onClick = {
+                                listSettings.isFilterDueTomorrow.value =
+                                    !listSettings.isFilterDueTomorrow.value
+                                onListSettingsChanged()
+                            },
+                            label = { Text(stringResource(id = R.string.list_due_tomorrow)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        FilterChip(
+                            selected = listSettings.isFilterDueFuture.value,
+                            onClick = {
+                                listSettings.isFilterDueFuture.value =
+                                    !listSettings.isFilterDueFuture.value
+                                onListSettingsChanged()
+                            },
+                            label = { Text(stringResource(id = R.string.list_due_future)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        FilterChip(
+                            selected = listSettings.isFilterNoDatesSet.value,
+                            onClick = {
+                                listSettings.isFilterNoDatesSet.value =
+                                    !listSettings.isFilterNoDatesSet.value
+                                onListSettingsChanged()
+                            },
+                            label = { Text(stringResource(id = R.string.list_no_dates_set)) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
                 }
             }
         }
@@ -208,14 +215,14 @@ fun ListOptionsFilter(
             },
             onInvertSelection = {
                 listSettings.searchCategories.value =
-                    allCategories?.filter { category ->
+                    allCategories.filter { category ->
                         !listSettings.searchCategories.value.contains(category)
-                    } ?: emptyList()
+                    }
                 onListSettingsChanged()
             })
         {
             FlowRow(modifier = Modifier.fillMaxWidth()) {
-                allCategories?.forEach { category ->
+                allCategories.forEach { category ->
                     FilterChip(
                         selected = listSettings.searchCategories.value.contains(
                             category
@@ -251,10 +258,7 @@ fun ListOptionsFilter(
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    listSettings.searchAccount.value =
-                        allAccounts?.keys?.toMutableList()
-                            ?.apply { removeAll(listSettings.searchAccount.value) }
-                            ?: emptyList()
+                    listSettings.searchAccount.value = allAccounts.toMutableList().apply { removeAll(listSettings.searchAccount.value) }
                     onListSettingsChanged()
                 })
             {
@@ -262,13 +266,7 @@ fun ListOptionsFilter(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    allAccounts
-                        ?.filterValues { collections ->
-                            (module == Module.JOURNAL && collections.any { it.supportsVJOURNAL })
-                                    || (module == Module.NOTE && collections.any { it.supportsVJOURNAL })
-                                    || (module == Module.TODO && collections.any { it.supportsVTODO })
-                        }
-                        ?.keys?.sortedBy { it.lowercase() }?.forEach { account ->
+                    allAccounts.forEach { account ->
                         FilterChip(
                             selected = listSettings.searchAccount.value.contains(account),
                             onClick = {
@@ -299,26 +297,15 @@ fun ListOptionsFilter(
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    val allCollectionsGrouped =
-                        allCollections?.groupBy { it.displayName ?: "" }
                     listSettings.searchCollection.value =
-                        allCollectionsGrouped?.keys?.toMutableList()
-                            ?.apply { removeAll(listSettings.searchCollection.value) }
-                            ?: emptyList()
+                        allCollections
+                            .toMutableList()
+                            .apply { removeAll(listSettings.searchCollection.value) }
                     onListSettingsChanged()
                 })
             {
                 FlowRow(modifier = Modifier.fillMaxWidth()) {
-
-                    val allCollectionsGrouped = allCollections
-                        ?.filter { collection ->
-                            (module == Module.JOURNAL && collection.supportsVJOURNAL)
-                                    || (module == Module.NOTE && collection.supportsVJOURNAL)
-                                    || (module == Module.TODO && collection.supportsVTODO)
-                        }
-                        ?.groupBy { it.displayName ?: "" }
-                    allCollectionsGrouped?.keys?.sortedBy { it.lowercase() }
-                        ?.forEach { collection ->
+                    allCollections.forEach { collection ->
                             FilterChip(
                                 selected = listSettings.searchCollection.value.contains(
                                     collection
@@ -370,7 +357,7 @@ fun ListOptionsFilter(
                     onListSettingsChanged()
                 })
             {
-                if (module == Module.JOURNAL || module == Module.NOTE) {
+                if  (module == Module.JOURNAL || module == Module.NOTE) {
                     FlowRow(modifier = Modifier.fillMaxWidth()) {
                         StatusJournal.values().forEach { status ->
                             FilterChip(
@@ -397,7 +384,8 @@ fun ListOptionsFilter(
                             )
                         }
                     }
-                } else {
+                }
+                if (module == Module.TODO) {
                     FlowRow(modifier = Modifier.fillMaxWidth()) {
                         StatusTodo.values().forEach { status ->
                             FilterChip(
@@ -471,19 +459,21 @@ fun ListOptionsFilter(
                     }
                 }
             }
-            
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .fillMaxWidth()
-            ) {
-                Button(onClick = {
-                    listSettings.reset()
-                    onListSettingsChanged()
-                }) {
-                    Text(stringResource(id = R.string.reset))
+
+            if(!isWidgetConfig) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .padding(top = 16.dp, bottom = 16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Button(onClick = {
+                        listSettings.reset()
+                        onListSettingsChanged()
+                    }) {
+                        Text(stringResource(id = R.string.reset))
+                    }
                 }
             }
         }
@@ -502,7 +492,7 @@ fun ListOptionsFilter_Preview_TODO() {
             Context.MODE_PRIVATE
         )
 
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
 
         ListOptionsFilter(
             module = Module.TODO,
@@ -539,7 +529,7 @@ fun ListOptionsFilter_Preview_JOURNAL() {
             Context.MODE_PRIVATE
         )
 
-        val listSettings = ListSettings(prefs)
+        val listSettings = ListSettings.fromPrefs(prefs)
 
         ListOptionsFilter(
             module = Module.JOURNAL,

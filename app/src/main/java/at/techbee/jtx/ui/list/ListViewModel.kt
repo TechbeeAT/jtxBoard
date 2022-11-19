@@ -43,7 +43,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         Module.TODO -> application.getSharedPreferences(PREFS_LIST_TODOS, Context.MODE_PRIVATE)
     }
 
-    val listSettings = ListSettings(prefs)
+    val listSettings = ListSettings.fromPrefs(prefs)
 
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
@@ -68,6 +68,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
     val allCategories = database.getAllCategoriesAsText()   // filter FragmentDialog
     val allWriteableCollections = database.getAllWriteableCollections()
+    val allCollections = database.getAllCollections(module = module.name)
+
 
     var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)
@@ -134,7 +136,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         )
         listQuery.postValue(query)
         if(saveListSettings)
-            listSettings.save()
+            listSettings.saveToPrefs()
     }
 
 
@@ -143,7 +145,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun clearFilter() {
         listSettings.reset()
-        listSettings.save()
+        listSettings.saveToPrefs()
         updateSearch()
     }
 
