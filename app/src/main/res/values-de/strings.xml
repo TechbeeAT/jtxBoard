@@ -590,4 +590,13 @@ Danke!"</string>
     <string name="menu_list_limit_recur_entries_sub">"Zeige nur einen Eintrag in der Zukunft"</string>
     <string name="menu_view_markdown_formatting">"Markdown-Formatierung"</string>
     <string name="menu_view_autosave">"Autosave"</string>
+    <string name="next">"Weiter"</string>
+    <string name="previous">"Zurück"</string>
+    <string name="widget_list_description">"Listenwidget"</string>
+    <string name="widget_list_configuration">"Widgetkonfiguration"</string>
+    <string name="widget_list_configuration_beta_info">"* Bitte beachten Sie, dass jtx Board eine neue, experimentelle Art zur Platzierung von Widgets verwendet, die in seltenen Fällen noch zu unerwartetem Verhalten führen kann."</string>
+    <string name="widget_list_configuration_pro_info">"Bitte kaufen Sie das Pro Paket um weitere Konfigurationsmöglichkeiten zu aktivieren"</string>
+    <string name="widget_list_configuration_checkbox_position">"Checkbox Position"</string>
+    <string name="widget_list_no_entries_found">"Keine Einträge gefunden, die den Filterkriterien entsprechen"</string>
+    <string name="widget_list_view_settings">"Ansichtsoptionen"</string>
 </resources>
