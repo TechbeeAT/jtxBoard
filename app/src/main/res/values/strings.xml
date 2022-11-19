@@ -683,6 +683,7 @@
 
     <string name="widget_list_description">List widget</string>
     <string name="widget_list_configuration">Widget configuration</string>
+    <string name="widget_list_configuration_beta_info">* Please note that jtx Board is using a new, experimental way to handle widgets which in rare cases might cause unexpected behaviour.</string>
     <string name="widget_list_configuration_pro_info">Please purchase the Pro package to enable further configuration options.</string>
     <string name="widget_list_configuration_checkbox_position">Checkbox position</string>
     <string name="widget_list_no_entries_found">No entries found that match your filter criteria</string>

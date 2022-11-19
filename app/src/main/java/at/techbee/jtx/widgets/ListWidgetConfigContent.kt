@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -86,6 +87,13 @@ fun ListWidgetConfigContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
+                Text(
+                    text = stringResource(R.string.widget_list_configuration_beta_info),
+                    modifier = Modifier.padding(8.dp),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontStyle = FontStyle.Italic,
+                    textAlign = TextAlign.Center
+                )
 
                 FlowRow(
                     modifier = Modifier
