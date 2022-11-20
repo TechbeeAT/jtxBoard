@@ -23,7 +23,6 @@ import java.io.File
 import java.io.IOException
 import android.webkit.MimeTypeMap
 import androidx.annotation.VisibleForTesting
-import at.techbee.jtx.widgets.ListWidgetReceiver
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.lang.NumberFormatException
 import kotlin.time.Duration
@@ -166,7 +165,6 @@ class SyncContentProvider : ContentProvider() {
         database.deleteRAW(deleteQuery)
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
-        ListWidgetReceiver.setOneTimeWork(context!!) // update Widget
 
         if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(
                 uri
@@ -276,8 +274,6 @@ class SyncContentProvider : ContentProvider() {
 
         if(sUriMatcher.match(uri) == CODE_ALARM_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)
             Alarm.scheduleNextNotifications(context!!)
-
-        ListWidgetReceiver.setOneTimeWork(context!!) // update Widget
 
         return ContentUris.withAppendedId(uri, id)
     }
@@ -555,8 +551,6 @@ class SyncContentProvider : ContentProvider() {
             || sUriMatcher.match(uri) == CODE_ALARM_ITEM
         )
             Alarm.scheduleNextNotifications(context!!)
-
-        ListWidgetReceiver.setOneTimeWork(context!!) // update Widget
 
         return 1
     }
