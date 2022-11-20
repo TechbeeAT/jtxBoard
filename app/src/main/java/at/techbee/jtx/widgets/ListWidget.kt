@@ -148,7 +148,7 @@ class ListWidget : GlanceAppWidget() {
 
                         items(list.filter {
                             if(listWidgetConfig?.flatView == false)
-                                it.vtodoUidOfParent == null    // no child elements on top level if flat view is deactivated
+                                !it.isChildOfTodo && !it.isChildOfNote && !it.isChildOfJournal     // no child elements on top level if flat view is deactivated
                             else
                                 true
                         }) { entry ->
