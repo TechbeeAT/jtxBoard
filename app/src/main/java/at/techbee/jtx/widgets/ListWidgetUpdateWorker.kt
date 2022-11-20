@@ -65,7 +65,7 @@ class ListWidgetUpdateWorker(
                                     isFilterStartTomorrow = listWidgetConfig?.isFilterStartTomorrow ?: false,
                                     isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
                                     isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false,
-                                    flatView = listWidgetConfig?.flatView ?: true,
+                                    flatView = true,  // always true in Widget, we handle the flat view in the code
                                 )
                             )
 

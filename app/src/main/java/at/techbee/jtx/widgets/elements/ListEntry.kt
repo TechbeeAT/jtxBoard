@@ -12,15 +12,13 @@ import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.glance.GlanceModifier
-import androidx.glance.LocalContext
+import androidx.glance.*
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.CheckBox
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
-import androidx.glance.background
 import androidx.glance.layout.*
 import androidx.glance.text.*
 import androidx.glance.unit.ColorProvider
@@ -37,6 +35,7 @@ import at.techbee.jtx.widgets.px
 @Composable
 fun ListEntry(
     obj: ICal4List,
+    groupedList: Map<String?, List<ICal4List>>,
     textColor: ColorProvider,
     containerColor: ColorProvider,
     checkboxEnd: Boolean
@@ -59,89 +58,134 @@ fun ListEntry(
 
     val imageSize = 18.dp
 
-    Row(
+    Column(
         modifier = GlanceModifier
             .fillMaxWidth()
             .padding(horizontal = 6.dp, vertical = 3.dp)
             .background(containerColor)
             .cornerRadius(8.dp)
-            .clickable(onClick = actionStartActivity(intent)),
-        verticalAlignment = Alignment.CenterVertically
     ) {
 
-        if (obj.module == Module.TODO.name && !obj.isReadOnly && !checkboxEnd) {
-            CheckBox(
-                checked = obj.percent == 100,
-                onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
-                    parameters = actionParametersOf(
-                        ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
-                    )
-                )
-            )
-        }
 
-        Column(
-            modifier = GlanceModifier.defaultWeight()
+        Row(
+            modifier = GlanceModifier
+                .clickable(onClick = actionStartActivity(intent)),
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
-            if (obj.dtstart != null || obj.due != null) {
-                Row(
-                    modifier = GlanceModifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (obj.dtstart != null) {
-                        TintImage(
-                            resource = if (obj.module == Module.TODO.name) R.drawable.ic_start else R.drawable.ic_start2,
-                            tintColor = GlanceTheme.colors.onPrimaryContainer,
-                            contentDescription = context.getString(R.string.started),
-                            imageHeight = imageSize.px,
-                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
+            if (obj.module == Module.TODO.name && !checkboxEnd) {
+                if(!obj.isReadOnly) {
+                    CheckBox(
+                        checked = obj.percent == 100,
+                        onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
+                            parameters = actionParametersOf(
+                                ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
+                            )
                         )
-                        Text(
-                            text = DateTimeUtils.convertLongToMediumDateString(
-                                obj.dtstart,
-                                obj.dtstartTimezone
-                            ),
-                            style = textStyleDate,
-                            modifier = GlanceModifier.padding(end = 8.dp)
-                        )
-                    }
-                    if (obj.due != null) {
-                        TintImage(
-                            resource = R.drawable.ic_due,
-                            tintColor = GlanceTheme.colors.onPrimaryContainer,
-                            contentDescription = context.getString(R.string.due),
-                            imageHeight = imageSize.px,
-                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                        )
-                        Text(
-                            text = DateTimeUtils.convertLongToMediumDateString(
-                                obj.due,
-                                obj.dueTimezone
-                            ),
-                            style = textStyleDate
-                        )
-                    }
+                    )
+                } else {
+                    TintImage(
+                        resource = R.drawable.ic_readonly,
+                        tintColor = GlanceTheme.colors.secondary,
+                        imageHeight = 24.dp.px,
+                        imageWidth = 24.dp.px,
+                        contentDescription = context.getString(R.string.readyonly),
+                        modifier = GlanceModifier.size(32.dp).padding(8.dp)
+                    )
                 }
             }
 
-            Column(modifier = GlanceModifier.defaultWeight()) {
-                if(!obj.summary.isNullOrEmpty())
-                    Text(text = obj.summary!!, style = textStyleSummary, modifier = GlanceModifier.fillMaxWidth().clickable(onClick = actionStartActivity(intent)))
-                if(!obj.description.isNullOrEmpty())
-                    Text(obj.description!!, maxLines = 2, style = textStyleDescription, modifier = GlanceModifier.fillMaxWidth().clickable(onClick = actionStartActivity(intent)))
+            Column(
+                modifier = GlanceModifier.defaultWeight()
+            ) {
+
+                if (obj.dtstart != null || obj.due != null) {
+                    Row(
+                        modifier = GlanceModifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (obj.dtstart != null) {
+                            TintImage(
+                                resource = if (obj.module == Module.TODO.name) R.drawable.ic_start else R.drawable.ic_start2,
+                                tintColor = GlanceTheme.colors.onPrimaryContainer,
+                                contentDescription = context.getString(R.string.started),
+                                imageHeight = imageSize.px,
+                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
+                            )
+                            Text(
+                                text = DateTimeUtils.convertLongToMediumDateString(
+                                    obj.dtstart,
+                                    obj.dtstartTimezone
+                                ),
+                                style = textStyleDate,
+                                modifier = GlanceModifier.padding(end = 8.dp)
+                            )
+                        }
+                        if (obj.due != null) {
+                            TintImage(
+                                resource = R.drawable.ic_due,
+                                tintColor = GlanceTheme.colors.onPrimaryContainer,
+                                contentDescription = context.getString(R.string.due),
+                                imageHeight = imageSize.px,
+                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            )
+                            Text(
+                                text = DateTimeUtils.convertLongToMediumDateString(
+                                    obj.due,
+                                    obj.dueTimezone
+                                ),
+                                style = textStyleDate
+                            )
+                        }
+                    }
+                }
+
+                Column(modifier = GlanceModifier.defaultWeight()) {
+                    if (!obj.summary.isNullOrEmpty())
+                        Text(
+                            text = obj.summary!!,
+                            style = textStyleSummary,
+                            modifier = GlanceModifier.fillMaxWidth().clickable(onClick = actionStartActivity(intent))
+                        )
+                    if (!obj.description.isNullOrEmpty())
+                        Text(
+                            obj.description!!,
+                            maxLines = 2,
+                            style = textStyleDescription,
+                            modifier = GlanceModifier.fillMaxWidth().clickable(onClick = actionStartActivity(intent))
+                        )
+                }
+            }
+
+            if (obj.module == Module.TODO.name && checkboxEnd) {
+                if(!obj.isReadOnly) {
+                    CheckBox(
+                        checked = obj.percent == 100,
+                        onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
+                            parameters = actionParametersOf(
+                                ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
+                            )
+                        )
+                    )
+                } else {
+                    TintImage(
+                        resource = R.drawable.ic_readonly,
+                        tintColor = GlanceTheme.colors.secondary,
+                        imageHeight = 24.dp.px,
+                        imageWidth = 24.dp.px,
+                        contentDescription = context.getString(R.string.readyonly),
+                        modifier = GlanceModifier.size(32.dp).padding(8.dp)
+                    )
+                }
             }
         }
 
-        if (obj.module == Module.TODO.name && !obj.isReadOnly && checkboxEnd) {
-            CheckBox(
-                checked = obj.percent == 100,
-                onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
-                    parameters = actionParametersOf(
-                        ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
-                    )
-                )
-            )
-        }
+        ListSubEntries(
+            parentUID = obj.uid,
+            groupedList = groupedList,
+            textColor = textColor,
+            containerColor = containerColor,
+            checkboxEnd = checkboxEnd
+        )
     }
 }

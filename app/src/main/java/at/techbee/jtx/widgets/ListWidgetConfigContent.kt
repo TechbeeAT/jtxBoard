@@ -275,6 +275,6 @@ data class ListWidgetConfig(
     var isFilterNoDatesSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!
     var viewMode: ViewMode = ViewMode.LIST,
-    var flatView: Boolean = true,
+    var flatView: Boolean = false,
     var checkboxPositionEnd: Boolean = false
 )

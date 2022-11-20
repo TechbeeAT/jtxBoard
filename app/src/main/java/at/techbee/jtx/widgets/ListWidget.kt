@@ -51,6 +51,8 @@ class ListWidget : GlanceAppWidget() {
             Json.decodeFromString<ICal4List>(it)
         } ?: emptyList()
 
+        val groupedList = list.groupBy { it.vtodoUidOfParent }
+
         val configIntent = Intent(context, ListWidgetConfigActivity::class.java)
             .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -144,7 +146,12 @@ class ListWidget : GlanceAppWidget() {
                             .cornerRadius(8.dp)
                     ) {
 
-                        items(list) { entry ->
+                        items(list.filter {
+                            if(listWidgetConfig?.flatView == false)
+                                it.vtodoUidOfParent == null    // no child elements on top level if flat view is deactivated
+                            else
+                                true
+                        }) { entry ->
 
                             Column(
                                 modifier = GlanceModifier
@@ -153,6 +160,7 @@ class ListWidget : GlanceAppWidget() {
                             ) {
                                 ListEntry(
                                     obj = entry,
+                                    groupedList = if(listWidgetConfig?.flatView == true) emptyMap() else groupedList,   // no child elements if flat view is activated
                                     textColor = GlanceTheme.colors.onSurface,
                                     containerColor = GlanceTheme.colors.surface,
                                     checkboxEnd = listWidgetConfig?.checkboxPositionEnd ?: false
