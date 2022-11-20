@@ -69,6 +69,7 @@ fun ListEntry(
 
         Row(
             modifier = GlanceModifier
+                .fillMaxWidth()
                 .clickable(onClick = actionStartActivity(intent)),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -185,7 +186,8 @@ fun ListEntry(
             groupedList = groupedList,
             textColor = textColor,
             containerColor = containerColor,
-            checkboxEnd = checkboxEnd
+            checkboxEnd = checkboxEnd,
+            modifier = GlanceModifier.fillMaxWidth()
         )
     }
 }
