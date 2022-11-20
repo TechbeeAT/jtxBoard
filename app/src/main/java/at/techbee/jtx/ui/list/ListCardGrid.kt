@@ -120,69 +120,57 @@ fun ListCardGrid(
                     }
                 }
 
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.SpaceEvenly,
+                Column(
+                    horizontalAlignment = Alignment.Start,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                        .weight(1f)
+                        .padding(start = 8.dp, bottom = 8.dp)
                 ) {
 
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 8.dp, end = 8.dp)
-                            .weight(1f)
-
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                        ) {
-
-                            if (iCalObject.summary?.isNotBlank() == true)
-                                Text(
-                                    text = iCalObject.summary?.trim() ?: "",
-                                    textDecoration = if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None,
-                                    maxLines = 4,
-                                    overflow = TextOverflow.Ellipsis,
-                                    fontWeight = FontWeight.Bold,
-                                    style = TextStyle(textDirection = TextDirection.Content),
-                                    modifier = Modifier
-                                        .padding(top = 4.dp)
-                                        .weight(1f)
-                                )
-
-                            if (iCalObject.module == Module.TODO.name)
-                                Checkbox(
-                                    checked = iCalObject.percent == 100,
-                                    enabled = !iCalObject.isReadOnly,
-                                    onCheckedChange = {
-                                        onProgressChanged(
-                                            iCalObject.id,
-                                            if (it) 100 else 0,
-                                            iCalObject.isLinkedRecurringInstance
-                                        )
-                                    },
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
-                        }
-
-                        if (iCalObject.description?.isNotBlank() == true)
+                        if (iCalObject.summary?.isNotBlank() == true)
                             Text(
-                                text = iCalObject.description?.trim() ?: "",
+                                text = iCalObject.summary?.trim() ?: "",
+                                textDecoration = if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None,
                                 maxLines = 4,
                                 overflow = TextOverflow.Ellipsis,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.Bold,
                                 style = TextStyle(textDirection = TextDirection.Content),
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .padding(top = 4.dp)
+                                    .weight(1f)
+                            )
+
+                        if (iCalObject.module == Module.TODO.name)
+                            Checkbox(
+                                checked = iCalObject.percent == 100,
+                                enabled = !iCalObject.isReadOnly,
+                                onCheckedChange = {
+                                    onProgressChanged(
+                                        iCalObject.id,
+                                        if (it) 100 else 0,
+                                        iCalObject.isLinkedRecurringInstance
+                                    )
+                                }
                             )
                     }
+
+                    if (iCalObject.description?.isNotBlank() == true)
+                        Text(
+                            text = iCalObject.description?.trim() ?: "",
+                            maxLines = 4,
+                            overflow = TextOverflow.Ellipsis,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = TextStyle(textDirection = TextDirection.Content),
+                            modifier = Modifier.fillMaxWidth().padding(end = 8.dp)
+                        )
                 }
+
 
                 AnimatedVisibility(visible = statusBarVisible) {
                     ListStatusBar(
@@ -195,7 +183,7 @@ fun ListCardGrid(
                         isRecurringInstance = iCalObject.isRecurringInstance,
                         isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
                         component = iCalObject.component,
-                        modifier = Modifier.fillMaxWidth().padding(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 4.dp).weight(0.2f)
+                        modifier = Modifier.fillMaxWidth().padding(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 4.dp)
                     )
                 }
             }
@@ -215,7 +203,6 @@ fun ListCardGrid_JOURNAL() {
             icalobject,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier
                 .width(150.dp)
-                .height(150.dp)
         )
     }
 }
@@ -235,7 +222,7 @@ fun ListCardGrid_NOTE() {
         ListCardGrid(
             icalobject,
             onProgressChanged = { _, _, _ -> },
-            modifier = Modifier.width(150.dp).height(150.dp)
+            modifier = Modifier.width(150.dp)
         )
     }
 }
@@ -263,7 +250,36 @@ fun ListCardGrid_TODO() {
         }
         ListCardGrid(
             icalobject,
-            onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp).height(150.dp)
+            onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ListCardGrid_TODO_short() {
+    MaterialTheme {
+
+        val icalobject = ICal4List.getSample().apply {
+            component = Component.VTODO.name
+            module = Module.TODO.name
+            percent = 89
+            status = StatusTodo.`IN-PROCESS`.name
+            classification = Classification.CONFIDENTIAL.name
+            dtstart = System.currentTimeMillis()
+            due = System.currentTimeMillis()
+            summary = "Lorem"
+            description = null
+            numSubtasks = 5
+            numAttachments = 4
+            numSubnotes = 1
+            uploadPending = true
+            isReadOnly = true
+        }
+        ListCardGrid(
+            icalobject,
+            onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }
 }

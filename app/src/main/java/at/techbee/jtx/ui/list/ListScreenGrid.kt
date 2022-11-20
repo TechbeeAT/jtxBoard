@@ -13,11 +13,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -44,7 +40,7 @@ fun ListScreenGrid(
 ) {
 
     val scrollId by scrollOnceId.observeAsState(null)
-    val gridState = rememberLazyGridState()
+    val gridState = rememberLazyStaggeredGridState()
 
     if(scrollId != null) {
         LaunchedEffect(list) {
@@ -56,11 +52,10 @@ fun ListScreenGrid(
         }
     }
 
-    LazyVerticalGrid(
+    LazyVerticalStaggeredGrid(
         //columns = GridCells.Adaptive(150.dp),
-        columns = GridCells.Adaptive(150.dp),
+        columns = StaggeredGridCells.Adaptive(150.dp),
         //modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
-        state = gridState,
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -76,15 +71,14 @@ fun ListScreenGrid(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(jtxCardCornerShape)
-                    .animateItemPlacement()
+                    //.animateItemPlacement()
                     .combinedClickable(
                         onClick = { goToDetail(iCalObject.id, false, list.value) },
                         onLongClick = {
                             if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                 goToDetail(iCalObject.id, true, list.value)
                         }
-                    )
-                    .height(150.dp),
+                    ),
                 onProgressChanged = onProgressChanged,
                 )
         }
