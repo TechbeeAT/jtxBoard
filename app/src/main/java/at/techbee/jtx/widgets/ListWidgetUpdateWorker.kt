@@ -9,6 +9,7 @@
 package at.techbee.jtx.widgets
 
 import android.content.Context
+import android.util.Log
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
@@ -35,10 +36,12 @@ class ListWidgetUpdateWorker(
 
             GlanceAppWidgetManager(context).getGlanceIds(ListWidget::class.java).forEach { glanceId ->
 
+                Log.d("ListWidgetUpdateWorker", "GlanceId on updateWidgetState: $glanceId")
+
                     updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { pref ->
 
                         val listWidgetConfig = pref[ListWidgetReceiver.filterConfig]?.let { filterConfig -> Json.decodeFromString<ListWidgetConfig>(filterConfig) }
-                        //Log.d(TAG, "filterConfig: $listWidgetConfig")
+                        Log.d("ListWidgetUpdateWorker", "GlanceId $glanceId : filterConfig: $listWidgetConfig")
                         //Log.v(TAG, "Loading data ...")
                         val entries = ICalDatabase.getInstance(context)
                             .iCalDatabaseDao

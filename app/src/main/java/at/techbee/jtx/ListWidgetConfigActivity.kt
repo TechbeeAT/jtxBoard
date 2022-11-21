@@ -41,9 +41,11 @@ class ListWidgetConfigActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val appWidgetId = intent?.extras?.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID) ?: AppWidgetManager.INVALID_APPWIDGET_ID
-        Log.d(TAG, "appWidgetId $appWidgetId")
+        Log.d(TAG, "appWidgetId on ListWidgetConfigActivity: $appWidgetId")
         val glanceId = GlanceAppWidgetManager(this).getGlanceIdBy(appWidgetId)
-        //Log.d(TAG, "glanceId $glanceId")
+        Log.d(TAG, "GlanceId on ListWidgetConfigActivity: $glanceId")
+
+        intent?.extras?.remove(AppWidgetManager.EXTRA_APPWIDGET_ID)
 
 
         setContent {
@@ -69,20 +71,19 @@ class ListWidgetConfigActivity : ComponentActivity() {
                             onFinish = { listWidgetConfig ->
 
                                 scope.launch {
-                                    glanceId.let { glanceId ->
-                                        updateAppWidgetState(
-                                            context,
-                                            PreferencesGlanceStateDefinition,
-                                            glanceId
-                                        ) { pref ->
-                                            pref.toMutablePreferences().apply {
-                                                this[ListWidgetReceiver.filterConfig] =
-                                                    Json.encodeToString(listWidgetConfig)
-                                            }
+
+                                    updateAppWidgetState(
+                                        context,
+                                        PreferencesGlanceStateDefinition,
+                                        glanceId
+                                    ) { pref ->
+                                        pref.toMutablePreferences().apply {
+                                            this[ListWidgetReceiver.filterConfig] =
+                                                Json.encodeToString(listWidgetConfig)
                                         }
-                                        ListWidgetReceiver.setOneTimeWork(context)
-                                        Log.d(TAG, "Widget update requested")
                                     }
+                                    ListWidgetReceiver.setOneTimeWork(context)
+                                    Log.d(TAG, "Widget update requested")
 
                                     val resultValue = Intent().putExtra(
                                         AppWidgetManager.EXTRA_APPWIDGET_ID,

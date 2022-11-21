@@ -8,8 +8,8 @@
 
 package at.techbee.jtx.widgets
 
-import android.appwidget.AppWidgetManager
 import android.content.Intent
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,6 +18,7 @@ import androidx.glance.*
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
@@ -27,7 +28,6 @@ import androidx.glance.layout.*
 import androidx.glance.text.*
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
-import at.techbee.jtx.ListWidgetConfigActivity
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.widgets.elements.ListEntry
@@ -42,7 +42,10 @@ class ListWidget : GlanceAppWidget() {
     override fun Content() {
 
         val context = LocalContext.current
-        val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)
+
+        Log.d("ListWidget", "appWidgetId in ListWidget: ${GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)}")
+        Log.d("ListWidget", "glanceId in ListWidget: ${LocalGlanceId.current}")
+
         val prefs = currentState<Preferences>()
         val listWidgetConfig = prefs[ListWidgetReceiver.filterConfig]?.let { filterConfig ->
             Json.decodeFromString<ListWidgetConfig>(filterConfig)
@@ -52,10 +55,6 @@ class ListWidget : GlanceAppWidget() {
         } ?: emptyList()
 
         val groupedList = list.groupBy { it.vtodoUidOfParent }
-
-        val configIntent = Intent(context, ListWidgetConfigActivity::class.java)
-            .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val imageSize = 36.dp
 
 
@@ -93,7 +92,7 @@ class ListWidget : GlanceAppWidget() {
                         contentDescription = context.getString(R.string.widget_list_configuration),
                         imageHeight = imageSize.px,
                         modifier = GlanceModifier
-                            .clickable(actionStartActivity(configIntent))
+                            //.clickable(actionStartActivity(configIntent))
                             .padding(8.dp)
                             .size(imageSize),
                     )
@@ -120,7 +119,7 @@ class ListWidget : GlanceAppWidget() {
                         contentDescription = context.getString(R.string.widget_list_configuration),
                         imageHeight = imageSize.px,
                         modifier = GlanceModifier
-                            .clickable(actionStartActivity(configIntent))
+                            .clickable(actionRunCallback<ListWidgetOpenConfigActionCallback>())
                             .padding(8.dp)
                             .size(imageSize),
                     )
