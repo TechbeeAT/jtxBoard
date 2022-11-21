@@ -33,22 +33,25 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         setOneTimeWork(context)
-        setPeriodicWork(context)
+        //setPeriodicWork(context)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         //if(intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE) {
             setOneTimeWork(context)
-            setPeriodicWork(context)
+            //setPeriodicWork(context)
         //}
     }
 
 
     companion object {
         val list = stringSetPreferencesKey("list")
+        val subtasks = stringSetPreferencesKey("subtasks")
+        val subnotes = stringSetPreferencesKey("subnotes")
         val filterConfig = stringPreferencesKey("filter_config")
 
+        /*
         private fun setPeriodicWork(context: Context) {
 
             val work: PeriodicWorkRequest = PeriodicWorkRequestBuilder<ListWidgetUpdateWorker>(5, TimeUnit.MINUTES).build()
@@ -57,6 +60,7 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
                 .enqueueUniquePeriodicWork("listWidgetWorker", ExistingPeriodicWorkPolicy.KEEP, work)
             Log.d(TAG, "Work enqueued")
         }
+         */
 
         fun setOneTimeWork(context: Context) {
 
