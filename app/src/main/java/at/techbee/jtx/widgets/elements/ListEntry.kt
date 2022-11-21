@@ -85,14 +85,7 @@ fun ListEntry(
                         )
                     )
                 } else {
-                    TintImage(
-                        resource = R.drawable.ic_readonly,
-                        tintColor = GlanceTheme.colors.secondary,
-                        imageHeight = 24.dp.px,
-                        imageWidth = 24.dp.px,
-                        contentDescription = context.getString(R.string.readyonly),
-                        modifier = GlanceModifier.size(32.dp).padding(8.dp)
-                    )
+                    Spacer(modifier = GlanceModifier.size(24.dp))
                 }
             }
 
@@ -169,14 +162,7 @@ fun ListEntry(
                         )
                     )
                 } else {
-                    TintImage(
-                        resource = R.drawable.ic_readonly,
-                        tintColor = GlanceTheme.colors.secondary,
-                        imageHeight = 24.dp.px,
-                        imageWidth = 24.dp.px,
-                        contentDescription = context.getString(R.string.readyonly),
-                        modifier = GlanceModifier.size(32.dp).padding(8.dp)
-                    )
+                    Spacer(modifier = GlanceModifier.size(24.dp))
                 }
             }
         }

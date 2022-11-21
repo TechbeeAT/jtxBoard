@@ -576,4 +576,33 @@ Merci !"</string>
     <string name="alarms_always_ondue">"Toujours en échéance"</string>
     <string name="settings_show_one_recur_entry_in_future">"Afficher une seule entrée récurrente à l'avenir"</string>
     <string name="settings_auto_alarm_sub">"Activez cette option pour créer automatiquement des alarmes. Choisissez \"Toujours à échéance\" pour ne pas créer d'alarme mais pour être informé dans tous les cas lorsqu'une tâche est à échéance."</string>
+
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="status_no_status">"Aucun statut"</string>
+    <string name="classification_no_classification">"Aucune classification (public)"</string>
+    <string name="map">"Carte"</string>
+    <string name="open_in_browser">"Ouvrir dans le navigateur"</string>
+    <string name="list_date_without">"Sans date"</string>
+    <string name="list_start_without">"Sans date de début"</string>
+    <string name="list_due_without">"Sans date d'échéance"</string>
+    <string name="list_dialog_delete_visible_message2">"Attention: les instances des entrées récurrentes sont exclues."</string>
+    <string name="list_snackbar_no_collection">"Veuillez ajouter une collection locale ou synchroniser une collection distante supportant ce module"</string>
+    <string name="filter_second_order_by">"Puis, trier par"</string>
+    <string name="filter_group_by">"Grouper par"</string>
+    <string name="filter_group_by_info">"Le groupement est disponible pour la vue en liste et la vue compacte"</string>
+    <string name="menu_list_flat_view">"Vue à plat"</string>
+    <string name="menu_list_flat_view_sub">"Toujours afficher les entrées enfants au niveau supérieur dans la liste"</string>
+    <string name="menu_list_limit_recur_entries">"Réduire les occurences"</string>
+    <string name="menu_list_limit_recur_entries_sub">"Afficher uniquement la prochaine occurence pour les entrées récurrentes"</string>
+    <string name="menu_view_markdown_formatting"></string>
+    <string name="menu_view_autosave">"Sauvegarde automatique"</string>
+    <string name="next">"Prochain"</string>
+    <string name="previous">"Précédent"</string>
+    <string name="widget_list_description">"Liste de widget"</string>
+    <string name="widget_list_configuration">"Configuration du widget"</string>
+    <string name="widget_list_configuration_beta_info">"*Veuillez noter que jtx Board utilise une nouvelle méthode expérimentale pour gérer les widgets qui, dans de rares cas, peut provoquer un comportement inattendu."</string>
+    <string name="widget_list_configuration_pro_info">"Veuillez acheter la version Pro pour obtenir plus d'options de configuration"</string>
+    <string name="widget_list_configuration_checkbox_position">"Position des checkbox"</string>
+    <string name="widget_list_no_entries_found">"Aucune entrée trouvée correspondant à vos critères de filtres"</string>
+    <string name="widget_list_view_settings">"Paramètres des vues"</string>
 </resources>

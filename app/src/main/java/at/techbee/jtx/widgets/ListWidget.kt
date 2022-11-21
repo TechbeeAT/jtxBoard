@@ -55,6 +55,9 @@ class ListWidget : GlanceAppWidget() {
         } ?: emptyList()
 
         val groupedList = list.groupBy { it.vtodoUidOfParent }
+
+        val mainIntent = Intent(context, MainActivity2::class.java)
+            .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val imageSize = 36.dp
 
 
@@ -92,7 +95,7 @@ class ListWidget : GlanceAppWidget() {
                         contentDescription = context.getString(R.string.widget_list_configuration),
                         imageHeight = imageSize.px,
                         modifier = GlanceModifier
-                            //.clickable(actionStartActivity(configIntent))
+                            .clickable(actionStartActivity(mainIntent))
                             .padding(8.dp)
                             .size(imageSize),
                     )
