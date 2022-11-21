@@ -35,7 +35,6 @@ import at.techbee.jtx.widgets.px
 @Composable
 fun ListEntry(
     obj: ICal4List,
-    groupedList: Map<String?, List<ICal4List>>,
     textColor: ColorProvider,
     containerColor: ColorProvider,
     checkboxEnd: Boolean
@@ -166,14 +165,5 @@ fun ListEntry(
                 }
             }
         }
-
-        ListSubEntries(
-            parentUID = obj.uid,
-            groupedList = groupedList,
-            textColor = textColor,
-            containerColor = containerColor,
-            checkboxEnd = checkboxEnd,
-            modifier = GlanceModifier.fillMaxWidth()
-        )
     }
 }

@@ -95,6 +95,7 @@ fun ListWidgetConfigContent(
                     textAlign = TextAlign.Center
                 )
 
+
                 FlowRow(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -118,7 +119,17 @@ fun ListWidgetConfigContent(
                     }
                 }
 
+
                 if(isPurchased.value) {
+
+                    if(selectedModule==Module.TODO)
+                        Text(
+                            text = stringResource(R.string.widget_list_configuration_only_one_hierarchy_layer_supported),
+                            modifier = Modifier.padding(8.dp),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontStyle = FontStyle.Italic,
+                            textAlign = TextAlign.Center
+                        )
 
                     ListOptionsFilter(
                         module = selectedModule,

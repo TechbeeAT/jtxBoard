@@ -56,6 +56,12 @@ class ListWidget : GlanceAppWidget() {
 
         val groupedList = list.groupBy { it.vtodoUidOfParent }
 
+        val flattenedList: MutableList<ICal4List> = mutableListOf()
+        groupedList[null]?.forEach { parents ->
+            flattenedList.add(parents)
+            groupedList[parents.uid]?.let { flattenedList.addAll(it) }
+        }
+
         val mainIntent = Intent(context, MainActivity2::class.java)
             .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val imageSize = 36.dp
@@ -128,7 +134,7 @@ class ListWidget : GlanceAppWidget() {
                     )
 
                     TintImage(
-                        resource = R.drawable.ic_edit,
+                        resource = R.drawable.ic_add,
                         tintColor = GlanceTheme.colors.onPrimaryContainer,
                         contentDescription = context.getString(R.string.add),
                         imageHeight = imageSize.px,
@@ -139,7 +145,7 @@ class ListWidget : GlanceAppWidget() {
                     )
                 }
 
-                if(list.isNotEmpty()) {
+                if(flattenedList.isNotEmpty()) {
                     LazyColumn(
                         modifier = GlanceModifier
                             //.defaultWeight()
@@ -148,21 +154,16 @@ class ListWidget : GlanceAppWidget() {
                             .cornerRadius(8.dp)
                     ) {
 
-                        items(list.filter {
-                            if(listWidgetConfig?.flatView == false)
-                                !it.isChildOfTodo && !it.isChildOfNote && !it.isChildOfJournal     // no child elements on top level if flat view is deactivated
-                            else
-                                true
-                        }) { entry ->
+                        items(
+                            if(listWidgetConfig?.flatView == false) flattenedList else list) { entry ->
 
                             Column(
                                 modifier = GlanceModifier
                                     .fillMaxWidth()
-                                    .padding(bottom = 4.dp)
+                                    .padding(bottom = 4.dp, start = if(entry.isChildOfTodo && listWidgetConfig?.flatView == false) 16.dp else 0.dp)
                             ) {
                                 ListEntry(
                                     obj = entry,
-                                    groupedList = if(listWidgetConfig?.flatView == true) emptyMap() else groupedList,   // no child elements if flat view is activated
                                     textColor = GlanceTheme.colors.onSurface,
                                     containerColor = GlanceTheme.colors.surface,
                                     checkboxEnd = listWidgetConfig?.checkboxPositionEnd ?: false
