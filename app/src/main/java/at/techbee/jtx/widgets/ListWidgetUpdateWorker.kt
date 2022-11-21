@@ -42,6 +42,8 @@ class ListWidgetUpdateWorker(
                 updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { pref ->
                     pref.toMutablePreferences().apply {
                         this[ListWidgetReceiver.list] = emptySet()
+                        this[ListWidgetReceiver.subnotes] = emptySet()
+                        this[ListWidgetReceiver.subtasks] = emptySet()
                     }
                 }
 
@@ -75,12 +77,17 @@ class ListWidgetUpdateWorker(
                                 isFilterStartTomorrow = listWidgetConfig?.isFilterStartTomorrow ?: false,
                                 isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
                                 isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false,
-                                flatView = true,  // always true in Widget, we handle the flat view in the code
+                                flatView = listWidgetConfig?.flatView?: false,  // always true in Widget, we handle the flat view in the code
                             )
                         )
 
+                    val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getAllSubtasksSync()
+                    val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getAllSubnotesSync()
+
                     pref.toMutablePreferences().apply {
                         this[ListWidgetReceiver.list] = entries.map { entry -> Json.encodeToString(entry) }.toSet()
+                        this[ListWidgetReceiver.subtasks] = subtasks.map { entry -> Json.encodeToString(entry) }.toSet()
+                        this[ListWidgetReceiver.subnotes] = subnotes.map { entry -> Json.encodeToString(entry) }.toSet()
                         //Log.d("ListWidgetUpdateWorker", this[ListWidgetReceiver.list].toString())
                     }
                 }

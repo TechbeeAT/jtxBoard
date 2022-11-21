@@ -50,16 +50,19 @@ class ListWidget : GlanceAppWidget() {
         val listWidgetConfig = prefs[ListWidgetReceiver.filterConfig]?.let { filterConfig ->
             Json.decodeFromString<ListWidgetConfig>(filterConfig)
         }
-        val list = prefs[ListWidgetReceiver.list]?.map {
-            Json.decodeFromString<ICal4List>(it)
-        } ?: emptyList()
 
-        val groupedList = list.groupBy { it.vtodoUidOfParent }
+        val list = prefs[ListWidgetReceiver.list]?.map { Json.decodeFromString<ICal4List>(it) } ?: emptyList()
+        val subtasks = prefs[ListWidgetReceiver.subtasks]?.map { Json.decodeFromString<ICal4List>(it) } ?: emptyList()
+        val subnotes = prefs[ListWidgetReceiver.subnotes]?.map { Json.decodeFromString<ICal4List>(it) } ?: emptyList()
 
-        val flattenedList: MutableList<ICal4List> = mutableListOf()
-        groupedList[null]?.forEach { parents ->
-            flattenedList.add(parents)
-            groupedList[parents.uid]?.let { flattenedList.addAll(it) }
+        val subtasksGrouped = subtasks.groupBy { it.vtodoUidOfParent }
+        val subnotesGrouped = subnotes.groupBy { it.vjournalUidOfParent }
+
+        val finalList: MutableList<ICal4List> = mutableListOf()
+        list.forEach { parent ->
+            finalList.add(parent)
+            subtasksGrouped[parent.uid]?.let { finalList.addAll(it) }
+            subnotesGrouped[parent.uid]?.let { finalList.addAll(it) }
         }
 
         val mainIntent = Intent(context, MainActivity2::class.java)
@@ -145,7 +148,7 @@ class ListWidget : GlanceAppWidget() {
                     )
                 }
 
-                if(flattenedList.isNotEmpty()) {
+                if(finalList.isNotEmpty()) {
                     LazyColumn(
                         modifier = GlanceModifier
                             //.defaultWeight()
@@ -155,13 +158,20 @@ class ListWidget : GlanceAppWidget() {
                     ) {
 
                         items(
-                            if(listWidgetConfig?.flatView == false) flattenedList else list) { entry ->
+                            if(listWidgetConfig?.flatView == false) finalList else list) { entry ->
 
-                            Column(
+                            Column  (
                                 modifier = GlanceModifier
                                     .fillMaxWidth()
-                                    .padding(bottom = 4.dp, start = if(entry.isChildOfTodo && listWidgetConfig?.flatView == false) 16.dp else 0.dp)
-                            ) {
+                                    .padding(bottom = 4.dp, start = if((entry.isChildOfTodo || entry.isChildOfNote || entry.isChildOfJournal) && listWidgetConfig?.flatView == false) 16.dp else 0.dp)
+                            ) ColumnWithinItems@ {
+
+                                if(listWidgetConfig?.isExcludeDone == true && entry.percent == 100)
+                                    return@ColumnWithinItems
+
+                                if(entry.summary.isNullOrEmpty() && entry.description.isNullOrEmpty())
+                                    return@ColumnWithinItems
+
                                 ListEntry(
                                     obj = entry,
                                     textColor = GlanceTheme.colors.onSurface,
