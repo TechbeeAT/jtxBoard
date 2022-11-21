@@ -19,7 +19,7 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.work.*
 import java.util.concurrent.TimeUnit
 
-private const val TAG = "JournalsWidgetRec"
+private const val TAG = "ListWidgetRec"
 
 
 class ListWidgetReceiver : GlanceAppWidgetReceiver() {
