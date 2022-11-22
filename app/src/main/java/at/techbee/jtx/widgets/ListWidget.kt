@@ -98,15 +98,14 @@ class ListWidget : GlanceAppWidget() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TintImage(
-                        resource = R.drawable.ic_jtx,
-                        tintColor = GlanceTheme.colors.onPrimaryContainer,
-                        contentDescription = context.getString(R.string.widget_list_configuration),
-                        imageHeight = imageSize.px,
+
+                    Image(
+                        provider = ImageProvider(R.drawable.ic_widget_jtx),
+                        contentDescription = context.getString(R.string.app_name),
                         modifier = GlanceModifier
                             .clickable(actionStartActivity(mainIntent))
                             .padding(8.dp)
-                            .size(imageSize),
+                            .size(imageSize)
                     )
 
                     Text(
@@ -125,26 +124,22 @@ class ListWidget : GlanceAppWidget() {
                             .defaultWeight()
                     )
 
-                    TintImage(
-                        resource = R.drawable.ic_settings,
-                        tintColor = GlanceTheme.colors.onPrimaryContainer,
+                    Image(
+                        provider = ImageProvider(R.drawable.ic_widget_settings),
                         contentDescription = context.getString(R.string.widget_list_configuration),
-                        imageHeight = imageSize.px,
                         modifier = GlanceModifier
                             .clickable(actionRunCallback<ListWidgetOpenConfigActionCallback>())
                             .padding(8.dp)
-                            .size(imageSize),
+                            .size(imageSize)
                     )
 
-                    TintImage(
-                        resource = R.drawable.ic_add,
-                        tintColor = GlanceTheme.colors.onPrimaryContainer,
+                    Image(
+                        provider = ImageProvider(R.drawable.ic_widget_add),
                         contentDescription = context.getString(R.string.add),
-                        imageHeight = imageSize.px,
                         modifier = GlanceModifier
                             .clickable(actionStartActivity(addNewIntent))
                             .padding(8.dp)
-                            .size(imageSize),
+                            .size(imageSize)
                     )
                 }
 

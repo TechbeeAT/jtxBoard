@@ -20,17 +20,17 @@ import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.layout.*
-import androidx.glance.text.*
+import androidx.glance.text.FontStyle
+import androidx.glance.text.FontWeight
+import androidx.glance.text.Text
+import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.DateTimeUtils
-import at.techbee.jtx.widgets.GlanceTheme
 import at.techbee.jtx.widgets.ListWidgetCheckedActionCallback
-import at.techbee.jtx.widgets.TintImage
-import at.techbee.jtx.widgets.px
 
 @Composable
 fun ListEntry(
@@ -98,11 +98,9 @@ fun ListEntry(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         if (obj.dtstart != null) {
-                            TintImage(
-                                resource = if (obj.module == Module.TODO.name) R.drawable.ic_start else R.drawable.ic_start2,
-                                tintColor = GlanceTheme.colors.onPrimaryContainer,
+                            Image(
+                                provider = ImageProvider(if (obj.module == Module.TODO.name) R.drawable.ic_widget_start else R.drawable.ic_start2),
                                 contentDescription = context.getString(R.string.started),
-                                imageHeight = imageSize.px,
                                 modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
                             )
                             Text(
@@ -115,12 +113,10 @@ fun ListEntry(
                             )
                         }
                         if (obj.due != null) {
-                            TintImage(
-                                resource = R.drawable.ic_due,
-                                tintColor = GlanceTheme.colors.onPrimaryContainer,
+                            Image(
+                                provider = ImageProvider(R.drawable.ic_widget_due),
                                 contentDescription = context.getString(R.string.due),
-                                imageHeight = imageSize.px,
-                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
                             )
                             Text(
                                 text = DateTimeUtils.convertLongToMediumDateString(
