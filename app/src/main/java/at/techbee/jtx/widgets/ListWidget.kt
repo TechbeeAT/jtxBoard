@@ -158,7 +158,7 @@ class ListWidget : GlanceAppWidget() {
                             Column  (
                                 modifier = GlanceModifier
                                     .fillMaxWidth()
-                                    .padding(bottom = 4.dp, start = if((entry.isChildOfTodo || entry.isChildOfNote || entry.isChildOfJournal) && listWidgetConfig?.flatView == false) 16.dp else 0.dp)
+                                    .padding(bottom = 3.dp, start = if((entry.isChildOfTodo || entry.isChildOfNote || entry.isChildOfJournal) && listWidgetConfig?.flatView == false) 16.dp else 0.dp)
                             ) ColumnWithinItems@ {
 
                                 if(listWidgetConfig?.isExcludeDone == true && entry.percent == 100)
