@@ -11,13 +11,15 @@ package at.techbee.jtx.widgets
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.work.*
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 private const val TAG = "ListWidgetRec"
 
@@ -63,12 +65,25 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
          */
 
         fun setOneTimeWork(context: Context) {
-
             val work: OneTimeWorkRequest = OneTimeWorkRequestBuilder<ListWidgetUpdateWorker>().build()
             WorkManager
                 .getInstance(context)
                 .enqueueUniqueWork("listWidgetOneTimeWorker", ExistingWorkPolicy.KEEP, work)
             Log.d(TAG, "Work enqueued")
+        }
+
+        fun setDelayedOneTimeWork(context: Context) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                setOneTimeWork(context)
+            } else {
+                val work: OneTimeWorkRequest = OneTimeWorkRequestBuilder<ListWidgetUpdateWorker>()
+                    .setInitialDelay((2).seconds.toJavaDuration())
+                    .build()
+                WorkManager
+                    .getInstance(context)
+                    .enqueueUniqueWork("listWidgetOneTimeWorker", ExistingWorkPolicy.REPLACE, work)
+                Log.d(TAG, "Work enqueued")
+            }
         }
     }
 }
