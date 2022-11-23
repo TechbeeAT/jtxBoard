@@ -30,5 +30,6 @@ class ListWidgetCheckedActionCallback: ActionCallback {
         val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return
         iCalObject.setUpdatedProgress(if(iCalObject.percent == 100) null else 100)
         database.update(iCalObject)
+        ListWidgetReceiver.setDelayedOneTimeWork(context)
     }
 }
