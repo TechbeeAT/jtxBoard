@@ -21,10 +21,9 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.DateTimeUtils
-import java.time.Instant
-import java.time.ZonedDateTime
+import java.time.*
+import java.time.temporal.ChronoUnit
 import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.milliseconds
 
 const val VIEW_NAME_ICAL4LIST = "ical4list"
 
@@ -412,31 +411,23 @@ data class ICal4List(
         else if(dtstart == null)
             return context.getString(R.string.list_date_without)
 
-        val zonedStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart!!), DateTimeUtils.requireTzId(dtstartTimezone)).toInstant().toEpochMilli()
-        val timeLeft = if(dtstartTimezone == ICalObject.TZ_ALLDAY) (zonedStart - DateTimeUtils.getTodayAsLong()).milliseconds + (1).days - (1).milliseconds else (zonedStart - System.currentTimeMillis()).milliseconds
-        val timeToEndOfDay = (DateTimeUtils.getTodayAsLong().milliseconds + (1).days - System.currentTimeMillis().milliseconds)
-        val timeToEndOfDayAfterTomorrow = (DateTimeUtils.getTodayAsLong().milliseconds + (2).days - System.currentTimeMillis().milliseconds)
+        val localNow = LocalDateTime.now()
+        val localTomorrow = localNow.plusDays(1)
+        val localStart = LocalDateTime.ofInstant(Instant.ofEpochMilli(dtstart!!), DateTimeUtils.requireTzId(dtstartTimezone))
+        val daysLeft = ChronoUnit.DAYS.between(localNow, localStart)
+        val hoursLeft = ChronoUnit.HOURS.between(localNow, localStart)
 
-        if(module == Module.TODO.name) {
-            return when {
-                timeLeft.isNegative() -> context.getString(R.string.list_start_past)
-                timeLeft < timeToEndOfDay && (dtstartTimezone == ICalObject.TZ_ALLDAY || daysOnly) -> context.getString(R.string.list_start_today)
-                timeLeft < timeToEndOfDayAfterTomorrow && (dtstartTimezone == ICalObject.TZ_ALLDAY || daysOnly) -> context.getString(
-                    R.string.list_start_tomorrow)
-                timeLeft.inWholeDays <= 1L && dtstartTimezone != ICalObject.TZ_ALLDAY -> context.getString(
-                    R.string.list_start_inXhours, timeLeft.inWholeHours)
-                timeLeft.inWholeDays > 1L -> context.getString(R.string.list_start_inXdays, timeLeft.inWholeDays)
-                else -> context.getString(R.string.list_start_without)      //should not be possible
-            }
-        } else {
-            return when {
-                timeLeft.isNegative() -> context.getString(R.string.list_date_start_in_past)
-                timeLeft < timeToEndOfDay && (dtstartTimezone == ICalObject.TZ_ALLDAY || daysOnly) -> context.getString(R.string.list_date_today)
-                timeLeft < timeToEndOfDayAfterTomorrow && (dtstartTimezone == ICalObject.TZ_ALLDAY || daysOnly) -> context.getString(R.string.list_date_tomorrow)
-                timeLeft.inWholeDays <= 1L && dtstartTimezone != ICalObject.TZ_ALLDAY -> context.getString(R.string.list_date_today)
-                timeLeft.inWholeDays > 1L -> context.getString(R.string.list_date_future)
-                else -> context.getString(R.string.list_date_without)      //should not be possible
-            }
+        return when {
+            localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == ICalObject.TZ_ALLDAY) ->
+                if(module == Module.TODO.name) context.getString(R.string.list_start_today) else context.getString(R.string.list_date_today)
+            daysLeft <= 0L && hoursLeft < 0L ->
+                if(module == Module.TODO.name) context.getString(R.string.list_start_past) else context.getString(R.string.list_date_start_in_past)
+            localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth ->
+                if(module == Module.TODO.name) context.getString(R.string.list_start_inXhours, hoursLeft) else context.getString(R.string.list_date_today)
+            localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth ->
+                if(module == Module.TODO.name) context.getString(R.string.list_start_tomorrow) else context.getString(R.string.list_date_tomorrow)
+            else ->
+                if(module == Module.TODO.name) context.getString(R.string.list_start_inXdays, daysLeft+1) else context.getString(R.string.list_date_future)
         }
     }
 
@@ -447,18 +438,19 @@ data class ICal4List(
         if(due == null)
             return context.getString(R.string.list_due_without)
 
-        val zonedDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due!!), DateTimeUtils.requireTzId(dueTimezone)).toInstant().toEpochMilli()
-        val timeLeft = if(dueTimezone == ICalObject.TZ_ALLDAY) (zonedDue - DateTimeUtils.getTodayAsLong()).milliseconds + (1).days - (1).milliseconds else (zonedDue - System.currentTimeMillis()).milliseconds
-        val timeToEndOfDay = (DateTimeUtils.getTodayAsLong().milliseconds + (1).days - System.currentTimeMillis().milliseconds)
-        val timeToEndOfDayAfterTomorrow = (DateTimeUtils.getTodayAsLong().milliseconds + (2).days - System.currentTimeMillis().milliseconds)
+
+        val localNow = LocalDateTime.now()
+        val localTomorrow = localNow.plusDays(1)
+        val localDue = LocalDateTime.ofInstant(Instant.ofEpochMilli(due!!), DateTimeUtils.requireTzId(dueTimezone))
+        val daysLeft = ChronoUnit.DAYS.between(localNow, localDue)
+        val hoursLeft = ChronoUnit.HOURS.between(localNow, localDue)
 
         return when {
-            timeLeft.isNegative() -> context.getString(R.string.list_due_overdue)
-            timeLeft < timeToEndOfDay && (dueTimezone == ICalObject.TZ_ALLDAY || daysOnly) -> context.getString(R.string.list_due_today)
-            timeLeft < timeToEndOfDayAfterTomorrow && (dueTimezone == ICalObject.TZ_ALLDAY || daysOnly) -> context.getString(R.string.list_due_tomorrow)
-            timeLeft.inWholeDays <= 1L && dueTimezone != ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_inXhours, timeLeft.inWholeHours)
-            timeLeft.inWholeDays > 1L -> context.getString(R.string.list_due_inXdays, timeLeft.inWholeDays)
-            else -> context.getString(R.string.list_due_without)      //should not be possible
+            localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || dueTimezone == ICalObject.TZ_ALLDAY) -> context.getString(R.string.list_due_today)
+            daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_due_overdue)
+            localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, hoursLeft)
+            localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
+            else -> context.getString(R.string.list_due_inXdays, daysLeft+1)
         }
     }
 

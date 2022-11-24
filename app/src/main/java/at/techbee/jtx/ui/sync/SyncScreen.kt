@@ -12,41 +12,21 @@ import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Sync
-import androidx.compose.material3.Button
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,7 +42,6 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import at.techbee.jtx.util.SyncUtil
@@ -78,8 +57,7 @@ fun SyncScreen(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
-    val isDAVx5available =
-        SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
+    val isDAVx5available = if (LocalInspectionMode.current) true else SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
 
     Scaffold(
         topBar = {
@@ -113,7 +91,6 @@ fun SyncScreen(
 }
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SyncScreenContent(
     remoteCollectionsLive: LiveData<List<ICalCollection>>,
@@ -276,19 +253,17 @@ fun SyncScreenContent(
                     style = Typography.bodyLarge,
                     textAlign = TextAlign.Center
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.ic_google_play),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(vertical = 16.dp)
-                        .size(200.dp, 70.dp)
-                        .clip(jtxCardCornerShape)
-                        .combinedClickable(
-                            enabled = true,
-                            onClickLabel = "Google Play",
-                            onClick = { SyncUtil.openDAVx5inPlayStore(context) }
-                        )
-                )
+                TextButton(onClick = { SyncUtil.openDAVx5inPlayStore(context) }) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_google_play),
+                        contentDescription = "Google Play",
+                        modifier = Modifier
+                            .padding(vertical = 16.dp)
+                            .size(200.dp, 70.dp)
+                            .clip(jtxCardCornerShape)
+                    )
+                }
+
                 Text(
                     text = stringResource(id = R.string.sync_furhter_info_davx5),
                     modifier = Modifier.padding(top = 16.dp),
@@ -322,7 +297,7 @@ fun SyncScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun SyncScreen_Preview_no_DAVX5() {
-    JtxBoardTheme {
+    MaterialTheme {
         SyncScreen(
             remoteCollectionsLive = MutableLiveData(emptyList()),
             isSyncInProgress = remember { mutableStateOf(false) },
@@ -335,7 +310,7 @@ fun SyncScreen_Preview_no_DAVX5() {
 @Preview(showBackground = true)
 @Composable
 fun SyncScreenContent_Preview_no_DAVX5() {
-    JtxBoardTheme {
+    MaterialTheme {
         SyncScreenContent(
             isDAVx5available = false,
             isSyncInProgress = remember { mutableStateOf(false) },
@@ -349,7 +324,7 @@ fun SyncScreenContent_Preview_no_DAVX5() {
 @Preview(showBackground = true)
 @Composable
 fun SyncScreenContent_Preview_DAVx5_no_collections() {
-    JtxBoardTheme {
+    MaterialTheme {
         SyncScreenContent(
             isDAVx5available = true,
             isSyncInProgress = remember { mutableStateOf(false) },
@@ -365,7 +340,7 @@ fun SyncScreenContent_Preview_DAVx5_no_collections() {
 @Preview(showBackground = true)
 @Composable
 fun SyncScreenContent_Preview_DAVx5_with_collections() {
-    JtxBoardTheme {
+    MaterialTheme {
         SyncScreenContent(
             isDAVx5available = true,
             isSyncInProgress = remember { mutableStateOf(true) },
