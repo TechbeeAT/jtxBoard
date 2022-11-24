@@ -58,7 +58,7 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
                 .getInstance(context)
                 .enqueueUniqueWork(
                     "listWidgetOneTimeWorker",
-                    if (delay == true && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) ExistingWorkPolicy.REPLACE else ExistingWorkPolicy.KEEP,
+                    ExistingWorkPolicy.REPLACE,
                     work
                 )
             Log.d(TAG, "Work enqueued")
