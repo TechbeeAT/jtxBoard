@@ -43,7 +43,12 @@ class ListWidget : GlanceAppWidget() {
 
         val context = LocalContext.current
 
-        Log.d("ListWidget", "appWidgetId in ListWidget: ${GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)}")
+        Log.d(
+            "ListWidget",
+            "appWidgetId in ListWidget: ${
+                GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)
+            }"
+        )
         Log.d("ListWidget", "glanceId in ListWidget: ${LocalGlanceId.current}")
 
         val prefs = currentState<Preferences>()
@@ -51,9 +56,14 @@ class ListWidget : GlanceAppWidget() {
             Json.decodeFromString<ListWidgetConfig>(filterConfig)
         }
 
-        val list = prefs[ListWidgetReceiver.list]?.map { Json.decodeFromString<ICal4List>(it) } ?: emptyList()
-        val subtasks = prefs[ListWidgetReceiver.subtasks]?.map { Json.decodeFromString<ICal4List>(it) } ?: emptyList()
-        val subnotes = prefs[ListWidgetReceiver.subnotes]?.map { Json.decodeFromString<ICal4List>(it) } ?: emptyList()
+        val list = prefs[ListWidgetReceiver.list]?.map { Json.decodeFromString<ICal4List>(it) }
+            ?: emptyList()
+        val subtasks =
+            prefs[ListWidgetReceiver.subtasks]?.map { Json.decodeFromString<ICal4List>(it) }
+                ?: emptyList()
+        val subnotes =
+            prefs[ListWidgetReceiver.subnotes]?.map { Json.decodeFromString<ICal4List>(it) }
+                ?: emptyList()
 
         val subtasksGrouped = subtasks.groupBy { it.vtodoUidOfParent }
         val subnotesGrouped = subnotes.groupBy { it.vjournalUidOfParent }
@@ -143,37 +153,36 @@ class ListWidget : GlanceAppWidget() {
                     )
                 }
 
-                if(finalList.isNotEmpty()) {
+                if (finalList.isNotEmpty()) {
                     LazyColumn(
                         modifier = GlanceModifier
-                            //.defaultWeight()
                             .padding(bottom = 2.dp, start = 2.dp, end = 2.dp, top = 0.dp)
                             .background(GlanceTheme.colors.primaryContainer)
                             .cornerRadius(8.dp)
                     ) {
 
                         items(
-                            if(listWidgetConfig?.flatView == false) finalList else list) { entry ->
+                            if (listWidgetConfig?.flatView == false) finalList else list
+                        ) { entry ->
 
-                            Column  (
+                            if (listWidgetConfig?.isExcludeDone == true && entry.percent == 100)
+                                return@items
+
+                            if (entry.summary.isNullOrEmpty() && entry.description.isNullOrEmpty())
+                                return@items
+
+                            ListEntry(
+                                obj = entry,
+                                textColor = GlanceTheme.colors.onSurface,
+                                checkboxEnd = listWidgetConfig?.checkboxPositionEnd ?: false,
                                 modifier = GlanceModifier
                                     .fillMaxWidth()
-                                    .padding(bottom = 3.dp, start = if((entry.isChildOfTodo || entry.isChildOfNote || entry.isChildOfJournal) && listWidgetConfig?.flatView == false) 16.dp else 0.dp)
-                            ) ColumnWithinItems@ {
+                                    .padding(
+                                        bottom = 2.dp,
+                                        start = if ((entry.isChildOfTodo || entry.isChildOfNote || entry.isChildOfJournal) && listWidgetConfig?.flatView == false) 16.dp else 0.dp
+                                    )
+                            )
 
-                                if(listWidgetConfig?.isExcludeDone == true && entry.percent == 100)
-                                    return@ColumnWithinItems
-
-                                if(entry.summary.isNullOrEmpty() && entry.description.isNullOrEmpty())
-                                    return@ColumnWithinItems
-
-                                ListEntry(
-                                    obj = entry,
-                                    textColor = GlanceTheme.colors.onSurface,
-                                    containerColor = GlanceTheme.colors.surface,
-                                    checkboxEnd = listWidgetConfig?.checkboxPositionEnd ?: false
-                                )
-                            }
                         }
                     }
                 } else {

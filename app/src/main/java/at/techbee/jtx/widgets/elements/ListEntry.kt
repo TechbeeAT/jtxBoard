@@ -30,23 +30,20 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.DateTimeUtils
+import at.techbee.jtx.widgets.GlanceTheme
 import at.techbee.jtx.widgets.ListWidgetCheckedActionCallback
 
 @Composable
 fun ListEntry(
     obj: ICal4List,
     textColor: ColorProvider,
-    containerColor: ColorProvider,
-    checkboxEnd: Boolean
+    checkboxEnd: Boolean,
+    modifier: GlanceModifier = GlanceModifier
 ) {
-
-    if(obj.summary.isNullOrEmpty() && obj.description.isNullOrEmpty())
-        return
 
     val context = LocalContext.current
     val textStyleDate = TextStyle(fontStyle = FontStyle.Italic, fontSize = 12.sp, color = textColor)
-    val textStyleSummary =
-        TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
+    val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
     val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp)
 
     val intent = Intent(context, MainActivity2::class.java).apply {
@@ -57,24 +54,20 @@ fun ListEntry(
 
     val imageSize = 18.dp
 
-    Column(
-        modifier = GlanceModifier
-            .fillMaxWidth()
-            .padding(horizontal = 6.dp, vertical = 3.dp)
-            .background(containerColor)
-            .cornerRadius(8.dp)
-    ) {
-
+    Column(modifier = modifier) {
 
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
+                .padding(6.dp)
+                .background(GlanceTheme.colors.surface)
+                .cornerRadius(8.dp)
                 .clickable(onClick = actionStartActivity(intent)),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
             if (obj.module == Module.TODO.name && !checkboxEnd) {
-                if(!obj.isReadOnly) {
+                if (!obj.isReadOnly) {
                     CheckBox(
                         checked = obj.percent == 100,
                         onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
@@ -134,20 +127,22 @@ fun ListEntry(
                         Text(
                             text = obj.summary!!,
                             style = textStyleSummary,
-                            modifier = GlanceModifier.fillMaxWidth().clickable(onClick = actionStartActivity(intent))
+                            modifier = GlanceModifier.fillMaxWidth()
+                                .clickable(onClick = actionStartActivity(intent))
                         )
                     if (!obj.description.isNullOrEmpty())
                         Text(
                             obj.description!!,
                             maxLines = 2,
                             style = textStyleDescription,
-                            modifier = GlanceModifier.fillMaxWidth().clickable(onClick = actionStartActivity(intent))
+                            modifier = GlanceModifier.fillMaxWidth()
+                                .clickable(onClick = actionStartActivity(intent))
                         )
                 }
             }
 
             if (obj.module == Module.TODO.name && checkboxEnd) {
-                if(!obj.isReadOnly) {
+                if (!obj.isReadOnly) {
                     CheckBox(
                         checked = obj.percent == 100,
                         onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
