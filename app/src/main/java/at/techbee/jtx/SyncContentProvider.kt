@@ -166,7 +166,7 @@ class SyncContentProvider : ContentProvider() {
         database.deleteRAW(deleteQuery)
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
-        ListWidgetReceiver.setDelayedOneTimeWork(context!!) // update Widget
+        ListWidgetReceiver.setOneTimeWork(context!!, true) // update Widget
 
         if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(
                 uri
@@ -277,7 +277,7 @@ class SyncContentProvider : ContentProvider() {
         if(sUriMatcher.match(uri) == CODE_ALARM_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)
             Alarm.scheduleNextNotifications(context!!)
 
-        ListWidgetReceiver.setDelayedOneTimeWork(context!!) // update Widget
+        ListWidgetReceiver.setOneTimeWork(context!!, true) // update Widget
 
         return ContentUris.withAppendedId(uri, id)
     }
@@ -556,7 +556,7 @@ class SyncContentProvider : ContentProvider() {
         )
             Alarm.scheduleNextNotifications(context!!)
 
-        ListWidgetReceiver.setDelayedOneTimeWork(context!!) // update Widget
+        ListWidgetReceiver.setOneTimeWork(context!!, true) // update Widget
 
         return 1
     }

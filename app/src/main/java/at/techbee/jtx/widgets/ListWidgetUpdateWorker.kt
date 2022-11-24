@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.Log
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
+import androidx.glance.appwidget.updateAll
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -92,11 +93,12 @@ class ListWidgetUpdateWorker(
                     }
                 }
 
-                ListWidget().update(context = context, glanceId = glanceId)
+                //ListWidget().update(context = context, glanceId = glanceId)
                 //glanceAppWidget.update(context, it)
                 //Log.d(TAG, "Widget updated")
 
         }
+        ListWidget().updateAll(context)
         return Result.success()
     }
 }
