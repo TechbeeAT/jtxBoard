@@ -54,7 +54,7 @@ fun ListEntry(
 
     val imageSize = 18.dp
 
-    Column(modifier = modifier) {
+    Box(modifier = modifier) {
 
         Row(
             modifier = GlanceModifier
@@ -66,19 +66,15 @@ fun ListEntry(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            if (obj.module == Module.TODO.name && !checkboxEnd) {
-                if (!obj.isReadOnly) {
-                    CheckBox(
-                        checked = obj.percent == 100,
-                        onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
-                            parameters = actionParametersOf(
-                                ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
-                            )
+            if (obj.module == Module.TODO.name && !checkboxEnd && !obj.isReadOnly){
+                CheckBox(
+                    checked = obj.percent == 100,
+                    onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
+                        parameters = actionParametersOf(
+                            ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
                         )
                     )
-                } else {
-                    Spacer(modifier = GlanceModifier.size(24.dp))
-                }
+                )
             }
 
             Column(
@@ -141,19 +137,15 @@ fun ListEntry(
                 }
             }
 
-            if (obj.module == Module.TODO.name && checkboxEnd) {
-                if (!obj.isReadOnly) {
-                    CheckBox(
-                        checked = obj.percent == 100,
-                        onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
-                            parameters = actionParametersOf(
-                                ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
-                            )
+            if (obj.module == Module.TODO.name && checkboxEnd && !obj.isReadOnly) {
+                CheckBox(
+                    checked = obj.percent == 100,
+                    onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
+                        parameters = actionParametersOf(
+                            ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
                         )
                     )
-                } else {
-                    Spacer(modifier = GlanceModifier.size(24.dp))
-                }
+                )
             }
         }
     }

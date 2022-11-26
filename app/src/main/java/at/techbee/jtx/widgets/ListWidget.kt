@@ -37,19 +37,13 @@ import kotlinx.serialization.json.Json
 
 class ListWidget : GlanceAppWidget() {
 
-
     @Composable
     override fun Content() {
 
         val context = LocalContext.current
 
-        Log.d(
-            "ListWidget",
-            "appWidgetId in ListWidget: ${
-                GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)
-            }"
-        )
-        Log.d("ListWidget", "glanceId in ListWidget: ${LocalGlanceId.current}")
+        Log.d("ListWidget","appWidgetId in ListWidget: ${GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)}")
+        Log.d("ListWidget","glanceId in ListWidget: ${LocalGlanceId.current}")
 
         val prefs = currentState<Preferences>()
         val listWidgetConfig = prefs[ListWidgetReceiver.filterConfig]?.let { filterConfig ->
@@ -81,7 +75,6 @@ class ListWidget : GlanceAppWidget() {
 
 
         GlanceTheme {
-
             Column(
                 modifier = GlanceModifier
                     .appWidgetBackground()
@@ -99,7 +92,6 @@ class ListWidget : GlanceAppWidget() {
                         else -> MainActivity2.INTENT_ACTION_ADD_NOTE
                     }
                 }
-
 
                 Row(
                     modifier = GlanceModifier

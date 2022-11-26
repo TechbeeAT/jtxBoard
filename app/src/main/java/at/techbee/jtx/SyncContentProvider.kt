@@ -27,6 +27,7 @@ import at.techbee.jtx.widgets.ListWidgetReceiver
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.lang.NumberFormatException
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 
 private const val CODE_ICALOBJECTS_DIR = 1
@@ -166,7 +167,7 @@ class SyncContentProvider : ContentProvider() {
         database.deleteRAW(deleteQuery)
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
-        ListWidgetReceiver.setOneTimeWork(context!!, true) // update Widget
+        ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
         if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(
                 uri
@@ -277,7 +278,7 @@ class SyncContentProvider : ContentProvider() {
         if(sUriMatcher.match(uri) == CODE_ALARM_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)
             Alarm.scheduleNextNotifications(context!!)
 
-        ListWidgetReceiver.setOneTimeWork(context!!, true) // update Widget
+        ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
         return ContentUris.withAppendedId(uri, id)
     }
@@ -556,7 +557,7 @@ class SyncContentProvider : ContentProvider() {
         )
             Alarm.scheduleNextNotifications(context!!)
 
-        ListWidgetReceiver.setOneTimeWork(context!!, true) // update Widget
+        ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
         return 1
     }
