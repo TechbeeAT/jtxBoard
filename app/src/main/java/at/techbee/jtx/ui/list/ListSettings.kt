@@ -144,7 +144,7 @@ class ListSettings {
     }
 
     fun saveToPrefs(prefs: SharedPreferences) {
-        prefs.edit()?.apply {
+        prefs.edit().apply {
             putBoolean(PREFS_FILTER_OVERDUE, isFilterOverdue.value)
             putBoolean(PREFS_FILTER_DUE_TODAY, isFilterDueToday.value)
             putBoolean(PREFS_FILTER_DUE_TOMORROW, isFilterDueTomorrow.value)
@@ -174,7 +174,7 @@ class ListSettings {
 
             putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
 
-        }?.apply()
+        }.apply()
     }
 
     fun reset() {
