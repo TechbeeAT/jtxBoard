@@ -13,7 +13,6 @@ import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
 import at.techbee.jtx.database.ICalDatabase
-import kotlin.time.Duration.Companion.seconds
 
 class ListWidgetCheckedActionCallback: ActionCallback {
 
@@ -31,6 +30,6 @@ class ListWidgetCheckedActionCallback: ActionCallback {
         val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return
         iCalObject.setUpdatedProgress(if(iCalObject.percent == 100) null else 100)
         database.update(iCalObject)
-        ListWidgetReceiver.setOneTimeWork(context, (30).seconds)
+        ListWidgetReceiver.setOneTimeWork(context, null)
     }
 }

@@ -33,8 +33,7 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
 
         /**
          * Sets a worker to update the widget
-         * @param delay: if true the update of the widget is delayed by 2 seconds and the existing work is replaced ( in order to not trigger multiple works in a row )
-         * if false the update of the widget is done immediately
+         * @param delay: null updates immediately, otherwise updates after the given Kotlin Duration
          */
         fun setOneTimeWork(context: Context, delay: Duration? = null) {
             val work: OneTimeWorkRequest = OneTimeWorkRequestBuilder<ListWidgetUpdateWorker>()
