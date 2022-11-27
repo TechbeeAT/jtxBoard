@@ -163,7 +163,13 @@ fun DetailScreenContent(
             iCalEntity.value?.property ?: ICalObject()
         )
     }
-    iCalEntity.value?.property?.eTag?.let { icalObject.eTag = it }    // make sure the eTag gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
+
+    // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
+    iCalEntity.value?.property?.eTag?.let { icalObject.eTag = it }
+    iCalEntity.value?.property?.flags?.let { icalObject.flags = it }
+    iCalEntity.value?.property?.scheduleTag?.let { icalObject.scheduleTag = it }
+    iCalEntity.value?.property?.fileName?.let { icalObject.fileName = it }
+
     val categories =
         rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
     val resources = rememberSaveable { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
