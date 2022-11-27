@@ -278,7 +278,7 @@ fun MainNavHost(
                             Context.MODE_PRIVATE
                         )
                     }
-                    ListSettings.fromPrefs(prefs).saveLastUsedCollectionId(collectionId)
+                    ListSettings.fromPrefs(prefs).saveLastUsedCollectionId(prefs, collectionId)
                 }
             )
         }

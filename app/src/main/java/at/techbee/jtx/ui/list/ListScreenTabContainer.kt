@@ -158,7 +158,7 @@ fun ListScreenTabContainer(
     }
 
     fun addNewEntry(newICalObject: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) {
-        listViewModel.listSettings.saveLastUsedCollectionId(newICalObject.collectionId)
+        listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, newICalObject.collectionId)
         settingsStateHolder.lastUsedModule.value = newICalObject.getModuleFromString()
         settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
 
@@ -249,7 +249,7 @@ fun ListScreenTabContainer(
                                         Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
                                     } else {
                                         getActiveViewModel().listSettings.viewMode.value = viewMode
-                                        getActiveViewModel().listSettings.saveToPrefs()
+                                        getActiveViewModel().updateSearch(saveListSettings = true)
                                     }
                                 }
                             )
@@ -297,7 +297,7 @@ fun ListScreenTabContainer(
                     },
                     onAddNewEntry = {
                         val lastUsedCollectionId =
-                            listViewModel.listSettings.getLastUsedCollectionId()
+                            listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs)
                         val proposedCollectionId =
                             if (allWriteableCollections.value.any { collection -> collection.collectionId == lastUsedCollectionId })
                                 lastUsedCollectionId
@@ -416,7 +416,7 @@ fun ListScreenTabContainer(
                                         ?: "",    // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allWriteableCollections = allWriteableCollections.value,
-                                    presetCollectionId = listViewModel.listSettings.getLastUsedCollectionId(),
+                                    presetCollectionId = listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
                                     onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
                                         addNewEntry(newICalObject, categories, attachment, editAfterSaving)
                                         scope.launch {

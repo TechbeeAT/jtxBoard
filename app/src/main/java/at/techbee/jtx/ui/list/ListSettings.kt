@@ -20,8 +20,6 @@ import at.techbee.jtx.widgets.ListWidgetConfig
 
 class ListSettings {
 
-    var prefs: SharedPreferences? = null
-
     var searchCategories: MutableState<List<String>> = mutableStateOf(emptyList())
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
     var searchStatusTodo: MutableState<List<StatusTodo>> = mutableStateOf(emptyList())
@@ -145,8 +143,8 @@ class ListSettings {
         }
     }
 
-    fun saveToPrefs() {
-        prefs?.edit()?.apply {
+    fun saveToPrefs(prefs: SharedPreferences) {
+        prefs.edit()?.apply {
             putBoolean(PREFS_FILTER_OVERDUE, isFilterOverdue.value)
             putBoolean(PREFS_FILTER_DUE_TODAY, isFilterDueToday.value)
             putBoolean(PREFS_FILTER_DUE_TOMORROW, isFilterDueTomorrow.value)
@@ -199,6 +197,6 @@ class ListSettings {
         isFilterNoDatesSet.value = false
     }
 
-    fun getLastUsedCollectionId() = prefs?.getLong(PREFS_LAST_COLLECTION, 0L) ?: 0L
-    fun saveLastUsedCollectionId(collectionId: Long) = prefs?.edit()?.putLong(PREFS_LAST_COLLECTION, collectionId)?.apply()
+    fun getLastUsedCollectionId(prefs: SharedPreferences) = prefs.getLong(PREFS_LAST_COLLECTION, 0L)
+    fun saveLastUsedCollectionId(prefs: SharedPreferences, collectionId: Long) = prefs.edit()?.putLong(PREFS_LAST_COLLECTION, collectionId)?.apply()
 }

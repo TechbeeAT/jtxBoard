@@ -37,7 +37,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
     private val settings = PreferenceManager.getDefaultSharedPreferences(application)
 
-    private val prefs: SharedPreferences = when (module) {
+    val prefs: SharedPreferences = when (module) {
         Module.JOURNAL -> application.getSharedPreferences(PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
         Module.NOTE -> application.getSharedPreferences(PREFS_LIST_NOTES, Context.MODE_PRIVATE)
         Module.TODO -> application.getSharedPreferences(PREFS_LIST_TODOS, Context.MODE_PRIVATE)
@@ -136,7 +136,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         )
         listQuery.postValue(query)
         if(saveListSettings)
-            listSettings.saveToPrefs()
+            listSettings.saveToPrefs(prefs)
     }
 
 
@@ -145,7 +145,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun clearFilter() {
         listSettings.reset()
-        listSettings.saveToPrefs()
+        listSettings.saveToPrefs(prefs)
         updateSearch()
     }
 
