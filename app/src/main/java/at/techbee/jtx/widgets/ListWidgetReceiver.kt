@@ -11,6 +11,7 @@ package at.techbee.jtx.widgets
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.glance.appwidget.GlanceAppWidget
@@ -29,6 +30,7 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
         val list = stringSetPreferencesKey("list")
         val subtasks = stringSetPreferencesKey("subtasks")
         val subnotes = stringSetPreferencesKey("subnotes")
+        val listExceedsLimits = booleanPreferencesKey("list_exceed_limits")
         val filterConfig = stringPreferencesKey("filter_config")
 
         /**

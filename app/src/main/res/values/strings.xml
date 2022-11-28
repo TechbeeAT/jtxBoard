@@ -688,6 +688,7 @@
     <string name="widget_list_configuration_checkbox_position">Checkbox position</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">Attention: Currently only one level of hierarchy is supported in the widget. In order to see the entries of lower levels, please use the flat view instead.</string>
     <string name="widget_list_no_entries_found">No entries found that match your filter criteria</string>
+    <string name="widget_list_maximum_entries_reached">Maximum number of entries in widget reached (%1$d).</string>
     <string name="widget_list_view_settings">View settings</string>
 
 
