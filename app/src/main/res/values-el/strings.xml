@@ -573,7 +573,38 @@ Global Strings -->
     <string name="list_start_date_future">"Έναρξη στο μέλλον"</string>
     <string name="list_hide_completed_tasks">"Απόκριψη ολοκληρωμένων εργασιών"</string>
     <string name="settings_auto_alarm">"Αυτόματο ξυπνητήρι"</string>
-    <string name="alarms_always_ondue"></string>
-    <string name="settings_show_one_recur_entry_in_future"></string>
-    <string name="settings_auto_alarm_sub"></string>
+    <string name="alarms_always_ondue">"Εντός προθεσμίας"</string>
+    <string name="settings_show_one_recur_entry_in_future">"Εμφάνιση μόνο μιας επαναλαμβανόμενης καταχώρισης στο μέλλον"</string>
+    <string name="settings_auto_alarm_sub">"Ενεργοποιήστε για αυτόματη δημιουργία συναγερμών. Επιλέξτε \"Always on time\" για να μην δημιουργήσετε συναγερμό αλλά για να λαμβάνετε ειδοποίηση σε κάθε περίπτωση όταν μια εργασία είναι ληξιπρόθεσμη."</string>
+
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="status_no_status">"Χωρίς κατάσταση"</string>
+    <string name="classification_no_classification">"Χωρίς ταξινόμηση (δημόσιο)"</string>
+    <string name="map">"Χάρτης"</string>
+    <string name="open_in_browser">"Άνοιγμα σε πρόγραμμα περιήγησης"</string>
+    <string name="list_date_without">"Χωρίς ημερομηνία"</string>
+    <string name="list_start_without">"Χωρίς ημερομηνία έναρξης"</string>
+    <string name="list_due_without">"Χωρίς διάρκεια ημερομηνίας"</string>
+    <string name="list_dialog_delete_visible_message2">"Προσοχή: Εξαιρούνται περιπτώσεις επαναλαμβανόμενων εγγραφών."</string>
+    <string name="list_snackbar_no_collection">"Προσθέστε μια τοπική συλλογή ή συγχρονίστε μια απομακρυσμένη συλλογή που υποστηρίζει αυτήν την ενότητα."</string>
+    <string name="filter_second_order_by">"Στην συνέχεια κατηγοριοποίησε ως"</string>
+    <string name="filter_group_by">"Ομαδοποίησε ως"</string>
+    <string name="filter_group_by_info">"Η ομαδοποίηση είναι διαθέσιμη για προβολή λίστας και συμπαγή"</string>
+    <string name="menu_list_flat_view">"Επίπεδη προβολή"</string>
+    <string name="menu_list_flat_view_sub">"Να εμφανίζονται πάντα οι θυγατρικές καταχωρήσεις στο ανώτερο επίπεδο της λίστας"</string>
+    <string name="menu_list_limit_recur_entries">"Όριο επαναλαμβανόμενο"</string>
+    <string name="menu_list_limit_recur_entries_sub">"Εμφάνιση μόνο μιας επαναλαμβανόμενης καταχώρισης στο μέλλον"</string>
+    <string name="menu_view_markdown_formatting">"Μορφοποίηση Markdown"</string>
+    <string name="menu_view_autosave">"Αυτόματη αποθήκευση"</string>
+    <string name="next">"Επόμενο"</string>
+    <string name="previous">"Προηγούμενο"</string>
+    <string name="widget_list_description">"Λίστα widget"</string>
+    <string name="widget_list_configuration">"Διαμόρφωση widget"</string>
+    <string name="widget_list_configuration_beta_info">"* Λάβετε υπόψη ότι το jtx Board χρησιμοποιεί έναν νέο, πειραματικό τρόπο χειρισμού γραφικών στοιχείων που σε σπάνιες περιπτώσεις μπορεί να προκαλέσουν απροσδόκητη συμπεριφορά."</string>
+    <string name="widget_list_configuration_pro_info">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε περαιτέρω επιλογές διαμόρφωσης."</string>
+    <string name="widget_list_configuration_checkbox_position">"Θέση πλαισίου ελέγχου"</string>
+    <string name="widget_list_no_entries_found">"Δεν βρέθηκαν καταχωρήσεις που να ταιριάζουν με τα κριτήρια φίλτρου σας"</string>
+    <string name="widget_list_view_settings">"Προβολή ρυθμίσεων"</string>
+    <string name="widget_list_configuration_only_one_hierarchy_layer_supported"></string>
+    <string name="widget_list_maximum_entries_reached"></string>
 </resources>
