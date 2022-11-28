@@ -10,7 +10,7 @@ Global Strings -->
     <string name="ok">"Aceptar"</string>
     <string name="delete">"Eliminar"</string>
     <string name="discard">"Descartar"</string>
-    <string name="gotit">"Entedido"</string>
+    <string name="gotit">"Entendido"</string>
     <string name="cont">"Continuar"</string>
     <string name="toolbar_text_jtx_board_journals_overview">"Vista general | Diarios"</string>
     <string name="toolbar_text_jtx_board_notes_overview">"Vista general | Notas"</string>
@@ -56,11 +56,11 @@ Global Strings -->
     <string name="navigation_drawer_sync">"Sincronizar con DAVx⁵"</string>
     <string name="navigation_drawer_about">"Acerca de / Licencia"</string>
     <string name="navigation_drawer_subtitle">"diarios, notas y tareas"</string>
-    <string name="navigation_drawer_beta_feedback">"Comentarios Beta"</string>
+    <string name="navigation_drawer_beta_feedback">"Comentarios beta"</string>
     <string name="navigation_drawer_settings">"Ajustes"</string>
     <string name="navigation_drawer_news_updates">"Novedades y actualizaciones"</string>
     <string name="navigation_drawer_external_links">"Enlaces externos"</string>
-    <string name="navigation_drawer_website">"Sitio Web"</string>
+    <string name="navigation_drawer_website">"Sitio web"</string>
     <string name="navigation_drawer_support">"Soporte"</string>
     <string name="navigation_drawer_donate">"Donar"</string>
     <string name="navigation_drawer_adinfo">"Información de anuncios"</string>
@@ -118,7 +118,9 @@ Global Strings -->
     <string name="view_toast_deleted_successfully">"\"%1$s\" eliminado correctamente"</string>
     <string name="view_dialog_add_note">"Añadir nota"</string>
     <string name="view_dialog_add_note_dialog_hint">"Añada su nota aquí"</string>
-    <string name="view_toast_entry_does_not_exist_anymore">"La entrada solicitada no existe (ya)."</string>
+
+    <!-- dropping () fits better in the original sense -->
+    <string name="view_toast_entry_does_not_exist_anymore">"La entrada solicitada ya no existe."</string>
     <string name="view_created_text">"Creada: %1$s"</string>
     <string name="view_last_modified_text">"Última modificación: %1$s"</string>
     <string name="view_due">"Vencimiento"</string>
@@ -135,14 +137,14 @@ Global Strings -->
     <string name="edit_contact_hint">"
 Jim Dolittle, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Información de contacto del responsable o propietario de esta entrada"</string>
-    <string name="edit_comment_hint">"Su comentario…"</string>
+    <string name="edit_comment_hint">"Su comentario..."</string>
     <string name="edit_comment_helper">"Añadir un comentario"</string>
     <string name="edit_attachment_button_text">"Añadir adjunto"</string>
     <string name="edit_take_picture_button_text">"Capturar foto"</string>
     <string name="edit_add_link_button_text">"Añadir enlace a adjunto"</string>
     <string name="edit_url_helper">"URL relacionada con esta entrada"</string>
     <string name="edit_location_helper">"Añadir ubicación para esta entrada"</string>
-    <string name="edit_attachment_add_dialog_hint">"URL del adjunto (https://…)"</string>
+    <string name="edit_attachment_add_dialog_hint">"URL del adjunto (https://...)"</string>
     <string name="edit_comment_add_dialog_hint">"Comentario"</string>
     <string name="edit_attachment_beta_info">"* Tenga en cuenta que los archivos adjuntos se consideran una característica experimental. Actualmente sólo los archivos adjuntos pequeños (hasta 100 Kb) pueden ser exportados como .ics y sincronizados a través de DAVx⁵. Si encuentra algún problema, por favor háganoslo saber a través de los foros de soporte o mediante una solicitud de soporte en el sitio web."</string>
     <string name="edit_subtasks_add_hint">"Subtarea"</string>
@@ -480,14 +482,14 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="audio_record">"Grabar"</string>
     <string name="audio_stop">"Detener"</string>
     <string name="audio_pause">"Pausa"</string>
-    <string name="audio_error_toast">"Lo siento, no se puede iniciar la reproducción…"</string>
+    <string name="audio_error_toast">"Lo siento, no se puede iniciar la reproducción..."</string>
     <string name="sync_in_progress">"Sincronización en proceso"</string>
-    <string name="saving">"Guardando…"</string>
-    <string name="saving_pending">"Pendiente de guardar…"</string>
+    <string name="saving">"Guardando..."</string>
+    <string name="saving_pending">"Pendiente de guardar..."</string>
     <string name="invalid_timezone_message">"Por favor, seleccione una zona horaria válida"</string>
     <string name="invalid_url_message">"Por favor, introduzca una URL válida."</string>
     <string name="list_quickadd_dialog_sr_start">"Iniciar reconocimiento de voz"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Escuchando…"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Escuchando..."</string>
     <string name="details_show_all_options">"Mostrar todas las opciones"</string>
     <string name="details_attendees_processing_info">"Atención: Los servidores pueden procesar automáticamente a los asistentes, por ejemplo, enviando mensajes iMIP."</string>
     <string name="details_toast_entry_deleted">"Entrada descartada/borrada"</string>
@@ -549,11 +551,58 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="buypro_snackbar_please_purchase_pro">"Por favor, adquiera el paquete Pro para activar esta característica."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="error_no_app_found_to_open_entry">"No se ha encontrado ninguna aplicación para enviar esta entrada."</string>
-    <string name="close">"Close"</string>
-    <string name="menu_view_share_mail">"Share as E-Mail"</string>
-    <string name="menu_view_copy_to_clipboard">"Copy to clipboard"</string>
-    <string name="menu_view_copy_to_clipboard_copied">"Copied"</string>
-    <string name="settings_select_language">"Select language"</string>
-    <string name="settings_select_language_system">"System default"</string>
-    <string name="settings_details_enable_markdown">"Enable markdown formatting"</string>
+    <string name="close">"Cerrar"</string>
+    <string name="menu_view_share_mail">"Compartir como correo electrónico"</string>
+    <string name="menu_view_copy_to_clipboard">"Copiar al portapapeles"</string>
+    <string name="menu_view_copy_to_clipboard_copied">"Copiado"</string>
+    <string name="settings_select_language">"Seleccionar idioma"</string>
+    <string name="settings_select_language_system">"Idioma por defecto"</string>
+    <string name="settings_details_enable_markdown">"Habilitar formateado Markdown"</string>
+    <string name="filter_special">"Filtros especiales"</string>
+
+    <!-- fragment_ical_list -->
+    <string name="list_date_start_in_past">"Fecha del pasado"</string>
+    <string name="list_date_today">"Hoy"</string>
+    <string name="list_date_tomorrow">"Mañana"</string>
+    <string name="list_date_future">"Fecha en el futuro"</string>
+    <string name="list_start_date_in_past">"Empezar en el pasado"</string>
+    <string name="list_start_date_today">"Empezar hoy"</string>
+    <string name="list_start_date_tomorrow">"Empezar mañana"</string>
+    <string name="list_start_date_future">"Empezar en el futuro"</string>
+    <string name="list_hide_completed_tasks">"Ocultar tareas completadas"</string>
+    <string name="settings_auto_alarm">"Alarma automática"</string>
+    <string name="alarms_always_ondue">"Siempre pendiente"</string>
+    <string name="settings_show_one_recur_entry_in_future">"Mostrar solo una entrada recurrente en el futuro"</string>
+    <string name="settings_auto_alarm_sub">"Activar para crear alarmas automáticamente. Elija \"Siempre pendiente\" para no crear una alarma pero recibir una notificación en cualquier caso cuando vence una tarea."</string>
+
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="status_no_status">"Sin estado"</string>
+    <string name="classification_no_classification">"No clasificado (público)"</string>
+    <string name="map">"Mapa"</string>
+    <string name="open_in_browser">"Abrir en el navegador"</string>
+    <string name="list_date_without">"Sin fecha"</string>
+    <string name="list_start_without">"Sin fecha de inicio"</string>
+    <string name="list_due_without">"Sin fecha de vencimiento"</string>
+    <string name="list_dialog_delete_visible_message2">"Atención: Se excluyen las instancias de entradas recurrentes."</string>
+    <string name="list_snackbar_no_collection">"Por favor, agregue una colección local o sincronice una colección remota que admita este módulo."</string>
+    <string name="filter_second_order_by">"A continuación, ordenar por"</string>
+    <string name="filter_group_by">"Agrupar por"</string>
+    <string name="filter_group_by_info">"La agrupación está disponible para la vistas de lista y compacta"</string>
+    <string name="menu_list_flat_view">"Vista plana"</string>
+    <string name="menu_list_flat_view_sub">"Mostrar siempre las entradas secundarias en el nivel superior de la lista"</string>
+    <string name="menu_list_limit_recur_entries">"Limitar las repeticiones"</string>
+    <string name="menu_list_limit_recur_entries_sub">"Mostrar solo una entrada recurrente en el futuro"</string>
+    <string name="menu_view_markdown_formatting">"Formato Markdown"</string>
+    <string name="menu_view_autosave">"Guardado automático"</string>
+    <string name="next">"Siguiente"</string>
+    <string name="previous">"Anterior"</string>
+    <string name="widget_list_description">"Lista de widgets"</string>
+    <string name="widget_list_configuration">"Configuración de widgets"</string>
+    <string name="widget_list_configuration_beta_info">"Tenga en cuenta que jtx Board está utilizando una nueva forma experimental de manejar los widgets que, en casos excepcionales, podría causar un comportamiento inesperado."</string>
+    <string name="widget_list_configuration_pro_info">"Por favor, adquiera el paquete Pro para habilitar más opciones de configuración."</string>
+    <string name="widget_list_configuration_checkbox_position">"Posición de la casilla de verificación"</string>
+    <string name="widget_list_no_entries_found">"No se han encontrado entradas que coincidan con sus criterios de filtrado"</string>
+    <string name="widget_list_view_settings">"Ver configuración"</string>
+    <string name="widget_list_configuration_only_one_hierarchy_layer_supported"></string>
+    <string name="widget_list_maximum_entries_reached"></string>
 </resources>

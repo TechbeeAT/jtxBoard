@@ -54,7 +54,7 @@ class ListWidgetUpdateWorker(
                 }
                 Log.d("ListWidgetUpdateWorker", "GlanceId $glanceId : filterConfig: $listWidgetConfig")
                 //Log.v(TAG, "Loading data ...")
-                val entries = ICalDatabase.getInstance(context)
+                val allEntries = ICalDatabase.getInstance(context)
                     .iCalDatabaseDao
                     .getIcal4ListSync(
                         ICal4List.constructQuery(
@@ -83,13 +83,16 @@ class ListWidgetUpdateWorker(
                         )
                     )
 
-                val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getAllSubtasksSync()
-                val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getAllSubnotesSync()
+                val entries = if(allEntries.isEmpty()) emptyList() else if (allEntries.size > ListWidget.MAX_ENTRIES) allEntries.subList(0,ListWidget.MAX_ENTRIES) else allEntries
+
+                val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubtasksSyncOf(entries.map { it.uid?:"" })
+                val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubnotesSyncOf(entries.map { it.uid?:"" })
 
                 pref.toMutablePreferences().apply {
-                    this[ListWidgetReceiver.list] = entries.map { entry -> Json.encodeToString(entry) }.toSet()
-                    this[ListWidgetReceiver.subtasks] = subtasks.map { entry -> Json.encodeToString(entry) }.toSet()
-                    this[ListWidgetReceiver.subnotes] = subnotes.map { entry -> Json.encodeToString(entry) }.toSet()
+                    this[ListWidgetReceiver.list] = entries.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()
+                    this[ListWidgetReceiver.subtasks] = subtasks.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()
+                    this[ListWidgetReceiver.subnotes] = subnotes.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()
+                    this[ListWidgetReceiver.listExceedsLimits] = allEntries.size > ListWidget.MAX_ENTRIES
                     //Log.d("ListWidgetUpdateWorker", this[ListWidgetReceiver.list].toString())
                 }
             }

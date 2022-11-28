@@ -29,13 +29,16 @@ import androidx.glance.text.*
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.widgets.elements.ListEntry
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 
 class ListWidget : GlanceAppWidget() {
+
+    companion object {
+        const val MAX_ENTRIES = 50
+    }
 
     @Composable
     override fun Content() {
@@ -50,19 +53,15 @@ class ListWidget : GlanceAppWidget() {
             Json.decodeFromString<ListWidgetConfig>(filterConfig)
         }
 
-        val list = prefs[ListWidgetReceiver.list]?.map { Json.decodeFromString<ICal4List>(it) }
-            ?: emptyList()
-        val subtasks =
-            prefs[ListWidgetReceiver.subtasks]?.map { Json.decodeFromString<ICal4List>(it) }
-                ?: emptyList()
-        val subnotes =
-            prefs[ListWidgetReceiver.subnotes]?.map { Json.decodeFromString<ICal4List>(it) }
-                ?: emptyList()
+        val list = prefs[ListWidgetReceiver.list]?.map { Json.decodeFromString<ICal4ListWidget>(it) } ?: emptyList()
+        val subtasks = prefs[ListWidgetReceiver.subtasks]?.map { Json.decodeFromString<ICal4ListWidget>(it) } ?: emptyList()
+        val subnotes = prefs[ListWidgetReceiver.subnotes]?.map { Json.decodeFromString<ICal4ListWidget>(it) } ?: emptyList()
+        val listExceedLimits = prefs[ListWidgetReceiver.listExceedsLimits] ?: false
 
         val subtasksGrouped = subtasks.groupBy { it.vtodoUidOfParent }
         val subnotesGrouped = subnotes.groupBy { it.vjournalUidOfParent }
 
-        val finalList: MutableList<ICal4List> = mutableListOf()
+        val finalList: MutableList<ICal4ListWidget> = mutableListOf()
         list.forEach { parent ->
             finalList.add(parent)
             subtasksGrouped[parent.uid]?.let { finalList.addAll(it) }
@@ -174,8 +173,21 @@ class ListWidget : GlanceAppWidget() {
                                         start = if ((entry.isChildOfTodo || entry.isChildOfNote || entry.isChildOfJournal) && listWidgetConfig?.flatView == false) 16.dp else 0.dp
                                     )
                             )
-
                         }
+
+                        if(listExceedLimits)
+                            item {
+                                Text(
+                                    text = context.getString(R.string.widget_list_maximum_entries_reached, MAX_ENTRIES),
+                                    style = TextStyle(
+                                            color = GlanceTheme.colors.onPrimaryContainer,
+                                            fontSize = 10.sp,
+                                            fontStyle = FontStyle.Italic,
+                                            textAlign = TextAlign.Center
+                                    ),
+                                    modifier = GlanceModifier.fillMaxWidth().padding(8.dp)
+                                )
+                            }
                     }
                 } else {
                     Column(

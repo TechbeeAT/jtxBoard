@@ -28,14 +28,14 @@ import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.widgets.GlanceTheme
+import at.techbee.jtx.widgets.ICal4ListWidget
 import at.techbee.jtx.widgets.ListWidgetCheckedActionCallback
 
 @Composable
 fun ListEntry(
-    obj: ICal4List,
+    obj: ICal4ListWidget,
     textColor: ColorProvider,
     checkboxEnd: Boolean,
     modifier: GlanceModifier = GlanceModifier
