@@ -605,4 +605,6 @@ Merci !"</string>
     <string name="widget_list_configuration_checkbox_position">"Position des checkbox"</string>
     <string name="widget_list_no_entries_found">"Aucune entrée trouvée correspondant à vos critères de filtres"</string>
     <string name="widget_list_view_settings">"Paramètres des vues"</string>
+    <string name="widget_list_configuration_only_one_hierarchy_layer_supported"></string>
+    <string name="widget_list_maximum_entries_reached"></string>
 </resources>
