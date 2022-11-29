@@ -31,11 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,6 +69,7 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import com.arnyminerz.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
+import org.apache.commons.lang3.StringUtils
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -152,10 +153,8 @@ fun DetailScreenContent(
 
     var color by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.color) }
     var summary by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
-    var description by rememberSaveable {
-        mutableStateOf(
-            iCalEntity.value?.property?.description ?: ""
-        )
+    var description by remember {
+        mutableStateOf(TextFieldValue(iCalEntity.value?.property?.description ?: ""))
     }
 
     val icalObject by rememberSaveable {
@@ -420,16 +419,16 @@ fun DetailScreenContent(
                                 //fontWeight = FontWeight.Bold
                             )
 
-                        if (description.isNotBlank()) {
+                        if (description.text.isNotBlank()) {
                             if(detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] != false)
                                 MarkdownText(
-                                    markdown = description.trim(),
+                                    markdown = description.text.trim(),
                                     modifier = Modifier.padding(8.dp),
                                     bodyStyle = TextStyle(textDirection = TextDirection.Content)
                                 )
                             else
                                 Text(
-                                    text = description.trim(),
+                                    text = description.text.trim(),
                                     modifier = Modifier.padding(8.dp),
                                     style = TextStyle(textDirection = TextDirection.Content)
                                 )
@@ -462,8 +461,30 @@ fun DetailScreenContent(
                     OutlinedTextField(
                         value = description,
                         onValueChange = {
-                            description = it
-                            icalObject.description = it.ifEmpty { null }
+
+                            val enteredCharIndex = StringUtils.indexOfDifference(it.text, description.text)
+                            val enteredCharIsReturn =
+                                enteredCharIndex >=0
+                                        && it.text.substring(enteredCharIndex).startsWith(System.lineSeparator())
+                                        && it.text.length > description.text.length  // excludes backspace!
+
+                            val before = it.getTextBeforeSelection(Int.MAX_VALUE)
+                            val after = if(it.selection.start < it.annotatedString.lastIndex) it.annotatedString.subSequence(it.selection.start, it.annotatedString.lastIndex) else AnnotatedString("")
+                            val lines =  before.split(System.lineSeparator())
+                            val previous = if(lines.lastIndex > 1) lines[lines.lastIndex-1] else before
+                            val containsHyphenBullet =  previous.contains(Regex("^[-]\\s.*"))
+                            val containsStarBullet =  previous.contains(Regex("^[*]\\s.*"))
+
+                            description = if(description.text != it.text && (containsHyphenBullet || containsStarBullet) && enteredCharIsReturn)
+                                TextFieldValue(
+                                    annotatedString = before
+                                        .plus(AnnotatedString(if(containsHyphenBullet) "- " else if(containsStarBullet) "* " else ""))
+                                        .plus(after),
+                                    selection = TextRange(it.selection.start+2)
+                                )
+                            else
+                                it
+                            icalObject.description = it.text.ifEmpty { null }
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         label = { Text(stringResource(id = R.string.description)) },
