@@ -555,4 +555,52 @@ Thank you!"</string>
     <string name="settings_select_language">"Select language"</string>
     <string name="settings_select_language_system">"System default"</string>
     <string name="settings_details_enable_markdown">"Enable markdown formatting"</string>
+    <string name="filter_special">"Special filters"</string>
+
+    <!-- fragment_ical_list -->
+    <string name="list_date_start_in_past">"Date in past"</string>
+    <string name="list_date_today">"Today"</string>
+    <string name="list_date_tomorrow">"Tomorrow"</string>
+    <string name="list_date_future">"Date in future"</string>
+    <string name="list_start_date_in_past">"Start in past"</string>
+    <string name="list_start_date_today">"Start today"</string>
+    <string name="list_start_date_tomorrow">"Start tomorrow"</string>
+    <string name="list_start_date_future">"Start in future"</string>
+    <string name="list_hide_completed_tasks">"Hide completed tasks"</string>
+    <string name="settings_auto_alarm">"Automatic alarm"</string>
+    <string name="alarms_always_ondue">"Always on due"</string>
+    <string name="settings_show_one_recur_entry_in_future">"Show only one recurring entry in future"</string>
+    <string name="settings_auto_alarm_sub">"Turn on to automatically create alarms. Choose \"Always on due\" to not create an alarm but to get notified in any case when a task is due."</string>
+
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="status_no_status">"No status"</string>
+    <string name="classification_no_classification">"No classification (public)"</string>
+    <string name="map">"Map"</string>
+    <string name="open_in_browser">"Open in browser"</string>
+    <string name="list_date_without">"Without date"</string>
+    <string name="list_start_without">"Without start date"</string>
+    <string name="list_due_without">"Without due date"</string>
+    <string name="list_dialog_delete_visible_message2">"Attention: Instances of recurring entries are excluded."</string>
+    <string name="list_snackbar_no_collection">"Please add a local collection or synchronise a remote collection that supports this module."</string>
+    <string name="filter_second_order_by">"Then order by"</string>
+    <string name="filter_group_by">"Group by"</string>
+    <string name="filter_group_by_info">"Grouping is available for list and compact view"</string>
+    <string name="menu_list_flat_view">"Flat view"</string>
+    <string name="menu_list_flat_view_sub">"Always show child-entries on top level in list"</string>
+    <string name="menu_list_limit_recur_entries">"Limit recurring"</string>
+    <string name="menu_list_limit_recur_entries_sub">"Show only one recurring entry in future"</string>
+    <string name="menu_view_markdown_formatting">"Markdown formatting"</string>
+    <string name="menu_view_autosave">"Autosave"</string>
+    <string name="next">"Next"</string>
+    <string name="previous">"Previous"</string>
+    <string name="widget_list_description">"List widget"</string>
+    <string name="widget_list_configuration">"Widget configuration"</string>
+    <string name="widget_list_configuration_beta_info">"* Please note that jtx Board is using a new, experimental way to handle widgets which in rare cases might cause unexpected behaviour."</string>
+    <string name="widget_list_configuration_pro_info">"Please purchase the Pro package to enable further configuration options."</string>
+    <string name="widget_list_configuration_checkbox_position">"Checkbox position"</string>
+    <string name="widget_list_no_entries_found">"No entries found that match your filter criteria"</string>
+    <string name="widget_list_view_settings">"View settings"</string>
+    <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attention: Currently only one level of hierarchy is supported in the widget. In order to see the entries of lower levels, please use the flat view instead."</string>
+    <string name="widget_list_maximum_entries_reached">"Maximum number of entries in widget reached (%1$d)."</string>
+    <string name="opacity">"Opacity"</string>
 </resources>
