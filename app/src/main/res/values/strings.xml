@@ -238,6 +238,7 @@
     <string name="list_fab_add_contentdesc">Add new item</string>
     <string name="list_progress">Progress</string>
     <string name="list_expand">Expand</string>
+    <string name="list_collapse">Collapse</string>
     <string name="list_dialog_contribution_title">Note on advertisements</string>
     <string name="list_dialog_contribution_message">This app is powered by advertisements by default. For more information please check out the Ad-Info section in the main menu!</string>
     <string name="list_dialog_contribution_more_information">Find out more</string>
