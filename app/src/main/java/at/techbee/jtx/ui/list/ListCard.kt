@@ -203,7 +203,7 @@ fun ICalObjectListCard(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            if (iCalObject.summary?.isNotBlank() == true)
+                            if (iCalObject.summary?.isNotBlank() == true || iCalObject.module == Module.TODO.name)
                                 Text(
                                     text = iCalObject.summary?.trim() ?: "",
                                     fontWeight = FontWeight.Bold,
