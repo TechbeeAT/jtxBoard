@@ -921,6 +921,28 @@ data class ICalObject(
 
             when (rRule.frequency)
             {
+                Recur.Frequency.SECONDLY ->
+                {
+                    for(i in 1..count) {
+                        recurList.add(zonedDtstart.toInstant().toEpochMilli())
+                        zonedDtstart = zonedDtstart.plusSeconds(interval)
+                    }
+                }
+                Recur.Frequency.MINUTELY ->
+                {
+                    for(i in 1..count) {
+                        recurList.add(zonedDtstart.toInstant().toEpochMilli())
+                        zonedDtstart = zonedDtstart.plusMinutes(interval)
+                    }
+                }
+                Recur.Frequency.HOURLY ->
+                {
+                    for(i in 1..count) {
+                        recurList.add(zonedDtstart.toInstant().toEpochMilli())
+                        zonedDtstart = zonedDtstart.plusHours(interval)
+                    }
+                }
+
                 Recur.Frequency.DAILY ->
                 {
                     if(rRule.dayList.isEmpty()) {

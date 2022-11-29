@@ -236,9 +236,7 @@ fun DetailsCardRecur(
                                                 intervalExpanded = false
                                                 onRecurUpdated(buildRRule())
                                             },
-                                            text = {
-                                                Text(DateTimeUtils.getLocalizedOrdinalFor(number))
-                                            }
+                                            text = { Text("$number") }
                                         )
                                     }
                                 }
@@ -254,6 +252,9 @@ fun DetailsCardRecur(
                                         Frequency.MONTHLY -> stringResource(id = R.string.edit_recur_month)
                                         Frequency.WEEKLY -> stringResource(id = R.string.edit_recur_week)
                                         Frequency.DAILY -> stringResource(id = R.string.edit_recur_day)
+                                        Frequency.HOURLY -> stringResource(id = R.string.edit_recur_hour)
+                                        Frequency.MINUTELY -> stringResource(id = R.string.edit_recur_minute)
+                                        Frequency.SECONDLY -> stringResource(id = R.string.edit_recur_second)
                                         else -> "not supported"
                                     }
                                 )
@@ -264,8 +265,11 @@ fun DetailsCardRecur(
                                 ) {
 
                                     Frequency.values().reversed().forEach { frequency2select ->
-                                        if(!listOf(Frequency.YEARLY, Frequency.MONTHLY, Frequency.WEEKLY, Frequency.DAILY).contains(frequency2select))
-                                            return@forEach  // show dropdown menu items only for supported frequencies
+                                        if(icalObject.dtstartTimezone == TZ_ALLDAY
+                                            && listOf(Frequency.SECONDLY, Frequency.MINUTELY, Frequency.HOURLY).contains(frequency2select))
+                                            return@forEach
+                                        if(frequency2select == Frequency.SECONDLY)
+                                            return@forEach
 
                                         DropdownMenuItem(
                                             onClick = {
@@ -280,6 +284,9 @@ fun DetailsCardRecur(
                                                         Frequency.MONTHLY -> stringResource(id = R.string.edit_recur_month)
                                                         Frequency.WEEKLY -> stringResource(id = R.string.edit_recur_week)
                                                         Frequency.DAILY -> stringResource(id = R.string.edit_recur_day)
+                                                        Frequency.HOURLY -> stringResource(id = R.string.edit_recur_hour)
+                                                        Frequency.MINUTELY -> stringResource(id = R.string.edit_recur_minute)
+                                                        //Frequency.SECONDLY -> stringResource(id = R.string.edit_recur_second)
                                                         else -> frequency2select.name
                                                     }
                                                 )
