@@ -356,6 +356,9 @@
     <string name="edit_recur_x_day_of_the_month">day of the month</string>
     <string name="edit_recur_x_times">times</string>
     <string name="edit_recur_toast_requires_start_date">Recurrence requires a start-date to be set!</string>
+    <string name="edit_recur_second">second(s)</string>
+    <string name="edit_recur_minute">minute(s)</string>
+    <string name="edit_recur_hour">hour(s)</string>
     <string name="edit_recur_day">day(s)</string>
     <string name="edit_recur_week">week(s)</string>
     <string name="edit_recur_month">month(s)</string>
