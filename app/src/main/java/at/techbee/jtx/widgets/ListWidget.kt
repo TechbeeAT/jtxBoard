@@ -72,6 +72,10 @@ class ListWidget : GlanceAppWidget() {
             .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val imageSize = 36.dp
 
+        val backgorundColor = GlanceTheme.colors.primaryContainer.getColor(context).copy(alpha = listWidgetConfig?.widgetAlpha ?: 1F)
+        val textColor = GlanceTheme.colors.onPrimaryContainer
+        val entryColor = GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig?.widgetAlphaEntries ?: 1F)
+        val entryTextColor = GlanceTheme.colors.onSurface
 
         GlanceTheme {
             Column(
@@ -79,7 +83,7 @@ class ListWidget : GlanceAppWidget() {
                     .appWidgetBackground()
                     .fillMaxSize()
                     .padding(horizontal = 4.dp)
-                    .background(GlanceTheme.colors.primaryContainer),
+                    .background(backgorundColor),
             ) {
 
                 val addNewIntent = Intent(context, MainActivity2::class.java).apply {
@@ -94,8 +98,7 @@ class ListWidget : GlanceAppWidget() {
 
                 Row(
                     modifier = GlanceModifier
-                        .fillMaxWidth()
-                        .background(GlanceTheme.colors.primaryContainer),
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -148,7 +151,6 @@ class ListWidget : GlanceAppWidget() {
                     LazyColumn(
                         modifier = GlanceModifier
                             .padding(bottom = 2.dp, start = 2.dp, end = 2.dp, top = 0.dp)
-                            .background(GlanceTheme.colors.primaryContainer)
                             .cornerRadius(8.dp)
                     ) {
 
@@ -164,7 +166,8 @@ class ListWidget : GlanceAppWidget() {
 
                             ListEntry(
                                 obj = entry,
-                                textColor = GlanceTheme.colors.onSurface,
+                                entryColor = entryColor,
+                                textColor = entryTextColor,
                                 checkboxEnd = listWidgetConfig?.checkboxPositionEnd ?: false,
                                 modifier = GlanceModifier
                                     .fillMaxWidth()
@@ -180,7 +183,7 @@ class ListWidget : GlanceAppWidget() {
                                 Text(
                                     text = context.getString(R.string.widget_list_maximum_entries_reached, MAX_ENTRIES),
                                     style = TextStyle(
-                                            color = GlanceTheme.colors.onPrimaryContainer,
+                                            color = textColor,
                                             fontSize = 10.sp,
                                             fontStyle = FontStyle.Italic,
                                             textAlign = TextAlign.Center
@@ -198,7 +201,7 @@ class ListWidget : GlanceAppWidget() {
                         Text(
                             text = context.getString(R.string.widget_list_no_entries_found),
                             style = TextStyle(
-                                color = GlanceTheme.colors.onPrimaryContainer,
+                                color = textColor,
                                 fontSize = 14.sp,
                                 fontStyle = FontStyle.Italic
                             )

@@ -73,6 +73,8 @@
 
     <string name="collection">Collection</string>
     <string name="color">Color</string>
+    <string name="opacity">Opacity</string>
+
 
     <string name="journal">Journal</string>
     <string name="note">Note</string>

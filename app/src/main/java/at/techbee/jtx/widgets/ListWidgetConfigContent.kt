@@ -8,8 +8,10 @@
 
 package at.techbee.jtx.widgets
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -18,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -145,7 +148,9 @@ fun ListWidgetConfigContent(
                         icon = Icons.Outlined.Settings,
                         iconDesc = stringResource(id = R.string.widget_list_view_settings),
                         text = stringResource(id = R.string.widget_list_view_settings),
-                        modifier = Modifier.padding(top = 8.dp).fillMaxWidth()
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .fillMaxWidth()
                     )
                     FlowRow(modifier = Modifier.fillMaxWidth()) {
 
@@ -186,6 +191,49 @@ fun ListWidgetConfigContent(
                         textAlign = TextAlign.Center
                     )
 
+                    Divider()
+
+                    HeadlineWithIcon(
+                        icon = Icons.Outlined.Opacity,
+                        iconDesc = stringResource(id = R.string.opacity),
+                        text = stringResource(id = R.string.opacity),
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .fillMaxWidth()
+                    )
+
+                    Slider(
+                        value = listSettings.widgetAlpha.value,
+                        valueRange = 0f..1f,
+                        onValueChange = {
+                            listSettings.widgetAlpha.value = it
+                        },
+                        colors = SliderDefaults.colors(
+                            thumbColor = MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value),
+                            activeTrackColor = MaterialTheme.colorScheme.primary
+                        ),
+                        steps = 20,
+                        modifier = Modifier.padding(16.dp)
+                    )
+
+                    Slider(
+                        value = listSettings.widgetAlphaEntries.value,
+                        valueRange = 0f..1f,
+                        onValueChange = {
+                            listSettings.widgetAlphaEntries.value = it
+                        },
+                        colors = SliderDefaults.colors(
+                            thumbColor = MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value),
+                            activeTrackColor = MaterialTheme.colorScheme.surface
+                        ),
+                        steps = 20,
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value))
+                            .padding(horizontal = 8.dp)
+                    )
+
                 } else {
                     Text(
                         text = stringResource(R.string.widget_list_configuration_pro_info),
@@ -223,6 +271,8 @@ fun ListWidgetConfigContent(
                                     groupBy = listSettings.groupBy.value
                                     flatView = listSettings.flatView.value
                                     checkboxPositionEnd = listSettings.checkboxPositionEnd.value
+                                    widgetAlpha = listSettings.widgetAlpha.value
+                                    widgetAlphaEntries = listSettings.widgetAlphaEntries.value
 
                                     isExcludeDone = listSettings.isExcludeDone.value
                                     isFilterOverdue = listSettings.isFilterOverdue.value
@@ -285,5 +335,7 @@ data class ListWidgetConfig(
     var searchText: String? = null,        // search text is not saved!
     var viewMode: ViewMode = ViewMode.LIST,
     var flatView: Boolean = false,
-    var checkboxPositionEnd: Boolean = false
+    var checkboxPositionEnd: Boolean = false,
+    var widgetAlpha: Float = 1F,
+    var widgetAlphaEntries: Float = 1F
 )

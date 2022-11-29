@@ -10,6 +10,7 @@ package at.techbee.jtx.widgets.elements
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.*
@@ -29,13 +30,13 @@ import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.util.DateTimeUtils
-import at.techbee.jtx.widgets.GlanceTheme
 import at.techbee.jtx.widgets.ICal4ListWidget
 import at.techbee.jtx.widgets.ListWidgetCheckedActionCallback
 
 @Composable
 fun ListEntry(
     obj: ICal4ListWidget,
+    entryColor: Color,
     textColor: ColorProvider,
     checkboxEnd: Boolean,
     modifier: GlanceModifier = GlanceModifier
@@ -60,7 +61,7 @@ fun ListEntry(
             modifier = GlanceModifier
                 .fillMaxWidth()
                 .padding(6.dp)
-                .background(GlanceTheme.colors.surface)
+                .background(entryColor)
                 .cornerRadius(8.dp)
                 .clickable(onClick = actionStartActivity(intent)),
             verticalAlignment = Alignment.CenterVertically
