@@ -47,3 +47,18 @@ debugTests:
   stage: test
   script:
   - ./gradlew -Pci --console=plain :app:testGplayDebug
+
+androidTests:
+  image: ghcr.io/bitfireat/docker-android-ci:main
+  stage: test
+  tags:
+    # require the privileged tag if the emulator is needed
+    - privileged
+  script:
+    - start-emulator.sh
+    - ./gradlew app:connectedGplayDebugAndroidTest
+  artifacts:
+    paths:
+      - app/build/outputs/lint-results-debug.html
+      - app/build/reports
+      - build/reports
