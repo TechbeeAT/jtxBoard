@@ -12,6 +12,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: "kotlinx-serialization"
+apply plugin: "com.huawei.agconnect"
 
 
 android {
@@ -91,6 +92,10 @@ android {
         generic {
             dimension 'version'
             versionNameSuffix '.generic'
+        }
+        huawei {
+            dimension 'version'
+            versionNameSuffix '.huawei'
         }
     }
 
@@ -292,5 +297,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-flowlayout:$version_accompanist"
 
     implementation "androidx.glance:glance-appwidget:1.0.0-alpha05"
+
+    huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
 }
 

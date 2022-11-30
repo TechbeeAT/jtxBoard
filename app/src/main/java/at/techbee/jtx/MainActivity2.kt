@@ -77,6 +77,7 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
         const val BUILD_FLAVOR_GENERIC = "generic"
+        const val BUILD_FLAVOR_HUAWEI = "huawei"
 
         const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
         const val INTENT_ACTION_ADD_NOTE = "addNote"
