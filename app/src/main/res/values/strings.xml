@@ -22,12 +22,14 @@
     <string name="link_jtx_support" translatable="false">https://jtx.techbee.at/support</string>
     <string name="link_jtx_privacy_policy" translatable="false">https://jtx.techbee.at/privacy</string>
     <string name="link_jtx_twitter" translatable="false">https://twitter.com/jtxBoard</string>
+    <string name="link_jtx_mastodon" translatable="false">https://fosstodon.org/@jtx</string>
     <string name="link_techbee" translatable="false">https://techbee.at</string>
     <string name="link_jtx_terms" translatable="false">https://jtx.techbee.at/terms-conditions</string>
     <string name="link_jtx_poeditor" translatable="false">https://poeditor.com/join/project?hash=4jaOOJSLxx</string>
     <string name="link_paypal" translatable="false">https://www.paypal.com/donate?hosted_button_id=8BVX7PUVVTCWY</string>
     <string name="link_jtx_donate" translatable="false">https://jtx.techbee.at/app/donate</string>
     <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
+    <string name="mastodon_account_name" translatable="false">\@jtx@fosstodon.org</string>
 
 
     <!-- Permissions -->

@@ -64,6 +64,17 @@ enum class NavigationDrawerDestination (
             )
         ) }
     ),
+    MASTODON(
+        titleResource = R.string.mastodon_account_name,
+        iconResource = R.drawable.logo_mastodon,
+        groupResource = R.string.navigation_drawer_news_updates,
+        navigationAction = { _, context -> context.startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(context.getString(R.string.link_jtx_mastodon))
+            )
+        ) }
+    ),
     WEBSITE(
         titleResource = R.string.navigation_drawer_website,
         icon = Icons.Outlined.Home,
@@ -114,7 +125,7 @@ enum class NavigationDrawerDestination (
         fun valuesFor(flavor: String): List<NavigationDrawerDestination> {
             return when(flavor) {
                 MainActivity2.BUILD_FLAVOR_GOOGLEPLAY -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_OSE -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_OSE -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, MASTODON, WEBSITE, NEWS, SUPPORT, PRIVACY)
                 MainActivity2.BUILD_FLAVOR_GENERIC -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
                 else -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
             }
