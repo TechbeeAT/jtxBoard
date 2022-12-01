@@ -202,6 +202,11 @@ fun ListWidgetConfigContent(
                             .fillMaxWidth()
                     )
 
+                    Text(
+                        text = stringResource(R.string.widget_list_configuration_widget_background),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(8.dp)
+                    )
                     Slider(
                         value = listSettings.widgetAlpha.value,
                         valueRange = 0f..1f,
@@ -210,12 +215,17 @@ fun ListWidgetConfigContent(
                         },
                         colors = SliderDefaults.colors(
                             thumbColor = MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value),
-                            activeTrackColor = MaterialTheme.colorScheme.primary
+                            activeTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value)
                         ),
                         steps = 20,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
 
+                    Text(
+                        text = stringResource(R.string.widget_list_configuration_entries_background),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(8.dp)
+                    )
                     Slider(
                         value = listSettings.widgetAlphaEntries.value,
                         valueRange = 0f..1f,
@@ -224,7 +234,7 @@ fun ListWidgetConfigContent(
                         },
                         colors = SliderDefaults.colors(
                             thumbColor = MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value),
-                            activeTrackColor = MaterialTheme.colorScheme.surface
+                            activeTrackColor = MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value)
                         ),
                         steps = 20,
                         modifier = Modifier
@@ -233,6 +243,8 @@ fun ListWidgetConfigContent(
                             .background(MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value))
                             .padding(horizontal = 8.dp)
                     )
+
+                    Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
 
                 } else {
                     Text(
