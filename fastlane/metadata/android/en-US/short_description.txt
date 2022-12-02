@@ -1,1 +1,1 @@
-Keep track of journals, notes & tasks - iCalendar compliant and syncable (DAVx5)
+Keep track of journals, notes & tasks - iCalendar compliant and syncable with your CalDAV-server through DAVx5
