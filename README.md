@@ -1,5 +1,4 @@
 # jtx Board
-[![Latest Release](https://gitlab.com/techbeeat1/jtx/-/badges/release.svg)](https://gitlab.com/techbeeat1/jtx/-/releases)
 
 ## Get the most out of journals, notes & tasks
 Elevate the power of the iCalendar standard to the next level, use the potential of the combination of journals (VJournal), notes (VJournal) and tasks (VTodo) out of one app and use DAVx5 to synchronize your entries with the CalDAV-server of your choice!
