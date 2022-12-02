@@ -86,7 +86,7 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
      */
     private fun getReleaseInfos() {
 
-        val url = "https://gitlab.com/api/v4/projects/29468606/repository/tags"
+        val url = "https://api.github.com/repos/TechbeeAT/jtxBoard/releases"
 
         val jsonArrayRequest: JsonArrayRequest = object : JsonArrayRequest(
             Method.GET, url, null,
@@ -94,8 +94,8 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
                 try {
                     Log.d("jsonResponse", response.toString())
                     for(i in 0 until response.length()) {
-                        val releaseName = response.getJSONObject(i).getJSONObject("release").getString("tag_name")
-                        val releaseText = response.getJSONObject(i).getJSONObject("release").getString("description")
+                        val releaseName = response.getJSONObject(i).getString("name")
+                        val releaseText = response.getJSONObject(i).getString("body")
                         Log.d("json", "tag_name = $releaseName, description = $releaseText")
                         releaseinfos.value?.add(Pair(releaseName, releaseText))
                     }
