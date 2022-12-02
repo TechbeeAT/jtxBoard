@@ -16,7 +16,7 @@ jobs:
       - uses: gradle/wrapper-validation-action@v1
 
       - name: Run lint and unit tests
-        run: ./gradlew app:lintStandardDebug app:testStandardDebugUnitTest
+        run: ./gradlew app:lintOseDebugUnitTest app:testOseDebugUnitTest
       - name: Archive results
         uses: actions/upload-artifact@v2
         with:
