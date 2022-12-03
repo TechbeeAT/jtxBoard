@@ -23,8 +23,24 @@ jobs:
       - name: Prepare keystore
         run: echo ${{ secrets.android_keystore_base64 }} | base64 -d >$GITHUB_WORKSPACE/keystore.jks
 
-      - name: Build signed packages
+      - name: Build signed package for OSE
         run: ./gradlew app:assembleRelease
+        env:
+          ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.android_keystore_password }}
+          ANDROID_KEY_ALIAS: ${{ secrets.android_key_alias }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
+          
+      - name: Build signed package for Generic
+        run: ./gradlew app:assembleGenericRelease
+        env:
+          ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.android_keystore_password }}
+          ANDROID_KEY_ALIAS: ${{ secrets.android_key_alias }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
+          
+      - name: Build app bundle release (AAB) for Gplay
+        run: ./gradlew app:bundleGplayRelease
         env:
           ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.android_keystore_password }}
@@ -32,10 +48,10 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
 
       - name: Generate archive
-        run: tar -cJvf release-${{ github.ref_name }}.tar.xz app/build/outputs/apk/ app/build/outputs/mapping/*/mapping.txt
+        run: tar -cJvf release-${{ github.ref_name }}.tar.xz app/build/outputs/apk/ app/build/outputs/mapping/*/mapping.txt app/build/outputs/bundle/gplayRelease/
         env:
           XZ_OPT: -9
-          
+                    
       - name: Copy OSE apk to root
         run: cp app/build/outputs/apk/ose/release/app-ose-release.apk jtxBoard-${{ github.ref_name }}.apk
 
@@ -53,7 +69,6 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.google_play_service_account_json }}
           packageName: at.techbee.jtx
-          releaseFiles: app/build/outputs/apk/gplay/release/*.apk
-          mappingFile: app/build/outputs/mapping/gplayRelease/mapping.txt
+          releaseFiles: app/build/outputs/bundle/gplayRelease/*.aab
           track: internal
           status: draft
