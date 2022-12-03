@@ -22,7 +22,7 @@ import java.util.*
 class AboutViewModel(application: Application) : AndroidViewModel(application) {
 
     val translators: MutableLiveData<MutableSet<Pair<String, String>>> = MutableLiveData(mutableSetOf())
-    val releaseinfos: MutableLiveData<MutableSet<Pair<String, String>>> = MutableLiveData(mutableSetOf())
+    val releaseinfos: MutableLiveData<MutableSet<Release>> = MutableLiveData(mutableSetOf())
     private val app = application
 
     init {
@@ -86,7 +86,7 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
      */
     private fun getReleaseInfos() {
 
-        val url = "https://api.github.com/repos/TechbeeAT/jtxBoard/releases"
+        val url = "https://api.github.com/repos/TechbeeAT/jtxBoard/releases?per_page=100"
 
         val jsonArrayRequest: JsonArrayRequest = object : JsonArrayRequest(
             Method.GET, url, null,
@@ -94,10 +94,15 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
                 try {
                     Log.d("jsonResponse", response.toString())
                     for(i in 0 until response.length()) {
-                        val releaseName = response.getJSONObject(i).getString("name")
-                        val releaseText = response.getJSONObject(i).getString("body")
-                        Log.d("json", "tag_name = $releaseName, description = $releaseText")
-                        releaseinfos.value?.add(Pair(releaseName, releaseText))
+                        val release = Release(
+                            releaseName = response.getJSONObject(i).getString("name"),
+                            releaseText = response.getJSONObject(i).getString("body"),
+                            prerelease = response.getJSONObject(i).getBoolean("prerelease"),
+                            githubUrl = response.getJSONObject(i).getString("url")
+                        )
+                        Log.d("json", "tag_name = ${release.releaseName}, description = ${release.releaseText}")
+                        if(!release.prerelease)   // prereleases are excluded
+                            releaseinfos.value?.add(release)
                     }
                 } catch (e: JSONException) {
                     Log.w("Gitlab", "Failed to parse JSON response with release info\n$e")
@@ -111,3 +116,10 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
     }
 }
 
+
+data class Release(
+    var releaseName: String,
+    var releaseText: String?,
+    var prerelease: Boolean,
+    var githubUrl: String
+)

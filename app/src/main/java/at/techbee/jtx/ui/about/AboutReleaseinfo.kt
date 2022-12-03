@@ -33,7 +33,7 @@ import at.techbee.jtx.ui.theme.Typography
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AboutReleaseinfo(
-    releaseinfoLive: MutableLiveData<MutableSet<Pair<String, String>>>,
+    releaseinfoLive: MutableLiveData<MutableSet<Release>>,
     modifier: Modifier = Modifier
 ) {
     val list by releaseinfoLive.observeAsState(emptyList())
@@ -57,11 +57,10 @@ fun AboutReleaseinfo(
 
         items(
             items = list.toList(),
-            key = { item -> item.first }
-        ) { releaseinfo ->
+            key = { release -> release.releaseName }
+        ) { release ->
             ReleaseInfoCard(
-                releaseName = releaseinfo.first,
-                releaseText = releaseinfo.second,
+                release = release,
                 modifier = Modifier.padding(top = 8.dp).animateItemPlacement()
             )
         }
@@ -76,11 +75,26 @@ fun AboutReleaseinfo_Preview() {
         AboutReleaseinfo(
             MutableLiveData(
                 mutableSetOf(
-                    Pair("v1.2.0", "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!"),
-                    Pair("v1.2.1", "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!"),
-                    Pair("v1.2.2", "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!")
+                    Release(
+                        "v1.2.0",
+                        "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!",
+                        prerelease = false,
+                        githubUrl = "https://github.com/TechbeeAT/jtxBoard/releases"
+                    ),
+                    Release(
+                        "v1.2.1",
+                        "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!",
+                        prerelease = false,
+                        githubUrl = "https://github.com/TechbeeAT/jtxBoard/releases"
+                    ),
+                    Release(
+                        "v1.2.2",
+                        "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!",
+                        prerelease = false,
+                        githubUrl = "https://github.com/TechbeeAT/jtxBoard/releases"
+                    )
                 )
-            )
+            ),
         )
     }
 }
