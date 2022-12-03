@@ -48,12 +48,12 @@ jobs:
             jtxBoard-${{ github.ref_name }}.apk
           fail_on_unmatched_files: true
 
-#      - name: Upload jtxBoard-gplay to Google Play
-#        uses: r0adkll/upload-google-play@v1
-#        with:
-#          serviceAccountJsonPlainText: ${{ secrets.google_play_service_account_json }}
-#          packageName: at.bitfire.davdroid
-#          releaseFiles: app/build/outputs/apk/gplay/release/*.apk
-#          mappingFile: app/build/outputs/mapping/gplayRelease/mapping.txt
-#          track: internal
-#          status: draft
+      - name: Upload jtxBoard-gplay to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.google_play_service_account_json }}
+          packageName: at.techbee.jtx
+          releaseFiles: app/build/outputs/apk/gplay/release/*.apk
+          mappingFile: app/build/outputs/mapping/gplayRelease/mapping.txt
+          track: internal
+          status: draft
