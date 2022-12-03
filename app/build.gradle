@@ -47,11 +47,23 @@ android {
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         resConfigs locales
     }
+
+    signingConfigs {
+        jtx {
+            storeFile file(System.getenv("ANDROID_KEYSTORE") ?: "/dev/null")
+            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+            keyAlias System.getenv("ANDROID_KEY_ALIAS")
+            keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled = true
             shrinkResources = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.jtx
         }
         // uncomment to test minifyEnabled without signing the package
         debug {
