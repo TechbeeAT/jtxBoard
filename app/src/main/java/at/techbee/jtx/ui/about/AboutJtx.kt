@@ -121,7 +121,16 @@ fun AboutJtx(modifier: Modifier = Modifier) {
             )
 
             ElevatedCard(
-                onClick = { clickCount += 1 },
+                onClick = {
+                    clickCount += 1
+                    if(clickCount >= 5) {
+                        val intent = Intent(Intent.ACTION_VIEW).apply {
+                            flags += Intent.FLAG_ACTIVITY_NEW_TASK
+                            data = Uri.parse("https://ko-fi.com/jtxboard")
+                        }
+                        context.startActivity(intent)
+                    }
+                          },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
