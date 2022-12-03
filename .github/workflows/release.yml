@@ -1,0 +1,54 @@
+name: Create release
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  build:
+    name: Create release
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: 11
+          cache: 'gradle'
+      - uses: gradle/wrapper-validation-action@v1
+
+      - name: Prepare keystore
+        run: echo ${{ secrets.android_keystore_base64 }} | base64 -d >$GITHUB_WORKSPACE/keystore.jks
+
+      - name: Build signed packages
+        run: ./gradlew app:assembleRelease
+        env:
+          ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.android_keystore_password }}
+          ANDROID_KEY_ALIAS: ${{ secrets.android_key_alias }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
+
+      - name: Generate archive
+        run: tar -cJvf release-${{ github.ref_name }}.tar.xz app/build/outputs/apk/ app/build/outputs/mapping/*/mapping.txt
+        env:
+          XZ_OPT: -9
+
+      - name: Create Github release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          prerelease: ${{ contains(github.ref_name, '-alpha') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-rc') }}
+          files: release-${{ github.ref_name }}.tar.xz
+          fail_on_unmatched_files: true
+
+#      - name: Upload jtxBoard-gplay to Google Play
+#        uses: r0adkll/upload-google-play@v1
+#        with:
+#          serviceAccountJsonPlainText: ${{ secrets.google_play_service_account_json }}
+#          packageName: at.bitfire.davdroid
+#          releaseFiles: app/build/outputs/apk/gplay/release/*.apk
+#          mappingFile: app/build/outputs/mapping/gplayRelease/mapping.txt
+#          track: internal
+#          status: draft
