@@ -33,7 +33,7 @@ Note: DAVx5 is an independent app and must be acquired separately.
 Contributions are always welcome! Whether financial support, translations, code changes, bug reports, feature requests, or otherwise, your help is appreciated. For more information please have a look at [Contribute](https://jtx.techbee.at/app/contribute) on our website.
 
 [![PayPal donate button](https://img.shields.io/badge/paypal-donate-yellow.svg?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=KNCKKUUYN4FMJ)
-
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/K3K2GSCFJ)
 
 ### Communication
 
