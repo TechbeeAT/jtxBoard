@@ -702,6 +702,6 @@
     <string name="widget_list_no_entries_found">No entries found that match your filter criteria</string>
     <string name="widget_list_maximum_entries_reached">Maximum number of entries in widget reached (%1$d).</string>
     <string name="widget_list_view_settings">View settings</string>
-
+    <string name="widget_list_show_description">Show description</string>
 
 </resources>

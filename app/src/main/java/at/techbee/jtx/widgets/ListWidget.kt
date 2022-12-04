@@ -234,6 +234,7 @@ class ListWidget : GlanceAppWidget() {
                                         textColor = entryTextColor,
                                         textColorOverdue = entryOverdueTextColor,
                                         checkboxEnd = listWidgetConfig?.checkboxPositionEnd ?: false,
+                                        showDescription = listWidgetConfig?.showDescription ?: true,
                                         modifier = GlanceModifier
                                             .fillMaxWidth()
                                             .padding(
@@ -251,6 +252,7 @@ class ListWidget : GlanceAppWidget() {
                                                 textColor = entryTextColor,
                                                 textColorOverdue = entryOverdueTextColor,
                                                 checkboxEnd = listWidgetConfig.checkboxPositionEnd,
+                                                showDescription = listWidgetConfig.showDescription,
                                                 modifier = GlanceModifier
                                                     .fillMaxWidth()
                                                     .padding(
@@ -271,6 +273,7 @@ class ListWidget : GlanceAppWidget() {
                                                 textColor = entryTextColor,
                                                 textColorOverdue = entryOverdueTextColor,
                                                 checkboxEnd = listWidgetConfig.checkboxPositionEnd,
+                                                showDescription = listWidgetConfig.showDescription,
                                                 modifier = GlanceModifier
                                                     .fillMaxWidth()
                                                     .padding(

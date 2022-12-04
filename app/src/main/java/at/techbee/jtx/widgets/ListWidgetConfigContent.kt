@@ -199,6 +199,7 @@ fun ListWidgetConfigContent(
                                     showOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
                                     widgetAlpha = listSettings.widgetAlpha.value
                                     widgetAlphaEntries = listSettings.widgetAlphaEntries.value
+                                    showDescription = listSettings.showDescription.value
 
                                     isExcludeDone = listSettings.isExcludeDone.value
                                     isFilterOverdue = listSettings.isFilterOverdue.value
@@ -279,5 +280,6 @@ data class ListWidgetConfig(
     var showOneRecurEntryInFuture: Boolean = false,
     var checkboxPositionEnd: Boolean = false,
     var widgetAlpha: Float = 1F,
-    var widgetAlphaEntries: Float = 1F
+    var widgetAlphaEntries: Float = 1F,
+    var showDescription: Boolean = true
 )

@@ -124,6 +124,15 @@ fun ListWidgetConfigGeneral(
                 label = { Text(stringResource(id = R.string.menu_list_limit_recur_entries)) },
                 modifier = Modifier.padding(horizontal = 2.dp)
             )
+
+            FilterChip(
+                selected = listSettings.showDescription.value,
+                onClick = {
+                    listSettings.showDescription.value = !listSettings.showDescription.value
+                },
+                label = { Text(stringResource(id = R.string.widget_list_show_description)) },
+                modifier = Modifier.padding(horizontal = 2.dp)
+            )
         }
 
         Text(

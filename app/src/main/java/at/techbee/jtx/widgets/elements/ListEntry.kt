@@ -41,6 +41,7 @@ fun ListEntry(
     textColor: ColorProvider,
     textColorOverdue: ColorProvider,
     checkboxEnd: Boolean,
+    showDescription: Boolean,
     modifier: GlanceModifier = GlanceModifier
 ) {
 
@@ -130,7 +131,7 @@ fun ListEntry(
                             modifier = GlanceModifier.fillMaxWidth()
                                 .clickable(onClick = actionStartActivity(intent))
                         )
-                    if (!obj.description.isNullOrEmpty())
+                    if (!obj.description.isNullOrEmpty() && showDescription)
                         Text(
                             obj.description!!,
                             maxLines = 2,
