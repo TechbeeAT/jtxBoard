@@ -1,4 +1,4 @@
-name: Development tests
+name: Android tests
 on: push
 jobs:
   test_on_emulator:
