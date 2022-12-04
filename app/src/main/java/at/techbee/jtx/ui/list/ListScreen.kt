@@ -44,7 +44,7 @@ fun ListScreen(
 
     val list = listViewModel.iCal4List.observeAsState(emptyList())
     // first apply a proper sort order, then group
-    val sortedList = when(listViewModel.listSettings.groupBy.value) {
+    var sortedList = when(listViewModel.listSettings.groupBy.value) {
         GroupBy.STATUS -> list.value.sortedBy {
             if(listViewModel.module == Module.TODO && it.percent != 100)
                 try { StatusTodo.valueOf(it.status ?: StatusTodo.`NEEDS-ACTION`.name).ordinal } catch (e: java.lang.IllegalArgumentException) { -1 }
@@ -54,17 +54,10 @@ fun ListScreen(
         GroupBy.CLASSIFICATION -> list.value.sortedBy {
             try { Classification.valueOf(it.classification ?: Classification.PUBLIC.name).ordinal } catch (e: java.lang.IllegalArgumentException) { -1 }
         }
-        GroupBy.PRIORITY -> list.value.sortedBy { it.priority ?: -1 }
-        GroupBy.DATE, GroupBy.START -> list.value.sortedBy { it.dtstart ?: 0L }
-        GroupBy.DUE ->list.value.sortedBy {
-            when {
-                it.percent == 100 -> Long.MAX_VALUE-1
-                it.due == null -> Long.MAX_VALUE
-                else -> it.due
-                }
-        }
         else -> list.value
     }
+    if(listViewModel.listSettings.sortOrder.value == SortOrder.DESC) sortedList = sortedList.asReversed()
+
     val groupedList = sortedList.groupBy {
         when(listViewModel.listSettings.groupBy.value) {
             GroupBy.STATUS -> {
@@ -81,9 +74,9 @@ fun ListScreen(
                     else -> it.priority.toString()
                 }
             }
-            GroupBy.DATE -> it.getDtstartTextInfo(context, true)
-            GroupBy.START -> it.getDtstartTextInfo(context, true)
-            GroupBy.DUE -> it.getDueTextInfo(context, true)
+            GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = LocalContext.current)
+            GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = LocalContext.current)
+            GroupBy.DUE -> ICalObject.getDueTextInfo(due = it.due, dueTimezone = it.dueTimezone, percent = it.percent, daysOnly = true, context = LocalContext.current)
             else -> { it.module }
         }
     }

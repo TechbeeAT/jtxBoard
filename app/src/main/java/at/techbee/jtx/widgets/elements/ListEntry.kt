@@ -38,6 +38,7 @@ fun ListEntry(
     obj: ICal4ListWidget,
     entryColor: Color,
     textColor: ColorProvider,
+    textColorOverdue: ColorProvider,
     checkboxEnd: Boolean,
     modifier: GlanceModifier = GlanceModifier
 ) {

@@ -144,6 +144,7 @@
     <string name="description">Description</string>
     <string name="search">Search</string>
     <string name="filter">Filter</string>
+    <string name="general">General</string>
     <string name="filter_special">Special filters</string>
     <string name="sync_now">Sync now</string>
 
@@ -429,6 +430,7 @@
     <!-- fragment_ical_filter -->
     <string name="filter_fab_apply_filter_contentdescription">Apply filter</string>
     <string name="filter_order_by">Order by</string>
+    <string name="filter_group_sort">Group/Sort</string>
     <string name="filter_second_order_by">Then order by</string>
     <string name="filter_group_by">Group by</string>
     <string name="filter_group_by_info">Grouping is available for list and compact view</string>
