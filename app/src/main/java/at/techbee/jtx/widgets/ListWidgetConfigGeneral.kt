@@ -115,6 +115,15 @@ fun ListWidgetConfigGeneral(
                 },
                 modifier = Modifier.padding(horizontal = 2.dp)
             )
+
+            FilterChip(
+                selected = listSettings.showOneRecurEntryInFuture.value,
+                onClick = {
+                    listSettings.showOneRecurEntryInFuture.value = !listSettings.showOneRecurEntryInFuture.value
+                },
+                label = { Text(stringResource(id = R.string.menu_list_limit_recur_entries)) },
+                modifier = Modifier.padding(horizontal = 2.dp)
+            )
         }
 
         Text(

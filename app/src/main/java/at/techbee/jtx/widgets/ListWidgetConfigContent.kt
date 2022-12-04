@@ -196,6 +196,7 @@ fun ListWidgetConfigContent(
                                     groupBy = listSettings.groupBy.value
                                     flatView = listSettings.flatView.value
                                     checkboxPositionEnd = listSettings.checkboxPositionEnd.value
+                                    showOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
                                     widgetAlpha = listSettings.widgetAlpha.value
                                     widgetAlphaEntries = listSettings.widgetAlphaEntries.value
 
@@ -275,6 +276,7 @@ data class ListWidgetConfig(
     var searchText: String? = null,        // search text is not saved!
     var viewMode: ViewMode = ViewMode.LIST,
     var flatView: Boolean = false,
+    var showOneRecurEntryInFuture: Boolean = false,
     var checkboxPositionEnd: Boolean = false,
     var widgetAlpha: Float = 1F,
     var widgetAlphaEntries: Float = 1F

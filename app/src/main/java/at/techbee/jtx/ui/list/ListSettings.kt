@@ -142,6 +142,7 @@ class ListSettings {
 
             flatView.value = listWidgetConfig.flatView
             viewMode.value = listWidgetConfig.viewMode
+            showOneRecurEntryInFuture.value = listWidgetConfig.showOneRecurEntryInFuture
             checkboxPositionEnd.value = listWidgetConfig.checkboxPositionEnd
             widgetAlpha.value = listWidgetConfig.widgetAlpha
             widgetAlphaEntries.value = listWidgetConfig.widgetAlphaEntries

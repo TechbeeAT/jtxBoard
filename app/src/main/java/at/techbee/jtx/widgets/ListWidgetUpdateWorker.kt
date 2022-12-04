@@ -80,6 +80,7 @@ class ListWidgetUpdateWorker(
                             isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
                             isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false,
                             flatView = listWidgetConfig?.flatView?: false,  // always true in Widget, we handle the flat view in the code
+                            searchSettingShowOneRecurEntryInFuture = listWidgetConfig?.showOneRecurEntryInFuture ?: false
                         )
                     )
 
