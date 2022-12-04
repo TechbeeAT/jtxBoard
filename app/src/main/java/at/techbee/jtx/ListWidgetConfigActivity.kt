@@ -19,12 +19,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.getAppWidgetState
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.widgets.ListWidgetReceiver
 import at.techbee.jtx.widgets.ListWidgetConfig
@@ -60,6 +63,8 @@ class ListWidgetConfigActivity : ComponentActivity() {
                     val context = LocalContext.current
 
                     var currentFilterConfig by remember { mutableStateOf<ListWidgetConfig?>(null)}
+                    BillingManager.getInstance().initialise(context)
+                    val isPurchased by BillingManager.getInstance().isProPurchased.observeAsState(false)
 
                     LaunchedEffect(true) {
                         currentFilterConfig = getAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId)[ListWidgetReceiver.filterConfig]?.let { filterConfig -> Json.decodeFromString<ListWidgetConfig>(filterConfig) } ?: ListWidgetConfig()
@@ -68,6 +73,7 @@ class ListWidgetConfigActivity : ComponentActivity() {
                     currentFilterConfig?.let {
                         ListWidgetConfigContent(
                             initialConfig = it,
+                            isPurchased = isPurchased,
                             onFinish = { listWidgetConfig ->
 
                                 scope.launch {

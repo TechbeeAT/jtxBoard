@@ -43,8 +43,10 @@ import net.fortuna.ical4j.model.property.DtStart
 import java.text.ParseException
 import java.time.DayOfWeek
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.format.TextStyle
+import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.TimeZone
 import kotlin.time.Duration
@@ -789,6 +791,55 @@ data class ICalObject(
             val millisLeft = if(dueTimezone == TZ_ALLDAY) zonedDue - DateTimeUtils.getTodayAsLong() else zonedDue - System.currentTimeMillis()
 
             return millisLeft < 0L
+        }
+
+        fun getDtstartTextInfo(module: Module, dtstart: Long?, dtstartTimezone: String?, daysOnly: Boolean = false, context: Context): String {
+
+            if(dtstart == null && module == Module.TODO)
+                return context.getString(R.string.list_start_without)
+            else if(dtstart == null)
+                return context.getString(R.string.list_date_without)
+
+            val localNow = LocalDateTime.now()
+            val localTomorrow = localNow.plusDays(1)
+            val localStart = LocalDateTime.ofInstant(Instant.ofEpochMilli(dtstart), requireTzId(dtstartTimezone))
+            val daysLeft = ChronoUnit.DAYS.between(localNow, localStart)
+            val hoursLeft = ChronoUnit.HOURS.between(localNow, localStart)
+
+            return when {
+                localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == TZ_ALLDAY) ->
+                    if(module == Module.TODO) context.getString(R.string.list_start_today) else context.getString(R.string.list_date_today)
+                daysLeft <= 0L && hoursLeft < 0L ->
+                    if(module == Module.TODO) context.getString(R.string.list_start_past) else context.getString(R.string.list_date_start_in_past)
+                localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth ->
+                    if(module == Module.TODO) context.getString(R.string.list_start_inXhours, hoursLeft) else context.getString(R.string.list_date_today)
+                localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth ->
+                    if(module == Module.TODO) context.getString(R.string.list_start_tomorrow) else context.getString(R.string.list_date_tomorrow)
+                else ->
+                    if(module == Module.TODO) context.getString(R.string.list_start_inXdays, daysLeft+1) else context.getString(R.string.list_date_future)
+            }
+        }
+
+        fun getDueTextInfo(due: Long?, dueTimezone: String?, percent: Int?, daysOnly: Boolean = false, context: Context): String {
+
+            if(percent == 100)
+                return context.getString(R.string.completed)
+            if(due == null)
+                return context.getString(R.string.list_due_without)
+
+            val localNow = LocalDateTime.now()
+            val localTomorrow = localNow.plusDays(1)
+            val localDue = LocalDateTime.ofInstant(Instant.ofEpochMilli(due), requireTzId(dueTimezone))
+            val daysLeft = ChronoUnit.DAYS.between(localNow, localDue)
+            val hoursLeft = ChronoUnit.HOURS.between(localNow, localDue)
+
+            return when {
+                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || dueTimezone == TZ_ALLDAY) -> context.getString(R.string.list_due_today)
+                daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_due_overdue)
+                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, hoursLeft)
+                localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
+                else -> context.getString(R.string.list_due_inXdays, daysLeft+1)
+            }
         }
     }
 

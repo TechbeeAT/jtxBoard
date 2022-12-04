@@ -48,9 +48,7 @@ fun ListOptionsBottomSheet(
     val scope = rememberCoroutineScope()
 
     val tabIndexFilter = 0
-    val tabIndexSortOrder = 1
-    val tabIndexGroupBy = 2
-
+    val tabIndexGroupSort = 1
 
     val pagerState = rememberPagerState(initialPage = tabIndexFilter)
 
@@ -77,27 +75,17 @@ fun ListOptionsBottomSheet(
                 selected = false,
                 onClick = {
                     scope.launch {
-                        pagerState.scrollToPage(tabIndexSortOrder)
+                        pagerState.scrollToPage(tabIndexGroupSort)
                     }
                 },
-                content = { Text(stringResource(id = R.string.filter_order_by)) },
-                modifier = Modifier.height(50.dp)
-            )
-            Tab(
-                selected = false,
-                onClick = {
-                    scope.launch {
-                        pagerState.scrollToPage(tabIndexGroupBy)
-                    }
-                },
-                content = { Text(stringResource(id = R.string.filter_group_by)) },
+                content = { Text(stringResource(id = R.string.filter_group_sort)) },
                 modifier = Modifier.height(50.dp)
             )
         }
 
         HorizontalPager(
             state = pagerState,
-            count = 3
+            count = 2
         ) { page ->
             when (page) {
                 tabIndexFilter -> {
@@ -113,19 +101,8 @@ fun ListOptionsBottomSheet(
                             .padding(8.dp),
                     )
                 }
-                tabIndexSortOrder -> {
-                    ListOptionsSortOrder(
-                        module = module,
-                        listSettings = listSettings,
-                        onListSettingsChanged = onListSettingsChanged,
-                        modifier = modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(8.dp),
-                    )
-                }
-                tabIndexGroupBy -> {
-                    ListOptionsGroupBy(
+                tabIndexGroupSort -> {
+                    ListOptionsGroupSort(
                         module = module,
                         listSettings = listSettings,
                         onListSettingsChanged = onListSettingsChanged,

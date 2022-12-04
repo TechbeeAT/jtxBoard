@@ -104,7 +104,7 @@ fun ListCardKanban(
                                 }
                                 if (iCalObject.module == Module.TODO.name && iCalObject.due != null) {
                                     Text(
-                                        iCalObject.getDueTextInfo(LocalContext.current),
+                                        ICalObject.getDueTextInfo(due = iCalObject.due, dueTimezone = iCalObject.dueTimezone, percent = iCalObject.percent, context = LocalContext.current),
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,

@@ -308,14 +308,16 @@ enum class OrderBy(val stringResource: Int, val queryAppendix: String) {
     LAST_MODIFIED(R.string.filter_last_modified, "$COLUMN_LAST_MODIFIED "),
     SUMMARY(R.string.summary, "UPPER($COLUMN_SUMMARY) "),
     PRIORITY(R.string.priority, "$COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY "),
+    CLASSIFICATION(R.string.classification, "$COLUMN_CLASSIFICATION IS NULL, $COLUMN_CLASSIFICATION "),
+    STATUS(R.string.status, "$COLUMN_STATUS IS NULL, $COLUMN_STATUS "),
     PROGRESS(R.string.progress, "$COLUMN_PERCENT ");
 
     companion object {
         fun getValuesFor(module: Module): Array<OrderBy> =
             when(module) {
-                Module.JOURNAL -> arrayOf(START_VJOURNAL, CREATED, LAST_MODIFIED, SUMMARY)
-                Module.NOTE -> arrayOf(CREATED, LAST_MODIFIED, SUMMARY)
-                Module.TODO -> arrayOf(START_VTODO, DUE, COMPLETED, CREATED, LAST_MODIFIED, SUMMARY, PRIORITY, PROGRESS)
+                Module.JOURNAL -> arrayOf(START_VJOURNAL, CREATED, LAST_MODIFIED, SUMMARY, STATUS, CLASSIFICATION)
+                Module.NOTE -> arrayOf(CREATED, LAST_MODIFIED, SUMMARY, STATUS, CLASSIFICATION)
+                Module.TODO -> arrayOf(START_VTODO, DUE, COMPLETED, CREATED, LAST_MODIFIED, SUMMARY, PRIORITY, PROGRESS, STATUS, CLASSIFICATION)
             }
     }
 }

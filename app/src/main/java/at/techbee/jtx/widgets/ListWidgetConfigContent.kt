@@ -8,40 +8,39 @@
 
 package at.techbee.jtx.widgets
 
-import androidx.compose.foundation.background
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.list.*
-import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Composable
 fun ListWidgetConfigContent(
     initialConfig: ListWidgetConfig,
+    isPurchased: Boolean,
     onFinish: (ListWidgetConfig) -> Unit,
     onCancel: () -> Unit
 ) {
@@ -49,13 +48,17 @@ fun ListWidgetConfigContent(
     val context = LocalContext.current
     val database = ICalDatabase.getInstance(context).iCalDatabaseDao
 
-    var selectedModule by remember { mutableStateOf(initialConfig.module) }
+    val selectedModule = remember { mutableStateOf(initialConfig.module) }
     val listSettings = ListSettings.fromListWidgetConfig(initialConfig)
-    BillingManager.getInstance().initialise(context)
-    val isPurchased = if(LocalInspectionMode.current)
-        remember { mutableStateOf(true) }
-    else
-        BillingManager.getInstance().isProPurchased.observeAsState(false)
+
+    val tabIndexGeneral = 0
+    val tabIndexFilter = 1
+    val tabIndexGroupSort = 2
+
+    val pagerState = rememberPagerState(initialPage = tabIndexGeneral)
+    val scope = rememberCoroutineScope()
+
+    val buyProToast = Toast.makeText(context, R.string.widget_list_configuration_pro_info, Toast.LENGTH_LONG)
 
 
     Scaffold(
@@ -82,183 +85,93 @@ fun ListWidgetConfigContent(
         content = { paddingValues ->
 
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingValues)
-                    .padding(horizontal = 8.dp)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.padding(paddingValues).fillMaxWidth(),
+                verticalArrangement = Arrangement.Top
             ) {
-
-                Text(
-                    text = stringResource(R.string.widget_list_configuration_beta_info),
-                    modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.labelMedium,
-                    fontStyle = FontStyle.Italic,
-                    textAlign = TextAlign.Center
-                )
-
-
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    mainAxisAlignment = FlowMainAxisAlignment.Center
+                TabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    //containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    //contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-
-                    Module.values().forEach { module ->
-                        FilterChip(
-                            selected = module == selectedModule,
-                            onClick = {
-                                selectedModule = module
-                                listSettings.reset()
-                            },
-                            label = { Text(stringResource(id = when(module) {
-                                Module.JOURNAL -> R.string.list_tabitem_journals
-                                Module.NOTE -> R.string.list_tabitem_notes
-                                Module.TODO -> R.string.list_tabitem_todos
-                            })) },
-                            modifier = Modifier.padding(end = 4.dp)
-                        )
-                    }
+                    Tab(
+                        selected = false,
+                        onClick = {
+                            scope.launch {
+                                pagerState.scrollToPage(tabIndexGeneral)
+                            }
+                        },
+                        content = { Text(stringResource(id = R.string.general)) },
+                        modifier = Modifier.height(50.dp)
+                    )
+                    Tab(
+                        selected = false,
+                        onClick = {
+                            if (isPurchased) {
+                                scope.launch {
+                                    pagerState.scrollToPage(tabIndexFilter)
+                                }
+                            } else {
+                                buyProToast.show()
+                            }
+                        },
+                        content = { Text(stringResource(id = R.string.filter)) },
+                        modifier = Modifier.height(50.dp)
+                    )
+                    Tab(
+                        selected = false,
+                        onClick = {
+                            if (isPurchased) {
+                                scope.launch {
+                                    pagerState.scrollToPage(tabIndexGroupSort)
+                                }
+                            } else {
+                                buyProToast.show()
+                            }
+                        },
+                        content = { Text(stringResource(id = R.string.filter_group_sort)) },
+                        modifier = Modifier.height(50.dp)
+                    )
                 }
 
-
-                if(isPurchased.value) {
-
-                    ListOptionsFilter(
-                        module = selectedModule,
-                        listSettings = listSettings,
-                        allCollectionsLive = database.getAllCollections(module = selectedModule.name),
-                        allCategoriesLive = database.getAllCategoriesAsText(),
-                        onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
-                        isWidgetConfig = true
-                    )
-
-                    Divider()
-
-                    ListOptionsSortOrder(
-                        module = selectedModule,
-                        listSettings = listSettings,
-                        onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ }
-                    )
-
-                    Divider()
-
-                    HeadlineWithIcon(
-                        icon = Icons.Outlined.Settings,
-                        iconDesc = stringResource(id = R.string.widget_list_view_settings),
-                        text = stringResource(id = R.string.widget_list_view_settings),
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .fillMaxWidth()
-                    )
-                    FlowRow(modifier = Modifier.fillMaxWidth()) {
-
-                        FilterChip(
-                            selected = listSettings.flatView.value,
-                            onClick = {
-                                listSettings.flatView.value = !listSettings.flatView.value
-                            },
-                            label = { Text(stringResource(id = R.string.menu_list_flat_view)) },
-                            modifier = Modifier.padding(end = 4.dp)
-                        )
-
-                        if(selectedModule == Module.TODO) {
-                            FilterChip(
-                                selected = listSettings.checkboxPositionEnd.value,
-                                onClick = {
-                                    listSettings.checkboxPositionEnd.value = !listSettings.checkboxPositionEnd.value
-                                },
-                                label = {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        if(!listSettings.checkboxPositionEnd.value)
-                                            Icon(Icons.Outlined.CheckBox, "Start", modifier = Modifier.padding(end = 4.dp))
-                                        Text(stringResource(id = R.string.widget_list_configuration_checkbox_position))
-                                        if(listSettings.checkboxPositionEnd.value)
-                                            Icon(Icons.Outlined.CheckBox, "End", modifier = Modifier.padding(start = 4.dp))
-                                        }
-                                    },
-                                modifier = Modifier.padding(end = 4.dp)
+                HorizontalPager(
+                    state = pagerState,
+                    count = if(isPurchased) 3 else 1,
+                    modifier = Modifier.weight(1f).padding(8.dp).verticalScroll(rememberScrollState()),
+                    verticalAlignment = Alignment.Top
+                ) { page ->
+                    when (page) {
+                        tabIndexGeneral -> {
+                            ListWidgetConfigGeneral(
+                                selectedModule = selectedModule,
+                                listSettings = listSettings
+                            )
+                        }
+                        tabIndexFilter -> {
+                            ListOptionsFilter(
+                                module = selectedModule.value,
+                                listSettings = listSettings,
+                                allCollectionsLive = database.getAllCollections(module = selectedModule.value.name),
+                                allCategoriesLive = database.getAllCategoriesAsText(),
+                                onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
+                                isWidgetConfig = true
+                            )
+                        }
+                        tabIndexGroupSort -> {
+                            ListOptionsGroupSort(
+                                module = selectedModule.value,
+                                listSettings = listSettings,
+                                onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ }
                             )
                         }
                     }
-
-                    Text(
-                        text = stringResource(R.string.widget_list_configuration_only_one_hierarchy_layer_supported),
-                        modifier = Modifier.padding(8.dp),
-                        style = MaterialTheme.typography.labelMedium,
-                        fontStyle = FontStyle.Italic,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Divider()
-
-                    HeadlineWithIcon(
-                        icon = Icons.Outlined.Opacity,
-                        iconDesc = stringResource(id = R.string.opacity),
-                        text = stringResource(id = R.string.opacity),
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .fillMaxWidth()
-                    )
-
-                    Text(
-                        text = stringResource(R.string.widget_list_configuration_widget_background),
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                    Slider(
-                        value = listSettings.widgetAlpha.value,
-                        valueRange = 0f..1f,
-                        onValueChange = {
-                            listSettings.widgetAlpha.value = it
-                        },
-                        colors = SliderDefaults.colors(
-                            thumbColor = MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value),
-                            activeTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value)
-                        ),
-                        steps = 20,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-
-                    Text(
-                        text = stringResource(R.string.widget_list_configuration_entries_background),
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                    Slider(
-                        value = listSettings.widgetAlphaEntries.value,
-                        valueRange = 0f..1f,
-                        onValueChange = {
-                            listSettings.widgetAlphaEntries.value = it
-                        },
-                        colors = SliderDefaults.colors(
-                            thumbColor = MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value),
-                            activeTrackColor = MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value)
-                        ),
-                        steps = 20,
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value))
-                            .padding(horizontal = 8.dp)
-                    )
-
-                    Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
-
-                } else {
-                    Text(
-                        text = stringResource(R.string.widget_list_configuration_pro_info),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
                 }
             }
         },
         bottomBar = {
             BottomAppBar(
                 actions = {
-                    if(isPurchased.value) {
+                    if(isPurchased) {
                         TextButton(onClick = { listSettings.reset() }) {
                             Text(stringResource(id = R.string.reset))
                         }
@@ -269,7 +182,7 @@ fun ListWidgetConfigContent(
                         onClick = {
                             onFinish(
                                 ListWidgetConfig().apply {
-                                    module = selectedModule
+                                    module = selectedModule.value
                                     searchCategories = listSettings.searchCategories.value
                                     searchStatusTodo = listSettings.searchStatusTodo.value
                                     searchStatusJournal = listSettings.searchStatusJournal.value
@@ -312,12 +225,27 @@ fun ListWidgetConfigContent(
 fun WidgetConfigContent_Preview() {
     MaterialTheme {
         ListWidgetConfigContent(
-            initialConfig = ListWidgetConfig(),
+            initialConfig = ListWidgetConfig(module = Module.TODO),
+            isPurchased = true,
             onFinish = { },
             onCancel = { }
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun WidgetConfigContent_Preview_not_purchased() {
+    MaterialTheme {
+        ListWidgetConfigContent(
+            initialConfig = ListWidgetConfig(),
+            isPurchased = false,
+            onFinish = { },
+            onCancel = { }
+        )
+    }
+}
+
 
 
 @kotlinx.serialization.Serializable
