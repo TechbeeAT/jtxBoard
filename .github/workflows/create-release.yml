@@ -71,4 +71,4 @@ jobs:
           packageName: at.techbee.jtx
           releaseFiles: app/build/outputs/bundle/gplayRelease/*.aab
           track: internal
-          status: draft
+          status: completed
