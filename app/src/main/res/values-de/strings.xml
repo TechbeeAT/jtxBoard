@@ -601,4 +601,14 @@ Danke!"</string>
     <string name="widget_list_view_settings">"Ansichtsoptionen"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Achtung: Zur Zeit wird nur eine Hierarchieebene im Widget unterstützt. Um Einträge weiterer Ebenen zu sehen, benutzen Sie bitte die flache Ansicht."</string>
     <string name="widget_list_maximum_entries_reached">"Maximale Anzahl an Einträgen im Widget erreicht (%1$d)."</string>
+    <string name="opacity">"Transparenz"</string>
+    <string name="general">"Allgemein"</string>
+    <string name="list_collapse">"Zuklappen"</string>
+    <string name="edit_recur_second">"Sekunde(n)"</string>
+    <string name="edit_recur_minute">"Minute(n)"</string>
+    <string name="edit_recur_hour">"Stunde(n)"</string>
+    <string name="filter_group_sort">"Gruppierung/Sortierung"</string>
+    <string name="widget_list_configuration_widget_background">"Widget Hintergrund"</string>
+    <string name="widget_list_configuration_entries_background">"Einträge Hintergrund"</string>
+    <string name="widget_list_show_description">"Beschreibung anzeigen"</string>
 </resources>
