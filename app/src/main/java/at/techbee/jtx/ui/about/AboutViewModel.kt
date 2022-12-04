@@ -98,7 +98,7 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
                             releaseName = response.getJSONObject(i).getString("name"),
                             releaseText = response.getJSONObject(i).getString("body"),
                             prerelease = response.getJSONObject(i).getBoolean("prerelease"),
-                            githubUrl = response.getJSONObject(i).getString("url")
+                            githubUrl = response.getJSONObject(i).getString("html_url")
                         )
                         Log.d("json", "tag_name = ${release.releaseName}, description = ${release.releaseText}")
                         if(!release.prerelease)   // prereleases are excluded
