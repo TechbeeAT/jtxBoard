@@ -108,7 +108,7 @@ fun ListCardKanban(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = if(iCalObject.isOverdue() == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )

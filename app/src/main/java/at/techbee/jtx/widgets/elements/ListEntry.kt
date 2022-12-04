@@ -28,6 +28,7 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.widgets.ICal4ListWidget
@@ -38,12 +39,14 @@ fun ListEntry(
     obj: ICal4ListWidget,
     entryColor: Color,
     textColor: ColorProvider,
+    textColorOverdue: ColorProvider,
     checkboxEnd: Boolean,
     modifier: GlanceModifier = GlanceModifier
 ) {
 
     val context = LocalContext.current
     val textStyleDate = TextStyle(fontStyle = FontStyle.Italic, fontSize = 12.sp, color = textColor)
+    val textStyleDateOverdue = textStyleDate.copy(color = textColorOverdue, fontWeight = FontWeight.Bold)
     val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
     val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp)
 
@@ -113,7 +116,7 @@ fun ListEntry(
                                     obj.due,
                                     obj.dueTimezone
                                 ),
-                                style = textStyleDate
+                                style = if(ICalObject.isOverdue(obj.percent, obj.due, obj.dueTimezone) == true) textStyleDateOverdue else textStyleDate,
                             )
                         }
                     }

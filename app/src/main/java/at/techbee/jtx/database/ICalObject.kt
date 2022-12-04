@@ -773,6 +773,23 @@ data class ICalObject(
                null
             }
         }
+
+        /**
+         * @return true if the current entry is overdue and not completed,
+         * null if no due date is set and not completed, false otherwise
+         */
+        fun isOverdue(percent: Int?, due: Long?, dueTimezone: String?): Boolean? {
+
+            if(percent == 100)
+                return false
+            if(due == null)
+                return null
+
+            val zonedDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), requireTzId(dueTimezone)).toInstant().toEpochMilli()
+            val millisLeft = if(dueTimezone == TZ_ALLDAY) zonedDue - DateTimeUtils.getTodayAsLong() else zonedDue - System.currentTimeMillis()
+
+            return millisLeft < 0L
+        }
     }
 
 

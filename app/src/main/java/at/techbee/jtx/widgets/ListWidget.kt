@@ -76,6 +76,7 @@ class ListWidget : GlanceAppWidget() {
         val textColor = GlanceTheme.colors.onPrimaryContainer
         val entryColor = GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig?.widgetAlphaEntries ?: 1F)
         val entryTextColor = GlanceTheme.colors.onSurface
+        val entryOverdueTextColor = GlanceTheme.colors.error
 
         GlanceTheme {
             Column(
@@ -168,6 +169,7 @@ class ListWidget : GlanceAppWidget() {
                                 obj = entry,
                                 entryColor = entryColor,
                                 textColor = entryTextColor,
+                                textColorOverdue = entryOverdueTextColor,
                                 checkboxEnd = listWidgetConfig?.checkboxPositionEnd ?: false,
                                 modifier = GlanceModifier
                                     .fillMaxWidth()
