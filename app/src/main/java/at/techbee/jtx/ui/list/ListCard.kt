@@ -148,7 +148,7 @@ fun ICalObjectListCard(
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
-                                    color = if(iCalObject.isOverdue() == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = if(ICalObject.isOverdue(iCalObject.percent, it, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(end = 16.dp).weight(0.2f),
                                     maxLines = 1
                                 )

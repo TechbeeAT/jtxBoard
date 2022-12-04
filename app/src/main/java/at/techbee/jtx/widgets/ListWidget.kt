@@ -124,9 +124,9 @@ class ListWidget : GlanceAppWidget() {
 
         val backgorundColor = GlanceTheme.colors.primaryContainer.getColor(context).copy(alpha = listWidgetConfig?.widgetAlpha ?: 1F)
         val textColor = GlanceTheme.colors.onPrimaryContainer
-        val entryOverdueTextColor = GlanceTheme.colors.error
         val entryColor = GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig?.widgetAlphaEntries ?: 1F)
         val entryTextColor = GlanceTheme.colors.onSurface
+        val entryOverdueTextColor = GlanceTheme.colors.error
 
         GlanceTheme {
             Column(

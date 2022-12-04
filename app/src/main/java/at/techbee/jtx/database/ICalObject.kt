@@ -793,7 +793,6 @@ data class ICalObject(
             return millisLeft < 0L
         }
 
-
         fun getDtstartTextInfo(module: Module, dtstart: Long?, dtstartTimezone: String?, daysOnly: Boolean = false, context: Context): String {
 
             if(dtstart == null && module == Module.TODO)
@@ -808,7 +807,7 @@ data class ICalObject(
             val hoursLeft = ChronoUnit.HOURS.between(localNow, localStart)
 
             return when {
-                localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == ICalObject.TZ_ALLDAY) ->
+                localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == TZ_ALLDAY) ->
                     if(module == Module.TODO) context.getString(R.string.list_start_today) else context.getString(R.string.list_date_today)
                 daysLeft <= 0L && hoursLeft < 0L ->
                     if(module == Module.TODO) context.getString(R.string.list_start_past) else context.getString(R.string.list_date_start_in_past)

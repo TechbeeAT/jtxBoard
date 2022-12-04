@@ -405,22 +405,6 @@ data class ICal4List(
     }
 
 
-    /**
-     * @return true if the current entry is overdue and not completed,
-     * null if no due date is set and not completed, false otherwise
-     */
-    fun isOverdue(): Boolean? {
-
-        if(percent == 100)
-            return false
-        if(due == null)
-            return null
-
-        val zonedDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due!!), DateTimeUtils.requireTzId(dueTimezone)).toInstant().toEpochMilli()
-        val millisLeft = if(dueTimezone == ICalObject.TZ_ALLDAY) zonedDue - DateTimeUtils.getTodayAsLong() else zonedDue - System.currentTimeMillis()
-
-        return millisLeft < 0L
-    }
 
     /**
      * @return the audioAttachment as Uri or null
