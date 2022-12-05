@@ -47,7 +47,7 @@ class ListViewModelTest {
     private lateinit var listViewModel: ListViewModel
 
     @Before
-    fun setup() = runTest {
+    fun setup() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
         ICalDatabase.switchToInMemory(context)
         application = context.applicationContext as Application
@@ -57,7 +57,7 @@ class ListViewModelTest {
     }
 
     @After
-    fun closeDb() = runTest {
+    fun closeDb()  {
         database.deleteAllICalObjects()
         ICalDatabase.getInstance(context).close()
     }
