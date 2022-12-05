@@ -8,10 +8,12 @@
 
 package at.techbee.jtx.ui.list
 
+import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteConstraintException
+import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
@@ -85,7 +87,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
             ?.getPackageInfoCompat(application.packageName, 0)
             ?.firstInstallTime ?: System.currentTimeMillis()
 
-        if(settings.getBoolean(PREFS_ISFIRSTRUN, true)) {
+        if(settings.getBoolean(PREFS_ISFIRSTRUN, true)
+            && !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && ActivityManager.isRunningInUserTestHarness())) {    // never add welcome entries in instrumented tests
             if (firstInstall > 1641596400000L)
                 addWelcomeEntries(application)
             settings.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
