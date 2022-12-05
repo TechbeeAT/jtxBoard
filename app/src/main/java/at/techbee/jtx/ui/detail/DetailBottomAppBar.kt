@@ -53,6 +53,7 @@ import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_RESOURCES
 import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_SUBNOTES
 import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_SUBTASKS
 import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_URL
+import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.reusable.elements.LabelledCheckbox
 import at.techbee.jtx.util.SyncUtil
 
@@ -61,12 +62,12 @@ fun DetailBottomAppBar(
     icalObject: ICalObject?,
     collection: ICalCollection?,
     isEditMode: MutableState<Boolean>,
+    isMarkdownMode: MutableState<Boolean>,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     detailSettings: DetailSettings,
     onDeleteClicked: () -> Unit,
     onCopyRequested: (Module) -> Unit,
     onRevertClicked: () -> Unit,
-    //onListSettingsChanged: () -> Unit
 ) {
 
     if (icalObject == null || collection == null)
@@ -75,6 +76,7 @@ fun DetailBottomAppBar(
     val context = LocalContext.current
     var settingsMenuExpanded by remember { mutableStateOf(false) }
     var copyOptionsExpanded by remember { mutableStateOf(false) }
+    var markdownFormatExpanded by remember { mutableStateOf(false) }
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
 
     val syncIconAnimation = rememberInfiniteTransition()
@@ -109,7 +111,7 @@ fun DetailBottomAppBar(
 
     BottomAppBar(
         actions = {
-            AnimatedVisibility(isEditMode.value) {
+            AnimatedVisibility(isEditMode.value && !isMarkdownMode.value) {
                 IconButton(onClick = { settingsMenuExpanded = true }) {
                     Icon(
                         Icons.Outlined.Settings,
@@ -157,7 +159,7 @@ fun DetailBottomAppBar(
                 }
             }
 
-            if(!collection.readonly) {
+            if(!collection.readonly && !isMarkdownMode.value) {
                 IconButton(onClick = { onDeleteClicked() }) {
                     Icon(
                         Icons.Outlined.Delete,
@@ -166,7 +168,7 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(isEditMode.value && changeState.value != DetailViewModel.DetailChangeState.UNCHANGED) {
+            AnimatedVisibility(isEditMode.value && changeState.value != DetailViewModel.DetailChangeState.UNCHANGED && !isMarkdownMode.value) {
                 IconButton(onClick = { onRevertClicked() }) {
                     Icon(
                         painterResource(id = R.drawable.ic_revert),
@@ -176,7 +178,7 @@ fun DetailBottomAppBar(
             }
 
 
-            AnimatedVisibility(collection.accountType != LOCAL_ACCOUNT_TYPE && (isSyncInProgress || icalObject.dirty)) {
+            AnimatedVisibility(collection.accountType != LOCAL_ACCOUNT_TYPE && (isSyncInProgress || icalObject.dirty) && !isMarkdownMode.value) {
                 IconButton(
                     onClick = {
                         if (!isSyncInProgress)
@@ -206,9 +208,9 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED
+            AnimatedVisibility((changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING
-                    || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVED) {
+                    || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVED)  && !isMarkdownMode.value) {
                 IconButton(
                     onClick = { },
                     enabled = false
@@ -242,6 +244,42 @@ fun DetailBottomAppBar(
                             else -> {}
                         }
                     }
+                }
+            }
+
+            // Icons for Markdown formatting
+            AnimatedVisibility(isEditMode.value && isMarkdownMode.value) {
+                IconButton(onClick = { markdownFormatExpanded = true }) {
+                    Icon(Icons.Outlined.TextFormat, "Format")
+
+                    // overflow menu
+                    DropdownMenu(
+                        expanded = markdownFormatExpanded,
+                        onDismissRequest = { markdownFormatExpanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { HeadlineWithIcon(Icons.Outlined.FormatBold, "Bold", "Bold") },
+                            onClick = { TODO() }
+                        )
+                        DropdownMenuItem(
+                            text = { HeadlineWithIcon(Icons.Outlined.FormatItalic, "Italic", "Italic") },
+                            onClick = { TODO() }
+                        )
+                        DropdownMenuItem(
+                            text = { HeadlineWithIcon(Icons.Outlined.FormatUnderlined, "Underlined", "Underlined") },
+                            onClick = { TODO() }
+                        )
+                    }
+                }
+            }
+            AnimatedVisibility(isEditMode.value && isMarkdownMode.value) {
+                IconButton(onClick = { TODO() }) {
+                    Icon(Icons.Outlined.FormatItalic, "Italic")
+                }
+            }
+            AnimatedVisibility(isEditMode.value && isMarkdownMode.value) {
+                IconButton(onClick = { TODO() }) {
+                    Icon(Icons.Outlined.FormatListBulleted, "List")
                 }
             }
 
@@ -448,6 +486,7 @@ fun DetailBottomAppBar_Preview_View() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
+            isMarkdownMode = remember { mutableStateOf(false) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
@@ -459,7 +498,6 @@ fun DetailBottomAppBar_Preview_View() {
 
 
 @Preview(showBackground = true)
-
 @Composable
 fun DetailBottomAppBar_Preview_edit() {
     MaterialTheme {
@@ -479,6 +517,37 @@ fun DetailBottomAppBar_Preview_edit() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
+            isMarkdownMode = remember { mutableStateOf(false) },
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
+            detailSettings = detailSettings,
+            onDeleteClicked = { },
+            onCopyRequested = { },
+            onRevertClicked = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailBottomAppBar_Preview_edit_markdown() {
+    MaterialTheme {
+
+        val collection = ICalCollection().apply {
+            this.readonly = false
+            this.accountType = DAVX5_ACCOUNT_TYPE
+        }
+
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
+            DetailViewModel.PREFS_DETAIL_NOTES,
+            Context.MODE_PRIVATE
+        )
+        val detailSettings = DetailSettings(prefs)
+
+        DetailBottomAppBar(
+            icalObject = ICalObject.createNote().apply { dirty = true },
+            collection = collection,
+            isEditMode = remember { mutableStateOf(true) },
+            isMarkdownMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
@@ -508,6 +577,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             icalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
+            isMarkdownMode = remember { mutableStateOf(false) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
@@ -540,6 +610,7 @@ fun DetailBottomAppBar_Preview_View_local() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
+            isMarkdownMode = remember { mutableStateOf(false) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailSettings = detailSettings,
             onDeleteClicked = { },

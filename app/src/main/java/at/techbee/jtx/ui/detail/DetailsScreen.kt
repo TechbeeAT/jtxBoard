@@ -13,9 +13,12 @@ import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Build
 import android.widget.Toast
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.ContentPaste
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -36,7 +39,7 @@ import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
@@ -242,6 +245,7 @@ fun DetailsScreen(
                 icalObject = icalEntity.value?.property,
                 collection = icalEntity.value?.ICalCollection,
                 isEditMode = isEditMode,
+                isMarkdownMode = remember { mutableStateOf(false) },
                 changeState = detailViewModel.changeState,
                 detailSettings = detailViewModel.detailSettings,
                 onDeleteClicked = { showDeleteDialog = true },
