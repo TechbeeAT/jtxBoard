@@ -18,6 +18,9 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
@@ -53,7 +56,6 @@ import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_RESOURCES
 import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_SUBNOTES
 import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_SUBTASKS
 import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_URL
-import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.reusable.elements.LabelledCheckbox
 import at.techbee.jtx.util.SyncUtil
 
@@ -62,7 +64,7 @@ fun DetailBottomAppBar(
     icalObject: ICalObject?,
     collection: ICalCollection?,
     isEditMode: MutableState<Boolean>,
-    isMarkdownMode: MutableState<Boolean>,
+    markdownState: MutableState<MarkdownState>,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     detailSettings: DetailSettings,
     onDeleteClicked: () -> Unit,
@@ -76,7 +78,6 @@ fun DetailBottomAppBar(
     val context = LocalContext.current
     var settingsMenuExpanded by remember { mutableStateOf(false) }
     var copyOptionsExpanded by remember { mutableStateOf(false) }
-    var markdownFormatExpanded by remember { mutableStateOf(false) }
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
 
     val syncIconAnimation = rememberInfiniteTransition()
@@ -111,7 +112,7 @@ fun DetailBottomAppBar(
 
     BottomAppBar(
         actions = {
-            AnimatedVisibility(isEditMode.value && !isMarkdownMode.value) {
+            AnimatedVisibility(isEditMode.value && markdownState.value == MarkdownState.DISABLED) {
                 IconButton(onClick = { settingsMenuExpanded = true }) {
                     Icon(
                         Icons.Outlined.Settings,
@@ -159,7 +160,7 @@ fun DetailBottomAppBar(
                 }
             }
 
-            if(!collection.readonly && !isMarkdownMode.value) {
+            if(!collection.readonly && markdownState.value == MarkdownState.DISABLED) {
                 IconButton(onClick = { onDeleteClicked() }) {
                     Icon(
                         Icons.Outlined.Delete,
@@ -168,7 +169,7 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(isEditMode.value && changeState.value != DetailViewModel.DetailChangeState.UNCHANGED && !isMarkdownMode.value) {
+            AnimatedVisibility(isEditMode.value && changeState.value != DetailViewModel.DetailChangeState.UNCHANGED && markdownState.value == MarkdownState.DISABLED) {
                 IconButton(onClick = { onRevertClicked() }) {
                     Icon(
                         painterResource(id = R.drawable.ic_revert),
@@ -178,7 +179,7 @@ fun DetailBottomAppBar(
             }
 
 
-            AnimatedVisibility(collection.accountType != LOCAL_ACCOUNT_TYPE && (isSyncInProgress || icalObject.dirty) && !isMarkdownMode.value) {
+            AnimatedVisibility(collection.accountType != LOCAL_ACCOUNT_TYPE && (isSyncInProgress || icalObject.dirty) && markdownState.value == MarkdownState.DISABLED) {
                 IconButton(
                     onClick = {
                         if (!isSyncInProgress)
@@ -210,7 +211,7 @@ fun DetailBottomAppBar(
 
             AnimatedVisibility((changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING
-                    || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVED)  && !isMarkdownMode.value) {
+                    || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVED)  && markdownState.value == MarkdownState.DISABLED) {
                 IconButton(
                     onClick = { },
                     enabled = false
@@ -248,41 +249,35 @@ fun DetailBottomAppBar(
             }
 
             // Icons for Markdown formatting
-            AnimatedVisibility(isEditMode.value && isMarkdownMode.value) {
-                IconButton(onClick = { markdownFormatExpanded = true }) {
-                    Icon(Icons.Outlined.TextFormat, "Format")
-
-                    // overflow menu
-                    DropdownMenu(
-                        expanded = markdownFormatExpanded,
-                        onDismissRequest = { markdownFormatExpanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { HeadlineWithIcon(Icons.Outlined.FormatBold, "Bold", "Bold") },
-                            onClick = { TODO() }
-                        )
-                        DropdownMenuItem(
-                            text = { HeadlineWithIcon(Icons.Outlined.FormatItalic, "Italic", "Italic") },
-                            onClick = { TODO() }
-                        )
-                        DropdownMenuItem(
-                            text = { HeadlineWithIcon(Icons.Outlined.FormatUnderlined, "Underlined", "Underlined") },
-                            onClick = { TODO() }
-                        )
+            AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED) {
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState())
+                ) {
+                    IconButton(onClick = { markdownState.value = MarkdownState.BOLD }) {
+                        Icon(Icons.Outlined.TextFormat, "Bold")
                     }
+                    IconButton(onClick = { markdownState.value = MarkdownState.ITALIC  }) {
+                        Icon(Icons.Outlined.FormatItalic, "Italic")
+                    }
+                    IconButton(onClick = { markdownState.value = MarkdownState.UNDERLINED  }) {
+                        Icon(Icons.Outlined.FormatUnderlined, "Underlined")
+                    }
+                    IconButton(onClick = { markdownState.value = MarkdownState.STRIKETHROUGH  }) {
+                        Icon(Icons.Outlined.FormatStrikethrough, "Strikethrough")
+                    }
+                    /*
+                    IconButton(onClick = { markdownState.value = MarkdownState.H1  }) {
+                        Icon(painterResource(id = R.drawable.ic_h1), "H1")
+                    }
+                    IconButton(onClick = { markdownState.value = MarkdownState.H2  }) {
+                        Icon(painterResource(id = R.drawable.ic_h2), "H2")
+                    }
+                    IconButton(onClick = { markdownState.value = MarkdownState.H3  }) {
+                        Icon(painterResource(id = R.drawable.ic_h3), "H3")
+                    }
+                     */
                 }
             }
-            AnimatedVisibility(isEditMode.value && isMarkdownMode.value) {
-                IconButton(onClick = { TODO() }) {
-                    Icon(Icons.Outlined.FormatItalic, "Italic")
-                }
-            }
-            AnimatedVisibility(isEditMode.value && isMarkdownMode.value) {
-                IconButton(onClick = { TODO() }) {
-                    Icon(Icons.Outlined.FormatListBulleted, "List")
-                }
-            }
-
 
             // overflow menu
             DropdownMenu(
@@ -430,8 +425,6 @@ fun DetailBottomAppBar(
                     )
                 }
             }
-
-
         },
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
@@ -447,8 +440,8 @@ fun DetailBottomAppBar(
                         isEditMode.value = !isEditMode.value
                 },
                 containerColor = if (collection.readonly) MaterialTheme.colorScheme.surface
-                else if (collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false) MaterialTheme.colorScheme.surface
-                else MaterialTheme.colorScheme.primaryContainer
+                    else if (collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false) MaterialTheme.colorScheme.surface
+                    else MaterialTheme.colorScheme.primaryContainer,
             ) {
                 Crossfade(targetState = isEditMode.value) { isEditMode ->
                     if (isEditMode) {
@@ -486,7 +479,7 @@ fun DetailBottomAppBar_Preview_View() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
-            isMarkdownMode = remember { mutableStateOf(false) },
+            markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
@@ -517,7 +510,7 @@ fun DetailBottomAppBar_Preview_edit() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
-            isMarkdownMode = remember { mutableStateOf(false) },
+            markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
@@ -547,7 +540,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
-            isMarkdownMode = remember { mutableStateOf(true) },
+            markdownState = remember { mutableStateOf(MarkdownState.OBSERVING) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
@@ -577,7 +570,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             icalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
-            isMarkdownMode = remember { mutableStateOf(false) },
+            markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
@@ -610,7 +603,7 @@ fun DetailBottomAppBar_Preview_View_local() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
-            isMarkdownMode = remember { mutableStateOf(false) },
+            markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailSettings = detailSettings,
             onDeleteClicked = { },

@@ -13,7 +13,6 @@ import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Build
 import android.widget.Toast
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentPaste
@@ -39,7 +38,7 @@ import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
@@ -58,6 +57,7 @@ fun DetailsScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showRevertDialog by remember { mutableStateOf(false) }
     var navigateUp by remember { mutableStateOf(false) }
+    val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
 
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
@@ -198,6 +198,7 @@ fun DetailsScreen(
                 icalObjectIdList = icalObjectIdList,
                 sliderIncrement = settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
                 goBackRequested = goBackRequestedByTopBar,
+                markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                     if (changedICalObject.isRecurLinkedInstance)
                         changedICalObject.isRecurLinkedInstance = false
@@ -245,7 +246,7 @@ fun DetailsScreen(
                 icalObject = icalEntity.value?.property,
                 collection = icalEntity.value?.ICalCollection,
                 isEditMode = isEditMode,
-                isMarkdownMode = remember { mutableStateOf(false) },
+                markdownState = markdownState,
                 changeState = detailViewModel.changeState,
                 detailSettings = detailViewModel.detailSettings,
                 onDeleteClicked = { showDeleteDialog = true },

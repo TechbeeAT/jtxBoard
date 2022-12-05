@@ -28,6 +28,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -90,6 +91,7 @@ fun DetailScreenContent(
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
     sliderIncrement: Int,
+    markdownState: MutableState<MarkdownState>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     goBackRequested: MutableState<Boolean>,    // Workaround to also go Back from Top menu
@@ -155,6 +157,11 @@ fun DetailScreenContent(
     var summary by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
     var description by remember {
         mutableStateOf(TextFieldValue(iCalEntity.value?.property?.description ?: ""))
+    }
+    // Apply Markdown on recomposition if applicable
+    if(markdownState.value != MarkdownState.DISABLED) {
+        description = markdownState.value.format(description)
+        markdownState.value = MarkdownState.OBSERVING
     }
 
     val icalObject by rememberSaveable {
@@ -462,6 +469,7 @@ fun DetailScreenContent(
                         value = description,
                         onValueChange = {
 
+                            // START Create bulletpoint if previous line started with a bulletpoint
                             val enteredCharIndex = StringUtils.indexOfDifference(it.text, description.text)
                             val enteredCharIsReturn =
                                 enteredCharIndex >=0
@@ -484,6 +492,8 @@ fun DetailScreenContent(
                                 )
                             else
                                 it
+                            // END Create bulletpoint if previous line started with a bulletpoint
+
                             icalObject.description = it.text.ifEmpty { null }
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
@@ -491,7 +501,13 @@ fun DetailScreenContent(
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp),
+                            .padding(8.dp)
+                            .onFocusChanged { focusState ->
+                                if(focusState.hasFocus && markdownState.value == MarkdownState.DISABLED)
+                                    markdownState.value = MarkdownState.OBSERVING
+                                else if (!focusState.hasFocus)
+                                    markdownState.value = MarkdownState.DISABLED
+                            },
                         textStyle = TextStyle(textDirection = TextDirection.Content)
                     )
                 }
@@ -797,6 +813,7 @@ fun DetailScreenContent_JOURNAL() {
             isChild = false,
             player = null,
             sliderIncrement = 10,
+            markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             goBackRequested = remember { mutableStateOf(false) },
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
@@ -848,6 +865,7 @@ fun DetailScreenContent_TODO_editInitially() {
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
+            markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
@@ -895,6 +913,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
+            markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
@@ -934,6 +953,7 @@ fun DetailScreenContent_failedLoading() {
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
+            markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
