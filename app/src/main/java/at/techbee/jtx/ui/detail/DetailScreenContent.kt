@@ -506,6 +506,7 @@ fun DetailScreenContent(
                         isLinkedRecurringInstance = icalObject.isRecurLinkedInstance,
                         sliderIncrement = sliderIncrement,
                         onProgressChanged = { itemId, newPercent, isLinked ->
+                            icalObject.percent = newPercent
                             onProgressChanged(itemId, newPercent, isLinked)
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
