@@ -40,6 +40,7 @@ import androidx.navigation.NavHostController
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Alarm
@@ -103,6 +104,14 @@ fun ListScreenTabContainer(
         else -> icalListViewModelJournals  // fallback, should not happen
     }
     val allWriteableCollections = listViewModel.allWriteableCollections.observeAsState(emptyList())
+    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
+    val allUsableCollections by remember(allWriteableCollections) {
+        derivedStateOf {
+            allWriteableCollections.value.filter {
+                it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value        // filter remote collections if pro was not purchased
+            }
+        }
+    }
 
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, allWriteableCollections.value) {
@@ -245,7 +254,7 @@ fun ListScreenTabContainer(
                                 text = stringResource(id = viewMode.stringResource),
                                 isSelected = getActiveViewModel().listSettings.viewMode.value == viewMode,
                                 onClick = {
-                                    if ((BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && BillingManager.getInstance().isProPurchased.value == false)) {
+                                    if ((BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !isProPurchased.value)) {
                                         Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
                                     } else {
                                         getActiveViewModel().listSettings.viewMode.value = viewMode
@@ -289,7 +298,7 @@ fun ListScreenTabContainer(
                 ListBottomAppBar(
                     module = listViewModel.module,
                     iCal4ListLive = listViewModel.iCal4List,
-                    allowNewEntries = allWriteableCollections.value.any { collection ->
+                    allowNewEntries = allUsableCollections.any { collection ->
                         ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.TODO && collection.supportsVTODO)
@@ -299,10 +308,10 @@ fun ListScreenTabContainer(
                         val lastUsedCollectionId =
                             listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs)
                         val proposedCollectionId =
-                            if (allWriteableCollections.value.any { collection -> collection.collectionId == lastUsedCollectionId })
+                            if (allUsableCollections.any { collection -> collection.collectionId == lastUsedCollectionId })
                                 lastUsedCollectionId
                             else
-                                allWriteableCollections.value.firstOrNull()?.collectionId
+                                allUsableCollections.firstOrNull()?.collectionId
                                     ?: return@ListBottomAppBar
                         val newICalObject = when (listViewModel.module) {
                             Module.JOURNAL -> ICalObject.createJournal()
@@ -405,7 +414,10 @@ fun ListScreenTabContainer(
                                 )
                             }
 
-                            AnimatedVisibility(showQuickAdd.value || globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
+                            AnimatedVisibility(
+                                allUsableCollections.isNotEmpty() &&
+                                        (showQuickAdd.value || globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null))
+                            {
                                 // origin can be button click or an import through the intent
                                 ListQuickAddElement(
                                     presetModule = if (showQuickAdd.value)
@@ -415,7 +427,7 @@ fun ListScreenTabContainer(
                                     presetText = globalStateHolder.icalFromIntentString.value
                                         ?: "",    // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
-                                    allWriteableCollections = allWriteableCollections.value,
+                                    allWriteableCollections = allUsableCollections,
                                     presetCollectionId = listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
                                     onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
                                         addNewEntry(newICalObject, categories, attachment, editAfterSaving)
