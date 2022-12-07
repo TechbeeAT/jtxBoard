@@ -17,7 +17,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.ui.list.ListViewModel
-import at.techbee.jtx.ui.list.ListViewModelJournals
 import at.techbee.jtx.ui.list.ListViewModelNotes
 import at.techbee.jtx.ui.list.ListViewModelTodos
 import junit.framework.TestCase.assertEquals
@@ -61,7 +60,7 @@ class ListViewModelTest {
         ICalDatabase.getInstance(context).close()
     }
 
-
+/*
     @Test
     fun updateSearch_filter_Module_Journal() = runTest {
 
@@ -71,6 +70,7 @@ class ListViewModelTest {
         database.insertICalObject(ICalObject.createJournal())
         assertEquals(2, listViewModel.iCal4List.value?.size)
     }
+ */
 
     @Test
     fun updateSearch_filter_Module_Note() = runTest {
