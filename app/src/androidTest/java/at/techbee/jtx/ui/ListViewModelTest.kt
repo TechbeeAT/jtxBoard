@@ -17,6 +17,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.ui.list.ListViewModel
+import at.techbee.jtx.ui.list.ListViewModelJournals
 import at.techbee.jtx.ui.list.ListViewModelNotes
 import at.techbee.jtx.ui.list.ListViewModelTodos
 import junit.framework.TestCase.assertEquals
@@ -44,6 +45,10 @@ class ListViewModelTest {
     private lateinit var application: Application
     private lateinit var listViewModel: ListViewModel
 
+    private lateinit var listViewModelJournals: ListViewModelJournals
+    private lateinit var listViewModelNotes: ListViewModelNotes
+    private lateinit var listViewModelTodos: ListViewModelTodos
+
     @Before
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -52,6 +57,12 @@ class ListViewModelTest {
         database = ICalDatabase.getInstance(context).iCalDatabaseDao
         database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests", readonly = false, supportsVJOURNAL = true, supportsVTODO = true))
         database.insertCollectionSync(ICalCollection(collectionId = 2L, displayName = "testcollection readonly", readonly = true, supportsVJOURNAL = true, supportsVTODO = true))
+
+        listViewModelJournals = ListViewModelJournals(application)
+        listViewModelNotes = ListViewModelNotes(application)
+        listViewModelTodos = ListViewModelTodos(application)
+
+        database.deleteAllICalObjects()    // make sure welcome entries get deleted
     }
 
     @After
@@ -60,22 +71,22 @@ class ListViewModelTest {
         ICalDatabase.getInstance(context).close()
     }
 
-/*
+
     @Test
     fun updateSearch_filter_Module_Journal() = runTest {
 
-        listViewModel = ListViewModelJournals(application)
+        listViewModel = listViewModelJournals
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createJournal())
         database.insertICalObject(ICalObject.createJournal())
         assertEquals(2, listViewModel.iCal4List.value?.size)
     }
- */
+
 
     @Test
     fun updateSearch_filter_Module_Note() = runTest {
 
-        listViewModel = ListViewModelNotes(application)
+        listViewModel = listViewModelNotes
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createNote("Note1"))
         assertEquals(1, listViewModel.iCal4List.value?.size)
@@ -85,7 +96,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Module_Todo() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createTask("Task1"))
         database.insertICalObject(ICalObject.createTask("Task2"))
@@ -96,7 +107,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Text() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createTask("Task1_abc_Text"))
         database.insertICalObject(ICalObject.createTask("Task2_asdf_Text"))
@@ -109,7 +120,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Categories() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
 
         val id1 = database.insertICalObject(ICalObject.createTask("Task1"))
@@ -138,7 +149,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Collections() = runTest {
 
-        listViewModel = ListViewModelNotes(application)
+        listViewModel = listViewModelNotes
         listViewModel.iCal4List.observeForever {  }
 
         val col1 = database.insertCollectionSync(ICalCollection(displayName = "ABC"))
@@ -164,7 +175,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_StatusJournal() = runTest {
 
-        listViewModel = ListViewModelNotes(application)
+        listViewModel = listViewModelNotes
         listViewModel.iCal4List.observeForever {  }
 
         database.insertICalObject(ICalObject(summary="Note1", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.CANCELLED.name))
@@ -188,7 +199,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_StatusTodo() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
 
         database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, status = StatusTodo.CANCELLED.name))
@@ -213,7 +224,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Classification() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
 
         database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, classification = Classification.PUBLIC.name))
@@ -237,7 +248,7 @@ class ListViewModelTest {
 
     @Test
     fun clearFilter() {
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.clearFilter()
         assertEquals(0, listViewModel.listSettings.searchCategories.value.size)
         assertEquals(0, listViewModel.listSettings.searchStatusJournal.value.size)
@@ -248,7 +259,7 @@ class ListViewModelTest {
 
     @Test
     fun updateProgress() = runTest {
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         val id = database.insertICalObject(ICalObject.createTask("Test").apply { percent = 0 })
 
         withContext(Dispatchers.IO) {
@@ -261,7 +272,7 @@ class ListViewModelTest {
 
     @Test
     fun updateProgress_withUnlink() = runTest {
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         val item = ICalObject.createTask("Test").apply { percent = 22 }
         item.isRecurLinkedInstance = true
 
@@ -283,7 +294,7 @@ class ListViewModelTest {
     @Test
     fun deleteVisible() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
 
         database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, classification = Classification.PUBLIC.name))
@@ -308,14 +319,14 @@ class ListViewModelTest {
 
     @Test
     fun getAllCollections() {
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.allWriteableCollections.observeForever {  }
         assertEquals(1, listViewModel.allWriteableCollections.value?.size)
     }
 
     @Test
     fun getAllCategories() = runTest {
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.allCategories.observeForever {  }
 
         val id1 = database.insertICalObject(ICalObject.createTask("Task1"))
