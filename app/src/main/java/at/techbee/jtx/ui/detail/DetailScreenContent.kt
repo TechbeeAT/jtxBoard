@@ -25,6 +25,7 @@ import androidx.compose.material.icons.outlined.NavigateBefore
 import androidx.compose.material.icons.outlined.NavigateNext
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +50,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_ALARMS
 import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_ATTACHMENTS
 import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_ATTENDEES
@@ -155,6 +157,11 @@ fun DetailScreenContent(
     var summary by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
     var description by remember {
         mutableStateOf(TextFieldValue(iCalEntity.value?.property?.description ?: ""))
+    }
+
+    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
+    val allPossibleCollections = allWriteableCollections.filter {
+            it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value            // filter remote collections if pro was not purchased
     }
 
     val icalObject by rememberSaveable {
@@ -351,8 +358,8 @@ fun DetailScreenContent(
                     ) {
 
                         CollectionsSpinner(
-                            collections = allWriteableCollections,
-                            preselected = iCalEntity.value?.ICalCollection ?: allWriteableCollections.first(),
+                            collections = allPossibleCollections,
+                            preselected = iCalEntity.value?.ICalCollection ?: allPossibleCollections.first(),
                             includeReadOnly = false,
                             includeVJOURNAL = if (iCalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
                             includeVTODO = if (iCalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
@@ -506,6 +513,7 @@ fun DetailScreenContent(
                         isLinkedRecurringInstance = icalObject.isRecurLinkedInstance,
                         sliderIncrement = sliderIncrement,
                         onProgressChanged = { itemId, newPercent, isLinked ->
+                            icalObject.percent = newPercent
                             onProgressChanged(itemId, newPercent, isLinked)
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },

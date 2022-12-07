@@ -101,14 +101,14 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
         BillingManager.getInstance().initialise(this)
 
         setContent {
-            val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
+            val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
             JtxBoardTheme(
                 darkTheme = when (settingsStateHolder.settingTheme.value) {
                     DropdownSettingOption.THEME_LIGHT -> false
                     DropdownSettingOption.THEME_DARK -> true
                     else -> isSystemInDarkTheme()
                 },
-                dynamicColor = isProPurchased.value ?: false
+                dynamicColor = isProPurchased.value
             ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -219,7 +219,7 @@ fun MainNavHost(
     settingsStateHolder: SettingsStateHolder
 ) {
     val navController = rememberNavController()
-    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
+    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
     var showOSEDonationDialog by remember { mutableStateOf(false) }
 
     NavHost(
