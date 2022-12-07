@@ -16,7 +16,6 @@ import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.getOrAwaitValue
 import at.techbee.jtx.ui.list.ListViewModel
 import at.techbee.jtx.ui.list.ListViewModelJournals
 import at.techbee.jtx.ui.list.ListViewModelNotes
@@ -70,7 +69,7 @@ class ListViewModelTest {
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createJournal())
         database.insertICalObject(ICalObject.createJournal())
-        assertEquals(2, listViewModel.iCal4List.getOrAwaitValue(100).size)
+        assertEquals(2, listViewModel.iCal4List.value?.size)
     }
 
     @Test
