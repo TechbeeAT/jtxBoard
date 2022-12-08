@@ -19,12 +19,14 @@ import android.speech.SpeechRecognizer
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mic
+import androidx.compose.material.icons.outlined.MicOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -38,10 +40,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
@@ -78,8 +82,7 @@ fun ListQuickAddElement(
         return
 
     val context = LocalContext.current
-    val permissionLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
     var showAudioPermissionDialog by rememberSaveable { mutableStateOf(false) }
     var currentCollection by rememberSaveable {
         mutableStateOf(
@@ -104,7 +107,7 @@ fun ListQuickAddElement(
                 null
         )
     }
-    var currentText by rememberSaveable { mutableStateOf(presetText) }
+    var currentText by remember { mutableStateOf(TextFieldValue(text = presetText, selection = TextRange(presetText.length))) }
     val currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
     var noTextError by rememberSaveable { mutableStateOf(false) }
 
@@ -131,7 +134,7 @@ fun ListQuickAddElement(
         if(currentCollection == null || currentModule == null)
             return
 
-        if (currentText.isNotBlank()) {
+        if (currentText.text.isNotBlank()) {
             val newICalObject = when (currentModule) {
                 Module.JOURNAL -> ICalObject.createJournal()
                 Module.NOTE -> ICalObject.createNote()
@@ -142,11 +145,11 @@ fun ListQuickAddElement(
                 else -> ICalObject.createNote()  // Fallback, can't actually reach it
             }
             newICalObject.collectionId = currentCollection!!.collectionId
-            newICalObject.parseSummaryAndDescription(currentText)
-            newICalObject.parseURL(currentText)
-            val categories = Category.extractHashtagsFromText(currentText)
+            newICalObject.parseSummaryAndDescription(currentText.text)
+            newICalObject.parseURL(currentText.text)
+            val categories = Category.extractHashtagsFromText(currentText.text)
             onSaveEntry(newICalObject, categories, currentAttachment, goToEdit)
-            currentText = ""
+            currentText = TextFieldValue(text = "")
             if(goToEdit)
                 onDismiss()
         } else {
@@ -214,11 +217,7 @@ fun ListQuickAddElement(
                             IconButton(onClick = {
 
                                 // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
-                                if (ContextCompat.checkSelfPermission(
-                                        context,
-                                        Manifest.permission.RECORD_AUDIO
-                                    ) != PackageManager.PERMISSION_GRANTED
-                                )
+                                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
                                     showAudioPermissionDialog = true
                                 else {
                                     val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -241,7 +240,7 @@ fun ListQuickAddElement(
 
                                         override fun onRmsChanged(p0: Float) {}
                                         override fun onBufferReceived(p0: ByteArray?) {}
-                                        override fun onError(errorCode: Int) {}
+                                        override fun onError(errorCode: Int) { srListening = false }
                                         override fun onPartialResults(bundle: Bundle?) {
                                             val data: ArrayList<String>? =
                                                 bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
@@ -253,23 +252,30 @@ fun ListQuickAddElement(
 
                                         override fun onEvent(p0: Int, p1: Bundle?) {}
                                         override fun onResults(bundle: Bundle?) {
+                                            srListening = false
                                             srTextResult = ""
                                             val data: ArrayList<String>? =
                                                 bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                                            if (currentText.isNotBlank())   // add a return if there is already text present to add it in a new line
-                                                currentText += "\n"
+                                            if (currentText.text.isNotBlank())   // add a return if there is already text present to add it in a new line
+                                                currentText = TextFieldValue(currentText.text + System.lineSeparator())
                                             // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
-                                            if (data?.isNotEmpty() == true)
-                                                currentText += data[0]
+                                            if (data?.isNotEmpty() == true) {
+                                                currentText = TextFieldValue(currentText.text + data[0], selection = TextRange(currentText.text.length + data[0].length))
+                                                sr.startListening(srIntent)
+                                                srListening = true
+                                            }
                                         }
                                     })
+                                    srListening = true
                                     sr.startListening(srIntent)
                                 }
                             }) {
-                                Icon(
-                                    Icons.Outlined.Mic,
-                                    stringResource(id = R.string.list_quickadd_dialog_sr_start)
-                                )
+                                Crossfade(srListening) { listening ->
+                                if (listening)
+                                    Icon(Icons.Outlined.Mic, stringResource(id = R.string.list_quickadd_dialog_sr_listening), tint = MaterialTheme.colorScheme.primary)
+                                else
+                                    Icon(Icons.Outlined.MicOff, stringResource(id = R.string.list_quickadd_dialog_sr_start))
+                                }
                             }
                         }
                     },
@@ -292,12 +298,6 @@ fun ListQuickAddElement(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
-                AnimatedVisibility(srListening) {
-                    Text(
-                        stringResource(id = R.string.list_quickadd_dialog_sr_listening),
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                }
                 AnimatedVisibility(srTextResult.isNotBlank()) {
                     Text(srTextResult, modifier = Modifier.padding(vertical = 8.dp))
                 }
@@ -329,7 +329,7 @@ fun ListQuickAddElement(
 
                     TextButton(
                         onClick = { saveEntry(goToEdit = true) },
-                        enabled = currentText.isNotEmpty() && currentCollection?.readonly == false,
+                        enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false,
                         modifier = Modifier.weight(0.4f)
                     ) {
                         Text(stringResource(id = R.string.save_and_edit), textAlign = TextAlign.Center)
@@ -340,7 +340,7 @@ fun ListQuickAddElement(
                             saveEntry(goToEdit = false)
                             onDismiss()
                                   },
-                        enabled = currentText.isNotEmpty() && currentCollection?.readonly == false,
+                        enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false,
                         modifier = Modifier.weight(0.3f)
                     ) {
                         Text(stringResource(id = R.string.save), textAlign = TextAlign.Center)
@@ -355,7 +355,10 @@ fun ListQuickAddElement(
     if (showAudioPermissionDialog) {
         RequestPermissionDialog(
             text = stringResource(id = R.string.view_fragment_audio_permission_message),
-            onConfirm = { permissionLauncher.launch(Manifest.permission.RECORD_AUDIO) }
+            onConfirm = {
+                permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                showAudioPermissionDialog = false
+            }
         )
     }
 }
@@ -397,7 +400,9 @@ fun ListQuickAddElement_Preview() {
             presetText = "This is my preset text",
             presetAttachment = Attachment(filename = "My File.PDF"),
             presetCollectionId = 0L,
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
     }
 }
@@ -427,7 +432,9 @@ fun ListQuickAddElement_Preview_empty() {
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
     }
 }
