@@ -241,10 +241,10 @@ fun DetailScreenContent(
 
             val dur = try { Duration.parse(alarm.triggerRelativeDuration!!) } catch (e: IllegalArgumentException) { return@forEach }
             if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) {
-                alarm.triggerTime = icalObject.due!! + dur.inWholeMilliseconds
+                icalObject.due?.let { alarm.triggerTime = it + dur.inWholeMilliseconds }
                 alarm.triggerTimezone = icalObject.dueTimezone
             } else {
-                alarm.triggerTime = icalObject.dtstart!! + dur.inWholeMilliseconds
+                icalObject.dtstart?.let { alarm.triggerTime = it + dur.inWholeMilliseconds }
                 alarm.triggerTimezone = icalObject.dtstartTimezone
             }
         }
