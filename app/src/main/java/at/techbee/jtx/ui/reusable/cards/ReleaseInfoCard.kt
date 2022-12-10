@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.ui.about.Release
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 
@@ -66,7 +65,7 @@ fun ReleaseInfoCard(
 @Preview(showBackground = true)
 @Composable
 fun ReleaseInfoCard_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         ReleaseInfoCard(
             Release(
                 "v1.2.0",
