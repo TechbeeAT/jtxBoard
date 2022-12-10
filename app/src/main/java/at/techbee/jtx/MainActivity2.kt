@@ -337,7 +337,7 @@ fun MainNavHost(
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false))
     }
 
-    if (!settingsStateHolder.proInfoShown.value && isProPurchased.value == false) {
+    if (!settingsStateHolder.proInfoShown.value && !isProPurchased.value) {
         ProInfoDialog(
             onOK = {
                 settingsStateHolder.proInfoShown.value = true
