@@ -6,6 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -33,6 +34,28 @@ private val DarkColorScheme = darkColorScheme(
     onSurfaceVariant = md_theme_dark_onSurfaceVariant
 )
 
+private val TrueDarkColorScheme = darkColorScheme(
+        primary = DarkColorScheme.primary,
+        secondary = DarkColorScheme.secondary,
+        tertiary = DarkColorScheme.tertiary,
+
+        /* Other default colors to override */
+        background = Color.Black,
+        surface = Color.Black,
+        onPrimary = DarkColorScheme.onPrimary,
+        primaryContainer = DarkColorScheme.primaryContainer,
+        onPrimaryContainer = DarkColorScheme.onPrimaryContainer,
+        onSecondary = DarkColorScheme.onSecondary,
+        secondaryContainer = DarkColorScheme.secondaryContainer,
+        onSecondaryContainer = DarkColorScheme.onSecondaryContainer,
+        onTertiary = DarkColorScheme.onTertiary,
+        onBackground = DarkColorScheme.onBackground,
+        onSurface = DarkColorScheme.onSurface,
+        surfaceVariant = DarkColorScheme.surfaceVariant,
+        onSurfaceVariant = DarkColorScheme.onSurfaceVariant
+    )
+
+
 private val LightColorScheme = lightColorScheme(
     primary = md_theme_dark_primary,
     secondary = md_theme_dark_secondary,
@@ -52,12 +75,12 @@ private val LightColorScheme = lightColorScheme(
     onSurface = md_theme_light_onSurface,
     surfaceVariant = md_theme_light_surfaceVariant,
     onSurfaceVariant = md_theme_light_onSurfaceVariant
-
 )
 
 @Composable
 fun JtxBoardTheme(
     darkTheme: Boolean = isSystemInDarkTheme(), // Dynamic color is available on Android 12+ and only if purchased
+    trueDarkTheme: Boolean = false,
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -67,6 +90,7 @@ fun JtxBoardTheme(
 
     val colorScheme = when {
         // dynamic colors are only loaded in pro!
+        trueDarkTheme -> TrueDarkColorScheme
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }

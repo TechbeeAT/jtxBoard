@@ -95,20 +95,15 @@ fun SettingsScreen(
                             settingsStateHolder.settingTheme.value = selection
                             SETTING_THEME.save(selection, context = context)
                             when (selection) {
-                                DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(
-                                    AppCompatDelegate.MODE_NIGHT_YES
-                                )
-                                DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(
-                                    AppCompatDelegate.MODE_NIGHT_NO
-                                )
+                                DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                                DropdownSettingOption.THEME_TRUE_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                                DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                                 else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                             }
                         }
                     )
 
-
                     /* Special Handling for Language Selector */
-
                     val appCompatLocales = AppCompatDelegate.getApplicationLocales()
                     var defaultLocale: Locale? = null
                     if(!appCompatLocales.isEmpty) {
