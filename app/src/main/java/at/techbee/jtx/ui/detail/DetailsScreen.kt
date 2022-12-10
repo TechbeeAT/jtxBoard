@@ -10,9 +10,12 @@ package at.techbee.jtx.ui.detail
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
+import android.content.ContextWrapper
 import android.os.Build
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -44,12 +47,19 @@ fun DetailsScreen(
     navController: NavHostController,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
+    returnToLauncher: Boolean = false,
     icalObjectIdList: List<Long>,
     onLastUsedCollectionChanged: (Module, Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
     //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
+    fun Context.getActivity(): AppCompatActivity? = when (this) {
+        is AppCompatActivity -> this
+        is ContextWrapper -> baseContext.getActivity()
+        else -> null
+    }
+
     val settingsStateHolder = SettingsStateHolder(context)
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
@@ -57,7 +67,6 @@ fun DetailsScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showRevertDialog by remember { mutableStateOf(false) }
     var navigateUp by remember { mutableStateOf(false) }
-
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
@@ -72,8 +81,13 @@ fun DetailsScreen(
 
 
     if (navigateUp && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.CHANGESAVING) {
-        onRequestReview()
-        navController.navigateUp()
+        if(returnToLauncher) {
+            context.getActivity()?.finish()
+        } else {
+            onRequestReview()
+            navigateUp = false
+            navController.navigateUp()
+        }
     }
 
     if (detailViewModel.entryDeleted.value) {

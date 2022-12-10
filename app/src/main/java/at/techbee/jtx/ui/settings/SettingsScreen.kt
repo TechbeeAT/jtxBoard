@@ -242,17 +242,6 @@ fun SettingsScreen(
                             .alpha(0.5f)
                     )
                     Text(
-                        text = stringResource(id = R.string.settings_details),
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
-                    )
-
-                    Divider(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .alpha(0.5f)
-                    )
-                    Text(
                         text = stringResource(id = R.string.settings_tasks),
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
