@@ -34,27 +34,6 @@ private val DarkColorScheme = darkColorScheme(
     onSurfaceVariant = md_theme_dark_onSurfaceVariant
 )
 
-private val TrueDarkColorScheme = darkColorScheme(
-        primary = DarkColorScheme.primary,
-        secondary = DarkColorScheme.secondary,
-        tertiary = DarkColorScheme.tertiary,
-
-        /* Other default colors to override */
-        background = Color.Black,
-        surface = Color.Black,
-        onPrimary = DarkColorScheme.onPrimary,
-        primaryContainer = DarkColorScheme.primaryContainer,
-        onPrimaryContainer = DarkColorScheme.onPrimaryContainer,
-        onSecondary = DarkColorScheme.onSecondary,
-        secondaryContainer = DarkColorScheme.secondaryContainer,
-        onSecondaryContainer = DarkColorScheme.onSecondaryContainer,
-        onTertiary = DarkColorScheme.onTertiary,
-        onBackground = DarkColorScheme.onBackground,
-        onSurface = DarkColorScheme.onSurface,
-        surfaceVariant = DarkColorScheme.surfaceVariant,
-        onSurfaceVariant = DarkColorScheme.onSurfaceVariant
-    )
-
 
 private val LightColorScheme = lightColorScheme(
     primary = md_theme_dark_primary,
@@ -90,10 +69,10 @@ fun JtxBoardTheme(
 
     val colorScheme = when {
         // dynamic colors are only loaded in pro!
-        trueDarkTheme -> TrueDarkColorScheme
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+        trueDarkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicDarkColorScheme(context).copy(background = Color.Black, surface = Color.Black)
+        trueDarkTheme -> DarkColorScheme.copy(background = Color.Black, surface = Color.Black)
+        darkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicDarkColorScheme(context)
+        !darkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicLightColorScheme(context)
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
