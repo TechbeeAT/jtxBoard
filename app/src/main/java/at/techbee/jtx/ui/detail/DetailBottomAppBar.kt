@@ -601,6 +601,7 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
             icalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
+            markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = false,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailSettings = detailSettings,

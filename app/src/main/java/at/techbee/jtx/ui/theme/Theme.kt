@@ -34,7 +34,6 @@ private val DarkColorScheme = darkColorScheme(
     onSurfaceVariant = md_theme_dark_onSurfaceVariant
 )
 
-
 private val LightColorScheme = lightColorScheme(
     primary = md_theme_dark_primary,
     secondary = md_theme_dark_secondary,
