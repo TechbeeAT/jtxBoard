@@ -806,17 +806,20 @@ data class ICalObject(
             val daysLeft = ChronoUnit.DAYS.between(localNow, localStart)
             val hoursLeft = ChronoUnit.HOURS.between(localNow, localStart)
 
-            return when {
-                localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == TZ_ALLDAY) ->
-                    if(module == Module.TODO) context.getString(R.string.list_start_today) else context.getString(R.string.list_date_today)
-                daysLeft <= 0L && hoursLeft < 0L ->
-                    if(module == Module.TODO) context.getString(R.string.list_start_past) else context.getString(R.string.list_date_start_in_past)
-                localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth ->
-                    if(module == Module.TODO) context.getString(R.string.list_start_inXhours, hoursLeft) else context.getString(R.string.list_date_today)
-                localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth ->
-                    if(module == Module.TODO) context.getString(R.string.list_start_tomorrow) else context.getString(R.string.list_date_tomorrow)
-                else ->
-                    if(module == Module.TODO) context.getString(R.string.list_start_inXdays, daysLeft+1) else context.getString(R.string.list_date_future)
+            return if(module == Module.TODO) {
+                 when {
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == TZ_ALLDAY) -> context.getString(R.string.list_start_today)
+                    daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_start_past)
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, hoursLeft)
+                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
+                    else -> context.getString(R.string.list_start_inXdays, daysLeft+1)
+                }
+            } else {
+                when {
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_date_today)
+                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_date_tomorrow)
+                    else -> DateTimeUtils.convertLongToMediumDateString(dtstart, dtstartTimezone)
+                }
             }
         }
 
