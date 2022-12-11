@@ -264,7 +264,6 @@ fun DetailBottomAppBar(
                     IconButton(onClick = { markdownState.value = MarkdownState.STRIKETHROUGH  }) {
                         Icon(Icons.Outlined.FormatStrikethrough, "Strikethrough")
                     }
-                    /*
                     IconButton(onClick = { markdownState.value = MarkdownState.H1  }) {
                         Icon(painterResource(id = R.drawable.ic_h1), "H1")
                     }
@@ -274,7 +273,12 @@ fun DetailBottomAppBar(
                     IconButton(onClick = { markdownState.value = MarkdownState.H3  }) {
                         Icon(painterResource(id = R.drawable.ic_h3), "H3")
                     }
-                     */
+                    IconButton(onClick = { markdownState.value = MarkdownState.HR  }) {
+                        Icon(Icons.Outlined.HorizontalRule, "Horizontal Ruler")
+                    }
+                    IconButton(onClick = { markdownState.value = MarkdownState.UNORDEREDLIST  }) {
+                        Icon(Icons.Outlined.List, "List")
+                    }
                 }
             }
 

@@ -8,23 +8,25 @@ import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
 
 enum class MarkdownState {
-    DISABLED, OBSERVING, BOLD, ITALIC, UNDERLINED, STRIKETHROUGH, H1, H2, H3;
+    DISABLED, OBSERVING, BOLD, ITALIC, UNDERLINED, STRIKETHROUGH, H1, H2, H3, HR, UNORDEREDLIST;
 
     fun format(textFieldValue: TextFieldValue): TextFieldValue {
         return when(this) {
             DISABLED -> textFieldValue
             OBSERVING -> textFieldValue
-            BOLD -> addTags(textFieldValue, "**", "**")
-            ITALIC -> addTags(textFieldValue, "*", "*")
-            UNDERLINED -> addTags(textFieldValue, "_", "_")
-            STRIKETHROUGH -> addTags(textFieldValue, "~", "~")
-            H1 -> addTags(textFieldValue, "# ", "")
-            H2 -> addTags(textFieldValue, "## ", "")
-            H3 -> addTags(textFieldValue, "## ", "")
+            BOLD -> addEnclosingTags(textFieldValue, "**", "**")
+            ITALIC -> addEnclosingTags(textFieldValue, "*", "*")
+            UNDERLINED -> addEnclosingTags(textFieldValue, "_", "_")
+            STRIKETHROUGH -> addEnclosingTags(textFieldValue, "~", "~")
+            H1 -> addTagAtLineStart(textFieldValue, "# ")
+            H2 -> addTagAtLineStart(textFieldValue, "## ")
+            H3 -> addTagAtLineStart(textFieldValue, "### ")
+            HR -> addTagAtLineStart(textFieldValue, "--------" + System.lineSeparator())
+            UNORDEREDLIST -> addTagAtLineStart(textFieldValue, "- ")
         }
     }
 
-    private fun addTags(textFieldValue: TextFieldValue, before: String, after: String) =
+    private fun addEnclosingTags(textFieldValue: TextFieldValue, before: String, after: String) =
         TextFieldValue(
             textFieldValue.getTextBeforeSelection(textFieldValue.annotatedString.length)
                 .plus(AnnotatedString(before))
@@ -33,4 +35,18 @@ enum class MarkdownState {
                 .plus(textFieldValue.getTextAfterSelection(textFieldValue.annotatedString.length)),
             selection = TextRange(textFieldValue.selection.min+(before.length), textFieldValue.selection.max+(after.length))
         )
+
+    private fun addTagAtLineStart(textFieldValue: TextFieldValue, tag: String) = TextFieldValue(
+        textFieldValue.getTextBeforeSelection(textFieldValue.annotatedString.length)
+            .plus(AnnotatedString(
+                if(textFieldValue.getTextBeforeSelection(textFieldValue.annotatedString.length).endsWith(System.lineSeparator()))
+                    tag
+                else
+                    System.lineSeparator() + tag
+                )
+            )
+            .plus(textFieldValue.getSelectedText())
+            .plus(textFieldValue.getTextAfterSelection(textFieldValue.annotatedString.length)),
+        selection = TextRange(textFieldValue.getTextBeforeSelection(textFieldValue.annotatedString.length).length + tag.length+1)
+    )
 }
