@@ -130,7 +130,7 @@ fun ListBottomAppBar(
                 )
             }
 
-            AnimatedVisibility(visible = module == Module.JOURNAL) {
+            AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null) {
                 IconButton(onClick = { showGoToDatePicker = true }) {
                     Icon(
                         Icons.Outlined.DateRange,

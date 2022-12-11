@@ -589,6 +589,13 @@
     <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">Show subjournals of Notes and Tasks in Journallist</string>
     <string name="settings_app">App Settings</string>
     <string name="settings_select_mimetype_for_audio">Select Mimetype for audio notes</string>
+    <string name="settings_journals">Journals Settings</string>
+    <string name="settings_default_journals_date">Set a default date/time for journals</string>
+    <string name="settings_default_journals_date_current_day">Current day</string>
+    <string name="settings_default_journals_date_current_hour">Current hour</string>
+    <string name="settings_default_journals_date_current_15min">Current 15 minutes</string>
+    <string name="settings_default_journals_date_current_5min">Current 5 minutes</string>
+    <string name="settings_default_journals_date_current_min">Current minute</string>
     <string name="settings_tasks">Tasks Settings</string>
     <string name="settings_default_start_date">Set a default start date for tasks</string>
     <string name="settings_default_due_date">Set a default due date for tasks</string>
