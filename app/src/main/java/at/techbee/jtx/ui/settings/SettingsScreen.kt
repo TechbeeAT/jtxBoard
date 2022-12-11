@@ -230,6 +230,25 @@ fun SettingsScreen(
                             SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
                         })
 
+                    Divider(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .alpha(0.5f)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.settings_journals),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
+                    )
+
+                    DropdownSetting(
+                        setting = SETTING_DEFAULT_JOURNALS_DATE,
+                        preselected = settingsStateHolder.settingDefaultJournalsDate.value,
+                        onSelectionChanged = { selection ->
+                            settingsStateHolder.settingDefaultJournalsDate.value = selection
+                            SETTING_DEFAULT_JOURNALS_DATE.save(selection, context = context)
+                        }
+                    )
 
                     Divider(
                         modifier = Modifier

@@ -28,6 +28,7 @@ import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.ui.settings.DropdownSetting
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
@@ -41,10 +42,7 @@ import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.property.DtStart
 import java.text.ParseException
-import java.time.DayOfWeek
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZonedDateTime
+import java.time.*
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -1320,6 +1318,37 @@ data class ICalObject(
             null
         else
             recurInfo + System.lineSeparator()
+    }
+
+    fun setDefaultJournalDateFromSettings(context: Context) {
+        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(
+            DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.key, null) ?: DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.default.key
+        try {
+            when(default) {
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_DAY.key -> {
+                    this.dtstart = DateTimeUtils.getTodayAsLong()
+                    this.dtstartTimezone = TZ_ALLDAY
+                }
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_HOUR.key -> {
+                    this.dtstart = LocalDateTime.now().withMinute(0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    this.dtstartTimezone = null
+                }
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_15MIN.key -> {
+                    this.dtstart = LocalDateTime.now().withMinute(((LocalDateTime.now().minute)/15)*15).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    this.dtstartTimezone = null
+                }
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_5MIN.key -> {
+                    this.dtstart = LocalDateTime.now().withMinute(((LocalDateTime.now().minute)/5)*5).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    this.dtstartTimezone = null
+                }
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_MIN.key -> {
+                    this.dtstart = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    this.dtstartTimezone = null
+                }
+            }
+        } catch (e: IllegalArgumentException) {
+            Log.d("DurationParsing", "Could not parse duration from settings")
+        }
     }
 
     fun setDefaultStartDateFromSettings(context: Context) {

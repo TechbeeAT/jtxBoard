@@ -34,6 +34,8 @@ class SettingsStateHolder(val context: Context) {
     var settingShowProgressForMainTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.key, SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.default))
     var settingShowProgressForSubTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS.key, SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS.default))
 
+    var settingDefaultJournalsDate = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
+        DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.key, DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.default.key) } ?: DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.default )
     var settingDefaultStartDate = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_DEFAULT_START_DATE.key, DropdownSetting.SETTING_DEFAULT_START_DATE.default.key) } ?: DropdownSetting.SETTING_DEFAULT_START_DATE.default )
     var settingDefaultDueDate = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
