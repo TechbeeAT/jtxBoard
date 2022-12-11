@@ -20,6 +20,7 @@ import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -250,7 +251,7 @@ fun DetailBottomAppBar(
             // Icons for Markdown formatting
             AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED) {
                 Row(
-                    modifier = Modifier.horizontalScroll(rememberScrollState())
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
                 ) {
                     IconButton(onClick = { markdownState.value = MarkdownState.BOLD }) {
                         Icon(Icons.Outlined.TextFormat, "Bold")
@@ -279,6 +280,35 @@ fun DetailBottomAppBar(
                     IconButton(onClick = { markdownState.value = MarkdownState.UNORDEREDLIST  }) {
                         Icon(Icons.Outlined.List, "List")
                     }
+
+                    //ATTENTION! Copy of FAB!!!
+                    // WORKAROUND, otherwise the FAB completely disappears
+                    /*
+                    FloatingActionButton(
+                        onClick = {
+                            if (!isProActionAvailable)
+                                Toast.makeText(
+                                    context,
+                                    context.getText(R.string.buypro_snackbar_remote_entries_blocked),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            else if (!collection.readonly)
+                                isEditMode.value = !isEditMode.value
+                        },
+                        containerColor = if (collection.readonly || !isProActionAvailable) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primaryContainer
+                    ) {
+                        Crossfade(targetState = isEditMode.value) { isEditMode ->
+                            if (isEditMode) {
+                                Icon(painterResource(id = R.drawable.ic_save_move_outline), stringResource(id = R.string.save))
+                            } else {
+                                if (collection.readonly || !isProActionAvailable)
+                                    Icon(Icons.Filled.EditOff, stringResource(id = R.string.readyonly))
+                                else
+                                    Icon(Icons.Filled.Edit, stringResource(id = R.string.edit))
+                            }
+                        }
+                    }
+                     */
                 }
             }
 
