@@ -42,6 +42,8 @@ class ListSettings {
     var isFilterStartTomorrow: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterNoStatusSet: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterNoClassificationSet: MutableState<Boolean> = mutableStateOf(false)
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
     var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
     var flatView: MutableState<Boolean> = mutableStateOf(false)
@@ -75,6 +77,8 @@ class ListSettings {
         private const val PREFS_FILTER_START_TODAY = "prefsFilterStartToday"
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
+        private const val PREFS_FILTER_NO_STATUS_SET = "prefsFilterNoStatusSet"
+        private const val PREFS_FILTER_NO_CLASSIFICATION_SET = "prefsFilterNoClassificationSet"
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
         private const val PREFS_FLAT_VIEW = "prefsFlatView"
@@ -98,6 +102,8 @@ class ListSettings {
             isFilterStartTomorrow.value = prefs.getBoolean(PREFS_FILTER_START_TOMORROW, false)
             isFilterStartFuture.value = prefs.getBoolean(PREFS_FILTER_START_FUTURE, false)
             isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
+            isFilterNoStatusSet.value = prefs.getBoolean(PREFS_FILTER_NO_STATUS_SET, false)
+            isFilterNoClassificationSet.value = prefs.getBoolean(PREFS_FILTER_NO_CLASSIFICATION_SET, false)
 
             //searchOrganizers =
             searchCategories.value = prefs.getStringSet(PREFS_CATEGORIES, null)?.toList() ?: emptyList()
@@ -128,10 +134,13 @@ class ListSettings {
             isFilterStartTomorrow.value = listWidgetConfig.isFilterStartTomorrow
             isFilterStartFuture.value = listWidgetConfig.isFilterStartFuture
             isFilterNoDatesSet.value = listWidgetConfig.isFilterNoDatesSet
+            isFilterNoStatusSet.value = listWidgetConfig.isFilterNoStatusSet
+            isFilterNoClassificationSet.value = listWidgetConfig.isFilterNoClassificationSet
 
             searchCategories.value = listWidgetConfig.searchCategories
             searchStatusJournal.value = listWidgetConfig.searchStatusJournal
             searchStatusTodo.value = listWidgetConfig.searchStatusTodo
+            searchClassification.value = listWidgetConfig.searchClassification
             searchCollection.value = listWidgetConfig.searchCollection
             searchAccount.value = listWidgetConfig.searchAccount
             orderBy.value = listWidgetConfig.orderBy
@@ -161,6 +170,9 @@ class ListSettings {
             putBoolean(PREFS_FILTER_START_TOMORROW, isFilterStartTomorrow.value)
             putBoolean(PREFS_FILTER_START_FUTURE, isFilterStartFuture.value)
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
+            putBoolean(PREFS_FILTER_NO_STATUS_SET, isFilterNoStatusSet.value)
+            putBoolean(PREFS_FILTER_NO_CLASSIFICATION_SET, isFilterNoClassificationSet.value)
+
             putString(PREFS_ORDERBY, orderBy.value.name)
             putString(PREFS_SORTORDER, sortOrder.value.name)
             putString(PREFS_ORDERBY2, orderBy2.value.name)
@@ -201,6 +213,8 @@ class ListSettings {
         isFilterDueTomorrow.value = false
         isFilterDueFuture.value = false
         isFilterNoDatesSet.value = false
+        isFilterNoStatusSet.value = false
+        isFilterNoClassificationSet.value = false
     }
 
     fun getLastUsedCollectionId(prefs: SharedPreferences) = prefs.getLong(PREFS_LAST_COLLECTION, 0L)

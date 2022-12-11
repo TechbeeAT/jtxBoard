@@ -211,6 +211,8 @@ fun ListWidgetConfigContent(
                                     isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value
                                     isFilterStartFuture = listSettings.isFilterStartFuture.value
                                     isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value
+                                    isFilterNoStatusSet = listSettings.isFilterNoStatusSet.value
+                                    isFilterNoClassificationSet = listSettings.isFilterNoClassificationSet.value
                                 }
                             )
                         }
@@ -274,6 +276,8 @@ data class ListWidgetConfig(
     var isFilterStartTomorrow: Boolean = false,
     var isFilterStartFuture: Boolean = false,
     var isFilterNoDatesSet: Boolean = false,
+    var isFilterNoStatusSet: Boolean = false,
+    var isFilterNoClassificationSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!
     var viewMode: ViewMode = ViewMode.LIST,
     var flatView: Boolean = false,

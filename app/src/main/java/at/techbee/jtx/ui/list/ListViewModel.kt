@@ -130,6 +130,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value,
             isFilterStartFuture = listSettings.isFilterStartFuture.value,
             isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
+            isFilterNoStatusSet = listSettings.isFilterNoStatusSet.value,
+            isFilterNoClassificationSet = listSettings.isFilterNoClassificationSet.value,
             searchText = listSettings.searchText.value,
             flatView = listSettings.flatView.value,
             searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value

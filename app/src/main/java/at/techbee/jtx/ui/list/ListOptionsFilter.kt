@@ -324,6 +324,7 @@ fun ListOptionsFilter(
                         listSettings.searchStatusJournal.value = emptyList()
                     else
                         listSettings.searchStatusTodo.value = emptyList()
+                    listSettings.isFilterNoStatusSet.value = false
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
@@ -337,11 +338,23 @@ fun ListOptionsFilter(
                             .filter { status ->
                                 !listSettings.searchStatusTodo.value.contains(status)
                             }
+                    listSettings.isFilterNoStatusSet.value = !listSettings.isFilterNoStatusSet.value
                     onListSettingsChanged()
                 })
             {
-                if (module == Module.JOURNAL || module == Module.NOTE) {
-                    FlowRow(modifier = Modifier.fillMaxWidth()) {
+                FlowRow(modifier = Modifier.fillMaxWidth()) {
+
+                    FilterChip(
+                        selected = listSettings.isFilterNoStatusSet.value,
+                        onClick = {
+                            listSettings.isFilterNoStatusSet.value = !listSettings.isFilterNoStatusSet.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.status_no_status)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+
+                    if (module == Module.JOURNAL || module == Module.NOTE) {
                         StatusJournal.values().forEach { status ->
                             FilterChip(
                                 selected = listSettings.searchStatusJournal.value.contains(
@@ -360,9 +373,8 @@ fun ListOptionsFilter(
                             )
                         }
                     }
-                }
-                if (module == Module.TODO) {
-                    FlowRow(modifier = Modifier.fillMaxWidth()) {
+
+                    if (module == Module.TODO) {
                         StatusTodo.values().forEach { status ->
                             FilterChip(
                                 selected = listSettings.searchStatusTodo.value.contains(status),
@@ -378,6 +390,7 @@ fun ListOptionsFilter(
                                 modifier = Modifier.padding(end = 4.dp)
                             )
                         }
+
                     }
                 }
             }
@@ -389,6 +402,7 @@ fun ListOptionsFilter(
                 headline = stringResource(id = R.string.classification),
                 onResetSelection = {
                     listSettings.searchClassification.value = emptyList()
+                    listSettings.isFilterNoClassificationSet.value = false
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
@@ -398,10 +412,22 @@ fun ListOptionsFilter(
                                 classification
                             )
                         }
+                    listSettings.isFilterNoClassificationSet.value = !listSettings.isFilterNoClassificationSet.value
                     onListSettingsChanged()
                 })
             {
                 FlowRow(modifier = Modifier.fillMaxWidth()) {
+
+                    FilterChip(
+                        selected = listSettings.isFilterNoClassificationSet.value,
+                        onClick = {
+                            listSettings.isFilterNoClassificationSet.value = !listSettings.isFilterNoClassificationSet.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.classification_no_classification)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+
                     Classification.values().forEach { classification ->
                         FilterChip(
                             selected = listSettings.searchClassification.value.contains(
