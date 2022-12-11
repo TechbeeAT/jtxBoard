@@ -85,7 +85,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             ?.getPackageInfoCompat(application.packageName, 0)
             ?.firstInstallTime ?: System.currentTimeMillis()
 
-        if(settings.getBoolean(PREFS_ISFIRSTRUN, true)) {
+        if(settings.getBoolean(PREFS_ISFIRSTRUN, true)) {    // never add welcome entries in instrumented tests
             if (firstInstall > 1641596400000L)
                 addWelcomeEntries(application)
             settings.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
@@ -130,6 +130,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value,
             isFilterStartFuture = listSettings.isFilterStartFuture.value,
             isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
+            isFilterNoStatusSet = listSettings.isFilterNoStatusSet.value,
+            isFilterNoClassificationSet = listSettings.isFilterNoClassificationSet.value,
             searchText = listSettings.searchText.value,
             flatView = listSettings.flatView.value,
             searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value

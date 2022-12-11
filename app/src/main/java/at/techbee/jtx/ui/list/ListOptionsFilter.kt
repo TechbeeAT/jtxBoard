@@ -45,8 +45,8 @@ fun ListOptionsFilter(
 ) {
     val allCollectionsState = allCollectionsLive.observeAsState(emptyList())
     val allCategories by allCategoriesLive.observeAsState(emptyList())
-    val allCollections by remember { derivedStateOf { allCollectionsState.value.map { it.displayName ?: "" }.sortedBy { it.lowercase() } }}
-    val allAccounts by remember { derivedStateOf { allCollectionsState.value.map {  it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } }}
+    val allCollections by remember { derivedStateOf { allCollectionsState.value.map { it.displayName ?: "" }.sortedBy { it.lowercase() } } }
+    val allAccounts by remember { derivedStateOf { allCollectionsState.value.map { it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } } }
 
 
     Column(
@@ -115,7 +115,7 @@ fun ListOptionsFilter(
                                 listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
                                 onListSettingsChanged()
                             },
-                            label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_in_past else R.string.list_date_start_in_past)) },
+                            label = { Text(stringResource(id = if (module == Module.TODO) R.string.list_start_date_in_past else R.string.list_date_start_in_past)) },
                             modifier = Modifier.padding(end = 4.dp)
                         )
                         FilterChip(
@@ -125,7 +125,7 @@ fun ListOptionsFilter(
                                     !listSettings.isFilterStartToday.value
                                 onListSettingsChanged()
                             },
-                            label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_today else R.string.list_date_today)) },
+                            label = { Text(stringResource(id = if (module == Module.TODO) R.string.list_start_date_today else R.string.list_date_today)) },
                             modifier = Modifier.padding(end = 4.dp)
                         )
                         FilterChip(
@@ -135,7 +135,7 @@ fun ListOptionsFilter(
                                     !listSettings.isFilterStartTomorrow.value
                                 onListSettingsChanged()
                             },
-                            label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_tomorrow else R.string.list_date_tomorrow)) },
+                            label = { Text(stringResource(id = if (module == Module.TODO) R.string.list_start_date_tomorrow else R.string.list_date_tomorrow)) },
                             modifier = Modifier.padding(end = 4.dp)
                         )
                         FilterChip(
@@ -145,7 +145,7 @@ fun ListOptionsFilter(
                                     !listSettings.isFilterStartFuture.value
                                 onListSettingsChanged()
                             },
-                            label = { Text(stringResource(id = if(module == Module.TODO) R.string.list_start_date_future else R.string.list_date_future)) },
+                            label = { Text(stringResource(id = if (module == Module.TODO) R.string.list_start_date_future else R.string.list_date_future)) },
                             modifier = Modifier.padding(end = 4.dp)
                         )
                     }
@@ -229,17 +229,10 @@ fun ListOptionsFilter(
                         ),
                         onClick = {
                             listSettings.searchCategories.value =
-                                if (listSettings.searchCategories.value.contains(
-                                        category
-                                    )
-                                )
-                                    listSettings.searchCategories.value.minus(
-                                        category
-                                    )
+                                if (listSettings.searchCategories.value.contains(category))
+                                    listSettings.searchCategories.value.minus(category)
                                 else
-                                    listSettings.searchCategories.value.plus(
-                                        category
-                                    )
+                                    listSettings.searchCategories.value.plus(category)
                             onListSettingsChanged()
                         },
                         label = { Text(category) },
@@ -271,10 +264,7 @@ fun ListOptionsFilter(
                             selected = listSettings.searchAccount.value.contains(account),
                             onClick = {
                                 listSettings.searchAccount.value =
-                                    if (listSettings.searchAccount.value.contains(
-                                            account
-                                        )
-                                    )
+                                    if (listSettings.searchAccount.value.contains(account))
                                         listSettings.searchAccount.value.minus(account)
                                     else
                                         listSettings.searchAccount.value.plus(account)
@@ -306,29 +296,22 @@ fun ListOptionsFilter(
             {
                 FlowRow(modifier = Modifier.fillMaxWidth()) {
                     allCollections.forEach { collection ->
-                            FilterChip(
-                                selected = listSettings.searchCollection.value.contains(
-                                    collection
-                                ),
-                                onClick = {
-                                    listSettings.searchCollection.value =
-                                        if (listSettings.searchCollection.value.contains(
-                                                collection
-                                            )
-                                        )
-                                            listSettings.searchCollection.value.minus(
-                                                collection
-                                            )
-                                        else
-                                            listSettings.searchCollection.value.plus(
-                                                collection
-                                            )
-                                    onListSettingsChanged()
-                                },
-                                label = { Text(collection) },
-                                modifier = Modifier.padding(end = 4.dp)
-                            )
-                        }
+                        FilterChip(
+                            selected = listSettings.searchCollection.value.contains(
+                                collection
+                            ),
+                            onClick = {
+                                listSettings.searchCollection.value =
+                                    if (listSettings.searchCollection.value.contains(collection))
+                                        listSettings.searchCollection.value.minus(collection)
+                                    else
+                                        listSettings.searchCollection.value.plus(collection)
+                                onListSettingsChanged()
+                            },
+                            label = { Text(collection) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
                 }
             }
 
@@ -341,6 +324,7 @@ fun ListOptionsFilter(
                         listSettings.searchStatusJournal.value = emptyList()
                     else
                         listSettings.searchStatusTodo.value = emptyList()
+                    listSettings.isFilterNoStatusSet.value = false
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
@@ -354,11 +338,23 @@ fun ListOptionsFilter(
                             .filter { status ->
                                 !listSettings.searchStatusTodo.value.contains(status)
                             }
+                    listSettings.isFilterNoStatusSet.value = !listSettings.isFilterNoStatusSet.value
                     onListSettingsChanged()
                 })
             {
-                if  (module == Module.JOURNAL || module == Module.NOTE) {
-                    FlowRow(modifier = Modifier.fillMaxWidth()) {
+                FlowRow(modifier = Modifier.fillMaxWidth()) {
+
+                    FilterChip(
+                        selected = listSettings.isFilterNoStatusSet.value,
+                        onClick = {
+                            listSettings.isFilterNoStatusSet.value = !listSettings.isFilterNoStatusSet.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.status_no_status)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+
+                    if (module == Module.JOURNAL || module == Module.NOTE) {
                         StatusJournal.values().forEach { status ->
                             FilterChip(
                                 selected = listSettings.searchStatusJournal.value.contains(
@@ -366,17 +362,10 @@ fun ListOptionsFilter(
                                 ),
                                 onClick = {
                                     listSettings.searchStatusJournal.value =
-                                        if (listSettings.searchStatusJournal.value.contains(
-                                                status
-                                            )
-                                        )
-                                            listSettings.searchStatusJournal.value.minus(
-                                                status
-                                            )
+                                        if (listSettings.searchStatusJournal.value.contains(status))
+                                            listSettings.searchStatusJournal.value.minus(status)
                                         else
-                                            listSettings.searchStatusJournal.value.plus(
-                                                status
-                                            )
+                                            listSettings.searchStatusJournal.value.plus(status)
                                     onListSettingsChanged()
                                 },
                                 label = { Text(stringResource(id = status.stringResource)) },
@@ -384,31 +373,24 @@ fun ListOptionsFilter(
                             )
                         }
                     }
-                }
-                if (module == Module.TODO) {
-                    FlowRow(modifier = Modifier.fillMaxWidth()) {
+
+                    if (module == Module.TODO) {
                         StatusTodo.values().forEach { status ->
                             FilterChip(
                                 selected = listSettings.searchStatusTodo.value.contains(status),
                                 onClick = {
                                     listSettings.searchStatusTodo.value =
-                                        if (listSettings.searchStatusTodo.value.contains(
-                                                status
-                                            )
-                                        )
-                                            listSettings.searchStatusTodo.value.minus(
-                                                status
-                                            )
+                                        if (listSettings.searchStatusTodo.value.contains(status))
+                                            listSettings.searchStatusTodo.value.minus(status)
                                         else
-                                            listSettings.searchStatusTodo.value.plus(
-                                                status
-                                            )
+                                            listSettings.searchStatusTodo.value.plus(status)
                                     onListSettingsChanged()
                                 },
                                 label = { Text(stringResource(id = status.stringResource)) },
                                 modifier = Modifier.padding(end = 4.dp)
                             )
                         }
+
                     }
                 }
             }
@@ -420,6 +402,7 @@ fun ListOptionsFilter(
                 headline = stringResource(id = R.string.classification),
                 onResetSelection = {
                     listSettings.searchClassification.value = emptyList()
+                    listSettings.isFilterNoClassificationSet.value = false
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
@@ -429,10 +412,22 @@ fun ListOptionsFilter(
                                 classification
                             )
                         }
+                    listSettings.isFilterNoClassificationSet.value = !listSettings.isFilterNoClassificationSet.value
                     onListSettingsChanged()
                 })
             {
                 FlowRow(modifier = Modifier.fillMaxWidth()) {
+
+                    FilterChip(
+                        selected = listSettings.isFilterNoClassificationSet.value,
+                        onClick = {
+                            listSettings.isFilterNoClassificationSet.value = !listSettings.isFilterNoClassificationSet.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.classification_no_classification)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+
                     Classification.values().forEach { classification ->
                         FilterChip(
                             selected = listSettings.searchClassification.value.contains(
@@ -460,7 +455,7 @@ fun ListOptionsFilter(
                 }
             }
 
-            if(!isWidgetConfig) {
+            if (!isWidgetConfig) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,

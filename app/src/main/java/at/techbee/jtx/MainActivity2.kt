@@ -101,14 +101,16 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
         BillingManager.getInstance().initialise(this)
 
         setContent {
-            val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
+            val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
             JtxBoardTheme(
                 darkTheme = when (settingsStateHolder.settingTheme.value) {
                     DropdownSettingOption.THEME_LIGHT -> false
                     DropdownSettingOption.THEME_DARK -> true
+                    DropdownSettingOption.THEME_TRUE_DARK -> true
                     else -> isSystemInDarkTheme()
                 },
-                dynamicColor = isProPurchased.value ?: false
+                trueDarkTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_TRUE_DARK,
+                dynamicColor = isProPurchased.value
             ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -219,7 +221,7 @@ fun MainNavHost(
     settingsStateHolder: SettingsStateHolder
 ) {
     val navController = rememberNavController()
-    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
+    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
     var showOSEDonationDialog by remember { mutableStateOf(false) }
 
     NavHost(
@@ -238,10 +240,10 @@ fun MainNavHost(
             arguments = DetailDestination.Detail.args
         ) { backStackEntry ->
 
-            val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId)
-                ?: return@composable
+            val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId) ?: return@composable
             val icalObjectIdList = backStackEntry.arguments?.getString(DetailDestination.argICalObjectIdList)?.let { Json.decodeFromString<List<Long>>(it)} ?: listOf(icalObjectId)
             val editImmediately = backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) ?: false
+            val returnToLauncher = backStackEntry.arguments?.getBoolean(DetailDestination.argReturnToLauncher) ?: false
 
             /*
             backStackEntry.savedStateHandle[DetailDestination.argICalObjectId] = icalObjectId
@@ -255,6 +257,7 @@ fun MainNavHost(
                 navController = navController,
                 detailViewModel = detailViewModel,
                 editImmediately = editImmediately,
+                returnToLauncher = returnToLauncher,
                 icalObjectIdList = icalObjectIdList,
                 onRequestReview = {
                     if (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
@@ -334,10 +337,10 @@ fun MainNavHost(
 
     globalStateHolder.icalObject2Open.value?.let { id ->
         globalStateHolder.icalObject2Open.value = null
-        navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false))
+        navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false, returnToLauncher = true))
     }
 
-    if (!settingsStateHolder.proInfoShown.value && isProPurchased.value == false) {
+    if (!settingsStateHolder.proInfoShown.value && !isProPurchased.value) {
         ProInfoDialog(
             onOK = {
                 settingsStateHolder.proInfoShown.value = true

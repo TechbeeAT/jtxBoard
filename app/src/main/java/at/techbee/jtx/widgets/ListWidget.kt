@@ -244,7 +244,14 @@ class ListWidget : GlanceAppWidget() {
                                 }
 
                                 if (listWidgetConfig?.flatView == false) {
-                                    subtasksGrouped[entry.uid]?.forEach { subtask ->
+                                    subtasksGrouped[entry.uid]?.forEach subtasks@ { subtask ->
+
+                                        if (listWidgetConfig.isExcludeDone && subtask.percent == 100)
+                                            return@subtasks
+
+                                        if (subtask.summary.isNullOrEmpty() && subtask.description.isNullOrEmpty())
+                                            return@subtasks
+
                                         item {
                                             ListEntry(
                                                 obj = subtask,
@@ -265,7 +272,11 @@ class ListWidget : GlanceAppWidget() {
                                 }
 
                                 if (listWidgetConfig?.flatView == false) {
-                                    subnotesGrouped[entry.uid]?.forEach { subnote ->
+                                    subnotesGrouped[entry.uid]?.forEach subnotes@ { subnote ->
+
+                                        if (subnote.summary.isNullOrEmpty() && subnote.description.isNullOrEmpty())
+                                            return@subnotes
+
                                         item {
                                             ListEntry(
                                                 obj = subnote,

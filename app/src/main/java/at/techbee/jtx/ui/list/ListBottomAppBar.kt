@@ -62,6 +62,9 @@ fun ListBottomAppBar(
             || (module == Module.TODO && listSettings.isFilterDueTomorrow.value)
             || (module == Module.TODO && listSettings.isFilterDueFuture.value)
             || (module == Module.TODO && listSettings.isFilterNoDatesSet.value)
+            || (module == Module.TODO && listSettings.isFilterNoStatusSet.value)
+            || (module == Module.TODO && listSettings.isFilterNoClassificationSet.value)
+
 
     if(showGoToDatePicker) {
         var dates = iCal4List?.map { it.dtstart ?: System.currentTimeMillis() }?.toList()

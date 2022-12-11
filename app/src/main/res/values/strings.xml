@@ -560,6 +560,7 @@
     <string name="settings_enforce_dark_theme">Enforce dark theme</string>
     <string name="settings_select_theme">Select theme</string>
     <string name="settings_select_theme_dark">Dark</string>
+    <string name="settings_select_theme_true_dark">True Dark (AMOLED)</string>
     <string name="settings_select_theme_light">Light</string>
     <string name="settings_select_theme_system">System default</string>
     <string name="settings_select_language">Select language</string>

@@ -10,14 +10,15 @@ package at.techbee.jtx.ui.detail
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
+import android.content.ContextWrapper
 import android.os.Build
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ContentPaste
-import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.Mail
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -27,8 +28,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
@@ -44,12 +47,19 @@ fun DetailsScreen(
     navController: NavHostController,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
+    returnToLauncher: Boolean = false,
     icalObjectIdList: List<Long>,
     onLastUsedCollectionChanged: (Module, Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
     //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
+    fun Context.getActivity(): AppCompatActivity? = when (this) {
+        is AppCompatActivity -> this
+        is ContextWrapper -> baseContext.getActivity()
+        else -> null
+    }
+
     val settingsStateHolder = SettingsStateHolder(context)
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
@@ -59,7 +69,6 @@ fun DetailsScreen(
     var navigateUp by remember { mutableStateOf(false) }
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
 
-
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
     val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
@@ -68,9 +77,18 @@ fun DetailsScreen(
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val allWriteableCollections = detailViewModel.allWriteableCollections.observeAsState(emptyList())
 
+    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
+    val isProActionAvailable by remember(isProPurchased, icalEntity) { derivedStateOf { isProPurchased.value || icalEntity.value?.ICalCollection?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
+
+
     if (navigateUp && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.CHANGESAVING) {
-        onRequestReview()
-        navController.navigateUp()
+        if(returnToLauncher) {
+            context.getActivity()?.finish()
+        } else {
+            onRequestReview()
+            navigateUp = false
+            navController.navigateUp()
+        }
     }
 
     if (detailViewModel.entryDeleted.value) {
@@ -247,6 +265,7 @@ fun DetailsScreen(
                 collection = icalEntity.value?.ICalCollection,
                 isEditMode = isEditMode,
                 markdownState = markdownState,
+                isProActionAvailable = isProActionAvailable,
                 changeState = detailViewModel.changeState,
                 detailSettings = detailViewModel.detailSettings,
                 onDeleteClicked = { showDeleteDialog = true },

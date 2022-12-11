@@ -19,6 +19,7 @@ enum class DropdownSettingOption(
     THEME_SYSTEM("system", R.string.settings_select_theme_system),
     THEME_LIGHT("light", R.string.settings_select_theme_light),
     THEME_DARK("dark", R.string.settings_select_theme_dark),
+    THEME_TRUE_DARK("truedark", R.string.settings_select_theme_true_dark),
 
     AUDIO_FORMAT_3GPP("audio/3gpp", R.string.settings_audio_format_3gpp),
     AUDIO_FORMAT_AAC("audio/aac", R.string.settings_audio_format_aac),

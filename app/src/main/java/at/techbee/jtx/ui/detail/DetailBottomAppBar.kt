@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
@@ -65,6 +64,7 @@ fun DetailBottomAppBar(
     collection: ICalCollection?,
     isEditMode: MutableState<Boolean>,
     markdownState: MutableState<MarkdownState>,
+    isProActionAvailable: Boolean,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     detailSettings: DetailSettings,
     onDeleteClicked: () -> Unit,
@@ -78,7 +78,6 @@ fun DetailBottomAppBar(
     val context = LocalContext.current
     var settingsMenuExpanded by remember { mutableStateOf(false) }
     var copyOptionsExpanded by remember { mutableStateOf(false) }
-    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
 
     val syncIconAnimation = rememberInfiniteTransition()
     val angle by syncIconAnimation.animateFloat(
@@ -121,7 +120,7 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(!isEditMode.value && !collection.readonly) {
+            AnimatedVisibility(!isEditMode.value && !collection.readonly && isProActionAvailable) {
                 IconButton(onClick = { copyOptionsExpanded = true }) {
                     Icon(
                         Icons.Outlined.ContentCopy,
@@ -160,7 +159,7 @@ fun DetailBottomAppBar(
                 }
             }
 
-            if(!collection.readonly && markdownState.value == MarkdownState.DISABLED) {
+            if(!collection.readonly && isProActionAvailable && markdownState.value == MarkdownState.DISABLED) {
                 IconButton(onClick = { onDeleteClicked() }) {
                     Icon(
                         Icons.Outlined.Delete,
@@ -430,7 +429,7 @@ fun DetailBottomAppBar(
             // TODO(b/228588827): Replace with Secondary FAB when available.
             FloatingActionButton(
                 onClick = {
-                    if (!collection.readonly && collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false)
+                    if (!isProActionAvailable)
                         Toast.makeText(
                             context,
                             context.getText(R.string.buypro_snackbar_remote_entries_blocked),
@@ -439,15 +438,13 @@ fun DetailBottomAppBar(
                     else if (!collection.readonly)
                         isEditMode.value = !isEditMode.value
                 },
-                containerColor = if (collection.readonly) MaterialTheme.colorScheme.surface
-                    else if (collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false) MaterialTheme.colorScheme.surface
-                    else MaterialTheme.colorScheme.primaryContainer,
+                containerColor = if (collection.readonly || !isProActionAvailable) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primaryContainer
             ) {
                 Crossfade(targetState = isEditMode.value) { isEditMode ->
                     if (isEditMode) {
                         Icon(painterResource(id = R.drawable.ic_save_move_outline), stringResource(id = R.string.save))
                     } else {
-                        if (collection.readonly)
+                        if (collection.readonly || !isProActionAvailable)
                             Icon(Icons.Filled.EditOff, stringResource(id = R.string.readyonly))
                         else
                             Icon(Icons.Filled.Edit, stringResource(id = R.string.edit))
@@ -480,6 +477,7 @@ fun DetailBottomAppBar_Preview_View() {
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
+            isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
@@ -510,6 +508,7 @@ fun DetailBottomAppBar_Preview_edit() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
+            isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailSettings = detailSettings,
@@ -540,6 +539,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
+            isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.OBSERVING) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailSettings = detailSettings,
@@ -571,6 +571,37 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
+            isProActionAvailable = true,
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
+            detailSettings = detailSettings,
+            onDeleteClicked = { },
+            onCopyRequested = { },
+            onRevertClicked = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailBottomAppBar_Preview_View_proOnly() {
+    MaterialTheme {
+
+        val collection = ICalCollection().apply {
+            this.readonly = false
+            this.accountType = DAVX5_ACCOUNT_TYPE
+        }
+
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
+            DetailViewModel.PREFS_DETAIL_NOTES,
+            Context.MODE_PRIVATE
+        )
+        val detailSettings = DetailSettings(prefs)
+
+        DetailBottomAppBar(
+            icalObject = ICalObject.createNote().apply { dirty = false },
+            collection = collection,
+            isEditMode = remember { mutableStateOf(false) },
+            isProActionAvailable = false,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
@@ -604,6 +635,7 @@ fun DetailBottomAppBar_Preview_View_local() {
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
+            isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailSettings = detailSettings,
             onDeleteClicked = { },

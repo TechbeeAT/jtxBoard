@@ -95,20 +95,15 @@ fun SettingsScreen(
                             settingsStateHolder.settingTheme.value = selection
                             SETTING_THEME.save(selection, context = context)
                             when (selection) {
-                                DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(
-                                    AppCompatDelegate.MODE_NIGHT_YES
-                                )
-                                DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(
-                                    AppCompatDelegate.MODE_NIGHT_NO
-                                )
+                                DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                                DropdownSettingOption.THEME_TRUE_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                                DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                                 else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                             }
                         }
                     )
 
-
                     /* Special Handling for Language Selector */
-
                     val appCompatLocales = AppCompatDelegate.getApplicationLocales()
                     var defaultLocale: Locale? = null
                     if(!appCompatLocales.isEmpty) {
@@ -235,17 +230,6 @@ fun SettingsScreen(
                             SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
                         })
 
-
-                    Divider(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .alpha(0.5f)
-                    )
-                    Text(
-                        text = stringResource(id = R.string.settings_details),
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
-                    )
 
                     Divider(
                         modifier = Modifier

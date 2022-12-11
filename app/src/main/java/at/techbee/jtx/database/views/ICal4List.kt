@@ -8,21 +8,17 @@
 
 package at.techbee.jtx.database.views
 
-import android.content.Context
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.sqlite.db.SimpleSQLiteQuery
-import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.DateTimeUtils
-import java.time.*
-import java.time.temporal.ChronoUnit
 import kotlin.time.Duration.Companion.days
 
 const val VIEW_NAME_ICAL4LIST = "ical4list"
@@ -175,8 +171,7 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_SUBNOTES_EXPANDED) var isSubnotesExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null,
-    )
-{
+) {
 
     companion object {
         fun getSample() =
@@ -260,6 +255,8 @@ data class ICal4List(
             isFilterStartTomorrow: Boolean = false,
             isFilterStartFuture: Boolean = false,
             isFilterNoDatesSet: Boolean = false,
+            isFilterNoStatusSet: Boolean = false,
+            isFilterNoClassificationSet: Boolean = false,
             searchText: String? = null,
             flatView: Boolean = false,
             searchSettingShowOneRecurEntryInFuture: Boolean = false
@@ -269,16 +266,16 @@ data class ICal4List(
 
             // Beginning of query string
             var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST "
-            if(searchCategories.isNotEmpty())
+            if (searchCategories.isNotEmpty())
                 queryString += "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID "
-            if(searchCollection.isNotEmpty() || searchAccount.isNotEmpty())
+            if (searchCollection.isNotEmpty() || searchAccount.isNotEmpty())
                 queryString += "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
 
             // First query parameter Module must always be present!
             queryString += "WHERE $COLUMN_MODULE = ? "
             args.add(module.name)
 
-            // Query for the given text search from the action bar
+            //TEXT
             searchText?.let { text ->
                 if (text.length >= 2) {
                     queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) "
@@ -287,36 +284,31 @@ data class ICal4List(
                 }
             }
 
-            // Query for the passed filter criteria from VJournalFilterFragment
+            //CATEGORIES
             if (searchCategories.isNotEmpty()) {
-                queryString += "AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN ("
-                searchCategories.forEach {
-                    queryString += "?,"
-                    args.add(it)
-                }
-                queryString = queryString.removeSuffix(",")      // remove the last comma
-                queryString += ") "
+                queryString += searchCategories.joinToString (
+                    prefix = "AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN (",
+                    separator = ", ",
+                    transform = { "?" },
+                    postfix = ") "
+                )
+                args.addAll(searchCategories)
             }
 
-            // Query for the passed filter criteria from FilterFragment
-            if (searchStatusJournal.isNotEmpty() && (module == Module.JOURNAL || module == Module.NOTE)) {
-                queryString += "AND $COLUMN_STATUS IN ("
-                searchStatusJournal.forEach {
-                    queryString += "?,"
-                    args.add(it.toString())
-                }
-                queryString = queryString.removeSuffix(",")      // remove the last comma
-                queryString += ") "
+            //STATUS
+            val searchStatus = mutableListOf<String>().apply {
+                addAll(searchStatusJournal.map { it.toString() })
+                addAll(searchStatusTodo.map { it.toString() })
             }
+            if ((searchStatus.isNotEmpty() || isFilterNoStatusSet)) {
+                queryString += "AND ("
+                queryString += searchStatus.joinToString(separator = "OR ", transform = { "$COLUMN_STATUS = ? " })
+                args.addAll(searchStatus.map { it })
 
-            // Query for the passed filter criteria from FilterFragment
-            if (searchStatusTodo.isNotEmpty() && module == Module.TODO) {
-                queryString += "AND $COLUMN_STATUS IN ("
-                searchStatusTodo.forEach {
-                    queryString += "?,"
-                    args.add(it.toString())
-                }
-                queryString = queryString.removeSuffix(",")      // remove the last comma
+                if(searchStatus.isNotEmpty() && isFilterNoStatusSet)
+                    queryString += "OR "
+                if (isFilterNoStatusSet)
+                    queryString += "$COLUMN_STATUS IS NULL"
                 queryString += ") "
             }
 
@@ -327,64 +319,65 @@ data class ICal4List(
             if (isFilterStartInPast)
                 dateQuery.add("$COLUMN_DTSTART < ${System.currentTimeMillis()}")
             if (isFilterStartToday)
-                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds-1}")
+                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds - 1}")
             if (isFilterStartTomorrow)
-                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds-1}")
+                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds - 1}")
             if (isFilterStartFuture)
                 dateQuery.add("$COLUMN_DTSTART > ${System.currentTimeMillis()}")
             if (isFilterOverdue)
                 dateQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
             if (isFilterDueToday)
-                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds-1}")
+                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds - 1}")
             if (isFilterDueTomorrow)
-                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds-1}")
+                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds - 1}")
             if (isFilterDueFuture)
                 dateQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
-            if(isFilterNoDatesSet)
+            if (isFilterNoDatesSet)
                 dateQuery.add("$COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL ")
-            if(dateQuery.isNotEmpty())
+            if (dateQuery.isNotEmpty())
                 queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
 
-            // Query for the passed filter criteria from FilterFragment
-            if (searchClassification.isNotEmpty()) {
-                queryString += "AND $COLUMN_CLASSIFICATION IN ("
-                searchClassification.forEach {
-                    queryString += "?,"
-                    args.add(it.toString())
-                }
-                queryString = queryString.removeSuffix(",")      // remove the last comma
+            //CLASSIFICATION
+            if ((searchClassification.isNotEmpty() || isFilterNoClassificationSet)) {
+                queryString += "AND ("
+                queryString += searchClassification.joinToString(separator = "OR ", transform = { "$COLUMN_CLASSIFICATION = ? " })
+                args.addAll(searchClassification.map { it.toString() })
+
+                if(searchClassification.isNotEmpty() && isFilterNoClassificationSet)
+                    queryString += "OR "
+                if (isFilterNoClassificationSet)
+                    queryString += "$COLUMN_CLASSIFICATION IS NULL"
                 queryString += ") "
             }
 
-
-            // Query for the passed filter criteria from FilterFragment
+            //COLLECTION
             if (searchCollection.isNotEmpty()) {
-                queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_DISPLAYNAME IN ("
-                searchCollection.forEach {
-                    queryString += "?,"
-                    args.add(it)
-                }
-                queryString = queryString.removeSuffix(",")      // remove the last comma
-                queryString += ") "
+                queryString += searchCollection.joinToString (
+                    prefix = "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_DISPLAYNAME IN (",
+                    separator = ", ",
+                    transform = { "?" },
+                    postfix = ") "
+                )
+                args.addAll(searchCollection)
             }
 
-            // Query for the passed filter criteria from FilterFragment
+            //ACCOUNT
             if (searchAccount.isNotEmpty()) {
-                queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME IN ("
-                searchAccount.forEach {
-                    queryString += "?,"
-                    args.add(it)
-                }
-                queryString = queryString.removeSuffix(",")      // remove the last comma
-                queryString += ") "
+                queryString += searchAccount.joinToString (
+                    prefix = "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME IN (",
+                    separator = ", ",
+                    transform = { "?" },
+                    postfix = ") "
+                )
+                args.addAll(searchAccount)
             }
 
             // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
             //queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
-            if(!flatView)
+            if (!flatView)
                 queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
 
-            if(searchSettingShowOneRecurEntryInFuture) {
+            if (searchSettingShowOneRecurEntryInFuture) {
                 queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ISLINKEDINSTANCE = 0 " +
                         "OR $VIEW_NAME_ICAL4LIST.$COLUMN_DTSTART <= " +
                         "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_RECUR_ORIGINALICALOBJECTID = $VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ORIGINALICALOBJECTID AND recurList.$COLUMN_RECUR_ISLINKEDINSTANCE = 1 AND recurList.$COLUMN_DTSTART >= ${DateTimeUtils.getTodayAsLong()} )) "
@@ -403,7 +396,6 @@ data class ICal4List(
             return SimpleSQLiteQuery(queryString, args.toArray())
         }
     }
-
 
 
     /**

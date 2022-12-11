@@ -30,7 +30,8 @@ enum class DropdownSetting(
         options = listOf(
             DropdownSettingOption.THEME_SYSTEM,
             DropdownSettingOption.THEME_LIGHT,
-            DropdownSettingOption.THEME_DARK
+            DropdownSettingOption.THEME_DARK,
+            DropdownSettingOption.THEME_TRUE_DARK
         ),
         default = DropdownSettingOption.THEME_SYSTEM
     ),
