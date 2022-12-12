@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,6 +28,8 @@ import androidx.glance.appwidget.state.getAppWidgetState
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.widgets.ListWidgetReceiver
 import at.techbee.jtx.widgets.ListWidgetConfig
@@ -48,10 +51,23 @@ class ListWidgetConfigActivity : ComponentActivity() {
         Log.d(TAG, "GlanceId on ListWidgetConfigActivity: $glanceId")
 
         intent?.extras?.remove(AppWidgetManager.EXTRA_APPWIDGET_ID)
+        val settingsStateHolder = SettingsStateHolder(this)
+        BillingManager.getInstance().initialise(this)
 
 
         setContent {
-            JtxBoardTheme {
+            val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
+
+            JtxBoardTheme(
+                darkTheme = when (settingsStateHolder.settingTheme.value) {
+                    DropdownSettingOption.THEME_LIGHT -> false
+                    DropdownSettingOption.THEME_DARK -> true
+                    DropdownSettingOption.THEME_TRUE_DARK -> true
+                    else -> isSystemInDarkTheme()
+                },
+                trueDarkTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_TRUE_DARK,
+                dynamicColor = isProPurchased.value
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

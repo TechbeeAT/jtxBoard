@@ -106,8 +106,10 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
                 darkTheme = when (settingsStateHolder.settingTheme.value) {
                     DropdownSettingOption.THEME_LIGHT -> false
                     DropdownSettingOption.THEME_DARK -> true
+                    DropdownSettingOption.THEME_TRUE_DARK -> true
                     else -> isSystemInDarkTheme()
                 },
+                trueDarkTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_TRUE_DARK,
                 dynamicColor = isProPurchased.value
             ) {
                 // A surface container using the 'background' color from the theme

@@ -28,6 +28,7 @@ import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.ui.settings.DropdownSetting
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
@@ -41,10 +42,7 @@ import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.property.DtStart
 import java.text.ParseException
-import java.time.DayOfWeek
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZonedDateTime
+import java.time.*
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -806,17 +804,20 @@ data class ICalObject(
             val daysLeft = ChronoUnit.DAYS.between(localNow, localStart)
             val hoursLeft = ChronoUnit.HOURS.between(localNow, localStart)
 
-            return when {
-                localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == TZ_ALLDAY) ->
-                    if(module == Module.TODO) context.getString(R.string.list_start_today) else context.getString(R.string.list_date_today)
-                daysLeft <= 0L && hoursLeft < 0L ->
-                    if(module == Module.TODO) context.getString(R.string.list_start_past) else context.getString(R.string.list_date_start_in_past)
-                localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth ->
-                    if(module == Module.TODO) context.getString(R.string.list_start_inXhours, hoursLeft) else context.getString(R.string.list_date_today)
-                localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth ->
-                    if(module == Module.TODO) context.getString(R.string.list_start_tomorrow) else context.getString(R.string.list_date_tomorrow)
-                else ->
-                    if(module == Module.TODO) context.getString(R.string.list_start_inXdays, daysLeft+1) else context.getString(R.string.list_date_future)
+            return if(module == Module.TODO) {
+                 when {
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == TZ_ALLDAY) -> context.getString(R.string.list_start_today)
+                    daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_start_past)
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, hoursLeft)
+                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
+                    else -> context.getString(R.string.list_start_inXdays, daysLeft+1)
+                }
+            } else {
+                when {
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_date_today)
+                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_date_tomorrow)
+                    else -> DateTimeUtils.convertLongToMediumDateString(dtstart, dtstartTimezone)
+                }
             }
         }
 
@@ -1317,6 +1318,37 @@ data class ICalObject(
             null
         else
             recurInfo + System.lineSeparator()
+    }
+
+    fun setDefaultJournalDateFromSettings(context: Context) {
+        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(
+            DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.key, null) ?: DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.default.key
+        try {
+            when(default) {
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_DAY.key -> {
+                    this.dtstart = DateTimeUtils.getTodayAsLong()
+                    this.dtstartTimezone = TZ_ALLDAY
+                }
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_HOUR.key -> {
+                    this.dtstart = LocalDateTime.now().withMinute(0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    this.dtstartTimezone = null
+                }
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_15MIN.key -> {
+                    this.dtstart = LocalDateTime.now().withMinute(((LocalDateTime.now().minute)/15)*15).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    this.dtstartTimezone = null
+                }
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_5MIN.key -> {
+                    this.dtstart = LocalDateTime.now().withMinute(((LocalDateTime.now().minute)/5)*5).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    this.dtstartTimezone = null
+                }
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_MIN.key -> {
+                    this.dtstart = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    this.dtstartTimezone = null
+                }
+            }
+        } catch (e: IllegalArgumentException) {
+            Log.d("DurationParsing", "Could not parse duration from settings")
+        }
     }
 
     fun setDefaultStartDateFromSettings(context: Context) {

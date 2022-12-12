@@ -314,8 +314,10 @@ fun ListScreenTabContainer(
                                 allUsableCollections.firstOrNull()?.collectionId
                                     ?: return@ListBottomAppBar
                         val newICalObject = when (listViewModel.module) {
-                            Module.JOURNAL -> ICalObject.createJournal()
-                                .apply { collectionId = proposedCollectionId }
+                            Module.JOURNAL -> ICalObject.createJournal().apply {
+                                this.setDefaultJournalDateFromSettings(context)
+                                collectionId = proposedCollectionId
+                            }
                             Module.NOTE -> ICalObject.createNote()
                                 .apply { collectionId = proposedCollectionId }
                             Module.TODO -> ICalObject.createTodo().apply {

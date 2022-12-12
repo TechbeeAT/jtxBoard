@@ -136,7 +136,9 @@ fun ListQuickAddElement(
 
         if (currentText.text.isNotBlank()) {
             val newICalObject = when (currentModule) {
-                Module.JOURNAL -> ICalObject.createJournal()
+                Module.JOURNAL -> ICalObject.createJournal().apply {
+                    this.setDefaultJournalDateFromSettings(context)
+                }
                 Module.NOTE -> ICalObject.createNote()
                 Module.TODO -> ICalObject.createTodo().apply {
                     this.setDefaultDueDateFromSettings(context)

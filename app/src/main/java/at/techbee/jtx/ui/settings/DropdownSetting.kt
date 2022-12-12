@@ -30,7 +30,8 @@ enum class DropdownSetting(
         options = listOf(
             DropdownSettingOption.THEME_SYSTEM,
             DropdownSettingOption.THEME_LIGHT,
-            DropdownSettingOption.THEME_DARK
+            DropdownSettingOption.THEME_DARK,
+            DropdownSettingOption.THEME_TRUE_DARK
         ),
         default = DropdownSettingOption.THEME_SYSTEM
     ),
@@ -46,6 +47,20 @@ enum class DropdownSetting(
         default = DropdownSettingOption.AUDIO_FORMAT_3GPP
     ),
 
+    SETTING_DEFAULT_JOURNALS_DATE(
+        key = "setting_default_journals_date",
+        icon = Icons.Outlined.EditCalendar,
+        title = R.string.settings_default_journals_date,
+        options = listOf(
+            DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_DAY,
+            DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_HOUR,
+            DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_15MIN,
+            DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_5MIN,
+            DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_MIN
+            ),
+        default = DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_DAY
+    ),
+
     SETTING_DEFAULT_START_DATE(
         key = "setting_default_start_date",
         icon = Icons.Outlined.EditCalendar,
@@ -53,8 +68,6 @@ enum class DropdownSetting(
         options = listOf(
             DropdownSettingOption.DEFAULT_DATE_NONE,
             DropdownSettingOption.DEFAULT_DATE_SAME_DAY,
-            DropdownSettingOption.DEFAULT_DATE_NEXT_DAY,
-
             DropdownSettingOption.DEFAULT_DATE_NEXT_DAY,
             DropdownSettingOption.DEFAULT_DATE_TWO_DAYS,
             DropdownSettingOption.DEFAULT_DATE_THREE_DAYS,
