@@ -611,4 +611,12 @@ Danke!"</string>
     <string name="widget_list_configuration_widget_background">"Widget Hintergrund"</string>
     <string name="widget_list_configuration_entries_background">"Einträge Hintergrund"</string>
     <string name="widget_list_show_description">"Beschreibung anzeigen"</string>
+    <string name="settings_select_theme_true_dark">"True Dark (AMOLED)"</string>
+    <string name="settings_journals">"Journal-Einstellungen"</string>
+    <string name="settings_default_journals_date">"Standard-Datum/-Uhrzeit für Journale"</string>
+    <string name="settings_default_journals_date_current_day">"Aktueller Tag"</string>
+    <string name="settings_default_journals_date_current_hour">"Aktuelle Stunde"</string>
+    <string name="settings_default_journals_date_current_15min">"Aktuelle 15 Min"</string>
+    <string name="settings_default_journals_date_current_5min">"Aktuelle 5 Min"</string>
+    <string name="settings_default_journals_date_current_min">"Aktuelle Minute"</string>
 </resources>
