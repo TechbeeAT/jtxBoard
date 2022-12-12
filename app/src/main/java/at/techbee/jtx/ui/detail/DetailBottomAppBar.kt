@@ -254,31 +254,31 @@ fun DetailBottomAppBar(
                     modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
                 ) {
                     IconButton(onClick = { markdownState.value = MarkdownState.BOLD }) {
-                        Icon(Icons.Outlined.TextFormat, "Bold")
+                        Icon(Icons.Outlined.TextFormat, stringResource(R.string.markdown_bold))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.ITALIC  }) {
-                        Icon(Icons.Outlined.FormatItalic, "Italic")
+                        Icon(Icons.Outlined.FormatItalic, stringResource(R.string.markdown_italic))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.UNDERLINED  }) {
-                        Icon(Icons.Outlined.FormatUnderlined, "Underlined")
+                        Icon(Icons.Outlined.FormatUnderlined, stringResource(R.string.markdown_underlined))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.STRIKETHROUGH  }) {
-                        Icon(Icons.Outlined.FormatStrikethrough, "Strikethrough")
+                        Icon(Icons.Outlined.FormatStrikethrough, stringResource(R.string.markdown_strikethrough))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.H1  }) {
-                        Icon(painterResource(id = R.drawable.ic_h1), "H1")
+                        Icon(painterResource(id = R.drawable.ic_h1), stringResource(R.string.markdown_heading1))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.H2  }) {
-                        Icon(painterResource(id = R.drawable.ic_h2), "H2")
+                        Icon(painterResource(id = R.drawable.ic_h2), stringResource(R.string.markdown_heading2))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.H3  }) {
-                        Icon(painterResource(id = R.drawable.ic_h3), "H3")
+                        Icon(painterResource(id = R.drawable.ic_h3), stringResource(R.string.markdown_heading3))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.HR  }) {
-                        Icon(Icons.Outlined.HorizontalRule, "Horizontal Ruler")
+                        Icon(Icons.Outlined.HorizontalRule, stringResource(R.string.markdown_horizontal_ruler))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.UNORDEREDLIST  }) {
-                        Icon(Icons.Outlined.List, "List")
+                        Icon(Icons.Outlined.List, stringResource(R.string.markdown_unordered_list))
                     }
 
                     //ATTENTION! Copy of FAB!!!
