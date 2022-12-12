@@ -510,7 +510,11 @@ fun DetailScreenContent(
                             .fillMaxWidth()
                             .padding(8.dp)
                             .onFocusChanged { focusState ->
-                                if(focusState.hasFocus && markdownState.value == MarkdownState.DISABLED)
+                                if(
+                                    focusState.hasFocus
+                                    && markdownState.value == MarkdownState.DISABLED
+                                    && detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] != false
+                                )
                                     markdownState.value = MarkdownState.OBSERVING
                                 else if (!focusState.hasFocus)
                                     markdownState.value = MarkdownState.DISABLED

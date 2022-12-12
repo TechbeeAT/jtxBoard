@@ -82,7 +82,7 @@ fun DetailsScreen(
 
 
     if (navigateUp && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.CHANGESAVING) {
-        if(returnToLauncher) {
+        if (returnToLauncher) {
             context.getActivity()?.finish()
         } else {
             onRequestReview()
@@ -141,9 +141,11 @@ fun DetailsScreen(
                     goBackRequestedByTopBar.value = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 actions = {
-                    if (!isEditMode.value) {
-                        val menuExpanded = remember { mutableStateOf(false) }
-                        OverflowMenu(menuExpanded = menuExpanded) {
+                    val menuExpanded = remember { mutableStateOf(false) }
+
+                    OverflowMenu(menuExpanded = menuExpanded) {
+
+                        if (!isEditMode.value) {
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_share_mail)) },
                                 onClick = {
@@ -172,21 +174,10 @@ fun DetailsScreen(
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.ContentPaste, null) }
                             )
-
-                            Divider()
-
-                            CheckboxWithText(
-                                text = stringResource(id = R.string.menu_view_markdown_formatting),
-                                onCheckedChange = {
-                                    detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] = it
-                                    detailViewModel.detailSettings.save()
-                                },
-                                isSelected = detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] ?: true,
-                            )
                         }
-                    } else {
-                        val menuExpanded = remember { mutableStateOf(false) }
-                        OverflowMenu(menuExpanded = menuExpanded) {
+
+
+                        if (isEditMode.value) {
                             CheckboxWithText(
                                 text = stringResource(id = R.string.menu_view_autosave),
                                 onCheckedChange = {
@@ -196,6 +187,17 @@ fun DetailsScreen(
                                 isSelected = detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_AUTOSAVE] ?: true,
                             )
                         }
+
+                        Divider()
+
+                        CheckboxWithText(
+                            text = stringResource(id = R.string.menu_view_markdown_formatting),
+                            onCheckedChange = {
+                                detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] = it
+                                detailViewModel.detailSettings.save()
+                            },
+                            isSelected = detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] ?: true,
+                        )
                     }
                 }
             )
