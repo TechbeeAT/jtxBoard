@@ -113,7 +113,10 @@ fun DetailBottomAppBar(
 
     BottomAppBar(
         actions = {
-            AnimatedVisibility(isEditMode.value && markdownState.value == MarkdownState.DISABLED) {
+            AnimatedVisibility(
+                isEditMode.value
+                        && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
+            ) {
                 IconButton(onClick = { settingsMenuExpanded = true }) {
                     Icon(
                         Icons.Outlined.Settings,
@@ -122,7 +125,11 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(!isEditMode.value && !collection.readonly && isProActionAvailable) {
+            AnimatedVisibility(
+                !isEditMode.value
+                        && !collection.readonly
+                        && isProActionAvailable
+            ) {
                 IconButton(onClick = { copyOptionsExpanded = true }) {
                     Icon(
                         Icons.Outlined.ContentCopy,
@@ -161,7 +168,11 @@ fun DetailBottomAppBar(
                 }
             }
 
-            if(!collection.readonly && isProActionAvailable && markdownState.value == MarkdownState.DISABLED) {
+            if(
+                !collection.readonly
+                && isProActionAvailable
+                && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
+            ) {
                 IconButton(onClick = { onDeleteClicked() }) {
                     Icon(
                         Icons.Outlined.Delete,
@@ -170,7 +181,11 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(isEditMode.value && changeState.value != DetailViewModel.DetailChangeState.UNCHANGED && markdownState.value == MarkdownState.DISABLED) {
+            AnimatedVisibility(
+                isEditMode.value
+                        && changeState.value != DetailViewModel.DetailChangeState.UNCHANGED
+                        && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
+            ) {
                 IconButton(onClick = { onRevertClicked() }) {
                     Icon(
                         painterResource(id = R.drawable.ic_revert),
@@ -179,8 +194,21 @@ fun DetailBottomAppBar(
                 }
             }
 
+            AnimatedVisibility(markdownState.value == MarkdownState.CLOSED) {
+                IconButton(onClick = { markdownState.value = MarkdownState.OBSERVING }) {
+                    Icon(
+                        Icons.Outlined.TextFormat,
+                        contentDescription = stringResource(id = R.string.menu_view_markdown_formatting)
+                    )
+                }
+            }
 
-            AnimatedVisibility(collection.accountType != LOCAL_ACCOUNT_TYPE && (isSyncInProgress || icalObject.dirty) && markdownState.value == MarkdownState.DISABLED) {
+
+            AnimatedVisibility(
+                collection.accountType != LOCAL_ACCOUNT_TYPE
+                    && (isSyncInProgress || icalObject.dirty)
+                    && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
+            ) {
                 IconButton(
                     onClick = {
                         if (!isSyncInProgress)
@@ -212,7 +240,8 @@ fun DetailBottomAppBar(
 
             AnimatedVisibility((changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING
-                    || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVED)  && markdownState.value == MarkdownState.DISABLED) {
+                    || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVED)
+                    && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)) {
                 IconButton(
                     onClick = { },
                     enabled = false
@@ -250,12 +279,12 @@ fun DetailBottomAppBar(
             }
 
             // Icons for Markdown formatting
-            AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED) {
+            AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
                 Row(
                     modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = { markdownState.value = MarkdownState.DISABLED }) {
+                    IconButton(onClick = { markdownState.value = MarkdownState.CLOSED }) {
                         Icon(Icons.Outlined.ArrowBack, stringResource(R.string.back))
                     }
                     Divider(
@@ -288,35 +317,6 @@ fun DetailBottomAppBar(
                     IconButton(onClick = { markdownState.value = MarkdownState.UNORDEREDLIST  }) {
                         Icon(Icons.Outlined.List, stringResource(R.string.markdown_unordered_list))
                     }
-
-                    //ATTENTION! Copy of FAB!!!
-                    // WORKAROUND, otherwise the FAB completely disappears
-                    /*
-                    FloatingActionButton(
-                        onClick = {
-                            if (!isProActionAvailable)
-                                Toast.makeText(
-                                    context,
-                                    context.getText(R.string.buypro_snackbar_remote_entries_blocked),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            else if (!collection.readonly)
-                                isEditMode.value = !isEditMode.value
-                        },
-                        containerColor = if (collection.readonly || !isProActionAvailable) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primaryContainer
-                    ) {
-                        Crossfade(targetState = isEditMode.value) { isEditMode ->
-                            if (isEditMode) {
-                                Icon(painterResource(id = R.drawable.ic_save_move_outline), stringResource(id = R.string.save))
-                            } else {
-                                if (collection.readonly || !isProActionAvailable)
-                                    Icon(Icons.Filled.EditOff, stringResource(id = R.string.readyonly))
-                                else
-                                    Icon(Icons.Filled.Edit, stringResource(id = R.string.edit))
-                            }
-                        }
-                    }
-                     */
                 }
             }
 

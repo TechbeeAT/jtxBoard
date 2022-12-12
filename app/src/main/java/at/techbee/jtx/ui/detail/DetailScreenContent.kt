@@ -160,8 +160,8 @@ fun DetailScreenContent(
     var description by remember {
         mutableStateOf(TextFieldValue(iCalEntity.value?.property?.description ?: ""))
     }
-    // Apply Markdown on recomposition if applicable
-    if(markdownState.value != MarkdownState.DISABLED) {
+    // Apply Markdown on recomposition if applicable, then set back to OBSERVING
+    if(markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
         description = markdownState.value.format(description)
         markdownState.value = MarkdownState.OBSERVING
     }

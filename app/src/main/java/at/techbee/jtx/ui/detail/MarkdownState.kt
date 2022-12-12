@@ -7,13 +7,20 @@ import androidx.compose.ui.text.input.getSelectedText
 import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
 
+/**
+ * DISABLED: For fields that don't allow Markdown
+ * OBSERVING: Markdown row is active, after changing state the state should change back to observing
+ * CLOSED: Markdown is basically available for the field, but was hidden by the user
+ * all others are for specific formatting
+ */
 enum class MarkdownState {
-    DISABLED, OBSERVING, BOLD, ITALIC, UNDERLINED, STRIKETHROUGH, H1, H2, H3, HR, UNORDEREDLIST;
+    DISABLED, OBSERVING, CLOSED, BOLD, ITALIC, UNDERLINED, STRIKETHROUGH, H1, H2, H3, HR, UNORDEREDLIST;
 
     fun format(textFieldValue: TextFieldValue): TextFieldValue {
         return when(this) {
             DISABLED -> textFieldValue
             OBSERVING -> textFieldValue
+            CLOSED -> textFieldValue
             BOLD -> addEnclosingTags(textFieldValue, "**", "**")
             ITALIC -> addEnclosingTags(textFieldValue, "*", "*")
             UNDERLINED -> addEnclosingTags(textFieldValue, "_", "_")
