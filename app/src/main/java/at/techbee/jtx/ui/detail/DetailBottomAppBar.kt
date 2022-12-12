@@ -19,8 +19,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -28,6 +27,7 @@ import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.DAVX5_ACCOUNT_TYPE
@@ -251,8 +252,15 @@ fun DetailBottomAppBar(
             // Icons for Markdown formatting
             AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    IconButton(onClick = { markdownState.value = MarkdownState.DISABLED }) {
+                        Icon(Icons.Outlined.ArrowBack, stringResource(R.string.back))
+                    }
+                    Divider(
+                        modifier = Modifier.height(40.dp).width(1.dp)
+                    )
                     IconButton(onClick = { markdownState.value = MarkdownState.BOLD }) {
                         Icon(Icons.Outlined.TextFormat, stringResource(R.string.markdown_bold))
                     }
