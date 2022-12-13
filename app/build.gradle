@@ -22,8 +22,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 201030005
-        versionName "2.01.03-beta05"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 201030007
+        versionName "2.01.03-rc07"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Stop Putin, stop Raisi - peace for Ukraine, liberty for Iranians!\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -235,7 +235,7 @@ dependencies {
     gplayImplementation "com.google.android.play:review-ktx:$version_review"
 
     // Google Maps
-    gplayImplementation "com.google.maps.android:maps-compose:2.2.0"
+    gplayImplementation "com.google.maps.android:maps-compose:2.7.3"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
     gplayImplementation "com.google.android.gms:play-services-location:21.0.1"
 
@@ -255,16 +255,16 @@ dependencies {
 
     // Testing-only dependencies
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
-    androidTestImplementation 'androidx.test:core-ktx:1.5.0'
+    androidTestImplementation "androidx.test:core-ktx:1.5.0"
 
     // Testing
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation "junit:junit:4.13.2"
     testImplementation "androidx.room:room-testing:$version_room"
-    testImplementation 'androidx.arch.core:core-testing:2.1.0'
-    testImplementation 'androidx.test:core-ktx:1.5.0'
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "androidx.test:core-ktx:1.5.0"
     // Required -- JUnit 4 framework
     testImplementation "androidx.test.ext:junit-ktx:1.1.4"
-    testImplementation "org.mockito:mockito-core:3.9.0"
+    testImplementation "org.mockito:mockito-core:4.9.0"
 
     //About Libraries
     implementation "com.mikepenz:aboutlibraries-core:${version_about_libraries}"
@@ -290,7 +290,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
     implementation "androidx.navigation:navigation-compose:2.6.0-alpha04"
-    implementation 'com.arnyminerz.markdowntext:markdowntext:1.1.1'
+    implementation "com.arnyminerz.markdowntext:markdowntext:1.1.1"
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
     debugImplementation "androidx.compose.ui:ui-tooling:$version_compose"

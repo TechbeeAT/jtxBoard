@@ -44,19 +44,18 @@ fun ListScreen(
 
     val list = listViewModel.iCal4List.observeAsState(emptyList())
     // first apply a proper sort order, then group
-    var sortedList = when(listViewModel.listSettings.groupBy.value) {
+    val sortedList = when(listViewModel.listSettings.groupBy.value) {
         GroupBy.STATUS -> list.value.sortedBy {
             if(listViewModel.module == Module.TODO && it.percent != 100)
                 try { StatusTodo.valueOf(it.status ?: StatusTodo.`NEEDS-ACTION`.name).ordinal } catch (e: java.lang.IllegalArgumentException) { -1 }
             else
                 try { StatusJournal.valueOf(it.status ?: StatusJournal.FINAL.name).ordinal } catch (e: java.lang.IllegalArgumentException) { -1 }
-        }
+        }.let { if(listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
         GroupBy.CLASSIFICATION -> list.value.sortedBy {
             try { Classification.valueOf(it.classification ?: Classification.PUBLIC.name).ordinal } catch (e: java.lang.IllegalArgumentException) { -1 }
-        }
+        }.let { if(listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
         else -> list.value
     }
-    if(listViewModel.listSettings.sortOrder.value == SortOrder.DESC) sortedList = sortedList.asReversed()
 
     val groupedList = sortedList.groupBy {
         when(listViewModel.listSettings.groupBy.value) {

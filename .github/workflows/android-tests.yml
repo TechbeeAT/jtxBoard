@@ -11,13 +11,13 @@ jobs:
         ANDROID_HOME: /sdk
         ANDROID_AVD_HOME: /root/.android/avd
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
       - uses: gradle/wrapper-validation-action@v1
 
       - name: Cache gradle dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           key: ${{ runner.os }}
           path: |
@@ -26,10 +26,10 @@ jobs:
       - name: Start emulator
         run: start-emulator.sh
       - name: Run connected tests
-        run: ./gradlew app:connectedOseDebugAndroidTest
+        run: ./gradlew app:connectedGplayDebugAndroidTest
       - name: Archive results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: |
