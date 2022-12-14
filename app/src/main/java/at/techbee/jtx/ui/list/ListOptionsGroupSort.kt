@@ -133,11 +133,9 @@ fun ListOptionsGroupSort(
 
         FlowRow(modifier = Modifier.fillMaxWidth()) {
             OrderBy.getValuesFor(module).forEach { orderBy ->
-                if (orderBy == listSettings.orderBy.value) // don't show criteria that was already selected
-                    return@forEach
-
                 FilterChip(
                     selected = listSettings.orderBy2.value == orderBy,
+                    enabled = orderBy != listSettings.orderBy.value,
                     onClick = {
                         if (listSettings.orderBy2.value != orderBy)
                             listSettings.orderBy2.value = orderBy
@@ -149,15 +147,15 @@ fun ListOptionsGroupSort(
             }
         }
         FlowRow(modifier = Modifier.fillMaxWidth()) {
-            SortOrder.values().forEach { sortOrder ->
+            SortOrder.values().forEach { sortOrder2 ->
                 FilterChip(
-                    selected = listSettings.sortOrder2.value == sortOrder,
+                    selected = listSettings.sortOrder2.value == sortOrder2,
                     onClick = {
-                        if (listSettings.sortOrder2.value != sortOrder)
-                            listSettings.sortOrder2.value = sortOrder
+                        if (listSettings.sortOrder2.value != sortOrder2)
+                            listSettings.sortOrder2.value = sortOrder2
                         onListSettingsChanged()
                     },
-                    label = { Text(stringResource(id = sortOrder.stringResource)) },
+                    label = { Text(stringResource(id = sortOrder2.stringResource)) },
                     modifier = Modifier.padding(end = 4.dp)
                 )
             }
