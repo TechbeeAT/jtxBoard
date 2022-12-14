@@ -85,6 +85,11 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
         const val INTENT_EXTRA_ITEM2SHOW = "item2show"
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //AppCompatDelegate.create(this, null).onCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
@@ -187,6 +192,7 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
                     }
                 }
             }
+            setResult(Activity.RESULT_OK)
         }
         lastProcessedIntentHash = intent.hashCode()
     }
