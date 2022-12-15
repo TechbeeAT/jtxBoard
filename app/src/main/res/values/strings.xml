@@ -712,4 +712,14 @@
     <string name="widget_list_view_settings">View settings</string>
     <string name="widget_list_show_description">Show description</string>
 
+    <string name="markdown_bold">Bold</string>
+    <string name="markdown_italic">Italic</string>
+    <string name="markdown_underlined">Underlined</string>
+    <string name="markdown_strikethrough">Strikethrough</string>
+    <string name="markdown_heading1">Heading 1</string>
+    <string name="markdown_heading2">Heading 2</string>
+    <string name="markdown_heading3">Heading 3</string>
+    <string name="markdown_horizontal_ruler">Horizontal ruler</string>
+    <string name="markdown_unordered_list">List</string>
+
 </resources>
