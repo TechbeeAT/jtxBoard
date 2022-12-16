@@ -116,6 +116,15 @@ fun DetailBottomAppBar(
 
     BottomAppBar(
         actions = {
+            AnimatedVisibility(markdownState.value == MarkdownState.CLOSED) {
+                IconButton(onClick = { markdownState.value = MarkdownState.OBSERVING }) {
+                    Icon(
+                        Icons.Outlined.TextFormat,
+                        contentDescription = stringResource(id = R.string.menu_view_markdown_formatting)
+                    )
+                }
+            }
+
             AnimatedVisibility(
                 isEditMode.value
                         && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
@@ -197,16 +206,6 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(markdownState.value == MarkdownState.CLOSED) {
-                IconButton(onClick = { markdownState.value = MarkdownState.OBSERVING }) {
-                    Icon(
-                        Icons.Outlined.TextFormat,
-                        contentDescription = stringResource(id = R.string.menu_view_markdown_formatting)
-                    )
-                }
-            }
-
-
             AnimatedVisibility(
                 collection.accountType != LOCAL_ACCOUNT_TYPE
                     && (isSyncInProgress || icalObject.dirty)
@@ -284,7 +283,6 @@ fun DetailBottomAppBar(
             // Icons for Markdown formatting
             AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = { markdownState.value = MarkdownState.CLOSED }) {
@@ -293,6 +291,13 @@ fun DetailBottomAppBar(
                     Divider(
                         modifier = Modifier.height(40.dp).width(1.dp)
                     )
+                }
+            }
+            AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     IconButton(onClick = { markdownState.value = MarkdownState.BOLD }) {
                         Icon(Icons.Outlined.TextFormat, stringResource(R.string.markdown_bold))
                     }
