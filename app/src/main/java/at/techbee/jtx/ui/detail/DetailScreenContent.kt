@@ -421,6 +421,7 @@ fun DetailScreenContent(
             AnimatedVisibility(!isEditMode.value) {
                 SelectionContainer {
                     ElevatedCard(
+                        onClick = { isEditMode.value = true },
                         modifier = Modifier.fillMaxWidth()
                     ) {
 
