@@ -435,14 +435,14 @@ fun DetailScreenContent(
 
                         if (description.text.isNotBlank()) {
                             if(detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] != false)
-                                CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.merge(TextStyle(textDirection = TextDirection.Content))) {
+                                //CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.merge(TextStyle(textDirection = TextDirection.Content))) {
                                 //ProvideTextStyle(value = TextStyle(textDirection = TextDirection.Content)) {
                                     MarkdownText(
                                         markdown = description.text.trim(),
                                         modifier = Modifier.padding(8.dp),
-                                        //bodyStyle = TextStyle(textDirection = TextDirection.Content)
+                                        style = TextStyle(textDirection = TextDirection.Content)
                                     )
-                                }
+                                //}
                             else
                                 Text(
                                     text = description.text.trim(),
