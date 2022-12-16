@@ -70,6 +70,7 @@ import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
+import com.arnyminerz.markdowntext.MarkdownFlavour
 import com.arnyminerz.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
 import org.apache.commons.lang3.StringUtils
@@ -439,14 +440,15 @@ fun DetailScreenContent(
                                 //ProvideTextStyle(value = TextStyle(textDirection = TextDirection.Content)) {
                                     MarkdownText(
                                         markdown = description.text.trim(),
-                                        modifier = Modifier.padding(8.dp),
+                                        flavour = MarkdownFlavour.CommonMark,
+                                        modifier = Modifier.fillMaxWidth().padding(8.dp),
                                         style = TextStyle(textDirection = TextDirection.Content)
                                     )
                                 //}
                             else
                                 Text(
                                     text = description.text.trim(),
-                                    modifier = Modifier.padding(8.dp),
+                                    modifier = Modifier.fillMaxWidth().padding(8.dp),
                                     style = TextStyle(textDirection = TextDirection.Content)
                                 )
                         }
