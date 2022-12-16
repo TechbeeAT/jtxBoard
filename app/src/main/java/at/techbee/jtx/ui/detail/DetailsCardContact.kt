@@ -31,11 +31,9 @@ import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -43,7 +41,10 @@ import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.UiUtil
-import com.google.accompanist.permissions.*
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.launch
 
 
@@ -83,8 +84,7 @@ fun DetailsCardContact(
                         HeadlineWithIcon(icon = Icons.Outlined.ContactMail, iconDesc = headline, text = headline)
                         Text(
                             text = contact,
-                            modifier = Modifier.fillMaxWidth(),
-                            style = TextStyle(textDirection = TextDirection.Content)
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 } else {
@@ -154,8 +154,7 @@ fun DetailsCardContact(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .border(0.dp, Color.Transparent)
-                                .bringIntoViewRequester(bringIntoViewRequester),
-                            textStyle = TextStyle(textDirection = TextDirection.Content)
+                                .bringIntoViewRequester(bringIntoViewRequester)
                         )
                     }
                 }

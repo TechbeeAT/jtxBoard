@@ -9,7 +9,10 @@
 package at.techbee.jtx.ui.reusable.elements
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -24,9 +27,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -103,8 +104,7 @@ fun TimezoneAutocompleteTextfield(
                     }
                 }
             },
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = TextStyle(textDirection = TextDirection.Content)
+            modifier = Modifier.fillMaxWidth()
         )
 
         AnimatedVisibility(!TimeZone.getAvailableIDs().contains(selectedTimezone)) {

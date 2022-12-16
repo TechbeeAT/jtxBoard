@@ -429,27 +429,21 @@ fun DetailScreenContent(
                                 summary.trim(),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(8.dp),
-                                style = MaterialTheme.typography.titleMedium.copy(textDirection = TextDirection.Content)
-                                //fontWeight = FontWeight.Bold
+                                    .padding(8.dp)
                             )
 
                         if (description.text.isNotBlank()) {
                             if(detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] != false)
-                                //CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.merge(TextStyle(textDirection = TextDirection.Content))) {
-                                //ProvideTextStyle(value = TextStyle(textDirection = TextDirection.Content)) {
                                     MarkdownText(
                                         markdown = description.text.trim(),
                                         flavour = MarkdownFlavour.CommonMark,
                                         modifier = Modifier.fillMaxWidth().padding(8.dp),
                                         style = TextStyle(textDirection = TextDirection.Content)
                                     )
-                                //}
                             else
                                 Text(
                                     text = description.text.trim(),
                                     modifier = Modifier.fillMaxWidth().padding(8.dp),
-                                    style = TextStyle(textDirection = TextDirection.Content)
                                 )
                         }
                     }
@@ -473,8 +467,7 @@ fun DetailScreenContent(
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp),
-                        textStyle = TextStyle(textDirection = TextDirection.Content)
+                            .padding(8.dp)
                         )
 
                     OutlinedTextField(
@@ -523,8 +516,7 @@ fun DetailScreenContent(
                                     markdownState.value = MarkdownState.OBSERVING
                                 else if (!focusState.hasFocus)
                                     markdownState.value = MarkdownState.DISABLED
-                            },
-                        textStyle = TextStyle(textDirection = TextDirection.Content)
+                            }
                     )
                 }
             }

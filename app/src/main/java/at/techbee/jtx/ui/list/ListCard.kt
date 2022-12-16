@@ -26,11 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -211,8 +209,7 @@ fun ICalObjectListCard(
                                     textDecoration = summaryTextDecoration,
                                     modifier = Modifier
                                         .padding(top = 4.dp)
-                                        .weight(1f),
-                                    style = TextStyle(textDirection = TextDirection.Content)
+                                        .weight(1f)
                                 )
 
                             if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
@@ -233,8 +230,7 @@ fun ICalObjectListCard(
                                 text = iCalObject.description?.trim() ?: "",
                                 maxLines = 6,
                                 overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.fillMaxWidth(),
-                                style = TextStyle(textDirection = TextDirection.Content)
+                                modifier = Modifier.fillMaxWidth()
                             )
 
                         if (iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0

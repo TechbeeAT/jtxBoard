@@ -14,8 +14,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,8 +45,7 @@ fun SubtaskCardCompact(
                 .padding(start = 8.dp, end = 8.dp)
                 .weight(1f),
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = TextStyle(textDirection = TextDirection.Content)
+            overflow = TextOverflow.Ellipsis
         )
 
         Checkbox(

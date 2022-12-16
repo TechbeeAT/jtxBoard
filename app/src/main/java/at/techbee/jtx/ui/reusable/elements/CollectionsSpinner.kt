@@ -9,8 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.ICalCollection
@@ -49,8 +47,7 @@ fun CollectionsSpinner(
                 Text(
                     text = selected.displayName + selected.accountName?.let { " (" + it + ")" },
                     modifier = Modifier.weight(1f)
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    style = TextStyle(textDirection = TextDirection.Content)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
                 Icon(Icons.Outlined.ArrowDropDown, null, modifier = Modifier.padding(8.dp))
 
