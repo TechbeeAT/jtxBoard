@@ -14,7 +14,7 @@ import androidx.compose.ui.text.input.getTextBeforeSelection
  * all others are for specific formatting
  */
 enum class MarkdownState {
-    DISABLED, OBSERVING, CLOSED, BOLD, ITALIC, UNDERLINED, STRIKETHROUGH, H1, H2, H3, HR, UNORDEREDLIST;
+    DISABLED, OBSERVING, CLOSED, BOLD, ITALIC, UNDERLINED, STRIKETHROUGH, H1, H2, H3, HR, UNORDEREDLIST, CODE;
 
     fun format(textFieldValue: TextFieldValue): TextFieldValue {
         return when(this) {
@@ -30,6 +30,7 @@ enum class MarkdownState {
             H3 -> addTagAtLineStart(textFieldValue, "### ")
             HR -> addTagAtLineStart(textFieldValue, "--------" + System.lineSeparator())
             UNORDEREDLIST -> addTagAtLineStart(textFieldValue, "- ")
+            CODE -> addEnclosingTags(textFieldValue, "`", "`")
         }
     }
 

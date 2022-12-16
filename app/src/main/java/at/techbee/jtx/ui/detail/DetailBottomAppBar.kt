@@ -19,7 +19,10 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -316,6 +319,9 @@ fun DetailBottomAppBar(
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.UNORDEREDLIST  }) {
                         Icon(Icons.Outlined.List, stringResource(R.string.markdown_unordered_list))
+                    }
+                    IconButton(onClick = { markdownState.value = MarkdownState.CODE  }) {
+                        Icon(Icons.Outlined.Code, stringResource(R.string.markdown_code))
                     }
                 }
             }

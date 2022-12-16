@@ -721,5 +721,6 @@
     <string name="markdown_heading3">Heading 3</string>
     <string name="markdown_horizontal_ruler">Horizontal ruler</string>
     <string name="markdown_unordered_list">List</string>
+    <string name="markdown_code">Code</string>
 
 </resources>
