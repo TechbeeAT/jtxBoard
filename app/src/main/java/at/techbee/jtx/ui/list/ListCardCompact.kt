@@ -150,7 +150,7 @@ fun ListCardCompact(
             }
 
             Row(
-                verticalAlignment = Alignment.Top,
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -339,6 +339,48 @@ fun ListCardCompact_TODO() {
             due = System.currentTimeMillis()-1
             summary =
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+        ListCardCompact(
+            icalobject,
+            subtasks = listOf(icalobject, icalobject),
+            onProgressChanged = { _, _, _ -> },
+            goToDetail = { _, _, _ -> }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ListCardCompact_TODO_only_summary() {
+    MaterialTheme {
+
+        val icalobject = ICal4List.getSample().apply {
+            id = 1L
+            component = Component.VTODO.name
+            module = Module.TODO.name
+            categories = null
+            percent = null
+            status = StatusTodo.`IN-PROCESS`.name
+            classification = Classification.PUBLIC.name
+            dtstart = null
+            due = null
+            numAttachments = 0
+            numSubnotes = 0
+            numSubtasks = 0
+            numAttendees = 0
+            numResources = 0
+            numAlarms = 0
+            numSubnotes = 0
+            numComments = 0
+            uploadPending = false
+            isReadOnly = false
+            recurOriginalIcalObjectId = null
+            isRecurringInstance = false
+            isLinkedRecurringInstance = false
+            isRecurringOriginal = false
+            summary = "Lorem ipsum"
+            description = null
         }
         ListCardCompact(
             icalobject,
