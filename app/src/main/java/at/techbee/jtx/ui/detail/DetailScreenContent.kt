@@ -435,11 +435,14 @@ fun DetailScreenContent(
 
                         if (description.text.isNotBlank()) {
                             if(detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] != false)
-                                MarkdownText(
-                                    markdown = description.text.trim(),
-                                    modifier = Modifier.padding(8.dp),
-                                    bodyStyle = TextStyle(textDirection = TextDirection.Content)
-                                )
+                                CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.merge(TextStyle(textDirection = TextDirection.Content))) {
+                                //ProvideTextStyle(value = TextStyle(textDirection = TextDirection.Content)) {
+                                    MarkdownText(
+                                        markdown = description.text.trim(),
+                                        modifier = Modifier.padding(8.dp),
+                                        //bodyStyle = TextStyle(textDirection = TextDirection.Content)
+                                    )
+                                }
                             else
                                 Text(
                                     text = description.text.trim(),
@@ -510,7 +513,7 @@ fun DetailScreenContent(
                             .fillMaxWidth()
                             .padding(8.dp)
                             .onFocusChanged { focusState ->
-                                if(
+                                if (
                                     focusState.hasFocus
                                     && markdownState.value == MarkdownState.DISABLED
                                     && detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] != false
@@ -759,7 +762,9 @@ fun DetailScreenContent(
                 val curIndex = icalObjectIdList.indexOf(iCalEntity.value?.property?.id?: 0)
                 if(icalObjectIdList.size > 1 && curIndex >=0) {
                     Row(
-                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp).fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(vertical = 16.dp, horizontal = 8.dp)
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
