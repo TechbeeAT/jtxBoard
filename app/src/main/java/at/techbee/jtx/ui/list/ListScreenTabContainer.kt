@@ -28,7 +28,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -50,7 +49,7 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
-import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
+import at.techbee.jtx.ui.reusable.appbars.ListTopAppBar
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
@@ -203,9 +202,11 @@ fun ListScreenTabContainer(
 
     Scaffold(
         topBar = {
-            JtxTopAppBar(
+            ListTopAppBar(
                 drawerState = drawerState,
-                title = stringResource(id = R.string.app_name),
+                module = listViewModel.module,
+                searchText = listViewModel.listSettings.searchText,
+                onSearchTextUpdated = { listViewModel.updateSearch(saveListSettings = false) },
                 actions = {
                     IconButton(onClick = { topBarMenuExpanded = true }) {
                         Icon(
@@ -338,23 +339,7 @@ fun ListScreenTabContainer(
                                 filterBottomSheetState.show()
                         }
                     },
-                    onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) },
-                    onSearchTextClicked = {
-                        scope.launch {
-                            if (!showSearch) {
-                                showSearch = true
-                                listViewModel.listSettings.searchText.value = ""
-                                keyboardController?.show()
-                                //focusRequesterSearchText.requestFocus()
-                            } else {
-                                showSearch = false
-                                keyboardController?.hide()
-                                listViewModel.listSettings.searchText.value =
-                                    null  // null removes color indicator for active search
-                                listViewModel.updateSearch(saveListSettings = false)
-                            }
-                        }
-                    }
+                    onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) }
                 )
             } else if(timeout) {
                 BottomAppBar {
@@ -398,22 +383,6 @@ fun ListScreenTabContainer(
                                         }
                                     )
                                 }
-                            }
-
-
-                            AnimatedVisibility(showSearch) {
-                                ListSearchTextField(
-                                    initialSeachText = getActiveViewModel().listSettings.searchText.value,
-                                    onSearchTextChanged = { newSearchText ->
-                                        getActiveViewModel().listSettings.searchText.value =
-                                            newSearchText
-                                        getActiveViewModel().updateSearch(saveListSettings = false)
-                                    },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .shadow(1.dp)
-                                        .padding(8.dp)
-                                )
                             }
 
                             AnimatedVisibility(
