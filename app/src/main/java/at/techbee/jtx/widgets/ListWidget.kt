@@ -243,7 +243,7 @@ class ListWidget : GlanceAppWidget() {
                                     )
                                 }
 
-                                if (listWidgetConfig?.flatView == false) {
+                                if (listWidgetConfig?.flatView == false && listWidgetConfig.showSubtasks) {
                                     subtasksGrouped[entry.uid]?.forEach subtasks@ { subtask ->
 
                                         if (listWidgetConfig.isExcludeDone && subtask.percent == 100)
@@ -271,7 +271,7 @@ class ListWidget : GlanceAppWidget() {
                                     }
                                 }
 
-                                if (listWidgetConfig?.flatView == false) {
+                                if (listWidgetConfig?.flatView == false && listWidgetConfig.showSubnotes) {
                                     subnotesGrouped[entry.uid]?.forEach subnotes@ { subnote ->
 
                                         if (subnote.summary.isNullOrEmpty() && subnote.description.isNullOrEmpty())

@@ -53,6 +53,8 @@ class ListSettings {
     var widgetAlpha: MutableState<Float> = mutableStateOf(1F)  // widget only
     var widgetAlphaEntries: MutableState<Float> = mutableStateOf(1F)  // widget only
     var showDescription: MutableState<Boolean> = mutableStateOf(true)  // widget only
+    var showSubtasks: MutableState<Boolean> = mutableStateOf(true)  // widget only
+    var showSubnotes: MutableState<Boolean> = mutableStateOf(true)  // widget only
 
 
     companion object {
@@ -154,6 +156,8 @@ class ListSettings {
             showOneRecurEntryInFuture.value = listWidgetConfig.showOneRecurEntryInFuture
             checkboxPositionEnd.value = listWidgetConfig.checkboxPositionEnd
             showDescription.value = listWidgetConfig.showDescription
+            showSubtasks.value = listWidgetConfig.showSubtasks
+            showSubnotes.value = listWidgetConfig.showSubnotes
             widgetAlpha.value = listWidgetConfig.widgetAlpha
             widgetAlphaEntries.value = listWidgetConfig.widgetAlphaEntries
         }

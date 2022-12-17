@@ -133,6 +133,24 @@ fun ListWidgetConfigGeneral(
                 label = { Text(stringResource(id = R.string.widget_list_show_description)) },
                 modifier = Modifier.padding(horizontal = 2.dp)
             )
+
+            FilterChip(
+                selected = listSettings.showSubtasks.value,
+                onClick = {
+                    listSettings.showSubtasks.value = !listSettings.showSubtasks.value
+                },
+                label = { Text(stringResource(id = R.string.widget_list_show_subtasks)) },
+                modifier = Modifier.padding(horizontal = 2.dp)
+            )
+
+            FilterChip(
+                selected = listSettings.showSubnotes.value,
+                onClick = {
+                    listSettings.showSubnotes.value = !listSettings.showSubnotes.value
+                },
+                label = { Text(stringResource(id = R.string.widget_list_show_subnotes)) },
+                modifier = Modifier.padding(horizontal = 2.dp)
+            )
         }
 
         Text(

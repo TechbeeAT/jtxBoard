@@ -200,6 +200,8 @@ fun ListWidgetConfigContent(
                                     widgetAlpha = listSettings.widgetAlpha.value
                                     widgetAlphaEntries = listSettings.widgetAlphaEntries.value
                                     showDescription = listSettings.showDescription.value
+                                    showSubtasks = listSettings.showSubtasks.value
+                                    showSubnotes = listSettings.showSubnotes.value
 
                                     isExcludeDone = listSettings.isExcludeDone.value
                                     isFilterOverdue = listSettings.isFilterOverdue.value
@@ -285,5 +287,7 @@ data class ListWidgetConfig(
     var checkboxPositionEnd: Boolean = false,
     var widgetAlpha: Float = 1F,
     var widgetAlphaEntries: Float = 1F,
-    var showDescription: Boolean = true
+    var showDescription: Boolean = true,
+    var showSubtasks: Boolean = true,
+    var showSubnotes: Boolean = true
 )
