@@ -70,7 +70,6 @@ import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
-import com.arnyminerz.markdowntext.MarkdownFlavour
 import com.arnyminerz.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
 import org.apache.commons.lang3.StringUtils
@@ -437,7 +436,6 @@ fun DetailScreenContent(
                             if(detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] != false)
                                     MarkdownText(
                                         markdown = description.text.trim(),
-                                        flavour = MarkdownFlavour.CommonMark,
                                         modifier = Modifier.fillMaxWidth().padding(8.dp),
                                         style = TextStyle(textDirection = TextDirection.Content)
                                     )
@@ -486,15 +484,17 @@ fun DetailScreenContent(
                             val after = if(it.selection.start < it.annotatedString.lastIndex) it.annotatedString.subSequence(it.selection.start, it.annotatedString.lastIndex) else AnnotatedString("")
                             val lines =  before.split(System.lineSeparator())
                             val previous = if(lines.lastIndex > 1) lines[lines.lastIndex-1] else before
-                            val containsHyphenBullet =  previous.contains(Regex("^[-]\\s.*"))
-                            val containsStarBullet =  previous.contains(Regex("^[*]\\s.*"))
+                            val nextLineStartWith = when {
+                                previous.startsWith("- [ ] ") || previous.startsWith("- [x]") -> "- [ ] "
+                                previous.startsWith("* ") -> "* "
+                                previous.startsWith("- ") -> "- "
+                                else -> null
+                            }
 
-                            description = if(description.text != it.text && (containsHyphenBullet || containsStarBullet) && enteredCharIsReturn)
+                            description = if(description.text != it.text && (nextLineStartWith != null) && enteredCharIsReturn)
                                 TextFieldValue(
-                                    annotatedString = before
-                                        .plus(AnnotatedString(if(containsHyphenBullet) "- " else if(containsStarBullet) "* " else ""))
-                                        .plus(after),
-                                    selection = TextRange(it.selection.start+2)
+                                    annotatedString = before.plus(AnnotatedString(nextLineStartWith)).plus(after),
+                                    selection = TextRange(it.selection.start+nextLineStartWith.length)
                                 )
                             else
                                 it

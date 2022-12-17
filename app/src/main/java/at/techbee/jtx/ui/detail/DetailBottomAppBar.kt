@@ -299,7 +299,7 @@ fun DetailBottomAppBar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = { markdownState.value = MarkdownState.BOLD }) {
-                        Icon(Icons.Outlined.TextFormat, stringResource(R.string.markdown_bold))
+                        Icon(Icons.Outlined.FormatBold, stringResource(R.string.markdown_bold))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.ITALIC  }) {
                         Icon(Icons.Outlined.FormatItalic, stringResource(R.string.markdown_italic))
