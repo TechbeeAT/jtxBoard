@@ -1,4 +1,4 @@
-package at.techbee.jtx.ui.reusable.appbars
+package at.techbee.jtx.ui.list
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade

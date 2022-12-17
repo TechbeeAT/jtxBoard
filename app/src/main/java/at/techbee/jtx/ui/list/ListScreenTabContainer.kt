@@ -49,7 +49,6 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
-import at.techbee.jtx.ui.reusable.appbars.ListTopAppBar
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
