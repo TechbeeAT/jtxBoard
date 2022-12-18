@@ -646,8 +646,7 @@ data class ICalObject(
          * @return the new id of the item that was inserted (that becomes the newParentId)
          *
          */
-        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long =
-            withContext(Dispatchers.IO) {
+        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long {
 
                 val item = database.getSync(id)
                 if (item != null) {
@@ -712,9 +711,9 @@ data class ICalObject(
                         database.insertRelatedto(relParent2Child)
                     }
                     Alarm.scheduleNextNotifications(context)
-                    return@withContext newId
+                    return newId
                 }
-                return@withContext 0L
+                return 0L
             }
 
         fun makeRecurringException(item: ICalObject, database: ICalDatabaseDao) {

@@ -29,6 +29,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -166,6 +167,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun moveToNewCollection(icalObject: ICalObject, newCollectionId: Long) {
 
         viewModelScope.launch(Dispatchers.IO) {
+            while(changeState.value != DetailChangeState.CHANGESAVED)
+                delay(50)
+
             changeState.value = DetailChangeState.CHANGESAVING
             try {
                 val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, database, getApplication())
