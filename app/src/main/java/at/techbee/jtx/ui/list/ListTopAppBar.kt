@@ -43,7 +43,7 @@ fun ListTopAppBar(
                                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(4.dp)
                     .clip(RoundedCornerShape(32.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -60,11 +60,14 @@ fun ListTopAppBar(
                 singleLine = true,
                 maxLines = 1,
                 leadingIcon = {
-                    IconButton(onClick = {
-                        coroutineScope.launch {
-                            if(drawerState.isClosed) drawerState.open() else drawerState.close()
-                        }
-                    }) {
+                    IconButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                if(drawerState.isClosed) drawerState.open() else drawerState.close()
+                            }
+                        },
+                        modifier = Modifier.padding(start = 4.dp)
+                    ) {
                         Crossfade(targetState = drawerState) {
                             when (it.targetValue) {
                                 DrawerValue.Open -> Icon(

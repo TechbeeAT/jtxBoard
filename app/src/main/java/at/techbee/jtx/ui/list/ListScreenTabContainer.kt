@@ -207,7 +207,10 @@ fun ListScreenTabContainer(
                 searchText = listViewModel.listSettings.searchText,
                 onSearchTextUpdated = { listViewModel.updateSearch(saveListSettings = false) },
                 actions = {
-                    IconButton(onClick = { topBarMenuExpanded = true }) {
+                    IconButton(
+                        onClick = { topBarMenuExpanded = true },
+                        modifier = Modifier.padding(end = 4.dp)
+                    ) {
                         Icon(
                             Icons.Outlined.MoreVert,
                             contentDescription = stringResource(id = R.string.more)
