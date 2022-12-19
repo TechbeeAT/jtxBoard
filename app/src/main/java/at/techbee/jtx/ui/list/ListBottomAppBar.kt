@@ -11,10 +11,7 @@ package at.techbee.jtx.ui.list
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -26,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -175,7 +173,35 @@ fun ListBottomAppBar(
                             .height(40.dp)
                             .width(1.dp)
                     )
-                    IconButton(onClick = {
+
+
+                    IconButton(onClick = { TODO() }) {
+                        Icon(
+                            Icons.Outlined.Delete,
+                            contentDescription = stringResource(id = R.string.delete),
+                        )
+                    }
+                    IconButton(onClick = { TODO() }) {
+                        Icon(
+                            Icons.Outlined.Label,
+                            contentDescription = stringResource(id = R.string.category),
+                        )
+                    }
+                    IconButton(onClick = { TODO() }) {
+                        Icon(
+                            Icons.Outlined.Folder,
+                            contentDescription = stringResource(id = R.string.collection),
+                        )
+                    }
+
+                    Text(
+                        text = stringResource(R.string.x_selected, selectedEntries.size, iCal4List.size),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+
+                    TextButton(onClick = {
                         when(selectedEntries.size) {
                             0 -> selectedEntries.addAll(iCal4List.map { it.id })
                             iCal4List.size -> selectedEntries.clear()
@@ -187,30 +213,13 @@ fun ListBottomAppBar(
                     }) {
                         Crossfade(selectedEntries.size) {
                             when (it) {
-                                0 -> Icon(Icons.Outlined.CheckBoxOutlineBlank, stringResource(R.string.select_all))
-                                iCal4List.size -> Icon(Icons.Outlined.CheckBox, stringResource(R.string.select_none))
-                                else -> Icon(Icons.Outlined.IndeterminateCheckBox, stringResource(R.string.select_all))
+                                0 -> Text(stringResource(R.string.select_all))
+                                iCal4List.size -> Text(stringResource(R.string.select_none))
+                                else -> Text(stringResource(R.string.select_all))
                             }
                         }
                     }
-                    IconButton(onClick = { TODO() }) {
-                        Icon(
-                            Icons.Outlined.Delete,
-                            contentDescription = stringResource(id = R.string.delete),
-                        )
-                    }
 
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(
-                            stringResource(R.string.x_selected, selectedEntries.size, iCal4List.size)
-                        )
-                    }
-                    IconButton(onClick = { TODO() }) {
-                        Icon(
-                            Icons.Outlined.MoreVert,
-                            contentDescription = stringResource(id = R.string.more),
-                        )
-                    }
                 }
             }
         },
