@@ -11,15 +11,23 @@ package at.techbee.jtx.ui.list
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
@@ -35,6 +43,8 @@ fun ListBottomAppBar(
     iCal4ListLive: LiveData<List<ICal4List>>,
     listSettings: ListSettings,
     showQuickEntry: MutableState<Boolean>,
+    multiselectEnabled: MutableState<Boolean>,
+    selectedEntries: SnapshotStateList<Long>,
     allowNewEntries: Boolean,
     onAddNewEntry: () -> Unit,
     onFilterIconClicked: () -> Unit,
@@ -42,7 +52,7 @@ fun ListBottomAppBar(
 ) {
 
     var showGoToDatePicker by remember { mutableStateOf(false) }
-    val iCal4List by iCal4ListLive.observeAsState()
+    val iCal4List by iCal4ListLive.observeAsState(emptyList())
 
     val isFilterActive = listSettings.searchCategories.value.isNotEmpty()
                 //|| searchOrganizers.value.isNotEmpty()
@@ -66,8 +76,8 @@ fun ListBottomAppBar(
 
 
     if(showGoToDatePicker) {
-        var dates = iCal4List?.map { it.dtstart ?: System.currentTimeMillis() }?.toList()
-        if (dates.isNullOrEmpty())
+        var dates = iCal4List.map { it.dtstart ?: System.currentTimeMillis() }.toList()
+        if (dates.isEmpty())
             dates = listOf(System.currentTimeMillis())
 
         // finds the closes number in a list of long
@@ -83,7 +93,7 @@ fun ListBottomAppBar(
             onConfirm = { selectedDate, _ ->
                 selectedDate?.let { selected ->
                     val closestDate = dates.findClosest(selected)
-                    iCal4List?.find { it.dtstart == closestDate }?.let { foundEntry ->
+                    iCal4List.find { it.dtstart == closestDate }?.let { foundEntry ->
                         onGoToDateSelected(foundEntry.id)
                     }
                 }
@@ -97,43 +107,116 @@ fun ListBottomAppBar(
 
     BottomAppBar(
         actions = {
-            IconButton(onClick = { onFilterIconClicked() }) {
-                Icon(
-                    Icons.Outlined.FilterList,
-                    contentDescription = stringResource(id = R.string.filter),
-                    tint = if (isFilterActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
-                )
-            }
-            AnimatedVisibility(allowNewEntries) {
-                IconButton(onClick = { showQuickEntry.value = !showQuickEntry.value }) {
-                    Icon(
-                        painterResource(
-                            id = R.drawable.ic_add_quick
-                        ),
-                        contentDescription = stringResource(
-                            id = when (module) {
-                                Module.JOURNAL -> R.string.menu_list_quick_journal
-                                Module.NOTE -> R.string.menu_list_quick_note
-                                Module.TODO -> R.string.menu_list_quick_todo
-                            }
-                        ),
-                        tint = if (showQuickEntry.value) MaterialTheme.colorScheme.primary else LocalContentColor.current
-                    )
+
+            AnimatedVisibility(!multiselectEnabled.value) {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { multiselectEnabled.value = true }) {
+                        Icon(
+                            Icons.Outlined.LibraryAddCheck,
+                            contentDescription = "select multiple"
+                        )
+                    }
+                    IconButton(onClick = { onFilterIconClicked() }) {
+                        Icon(
+                            Icons.Outlined.FilterList,
+                            contentDescription = stringResource(id = R.string.filter),
+                            tint = if (isFilterActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                        )
+                    }
+                    AnimatedVisibility(allowNewEntries) {
+                        IconButton(onClick = { showQuickEntry.value = !showQuickEntry.value }) {
+                            Icon(
+                                painterResource(
+                                    id = R.drawable.ic_add_quick
+                                ),
+                                contentDescription = stringResource(
+                                    id = when (module) {
+                                        Module.JOURNAL -> R.string.menu_list_quick_journal
+                                        Module.NOTE -> R.string.menu_list_quick_note
+                                        Module.TODO -> R.string.menu_list_quick_todo
+                                    }
+                                ),
+                                tint = if (showQuickEntry.value) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                            )
+                        }
+                    }
+
+                    AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null) {
+                        IconButton(onClick = { showGoToDatePicker = true }) {
+                            Icon(
+                                Icons.Outlined.DateRange,
+                                contentDescription = stringResource(id = R.string.menu_list_gotodate)
+                            )
+                        }
+                    }
                 }
             }
 
-            AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null) {
-                IconButton(onClick = { showGoToDatePicker = true }) {
-                    Icon(
-                        Icons.Outlined.DateRange,
-                        contentDescription = stringResource(id = R.string.menu_list_gotodate)
+
+            AnimatedVisibility(multiselectEnabled.value) {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = {
+                        selectedEntries.clear()
+                        multiselectEnabled.value = false
+                    }) {
+                        Icon(
+                            Icons.Outlined.Close,
+                            contentDescription = stringResource(id = R.string.cancel)
+                        )
+                    }
+                    Divider(
+                        modifier = Modifier
+                            .height(40.dp)
+                            .width(1.dp)
                     )
+                    IconButton(onClick = {
+                        when(selectedEntries.size) {
+                            0 -> selectedEntries.addAll(iCal4List.map { it.id })
+                            iCal4List.size -> selectedEntries.clear()
+                            else -> {
+                                selectedEntries.clear()
+                                selectedEntries.addAll(iCal4List.map { it.id })
+                            }
+                        }
+                    }) {
+                        Crossfade(selectedEntries.size) {
+                            when (it) {
+                                0 -> Icon(Icons.Outlined.CheckBoxOutlineBlank, stringResource(R.string.select_all))
+                                iCal4List.size -> Icon(Icons.Outlined.CheckBox, stringResource(R.string.select_none))
+                                else -> Icon(Icons.Outlined.IndeterminateCheckBox, stringResource(R.string.select_all))
+                            }
+                        }
+                    }
+                    IconButton(onClick = { TODO() }) {
+                        Icon(
+                            Icons.Outlined.Delete,
+                            contentDescription = stringResource(id = R.string.delete),
+                        )
+                    }
+
+                    TextButton(onClick = { /*TODO*/ }) {
+                        Text(
+                            stringResource(R.string.x_selected, selectedEntries.size, iCal4List.size)
+                        )
+                    }
+                    IconButton(onClick = { TODO() }) {
+                        Icon(
+                            Icons.Outlined.MoreVert,
+                            contentDescription = stringResource(id = R.string.more),
+                        )
+                    }
                 }
             }
         },
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
-            AnimatedVisibility(allowNewEntries) {
+            AnimatedVisibility(allowNewEntries && !multiselectEnabled.value) {
                 FloatingActionButton(
                     onClick = { onAddNewEntry() },
                 ) {
@@ -165,6 +248,8 @@ fun ListBottomAppBar_Preview_Journal() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
+            multiselectEnabled = remember { mutableStateOf(false) },
+            selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
@@ -186,9 +271,11 @@ fun ListBottomAppBar_Preview_Note() {
             module = Module.NOTE,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
-            allowNewEntries = true,
+            allowNewEntries = false,
+            multiselectEnabled = remember { mutableStateOf(true) },
+            selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
-            showQuickEntry = remember { mutableStateOf(true) },
+            showQuickEntry = remember { mutableStateOf(false) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
         )
@@ -209,6 +296,8 @@ fun ListBottomAppBar_Preview_Todo() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
+            multiselectEnabled = remember { mutableStateOf(false) },
+            selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
@@ -232,6 +321,8 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
+            multiselectEnabled = remember { mutableStateOf(false) },
+            selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },

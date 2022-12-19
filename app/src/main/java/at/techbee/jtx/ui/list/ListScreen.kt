@@ -23,6 +23,8 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.navigation.NavController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 
@@ -43,31 +45,44 @@ fun ListScreen(
     }
 
     val list = listViewModel.iCal4List.observeAsState(emptyList())
+
     // first apply a proper sort order, then group
-    val sortedList = when(listViewModel.listSettings.groupBy.value) {
+    val sortedList = when (listViewModel.listSettings.groupBy.value) {
         GroupBy.STATUS -> list.value.sortedBy {
-            if(listViewModel.module == Module.TODO && it.percent != 100)
-                try { StatusTodo.valueOf(it.status ?: StatusTodo.`NEEDS-ACTION`.name).ordinal } catch (e: java.lang.IllegalArgumentException) { -1 }
+            if (listViewModel.module == Module.TODO && it.percent != 100)
+                try {
+                    StatusTodo.valueOf(it.status ?: StatusTodo.`NEEDS-ACTION`.name).ordinal
+                } catch (e: java.lang.IllegalArgumentException) {
+                    -1
+                }
             else
-                try { StatusJournal.valueOf(it.status ?: StatusJournal.FINAL.name).ordinal } catch (e: java.lang.IllegalArgumentException) { -1 }
-        }.let { if(listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
+                try {
+                    StatusJournal.valueOf(it.status ?: StatusJournal.FINAL.name).ordinal
+                } catch (e: java.lang.IllegalArgumentException) {
+                    -1
+                }
+        }.let { if (listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
         GroupBy.CLASSIFICATION -> list.value.sortedBy {
-            try { Classification.valueOf(it.classification ?: Classification.PUBLIC.name).ordinal } catch (e: java.lang.IllegalArgumentException) { -1 }
-        }.let { if(listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
+            try {
+                Classification.valueOf(it.classification ?: Classification.PUBLIC.name).ordinal
+            } catch (e: java.lang.IllegalArgumentException) {
+                -1
+            }
+        }.let { if (listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
         else -> list.value
     }
 
     val groupedList = sortedList.groupBy {
-        when(listViewModel.listSettings.groupBy.value) {
+        when (listViewModel.listSettings.groupBy.value) {
             GroupBy.STATUS -> {
-                if(listViewModel.module == Module.TODO)
+                if (listViewModel.module == Module.TODO)
                     StatusTodo.getStringResource(context, it.status)
                 else
                     StatusJournal.getStringResource(context, it.status)
             }
             GroupBy.CLASSIFICATION -> Classification.getStringResource(context, it.classification)
             GroupBy.PRIORITY -> {
-                when(it.priority) {
+                when (it.priority) {
                     null -> stringArrayResource(id = R.array.priority)[0]
                     in 0..9 -> stringArrayResource(id = R.array.priority)[it.priority!!]
                     else -> it.priority.toString()
@@ -76,10 +91,32 @@ fun ListScreen(
             GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = LocalContext.current)
             GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = LocalContext.current)
             GroupBy.DUE -> ICalObject.getDueTextInfo(due = it.due, dueTimezone = it.dueTimezone, percent = it.percent, daysOnly = true, context = LocalContext.current)
-            else -> { it.module }
+            else -> {
+                it.module
+            }
         }
     }
 
+    fun processOnClick(itemId: Long, ical4list: List<ICal4List>) {
+        if (listViewModel.multiselectEnabled.value)
+            if (listViewModel.selectedEntries.contains(itemId)) listViewModel.selectedEntries.remove(itemId) else listViewModel.selectedEntries.add(itemId)
+        else
+            navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, false))
+    }
+
+    fun processOnLongClick(itemId: Long, ical4list: List<ICal4List>) {
+        if (!listViewModel.multiselectEnabled.value && BillingManager.getInstance().isProPurchased.value == true)
+            navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, true))
+    }
+
+    fun processOnProgressChanged(itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
+        listViewModel.updateProgress(
+            itemId,
+            newPercent,
+            isLinkedRecurringInstance,
+            scrollOnce
+        )
+    }
 
     Column {
         when (listViewModel.listSettings.viewMode.value) {
@@ -88,6 +125,7 @@ fun ListScreen(
                     groupedList = groupedList,
                     subtasksLive = listViewModel.allSubtasksMap,
                     subnotesLive = listViewModel.allSubnotesMap,
+                    selectedEntries = listViewModel.selectedEntries,
                     attachmentsLive = listViewModel.allAttachmentsMap,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
@@ -97,13 +135,10 @@ fun ListScreen(
                     settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks,
                     settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
                     settingProgressIncrement = settingsStateHolder.settingStepForProgress,
-                    goToDetail = { itemId, editMode, ical4list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, editMode))},
+                    onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
+                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
-                        listViewModel.updateProgress(
-                            itemId,
-                            newPercent,
-                            isLinkedRecurringInstance
-                        )
+                        processOnProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
                     },
                     onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean ->
                         listViewModel.updateExpanded(
@@ -118,45 +153,39 @@ fun ListScreen(
             ViewMode.GRID -> {
                 ListScreenGrid(
                     list = list,
+                    selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
+                    onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
+                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
-                        listViewModel.updateProgress(
-                            itemId,
-                            newPercent,
-                            isLinkedRecurringInstance
-                        )
-                    },
-                    goToDetail = { itemId, editMode, ical4list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, editMode))},
+                        processOnProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
+                    }
                 )
             }
             ViewMode.COMPACT -> {
                 ListScreenCompact(
                     groupedList = groupedList,
                     subtasksLive = listViewModel.allSubtasksMap,
+                    selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
+                    onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
+                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
-                        listViewModel.updateProgress(
-                            itemId,
-                            newPercent,
-                            isLinkedRecurringInstance
-                        )
-                    },
-                    goToDetail = { itemId, editMode, ical4list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, editMode))},
+                        processOnProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
+                    }
                 )
             }
             ViewMode.KANBAN -> {
                 ListScreenKanban(
                     module = listViewModel.module,
                     list = list,
+                    selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
+                    onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
+                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance, scrollOnce ->
-                        listViewModel.updateProgress(
-                            itemId,
-                            newPercent,
-                            isLinkedRecurringInstance,
-                            scrollOnce
-                        )
+                        processOnProgressChanged(itemId, newPercent, isLinkedRecurringInstance, scrollOnce)
                     },
                     onStatusChanged = { itemId, newStatus, isLinkedRecurringInstance, scrollOnce ->
                         listViewModel.updateStatusJournal(
@@ -165,8 +194,7 @@ fun ListScreen(
                             isLinkedRecurringInstance,
                             scrollOnce
                         )
-                    },
-                    goToDetail = { itemId, editMode, ical4list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, editMode))},
+                    }
                 )
             }
         }

@@ -13,6 +13,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
@@ -75,6 +76,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val scrollOnceId = MutableLiveData<Long?>(null)
     var goToEdit = MutableLiveData<Long?>(null)
     var toastMessage = mutableStateOf<String?>(null)
+
+    val selectedEntries = mutableStateListOf<Long>()
+    val multiselectEnabled = mutableStateOf(false)
 
 
     init {

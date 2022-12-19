@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
@@ -34,9 +34,11 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @Composable
 fun ListScreenGrid(
     list: State<List<ICal4List>>,
+    selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
-    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit
+    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
 
     val scrollId by scrollOnceId.observeAsState(null)
@@ -68,15 +70,16 @@ fun ListScreenGrid(
 
             ListCardGrid(
                 iCalObject,
+                selected = selectedEntries.contains(iCalObject.id),
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(jtxCardCornerShape)
                     //.animateItemPlacement()
                     .combinedClickable(
-                        onClick = { goToDetail(iCalObject.id, false, list.value) },
+                        onClick = { onClick(iCalObject.id, list.value) },
                         onLongClick = {
-                            if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                goToDetail(iCalObject.id, true, list.value)
+                            if (!iCalObject.isReadOnly)
+                                onLongClick(iCalObject.id, list.value)
                         }
                     ),
                 onProgressChanged = onProgressChanged,
@@ -120,9 +123,11 @@ fun ListScreenGrid_TODO() {
         }
         ListScreenGrid(
             list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
+            selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> }
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> }
         )
     }
 }
@@ -162,9 +167,11 @@ fun ListScreenGrid_JOURNAL() {
         }
         ListScreenGrid(
             list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
+            selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> }
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> }
         )
     }
 }

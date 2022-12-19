@@ -52,10 +52,11 @@ import com.google.accompanist.flowlayout.FlowRow
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun ICalObjectListCard(
+fun ListCard(
     iCalObject: ICal4List,
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
+    selected: Boolean,
     attachments: List<Attachment>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
@@ -65,7 +66,8 @@ fun ICalObjectListCard(
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
     progressIncrement: Int,
-    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit,
+    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
@@ -88,7 +90,9 @@ fun ICalObjectListCard(
 
 
     ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+        ),
         modifier = modifier
     ) {
 
@@ -427,10 +431,10 @@ fun ICalObjectListCard(
                                     .padding(start = 8.dp, end = 8.dp)
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
-                                        onClick = { goToDetail(subtask.id, false, subtasks)  },
+                                        onClick = { onClick(subtask.id, subtasks)  },
                                         onLongClick = {
                                             if (!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                                goToDetail(subtask.id, true, subtasks)
+                                                onLongClick(subtask.id, subtasks)
                                         }
                                     )
                             )
@@ -449,10 +453,10 @@ fun ICalObjectListCard(
                                     .padding(start = 8.dp, end = 8.dp)
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
-                                        onClick = { goToDetail(subnote.id, false, subnotes) },
+                                        onClick = { onClick(subnote.id, subnotes) },
                                         onLongClick = {
                                             if (!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                                goToDetail(subnote.id, true, subnotes)
+                                                onLongClick(subnote.id, subnotes)
                                         },
                                     ),
                                 isEditMode = false, //no editing here
@@ -478,7 +482,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
             isLinkedRecurringInstance = false
             isRecurringOriginal = false
         }
-        ICalObjectListCard(
+        ListCard(
             icalobject,
             listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
@@ -489,9 +493,11 @@ fun ICalObjectListCardPreview_JOURNAL() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            selected = false,
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
-            goToDetail = { _, _, _ -> },
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> },
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
@@ -511,7 +517,7 @@ fun ICalObjectListCardPreview_NOTE() {
             dtstartTimezone = null
             status = StatusJournal.CANCELLED.name
         }
-        ICalObjectListCard(
+        ListCard(
             icalobject,
             listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
@@ -522,9 +528,11 @@ fun ICalObjectListCardPreview_NOTE() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            selected = false,
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
-            goToDetail = { _, _, _ -> },
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> },
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
@@ -549,7 +557,7 @@ fun ICalObjectListCardPreview_TODO() {
             categories =
                 "Long category 1, long category 2, long category 3, long category 4"
         }
-        ICalObjectListCard(
+        ListCard(
             icalobject,
             listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
@@ -560,8 +568,10 @@ fun ICalObjectListCardPreview_TODO() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            selected = true,
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
-            goToDetail = { _, _, _ -> },
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> },
             settingShowProgressMaintasks = true,
             progressIncrement = 1,
             onProgressChanged = { _, _, _ -> },
@@ -589,7 +599,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             dtstart = null
             due = null
         }
-        ICalObjectListCard(
+        ListCard(
             icalobject,
             listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
@@ -600,7 +610,9 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            goToDetail = { _, _, _ -> },
+            selected = false,
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
             settingShowProgressMaintasks = false,
@@ -630,7 +642,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             isRecurringOriginal = false
             isReadOnly = true
         }
-        ICalObjectListCard(
+        ListCard(
             icalobject,
             listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
@@ -641,7 +653,9 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            goToDetail = { _, _, _ -> },
+            selected = false,
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
@@ -679,11 +693,13 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             numSubnotes = 0
             numComments = 0
         }
-        ICalObjectListCard(
+        ListCard(
             icalobject,
             emptyList(),
             emptyList(),
-            goToDetail = { _, _, _ -> },
+            selected = false,
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> },
             attachments = listOf(),
             settingShowProgressMaintasks = false,
             progressIncrement = 1,

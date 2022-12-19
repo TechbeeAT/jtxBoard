@@ -332,6 +332,8 @@ fun ListScreenTabContainer(
                         addNewEntry(newICalObject, emptyList(), null, true)
                     },
                     showQuickEntry = showQuickAdd,
+                    multiselectEnabled = listViewModel.multiselectEnabled,
+                    selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,
                     onFilterIconClicked = {
                         scope.launch {
@@ -347,7 +349,9 @@ fun ListScreenTabContainer(
                 BottomAppBar {
                     Text(
                         text = stringResource(R.string.list_snackbar_no_collection),
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -430,29 +434,17 @@ fun ListScreenTabContainer(
                                     count = 3,
                                     userScrollEnabled = !filterBottomSheetState.isVisible,
                                 ) { page ->
-                                    when (page) {
-                                        ListTabDestination.Journals.tabIndex -> {
-                                            ListScreen(
-                                                listViewModel = icalListViewModelJournals,
-                                                navController = navController,
-                                                filterBottomSheetState = filterBottomSheetState,
-                                            )
-                                        }
-                                        ListTabDestination.Notes.tabIndex -> {
-                                            ListScreen(
-                                                listViewModel = icalListViewModelNotes,
-                                                navController = navController,
-                                                filterBottomSheetState = filterBottomSheetState,
-                                            )
-                                        }
-                                        ListTabDestination.Tasks.tabIndex -> {
-                                            ListScreen(
-                                                listViewModel = icalListViewModelTodos,
-                                                navController = navController,
-                                                filterBottomSheetState = filterBottomSheetState,
-                                            )
-                                        }
-                                    }
+
+                                    ListScreen(
+                                        listViewModel = when (page) {
+                                            ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
+                                            ListTabDestination.Notes.tabIndex -> icalListViewModelNotes
+                                            ListTabDestination.Tasks.tabIndex -> icalListViewModelTodos
+                                            else -> icalListViewModelJournals
+                                        },
+                                        navController = navController,
+                                        filterBottomSheetState = filterBottomSheetState,
+                                    )
                                 }
 
                                 if(globalStateHolder.isSyncInProgress.value) {

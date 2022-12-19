@@ -38,6 +38,7 @@ import at.techbee.jtx.util.DateTimeUtils
 @Composable
 fun ListCardKanban(
     iCalObject: ICal4List,
+    selected: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -48,7 +49,9 @@ fun ListCardKanban(
     }
 
     ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+        ),
         modifier = modifier
     ) {
 
@@ -190,6 +193,7 @@ fun ListCardKanban_JOURNAL() {
         }
         ListCardKanban(
             icalobject,
+            selected = false,
             modifier = Modifier
                 .width(150.dp)
                 .height(150.dp)
@@ -211,6 +215,7 @@ fun ListCardKanban_NOTE() {
         }
         ListCardKanban(
             icalobject,
+            selected = true,
             modifier = Modifier.width(150.dp).height(150.dp)
         )
     }
@@ -238,7 +243,8 @@ fun ListCardKanban_TODO() {
             isReadOnly = true
         }
         ListCardKanban(
-            icalobject
+            icalobject,
+            selected = false,
         )
     }
 }

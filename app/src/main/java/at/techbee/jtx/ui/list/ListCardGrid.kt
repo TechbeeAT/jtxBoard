@@ -35,6 +35,7 @@ import at.techbee.jtx.util.DateTimeUtils
 @Composable
 fun ListCardGrid(
     iCalObject: ICal4List,
+    selected: Boolean,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
@@ -47,7 +48,9 @@ fun ListCardGrid(
 
 
     ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+        ),
         modifier = modifier
     ) {
 
@@ -197,6 +200,7 @@ fun ListCardGrid_JOURNAL() {
         }
         ListCardGrid(
             icalobject,
+            selected = false,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier
                 .width(150.dp)
         )
@@ -217,6 +221,7 @@ fun ListCardGrid_NOTE() {
         }
         ListCardGrid(
             icalobject,
+            selected = true,
             onProgressChanged = { _, _, _ -> },
             modifier = Modifier.width(150.dp)
         )
@@ -246,6 +251,7 @@ fun ListCardGrid_TODO() {
         }
         ListCardGrid(
             icalobject,
+            selected = false,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }
@@ -275,6 +281,7 @@ fun ListCardGrid_TODO_short() {
         }
         ListCardGrid(
             icalobject,
+            selected = false,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }
