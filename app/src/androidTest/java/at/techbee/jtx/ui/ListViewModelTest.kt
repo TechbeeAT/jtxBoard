@@ -306,9 +306,10 @@ class ListViewModelTest {
         listViewModel.listSettings.searchClassification.value = listViewModel.listSettings.searchClassification.value.plus(Classification.PUBLIC)
         listViewModel.updateSearch()
         assertEquals(2, listViewModel.iCal4List.value?.size)
+        listViewModel.selectedEntries.addAll(listViewModel.iCal4List.value!!.map { it.id })
 
         withContext(Dispatchers.IO) {
-            listViewModel.deleteVisible()
+            listViewModel.deleteSelected()
             Thread.sleep(100)
             listViewModel.listSettings.searchClassification.value = emptyList()
             listViewModel.updateSearch()

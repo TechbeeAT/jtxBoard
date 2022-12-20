@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
@@ -25,6 +26,7 @@ import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getPackageInfoCompat
@@ -190,16 +192,23 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     /*
-    Deletes all entries that are currently visible (present in iCal4List)
+    Deletes selected entries
      */
-    fun deleteVisible() {
+    fun deleteSelected() {
         viewModelScope.launch(Dispatchers.IO) {
-            iCal4List.value?.forEach { entry ->
-                if(entry.isReadOnly || entry.isLinkedRecurringInstance)
+            val selectedICal4List = database.getIcal4ListSync(
+                SupportSQLiteQueryBuilder
+                    .builder(VIEW_NAME_ICAL4LIST)
+                    .selection("$COLUMN_ID IN (${selectedEntries.joinToString(separator = ",", transform = { "?"})})", selectedEntries.toTypedArray())
+                    .create()
+            )
+            selectedICal4List.forEach { entry ->
+                if(entry.isReadOnly)
                     return@forEach
-                else
-                    ICalObject.deleteItemWithChildren(entry.id, database)
-
+                if(entry.isLinkedRecurringInstance)
+                    database.getICalObjectByIdSync(entry.id)?.let { ICalObject.makeRecurringException(it, database) }
+                ICalObject.deleteItemWithChildren(entry.id, database)
+                selectedEntries.clear()
             }
         }
     }

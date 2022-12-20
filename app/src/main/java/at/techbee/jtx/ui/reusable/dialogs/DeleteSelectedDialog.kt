@@ -15,13 +15,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
 
 
 @Composable
-fun DeleteVisibleDialog(
+fun DeleteSelectedDialog(
     numEntriesToDelete: Int,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
@@ -29,15 +28,10 @@ fun DeleteVisibleDialog(
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text(stringResource(id = R.string.list_dialog_delete_visible_title)) },
+        title = { Text(stringResource(id = R.string.list_dialog_delete_selected_title)) },
         text = {
             Column {
-                Text(stringResource(id = R.string.list_dialog_delete_visible_message, numEntriesToDelete))
-                Text(
-                    text = stringResource(id = R.string.list_dialog_delete_visible_message2),
-                    style = MaterialTheme.typography.bodySmall,
-                    fontStyle = FontStyle.Italic
-                )
+                Text(stringResource(id = R.string.list_dialog_delete_selected_message, numEntriesToDelete))
             }
                },
         confirmButton = {
@@ -65,10 +59,10 @@ fun DeleteVisibleDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun DeleteVisibleDialog_Preview() {
+fun DeleteSelectedDialog_Preview() {
     MaterialTheme {
 
-        DeleteVisibleDialog(
+        DeleteSelectedDialog(
             numEntriesToDelete = 5,
             onConfirm = { },
             onDismiss = { }

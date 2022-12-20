@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.rememberModalBottomSheetState
@@ -50,7 +49,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
-import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
+import at.techbee.jtx.ui.reusable.dialogs.DeleteSelectedDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
@@ -120,7 +119,7 @@ fun ListScreenTabContainer(
     }
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
-    var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
+    var showDeleteSelectedDialog by remember { mutableStateOf(false) }
 
     fun getActiveViewModel() =
         when (pagerState.currentPage) {
@@ -142,11 +141,11 @@ fun ListScreenTabContainer(
     var showSearch by remember { mutableStateOf(false) }
     val showQuickAdd = remember { mutableStateOf(false) }
 
-    if (showDeleteAllVisibleDialog) {
-        DeleteVisibleDialog(
-            numEntriesToDelete = getActiveViewModel().iCal4List.value?.filter { entry -> !entry.isReadOnly}?.size ?: 0,
-            onConfirm = { getActiveViewModel().deleteVisible() },
-            onDismiss = { showDeleteAllVisibleDialog = false }
+    if (showDeleteSelectedDialog) {
+        DeleteSelectedDialog(
+            numEntriesToDelete = getActiveViewModel().selectedEntries.size,
+            onConfirm = { getActiveViewModel().deleteSelected() },
+            onDismiss = { showDeleteSelectedDialog = false }
         )
     }
 
@@ -232,21 +231,6 @@ fun ListScreenTabContainer(
                                 leadingIcon = { Icon(Icons.Outlined.Sync, null) },
                                 onClick = {
                                     SyncUtil.syncAllAccounts(context)
-                                    topBarMenuExpanded = false
-                                }
-                            )
-                            Divider()
-                        }
-                        if(getActiveViewModel().iCal4List.value?.isNotEmpty() == true) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        stringResource(id = R.string.menu_list_delete_visible)
-                                    )
-                                },
-                                leadingIcon = { Icon(Icons.Outlined.DeleteOutline, null) },
-                                onClick = {
-                                    showDeleteAllVisibleDialog = true
                                     topBarMenuExpanded = false
                                 }
                             )
@@ -343,7 +327,8 @@ fun ListScreenTabContainer(
                                 filterBottomSheetState.show()
                         }
                     },
-                    onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) }
+                    onGoToDateSelected = { id -> getActiveViewModel().scrollOnceId.postValue(id) },
+                    onDeleteSelectedClicked = { showDeleteSelectedDialog = true }
                 )
             } else if(timeout) {
                 BottomAppBar {

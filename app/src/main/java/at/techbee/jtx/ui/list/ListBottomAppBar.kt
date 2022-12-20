@@ -46,7 +46,8 @@ fun ListBottomAppBar(
     allowNewEntries: Boolean,
     onAddNewEntry: () -> Unit,
     onFilterIconClicked: () -> Unit,
-    onGoToDateSelected: (Long) -> Unit
+    onGoToDateSelected: (Long) -> Unit,
+    onDeleteSelectedClicked: () -> Unit
 ) {
 
     var showGoToDatePicker by remember { mutableStateOf(false) }
@@ -175,19 +176,28 @@ fun ListBottomAppBar(
                     )
 
 
-                    IconButton(onClick = { TODO() }) {
+                    IconButton(
+                        onClick = { onDeleteSelectedClicked() },
+                        enabled = selectedEntries.isNotEmpty()
+                    ) {
                         Icon(
                             Icons.Outlined.Delete,
                             contentDescription = stringResource(id = R.string.delete),
                         )
                     }
-                    IconButton(onClick = { TODO() }) {
+                    IconButton(
+                        onClick = { TODO() },
+                        enabled = selectedEntries.isNotEmpty()
+                    ) {
                         Icon(
                             Icons.Outlined.Label,
                             contentDescription = stringResource(id = R.string.category),
                         )
                     }
-                    IconButton(onClick = { TODO() }) {
+                    IconButton(
+                        onClick = { TODO() },
+                        enabled = selectedEntries.isNotEmpty()
+                    ) {
                         Icon(
                             Icons.Outlined.Folder,
                             contentDescription = stringResource(id = R.string.collection),
@@ -263,6 +273,7 @@ fun ListBottomAppBar_Preview_Journal() {
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
+            onDeleteSelectedClicked = { }
         )
     }
 }
@@ -287,6 +298,7 @@ fun ListBottomAppBar_Preview_Note() {
             showQuickEntry = remember { mutableStateOf(false) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
+            onDeleteSelectedClicked = { }
         )
     }
 }
@@ -311,6 +323,7 @@ fun ListBottomAppBar_Preview_Todo() {
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
+            onDeleteSelectedClicked = { }
         )
     }
 }
@@ -336,6 +349,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
+            onDeleteSelectedClicked = { }
         )
     }
 }
