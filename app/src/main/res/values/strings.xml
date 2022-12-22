@@ -149,6 +149,10 @@
     <string name="general">General</string>
     <string name="filter_special">Special filters</string>
     <string name="sync_now">Sync now</string>
+    <string name="search_journals">Search journals</string>
+    <string name="search_notes">Search notes</string>
+    <string name="search_todos">Search tasks</string>
+
 
     <string name="due">Due</string>
     <string name="completed">Completed</string>
