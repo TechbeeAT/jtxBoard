@@ -38,8 +38,7 @@ fun ListBottomAppBar(
     allowNewEntries: Boolean,
     onAddNewEntry: () -> Unit,
     onFilterIconClicked: () -> Unit,
-    onGoToDateSelected: (Long) -> Unit,
-    onSearchTextClicked: () -> Unit
+    onGoToDateSelected: (Long) -> Unit
 ) {
 
     var showGoToDatePicker by remember { mutableStateOf(false) }
@@ -122,13 +121,6 @@ fun ListBottomAppBar(
                     )
                 }
             }
-            IconButton(onClick = { onSearchTextClicked() }) {
-                Icon(
-                    Icons.Outlined.Search,
-                    contentDescription = stringResource(id = R.string.search),
-                    tint = if (listSettings.searchText.value != null) MaterialTheme.colorScheme.primary else LocalContentColor.current
-                )
-            }
 
             AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null) {
                 IconButton(onClick = { showGoToDatePicker = true }) {
@@ -166,9 +158,7 @@ fun ListBottomAppBar_Preview_Journal() {
 
         val application = LocalContext.current.applicationContext
         val prefs = application.getSharedPreferences(ListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
-
         val listSettings = ListSettings.fromPrefs(prefs)
-        listSettings.searchText.value = "whatever"
 
         ListBottomAppBar(
             module = Module.JOURNAL,
@@ -179,7 +169,6 @@ fun ListBottomAppBar_Preview_Journal() {
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
-            onSearchTextClicked = { },
         )
     }
 }
@@ -191,9 +180,7 @@ fun ListBottomAppBar_Preview_Note() {
 
         val application = LocalContext.current.applicationContext
         val prefs = application.getSharedPreferences(ListViewModel.PREFS_LIST_NOTES, Context.MODE_PRIVATE)
-
         val listSettings = ListSettings.fromPrefs(prefs)
-        listSettings.searchText.value = "whatever"
 
         ListBottomAppBar(
             module = Module.NOTE,
@@ -204,7 +191,6 @@ fun ListBottomAppBar_Preview_Note() {
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
-            onSearchTextClicked = { },
         )
     }
 }
@@ -216,9 +202,7 @@ fun ListBottomAppBar_Preview_Todo() {
 
         val application = LocalContext.current.applicationContext
         val prefs = application.getSharedPreferences(ListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
-
         val listSettings = ListSettings.fromPrefs(prefs)
-        listSettings.searchText.value = "whatever"
 
         ListBottomAppBar(
             module = Module.TODO,
@@ -229,7 +213,6 @@ fun ListBottomAppBar_Preview_Todo() {
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
-            onSearchTextClicked = { },
         )
     }
 }
@@ -242,9 +225,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
 
         val application = LocalContext.current.applicationContext
         val prefs = application.getSharedPreferences(ListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
-
         val listSettings = ListSettings.fromPrefs(prefs)
-        listSettings.searchCategories.value = listOf("Whatever")
 
         ListBottomAppBar(
             module = Module.TODO,
@@ -255,7 +236,6 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             showQuickEntry = remember { mutableStateOf(true) },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
-            onSearchTextClicked = { },
         )
     }
 }
