@@ -619,4 +619,16 @@ Danke!"</string>
     <string name="settings_default_journals_date_current_15min">"Aktuelle 15 Min"</string>
     <string name="settings_default_journals_date_current_5min">"Aktuelle 5 Min"</string>
     <string name="settings_default_journals_date_current_min">"Aktuelle Minute"</string>
+    <string name="widget_list_show_subtasks">"Subtasks anzeigen"</string>
+    <string name="widget_list_show_subnotes">"Verlinkte Notizen anzeigen"</string>
+    <string name="markdown_bold">"Fett"</string>
+    <string name="markdown_italic">"Kursiv"</string>
+    <string name="markdown_underlined">"Unterstrichen"</string>
+    <string name="markdown_strikethrough">"Durchgestrichen"</string>
+    <string name="markdown_heading1">"Überschrift 1"</string>
+    <string name="markdown_heading2">"Überschrift 2"</string>
+    <string name="markdown_heading3">"Überschrift 3"</string>
+    <string name="markdown_horizontal_ruler">"Horizontale Linie"</string>
+    <string name="markdown_unordered_list">"Liste"</string>
+    <string name="markdown_code">"Code"</string>
 </resources>
