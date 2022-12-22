@@ -50,6 +50,7 @@ fun DetailsCardSubtasks(
     subtasks: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
     sliderIncrement: Int,
+    showSlider: Boolean,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
@@ -81,7 +82,7 @@ fun DetailsCardSubtasks(
                         SubtaskCard(
                             subtask = subtask,
                             isEditMode = isEditMode.value,
-                            showProgress = true, /* TODO */
+                            showProgress = showSlider,
                             sliderIncrement = sliderIncrement,
                             onProgressChanged = onProgressChanged,
                             onDeleteClicked = { icalObjectId ->  onSubtaskDeleted(icalObjectId) },
@@ -151,6 +152,7 @@ fun DetailsCardSubtasks_Preview() {
                     ),
             isEditMode = remember { mutableStateOf(false) },
             sliderIncrement = 25,
+            showSlider = true,
             onSubtaskAdded = { },
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
@@ -175,6 +177,32 @@ fun DetailsCardSubtasks_Preview_edit() {
             ),
             isEditMode = remember { mutableStateOf(true) },
             sliderIncrement = 25,
+            showSlider = true,
+            onSubtaskAdded = { },
+            onProgressChanged = { _, _, _ -> },
+            onSubtaskUpdated = { _, _ ->  },
+            onSubtaskDeleted = { },
+            goToDetail = { _, _, _ -> }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardSubtasks_Preview_edit_without_Slider() {
+    MaterialTheme {
+        DetailsCardSubtasks(
+            subtasks = listOf(
+                ICal4List.getSample().apply {
+                    this.component = Component.VTODO
+                    this.module = Module.TODO.name
+                    this.summary = "My Subtask"
+                }
+            ),
+            isEditMode = remember { mutableStateOf(true) },
+            sliderIncrement = 25,
+            showSlider = false,
             onSubtaskAdded = { },
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },

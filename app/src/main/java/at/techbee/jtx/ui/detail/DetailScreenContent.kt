@@ -92,6 +92,8 @@ fun DetailScreenContent(
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
     sliderIncrement: Int,
+    showProgressForMainTasks: Boolean,
+    showProgressForSubTasks: Boolean,
     markdownState: MutableState<MarkdownState>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
@@ -542,7 +544,7 @@ fun DetailScreenContent(
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         showProgressLabel = true,
-                        showSlider = true, //TODO
+                        showSlider = showProgressForMainTasks,
                         modifier = Modifier.align(Alignment.End)
                     )
                 }
@@ -595,6 +597,7 @@ fun DetailScreenContent(
                     subtasks = subtasks.value,
                     isEditMode = isEditMode,
                     sliderIncrement = sliderIncrement,
+                    showSlider = showProgressForSubTasks,
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                         onProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
                     },
@@ -842,6 +845,8 @@ fun DetailScreenContent_JOURNAL() {
             isChild = false,
             player = null,
             sliderIncrement = 10,
+            showProgressForMainTasks = true,
+            showProgressForSubTasks = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             goBackRequested = remember { mutableStateOf(false) },
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
@@ -894,6 +899,8 @@ fun DetailScreenContent_TODO_editInitially() {
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
+            showProgressForMainTasks = true,
+            showProgressForSubTasks = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
@@ -942,6 +949,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
+            showProgressForMainTasks = false,
+            showProgressForSubTasks = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
@@ -982,6 +991,8 @@ fun DetailScreenContent_failedLoading() {
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
+            showProgressForMainTasks = true,
+            showProgressForSubTasks = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },

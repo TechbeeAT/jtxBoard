@@ -215,20 +215,6 @@ fun SettingsScreen(
                             settingsStateHolder.settingAutoExpandAttachments.value = it
                             SETTING_AUTO_EXPAND_ATTACHMENTS.save(it, context)
                         })
-                    SwitchSetting(
-                        setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST,
-                        initiallyChecked = settingsStateHolder.settingShowProgressForMainTasks.value,
-                        onCheckedChanged = {
-                            settingsStateHolder.settingShowProgressForMainTasks.value = it
-                            SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.save(it, context)
-                        })
-                    SwitchSetting(
-                        setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
-                        initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
-                        onCheckedChanged = {
-                            settingsStateHolder.settingShowProgressForSubTasks.value = it
-                            SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
-                        })
 
                     Divider(
                         modifier = Modifier
@@ -260,6 +246,21 @@ fun SettingsScreen(
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
                     )
+
+                    SwitchSetting(
+                        setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS,
+                        initiallyChecked = settingsStateHolder.settingShowProgressForMainTasks.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingShowProgressForMainTasks.value = it
+                            SETTING_SHOW_PROGRESS_FOR_MAINTASKS.save(it, context)
+                        })
+                    SwitchSetting(
+                        setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
+                        initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingShowProgressForSubTasks.value = it
+                            SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
+                        })
 
                     DropdownSetting(
                         setting = SETTING_DEFAULT_START_DATE,

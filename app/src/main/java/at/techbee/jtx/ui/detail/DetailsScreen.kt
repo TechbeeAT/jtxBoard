@@ -21,7 +21,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.ContentPaste
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -223,6 +225,8 @@ fun DetailsScreen(
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
                 sliderIncrement = settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
+                showProgressForMainTasks = settingsStateHolder.settingShowProgressForMainTasks.value,
+                showProgressForSubTasks = settingsStateHolder.settingShowProgressForSubTasks.value,
                 goBackRequested = goBackRequestedByTopBar,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
