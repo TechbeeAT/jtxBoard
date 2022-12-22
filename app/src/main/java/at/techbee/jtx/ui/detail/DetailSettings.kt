@@ -9,13 +9,7 @@
 package at.techbee.jtx.ui.detail
 
 import android.content.SharedPreferences
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Alarm
-import androidx.compose.material.icons.outlined.Attachment
-import androidx.compose.material.icons.outlined.Category
-import androidx.compose.material.icons.outlined.Link
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.ui.graphics.vector.ImageVector
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 
@@ -24,16 +18,56 @@ enum class DetailSettingsOptionGroup { GENERAL, ELEMENT }
 enum class DetailSettingsOption(
     val setting: String,
     val stringResource: Int,
-    val icon: ImageVector?,
     val group: DetailSettingsOptionGroup,
     val default: Boolean,
     val possibleFor: List<Module>
     )
 {
+    ENABLE_DTSTART(
+        setting = "enableStarted",
+        stringResource = R.string.started,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.TODO)
+    ),
+    ENABLE_DUE(
+        setting = "enableDue",
+        stringResource = R.string.due,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.TODO)
+    ),
+    ENABLE_COMPLETED(
+        setting = "enableCompleted",
+        stringResource = R.string.completed,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.TODO)
+    ),
+    ENABLE_STATUS(
+        setting = "enableStatus",
+        stringResource = R.string.status,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_CLASSIFICATION(
+        setting = "enableClassification",
+        stringResource = R.string.classification,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_PRIORITY(
+        setting = "enablePriority",
+        stringResource = R.string.priority,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.TODO)
+    ),
     ENABLE_CATEGORIES(
         setting = "enableCategories",
         stringResource = R.string.categories,
-        icon = Icons.Outlined.Category,
         group = DetailSettingsOptionGroup.ELEMENT,
         default = true,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -41,7 +75,6 @@ enum class DetailSettingsOption(
     ENABLE_ATTENDEES(
         setting = "enableAttendees",
         stringResource = R.string.attendees,
-        icon = Icons.Outlined.Category,   //TODO
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -49,7 +82,6 @@ enum class DetailSettingsOption(
     ENABLE_RESOURCES(
         setting = "enableResources",
         stringResource = R.string.resources,
-        icon = Icons.Outlined.Category,  //TODO
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -57,7 +89,6 @@ enum class DetailSettingsOption(
     ENABLE_CONTACT(
         setting = "enableContact",
         stringResource = R.string.contact,
-        icon = Icons.Outlined.Category,  //TODO
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -65,7 +96,6 @@ enum class DetailSettingsOption(
     ENABLE_LOCATION(
         setting = "enableLocation",
         stringResource = R.string.location,
-        icon = Icons.Outlined.Category,   //TODO
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -73,7 +103,6 @@ enum class DetailSettingsOption(
     ENABLE_URL(
         setting = "enableURL",
         stringResource = R.string.url,
-        icon = Icons.Outlined.Link,
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -81,7 +110,6 @@ enum class DetailSettingsOption(
     ENABLE_SUBTASKS(
         setting = "enableSubtasks",
         stringResource = R.string.subtasks,
-        icon = Icons.Outlined.Category,  //TODO
         group = DetailSettingsOptionGroup.ELEMENT,
         default = true,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -89,7 +117,6 @@ enum class DetailSettingsOption(
     ENABLE_SUBNOTES(
         setting = "enableSubnotes",
         stringResource = R.string.view_feedback_linked_notes,
-        icon = Icons.Outlined.Category,   //TODO
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -97,7 +124,6 @@ enum class DetailSettingsOption(
     ENABLE_ATTACHMENTS(
         setting = "enableAttachments",
         stringResource = R.string.attachments,
-        icon = Icons.Outlined.Attachment,
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -105,7 +131,6 @@ enum class DetailSettingsOption(
     ENABLE_RECURRENCE(
         setting = "enableRecurrence",
         stringResource = R.string.recurrence,
-        icon = Icons.Outlined.Category,  // TODO
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -113,7 +138,6 @@ enum class DetailSettingsOption(
     ENABLE_ALARMS(
         setting = "enableAlarms",
         stringResource = R.string.alarms,
-        icon = Icons.Outlined.Alarm,
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
         possibleFor = listOf(Module.TODO)
@@ -121,7 +145,6 @@ enum class DetailSettingsOption(
     ENABLE_COMMENTS(
         setting = "enableComments",
         stringResource = R.string.comments,
-        icon = Icons.Outlined.Category,   //TODO
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -129,7 +152,6 @@ enum class DetailSettingsOption(
     ENABLE_AUTOSAVE(
         setting = "enableAutosave",
         stringResource = R.string.menu_view_autosave,
-        icon = Icons.Outlined.Category,   //TODO
         group = DetailSettingsOptionGroup.GENERAL,
         default = true,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
@@ -137,7 +159,6 @@ enum class DetailSettingsOption(
     ENABLE_MARKDOWN(
         setting = "enableMarkdown",
         stringResource = R.string.menu_view_markdown_formatting,
-        icon = Icons.Outlined.Category,   //TODO
         group = DetailSettingsOptionGroup.GENERAL,
         default = true,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)

@@ -52,10 +52,8 @@ fun DetailOptionsBottomSheet(
             modifier = Modifier.fillMaxWidth()
         ) {
             detailSettings.detailSetting
-                .filter {
-                    it.key.group == DetailSettingsOptionGroup.ELEMENT
-                            && it.key.possibleFor.contains(module)
-                }
+                .filter { it.key.group == DetailSettingsOptionGroup.ELEMENT && it.key.possibleFor.contains(module) }
+                .toSortedMap(compareBy { it.ordinal })
                 .forEach { (setting, enabled) ->
 
             FilterChip(

@@ -397,6 +397,9 @@ fun DetailScreenContent(
             DetailsCardDates(
                 icalObject = icalObject,
                 isEditMode = isEditMode.value,
+                enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART]?:true || icalObject.getModuleFromString() == Module.JOURNAL,
+                enableDue = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE]?:true,
+                enableCompleted = detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED]?:true,
                 onDtstartChanged = { datetime, timezone ->
                     icalObject.dtstart = datetime
                     icalObject.dtstartTimezone = timezone
@@ -539,30 +542,41 @@ fun DetailScreenContent(
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         showProgressLabel = true,
-                        showSlider = true,
+                        showSlider = true, //TODO
                         modifier = Modifier.align(Alignment.End)
                     )
                 }
             }
 
-
-            DetailsCardStatusClassificationPriority(
-                icalObject = icalObject,
-                isEditMode = isEditMode.value,
-                onStatusChanged = { newStatus ->
-                    icalObject.status = newStatus
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                onClassificationChanged = { newClassification ->
-                    icalObject.classification = newClassification
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                onPriorityChanged = { newPriority ->
-                    icalObject.priority = newPriority
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+            AnimatedVisibility((!isEditMode.value && (!icalObject.status.isNullOrEmpty() || !icalObject.classification.isNullOrEmpty() || icalObject.priority in 1..9))
+                    || (isEditMode.value
+                        && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS]?:true
+                            || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION]?:true
+                            || (icalObject.getModuleFromString() == Module.TODO && detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY]?:true)
+                            || showAllOptions)
+                    )
+            ) {
+                DetailsCardStatusClassificationPriority(
+                    icalObject = icalObject,
+                    isEditMode = isEditMode.value,
+                    enableStatus = detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS]?:true || showAllOptions,
+                    enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION]?:true || showAllOptions,
+                    enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY]?:true || showAllOptions,
+                    onStatusChanged = { newStatus ->
+                        icalObject.status = newStatus
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    onClassificationChanged = { newClassification ->
+                        icalObject.classification = newClassification
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    onPriorityChanged = { newPriority ->
+                        icalObject.priority = newPriority
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
             AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES]?:true || showAllOptions))) {
                 DetailsCardCategories(
