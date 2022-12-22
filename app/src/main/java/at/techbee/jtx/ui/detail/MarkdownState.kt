@@ -24,7 +24,7 @@ enum class MarkdownState {
             BOLD -> addEnclosingTags(textFieldValue, "**", "**")
             ITALIC -> addEnclosingTags(textFieldValue, "*", "*")
             UNDERLINED -> addEnclosingTags(textFieldValue, "_", "_")
-            STRIKETHROUGH -> addEnclosingTags(textFieldValue, "~", "~")
+            STRIKETHROUGH -> addEnclosingTags(textFieldValue, "~~", "~~")
             H1 -> addTagAtLineStart(textFieldValue, "# ")
             H2 -> addTagAtLineStart(textFieldValue, "## ")
             H3 -> addTagAtLineStart(textFieldValue, "### ")

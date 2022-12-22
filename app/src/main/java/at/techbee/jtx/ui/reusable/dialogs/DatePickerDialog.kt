@@ -13,30 +13,16 @@ import android.text.format.DateFormat
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreTime
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material.icons.outlined.TravelExplore
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -55,7 +41,7 @@ import at.techbee.jtx.util.DateTimeUtils
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.TimeZone
+import java.util.*
 import kotlin.collections.contains
 
 
@@ -193,32 +179,36 @@ fun DatePickerDialog(
 
 
                 AnimatedVisibility(selectedTab == tabIndexDate && newDateTime != null) {
-                    AndroidView(
-                        //modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
-                        factory = { context ->
-                            // Creates custom view
-                            val datepicker = DatePicker(context)
-                            newDateTime?.let { dateTime ->
-                                datepicker.init(
-                                    dateTime.year,
-                                    dateTime.monthValue - 1,
-                                    dateTime.dayOfMonth
-                                ) { _, year, monthOfYear, dayOfMonth ->
-                                    newDateTime =
-                                        dateTime.withYear(year).withMonth(monthOfYear + 1)
-                                            .withDayOfMonth(dayOfMonth)
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState())
+                    ) {
+                        AndroidView(
+                            //modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
+                            factory = { context ->
+                                // Creates custom view
+                                val datepicker = DatePicker(context)
+                                newDateTime?.let { dateTime ->
+                                    datepicker.init(
+                                        dateTime.year,
+                                        dateTime.monthValue - 1,
+                                        dateTime.dayOfMonth
+                                    ) { _, year, monthOfYear, dayOfMonth ->
+                                        newDateTime =
+                                            dateTime.withYear(year).withMonth(monthOfYear + 1)
+                                                .withDayOfMonth(dayOfMonth)
+                                    }
+                                    datepicker.updateDate(
+                                        dateTime.year,
+                                        dateTime.monthValue - 1,
+                                        dateTime.dayOfMonth
+                                    )
+                                    minDate?.let { datepicker.minDate = it }
+                                    maxDate?.let { datepicker.maxDate = it }
                                 }
-                                datepicker.updateDate(
-                                    dateTime.year,
-                                    dateTime.monthValue - 1,
-                                    dateTime.dayOfMonth
-                                )
-                                minDate?.let { datepicker.minDate = it }
-                                maxDate?.let { datepicker.maxDate = it }
+                                datepicker.rootView
                             }
-                            datepicker.rootView
-                        }
-                    )
+                        )
+                    }
                 }
                 AnimatedVisibility(selectedTab == tabIndexDate && newDateTime == null) {
                     Text(
@@ -232,35 +222,43 @@ fun DatePickerDialog(
                 }
 
                 AnimatedVisibility(selectedTab == tabIndexTime) {
-                    newDateTime?.let { dateTime ->
-                        AndroidView(
-                            //modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
-                            factory = { context ->
-                                // Creates custom view
-                                val timepicker = TimePicker(context)
-                                timepicker.setIs24HourView(DateFormat.is24HourFormat(context))
-                                @Suppress("DEPRECATION")
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    timepicker.hour = dateTime.hour
-                                    timepicker.minute = dateTime.minute
-                                } else {
-                                    timepicker.currentHour = dateTime.hour
-                                    timepicker.currentMinute = dateTime.minute
-                                }
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState())
+                    ) {
+                        newDateTime?.let { dateTime ->
+                            AndroidView(
+                                //modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
+                                factory = { context ->
+                                    // Creates custom view
+                                    val timepicker = TimePicker(context)
+                                    timepicker.setIs24HourView(DateFormat.is24HourFormat(context))
+                                    @Suppress("DEPRECATION")
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        timepicker.hour = dateTime.hour
+                                        timepicker.minute = dateTime.minute
+                                    } else {
+                                        timepicker.currentHour = dateTime.hour
+                                        timepicker.currentMinute = dateTime.minute
+                                    }
 
-                                timepicker.setOnTimeChangedListener { _, hour, minute ->
-                                    newDateTime = dateTime.withHour(hour).withMinute(minute)
+                                    timepicker.setOnTimeChangedListener { _, hour, minute ->
+                                        newDateTime = dateTime.withHour(hour).withMinute(minute)
+                                    }
+                                    timepicker.rootView
                                 }
-                                timepicker.rootView
-                            }
-                        )
+                            )
+                        }
                     }
                 }
                 AnimatedVisibility(selectedTab == tabIndexTimezone) {
-                    TimezoneAutocompleteTextfield(
-                        timezone = newTimezone,
-                        onTimezoneChanged = { tz -> newTimezone = tz }
-                    )
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState())
+                    ) {
+                        TimezoneAutocompleteTextfield(
+                            timezone = newTimezone,
+                            onTimezoneChanged = { tz -> newTimezone = tz }
+                        )
+                    }
                 }
             }
         },
