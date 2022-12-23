@@ -16,7 +16,7 @@ Global Strings -->
     <string name="toolbar_text_jtx_board_journals_overview">"Journale Überblick"</string>
     <string name="toolbar_text_jtx_board_notes_overview">"Notizen Überblick"</string>
     <string name="toolbar_text_jtx_board_tasks_overview">"Aufgaben Überblick"</string>
-    <string name="toolbar_text_view_journal_details">"Journal-Details"</string>
+    <string name="toolbar_text_view_journal_details">"Journal Details"</string>
     <string name="toolbar_text_view_note_details">"Notiz Details"</string>
     <string name="toolbar_text_view_task_details">"Aufgabe Details"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
