@@ -468,7 +468,7 @@ Global Strings -->
     <string name="audio_pause">"Παύση"</string>
     <string name="audio_error_toast">"Συγνώμη, η έναρξη είναι αδύνατη"</string>
     <string name="sync_in_progress">"Συγχρονισμός σε εξέλιξη"</string>
-    <string name="saving">"Αποθήκευση... "</string>
+    <string name="saving">"Αποθήκευση… "</string>
     <string name="saving_pending">"Αποθήκευση σε αναμονή"</string>
     <string name="invalid_timezone_message">"Παρακαλώ επιλέξτε μια σωστή ζώνη ώρας"</string>
     <string name="invalid_url_message">"Παρακαλώ επιλέξτε έναν σωστό σύνδεσμο URL"</string>

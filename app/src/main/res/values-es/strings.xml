@@ -131,7 +131,7 @@ Global Strings -->
     <string name="edit_contact_hint">"
 Jim Dolittle, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Información de contacto del responsable o propietario de esta entrada"</string>
-    <string name="edit_comment_hint">"Su comentario..."</string>
+    <string name="edit_comment_hint">"Su comentario…"</string>
     <string name="edit_comment_helper">"Añadir un comentario"</string>
     <string name="edit_attachment_button_text">"Añadir adjunto"</string>
     <string name="edit_take_picture_button_text">"Capturar foto"</string>
@@ -416,7 +416,7 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="notification_add_1d">"+ 1 día"</string>
     <string name="edit_recur_ends_never">"nunca finaliza"</string>
     <string name="edit_recur_ends_on">"termina el"</string>
-    <string name="edit_recur_ends_after">"termina despues de"</string>
+    <string name="edit_recur_ends_after">"termina después de"</string>
     <string name="collections_toast_export_all_ics_success">"Todas las colecciones han sido exportadas correctamente"</string>
     <string name="collections_toast_export_all_ics_error">"Ocurrió un error durante la exportación de todas las colecciones."</string>
     <string name="menu_collections_export_all">"Exportar todas"</string>
@@ -467,14 +467,14 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="audio_record">"Grabar"</string>
     <string name="audio_stop">"Detener"</string>
     <string name="audio_pause">"Pausa"</string>
-    <string name="audio_error_toast">"Lo siento, no se puede iniciar la reproducción..."</string>
+    <string name="audio_error_toast">"Lo siento, no se puede iniciar la reproducción…"</string>
     <string name="sync_in_progress">"Sincronización en proceso"</string>
-    <string name="saving">"Guardando..."</string>
-    <string name="saving_pending">"Pendiente de guardar..."</string>
+    <string name="saving">"Guardando…"</string>
+    <string name="saving_pending">"Pendiente de guardar…"</string>
     <string name="invalid_timezone_message">"Por favor, seleccione una zona horaria válida"</string>
     <string name="invalid_url_message">"Por favor, introduzca una URL válida."</string>
     <string name="list_quickadd_dialog_sr_start">"Iniciar reconocimiento de voz"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Escuchando..."</string>
+    <string name="list_quickadd_dialog_sr_listening">"Escuchando…"</string>
     <string name="details_show_all_options">"Mostrar todas las opciones"</string>
     <string name="details_attendees_processing_info">"Atención: Los servidores pueden procesar automáticamente a los asistentes, por ejemplo, enviando mensajes iMIP."</string>
     <string name="details_toast_entry_deleted">"Entrada descartada/borrada"</string>

@@ -44,14 +44,12 @@ Global Strings -->
     <string name="classification_public">"Публичный"</string>
     <string name="classification_private">"Приватный"</string>
     <string name="classification_confidential">"Конфиденциальный"</string>
-    <string name="attendee_role_chair"></string>
     <string name="attendee_role_required_participant">"Требуемый участник"</string>
     <string name="attendee_role_optional_participant">"Необязательный участник"</string>
     <string name="attendee_role_non_participant">"Не учавствующий / сведения"</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Открыть панель навигации"</string>
     <string name="navigation_drawer_close">"Закрыть панель навигации"</string>
-    <string name="navigation_drawer_board"></string>
     <string name="navigation_drawer_sync">"Синхронизация с DAVx⁵"</string>
     <string name="navigation_drawer_about">"О приложении / Лицензия"</string>
     <string name="navigation_drawer_subtitle">"дневники, заметки и задачи"</string>

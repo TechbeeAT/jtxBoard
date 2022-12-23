@@ -16,7 +16,7 @@ Global Strings -->
     <string name="toolbar_text_jtx_board_journals_overview">"Journale Überblick"</string>
     <string name="toolbar_text_jtx_board_notes_overview">"Notizen Überblick"</string>
     <string name="toolbar_text_jtx_board_tasks_overview">"Aufgaben Überblick"</string>
-    <string name="toolbar_text_view_journal_details">"Journal-Details"</string>
+    <string name="toolbar_text_view_journal_details">"Journal Details"</string>
     <string name="toolbar_text_view_note_details">"Notiz Details"</string>
     <string name="toolbar_text_view_task_details">"Aufgabe Details"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
@@ -470,12 +470,12 @@ Danke!"</string>
     <string name="audio_pause">"Pause"</string>
     <string name="audio_error_toast">"Entschuldung, das Playback konnte nicht gestartet werden"</string>
     <string name="sync_in_progress">"Synchronisierung läuft"</string>
-    <string name="saving">"Speichern ..."</string>
-    <string name="saving_pending">"Speichern ..."</string>
+    <string name="saving">"Speichern …"</string>
+    <string name="saving_pending">"Speichern …"</string>
     <string name="invalid_timezone_message">"Bitte wählen Sie eine gültige Zeitzone"</string>
     <string name="invalid_url_message">"Bitte geben Sie eine gültige URL ein!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spracherkennung starten"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Zuhören..."</string>
+    <string name="list_quickadd_dialog_sr_listening">"Zuhören…"</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
     <string name="details_attendees_processing_info">"Achtung: Server könnten Teilnehmer automatisch verarbeiten und zB iMIP-Nachrichten versenden."</string>
     <string name="details_toast_entry_deleted">"Eintrag verworfen/gelöscht"</string>
