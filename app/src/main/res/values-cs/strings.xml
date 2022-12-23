@@ -618,4 +618,16 @@ Děkujeme!"</string>
     <string name="settings_default_journals_date_current_15min">"Aktuálních 15 minut"</string>
     <string name="settings_default_journals_date_current_5min">"Aktuální 5 minut"</string>
     <string name="settings_default_journals_date_current_min">"Aktuální minuta"</string>
+    <string name="widget_list_show_subtasks"></string>
+    <string name="widget_list_show_subnotes"></string>
+    <string name="markdown_bold"></string>
+    <string name="markdown_italic"></string>
+    <string name="markdown_underlined"></string>
+    <string name="markdown_strikethrough"></string>
+    <string name="markdown_heading1"></string>
+    <string name="markdown_heading2"></string>
+    <string name="markdown_heading3"></string>
+    <string name="markdown_horizontal_ruler"></string>
+    <string name="markdown_unordered_list"></string>
+    <string name="markdown_code"></string>
 </resources>
