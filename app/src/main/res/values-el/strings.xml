@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App title and fragment titles -->
     <string name="app_permission_label">"jtx Board sync Ημερολόγιο, Σημειώσεις &amp; Εργασίες"</string>
     <string name="app_permission_desc">"το sync jtx Board παρέχει περιεχόμενο σε συνδυασμό με άλλες εφαρμογές όπως η DAVx⁵"</string>
-
+    <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
     <string name="save">"Αποθήκευση"</string>
@@ -32,7 +33,6 @@ Global Strings -->
     <string name="toolbar_text_adinfo">"Πληροφορίες διαφημίσεων"</string>
     <string name="default_local_collection_name">"Τοπικές"</string>
     <string name="default_local_account_name">"Τοπικές"</string>
-
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Πρόχειρο"</string>
     <string name="journal_status_final">"Τελικό"</string>
@@ -48,7 +48,6 @@ Global Strings -->
     <string name="attendee_role_required_participant">"Υποχρεωτική συμμετοχή"</string>
     <string name="attendee_role_optional_participant">"Προαιρετική συμμετοχή"</string>
     <string name="attendee_role_non_participant">"Χωρίς συμμετοχή"</string>
-
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Άνοιγμα πλοηγού"</string>
     <string name="navigation_drawer_close">"Κλείσιμο πλοηγού"</string>
@@ -65,7 +64,6 @@ Global Strings -->
     <string name="navigation_drawer_donate">"Δωρεά"</string>
     <string name="navigation_drawer_adinfo">"Πληροφορίες διαφημίσεων"</string>
     <string name="navigation_drawer_privacy_policy">"Πολιτική Απορρήτου"</string>
-
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Καθυστερημένα"</string>
     <string name="list_due_today">"Μέχρι σήμερα"</string>
@@ -95,14 +93,11 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"Η πρώτη γραμμή ερμηνεύεται ως περίληψη, η υπόλοιπη ως περιγραφή. Τα hashtags ερμηνεύονται ως κατηγορίες (πχ. #category)."</string>
     <string name="list_item_upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>
     <string name="list_item_recurring">"Επαναλαμβανόμενη καταχώρηση"</string>
-
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Μεταφορά στο πρωτότυπο"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Περίπτωση επαναλαμβανόμενης"</string>
     <string name="view_recurrence_note_to_original">"Αυτή η καταχώρηση είναι μέρος μιας σειράς επαναλαμβανόμενων καταχωρήσεων. Η επεξεργασία αυτής της καταχώρισης θα την αποσυνδέσει από τη ακολουθία, θα συνεχιστεί ως αυτόνομο συμβάν και οι αλλαγές στο αρχικό συμβάν δεν θα επηρεάζουν πλέον αυτήν την καταχώριση."</string>
     <string name="view_fragment_audio_permission">"Άδεια εφαρμογής"</string>
-
-    <!-- Fuzzy -->
     <string name="view_fragment_audio_permission_message">"Η εφαρμογή jtx Board χρειάζεται την άδεια σας για την εγγραφή ήχου. Παρακαλούμε παραχωρήστε την άδεια χρήσης αυτής της δυνατότητας."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Προσθήκη ηχητικής σημείωσης"</string>
     <string name="view_comment_playbutton_content_desc">"Αναπαραγωγή ηχητικής σημείωσης"</string>
@@ -126,7 +121,6 @@ Global Strings -->
     <string name="view_due">"Μέχρι"</string>
     <string name="view_completed">"Ολοκληρώθηκε"</string>
     <string name="view_started">"Έναρξη"</string>
-
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#ηκατηγοριαμου"</string>
     <string name="edit_add_category_helper">"Προσθήκη κατηγορίας"</string>
@@ -145,8 +139,6 @@ Global Strings -->
     <string name="edit_location_helper">"Γι’ αυτή την καταχώρηση προσθέστε μια τοποθεσία"</string>
     <string name="edit_attachment_add_dialog_hint">"Το συνημμένο-url σας (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Το σχόλιο σου"</string>
-
-    <!-- Fuzzy -->
     <string name="edit_attachment_beta_info">"*Λάβετε υπόψη σας ότι ο συγχρονισμός συνημμένων με το DAVx⁵ είναι μια πειραματική δυνατότητα και αυτό μπορεί να προκαλέσει κάποια απροσδόκητη συμπεριφορά ή σφάλματα. Εάν αντιμετωπίζετε προβλήματα, ενημερώστε μας μέσω του φόρουμ υποστήριξης ή ενός αιτήματος υποστήριξης στον ιστότοπο!"</string>
     <string name="edit_subtasks_add_hint">"Η υποεργασία σας"</string>
     <string name="edit_subtasks_add_helper">"Προσθήκη υποεργασίας"</string>
@@ -187,9 +179,9 @@ Global Strings -->
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"Εντοπίστηκε ένας άγνωστος ή μη υποστηριζόμενος κανόνας επανάληψης. Εάν αποθηκεύσετε αυτήν την καταχώρηση, ο υπάρχων κανόνας επανάληψης θα διαγραφεί/αντικατασταθεί."</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Εντοπίστηκε μη υποστηριζόμενη τιμή (Διάρκεια)!"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Εντοπίστηκε μια διάρκεια για αυτήν την καταχώρηση στο παρασκήνιο. Ο χειρισμός μιας διάρκειας δεν υποστηρίζεται, προς το παρόν, από το jtx Board. Χρησιμοποιήστε την ημερομηνία έναρξης, κατά την διάρκεια και λήξης. Εάν αποθηκεύσετε αυτήν την καταχώρηση, η υπάρχουσα διάρκεια θα διαγραφεί."</string>
-
     <!-- fragment_ical_filter -->
     <string name="filter_fab_apply_filter_contentdescription">"Εφαρμογή φίλτρου"</string>
+    <!-- fragment_about -->
     <string name="about_tabitem_translations">"Μεταφράσεις"</string>
     <string name="about_tabitem_libraries">"Βιβλιοθήκες"</string>
     <string name="about_tabitem_thanks">"Ιδιαίτερες ευχαριστίες"</string>
@@ -198,7 +190,6 @@ Global Strings -->
     <string name="about_app_build_date">"Συντάχθηκε στις %s"</string>
     <string name="about_app_terms">"Όροι &amp; Προϋποθέσεις"</string>
     <string name="about_thanks_ffg">"Ευχαριστούμε ιδιαιτέρως την FFG για την εμπιστοσύνη και την οικονομική τους υποστήριξη για την υλοποίηση αυτού του έργου."</string>
-
     <!-- menus -->
     <string name="menu_edit_clear_dates">"Καθαρισμός ημερομηνιών"</string>
     <string name="menu_list_gotodate">"Σε ημερομηνία"</string>
@@ -214,16 +205,13 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Αντιγραφή ως Εργασία"</string>
     <string name="menu_view_copy_as_note">"Αντιγραφή ως Σημείωση"</string>
     <string name="menu_view_copy_item">"Δημιουργία αντίγραφου"</string>
-
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">"Επιθυμητή υπενθύμιση"</string>
     <string name="notification_channel_reminder_description">"Ειδοποίηση για εργασίες σε καθηστέρηση"</string>
-
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Προσθήκη ημερολογίου"</string>
     <string name="shortcut_addNote_longLabel">"Προσθήκη σημείωσης"</string>
     <string name="shortcut_addTodo_longLabel">"Προσθήκη εργασίας"</string>
-
     <!-- Settings fragment -->
     <string name="settings_enforce_dark_theme">"Εφαρμογή σκούρου θέματος"</string>
     <string name="settings_list">"Ρυθμίσεις για τη λίστα στοιχείων"</string>
@@ -237,7 +225,6 @@ Global Strings -->
     <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"Εμφάνιση υποημερολογίων των σημειώσεων και εργασιών στη λίστα ημερολογίων"</string>
     <string name="settings_app">"Ρυθμίσεις εφαρμογής"</string>
     <string name="settings_select_mimetype_for_audio">"Επιλέξτε Mimetype για ηχητικές σημειώσεις"</string>
-
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"Συγχρονισμός με DAVx⁵ (σύντομα κοντά σας)"</string>
     <string name="sync_coming_soon_text">"Το jtx Board δεν παρέχει τον συγχρονισμό με τον διακομιστή, αλλά θα υποστηρίζει συγχρονισμό μέσω DAVx⁵. Αυτή η μέθοδος θα σας επιτρέψει να χρησιμοποιήσετε έναν συμβατό διακομιστή CalDAV της επιλογής σας για αποθήκευση, δημιουργία αντιγράφων ασφαλείας και συγχρονισμό των δεδομένων σας.
@@ -256,13 +243,11 @@ Global Strings -->
     <string name="sync_button_add_account_in_davx5">"Προσθέστε έναν λογαριασμό στο DAVx⁵"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Αποτυχία ανοίγματος του DAVx⁵, παρακαλώ ανοίξτε χειροκίνητα την εφαρμογή."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Η ενεργοποίηση του συγχρονισμού με το DAVx⁵ απαίτυχε, παρακαλώ ελέγξτε το DAVx⁵."</string>
-
     <!-- Donate fragment -->
     <string name="donate_header_text">"adinfo_text"</string>
     <string name="donate_thank_you">"Ευχαριστούμε!"</string>
     <string name="donate_donate_with">"Δωρίστε μέσω"</string>
     <string name="donate_other_donation_methods">"Εάν θέλετε να εξετάσετε οποιαδήποτε άλλη μέθοδο δωρεάς, ελέγξτε τον ιστότοπό μας:"</string>
-
     <!-- Adinfo fragment -->
     <string name="adinfo_text">"Η ανάπτυξη μιας εφαρμογής είναι ένα περίπλοκο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη απαιτούν επίσης πολύ σκληρή δουλειά. Η έκδοση του jtx Board είναι δωρεάν και χρηματοδοτείται από διαφημίσεις. Με την αποδοχή διαφημίσεων συμβάλλετε στη συνεχή ανάπτυξη και χρηματοδότηση αυτού του έργου."</string>
     <string name="adinfo_huwei_only_non_personalized_text">"Αυτή η έκδοση του jtx board χρησιμοποιεί μη εξατομικευμένες διαφημίσεις."</string>
@@ -280,7 +265,6 @@ Global Strings -->
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Δεν βρέθηκε εφαρμογή για να ανοίξει αυτό το αρχείο/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Το επαναλαμβανόμενο στοιχείο αποτελεί πλέον εξαίρεση."</string>
     <string name="toast_adfree_for_a_week">"Όχι άλλες βίντεο διαφημίσεις εδώ και μια εβδομάδα :-)"</string>
-
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Λυπούμαστε, το jtx board δυσκολεύεται να συγχρονίστει. Κλείστε το DAVx⁵ και ξεκινήστε τον συγχρονισμό εκ νέου."</string>
     <string name="about_translations_thanks_to">"Ευχαριστίες"</string>
@@ -300,7 +284,6 @@ Global Strings -->
     <string name="list_quickadd_dialog_sr_start_listening">"Η ομιλία σε κείμενο έχει ξεκινήσει"</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Η ομιλία σε κείμενο έχει σταματήσει "</string>
     <string name="list_quickadd_dialog_sr_error">"Συγνώμη, η ομιλία σε κείμενο αντιμετώπισε κάποιο πρόβλημα. (%1$s)"</string>
-
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Παραχωρήθηκε η άδεια ανάγνωσης επαφών"</string>
     <string name="permission_read_contacts_denied">"Η άδεια ανάγνωσης των επαφών απορρίφθηκε"</string>
@@ -316,7 +299,6 @@ Global Strings -->
     <string name="toolbar_text_collections">"Συλλογές"</string>
     <string name="navigation_drawer_collections">"Συλλογες"</string>
     <string name="edit_dialog_set_attendee_role">"Καθορισμός ρόλου"</string>
-
     <!-- alarms -->
     <string name="alarms_onstart">"Έναρξη"</string>
     <string name="alarms_ondue">"Μέχρι"</string>
@@ -328,12 +310,14 @@ Global Strings -->
     <string name="alarms_minutes">"Λεπτό(ά)"</string>
     <string name="alarms_hours">"Ώρα(ες)"</string>
     <string name="alarms_days">"Ημέρα(ες)"</string>
-
     <!-- fragment_collections -->
     <string name="collections_local_collections">"Προσωπική συλλογή"</string>
     <string name="collections_remote_collections">"Απομακρυσμένη συλλογή"</string>
+    <!-- Fuzzy -->
     <string name="collections_journals_num">"Ημερολόγια: %1$s"</string>
+    <!-- Fuzzy -->
     <string name="collections_notes_num">"Σημειώσεις: %1$s"</string>
+    <!-- Fuzzy -->
     <string name="collections_tasks_num">"Εργασίες: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Δεν βρέθηκαν προσωπικές συλλογές"</string>
     <string name="collections_local_noremotecollections">"Δεν βρέθηκαν απομακρυσμένες συλλογές"</string>
@@ -344,8 +328,6 @@ Global Strings -->
     <string name="collections_dialog_delete_local_title">"Διαγραφή \"%1$s\";"</string>
     <string name="collections_dialog_delete_local_message">"Η διαγραφή μιας συλλογής θα διαγράψει επίσης όλα τα ημερολόγια, τις σημειώσεις και τις εργασίες σε αυτήν τη συλλογή. Η ενέργεια αυτή δεν θα μπορεί να αναιρεθεί. Είστε σίγουροι ότι θέλετε να συνεχίσετε;"</string>
     <string name="menu_collections_add_local">"Προσθήκη προσωπικής συλλογης"</string>
-
-    <!-- Fuzzy -->
     <string name="navigation_drawer_website_news">"Νέα &amp; ενημερώσεις"</string>
     <string name="list_quickadd_toast_no_summary_description">"Η εγγραφη δεν μπορεί να δημιουργηθεί χωρίς περίληψη/περιγραφή."</string>
     <string name="view_dialog_addnote_toast_no_summary_description">"Η σημείωση δεν μπορεί να δημιουργηθεί χωρίς κείμενο."</string>
@@ -447,7 +429,6 @@ Global Strings -->
     <string name="donate_dialog_title">"Σας αρέσει το jtx Board;"</string>
     <string name="donate_dialog_message">"Η δημιουργία μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μια σκληρή δουλειά.  Εάν σας αρέσει αυτή η εφαρμογή και εάν θέλετε να εξασφαλίσετε την συνεχή ανάπτυξη της, σκεφτείτε για μια δωρεά :-)
  Ευχαριστώ!"</string>
-
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"Η ανάπτυξη μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μία σκληρή δουλειά. Εάν θέλετε να χρησιμοποιήσετε τις λειτουργίες Pro ή εάν θέλετε να υποστηρίξετε το έργο μας, σκεφτείτε την ακόλουθη αγορά εντός της εφαρμογής:"</string>
     <string name="buypro_purchase_header">"Αναβαθμιστείτε στο jtx Board Pro"</string>
@@ -506,7 +487,6 @@ Global Strings -->
     <string name="edit_subnote">"Επεξεργασία υποσημείωσης"</string>
     <string name="edit_fragment_app_notification_permission_message">"Το jtx Board εμφανίζει ειδοποιήσεις όταν οφείλονται συναγερμοί. Παρακαλούμε παραχωρήστε την άδεια ειδοποιήσεων για να χρησιμοποιήσετε αυτήν τη δυνατότητα."</string>
     <string name="edit_fragment_app_coarse_location_permission_message">"Το jtx Board μπορεί να χρησιμοποιήσει την τοποθεσία σας για αυτόματη μεγέθυνση στην τοποθεσία σας όταν χρησιμοποιείτε χάρτες. Παρακαλούμε παραχωρήστε την άδεια χονδρικής τοποθεσίας εάν θέλετε να χρησιμοποιήσετε αυτήν τη δυνατότητα."</string>
-
     <!-- alarms -->
     <string name="alarms_alarm">"Υπενθήμιση"</string>
     <string name="alarms_before">"πριν"</string>
@@ -561,7 +541,6 @@ Global Strings -->
     <string name="settings_select_language_system">"Προεπιλογή συστήματος"</string>
     <string name="settings_details_enable_markdown">"Ενεργοποίηση μορφοποίησης σήμανσης"</string>
     <string name="filter_special">"Ειδικά φίλτρα"</string>
-
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Παρελθοντική ημερομηνία"</string>
     <string name="list_date_today">"Σήμερα"</string>
@@ -576,7 +555,6 @@ Global Strings -->
     <string name="alarms_always_ondue">"Εντός προθεσμίας"</string>
     <string name="settings_show_one_recur_entry_in_future">"Εμφάνιση μόνο μιας επαναλαμβανόμενης καταχώρισης στο μέλλον"</string>
     <string name="settings_auto_alarm_sub">"Ενεργοποιήστε για αυτόματη δημιουργία συναγερμών. Επιλέξτε \"Always on time\" για να μην δημιουργήσετε συναγερμό αλλά για να λαμβάνετε ειδοποίηση σε κάθε περίπτωση όταν μια εργασία είναι ληξιπρόθεσμη."</string>
-
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"Χωρίς κατάσταση"</string>
     <string name="classification_no_classification">"Χωρίς ταξινόμηση (δημόσιο)"</string>
@@ -605,36 +583,4 @@ Global Strings -->
     <string name="widget_list_configuration_checkbox_position">"Θέση πλαισίου ελέγχου"</string>
     <string name="widget_list_no_entries_found">"Δεν βρέθηκαν καταχωρήσεις που να ταιριάζουν με τα κριτήρια φίλτρου σας"</string>
     <string name="widget_list_view_settings">"Προβολή ρυθμίσεων"</string>
-    <string name="widget_list_configuration_only_one_hierarchy_layer_supported"></string>
-    <string name="widget_list_maximum_entries_reached"></string>
-    <string name="opacity"></string>
-    <string name="general"></string>
-    <string name="list_collapse"></string>
-    <string name="edit_recur_second"></string>
-    <string name="edit_recur_minute"></string>
-    <string name="edit_recur_hour"></string>
-    <string name="filter_group_sort"></string>
-    <string name="widget_list_configuration_widget_background"></string>
-    <string name="widget_list_configuration_entries_background"></string>
-    <string name="widget_list_show_description"></string>
-    <string name="settings_select_theme_true_dark"></string>
-    <string name="settings_journals"></string>
-    <string name="settings_default_journals_date"></string>
-    <string name="settings_default_journals_date_current_day"></string>
-    <string name="settings_default_journals_date_current_hour"></string>
-    <string name="settings_default_journals_date_current_15min"></string>
-    <string name="settings_default_journals_date_current_5min"></string>
-    <string name="settings_default_journals_date_current_min"></string>
-    <string name="widget_list_show_subtasks"></string>
-    <string name="widget_list_show_subnotes"></string>
-    <string name="markdown_bold"></string>
-    <string name="markdown_italic"></string>
-    <string name="markdown_underlined"></string>
-    <string name="markdown_strikethrough"></string>
-    <string name="markdown_heading1"></string>
-    <string name="markdown_heading2"></string>
-    <string name="markdown_heading3"></string>
-    <string name="markdown_horizontal_ruler"></string>
-    <string name="markdown_unordered_list"></string>
-    <string name="markdown_code"></string>
 </resources>

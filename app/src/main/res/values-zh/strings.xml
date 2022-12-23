@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App title and fragment titles -->
     <string name="app_permission_label">"jtx Board同步日志、笔记和任务"</string>
     <string name="app_permission_desc">"使用诸如DAVx⁵之类的其它程序同步jtx Board内容"</string>
-
+    <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
     <string name="save">"保存"</string>
@@ -32,7 +33,6 @@ Global Strings -->
     <string name="toolbar_text_adinfo">"广告信息"</string>
     <string name="default_local_collection_name">"位置"</string>
     <string name="default_local_account_name">"位置"</string>
-
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"草稿"</string>
     <string name="journal_status_final">"定稿"</string>
@@ -48,7 +48,6 @@ Global Strings -->
     <string name="attendee_role_required_participant">"必需的参与者"</string>
     <string name="attendee_role_optional_participant">"可选的参与者"</string>
     <string name="attendee_role_non_participant">"非参与者/信息"</string>
-
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"打开导航抽屉"</string>
     <string name="navigation_drawer_close">"关闭导航抽屉"</string>
@@ -65,7 +64,6 @@ Global Strings -->
     <string name="navigation_drawer_donate">"捐赠"</string>
     <string name="navigation_drawer_adinfo">"广告信息"</string>
     <string name="navigation_drawer_privacy_policy">"隐私政策"</string>
-
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"超期"</string>
     <string name="list_due_today">"今日到期"</string>
@@ -95,7 +93,6 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"第一行被提取为摘要，其余当做为说明。hashtags被提取为类别（例如#category）。"</string>
     <string name="list_item_upload_pending">"上传挂起"</string>
     <string name="list_item_recurring">"常用条目"</string>
-
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"转到原始"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"常用实例"</string>
@@ -124,7 +121,6 @@ Global Strings -->
     <string name="view_due">"到期"</string>
     <string name="view_completed">"完成"</string>
     <string name="view_started">"开始"</string>
-
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#我的分类"</string>
     <string name="edit_add_category_helper">"添加分类"</string>
@@ -183,18 +179,17 @@ Global Strings -->
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"检测到未知的或不支持的重复规则！如保存此条目，已有的重复规则将被删除或覆写。"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"检测到不支持的值（持续时间）！"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"在后台检测到此条目的持续时间。jtx Board目前不支持处理持续时间。请使用开始日期、截止日期和结束日期代替。如果保存此条目，已有的持续时间将被删除。"</string>
-
     <!-- fragment_ical_filter -->
     <string name="filter_fab_apply_filter_contentdescription">"应用过滤"</string>
+    <!-- fragment_about -->
     <string name="about_tabitem_translations">"翻译"</string>
     <string name="about_tabitem_libraries">"库"</string>
     <string name="about_tabitem_thanks">"特别致谢"</string>
     <string name="about_app_version">"版本：%1$s (%2$d)"</string>
-    <string name="about_app_codename">"代码名称：%1$s"</string>
+    <string name="about_app_codename">"Codename: %1$s"</string>
     <string name="about_app_build_date">"编译于%s"</string>
     <string name="about_app_terms">"条款与条件"</string>
     <string name="about_thanks_ffg">"特别感谢FFG信任并财务支持实现此项目。"</string>
-
     <!-- menus -->
     <string name="menu_edit_clear_dates">"清除数据"</string>
     <string name="menu_list_gotodate">"转到日期"</string>
@@ -210,16 +205,13 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"复制为任务"</string>
     <string name="menu_view_copy_as_note">"复制为笔记"</string>
     <string name="menu_view_copy_item">"创建复本"</string>
-
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">"任务截止提醒"</string>
     <string name="notification_channel_reminder_description">"提醒任务截止"</string>
-
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"添加日志"</string>
     <string name="shortcut_addNote_longLabel">"添加笔记"</string>
     <string name="shortcut_addTodo_longLabel">"添加任务"</string>
-
     <!-- Settings fragment -->
     <string name="settings_enforce_dark_theme">"强化黑暗主题"</string>
     <string name="settings_list">"项目列表设置"</string>
@@ -233,31 +225,29 @@ Global Strings -->
     <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"在日志列表中显示笔记和任务的子日志"</string>
     <string name="settings_app">"应用设置"</string>
     <string name="settings_select_mimetype_for_audio">"选择音频笔记的Mimetype"</string>
-
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"使用DAVx⁵同步（即将推出）"</string>
-    <string name="sync_coming_soon_text">"jtx Board本身不提供服务器同步，但将支持通过 DAVx⁵同步。此方法允许您选择一个兼容的CalDAV服务器来存储、备份和同步您的数据。
-此功能仍在开发中，不必将推出！请继续关注我们的主页和 Twitter :-)"</string>
+    <string name="sync_coming_soon_text">"jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data.
+This feature is still under development and will be released soon! Stay tuned on our website and on Twitter :-)"</string>
     <string name="sync_with_davx5_heading">"使用DAVx⁵同步（测试版）*"</string>
-    <string name="sync_basic_info">"jtx Board本身不提供服务器同步，但将支持通过 DAVx⁵同步。此方法允许您选择一个兼容的CalDAV服务器来存储、备份和同步您的数据。*请注意，此功能仍被视为测试版。虽然此功能已经过测试，但仍可能出现问题。如遇到任何问题，请反馈，感谢！"</string>
+    <string name="sync_basic_info">"jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data. * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!"</string>
     <string name="sync_congratulations">"恭喜！ :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"在您的电话上侦测到了DAVx⁵。如您尚未设置DAVx⁵账号，请按照我们主页上的介绍进行操作："</string>
     <string name="sync_davx5_installed_with_collections_found">"在您的电话上侦测到了DAVx⁵。如有问题或疑惑，请先查看我们的主页："</string>
     <string name="sync_davx5_installed_with_collections_synched_collections">"以下帐户（日历）当前已同步："</string>
     <string name="sync_check_out_davx5">"查看DAVx⁵！"</string>
-    <string name="sync_davx5_not_found">"在您的电话上侦测到DAVx⁵。了解更多同步信息，请参见："</string>
+    <string name="sync_davx5_not_found">"We have not detected DAVx⁵ on your phone.
+For more information about the Sync please see:"</string>
     <string name="sync_davx5_get_davx5_on">"或获取DAVx⁵"</string>
     <string name="sync_furhter_info_davx5">"了解更多DAVx⁵信息，请查看"</string>
     <string name="sync_button_add_account_in_davx5">"添加DAVx⁵账号"</string>
     <string name="sync_toast_intent_open_davx5_failed">"打开DAVx⁵失败，请手动打开应用。"</string>
     <string name="sync_toast_intent_start_davx5_sync">"在DAVx⁵中触发同步失败，请登录DAVx⁵。"</string>
-
     <!-- Donate fragment -->
     <string name="donate_header_text">"应用程序开发是一个复杂的主题，开发、维护和提供支持是一项艰巨的工作。如您喜欢此程序，并且希望其持续发展，请考虑捐赠：-）"</string>
     <string name="donate_thank_you">"感谢您！"</string>
     <string name="donate_donate_with">"使用PayPal捐赠"</string>
     <string name="donate_other_donation_methods">"如您想使用其它捐赠方式，请访问我们的网站："</string>
-
     <!-- Adinfo fragment -->
     <string name="adinfo_text">"应用程序的开发是一个复杂的主题，开发、维护和提供支持是一项艰巨的工作。您的jtx Board版本是免费的，由广告提供资金。通过接受广告，你将为该项目的持续发展和融资做出贡献。"</string>
     <string name="adinfo_huwei_only_non_personalized_text">"此版本jtx Board使用非个性化广告。"</string>
@@ -275,7 +265,6 @@ Global Strings -->
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"找不到可打开此文件或网址的应用程序。"</string>
     <string name="toast_item_is_now_recu_exception">"定期项目现在是例外。"</string>
     <string name="toast_adfree_for_a_week">"一周内再无更多视频广告 :-)"</string>
-
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"jtx很难同步。请关闭DAVx⁵ 然后再次启动同步。"</string>
     <string name="about_translations_thanks_to">"感谢"</string>
@@ -295,7 +284,6 @@ Global Strings -->
     <string name="list_quickadd_dialog_sr_start_listening">"语音转文本引擎正在侦听。"</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"语音转文本引擎停止了侦听。"</string>
     <string name="list_quickadd_dialog_sr_error">"抱歉，语音转文本引擎出错。（%1$s）"</string>
-
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"已授予读取联系人权限"</string>
     <string name="permission_read_contacts_denied">"已禁止读取联系人权限"</string>
@@ -311,7 +299,6 @@ Global Strings -->
     <string name="toolbar_text_collections">"合集"</string>
     <string name="navigation_drawer_collections">"合集"</string>
     <string name="edit_dialog_set_attendee_role">"设置参与者角色"</string>
-
     <!-- alarms -->
     <string name="alarms_onstart">"开始"</string>
     <string name="alarms_ondue">"到期"</string>
@@ -323,12 +310,14 @@ Global Strings -->
     <string name="alarms_minutes">"分钟"</string>
     <string name="alarms_hours">"小时"</string>
     <string name="alarms_days">"天"</string>
-
     <!-- fragment_collections -->
     <string name="collections_local_collections">"本地合集"</string>
     <string name="collections_remote_collections">"远程合集"</string>
+    <!-- Fuzzy -->
     <string name="collections_journals_num">"日志：%1$s"</string>
+    <!-- Fuzzy -->
     <string name="collections_notes_num">"笔记：%1$s"</string>
+    <!-- Fuzzy -->
     <string name="collections_tasks_num">"任务：%1$s"</string>
     <string name="collections_local_nolocalcollections">"未发现本地合集"</string>
     <string name="collections_local_noremotecollections">"未发现远程合集"</string>
@@ -438,9 +427,8 @@ Global Strings -->
     <string name="settings_select_theme_light">"轻亮"</string>
     <string name="settings_select_theme_system">"系统默认"</string>
     <string name="donate_dialog_title">"您喜欢jtx Board吗？"</string>
-    <string name="donate_dialog_message">"应用程序开发是一个复杂的主题，开发、维护和提供支持是一项艰巨的工作。如您喜欢此应用程序，并且希望其持续发展，请考虑捐赠：-）
-非常感谢。"</string>
-
+    <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
+Thank you!"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"应用程序的开发是一个复杂的主题，开发、维护和提供支持是一项艰巨的工作。如您想使用高级功能，或想支持我们的项目，请考虑以下应用内购买："</string>
     <string name="buypro_purchase_header">"升级到jtx Board Pro版"</string>
@@ -456,178 +444,4 @@ Global Strings -->
     <string name="buypro_snackbar_quick_entries_blocked">"想要启用快速添加功能，请购买Pro软件包。"</string>
     <string name="buypro_initial_dialog_message">"您好！jtx Board分为标准版和Pro版。查看“购买Pro版”章节，可了解有关jtx Board Pro版的更多信息！
 十分感谢！"</string>
-    <string name="view_comment_pausebutton_content_desc"></string>
-    <string name="menu_list_viewmode_list"></string>
-    <string name="menu_list_viewmode_grid"></string>
-    <string name="settings_default_expand_subtasks"></string>
-    <string name="settings_default_expand_subnotes"></string>
-    <string name="settings_default_expand_attachments"></string>
-    <string name="title_activity_list_screen"></string>
-    <string name="permission_coarse_location_granted"></string>
-    <string name="permission_coarse_location_denied"></string>
-    <string name="sorry"></string>
-    <string name="back"></string>
-    <string name="details"></string>
-    <string name="date"></string>
-    <string name="timezone"></string>
-    <string name="not_set2"></string>
-    <string name="invert_selection"></string>
-    <string name="preferences"></string>
-    <string name="revert"></string>
-    <string name="audio_play"></string>
-    <string name="audio_record"></string>
-    <string name="audio_stop"></string>
-    <string name="audio_pause"></string>
-    <string name="audio_error_toast"></string>
-    <string name="sync_in_progress"></string>
-    <string name="saving"></string>
-    <string name="saving_pending"></string>
-    <string name="invalid_timezone_message"></string>
-    <string name="invalid_url_message"></string>
-    <string name="list_quickadd_dialog_sr_start"></string>
-    <string name="list_quickadd_dialog_sr_listening"></string>
-    <string name="details_show_all_options"></string>
-    <string name="details_attendees_processing_info"></string>
-    <string name="details_toast_entry_deleted"></string>
-    <string name="details_recur_unknown_rrule_dialog_title"></string>
-    <string name="details_recur_unknown_rrule_dialog_message"></string>
-    <string name="details_entry_could_not_be_loaded"></string>
-    <string name="details_attachment_beta_info"></string>
-    <string name="edit_comment"></string>
-    <string name="edit_subnote_add_helper"></string>
-    <string name="edit_subtask"></string>
-    <string name="edit_subnote"></string>
-    <string name="edit_fragment_app_notification_permission_message"></string>
-    <string name="edit_fragment_app_coarse_location_permission_message"></string>
-
-    <!-- alarms -->
-    <string name="alarms_alarm"></string>
-    <string name="alarms_before"></string>
-    <string name="alarms_after"></string>
-    <string name="alarms_start"></string>
-    <string name="alarms_due"></string>
-    <string name="about_tabitem_releasenotes"></string>
-    <string name="collections_account_not_found_info"></string>
-    <string name="collections_account_delete_dialog_title"></string>
-    <string name="collections_account_delete_dialog_message"></string>
-    <string name="dialog_move_item_to_collection_title"></string>
-    <string name="dialog_move_item_to_collection_text"></string>
-    <string name="dialog_unsaved_changes_title"></string>
-    <string name="dialog_unsaved_changes_text"></string>
-    <string name="dialog_error_on_update_message"></string>
-    <string name="dialog_revert_changes_title"></string>
-    <string name="dialog_revert_changes_message"></string>
-    <string name="dialog_revert_changes_message2"></string>
-    <string name="menu_list_viewmode_compact"></string>
-    <string name="menu_list_viewmode_kanban"></string>
-    <string name="settings_details"></string>
-    <string name="settings_details_autosave_while_editing"></string>
-    <string name="settings_tasks"></string>
-    <string name="settings_default_start_date"></string>
-    <string name="settings_default_due_date"></string>
-    <string name="settings_default_date_none"></string>
-    <string name="settings_default_date_same_day"></string>
-    <string name="settings_default_date_next_day"></string>
-    <string name="settings_default_date_two_days"></string>
-    <string name="settings_default_date_three_days"></string>
-    <string name="settings_default_date_one_week"></string>
-    <string name="settings_default_date_two_weeks"></string>
-    <string name="settings_default_date_four_weeks"></string>
-    <string name="settings_progress_step_1"></string>
-    <string name="settings_progress_step_2"></string>
-    <string name="settings_progress_step_5"></string>
-    <string name="settings_progress_step_10"></string>
-    <string name="settings_progress_step_20"></string>
-    <string name="settings_progress_step_25"></string>
-    <string name="settings_progress_step_50"></string>
-    <string name="settings_progress_step"></string>
-    <string name="settings_disable_alarms_for_readonly"></string>
-    <string name="sync_button_go_to_collections"></string>
-    <string name="buypro_snackbar_please_purchase_pro"></string>
-    <string name="buypro_initial_dialog_title"></string>
-    <string name="error_no_app_found_to_open_entry"></string>
-    <string name="close"></string>
-    <string name="menu_view_share_mail"></string>
-    <string name="menu_view_copy_to_clipboard"></string>
-    <string name="menu_view_copy_to_clipboard_copied"></string>
-    <string name="settings_select_language"></string>
-    <string name="settings_select_language_system"></string>
-    <string name="settings_details_enable_markdown"></string>
-    <string name="filter_special"></string>
-
-    <!-- fragment_ical_list -->
-    <string name="list_date_start_in_past"></string>
-    <string name="list_date_today"></string>
-    <string name="list_date_tomorrow"></string>
-    <string name="list_date_future"></string>
-    <string name="list_start_date_in_past"></string>
-    <string name="list_start_date_today"></string>
-    <string name="list_start_date_tomorrow"></string>
-    <string name="list_start_date_future"></string>
-    <string name="list_hide_completed_tasks"></string>
-    <string name="settings_auto_alarm"></string>
-    <string name="alarms_always_ondue"></string>
-    <string name="settings_show_one_recur_entry_in_future"></string>
-    <string name="settings_auto_alarm_sub"></string>
-
-    <!-- Strings for values in properties of an ICalObject -->
-    <string name="status_no_status"></string>
-    <string name="classification_no_classification"></string>
-    <string name="map"></string>
-    <string name="open_in_browser"></string>
-    <string name="list_date_without"></string>
-    <string name="list_start_without"></string>
-    <string name="list_due_without"></string>
-    <string name="list_dialog_delete_visible_message2"></string>
-    <string name="list_snackbar_no_collection"></string>
-    <string name="filter_second_order_by"></string>
-    <string name="filter_group_by"></string>
-    <string name="filter_group_by_info"></string>
-    <string name="menu_list_flat_view"></string>
-    <string name="menu_list_flat_view_sub"></string>
-    <string name="menu_list_limit_recur_entries"></string>
-    <string name="menu_list_limit_recur_entries_sub"></string>
-    <string name="menu_view_markdown_formatting"></string>
-    <string name="menu_view_autosave"></string>
-    <string name="next"></string>
-    <string name="previous"></string>
-    <string name="widget_list_description"></string>
-    <string name="widget_list_configuration"></string>
-    <string name="widget_list_configuration_beta_info"></string>
-    <string name="widget_list_configuration_pro_info"></string>
-    <string name="widget_list_configuration_checkbox_position"></string>
-    <string name="widget_list_no_entries_found"></string>
-    <string name="widget_list_view_settings"></string>
-    <string name="widget_list_configuration_only_one_hierarchy_layer_supported"></string>
-    <string name="widget_list_maximum_entries_reached"></string>
-    <string name="opacity"></string>
-    <string name="general"></string>
-    <string name="list_collapse"></string>
-    <string name="edit_recur_second"></string>
-    <string name="edit_recur_minute"></string>
-    <string name="edit_recur_hour"></string>
-    <string name="filter_group_sort"></string>
-    <string name="widget_list_configuration_widget_background"></string>
-    <string name="widget_list_configuration_entries_background"></string>
-    <string name="widget_list_show_description"></string>
-    <string name="settings_select_theme_true_dark"></string>
-    <string name="settings_journals"></string>
-    <string name="settings_default_journals_date"></string>
-    <string name="settings_default_journals_date_current_day"></string>
-    <string name="settings_default_journals_date_current_hour"></string>
-    <string name="settings_default_journals_date_current_15min"></string>
-    <string name="settings_default_journals_date_current_5min"></string>
-    <string name="settings_default_journals_date_current_min"></string>
-    <string name="widget_list_show_subtasks"></string>
-    <string name="widget_list_show_subnotes"></string>
-    <string name="markdown_bold"></string>
-    <string name="markdown_italic"></string>
-    <string name="markdown_underlined"></string>
-    <string name="markdown_strikethrough"></string>
-    <string name="markdown_heading1"></string>
-    <string name="markdown_heading2"></string>
-    <string name="markdown_heading3"></string>
-    <string name="markdown_horizontal_ruler"></string>
-    <string name="markdown_unordered_list"></string>
-    <string name="markdown_code"></string>
 </resources>

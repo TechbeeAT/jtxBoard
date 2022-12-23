@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App title and fragment titles -->
     <string name="app_permission_label">"jtx Board synchronizuje deníky, poznámky a úkoly"</string>
     <string name="app_permission_desc">"synchronizovat obsah jtx Board s jinými aplikacemi, jako je DAVx⁵"</string>
-
+    <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
     <string name="save">"Uložit"</string>
@@ -32,7 +33,6 @@ Global Strings -->
     <string name="toolbar_text_adinfo">"Přidat informaci"</string>
     <string name="default_local_collection_name">"Místní"</string>
     <string name="default_local_account_name">"Místní"</string>
-
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Koncept"</string>
     <string name="journal_status_final">"Konečný"</string>
@@ -48,7 +48,6 @@ Global Strings -->
     <string name="attendee_role_required_participant">"Povinný účastník"</string>
     <string name="attendee_role_optional_participant">"Volitelný účastník"</string>
     <string name="attendee_role_non_participant">"Neúčastník / Informace"</string>
-
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Otevřít navigační panel"</string>
     <string name="navigation_drawer_close">"Zavřít navigační panel"</string>
@@ -65,7 +64,6 @@ Global Strings -->
     <string name="navigation_drawer_donate">"Darovat"</string>
     <string name="navigation_drawer_adinfo">"Informace o reklamě"</string>
     <string name="navigation_drawer_privacy_policy">"Zásady ochrany osobních údajů"</string>
-
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Po termínu"</string>
     <string name="list_due_today">"Termín dnes"</string>
@@ -95,7 +93,6 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"První řádek je interpretován jako souhrn, zbytek jako popis. Hashtagy jsou interpretovány jako kategorie (např. #kategorie)."</string>
     <string name="list_item_upload_pending">"Čekání na nahrání"</string>
     <string name="list_item_recurring">"Opakující se záznam"</string>
-
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Přejít na původní"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Výskyt opakování"</string>
@@ -124,7 +121,6 @@ Global Strings -->
     <string name="view_due">"Termín"</string>
     <string name="view_completed">"Dokončeno"</string>
     <string name="view_started">"Zahájeno"</string>
-
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#mojekategorie"</string>
     <string name="edit_add_category_helper">"Přidat kategorii"</string>
@@ -183,18 +179,17 @@ Global Strings -->
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"Bylo zjištěno neznámé nebo nepodporované pravidlo opakování. Pokud tento záznam uložíte, stávající pravidlo opakování bude odstraněno nebo přepsáno."</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Zjištěna nepodporovaná hodnota (Doba trvání)!"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Pro tento záznam byla na pozadí zjištěna doba trvání. Zpracování doby trvání není v současné době v jtx Board podporováno. Místo toho prosím použijte datum zahájení, termínu a ukončení. Pokud tento záznam uložíte, stávající doba trvání bude odstraněna."</string>
-
     <!-- fragment_ical_filter -->
     <string name="filter_fab_apply_filter_contentdescription">"Použít filtr"</string>
+    <!-- fragment_about -->
     <string name="about_tabitem_translations">"Překlady"</string>
     <string name="about_tabitem_libraries">"Knihovny"</string>
     <string name="about_tabitem_thanks">"Zvláštní poděkování"</string>
     <string name="about_app_version">"Verze: %1$s (%2$d)"</string>
-    <string name="about_app_codename">"Kódové označení: %1$s"</string>
+    <string name="about_app_codename">"Codename: %1$s"</string>
     <string name="about_app_build_date">"Zkompilováno dne %s"</string>
     <string name="about_app_terms">"Podmínky a ujednání"</string>
     <string name="about_thanks_ffg">"Zvláštní poděkování patří FFG za jejich důvěru a finanční podporu při realizaci tohoto projektu."</string>
-
     <!-- menus -->
     <string name="menu_edit_clear_dates">"Vymazat data"</string>
     <string name="menu_list_gotodate">"Přejít na datum"</string>
@@ -210,16 +205,13 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Kopírovat jako Úkol"</string>
     <string name="menu_view_copy_as_note">"Kopírovat jako Poznámku"</string>
     <string name="menu_view_copy_item">"Vytvořit kopii"</string>
-
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">"Připomenutí termínu úkolů"</string>
     <string name="notification_channel_reminder_description">"Oznámení pro termíny úkolů"</string>
-
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Přidat Deník"</string>
     <string name="shortcut_addNote_longLabel">"Přidat Poznámku"</string>
     <string name="shortcut_addTodo_longLabel">"Přidat Úkol"</string>
-
     <!-- Settings fragment -->
     <string name="settings_enforce_dark_theme">"Vynutit tmavý motiv"</string>
     <string name="settings_list">"Nastavení seznamu položek"</string>
@@ -233,32 +225,29 @@ Global Strings -->
     <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"Zobrazit dílčí deníky Poznámek a Úkolů v Seznamu deníků"</string>
     <string name="settings_app">"Nastavení aplikace"</string>
     <string name="settings_select_mimetype_for_audio">"Vybrat Mimetype pro zvukové poznámky"</string>
-
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"Synchronizovat s DAVx⁵ (již brzy)"</string>
-    <string name="sync_coming_soon_text">"jtx Board samotné neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní použít kompatibilní server CalDAV dle vašeho výběru k ukládání, zálohování a synchronizaci dat.
-Tato funkce je stále ve vývoji a bude brzy vydána! Sledujte naše webové stránky a Twitter :-)"</string>
+    <string name="sync_coming_soon_text">"jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data.
+This feature is still under development and will be released soon! Stay tuned on our website and on Twitter :-)"</string>
     <string name="sync_with_davx5_heading">"Synchronizovat s DAVx⁵ (beta)*"</string>
-    <string name="sync_basic_info">"jtx Board samotné neposkytuje synchronizaci se serverem, ale podporuje synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožňuje použít kompatibilní server CalDAV dle vašeho výběru k ukládání, zálohování a synchronizaci dat. * Pamatujte, že tato funkce je stále ve fázi beta. Přestože byla tato funkce testována, mohou se stále vyskytovat problémy. Pokud narazíte na nějaký problém, budeme rádi za vaši zpětnou vazbu!"</string>
+    <string name="sync_basic_info">"jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data. * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!"</string>
     <string name="sync_congratulations">"Gratulujeme! :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud jste si ještě nenastavili žádný účet, postupujte podle pokynů na našich webových stránkách:"</string>
     <string name="sync_davx5_installed_with_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud máte jakékoliv potíže nebo pochybnosti, podívejte se nejprve na naše webové stránky:"</string>
     <string name="sync_davx5_installed_with_collections_synched_collections">"Aktuálně jsou synchronizovány následující účty (kalendáře):"</string>
     <string name="sync_check_out_davx5">"Vyzkoušejte DAVx⁵!"</string>
-    <string name="sync_davx5_not_found">"Ve vašem telefonu jsme nerozpoznali DAVx⁵.
-Další informace o synchronizaci naleznete na:"</string>
+    <string name="sync_davx5_not_found">"We have not detected DAVx⁵ on your phone.
+For more information about the Sync please see:"</string>
     <string name="sync_davx5_get_davx5_on">"nebo získejte DAVx⁵ na"</string>
     <string name="sync_furhter_info_davx5">"Další informace o DAVx⁵ naleznete na"</string>
     <string name="sync_button_add_account_in_davx5">"Přidat účet v DAVx⁵"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Nepodařilo se otevřít DAVx⁵, otevřete aplikaci ručně."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Spuštění synchronizace v DAVx⁵ se nezdařilo, zkontrolujte to v DAVx⁵."</string>
-
     <!-- Donate fragment -->
     <string name="donate_header_text">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud se vám tato aplikace líbí a pokud chcete zajistit její neustálý vývoj, zvažte prosím příspěvek :-)"</string>
     <string name="donate_thank_you">"Děkujeme!"</string>
     <string name="donate_donate_with">"Darovat přes"</string>
     <string name="donate_other_donation_methods">"Pokud byste chtěli zvážit jiný způsob darování, podívejte se na naše webové stránky:"</string>
-
     <!-- Adinfo fragment -->
     <string name="adinfo_text">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Vaše verze jtx Board je zdarma a je financována z reklam. Přijímáním reklam přispíváte k pokračujícímu vývoji a financování tohoto projektu."</string>
     <string name="adinfo_huwei_only_non_personalized_text">"Tato verze jtx Board používá nepersonalizované reklamy."</string>
@@ -276,7 +265,6 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nebyla nalezena žádná aplikace pro otevření tohoto souboru nebo URL."</string>
     <string name="toast_item_is_now_recu_exception">"Opakující se položka je nyní výjimkou."</string>
     <string name="toast_adfree_for_a_week">"Od teď na týden žádné videoreklamy :-)"</string>
-
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Omlouváme se, ale jtx má potíže se synchronizací. Zavřete prosím DAVx⁵ a spusťte synchronizaci znovu."</string>
     <string name="about_translations_thanks_to">"Díky"</string>
@@ -296,7 +284,6 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Modul převodu řeči na text naslouchá."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Modul převodu řeči na text přestal naslouchat."</string>
     <string name="list_quickadd_dialog_sr_error">"Omlouváme se, u modulu převodu řeči na text došlo k chybě. (%1$s)"</string>
-
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Oprávnění ke čtení kontaktů uděleno"</string>
     <string name="permission_read_contacts_denied">"Oprávnění ke čtení kontaktů zamítnuto"</string>
@@ -312,7 +299,6 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="toolbar_text_collections">"Sbírky"</string>
     <string name="navigation_drawer_collections">"Sbírky"</string>
     <string name="edit_dialog_set_attendee_role">"Nastavení role účastníka"</string>
-
     <!-- alarms -->
     <string name="alarms_onstart">"Při zahájení"</string>
     <string name="alarms_ondue">"Při termínu"</string>
@@ -324,12 +310,14 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="alarms_minutes">"Minut"</string>
     <string name="alarms_hours">"Hodin"</string>
     <string name="alarms_days">"Dní"</string>
-
     <!-- fragment_collections -->
     <string name="collections_local_collections">"Místní Sbírky"</string>
     <string name="collections_remote_collections">"Vzdálené Sbírky"</string>
+    <!-- Fuzzy -->
     <string name="collections_journals_num">"Deníky: %1$s"</string>
+    <!-- Fuzzy -->
     <string name="collections_notes_num">"Poznámky: %1$s"</string>
+    <!-- Fuzzy -->
     <string name="collections_tasks_num">"Úkoly: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Nebyly nalezeny žádné místní Sbírky"</string>
     <string name="collections_local_noremotecollections">"Nebyly nalezeny žádné vzdálené Sbírky"</string>
@@ -439,9 +427,8 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="settings_select_theme_light">"Světlý"</string>
     <string name="settings_select_theme_system">"Výchozí nastavení systému"</string>
     <string name="donate_dialog_title">"Líbí se vám jtx Board?"</string>
-    <string name="donate_dialog_message">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud se vám tato aplikace líbí a pokud chcete zajistit její neustálý vývoj, zvažte prosím příspěvek :-)
-Děkujeme!"</string>
-
+    <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
+Thank you!"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud chcete využívat funkce Pro nebo pokud chcete náš projekt podpořit, zvažte prosím následující nákup v aplikaci:"</string>
     <string name="buypro_purchase_header">"Upgradovat na jtx Board Pro"</string>
@@ -499,7 +486,6 @@ Děkujeme!"</string>
     <string name="edit_subnote">"Upravit dílčí poznámku"</string>
     <string name="edit_fragment_app_notification_permission_message">"jtx Board zobrazuje oznámení, když se má spustit budík. Pro použití této funkce udělte prosím oprávnění pro oznámení."</string>
     <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board může používat vaši polohu k automatickému přiblížení vaší polohy při používání map. Pro použití této funkce udělte prosím oprávnění k přibližné poloze."</string>
-
     <!-- alarms -->
     <string name="alarms_alarm">"Budík"</string>
     <string name="alarms_before">"před"</string>
@@ -554,7 +540,6 @@ Děkujeme!"</string>
     <string name="settings_select_language_system">"Výchozí nastavení systému"</string>
     <string name="settings_details_enable_markdown">"Povolit formátování markdown"</string>
     <string name="filter_special">"Speciální filtry"</string>
-
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum v minulosti"</string>
     <string name="list_date_today">"Dnes"</string>
@@ -569,7 +554,6 @@ Děkujeme!"</string>
     <string name="alarms_always_ondue">"Vždy v termínu"</string>
     <string name="settings_show_one_recur_entry_in_future">"Zobrazit pouze jeden opakující se záznam v budoucnosti"</string>
     <string name="settings_auto_alarm_sub">"Zapněte pro automatické vytváření budíků. Zvolte \"Vždy v termínu\", abyste nevytvářeli budík, ale abyste byli v každém případě upozorněni, když má úkol termín."</string>
-
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"Bez stavu"</string>
     <string name="classification_no_classification">"Bez zařazení (veřejný)"</string>
@@ -618,16 +602,4 @@ Děkujeme!"</string>
     <string name="settings_default_journals_date_current_15min">"Aktuálních 15 minut"</string>
     <string name="settings_default_journals_date_current_5min">"Aktuální 5 minut"</string>
     <string name="settings_default_journals_date_current_min">"Aktuální minuta"</string>
-    <string name="widget_list_show_subtasks"></string>
-    <string name="widget_list_show_subnotes"></string>
-    <string name="markdown_bold"></string>
-    <string name="markdown_italic"></string>
-    <string name="markdown_underlined"></string>
-    <string name="markdown_strikethrough"></string>
-    <string name="markdown_heading1"></string>
-    <string name="markdown_heading2"></string>
-    <string name="markdown_heading3"></string>
-    <string name="markdown_horizontal_ruler"></string>
-    <string name="markdown_unordered_list"></string>
-    <string name="markdown_code"></string>
 </resources>
