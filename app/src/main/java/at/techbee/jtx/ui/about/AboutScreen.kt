@@ -26,7 +26,8 @@ import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
-    translators: MutableLiveData<MutableSet<Pair<String, String>>>,
+    translatorsPoeditor: MutableState<List<String>>,
+    translatorsCrowdin: MutableState<List<String>>,
     releaseinfo: MutableLiveData<MutableSet<Release>>,
     navController: NavHostController
 ) {
@@ -76,7 +77,7 @@ fun AboutScreen(
                                 )
                                 AboutTabDestination.Libraries.tabIndex -> AboutLibraries()
                                 AboutTabDestination.Translations.tabIndex -> AboutTranslations(
-                                    translators
+                                    translatorsPoeditor, translatorsCrowdin
                                 )
                                 AboutTabDestination.Thanks.tabIndex -> AboutSpecialThanks()
                             }
@@ -96,13 +97,8 @@ fun AboutScreen(
 fun AboutScreenPreview() {
     MaterialTheme {
         AboutScreen(
-            MutableLiveData(
-                mutableSetOf(
-                    Pair("Patrick", "German, English, French"),
-                    Pair("Ioannis", "Greek"),
-                    Pair("Luis", "Portuguese")
-                )
-            ),
+            translatorsPoeditor = remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) },
+            translatorsCrowdin = remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) },
             MutableLiveData(
                 mutableSetOf(
                     Release(

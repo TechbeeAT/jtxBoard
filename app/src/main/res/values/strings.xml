@@ -282,12 +282,12 @@ For more information about the Sync please see:"</string>
     <string name="toast_adfree_for_a_week">"No more video-ads for a week now :-)"</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again."</string>
-    <string name="link_jtx_poeditor" translatable="false">"https://poeditor.com/join/project?hash=4jaOOJSLxx"</string>
     <string name="about_translations_thanks_to">"Thanks to"</string>
     <string name="about_translations_for_contributions_in">"for contributions in"</string>
     <string name="about_translations_basic_info">"jtx Board is an open source app that appreciates the participation and contribution of the open source community. On this page we would like to attribute the efforts of community members for translations."</string>
-    <string name="about_translations_contribution_info">"If you would like to edit/add translations or add new languages to this app, feel free to join the jtx Board project on the translation platform POEditor:"</string>
-    <string name="about_translations_contribution_button">"Join on POEditor.com"</string>
+    <string name="about_translations_contribution_info">"If you would like to edit/add translations or add new languages to this app, feel free to join the jtx Board project on the translation platform Crowdin:"</string>
+    <string name="about_translations_contribution_button">"Join on Crowdin.com"</string>
+    <string name="about_translations_poeditor">"Translators on POeditor.com (legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Congratulations, this is your first journal entry :-)"</string>
     <string name="list_welcome_entry_journal_description">"Journals can be used to keep your notes for a specific date. Use this functionality for example for protocols, meeting minutes, diary entries and so on. If you edit this entry, you will see the options to add categories, attendees, attachments, … Feel free to delete this entry whenever you want!"</string>
     <string name="list_welcome_entry_note_summary">"Congratulations, this is your first note entry :-)"</string>
