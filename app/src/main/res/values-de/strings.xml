@@ -16,7 +16,7 @@ Global Strings -->
     <string name="toolbar_text_jtx_board_journals_overview">"Journale Überblick"</string>
     <string name="toolbar_text_jtx_board_notes_overview">"Notizen Überblick"</string>
     <string name="toolbar_text_jtx_board_tasks_overview">"Aufgaben Überblick"</string>
-    <string name="toolbar_text_view_journal_details">"Journal Details"</string>
+    <string name="toolbar_text_view_journal_details">"Journal-Details"</string>
     <string name="toolbar_text_view_note_details">"Notiz Details"</string>
     <string name="toolbar_text_view_task_details">"Aufgabe Details"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
@@ -59,7 +59,7 @@ Global Strings -->
     <string name="navigation_drawer_settings">"Einstellungen"</string>
     <string name="navigation_drawer_news_updates">"Neuigkeiten &amp; Updates"</string>
     <string name="navigation_drawer_external_links">"Externe Links"</string>
-    <string name="navigation_drawer_website">"Website"</string>
+    <string name="navigation_drawer_website">"Webseite"</string>
     <string name="navigation_drawer_support">"Support"</string>
     <string name="navigation_drawer_donate">"Spenden"</string>
     <string name="navigation_drawer_adinfo">"Werbeinformation"</string>
@@ -124,7 +124,7 @@ Global Strings -->
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#Kategorie"</string>
     <string name="edit_add_category_helper">"Kategorie hinzufügen"</string>
-    <string name="edit_attendees_hint">"johanna@example.com"</string>
+    <string name="edit_attendees_hint">"max@mustermann.com"</string>
     <string name="edit_attendees_helper">"Teilnehmer hinzufügen (E-Mail-Adresse)"</string>
     <string name="edit_resources_hint">"Beamer"</string>
     <string name="edit_resources_helper">"Materialen hinzufügen"</string>
@@ -227,17 +227,16 @@ Global Strings -->
     <string name="settings_select_mimetype_for_audio">"Format für Audio-Notizen wählen"</string>
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"Sync mit DAVx⁵ (in Kürze erhältlich)"</string>
-    <string name="sync_coming_soon_text">"jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data.
-This feature is still under development and will be released soon! Stay tuned on our website and on Twitter :-)"</string>
+    <string name="sync_coming_soon_text">"jtx Board bietet selbst keine Server-Synchronisierung an, unterstützt aber die Synchronisierung durch DAVx⁵. Durch diese Kombination können Sie jeglichen kompatiblen CalDAV-Server verwenden und Ihre Einträge ablegen, sichern und synchronisieren."</string>
     <string name="sync_with_davx5_heading">"Synchronisierung mit DAVx⁵ (beta)*"</string>
-    <string name="sync_basic_info">"jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data. * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!"</string>
+    <string name="sync_basic_info">"jtx Board bietet selbst keine Server-Synchronisierung an, unterstützt aber die Synchronisierung durch DAVx⁵. Durch diese Kombination können Sie jeglichen kompatiblen CalDAV-Server verwenden und Ihre Einträge ablegen, sichern und synchronisieren. * Bitte beachten Sie, dass diese Funktionalität sich noch in einer Beta-Phase befinden. Auch wenn die Synchronisierung ausgiebig getestet wurde können noch Fehler auftreten. Falls Sie ein Problem feststellen, würden wir uns über Ihre Rückmeldung freuen!"</string>
     <string name="sync_congratulations">"Gratulation! :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"Wir haben DAVx⁵ auf Ihrem Handy festgestellt. Falls Sie noch keine Accounts konfiguriert haben, folgen Sie bitte der Anleitung auf unserer Website:"</string>
     <string name="sync_davx5_installed_with_collections_found">"Wir haben DAVx⁵ auf Ihrem Handy festgestellt. Falls Sie weitere Fragen oder dazu haben, schauen Sie bitte zuerst auf unsere Website: "</string>
     <string name="sync_davx5_installed_with_collections_synched_collections">"Die folgenden Accounts (Kalender) werden aktuell synchronisiert:"</string>
     <string name="sync_check_out_davx5">"Probieren Sie DAVx⁵!"</string>
-    <string name="sync_davx5_not_found">"We have not detected DAVx⁵ on your phone.
-For more information about the Sync please see:"</string>
+    <string name="sync_davx5_not_found">"Wir haben DAVx⁵ auf Ihrem Handy nicht festgestellt.
+Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string>
     <string name="sync_davx5_get_davx5_on">"oder erwerben Sie DAVx⁵ auf"</string>
     <string name="sync_furhter_info_davx5">"Für weitere Informationen zu DAVx⁵ schauen Sie bitte auf"</string>
     <string name="sync_button_add_account_in_davx5">"Account in DAVx⁵ hinzufügen"</string>
@@ -376,6 +375,9 @@ For more information about the Sync please see:"</string>
     <string name="summary">"Zusammenfassung"</string>
     <string name="description">"Beschreibung"</string>
     <string name="search">"Suchen"</string>
+    <string name="search_journals">Journale durchsuchen</string>
+    <string name="search_notes">Notizen durchsuchen</string>
+    <string name="search_todos">Aufgaben durchsuchen</string>
     <string name="filter">"Filter"</string>
     <string name="sync_now">"Jetzt synchronisieren"</string>
     <string name="due">"Fällig"</string>
@@ -427,8 +429,8 @@ For more information about the Sync please see:"</string>
     <string name="settings_select_theme_light">"Hell"</string>
     <string name="settings_select_theme_system">"Systemstandard"</string>
     <string name="donate_dialog_title">"Gefällt dir jtx Board?"</string>
-    <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
-Thank you!"</string>
+    <string name="donate_dialog_message">"Die Entwicklung und Wartung einer App ist viel Arbeit. Wenn dir jtx Board gefällt und du die kontinuierliche Entwicklung sicherstellen möchtest, dann denke bitte auch an die Möglichkeit einer Spende! :-)
+Vielen Dank!"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"Die Entwicklung und Wartung einer App ist viel Arbeit. Wenn dir jtx Board gefällt und du die Pro-Funktionalitäten freischalten möchtest oder du einfach gerne das Projekt unterstützen möchtest, dann folge bitte folgendem In-App-Kauf:"</string>
     <string name="buypro_purchase_header">"Upgrade auf jtx Board Pro"</string>
@@ -464,7 +466,7 @@ Danke!"</string>
     <string name="revert">"Zurücksetzen"</string>
     <string name="audio_play">"Abspielen"</string>
     <string name="audio_record">"Aufnehmen"</string>
-    <string name="audio_stop">"Stop"</string>
+    <string name="audio_stop">"Stopp"</string>
     <string name="audio_pause">"Pause"</string>
     <string name="audio_error_toast">"Entschuldung, das Playback konnte nicht gestartet werden"</string>
     <string name="sync_in_progress">"Synchronisierung läuft"</string>
@@ -573,7 +575,7 @@ Danke!"</string>
     <string name="menu_list_limit_recur_entries">"Wiederkehrende Einträge limitieren"</string>
     <string name="menu_list_limit_recur_entries_sub">"Zeige nur einen Eintrag in der Zukunft"</string>
     <string name="menu_view_markdown_formatting">"Markdown-Formatierung"</string>
-    <string name="menu_view_autosave">"Autosave"</string>
+    <string name="menu_view_autosave">"Automatische Speicherung"</string>
     <string name="next">"Weiter"</string>
     <string name="previous">"Zurück"</string>
     <string name="widget_list_description">"Listenwidget"</string>
@@ -595,7 +597,7 @@ Danke!"</string>
     <string name="widget_list_configuration_widget_background">"Widget Hintergrund"</string>
     <string name="widget_list_configuration_entries_background">"Einträge Hintergrund"</string>
     <string name="widget_list_show_description">"Beschreibung anzeigen"</string>
-    <string name="settings_select_theme_true_dark">"True Dark (AMOLED)"</string>
+    <string name="settings_select_theme_true_dark">"Richtig dunkel (AMOLED)"</string>
     <string name="settings_journals">"Journal-Einstellungen"</string>
     <string name="settings_default_journals_date">"Standard-Datum/-Uhrzeit für Journale"</string>
     <string name="settings_default_journals_date_current_day">"Aktueller Tag"</string>
