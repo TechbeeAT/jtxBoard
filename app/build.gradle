@@ -46,6 +46,8 @@ android {
         def locales = getLocales()
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         resConfigs locales
+
+        buildConfigField "String", "CROWDIN_API_KEY", "\"" + System.getenv("CROWDIN_API_KEY") + "\""
     }
 
     signingConfigs {
