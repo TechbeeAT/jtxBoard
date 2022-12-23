@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- App title and fragment titles -->
     <string name="app_name" translatable="false">"jtx Board"</string>
     <string name="app_permission_label">"jtx Board sync Journals, Notes &amp; Tasks"</string>
     <string name="app_permission_desc">"sync jtx Board content with other applications like DAVx⁵"</string>
-
     <!-- Reusable links in different contexts -->
     <string name="link_davx5" translatable="false">"https://www.davx5.com/"</string>
     <string name="link_ffg" translatable="false">"https://www.ffg.at"</string>
@@ -17,7 +15,6 @@
     <string name="link_techbee" translatable="false">"https://techbee.at"</string>
     <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
     <string name="twitter_account_name" translatable="false">"@jtxBoard"</string>
-
     <!-- Possible audio formats for settings
 Global Strings -->
     <string name="save">"Save"</string>
@@ -48,7 +45,6 @@ Global Strings -->
     <string name="toolbar_text_adinfo">"Ad Info"</string>
     <string name="default_local_collection_name">"Local"</string>
     <string name="default_local_account_name">"Local"</string>
-
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Draft"</string>
     <string name="journal_status_final">"Final"</string>
@@ -64,7 +60,6 @@ Global Strings -->
     <string name="attendee_role_required_participant">"Required participant"</string>
     <string name="attendee_role_optional_participant">"Optional participant"</string>
     <string name="attendee_role_non_participant">"Non-participant / Info"</string>
-
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Open navigation drawer"</string>
     <string name="navigation_drawer_close">"Close navigation drawer"</string>
@@ -81,7 +76,6 @@ Global Strings -->
     <string name="navigation_drawer_donate">"Donate"</string>
     <string name="navigation_drawer_adinfo">"Ad Info"</string>
     <string name="navigation_drawer_privacy_policy">"Privacy Policy"</string>
-
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Overdue"</string>
     <string name="list_due_today">"Due today"</string>
@@ -111,7 +105,6 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
     <string name="list_item_upload_pending">"Upload pending"</string>
     <string name="list_item_recurring">"Recurring entry"</string>
-
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Go to original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instance of recurring"</string>
@@ -140,7 +133,6 @@ Global Strings -->
     <string name="view_due">"Due"</string>
     <string name="view_completed">"Completed"</string>
     <string name="view_started">"Start(ed)"</string>
-
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#mycategory"</string>
     <string name="edit_add_category_helper">"Add a category"</string>
@@ -201,10 +193,8 @@ Global Strings -->
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"An unknown or unsupported recurrence rule was detected. If you save this entry, the existing recurrence rule will be deleted/overwritten."</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Unsupported value (Duration) detected!"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"A duration was detected for this entry in the background. Handling a duration is currently not supported by jtx Board. Please use the start, due and end date instead. If you save this entry, the existing duration will be deleted."</string>
-
     <!-- fragment_ical_filter -->
     <string name="filter_fab_apply_filter_contentdescription">"Apply filter"</string>
-
     <!-- fragment_about -->
     <string name="about_tabitem_jtx" translatable="false">"jtx Board"</string>
     <string name="about_tabitem_translations">"Translations"</string>
@@ -216,7 +206,6 @@ Global Strings -->
     <string name="about_app_copyright" translatable="false">"© Techbee e.U."</string>
     <string name="about_app_terms">"Terms &amp; Conditions"</string>
     <string name="about_thanks_ffg">"Special thanks to FFG for their trust and financial support to realize this project."</string>
-
     <!-- menus -->
     <string name="menu_edit_clear_dates">"Clear dates"</string>
     <string name="menu_list_gotodate">"Go to date"</string>
@@ -232,16 +221,13 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Copy as Todo"</string>
     <string name="menu_view_copy_as_note">"Copy as Note"</string>
     <string name="menu_view_copy_item">"Create copy"</string>
-
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">"Todo Due Reminder"</string>
     <string name="notification_channel_reminder_description">"Notification for due todos"</string>
-
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Add Journal"</string>
     <string name="shortcut_addNote_longLabel">"Add Note"</string>
     <string name="shortcut_addTodo_longLabel">"Add Todo"</string>
-
     <!-- Settings fragment -->
     <string name="settings_enforce_dark_theme">"Enforce dark theme"</string>
     <string name="settings_list">"Settings for the item list"</string>
@@ -255,11 +241,9 @@ Global Strings -->
     <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"Show subjournals of Notes and Tasks in Journallist"</string>
     <string name="settings_app">"App Settings"</string>
     <string name="settings_select_mimetype_for_audio">"Select Mimetype for audio notes"</string>
-
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"Sync with DAVx⁵ (coming soon)"</string>
-    <string name="sync_coming_soon_text">"jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data.
-This feature is still under development and will be released soon! Stay tuned on our website and on Twitter :-)"</string>
+    <string name="sync_coming_soon_text">"jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data."</string>
     <string name="sync_with_davx5_heading">"Sync with DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data. * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!"</string>
     <string name="sync_congratulations">"Congratulations! :-)"</string>
@@ -274,13 +258,11 @@ For more information about the Sync please see:"</string>
     <string name="sync_button_add_account_in_davx5">"Add account in DAVx⁵"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Failed opening DAVx⁵, please open the app manually."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Triggering sync in DAVx⁵ failed, please check in DAVx⁵."</string>
-
     <!-- Donate fragment -->
     <string name="donate_header_text">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)"</string>
     <string name="donate_thank_you">"Thank you!"</string>
     <string name="donate_donate_with">"Donate with"</string>
     <string name="donate_other_donation_methods">"If you would like to consider any other donation method, please check our website:"</string>
-
     <!-- Adinfo fragment -->
     <string name="adinfo_text">"The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by advertisements. By accepting ads you contribute to the ongoing development and financing of this project."</string>
     <string name="adinfo_huwei_only_non_personalized_text">"This version of jtx Board is using non-personalized ads."</string>
@@ -298,7 +280,6 @@ For more information about the Sync please see:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"No app was found to open this file/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Recurring item is now an exception."</string>
     <string name="toast_adfree_for_a_week">"No more video-ads for a week now :-)"</string>
-
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again."</string>
     <string name="link_jtx_poeditor" translatable="false">"https://poeditor.com/join/project?hash=4jaOOJSLxx"</string>
@@ -319,7 +300,6 @@ For more information about the Sync please see:"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Speech-to-text engine is listening."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Speech-to-text engine stopped listening."</string>
     <string name="list_quickadd_dialog_sr_error">"Sorry, Speech-to-text engine encountered an error. (%1$s)"</string>
-
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Read contacts permission granted"</string>
     <string name="permission_read_contacts_denied">"Read contacts permission denied"</string>
@@ -335,7 +315,6 @@ For more information about the Sync please see:"</string>
     <string name="toolbar_text_collections">"Collections"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
     <string name="edit_dialog_set_attendee_role">"Set attendee role"</string>
-
     <!-- alarms -->
     <string name="alarms_onstart">"On start"</string>
     <string name="alarms_ondue">"On due"</string>
@@ -349,17 +328,13 @@ For more information about the Sync please see:"</string>
     <string name="alarms_days">"Day(s)"</string>
     <string name="alarms_duration_full_string" translatable="false">"%1$d %2$s %3$s"</string>
     <string name="alarms_default_number" translatable="false">"15"</string>
-
     <!-- fragment_collections -->
     <string name="collections_local_collections">"Local Collections"</string>
     <string name="collections_remote_collections">"Remote Collections"</string>
-
     <!-- Fuzzy -->
     <string name="collections_journals_num">"Journals: %1$s"</string>
-
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Notes: %1$s"</string>
-
     <!-- Fuzzy -->
     <string name="collections_tasks_num">"Tasks: %1$s"</string>
     <string name="collections_local_nolocalcollections">"No local Collections found"</string>
@@ -420,6 +395,9 @@ For more information about the Sync please see:"</string>
     <string name="summary">"Summary"</string>
     <string name="description">"Description"</string>
     <string name="search">"Search"</string>
+    <string name="search_journals">Search journals</string>
+    <string name="search_notes">Search notes</string>
+    <string name="search_todos">Search tasks</string>
     <string name="filter">"Filter"</string>
     <string name="sync_now">"Sync now"</string>
     <string name="due">"Due"</string>
@@ -473,7 +451,6 @@ For more information about the Sync please see:"</string>
     <string name="donate_dialog_title">"Do you like jtx Board?"</string>
     <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
 Thank you!"</string>
-
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"The development of an app is a complex topic and development, maintenance and support is hard work. If you would like use the Pro functionalities or if you would like to support our project, please consider the following in-app purchase:"</string>
     <string name="buypro_purchase_header">"Upgrade to jtx Board Pro"</string>
@@ -533,7 +510,6 @@ Thank you!"</string>
     <string name="edit_subnote">"Edit subnote"</string>
     <string name="edit_fragment_app_notification_permission_message">"jtx Board shows notifications when alarms are due. Please grant the notifications permission in order to use this feature."</string>
     <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board can use your location to automatically zoom to your location when using maps. Please grant the coarse location permission if you want to use this feature."</string>
-
     <!-- alarms -->
     <string name="alarms_alarm">"Alarm"</string>
     <string name="alarms_before">"before"</string>
@@ -591,7 +567,6 @@ Thank you!"</string>
     <string name="settings_select_language_system">"System default"</string>
     <string name="settings_details_enable_markdown">"Enable markdown formatting"</string>
     <string name="filter_special">"Special filters"</string>
-
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>
@@ -606,7 +581,6 @@ Thank you!"</string>
     <string name="alarms_always_ondue">"Always on due"</string>
     <string name="settings_show_one_recur_entry_in_future">"Show only one recurring entry in future"</string>
     <string name="settings_auto_alarm_sub">"Turn on to automatically create alarms. Choose \"Always on due\" to not create an alarm but to get notified in any case when a task is due."</string>
-
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"No status"</string>
     <string name="classification_no_classification">"No classification (public)"</string>
