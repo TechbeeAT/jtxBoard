@@ -118,7 +118,7 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
      */
     private fun getTranslatorInfosCrowdin() {
 
-        val url = "https://api.crowdin.com/api/v2/projects/557223/members"
+        val url = "https://api.crowdin.com/api/v2/projects/557223/members?limit=100"
 
         val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
             Method.GET,
