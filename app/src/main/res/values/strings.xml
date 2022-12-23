@@ -420,9 +420,6 @@ For more information about the Sync please see:"</string>
     <string name="summary">"Summary"</string>
     <string name="description">"Description"</string>
     <string name="search">"Search"</string>
-    <string name="search_journals">Search journals</string>
-    <string name="search_notes">Search notes</string>
-    <string name="search_todos">Search tasks</string>
     <string name="filter">"Filter"</string>
     <string name="sync_now">"Sync now"</string>
     <string name="due">"Due"</string>
