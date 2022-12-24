@@ -22,8 +22,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 201050002
-        versionName "2.01.05-rc02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 201050003
+        versionName "2.01.05-rc03"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Stop Putin, stop Raisi - peace for Ukraine, liberty for Iranians!\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -46,6 +46,8 @@ android {
         def locales = getLocales()
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         resConfigs locales
+
+        buildConfigField "String", "CROWDIN_API_KEY", "\"" + System.getenv("CROWDIN_API_KEY") + "\""
     }
 
     signingConfigs {
