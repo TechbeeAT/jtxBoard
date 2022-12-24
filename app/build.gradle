@@ -125,7 +125,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     lint {
-        disable 'MissingTranslation'
+        disable 'MissingTranslation', 'ExtraTranslation'
     }
     kotlinOptions {
         jvmTarget = '1.8'
