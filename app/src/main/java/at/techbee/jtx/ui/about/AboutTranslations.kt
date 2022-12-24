@@ -19,9 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
@@ -40,17 +37,17 @@ import at.techbee.jtx.ui.theme.Typography
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AboutTranslations(
-    translatorsLive: MutableLiveData<MutableSet<Pair<String, String>>>,
+    translatorsPoeditor: MutableState<List<String>>,
+    translatorsCrowdin: MutableState<List<String>>,
     modifier: Modifier = Modifier
 ) {
 
     val context = LocalContext.current
-    val list by translatorsLive.observeAsState(emptyList())
 
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 16.dp),
+            .padding(start = 8.dp, end = 8.dp, top = 24.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -84,7 +81,7 @@ fun AboutTranslations(
                     context.startActivity(
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse(context.getString(R.string.link_jtx_poeditor))
+                            Uri.parse("https://crowdin.com/project/jtx-board/invite?h=a8fd45e2dfea25534eda503b441476ea1545967")
                         )
                     )
                 }) {
@@ -92,13 +89,27 @@ fun AboutTranslations(
                 }
         }
 
-        items(
-            items = list.toList(),
-            key = { item -> item.first }
-        ) { translator ->
+
+        items(items = translatorsCrowdin.value) { translator ->
             TranslatorCard(
-                name = translator.first,
-                languages = translator.second,
+                name = translator,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .animateItemPlacement()
+            )
+        }
+
+        item {
+            Text(
+                text = stringResource(R.string.about_translations_poeditor),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 8.dp, end = 8.dp)
+            )
+        }
+
+        items(items = translatorsPoeditor.value) { translator ->
+            TranslatorCard(
+                name = translator,
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .animateItemPlacement()
@@ -113,13 +124,8 @@ fun AboutTranslations(
 fun AboutTranslations_Preview() {
     MaterialTheme {
         AboutTranslations(
-            MutableLiveData(
-                mutableSetOf(
-                    Pair("Patrick", "German, English, French"),
-                    Pair("Ioannis", "Greek"),
-                    Pair("Luis", "Portuguese")
-                )
-            )
+            remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) },
+            remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) }
         )
     }
 }

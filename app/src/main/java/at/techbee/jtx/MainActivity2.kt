@@ -317,7 +317,8 @@ fun MainNavHost(
         composable(NavigationDrawerDestination.ABOUT.name) {
             val viewModel: AboutViewModel = viewModel()
             AboutScreen(
-                translators = viewModel.translators,
+                translatorsPoeditor = viewModel.translatorsPoeditor,
+                translatorsCrowdin = viewModel.translatorsCrowdin,
                 releaseinfo = viewModel.releaseinfos,
                 navController = navController
             )
