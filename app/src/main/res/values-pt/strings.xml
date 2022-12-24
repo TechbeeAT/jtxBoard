@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App title and fragment titles -->
+    <!-- Reusable links in different contexts -->
+    <!-- Possible audio formats for settings
+Global Strings -->
+    <!-- Strings for values in properties of an ICalObject -->
+    <!-- Navigation Drawer -->
+    <!-- fragment_ical_list -->
+    <!-- fragment_ical_view -->
+    <!-- fragment_ical_edit -->
+    <!-- fragment_ical_filter -->
+    <!-- fragment_about -->
+    <!-- menus -->
+    <!-- Notification channel for Reminders -->
+    <!-- Shortcuts -->
+    <!-- Settings fragment -->
+    <!-- Sync fragment -->
+    <!-- Donate fragment -->
+    <!-- Adinfo fragment -->
+    <!-- sync content provider -->
+    <!-- Permissions -->
+    <!-- alarms -->
+    <!-- fragment_collections -->
+    <!-- Fuzzy -->
+    <!-- Fuzzy -->
+    <!-- Fuzzy -->
+    <!-- Buy Pro fragment -->
+    <!-- alarms -->
+    <!-- fragment_ical_list -->
+    <!-- Strings for values in properties of an ICalObject -->
+</resources>
