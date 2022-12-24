@@ -89,13 +89,13 @@ Global Strings -->
     <string name="list_dialog_delete_visible_title">"Alle sichtbaren Einträge löschen?"</string>
     <string name="list_dialog_delete_visible_message">"Diese Aktion löscht alle sichtbaren Einträge (%1$d). Sind Sie sicher, dass Sie fortfahren wollen? Diese Aktion kann nicht rückgängig gemacht werden!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Zusammenfassung/Beschreibung"</string>
-    <string name="list_quickadd_dialog_summary_description_helper">"Die erste Zeile wird als Zusammenfassung interpretiert, der Rest als Beschreibung. Hashtags werden als Kategorien interpretiert (z.B. #Kategorie)"</string>
+    <string name="list_quickadd_dialog_summary_description_helper">"Die erste Zeile wird als Zusammenfassung interpretiert, der Rest als Beschreibung. Hashtags werden als Kategorien interpretiert (z.B. #Kategorie)."</string>
     <string name="list_item_upload_pending">"Hochladen ausständig"</string>
     <string name="list_item_recurring">"Wiederkehrender Eintrag"</string>
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Zum Original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instanz von wiederkehrendem Eintrag"</string>
-    <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, al s eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen. "</string>
+    <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, al s eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen."</string>
     <string name="view_fragment_audio_permission">"App Berechtigungen"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board benötigt Ihre Zustimmung, um Audio aufzunehmen und um die Spracherkennung zu nutzen. Bitte geben Sie die Berechtigung, um diese Funktionalität zu nutzen."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Audio-Notiz hinzufügen"</string>
@@ -332,7 +332,7 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="edit_recur_week">"Woche"</string>
     <string name="edit_recur_month">"Monat"</string>
     <string name="edit_recur_year">"Jahr"</string>
-    <string name="edit_validation_errors_start_due_timezone_check">"Bitte wählen Sie eine Zeitzone für Startzeit und Fälligkeit oder deaktivieren Sie Zeitzonen"</string>
+    <string name="edit_validation_errors_start_due_timezone_check">"Bitte wählen Sie eine Zeitzone für Startzeit und Fälligkeit oder deaktivieren Sie Zeitzonen."</string>
     <string name="collections_toast_export_ics_success">"Export der Collection erfolgreich durchgeführt."</string>
     <string name="collections_toast_export_ics_error">"Beim Exportieren der Collection ist ein Fehler aufgetreten."</string>
     <string name="menu_collections_add_remote">"Remote Collection hinzufügen (DAVx⁵)"</string>
@@ -396,7 +396,7 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="filter_desc">"Absteigend"</string>
     <string name="filter_created">"Erstellt"</string>
     <string name="filter_last_modified">"Zuletzt bearbeitet"</string>
-    <string name="collections_snackbar_select_collection_for_ics_import">"Bitte klicken Sie auf die Collection zu der die Einträge hinzugefügt werden sollen!"</string>
+    <string name="collections_snackbar_select_collection_for_ics_import">"Bitte klicken Sie auf die Collection, zu der die Einträge hinzugefügt werden sollen!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d hinzugefügt, %2$d übersprungen. (Exklusive Instanzen von wiederkehrenden Einträgen)"</string>
     <string name="menu_collection_popup_import_from_ics">"Von .ics importieren"</string>
     <string name="notification_done">"Erledigt"</string>
@@ -416,10 +416,10 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="settings_select_theme_light">"Hell"</string>
     <string name="settings_select_theme_system">"Systemstandard"</string>
     <string name="donate_dialog_title">"Gefällt dir jtx Board?"</string>
-    <string name="donate_dialog_message">"Die Entwicklung und Wartung einer App ist viel Arbeit. Wenn dir jtx Board gefällt und du die kontinuierliche Entwicklung sicherstellen möchtest, dann denke bitte auch an die Möglichkeit einer Spende! :-)
+    <string name="donate_dialog_message">"Die Entwicklung und Wartung einer App sind viel Arbeit. Wenn dir jtx Board gefällt und du die kontinuierliche Entwicklung sicherstellen möchtest, dann denke bitte auch an die Möglichkeit einer Spende! :-)
 Vielen Dank!"</string>
     <!-- Buy Pro fragment -->
-    <string name="buypro_text">"Die Entwicklung und Wartung einer App ist viel Arbeit. Wenn dir jtx Board gefällt und du die Pro-Funktionalitäten freischalten möchtest oder du einfach gerne das Projekt unterstützen möchtest, dann folge bitte folgendem In-App-Kauf:"</string>
+    <string name="buypro_text">"Die Entwicklung und Wartung einer App sind viel Arbeit. Wenn dir jtx Board gefällt und du die Pro-Funktionalitäten freischalten möchtest oder du einfach gerne das Projekt unterstützen möchtest, dann folge bitte folgendem In-App-Kauf:"</string>
     <string name="buypro_purchase_header">"Upgrade auf jtx Board Pro"</string>
     <string name="buypro_purchase_description">"Vielen Dank, dass du jtx Board Pro in Erwägung ziehst. Dieses Upgrade schaltet die Bearbeitung von remote Collections, Schnell-Einträge, Schnell-Bearbeitung durch langen Klick und Dynamic Colors (ab Android 12) frei."</string>
     <string name="buypro_purchase_header_thankyou">"Danke für den Kauf von jtx Board Pro"</string>
@@ -429,9 +429,9 @@ Vielen Dank!"</string>
     <string name="buypro_success_header">"Danke für den Kauf von jtx Board Pro!"</string>
     <string name="buypro_success_description">"Die Bearbeitung von remote Collections, Schnell-Einträgen, Schnell-Bearbeitung durch langen Klick und Dynamic Colors (ab Android 12) sind jetzt aktiviert."</string>
     <string name="buypro_success_thankyou">"Dankeschön!"</string>
-    <string name="buypro_snackbar_remote_entries_blocked">"Bitte kaufe das Pro Package um die Bearbeitung von remote Collections zu aktivieren."</string>
-    <string name="buypro_snackbar_quick_entries_blocked">"Bitte kaufe das Pro-Package um Schnell-Einträge zu aktivieren!"</string>
-    <string name="buypro_initial_dialog_message">"Hallo! jtx Board kommt in einer Standard- und einer Pro-Version. Bitte schaue in die \"Pro kaufen\" Sektion für weitere Infos!
+    <string name="buypro_snackbar_remote_entries_blocked">"Bitte kaufe die Pro-Version, um die Bearbeitung von remote Collections zu aktivieren."</string>
+    <string name="buypro_snackbar_quick_entries_blocked">"Bitte kaufe die Pro-Version, um Schnell-Einträge zu aktivieren!"</string>
+    <string name="buypro_initial_dialog_message">"Hallo! jtx Board kommt in einer Standard- und einer Pro-Version. Bitte schaue in die \"Pro kaufen\" Sektion für weitere Informationen!
 Danke!"</string>
     <string name="view_comment_pausebutton_content_desc">"Audiokommentar pausieren"</string>
     <string name="menu_list_viewmode_list">"Listenansicht"</string>
@@ -455,7 +455,7 @@ Danke!"</string>
     <string name="audio_record">"Aufnehmen"</string>
     <string name="audio_stop">"Stopp"</string>
     <string name="audio_pause">"Pause"</string>
-    <string name="audio_error_toast">"Entschuldung, das Playback konnte nicht gestartet werden"</string>
+    <string name="audio_error_toast">"Entschuldung, das Playback konnte nicht gestartet werden."</string>
     <string name="sync_in_progress">"Synchronisierung läuft"</string>
     <string name="saving">"Speichern …"</string>
     <string name="saving_pending">"Speichern …"</string>
@@ -566,13 +566,13 @@ Danke!"</string>
     <string name="next">"Weiter"</string>
     <string name="previous">"Zurück"</string>
     <string name="widget_list_description">"Listenwidget"</string>
-    <string name="widget_list_configuration">"Widgetkonfiguration"</string>
+    <string name="widget_list_configuration">"Widget-Konfiguration"</string>
     <string name="widget_list_configuration_beta_info">"* Bitte beachten Sie, dass jtx Board eine neue, experimentelle Art zur Platzierung von Widgets verwendet, die in seltenen Fällen noch zu unerwartetem Verhalten führen kann."</string>
-    <string name="widget_list_configuration_pro_info">"Bitte kaufen Sie das Pro Paket um weitere Konfigurationsmöglichkeiten zu aktivieren"</string>
+    <string name="widget_list_configuration_pro_info">"Bitte kaufen Sie das Pro Paket, um weitere Konfigurationsmöglichkeiten zu aktivieren."</string>
     <string name="widget_list_configuration_checkbox_position">"Checkbox Position"</string>
     <string name="widget_list_no_entries_found">"Keine Einträge gefunden, die den Filterkriterien entsprechen"</string>
     <string name="widget_list_view_settings">"Ansichtsoptionen"</string>
-    <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Achtung: Zur Zeit wird nur eine Hierarchieebene im Widget unterstützt. Um Einträge weiterer Ebenen zu sehen, benutzen Sie bitte die flache Ansicht."</string>
+    <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Achtung: Aktuell wird nur eine Hierarchieebene im Widget unterstützt. Um Einträge weiterer Ebenen zu sehen, benutzen Sie bitte die flache Ansicht."</string>
     <string name="widget_list_maximum_entries_reached">"Maximale Anzahl an Einträgen im Widget erreicht (%1$d)."</string>
     <string name="opacity">"Transparenz"</string>
     <string name="general">"Allgemein"</string>
