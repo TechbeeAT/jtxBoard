@@ -94,7 +94,6 @@ Global Strings -->
     <string name="list_progress">"Progress"</string>
     <string name="list_expand">"Expand"</string>
     <string name="list_dialog_contribution_title">"Note on advertisements"</string>
-    <string name="list_dialog_contribution_message">"This app is powered by advertisements by default. For more information please check out the Ad-Info section in the main menu!"</string>
     <string name="list_dialog_contribution_more_information">"Find out more"</string>
     <string name="list_num_attendees_contentdesc">"Number of attendees"</string>
     <string name="list_num_attachments_contentdesc">"Number of attachments"</string>
@@ -108,7 +107,7 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Go to original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instance of recurring"</string>
-    <string name="view_recurrence_note_to_original">"This entry is part of a series. Editing this entry will unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore. "</string>
+    <string name="view_recurrence_note_to_original">"This entry is part of a series. Editing this entry will unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore."</string>
     <string name="view_fragment_audio_permission">"App Permission"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Add Audio Note"</string>
@@ -142,7 +141,7 @@ Global Strings -->
     <string name="edit_resources_helper">"Add a resource"</string>
     <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Contact information of the responsible or owner of this entry"</string>
-    <string name="edit_comment_hint">"Your comment…"</string>
+    <string name="edit_comment_hint">"Your comment …"</string>
     <string name="edit_comment_helper">"Add a comment"</string>
     <string name="edit_attachment_button_text">"Add attachment"</string>
     <string name="edit_take_picture_button_text">"Take picture"</string>
@@ -242,7 +241,7 @@ Global Strings -->
     <string name="settings_app">"App Settings"</string>
     <string name="settings_select_mimetype_for_audio">"Select Mimetype for audio notes"</string>
     <!-- Sync fragment -->
-    <string name="sync_coming_soon_heading">"Sync with DAVx⁵ (coming soon)"</string>
+    <string name="sync_coming_soon_heading">"Sync with DAVx⁵"</string>
     <string name="sync_coming_soon_text">"jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data."</string>
     <string name="sync_with_davx5_heading">"Sync with DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data. * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!"</string>
@@ -264,22 +263,11 @@ For more information about the Sync please see:"</string>
     <string name="donate_donate_with">"Donate with"</string>
     <string name="donate_other_donation_methods">"If you would like to consider any other donation method, please check our website:"</string>
     <!-- Adinfo fragment -->
-    <string name="adinfo_text">"The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by advertisements. By accepting ads you contribute to the ongoing development and financing of this project."</string>
-    <string name="adinfo_huwei_only_non_personalized_text">"This version of jtx Board is using non-personalized ads."</string>
-    <string name="adinfo_adfree_text">"If you prefer this app without ads, please consider the following upgrade:"</string>
-    <string name="adinfo_adfree_purchase_header">"Upgrade to jtx Board Ad-free"</string>
-    <string name="adinfo_adfree_purchase_description">"Thank you for considering the ad-free upgrade of jtx Board. This upgrade removes the recurring ads from this app."</string>
-    <string name="adinfo_adfree_purchase_header_thankyou">"Thank you for buying jtx Board Ad-free"</string>
-    <string name="adinfo_adfree_purchase_description_thankyou">"Ads are now removed from the app. If you like this app and you would like to support the continuous development, please also consider the subscription."</string>
-    <string name="adinfo_adfree_subscribe_header">"Subscription for jtx Board Ad-free"</string>
-    <string name="adinfo_adfree_subscribe_description">"The subscription removes the recurring ads from this app and additionally you support the continuous development of this app."</string>
-    <string name="adinfo_adfree_subscribe_quarterly">"Quarterly"</string>
     <string name="adinfo_button_reset_user_consent">"Reset user consent"</string>
     <string name="adinfo_button_manage_subscriptions">"Manage subscription"</string>
     <string name="attachment_error_on_retrieving_file">"Failed to retrieve file."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"No app was found to open this file/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Recurring item is now an exception."</string>
-    <string name="toast_adfree_for_a_week">"No more video-ads for a week now :-)"</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again."</string>
     <string name="about_translations_thanks_to">"Thanks to"</string>
@@ -418,8 +406,6 @@ For more information about the Sync please see:"</string>
     <string name="collections_dialog_move_title">"Move all entries from \"%1$s\" to"</string>
     <string name="collection_dialog_move_info">"Please note: Only writeable collections and collections with support for the same components (Journals, Notes, Tasks) can be selected."</string>
     <string name="menu_collections_popup_move_entries">"Move entries"</string>
-    <string name="adinfo_adfree_success_header">"Thank you for buying the jtx Board Ad-free!"</string>
-    <string name="adinfo_adfree_success_description">"Ads are now removed from the app. Thank you for your contribution to keep this project alive!"</string>
     <string name="adinfo_adfree_success_thankyou">"Thank you!"</string>
     <string name="adinfo_adfree_purchase_date">"Purchased on %1$s"</string>
     <string name="adinfo_adfree_order_id">"Order ID: %1$s"</string>
@@ -558,7 +544,7 @@ Thank you!"</string>
     <string name="sync_button_go_to_collections">"Go to Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Please purchase the Pro package to enable this feature."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
-    <string name="error_no_app_found_to_open_entry">"No app found to send this entry.."</string>
+    <string name="error_no_app_found_to_open_entry">"No app found to send this entry."</string>
     <string name="close">"Close"</string>
     <string name="menu_view_share_mail">"Share as E-Mail"</string>
     <string name="menu_view_copy_to_clipboard">"Copy to clipboard"</string>
@@ -589,7 +575,7 @@ Thank you!"</string>
     <string name="list_date_without">"Without date"</string>
     <string name="list_start_without">"Without start date"</string>
     <string name="list_due_without">"Without due date"</string>
-    <string name="list_dialog_delete_visible_message2">"Attention: Instances of recurring entries are excluded."</string>
+    <string name="list_dialog_delete_visible_message2">"Attention: Instances of recurring entries are excluded!"</string>
     <string name="list_snackbar_no_collection">"Please add a local collection or synchronise a remote collection that supports this module."</string>
     <string name="filter_second_order_by">"Then order by"</string>
     <string name="filter_group_by">"Group by"</string>
