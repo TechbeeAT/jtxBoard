@@ -8,7 +8,6 @@
 Global Strings -->
     <string name="save">"Αποθήκευση"</string>
     <string name="cancel">"Ακύρωση"</string>
-    <string name="ok">"OK"</string>
     <string name="delete">"Διαγραφή"</string>
     <string name="discard">"Απόρριψη"</string>
     <string name="gotit">"Το κατάλαβα"</string>
@@ -51,7 +50,6 @@ Global Strings -->
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Άνοιγμα πλοηγού"</string>
     <string name="navigation_drawer_close">"Κλείσιμο πλοηγού"</string>
-    <string name="navigation_drawer_board">"Board"</string>
     <string name="navigation_drawer_sync">"Συγχρονισμός με DAVx⁵"</string>
     <string name="navigation_drawer_about">"Σχετικά / Άδεια"</string>
     <string name="navigation_drawer_subtitle">"Ημερολόγια, σημειώσεις &amp; εργασίες"</string>
@@ -82,7 +80,6 @@ Global Strings -->
     <string name="list_progress">"Πρόοδος"</string>
     <string name="list_expand">"Επέκταση"</string>
     <string name="list_dialog_contribution_title">"Σημείωση για τις διαφημίσεις"</string>
-    <string name="list_dialog_contribution_message">"Αυτή η εφαρμογή περιέχει διαφημίσεις από προεπιλογή. Για περισσότερες πληροφορίες, ανατρέξτε στην ενότητα Ad-Info (Πληροφορίες διαφημίσεων) στο κύριο μενού!"</string>
     <string name="list_dialog_contribution_more_information">"Περισσότερα"</string>
     <string name="list_num_attendees_contentdesc">"Αριθμός συμμετεχόντων"</string>
     <string name="list_num_attachments_contentdesc">"Αριθμός συνημμένων"</string>
@@ -124,11 +121,9 @@ Global Strings -->
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#ηκατηγοριαμου"</string>
     <string name="edit_add_category_helper">"Προσθήκη κατηγορίας"</string>
-    <string name="edit_attendees_hint">"johanna@example.com"</string>
     <string name="edit_attendees_helper">"Προσθέστε συμμετέχοντες (e-mail)"</string>
     <string name="edit_resources_hint">"Εξοπλισμός"</string>
     <string name="edit_resources_helper">"Προσθήκη εξοπλισμού"</string>
-    <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Στοιχεία επικοινωνίας του υπεύθυνου ή του κατόχου αυτής της καταχώρισης"</string>
     <string name="edit_comment_hint">"Το σχόλιό σου…"</string>
     <string name="edit_comment_helper">"Προσθήκη σχολίων"</string>
@@ -249,29 +244,16 @@ Global Strings -->
     <string name="donate_donate_with">"Δωρίστε μέσω"</string>
     <string name="donate_other_donation_methods">"Εάν θέλετε να εξετάσετε οποιαδήποτε άλλη μέθοδο δωρεάς, ελέγξτε τον ιστότοπό μας:"</string>
     <!-- Adinfo fragment -->
-    <string name="adinfo_text">"Η ανάπτυξη μιας εφαρμογής είναι ένα περίπλοκο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη απαιτούν επίσης πολύ σκληρή δουλειά. Η έκδοση του jtx Board είναι δωρεάν και χρηματοδοτείται από διαφημίσεις. Με την αποδοχή διαφημίσεων συμβάλλετε στη συνεχή ανάπτυξη και χρηματοδότηση αυτού του έργου."</string>
-    <string name="adinfo_huwei_only_non_personalized_text">"Αυτή η έκδοση του jtx board χρησιμοποιεί μη εξατομικευμένες διαφημίσεις."</string>
-    <string name="adinfo_adfree_text">"Αν προτιμάτε αυτήν την εφαρμογή χωρίς διαφημίσεις, εξετάστε την ακόλουθη αναβάθμιση:"</string>
-    <string name="adinfo_adfree_purchase_header">"Αναβάθμιση σε jtx Board χωρίς διαφημίσεις"</string>
-    <string name="adinfo_adfree_purchase_description">"Σας ευχαριστούμε που επιλέξατε την αναβάθμιση του jtx Board χωρίς διαφημίσεις. Αυτή η αναβάθμιση καταργεί τις επαναλαμβανόμενες διαφημίσεις από αυτήν την εφαρμογή."</string>
-    <string name="adinfo_adfree_purchase_header_thankyou">"Σας ευχαριστούμε που αγοράσατε το jtx Board χωρίς διαφημίσεις"</string>
-    <string name="adinfo_adfree_purchase_description_thankyou">"Οι διαφημίσεις έχουν πλέον καταργηθεί από την εφαρμογή. Εάν σας αρέσει αυτή η εφαρμογή και θέλετε να υποστηρίξετε τη συνεχή ανάπτυξη, εξετάστε επίσης τη συνδρομή."</string>
-    <string name="adinfo_adfree_subscribe_header">"Συνδρομή για jtx Board xωρίς διαφημίσεις"</string>
-    <string name="adinfo_adfree_subscribe_description">"Η συνδρομή αφαιρεί τις επαναλαμβανόμενες διαφημίσεις από αυτήν την εφαρμογή και επιπλέον υποστηρίζετε τη συνεχή ανάπτυξη αυτής."</string>
-    <string name="adinfo_adfree_subscribe_quarterly">"Τριμηνιαία"</string>
     <string name="adinfo_button_reset_user_consent">"Επαναφορά συναίνεσης χρήστη"</string>
     <string name="adinfo_button_manage_subscriptions">"Διαχείριση συνδρομής"</string>
     <string name="attachment_error_on_retrieving_file">"Η ανάκτηση του αρχείου απέτυχε."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Δεν βρέθηκε εφαρμογή για να ανοίξει αυτό το αρχείο/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Το επαναλαμβανόμενο στοιχείο αποτελεί πλέον εξαίρεση."</string>
-    <string name="toast_adfree_for_a_week">"Όχι άλλες βίντεο διαφημίσεις εδώ και μια εβδομάδα :-)"</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Λυπούμαστε, το jtx board δυσκολεύεται να συγχρονίστει. Κλείστε το DAVx⁵ και ξεκινήστε τον συγχρονισμό εκ νέου."</string>
     <string name="about_translations_thanks_to">"Ευχαριστίες"</string>
     <string name="about_translations_for_contributions_in">"Συνεισφορά"</string>
     <string name="about_translations_basic_info">"Η jtx Board είναι μια εφαρμογή ανοιχτού κώδικα που εκτιμά τη συμμετοχή και τη συνεισφορά της κοινότητας ανοιχτού κώδικα. Σε αυτή τη σελίδα θα θέλαμε να αποδώσουμε τις προσπάθειες των μελών της κοινότητας για μεταφράσεις."</string>
-    <string name="about_translations_contribution_info">"Εάν θέλετε να επεξεργαστείτε, να προσθέσετε μεταφράσεις ή να προσθέσετε νέες γλώσσες σε αυτήν την εφαρμογή, μη διστάσετε να κάνετε εγγραφή για το έργο της jtx Board στη μεταφραστική πλατφόρμα POEditor:"</string>
-    <string name="about_translations_contribution_button">"Εγγραφείτε στο POEditor.com"</string>
     <string name="list_welcome_entry_journal_summary">"Συγχαρητήρια, αυτή είναι η πρώτη σας ημερολογιακή εγγραφή :-)"</string>
     <string name="list_welcome_entry_journal_description">"Τα ημερολόγια μπορούν να χρησιμοποιηθούν για να κρατήσετε τις σημειώσεις σας για μια συγκεκριμένη ημερομηνία. Χρησιμοποιήστε αυτήν τη λειτουργία πχ για πρωτόκολλα, πρακτικά συνάντησης, καταχωρήσεις ημερολογίου και ούτω καθεξής. Εάν επεξεργαστείτε αυτήν την καταχώριση, θα δείτε τις επιλογές για να προσθέσετε κατηγορίες, συμμετέχοντες, συνημμένα κλπ. Μη διστάσετε να διαγράψετε αυτήν την καταχώριση όποτε θέλετε!"</string>
     <string name="list_welcome_entry_note_summary">"Συγχαρητήρια, αυτή είναι η πρώτη σας σημείωση :-)"</string>
@@ -360,7 +342,6 @@ Global Strings -->
     <string name="priority">"Προτεραιότητα"</string>
     <string name="readyonly">"Μόνο για ανάγνωση"</string>
     <string name="upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>
-    <string name="url">"URL"</string>
     <string name="location">"Τοποθεσία"</string>
     <string name="attendees">"Συμμετέχοντες"</string>
     <string name="resources">"Απαραίτητος εξοπλισμός"</string>
@@ -396,8 +377,6 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Μεταφέρετε όλες τις εγγραφές από \"%1$s\" προς"</string>
     <string name="collection_dialog_move_info">"Σημείωση: Μπορούν να επιλεγούν μόνο εγγράψιμες συλλογές και συλλογές με υποστήριξη για τα ίδια στοιχεία (ημερολόγια, σημειώσεις, εργασίες)."</string>
     <string name="menu_collections_popup_move_entries">"Μεταφορά εγγραφών"</string>
-    <string name="adinfo_adfree_success_header">"Σας ευχαριστούμε που αγοράσατε jtx Board χωρίς διαφημίσεις"</string>
-    <string name="adinfo_adfree_success_description">"Οι διαφημίσεις έχουν πλέον καταργηθεί από την εφαρμογή. Σας ευχαριστούμε για τη συνεισφορά σας για να κρατήσετε αυτό το έργο ζωντανό!"</string>
     <string name="adinfo_adfree_success_thankyou">"Ευχαριστούμε!"</string>
     <string name="adinfo_adfree_purchase_date">"Αγοράστηκε στις %1$s"</string>
     <string name="adinfo_adfree_order_id">"Αναγνωριστικό παραγγελίας: %1$s"</string>
@@ -464,7 +443,6 @@ Global Strings -->
     <string name="revert">"Επαναστροφή"</string>
     <string name="audio_play">"Έναρξη"</string>
     <string name="audio_record">"Εγγραφή"</string>
-    <string name="audio_stop">"Stop"</string>
     <string name="audio_pause">"Παύση"</string>
     <string name="audio_error_toast">"Συγνώμη, η έναρξη είναι αδύνατη"</string>
     <string name="sync_in_progress">"Συγχρονισμός σε εξέλιξη"</string>
@@ -531,7 +509,6 @@ Global Strings -->
     <string name="settings_disable_alarms_for_readonly">"Απενεργοποίηση ειδοποιήσεων για συλλογές μόνο για ανάγνωση"</string>
     <string name="sync_button_go_to_collections">"Πήγαινε στις συλλογέ"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε αυτήν τη δυνατότητα."</string>
-    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="error_no_app_found_to_open_entry">"Δεν βρέθηκε εφαρμογή για αποστολή αυτής της καταχώρισης.."</string>
     <string name="close">"Κλειστό"</string>
     <string name="menu_view_share_mail">"Διαμοιρασμός ως E-mail"</string>
