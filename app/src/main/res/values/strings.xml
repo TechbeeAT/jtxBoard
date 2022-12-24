@@ -449,7 +449,7 @@ Thank you!"</string>
     <string name="buypro_success_description">"Editing capabilities for remote collections, quick-entries, quick-editing through long click and dynamic colors (available from Android 12) are now enabled."</string>
     <string name="buypro_success_thankyou">"Thank you!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Please purchase the Pro package to enable editing capabilities of remote collections."</string>
-    <string name="buypro_snackbar_quick_entries_blocked">"Please purchase the Pro package to enable quick-add capabilities."</string>
+    <string name="buypro_snackbar_quick_entries_blocked">"Please purchase the Pro package to enable quick-add capabilities!"</string>
     <string name="buypro_initial_dialog_message">"Hello! jtx Board comes with a standard and a Pro version. Please check out the \"Buy Pro\" section to find out more about jtx Board Pro! Thank you!"</string>
     <string name="view_comment_pausebutton_content_desc">"Pause audio comment"</string>
     <string name="menu_list_viewmode_list">"List view"</string>
@@ -475,10 +475,10 @@ Thank you!"</string>
     <string name="audio_record">"Record"</string>
     <string name="audio_stop">"Stop"</string>
     <string name="audio_pause">"Pause"</string>
-    <string name="audio_error_toast">"Sorry, can't start playback…"</string>
+    <string name="audio_error_toast">"Sorry, can't start playback."</string>
     <string name="sync_in_progress">"Sync in progress"</string>
-    <string name="saving">"Saving…"</string>
-    <string name="saving_pending">"Saving pending…"</string>
+    <string name="saving">"Saving …"</string>
+    <string name="saving_pending">"Saving pending …"</string>
     <string name="invalid_timezone_message">"Please select a valid timezone!"</string>
     <string name="invalid_url_message">"Please enter a valid URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
