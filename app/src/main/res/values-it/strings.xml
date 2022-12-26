@@ -397,9 +397,24 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="notification_done">"Fatto"</string>
     <string name="notification_add_1h">"+ 1 ora"</string>
     <string name="notification_add_1d">"+ 1 giorno"</string>
+    <string name="menu_collections_export_all">"Esporta tutto"</string>
+    <string name="toolbar_text_buypro">"Compra Pro"</string>
+    <string name="navigation_drawer_buypro">"Compra Pro"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_success_thankyou">"Grazie!"</string>
+    <string name="saving">"Salvataggio …"</string>
+    <string name="saving_pending">"Salvataggio in attesa …"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Ascolto …"</string>
     <!-- alarms -->
+    <string name="settings_progress_step_1">"Incremento di 1 (100 passi)"</string>
+    <string name="settings_progress_step_2">"Incremento di 2 (50 passi)"</string>
+    <string name="settings_progress_step_5">"Incremento di 5 (20 passi)"</string>
+    <string name="settings_progress_step_10">"Incremento di 10 (10 passi)"</string>
+    <string name="settings_progress_step_20">"Incremento di 20 (5 passi)"</string>
+    <string name="settings_progress_step_25">"Incremento di 25 (4 passi)"</string>
+    <string name="settings_progress_step_50">"Incremento di 50 (2 passi)"</string>
+    <string name="settings_progress_step">"Imposta il passo per il cursore di avanzamento"</string>
+    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
 </resources>
