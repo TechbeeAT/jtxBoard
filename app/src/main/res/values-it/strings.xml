@@ -416,7 +416,6 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="settings_progress_step">"Imposta il passo per il cursore di avanzamento"</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <!-- Buy Pro fragment -->
-    <string name="buypro_success_thankyou">"Grazie!"</string>
     <!-- alarms -->
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
