@@ -537,10 +537,12 @@ Merci !"</string>
     <string name="widget_list_configuration_checkbox_position">"Position des checkbox"</string>
     <string name="widget_list_no_entries_found">"Aucune entrée trouvée correspondant à vos critères de filtres"</string>
     <string name="widget_list_view_settings">"Paramètres des vues"</string>
+    <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attention : Actuellement, un seul niveau de hiérarchie est pris en charge dans le widget. Afin de voir les entrées de niveaux inférieurs, veuillez utiliser la vue à plat à la place."</string>
     <string name="opacity">"Opacité"</string>
     <string name="general">"Général"</string>
     <string name="list_collapse">"Fermer"</string>
     <string name="edit_recur_second">"seconde(s)"</string>
+    <string name="edit_recur_minute">"minute(s)"</string>
     <string name="edit_recur_hour">"heure(s)"</string>
     <string name="filter_group_sort">"Groupement/Triage"</string>
 </resources>
