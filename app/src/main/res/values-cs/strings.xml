@@ -226,7 +226,6 @@ Global Strings -->
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"Synchronizovat s DAVx⁵ (již brzy)"</string>
     <string name="sync_coming_soon_text">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat."</string>
-    <string name="sync_with_davx5_heading">"Synchronizovat s DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat. * Pamatujte, že tato funkce je stále považována za beta verzi. Přestože byla tato funkce testována, mohou se stále vyskytovat problémy. Pokud narazíte na nějaký problém, budeme rádi za vaši zpětnou vazbu!"</string>
     <string name="sync_with_davx5_heading">"Synchronizovat s DAVx⁵ (beta)*"</string>
     <string name="sync_congratulations">"Gratulujeme! :-)"</string>
