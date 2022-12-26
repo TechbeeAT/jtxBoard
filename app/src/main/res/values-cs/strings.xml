@@ -8,6 +8,7 @@
 Global Strings -->
     <string name="save">"Uložit"</string>
     <string name="cancel">"Zrušit"</string>
+    <string name="ok">"OK"</string>
     <string name="delete">"Odstranit"</string>
     <string name="discard">"Zahodit"</string>
     <string name="gotit">"Rozumím"</string>
@@ -184,6 +185,7 @@ Global Strings -->
     <string name="about_tabitem_libraries">"Knihovny"</string>
     <string name="about_tabitem_thanks">"Zvláštní poděkování"</string>
     <string name="about_app_version">"Verze: %1$s (%2$d)"</string>
+    <string name="about_app_codename">"Kódový název: %1$s"</string>
     <string name="about_app_build_date">"Zkompilováno dne %s"</string>
     <string name="about_app_terms">"Podmínky a ujednání"</string>
     <string name="about_thanks_ffg">"Zvláštní poděkování patří FFG za jejich důvěru a finanční podporu při realizaci tohoto projektu."</string>
@@ -224,12 +226,16 @@ Global Strings -->
     <string name="settings_select_mimetype_for_audio">"Vybrat Mimetype pro zvukové poznámky"</string>
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"Synchronizovat s DAVx⁵ (již brzy)"</string>
+    <string name="sync_coming_soon_text">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat."</string>
     <string name="sync_with_davx5_heading">"Synchronizovat s DAVx⁵ (beta)*"</string>
+    <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat. * Pamatujte, že tato funkce je stále považována za beta verzi. Přestože byla tato funkce testována, mohou se stále vyskytovat problémy. Pokud narazíte na nějaký problém, budeme rádi za vaši zpětnou vazbu!"</string>
     <string name="sync_congratulations">"Gratulujeme! :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud jste si ještě nenastavili žádný účet, postupujte podle pokynů na našich webových stránkách:"</string>
     <string name="sync_davx5_installed_with_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud máte jakékoliv potíže nebo pochybnosti, podívejte se nejprve na naše webové stránky:"</string>
     <string name="sync_davx5_installed_with_collections_synched_collections">"Aktuálně jsou synchronizovány následující účty (kalendáře):"</string>
     <string name="sync_check_out_davx5">"Vyzkoušejte DAVx⁵!"</string>
+    <string name="sync_davx5_not_found">"Ve vašem telefonu jsme nerozpoznali DAVx⁵.
+Další informace o synchronizaci naleznete na:"</string>
     <string name="sync_davx5_get_davx5_on">"nebo získejte DAVx⁵ na"</string>
     <string name="sync_furhter_info_davx5">"Další informace o DAVx⁵ naleznete na"</string>
     <string name="sync_button_add_account_in_davx5">"Přidat účet v DAVx⁵"</string>
@@ -251,6 +257,9 @@ Global Strings -->
     <string name="about_translations_thanks_to">"Díky"</string>
     <string name="about_translations_for_contributions_in">"za příspěvky v rámci"</string>
     <string name="about_translations_basic_info">"jtx Board je aplikace s otevřeným zdrojovým kódem, která si cení účasti a příspěvků komunity open source. Na této stránce bychom rádi ocenili úsilí členů komunity v oblasti překladů."</string>
+    <string name="about_translations_contribution_info">"Pokud chcete upravovat či přidávat překlady nebo přidávat nové jazyky do této aplikace, neváhejte se připojit k projektu jtx Board na překladatelské platformě Crowdin:"</string>
+    <string name="about_translations_contribution_button">"Připojte se na Crowdin.com"</string>
+    <string name="about_translations_poeditor">"Překladatelé na POeditor.com (starší verze)"</string>
     <string name="list_welcome_entry_journal_summary">"Blahopřejeme, toto je váš první záznam do deníku :-)"</string>
     <string name="list_welcome_entry_journal_description">"Deníky lze použít k uchovávání poznámek k určitému datu. Tuto funkci můžete použít například pro protokoly, zápisy z jednání, deníkové záznamy apod. Pokud tento záznam upravíte, zobrazí se možnosti přidání kategorií, účastníků, příloh, … Nebojte se tento záznam kdykoli odstranit!"</string>
     <string name="list_welcome_entry_note_summary">"Blahopřejeme, toto je váš první záznam poznámky :-)"</string>
@@ -339,6 +348,7 @@ Global Strings -->
     <string name="priority">"Priorita"</string>
     <string name="readyonly">"Pouze ke čtení"</string>
     <string name="upload_pending">"Čekající na nahrání"</string>
+    <string name="url">"URL"</string>
     <string name="location">"Místo"</string>
     <string name="attendees">"Účastníci"</string>
     <string name="resources">"Zdroje"</string>
@@ -354,6 +364,9 @@ Global Strings -->
     <string name="summary">"Souhrn"</string>
     <string name="description">"Popis"</string>
     <string name="search">"Hledat"</string>
+    <string name="search_journals">Hledat deníky</string>
+    <string name="search_notes">Hledat poznámky</string>
+    <string name="search_todos">Hledat úkoly</string>
     <string name="filter">"Filtrovat"</string>
     <string name="sync_now">"Synchronizovat nyní"</string>
     <string name="due">"Termín"</string>
@@ -403,6 +416,8 @@ Global Strings -->
     <string name="settings_select_theme_light">"Světlý"</string>
     <string name="settings_select_theme_system">"Výchozí nastavení systému"</string>
     <string name="donate_dialog_title">"Líbí se vám jtx Board?"</string>
+    <string name="donate_dialog_message">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud se vám tato aplikace líbí a pokud chcete zajistit její neustálý vývoj, zvažte prosím příspěvek :-)
+Děkujeme vám!"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud chcete využívat funkce Pro nebo pokud chcete náš projekt podpořit, zvažte prosím následující nákup v aplikaci:"</string>
     <string name="buypro_purchase_header">"Upgradovat na jtx Board Pro"</string>
@@ -504,6 +519,7 @@ Global Strings -->
     <string name="settings_disable_alarms_for_readonly">"Zakázat budíky pro sbírky pouze pro čtení"</string>
     <string name="sync_button_go_to_collections">"Přejít na Sbírky"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Pro povolení této funkce si zakupte prosím balíček Pro."</string>
+    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="error_no_app_found_to_open_entry">"Pro odeslání tohoto záznamu nebyla nalezena žádná aplikace."</string>
     <string name="close">"Zavřít"</string>
     <string name="menu_view_share_mail">"Sdílet jako e-mail"</string>
@@ -575,4 +591,16 @@ Global Strings -->
     <string name="settings_default_journals_date_current_15min">"Aktuálních 15 minut"</string>
     <string name="settings_default_journals_date_current_5min">"Aktuální 5 minut"</string>
     <string name="settings_default_journals_date_current_min">"Aktuální minuta"</string>
+    <string name="widget_list_show_subtasks">"Zobrazit dílčí úkoly"</string>
+    <string name="widget_list_show_subnotes">"Zobrazit dílčí poznámky"</string>
+    <string name="markdown_bold">"Tučné"</string>
+    <string name="markdown_italic">"Kurzíva"</string>
+    <string name="markdown_underlined">"Podtržené"</string>
+    <string name="markdown_strikethrough">"Přeškrtnuté"</string>
+    <string name="markdown_heading1">"Nadpis 1"</string>
+    <string name="markdown_heading2">"Nadpis 2"</string>
+    <string name="markdown_heading3">"Nadpis 3"</string>
+    <string name="markdown_horizontal_ruler">"Vodorovné pravítko"</string>
+    <string name="markdown_unordered_list">"Seznam"</string>
+    <string name="markdown_code">"Kód"</string>
 </resources>
