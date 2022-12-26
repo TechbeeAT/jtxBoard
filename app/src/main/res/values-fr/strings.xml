@@ -415,6 +415,7 @@ Merci !"</string>
     <string name="sorry">"Désolé"</string>
     <string name="back">"Retour"</string>
     <string name="details">"Détails"</string>
+    <string name="date">"Date"</string>
     <string name="timezone">"Fuseau horaire"</string>
     <string name="not_set2">"Non défini"</string>
     <string name="invert_selection">"Sélection inversée"</string>
@@ -538,6 +539,7 @@ Merci !"</string>
     <string name="widget_list_no_entries_found">"Aucune entrée trouvée correspondant à vos critères de filtres"</string>
     <string name="widget_list_view_settings">"Paramètres des vues"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attention : Actuellement, un seul niveau de hiérarchie est pris en charge dans le widget. Afin de voir les entrées de niveaux inférieurs, veuillez utiliser la vue à plat à la place."</string>
+    <string name="widget_list_maximum_entries_reached">"Nombre maximum d'entrées dans le widget atteint(%1$d)."</string>
     <string name="opacity">"Opacité"</string>
     <string name="general">"Général"</string>
     <string name="list_collapse">"Fermer"</string>
@@ -545,4 +547,19 @@ Merci !"</string>
     <string name="edit_recur_minute">"minute(s)"</string>
     <string name="edit_recur_hour">"heure(s)"</string>
     <string name="filter_group_sort">"Groupement/Triage"</string>
+    <string name="widget_list_configuration_widget_background">"Arrière-plan du widget"</string>
+    <string name="widget_list_configuration_entries_background">"Fond des entrées"</string>
+    <string name="widget_list_show_description">"Afficher la description"</string>
+    <string name="settings_select_theme_true_dark">"Sombre Véritable (AMOLED)"</string>
+    <string name="settings_journals">"Paramètres des journaux"</string>
+    <string name="settings_default_journals_date">"Définir une date/heure par défaut pour les journaux"</string>
+    <string name="settings_default_journals_date_current_day">"Journée en cours"</string>
+    <string name="settings_default_journals_date_current_hour">"Heure en cours"</string>
+    <string name="settings_default_journals_date_current_15min">"15 minutes en cours"</string>
+    <string name="settings_default_journals_date_current_5min">"5 minutes en cours"</string>
+    <string name="settings_default_journals_date_current_min">"Minute en cours"</string>
+    <string name="widget_list_show_subtasks">"Afficher les sous-tâches"</string>
+    <string name="widget_list_show_subnotes">"Afficher les sous-notes"</string>
+    <string name="markdown_bold">"Gras"</string>
+    <string name="markdown_italic">"Italique"</string>
 </resources>
