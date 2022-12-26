@@ -121,7 +121,7 @@ Global Strings -->
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#ηκατηγοριαμου"</string>
     <string name="edit_add_category_helper">"Προσθήκη κατηγορίας"</string>
-    <string name="edit_attendees_helper">"Προσθέστε συμμετέχοντες (e-mail)"</string>
+    <string name="edit_attendees_helper">"Προσθέστε συμμετέχοντες (e-mail)."</string>
     <string name="edit_resources_hint">"Εξοπλισμός"</string>
     <string name="edit_resources_helper">"Προσθήκη εξοπλισμού"</string>
     <string name="edit_contact_helper">"Στοιχεία επικοινωνίας του υπεύθυνου ή του κατόχου αυτής της καταχώρισης"</string>
@@ -396,7 +396,7 @@ Global Strings -->
     <string name="edit_recur_ends_never">"Χωρίς λήξη"</string>
     <string name="edit_recur_ends_on">"Λήξη στις"</string>
     <string name="edit_recur_ends_after">"Λήξη μετά από"</string>
-    <string name="collections_toast_export_all_ics_success">"Η εξαγωγή όλων των συλλογών ολοκληρώθηκε επιτυχώς"</string>
+    <string name="collections_toast_export_all_ics_success">"Η εξαγωγή όλων των συλλογών ολοκληρώθηκε επιτυχώς."</string>
     <string name="collections_toast_export_all_ics_error">"Εντοπίστηκε ένα πρόβλημα κατά την διαδικασία της εξαγωγής όπλων των συλλογών."</string>
     <string name="menu_collections_export_all">"Εξαγωγή όλων"</string>
     <string name="more">"Περισσοτερα"</string>
@@ -445,14 +445,14 @@ Global Strings -->
     <string name="audio_play">"Έναρξη"</string>
     <string name="audio_record">"Εγγραφή"</string>
     <string name="audio_pause">"Παύση"</string>
-    <string name="audio_error_toast">"Συγνώμη, η έναρξη είναι αδύνατη"</string>
+    <string name="audio_error_toast">"Συγνώμη, η έναρξη είναι αδύνατη."</string>
     <string name="sync_in_progress">"Συγχρονισμός σε εξέλιξη"</string>
     <string name="saving">"Αποθήκευση …"</string>
     <string name="saving_pending">"Αποθήκευση σε αναμονή …"</string>
-    <string name="invalid_timezone_message">"Παρακαλώ επιλέξτε μια σωστή ζώνη ώρας"</string>
+    <string name="invalid_timezone_message">"Παρακαλώ επιλέξτε μια σωστή ζώνη ώρας!"</string>
     <string name="invalid_url_message">"Παρακαλώ επιλέξτε έναν σωστό σύνδεσμο URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Έναρξη αναγνώρισης φωνής"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Αναπαραγωγή"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Αναπαραγωγή …"</string>
     <string name="details_show_all_options">"Εμφάνιση όλων των επιλογών"</string>
     <string name="details_attendees_processing_info">"Προσοχή: Οι διακομιστές ενδέχεται να επεξεργάζονται αυτόματα τους συμμετέχοντες π.χ. με την αποστολή μηνυμάτων iMIP."</string>
     <string name="details_toast_entry_deleted">"Η εγγραφή απορρίφθηκε/διεγράφη"</string>
@@ -510,7 +510,7 @@ Global Strings -->
     <string name="settings_disable_alarms_for_readonly">"Απενεργοποίηση ειδοποιήσεων για συλλογές μόνο για ανάγνωση"</string>
     <string name="sync_button_go_to_collections">"Πήγαινε στις συλλογέ"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε αυτήν τη δυνατότητα."</string>
-    <string name="error_no_app_found_to_open_entry">"Δεν βρέθηκε εφαρμογή για αποστολή αυτής της καταχώρισης.."</string>
+    <string name="error_no_app_found_to_open_entry">"Δε βρέθηκε εφαρμογή για αποστολή αυτής της καταχώρισης."</string>
     <string name="close">"Κλειστό"</string>
     <string name="menu_view_share_mail">"Διαμοιρασμός ως E-mail"</string>
     <string name="menu_view_copy_to_clipboard">"Αντιγραφή στο πρόχειρο"</string>
@@ -541,7 +541,7 @@ Global Strings -->
     <string name="list_date_without">"Χωρίς ημερομηνία"</string>
     <string name="list_start_without">"Χωρίς ημερομηνία έναρξης"</string>
     <string name="list_due_without">"Χωρίς διάρκεια ημερομηνίας"</string>
-    <string name="list_dialog_delete_visible_message2">"Προσοχή: Εξαιρούνται περιπτώσεις επαναλαμβανόμενων εγγραφών."</string>
+    <string name="list_dialog_delete_visible_message2">"Προσοχή: Εξαιρούνται περιπτώσεις επαναλαμβανόμενων εγγραφών!"</string>
     <string name="list_snackbar_no_collection">"Προσθέστε μια τοπική συλλογή ή συγχρονίστε μια απομακρυσμένη συλλογή που υποστηρίζει αυτήν την ενότητα."</string>
     <string name="filter_second_order_by">"Στην συνέχεια κατηγοριοποίησε ως"</string>
     <string name="filter_group_by">"Ομαδοποίησε ως"</string>
