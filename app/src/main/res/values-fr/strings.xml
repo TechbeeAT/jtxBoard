@@ -415,7 +415,6 @@ Merci !"</string>
     <string name="sorry">"Désolé"</string>
     <string name="back">"Retour"</string>
     <string name="details">"Détails"</string>
-    <string name="date">"Date"</string>
     <string name="timezone">"Fuseau horaire"</string>
     <string name="not_set2">"Non défini"</string>
     <string name="invert_selection">"Sélection inversée"</string>
@@ -544,7 +543,6 @@ Merci !"</string>
     <string name="general">"Général"</string>
     <string name="list_collapse">"Fermer"</string>
     <string name="edit_recur_second">"seconde(s)"</string>
-    <string name="edit_recur_minute">"minute(s)"</string>
     <string name="edit_recur_hour">"heure(s)"</string>
     <string name="filter_group_sort">"Groupement/Triage"</string>
     <string name="widget_list_configuration_widget_background">"Arrière-plan du widget"</string>

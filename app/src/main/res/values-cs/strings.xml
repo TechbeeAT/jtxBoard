@@ -8,7 +8,6 @@
 Global Strings -->
     <string name="save">"Uložit"</string>
     <string name="cancel">"Zrušit"</string>
-    <string name="ok">"OK"</string>
     <string name="delete">"Odstranit"</string>
     <string name="discard">"Zahodit"</string>
     <string name="gotit">"Rozumím"</string>
@@ -229,6 +228,7 @@ Global Strings -->
     <string name="sync_coming_soon_text">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat."</string>
     <string name="sync_with_davx5_heading">"Synchronizovat s DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat. * Pamatujte, že tato funkce je stále považována za beta verzi. Přestože byla tato funkce testována, mohou se stále vyskytovat problémy. Pokud narazíte na nějaký problém, budeme rádi za vaši zpětnou vazbu!"</string>
+    <string name="sync_with_davx5_heading">"Synchronizovat s DAVx⁵ (beta)*"</string>
     <string name="sync_congratulations">"Gratulujeme! :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud jste si ještě nenastavili žádný účet, postupujte podle pokynů na našich webových stránkách:"</string>
     <string name="sync_davx5_installed_with_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud máte jakékoliv potíže nebo pochybnosti, podívejte se nejprve na naše webové stránky:"</string>
@@ -348,7 +348,6 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="priority">"Priorita"</string>
     <string name="readyonly">"Pouze ke čtení"</string>
     <string name="upload_pending">"Čekající na nahrání"</string>
-    <string name="url">"URL"</string>
     <string name="location">"Místo"</string>
     <string name="attendees">"Účastníci"</string>
     <string name="resources">"Zdroje"</string>
@@ -519,7 +518,6 @@ Děkujeme vám!"</string>
     <string name="settings_disable_alarms_for_readonly">"Zakázat budíky pro sbírky pouze pro čtení"</string>
     <string name="sync_button_go_to_collections">"Přejít na Sbírky"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Pro povolení této funkce si zakupte prosím balíček Pro."</string>
-    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="error_no_app_found_to_open_entry">"Pro odeslání tohoto záznamu nebyla nalezena žádná aplikace."</string>
     <string name="close">"Zavřít"</string>
     <string name="menu_view_share_mail">"Sdílet jako e-mail"</string>
