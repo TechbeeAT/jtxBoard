@@ -35,8 +35,6 @@ import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import at.techbee.jtx.util.UiUtil.asDayOfWeek
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date

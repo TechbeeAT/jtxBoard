@@ -31,6 +31,9 @@ import at.techbee.jtx.database.*
 fun DetailsCardStatusClassificationPriority(
     icalObject: ICalObject,
     isEditMode: Boolean,
+    enableStatus: Boolean,
+    enableClassification: Boolean,
+    enablePriority: Boolean,
     onStatusChanged: (String?) -> Unit,
     onClassificationChanged: (String?) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
@@ -77,7 +80,7 @@ fun DetailsCardStatusClassificationPriority(
                     onClick = { },
                     modifier = Modifier.weight(0.33f)
                 )
-            } else if(isEditMode) {
+            } else if(isEditMode && (enableStatus || !status.isNullOrEmpty())) {
                 AssistChip(
                     label = {
                         if (icalObject.component == Component.VJOURNAL.name)
@@ -153,7 +156,7 @@ fun DetailsCardStatusClassificationPriority(
                     onClick = { },
                     modifier = Modifier.weight(0.33f)
                 )
-            } else if(isEditMode) {
+            } else if(isEditMode && (enableClassification || !classification.isNullOrEmpty())) {
                 AssistChip(
                     label = {
                         Text(
@@ -223,7 +226,7 @@ fun DetailsCardStatusClassificationPriority(
                         onClick = { },
                         modifier = Modifier.weight(0.33f)
                     )
-                } else if(isEditMode) {
+                } else if(isEditMode && (enablePriority || priority in 1..9)) {
                     AssistChip(
                         label = {
                             Text(
@@ -273,6 +276,9 @@ fun DetailsCardStatusClassificationPriority_Journal_Preview() {
         DetailsCardStatusClassificationPriority(
             icalObject = ICalObject.createJournal(),
             isEditMode = false,
+            enableStatus = false,
+            enableClassification = false,
+            enablePriority = false,
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -287,6 +293,9 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview() {
         DetailsCardStatusClassificationPriority(
             icalObject = ICalObject.createTodo(),
             isEditMode = true,
+            enableStatus = true,
+            enableClassification = true,
+            enablePriority = true,
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -294,3 +303,19 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardStatusClassificationPriority_Todo_Preview2() {
+    MaterialTheme {
+        DetailsCardStatusClassificationPriority(
+            icalObject = ICalObject.createTodo(),
+            isEditMode = true,
+            enableStatus = true,
+            enableClassification = false,
+            enablePriority = false,
+            onStatusChanged = { },
+            onClassificationChanged = { },
+            onPriorityChanged = { }
+        )
+    }
+}
