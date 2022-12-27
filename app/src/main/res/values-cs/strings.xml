@@ -216,8 +216,8 @@ Global Strings -->
     <string name="settings_list">"Nastavení seznamu položek"</string>
     <string name="settings_show_subtasks_in_list">"Zobrazit v seznamu dílčí úkoly"</string>
     <string name="settings_show_attachments_in_list">"Zobrazit v seznamu přílohy"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Zobrazit v seznamu průběh pro dílčí úkoly"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Zobrazit v seznamu průběh pro úkoly"</string>
+    <string name="settings_show_progress_for_subtasks">Zobrazit průběh pro dílčí úkoly</string>
+    <string name="settings_show_progress_for_maintasks">Zobrazit průběh pro hlavní úkoly</string>
     <string name="settings_group_settings_for_subentries">"Nastavení pro dílčí úkoly, poznámky a deníky"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Zobrazit dílčí úkoly Deníků a Poznámek v Seznamu úkolů"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Zobrazit dílčí poznámky Deníků a Úkolů v Seznamu poznámek"</string>
@@ -227,8 +227,8 @@ Global Strings -->
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"Synchronizovat s DAVx⁵ (již brzy)"</string>
     <string name="sync_coming_soon_text">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat."</string>
-    <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat. * Pamatujte, že tato funkce je stále považována za beta verzi. Přestože byla tato funkce testována, mohou se stále vyskytovat problémy. Pokud narazíte na nějaký problém, budeme rádi za vaši zpětnou vazbu!"</string>
     <string name="sync_with_davx5_heading">"Synchronizovat s DAVx⁵ (beta)*"</string>
+    <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat. * Pamatujte, že tato funkce je stále považována za beta verzi. Přestože byla tato funkce testována, mohou se stále vyskytovat problémy. Pokud narazíte na nějaký problém, budeme rádi za vaši zpětnou vazbu!"</string>
     <string name="sync_congratulations">"Gratulujeme! :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud jste si ještě nenastavili žádný účet, postupujte podle pokynů na našich webových stránkách:"</string>
     <string name="sync_davx5_installed_with_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud máte jakékoliv potíže nebo pochybnosti, podívejte se nejprve na naše webové stránky:"</string>
@@ -463,6 +463,7 @@ Děkujeme vám!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spustit rozpoznávání řeči"</string>
     <string name="list_quickadd_dialog_sr_listening">"Naslouchání…"</string>
     <string name="details_show_all_options">"Zobrazit všechny volby"</string>
+    <string name="details_show_hide_elements">Zobrazit/skrýt prvky</string>
     <string name="details_attendees_processing_info">"Pozor: Servery mohou účastníky automaticky zpracovávat např. zasíláním zpráv iMIP."</string>
     <string name="details_toast_entry_deleted">"Záznam byl zahozen nebo odstraněn"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Rozpoznáno nepodporované pravidlo opakování!"</string>
@@ -564,6 +565,8 @@ Děkujeme vám!"</string>
     <string name="menu_view_autosave">"Automaticky ukládat"</string>
     <string name="next">"Další"</string>
     <string name="previous">"Předchozí"</string>
+    <string name="visible">Viditelný</string>
+    <string name="invisible">Neviditelný</string>
     <string name="widget_list_description">"Widget seznamu"</string>
     <string name="widget_list_configuration">"Nastavení seznamu"</string>
     <string name="widget_list_configuration_beta_info">"* Pamatujte, že jtx Board používá nový, experimentální způsob zpracování widgetů, který může ve vzácných případech způsobit neočekávané chování."</string>
