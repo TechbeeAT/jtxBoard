@@ -11,7 +11,6 @@ package at.techbee.jtx.widgets
 import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
@@ -95,8 +94,8 @@ class ListWidget : GlanceAppWidget() {
                 GroupBy.CLASSIFICATION -> Classification.getStringResource(context, it.classification)
                 GroupBy.PRIORITY -> {
                     when (it.priority) {
-                        null -> stringArrayResource(id = R.array.priority)[0]
-                        in 0..9 -> stringArrayResource(id = R.array.priority)[it.priority!!]
+                        null -> context.resources.getStringArray(R.array.priority)[0]
+                        in 0..9 -> context.resources.getStringArray(R.array.priority)[it.priority?:0]
                         else -> it.priority.toString()
                     }
                 }

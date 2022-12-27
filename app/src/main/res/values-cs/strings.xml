@@ -82,7 +82,6 @@ Global Strings -->
     <string name="list_progress">"Průběh"</string>
     <string name="list_expand">"Rozbalit"</string>
     <string name="list_dialog_contribution_title">"Poznámka k reklamám"</string>
-    <string name="list_dialog_contribution_message">"Tato aplikace používá ve výchozím nastavení reklamamy. Další informace naleznete v sekci Informace o reklamách v hlavní nabídce!"</string>
     <string name="list_dialog_contribution_more_information">"Zjistit více"</string>
     <string name="list_num_attendees_contentdesc">"Počet účastníků"</string>
     <string name="list_num_attachments_contentdesc">"Počet příloh"</string>
@@ -186,7 +185,7 @@ Global Strings -->
     <string name="about_tabitem_libraries">"Knihovny"</string>
     <string name="about_tabitem_thanks">"Zvláštní poděkování"</string>
     <string name="about_app_version">"Verze: %1$s (%2$d)"</string>
-    <string name="about_app_codename">"Codename: %1$s"</string>
+    <string name="about_app_codename">"Kódový název: %1$s"</string>
     <string name="about_app_build_date">"Zkompilováno dne %s"</string>
     <string name="about_app_terms">"Podmínky a ujednání"</string>
     <string name="about_thanks_ffg">"Zvláštní poděkování patří FFG za jejich důvěru a finanční podporu při realizaci tohoto projektu."</string>
@@ -227,17 +226,15 @@ Global Strings -->
     <string name="settings_select_mimetype_for_audio">"Vybrat Mimetype pro zvukové poznámky"</string>
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"Synchronizovat s DAVx⁵ (již brzy)"</string>
-    <string name="sync_coming_soon_text">"jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data.
-This feature is still under development and will be released soon! Stay tuned on our website and on Twitter :-)"</string>
-    <string name="sync_with_davx5_heading">"Synchronizovat s DAVx⁵ (beta)*"</string>
-    <string name="sync_basic_info">"jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data. * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!"</string>
+    <string name="sync_coming_soon_text">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat."</string>
+    <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat. * Pamatujte, že tato funkce je stále považována za beta verzi. Přestože byla tato funkce testována, mohou se stále vyskytovat problémy. Pokud narazíte na nějaký problém, budeme rádi za vaši zpětnou vazbu!"</string>
     <string name="sync_congratulations">"Gratulujeme! :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud jste si ještě nenastavili žádný účet, postupujte podle pokynů na našich webových stránkách:"</string>
     <string name="sync_davx5_installed_with_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud máte jakékoliv potíže nebo pochybnosti, podívejte se nejprve na naše webové stránky:"</string>
     <string name="sync_davx5_installed_with_collections_synched_collections">"Aktuálně jsou synchronizovány následující účty (kalendáře):"</string>
     <string name="sync_check_out_davx5">"Vyzkoušejte DAVx⁵!"</string>
-    <string name="sync_davx5_not_found">"We have not detected DAVx⁵ on your phone.
-For more information about the Sync please see:"</string>
+    <string name="sync_davx5_not_found">"Ve vašem telefonu jsme nerozpoznali DAVx⁵.
+Další informace o synchronizaci naleznete na:"</string>
     <string name="sync_davx5_get_davx5_on">"nebo získejte DAVx⁵ na"</string>
     <string name="sync_furhter_info_davx5">"Další informace o DAVx⁵ naleznete na"</string>
     <string name="sync_button_add_account_in_davx5">"Přidat účet v DAVx⁵"</string>
@@ -249,29 +246,19 @@ For more information about the Sync please see:"</string>
     <string name="donate_donate_with">"Darovat přes"</string>
     <string name="donate_other_donation_methods">"Pokud byste chtěli zvážit jiný způsob darování, podívejte se na naše webové stránky:"</string>
     <!-- Adinfo fragment -->
-    <string name="adinfo_text">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Vaše verze jtx Board je zdarma a je financována z reklam. Přijímáním reklam přispíváte k pokračujícímu vývoji a financování tohoto projektu."</string>
-    <string name="adinfo_huwei_only_non_personalized_text">"Tato verze jtx Board používá nepersonalizované reklamy."</string>
-    <string name="adinfo_adfree_text">"Pokud dáváte přednost této aplikaci bez reklam, zvažte prosím následující upgrade:"</string>
-    <string name="adinfo_adfree_purchase_header">"Upgrade na jtx Board bez reklam"</string>
-    <string name="adinfo_adfree_purchase_description">"Děkujeme, že jste zvážili upgrade na jtx Board bez reklam. Tato aktualizace odstraní opakující se reklamy z této aplikace."</string>
-    <string name="adinfo_adfree_purchase_header_thankyou">"Děkujeme za zakoupení jtx Board bez reklam"</string>
-    <string name="adinfo_adfree_purchase_description_thankyou">"Reklamy jsou nyní z aplikace odebrány. Pokud se vám tato aplikace líbí a chcete podpořit její neustálý vývoj, zvažte prosím také předplatné."</string>
-    <string name="adinfo_adfree_subscribe_header">"Předplatné pro jtx Board bez reklam"</string>
-    <string name="adinfo_adfree_subscribe_description">"Předplatné odstraní opakující se reklamy z této aplikace a navíc podpoříte neustálý vývoj této aplikace."</string>
-    <string name="adinfo_adfree_subscribe_quarterly">"Čtvrtletně"</string>
     <string name="adinfo_button_reset_user_consent">"Obnovit souhlas uživatele"</string>
     <string name="adinfo_button_manage_subscriptions">"Spravovat předplatné"</string>
     <string name="attachment_error_on_retrieving_file">"Nepodařilo se načíst soubor."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nebyla nalezena žádná aplikace pro otevření tohoto souboru nebo URL."</string>
     <string name="toast_item_is_now_recu_exception">"Opakující se položka je nyní výjimkou."</string>
-    <string name="toast_adfree_for_a_week">"Od teď na týden žádné videoreklamy :-)"</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Omlouváme se, ale jtx má potíže se synchronizací. Zavřete prosím DAVx⁵ a spusťte synchronizaci znovu."</string>
     <string name="about_translations_thanks_to">"Díky"</string>
     <string name="about_translations_for_contributions_in">"za příspěvky v rámci"</string>
     <string name="about_translations_basic_info">"jtx Board je aplikace s otevřeným zdrojovým kódem, která si cení účasti a příspěvků komunity open source. Na této stránce bychom rádi ocenili úsilí členů komunity v oblasti překladů."</string>
-    <string name="about_translations_contribution_info">"Pokud chcete upravovat či přidávat překlady nebo přidávat nové jazyky do této aplikace, neváhejte se připojit k projektu jtx Board na překladatelské platformě POEditor:"</string>
-    <string name="about_translations_contribution_button">"Připojte se k POEditor.com"</string>
+    <string name="about_translations_contribution_info">"Pokud chcete upravovat či přidávat překlady nebo přidávat nové jazyky do této aplikace, neváhejte se připojit k projektu jtx Board na překladatelské platformě Crowdin:"</string>
+    <string name="about_translations_contribution_button">"Připojte se na Crowdin.com"</string>
+    <string name="about_translations_poeditor">"Překladatelé na POeditor.com (starší verze)"</string>
     <string name="list_welcome_entry_journal_summary">"Blahopřejeme, toto je váš první záznam do deníku :-)"</string>
     <string name="list_welcome_entry_journal_description">"Deníky lze použít k uchovávání poznámek k určitému datu. Tuto funkci můžete použít například pro protokoly, zápisy z jednání, deníkové záznamy apod. Pokud tento záznam upravíte, zobrazí se možnosti přidání kategorií, účastníků, příloh, … Nebojte se tento záznam kdykoli odstranit!"</string>
     <string name="list_welcome_entry_note_summary">"Blahopřejeme, toto je váš první záznam poznámky :-)"</string>
@@ -376,6 +363,9 @@ For more information about the Sync please see:"</string>
     <string name="summary">"Souhrn"</string>
     <string name="description">"Popis"</string>
     <string name="search">"Hledat"</string>
+    <string name="search_journals">Hledat deníky</string>
+    <string name="search_notes">Hledat poznámky</string>
+    <string name="search_todos">Hledat úkoly</string>
     <string name="filter">"Filtrovat"</string>
     <string name="sync_now">"Synchronizovat nyní"</string>
     <string name="due">"Termín"</string>
@@ -396,8 +386,6 @@ For more information about the Sync please see:"</string>
     <string name="collections_dialog_move_title">"Přesunout všechny záznamy z \"%1$s\" do"</string>
     <string name="collection_dialog_move_info">"Upozornění: Lze vybrat pouze zapisovatelné sbírky a sbírky s podporou stejných komponent (Deníky, Poznámky, Úkoly)."</string>
     <string name="menu_collections_popup_move_entries">"Přesunout záznamy"</string>
-    <string name="adinfo_adfree_success_header">"Děkujeme za zakoupení jtx Board bez reklam!"</string>
-    <string name="adinfo_adfree_success_description">"Reklamy jsou nyní z aplikace odebrány. Děkujeme za váš příspěvek k udržení tohoto projektu při životě!"</string>
     <string name="adinfo_adfree_success_thankyou">"Děkujeme!"</string>
     <string name="adinfo_adfree_purchase_date">"Zakoupeno %1$s"</string>
     <string name="adinfo_adfree_order_id">"ID objednávky: %1$s"</string>
@@ -427,8 +415,8 @@ For more information about the Sync please see:"</string>
     <string name="settings_select_theme_light">"Světlý"</string>
     <string name="settings_select_theme_system">"Výchozí nastavení systému"</string>
     <string name="donate_dialog_title">"Líbí se vám jtx Board?"</string>
-    <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
-Thank you!"</string>
+    <string name="donate_dialog_message">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud se vám tato aplikace líbí a pokud chcete zajistit její neustálý vývoj, zvažte prosím příspěvek :-)
+Děkujeme vám!"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud chcete využívat funkce Pro nebo pokud chcete náš projekt podpořit, zvažte prosím následující nákup v aplikaci:"</string>
     <string name="buypro_purchase_header">"Upgradovat na jtx Board Pro"</string>
@@ -602,4 +590,16 @@ Thank you!"</string>
     <string name="settings_default_journals_date_current_15min">"Aktuálních 15 minut"</string>
     <string name="settings_default_journals_date_current_5min">"Aktuální 5 minut"</string>
     <string name="settings_default_journals_date_current_min">"Aktuální minuta"</string>
+    <string name="widget_list_show_subtasks">"Zobrazit dílčí úkoly"</string>
+    <string name="widget_list_show_subnotes">"Zobrazit dílčí poznámky"</string>
+    <string name="markdown_bold">"Tučné"</string>
+    <string name="markdown_italic">"Kurzíva"</string>
+    <string name="markdown_underlined">"Podtržené"</string>
+    <string name="markdown_strikethrough">"Přeškrtnuté"</string>
+    <string name="markdown_heading1">"Nadpis 1"</string>
+    <string name="markdown_heading2">"Nadpis 2"</string>
+    <string name="markdown_heading3">"Nadpis 3"</string>
+    <string name="markdown_horizontal_ruler">"Vodorovné pravítko"</string>
+    <string name="markdown_unordered_list">"Seznam"</string>
+    <string name="markdown_code">"Kód"</string>
 </resources>

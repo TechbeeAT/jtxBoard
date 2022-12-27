@@ -54,11 +54,14 @@ fun CollectionsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     /* EXPORT FUNCTIONALITIES */
+    val collectionsICS = collectionsViewModel.collectionsICS.observeAsState()
     val resultExportFilepath = remember { mutableStateOf<Uri?>(null) }
-    val launcherExportAll = rememberLauncherForActivityResult(CreateDocument("text/calendar")) {
+    val launcherExportAll = rememberLauncherForActivityResult(CreateDocument("application/zip")) {
         resultExportFilepath.value = it
     }
-    val collectionsICS = collectionsViewModel.collectionsICS.observeAsState()
+    val launcherExportSingle = rememberLauncherForActivityResult(CreateDocument("text/calendar")) {
+        resultExportFilepath.value = it
+    }
     if (resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size > 1) {
         launcherExportAll.launch(
             "jtxBoard_${
@@ -69,7 +72,7 @@ fun CollectionsScreen(
             }.zip"
         )
     } else if (resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size == 1) {
-        launcherExportAll.launch(
+        launcherExportSingle.launch(
             "${collectionsICS.value!!.first().first}_${
                 DateTimeUtils.convertLongToYYYYMMDDString(
                     System.currentTimeMillis(),

@@ -58,7 +58,7 @@ Global Strings -->
     <string name="navigation_drawer_beta_feedback">"Feedback beta"</string>
     <string name="navigation_drawer_settings">"Impostazioni"</string>
     <string name="navigation_drawer_news_updates">"Notizie e aggiornamenti"</string>
-    <string name="navigation_drawer_external_links">"Links esterni"</string>
+    <string name="navigation_drawer_external_links">"Link esterni"</string>
     <string name="navigation_drawer_website">"Sito web"</string>
     <string name="navigation_drawer_support">"Supporto"</string>
     <string name="navigation_drawer_donate">"Donazione"</string>
@@ -82,13 +82,12 @@ Global Strings -->
     <string name="list_progress">"Progresso"</string>
     <string name="list_expand">"Espandi"</string>
     <string name="list_dialog_contribution_title">"Nota sugli annunci"</string>
-    <string name="list_dialog_contribution_message">"Quest'app contiene predefinitivamente annunci pubblicitari. Per maggiori informazioni, controlla la sezione relativa alle Informazioni sugli annunci pubblicitari, nel menu principale!"</string>
     <string name="list_dialog_contribution_more_information">"Scopri di più"</string>
     <string name="list_num_attendees_contentdesc">"Numero di partecipanti"</string>
     <string name="list_num_attachments_contentdesc">"Numero di allegati"</string>
     <string name="list_num_comments_contentdesc">"Numero di commenti"</string>
     <string name="list_dialog_delete_visible_title">"Eliminare tutti gli elementi visibili?"</string>
-    <string name="list_dialog_delete_visible_message">"Questa azione elimina tutti gli elementi visibili (%1$d). Sei sicuro di voler continuare? Questa operazione é irreversibile!"</string>
+    <string name="list_dialog_delete_visible_message">"Questa azione elimina tutti gli elementi visibili (%1$d). Sei sicuro di voler continuare? Questa operazione è irreversibile!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Riassunto/Descrizione"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La prima riga è interpretata come riassunto, il resto come descrizione. Gli hashtag sono interpretati come categorie (es. #categoria)."</string>
     <string name="list_item_upload_pending">"Caricamento in sospeso"</string>
@@ -96,7 +95,7 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Vai all'originale"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Istanza ricorrente"</string>
-    <string name="view_recurrence_note_to_original">"Questa voce fa parte di una serie. Ogni modifica a questo elemento, farà in modo che venga disconnesso dalla serie, rendendolo un evento autonomo. Successive modifiche all'evento originale non avranno influenza su questo elemento. "</string>
+    <string name="view_recurrence_note_to_original">"Questa voce fa parte di una serie. Ogni modifica a questo elemento, farà in modo che venga disconnesso dalla serie, rendendolo un evento autonomo. Successive modifiche all'evento originale non avranno influenza su questo elemento."</string>
     <string name="view_fragment_audio_permission">"Autorizzazione app"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board ha bisogno dell'autorizzazione per usare il microfono del dispositivo. Si prega di concedere l'autorizzazione per utilizzare questa funzione."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Aggiungi nota audio"</string>
@@ -125,7 +124,7 @@ Global Strings -->
     <string name="edit_add_category_hint">"#miacategoria"</string>
     <string name="edit_add_category_helper">"Aggiungi una categoria"</string>
     <string name="edit_attendees_hint">"mario.rossi@esempio.com"</string>
-    <string name="edit_attendees_helper">"Aggiungi un partecipante (indirizzo e-mail)"</string>
+    <string name="edit_attendees_helper">"Aggiungi un partecipante (indirizzo e-mail). Attenzione: i server potrebbero elaborare automaticamente i partecipanti, ad esempio inviando messaggi iMIP."</string>
     <string name="edit_resources_hint">"Proiettore"</string>
     <string name="edit_resources_helper">"Aggiungi una risorsa"</string>
     <string name="edit_contact_hint">"Mario Rossi, +39 919 555 1234"</string>
@@ -227,8 +226,6 @@ Global Strings -->
     <string name="settings_select_mimetype_for_audio">"Seleziona Tipo MI per le note audio"</string>
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"Sincronizza con DAVx⁵ (disponibile a breve)"</string>
-    <string name="sync_coming_soon_text">"jtx Board non fornisce la sincronizzazione del server in sé, ma supporterà la sincronizzazione tramite DAVx⁵. Questo metodo ti consentirà di utilizzare un server CalDAV compatibile di tua scelta per archiviare, eseguire il backup e sincronizzare i tuoi dati.
-Questa funzione è ancora in fase di sviluppo e verrà rilasciata presto! Resta sintonizzato sul nostro sito e su Twitter :-)"</string>
     <string name="sync_with_davx5_heading">"Sincronizzazione con DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"jtx Board non fornisce la sincronizzazione del server in sé, ma supporta la sincronizzazione tramite DAVx⁵. Questo metodo ti consente di utilizzare qualsiasi server CalDAV compatibile di tua scelta per archiviare, eseguire il backup e sincronizzare i tuoi dati. * Si prega di notare che questa funzionalità è ancora considerata come beta. Sebbene questa funzionalità sia stata testata, i problemi potrebbero ancora verificarsi. In caso di problemi, apprezzeremmo il tuo feedback!"</string>
     <string name="sync_congratulations">"Congratulazioni! :-)"</string>
@@ -249,29 +246,18 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="donate_donate_with">"Dona con"</string>
     <string name="donate_other_donation_methods">"Se desideri considerare qualsiasi altro metodo di donazione, controlla il nostro sito Web:"</string>
     <!-- Adinfo fragment -->
-    <string name="adinfo_text">"Lo sviluppo di un'app è un processo complesso e lo sviluppo, la manutenzione e il supporto sono un duro lavoro. La tua versione di jtx Board è gratuita e finanziata dalla pubblicità. Accettando gli annunci contribuisci allo sviluppo continuo ed al finanziamento di questo progetto."</string>
-    <string name="adinfo_huwei_only_non_personalized_text">"Questa versione di jtx Board utilizza annunci non personalizzati."</string>
-    <string name="adinfo_adfree_text">"Se preferisci questa app senza pubblicità, considera il seguente aggiornamento:"</string>
-    <string name="adinfo_adfree_purchase_header">"Aggiorna a jtx Board senza pubblicità"</string>
-    <string name="adinfo_adfree_purchase_description">"Grazie per aver preso in considerazione l'aggiornamento senza pubblicità di jtx Board. Questo aggiornamento rimuove gli annunci ricorrenti da questa app."</string>
-    <string name="adinfo_adfree_purchase_header_thankyou">"Grazie per aver acquistato jtx Board senza pubblicità"</string>
-    <string name="adinfo_adfree_purchase_description_thankyou">"Gli annunci vengono ora rimossi dall'app. Se ti piace questa app e desideri supportarne lo sviluppo continuo, considera anche l'abbonamento."</string>
-    <string name="adinfo_adfree_subscribe_header">"Abbonamento per jtx Board senza pubblicità"</string>
-    <string name="adinfo_adfree_subscribe_description">"L'abbonamento rimuove gli annunci ricorrenti da questa app e inoltre sostieni il continuo sviluppo di questa app."</string>
-    <string name="adinfo_adfree_subscribe_quarterly">"Trimestrale"</string>
     <string name="adinfo_button_reset_user_consent">"Resetta il consenso dell'utente"</string>
     <string name="adinfo_button_manage_subscriptions">"Gestisci abbonamento"</string>
     <string name="attachment_error_on_retrieving_file">"Impossibile recuperare il file."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nessuna app trovata per aprire questo file/URL."</string>
     <string name="toast_item_is_now_recu_exception">"L'elemento ricorrente è ora un'eccezione."</string>
-    <string name="toast_adfree_for_a_week">"Senza annunci video per una settimana ora :-)"</string>
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"Spiacenti, jtx ha difficoltà a sincronizzarsi. Chiudere DAVx⁵ e riavviare la sincronizzazione."</string>
+    <string name="synccontentprovider_sync_problem">"Spiacenti, jtx Board ha difficoltà a sincronizzarsi. Chiudere DAVx⁵ e riavviare la sincronizzazione."</string>
     <string name="about_translations_thanks_to">"Grazie a"</string>
     <string name="about_translations_for_contributions_in">"per i contributi in"</string>
     <string name="about_translations_basic_info">"jtx Board è un'app open source che apprezza la partecipazione e il contributo della comunità open source. In questa pagina vorremmo attribuire gli sforzi dei membri della comunità per le traduzioni."</string>
-    <string name="about_translations_contribution_info">"Se desideri modificare/aggiungere traduzioni o aggiungere nuove lingue a questa app, sentiti libero di unirti al progetto jtx Board sulla piattaforma di traduzione POEditor:"</string>
-    <string name="about_translations_contribution_button">"Contribuire su POEditor.com"</string>
+    <string name="about_translations_contribution_button">"Partecipa a Crowdin.com"</string>
+    <string name="about_translations_poeditor">"Traduttori su POeditor.com (legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Congratulazioni, questa è la tua prima annotazione nel diario :-)"</string>
     <string name="list_welcome_entry_journal_description">"I Diari possono essere utilizzati per conservare i tuoi appunti per una data specifica. Utilizzare questa funzionalità ad esempio per i protocolli, i verbali delle riunioni, le voci del diario e così via. Se modifichi questa voce, vedrai le opzioni per aggiungere categorie, partecipanti, allegati, … Sentiti libero di eliminare questa voce quando vuoi!"</string>
     <string name="list_welcome_entry_note_summary">"Congratulazioni, questa è la tua prima nota :-)"</string>
@@ -396,8 +382,6 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="collections_dialog_move_title">"Sposta tutte le voci da \"%1$s\" a"</string>
     <string name="collection_dialog_move_info">"Nota: solo le collezioni scrivibili e le collezioni con supporto per gli stessi componenti (Diari, Note, Compiti) possono essere selezionate."</string>
     <string name="menu_collections_popup_move_entries">"Spostare le voci"</string>
-    <string name="adinfo_adfree_success_header">"Grazie per aver acquistato jtx Board senza pubblicità"</string>
-    <string name="adinfo_adfree_success_description">"Gli annunci vengono ora rimossi dall'app. Grazie per il tuo contributo per mantenere vivo questo progetto!"</string>
     <string name="adinfo_adfree_success_thankyou">"Grazie!"</string>
     <string name="adinfo_adfree_purchase_date">"Acquistato su %1$s"</string>
     <string name="adinfo_adfree_order_id">"ID ordine: %1$s"</string>
@@ -413,4 +397,9 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="notification_done">"Fatto"</string>
     <string name="notification_add_1h">"+ 1 ora"</string>
     <string name="notification_add_1d">"+ 1 giorno"</string>
+    <!-- Buy Pro fragment -->
+    <string name="buypro_success_thankyou">"Grazie!"</string>
+    <!-- alarms -->
+    <!-- fragment_ical_list -->
+    <!-- Strings for values in properties of an ICalObject -->
 </resources>
