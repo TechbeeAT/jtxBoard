@@ -8,6 +8,7 @@
 Global Strings -->
     <string name="save">"Desa"</string>
     <string name="cancel">"Cancel·lar"</string>
+    <string name="ok">"OK"</string>
     <string name="delete">"Eliminar"</string>
     <string name="discard">"Descartar"</string>
     <string name="gotit">"D'acord"</string>
@@ -30,8 +31,11 @@ Global Strings -->
     <string name="toolbar_text_sync">"Sincronitza"</string>
     <string name="toolbar_text_donate">"Donar"</string>
     <string name="toolbar_text_adinfo">"Informació d'Anuncis"</string>
+    <string name="default_local_collection_name">"Local"</string>
+    <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Esborrany"</string>
+    <string name="journal_status_final">"Final"</string>
     <string name="journal_status_cancelled">"Cancel·lat"</string>
     <string name="todo_status_needsaction">"Necessita acció"</string>
     <string name="todo_status_completed">"Completat"</string>
@@ -72,6 +76,7 @@ Global Strings -->
     <string name="list_start_inXhours">"Inici planejat en %d hores"</string>
     <string name="list_start_inXdays">"Inici planejat en %d dies"</string>
     <string name="list_tabitem_journals">"Diaris"</string>
+    <string name="list_tabitem_notes">"Notes"</string>
     <string name="list_tabitem_todos">"Tasques"</string>
     <string name="list_fab_add_contentdesc">"Afegir un nou element"</string>
     <string name="list_progress">"Progrés"</string>
@@ -120,6 +125,7 @@ Global Strings -->
     <string name="edit_add_category_helper">"Afegir una categoria"</string>
     <string name="edit_attendees_hint">"joana@example.com"</string>
     <string name="edit_attendees_helper">"Afegeix un assistent (adreça electrònica). Atenció: els servidors poden processar assistents automàticament, per exemple, enviant missatges iMIP."</string>
+    <string name="edit_resources_hint">"Projector"</string>
     <string name="edit_resources_helper">"Afegeix un recurs"</string>
     <string name="edit_contact_hint">"Pep Carbonell, +34 987 34 76 81"</string>
     <string name="edit_contact_helper">"Informació de contacte del responsable d'aquest esdeveniment"</string>
@@ -212,7 +218,18 @@ Global Strings -->
     <string name="settings_show_attachments_in_list">"Mostra els adjunts en una llista"</string>
     <string name="settings_show_progress_for_subtasks_in_list">"Mostra el progrés de les subtasques en una llista"</string>
     <string name="settings_show_progress_for_maintasks_in_list">"Mostra el progrés de les tasques en una llista"</string>
+    <string name="settings_group_settings_for_subentries">"Configuració per a sub-tasques, sub-notes i sub-diaris"</string>
+    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Mostra sub-tasques de Diaris i Notes en la llista de tasques"</string>
+    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Mostra les sub-notes de Diaris i Tasques en la llista de notes"</string>
+    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"Mostra les sub-entrades de diari de Notes i Tasques en la llista de diaris"</string>
+    <string name="settings_app">"Configuració de l'App"</string>
+    <string name="settings_select_mimetype_for_audio">"Selecciona el tipus MIME per a notes d'àudio"</string>
     <!-- Sync fragment -->
+    <string name="sync_coming_soon_heading">"Sincronitza amb DAVx⁵"</string>
+    <string name="sync_coming_soon_text">"jtx Board no proporciona sincronització amb servidors per ella mateixa, però suporta la sincronització mitjançant DAVx⁵. Aquest mètode et permet fer servir qualsevol servidor CalDAV per a desar, crear una còpia de seguretat, i sincronitzar les teues dades."</string>
+    <string name="sync_with_davx5_heading">"Sincronitza amb DAVx⁵ (beta)*"</string>
+    <string name="sync_basic_info">"jtx Board no proporciona sincronització amb servidors per ella mateixa, però suporta la sincronització mitjançant DAVx⁵. Aquest mètode et permet fer servir qualsevol servidor CalDAV per a desar, crear una còpia de seguretat, i sincronitzar les teues dades. * Per favor, tingues en compte que aquesta funció està considerada en estat de beta. Encara que s'ha provat, poden haver problemes. Si te'n surt cap, ens encantaria rebre més informació!"</string>
+    <string name="sync_congratulations">"Felicitats! :-)"</string>
     <!-- Donate fragment -->
     <!-- Adinfo fragment -->
     <!-- sync content provider -->
