@@ -207,8 +207,6 @@ Global Strings -->
     <string name="settings_list">"Paramètres de la liste des éléments"</string>
     <string name="settings_show_subtasks_in_list">"Afficher les sous-tâches dans la liste"</string>
     <string name="settings_show_attachments_in_list">"Afficher les pièces jointes dans la liste"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Afficher le progrès des sous-tâches dans la liste"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Afficher le progrès des tâches dans la liste"</string>
     <string name="settings_group_settings_for_subentries">"Paramètres pour les sous-tâches, les sous-notes et les sous-journaux"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Afficher les sous-tâches des journaux et des notes dans la liste des tâches"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Afficher les sous-notes des journaux et des tâches dans la liste des notes"</string>
@@ -415,6 +413,7 @@ Merci !"</string>
     <string name="sorry">"Désolé"</string>
     <string name="back">"Retour"</string>
     <string name="details">"Détails"</string>
+    <string name="date">"Date"</string>
     <string name="timezone">"Fuseau horaire"</string>
     <string name="not_set2">"Non défini"</string>
     <string name="invert_selection">"Sélection inversée"</string>
@@ -429,7 +428,6 @@ Merci !"</string>
     <string name="invalid_timezone_message">"Veuillez sélectionner un fuseau horaire valide !"</string>
     <string name="invalid_url_message">"Veuillez entrer une URL valide !"</string>
     <string name="list_quickadd_dialog_sr_start">"Démarrer la reconnaissance vocale"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Écouter…"</string>
     <string name="details_show_all_options">"Afficher toutes les options"</string>
     <string name="details_attendees_processing_info">"Attention : Les serveurs peuvent traiter automatiquement les participants, par exemple en envoyant des messages iMIP."</string>
     <string name="details_toast_entry_deleted">"Entrée rejetée/supprimée"</string>
