@@ -11,7 +11,10 @@ package at.techbee.jtx.ui.settings
 import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.AlarmOff
+import androidx.compose.material.icons.outlined.Attachment
+import androidx.compose.material.icons.outlined.Note
+import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -48,13 +51,13 @@ enum class SwitchSetting(
         title = R.string.settings_default_expand_attachments,
         default = false
     ),
-    SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST(
+    SETTING_SHOW_PROGRESS_FOR_MAINTASKS(
         key = "settings_show_progress_for_maintasks_in_list",
         icon = { Icon(
             painterResource(id = R.drawable.ic_progress_task), null, modifier = Modifier.padding(
             16.dp
         ))  },
-        title = R.string.settings_show_progress_for_maintasks_in_list,
+        title = R.string.settings_show_progress_for_maintasks,
         default = false
     ),
     SETTING_SHOW_PROGRESS_FOR_SUBTASKS(
@@ -63,7 +66,7 @@ enum class SwitchSetting(
             painterResource(id = R.drawable.ic_progress_subtask), null, modifier = Modifier.padding(
             16.dp
         ))  },
-        title = R.string.settings_show_progress_for_subtasks_in_list,
+        title = R.string.settings_show_progress_for_subtasks,
         default = false
     ),
     SETTING_DISABLE_ALARMS_FOR_READONLY(

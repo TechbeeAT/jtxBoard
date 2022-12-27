@@ -121,7 +121,7 @@ Global Strings -->
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#ηκατηγοριαμου"</string>
     <string name="edit_add_category_helper">"Προσθήκη κατηγορίας"</string>
-    <string name="edit_attendees_helper">"Προσθέστε συμμετέχοντες (e-mail)"</string>
+    <string name="edit_attendees_helper">"Προσθέστε συμμετέχοντες (e-mail)."</string>
     <string name="edit_resources_hint">"Εξοπλισμός"</string>
     <string name="edit_resources_helper">"Προσθήκη εξοπλισμού"</string>
     <string name="edit_contact_helper">"Στοιχεία επικοινωνίας του υπεύθυνου ή του κατόχου αυτής της καταχώρισης"</string>

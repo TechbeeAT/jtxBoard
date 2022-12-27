@@ -8,6 +8,7 @@
 Global Strings -->
     <string name="save">"Uložit"</string>
     <string name="cancel">"Zrušit"</string>
+    <string name="ok">"OK"</string>
     <string name="delete">"Odstranit"</string>
     <string name="discard">"Zahodit"</string>
     <string name="gotit">"Rozumím"</string>
@@ -347,6 +348,7 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="priority">"Priorita"</string>
     <string name="readyonly">"Pouze ke čtení"</string>
     <string name="upload_pending">"Čekající na nahrání"</string>
+    <string name="url">"URL"</string>
     <string name="location">"Místo"</string>
     <string name="attendees">"Účastníci"</string>
     <string name="resources">"Zdroje"</string>
@@ -517,6 +519,7 @@ Děkujeme vám!"</string>
     <string name="settings_disable_alarms_for_readonly">"Zakázat budíky pro sbírky pouze pro čtení"</string>
     <string name="sync_button_go_to_collections">"Přejít na Sbírky"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Pro povolení této funkce si zakupte prosím balíček Pro."</string>
+    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="error_no_app_found_to_open_entry">"Pro odeslání tohoto záznamu nebyla nalezena žádná aplikace."</string>
     <string name="close">"Zavřít"</string>
     <string name="menu_view_share_mail">"Sdílet jako e-mail"</string>

@@ -38,6 +38,9 @@ import kotlin.time.Duration.Companion.days
 fun DetailsCardDates(
     icalObject: ICalObject,
     isEditMode: Boolean,
+    enableDtstart: Boolean,
+    enableDue: Boolean,
+    enableCompleted: Boolean,
     onDtstartChanged: (Long?, String?) -> Unit,
     onDueChanged: (Long?, String?) -> Unit,
     onCompletedChanged: (Long?, String?) -> Unit,
@@ -61,7 +64,7 @@ fun DetailsCardDates(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if((icalObject.module == Module.JOURNAL.name || icalObject.module == Module.TODO.name)
-                && (dtstart != null || isEditMode)) {
+                && (dtstart != null || (isEditMode && (enableDtstart || icalObject.getModuleFromString() == Module.JOURNAL)))) {
                 HorizontalDateCard(
                     datetime = dtstart,
                     timezone = if((icalObject.due != null && icalObject.dueTimezone == TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone == TZ_ALLDAY)) TZ_ALLDAY else dtstartTimezone,
@@ -96,7 +99,7 @@ fun DetailsCardDates(
             }
 
             if(icalObject.module == Module.TODO.name
-                && (due != null || isEditMode)) {
+                && (due != null || (isEditMode && enableDue))) {
                 HorizontalDateCard(
                     datetime = due,
                     timezone = if((dtstart != null && dtstartTimezone == TZ_ALLDAY) || (completed != null && completedTimezone == TZ_ALLDAY)) TZ_ALLDAY else dueTimezone,
@@ -129,7 +132,7 @@ fun DetailsCardDates(
                 )
             }
             if(icalObject.module == Module.TODO.name
-                && (completed != null || isEditMode)) {
+                && (completed != null || (isEditMode && enableCompleted))) {
                 HorizontalDateCard(
                     datetime = completed,
                     timezone = if((dtstart != null && dtstartTimezone == TZ_ALLDAY) || (due != null && dueTimezone == TZ_ALLDAY)) TZ_ALLDAY else completedTimezone,
@@ -159,6 +162,9 @@ fun DetailsCardDates_Journal_Preview() {
         DetailsCardDates(
             icalObject = ICalObject.createJournal(),
             isEditMode = false,
+            enableDtstart = true,
+            enableDue = false,
+            enableCompleted = false,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -180,6 +186,9 @@ fun DetailsCardDates_Todo_Preview() {
                 this.completedTimezone = TZ_ALLDAY
             },
             isEditMode = false,
+            enableDtstart = true,
+            enableDue = false,
+            enableCompleted = false,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -196,6 +205,9 @@ fun DetailsCardDates_Journal_edit_Preview() {
         DetailsCardDates(
             icalObject = ICalObject.createJournal(),
             isEditMode = true,
+            enableDtstart = true,
+            enableDue = true,
+            enableCompleted = false,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -215,6 +227,30 @@ fun DetailsCardDates_Todo_edit_Preview() {
                 this.dueTimezone = TZ_ALLDAY
             },
             isEditMode = true,
+            enableDtstart = true,
+            enableDue = false,
+            enableCompleted = true,
+            onDtstartChanged = { _, _ -> },
+            onDueChanged = { _, _ -> },
+            onCompletedChanged = { _, _ -> }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardDates_Todo_edit_Preview_completed_hidden() {
+    MaterialTheme {
+        DetailsCardDates(
+            icalObject = ICalObject.createTodo().apply {
+                this.due = System.currentTimeMillis()
+                this.dueTimezone = TZ_ALLDAY
+            },
+            isEditMode = true,
+            enableDtstart = true,
+            enableDue = false,
+            enableCompleted = false,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -229,6 +265,9 @@ fun DetailsCardDates_Note_edit_Preview() {
         DetailsCardDates(
             icalObject = ICalObject.createNote(),
             isEditMode = true,
+            enableDtstart = true,
+            enableDue = true,
+            enableCompleted = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -243,6 +282,9 @@ fun DetailsCardDates_Note_Preview() {
         DetailsCardDates(
             icalObject = ICalObject.createNote(),
             isEditMode = false,
+            enableDtstart = true,
+            enableDue = true,
+            enableCompleted = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }

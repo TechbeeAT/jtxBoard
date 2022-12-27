@@ -17,8 +17,14 @@ import android.os.Build
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.ContentPaste
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Mail
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,6 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
@@ -41,7 +48,7 @@ import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
@@ -61,6 +68,7 @@ fun DetailsScreen(
     }
 
     val settingsStateHolder = SettingsStateHolder(context)
+    val detailsBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     val goBackRequestedByTopBar = remember { mutableStateOf(false) }
@@ -181,10 +189,10 @@ fun DetailsScreen(
                             CheckboxWithText(
                                 text = stringResource(id = R.string.menu_view_autosave),
                                 onCheckedChange = {
-                                    detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_AUTOSAVE] = it
+                                    detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] = it
                                     detailViewModel.detailSettings.save()
                                 },
-                                isSelected = detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_AUTOSAVE] ?: true,
+                                isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] ?: true,
                             )
                         }
 
@@ -193,10 +201,10 @@ fun DetailsScreen(
                         CheckboxWithText(
                             text = stringResource(id = R.string.menu_view_markdown_formatting),
                             onCheckedChange = {
-                                detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] = it
+                                detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] = it
                                 detailViewModel.detailSettings.save()
                             },
-                            isSelected = detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] ?: true,
+                            isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] ?: true,
                         )
                     }
                 }
@@ -217,6 +225,8 @@ fun DetailsScreen(
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
                 sliderIncrement = settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
+                showProgressForMainTasks = settingsStateHolder.settingShowProgressForMainTasks.value,
+                showProgressForSubTasks = settingsStateHolder.settingShowProgressForSubTasks.value,
                 goBackRequested = goBackRequestedByTopBar,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
@@ -260,6 +270,20 @@ fun DetailsScreen(
                 goBack = { navigateUp = true },
                 modifier = Modifier.padding(paddingValues)
             )
+
+            ModalBottomSheetLayout(
+                sheetState = detailsBottomSheetState,
+                sheetContent = {
+                    DetailOptionsBottomSheet(
+                        module = try { Module.valueOf(detailViewModel.icalEntity.value?.property?.module?: Module.NOTE.name) } catch(e: Exception) { Module.NOTE },
+                        detailSettings = detailViewModel.detailSettings,
+                        onListSettingsChanged = { detailViewModel.detailSettings.save() },
+                        modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = paddingValues.calculateBottomPadding())
+                    )
+                },
+                sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+                sheetContentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface)
+            ) { }
         },
         bottomBar = {
             DetailBottomAppBar(
@@ -269,7 +293,7 @@ fun DetailsScreen(
                 markdownState = markdownState,
                 isProActionAvailable = isProActionAvailable,
                 changeState = detailViewModel.changeState,
-                detailSettings = detailViewModel.detailSettings,
+                detailsBottomSheetState = detailsBottomSheetState,
                 onDeleteClicked = { showDeleteDialog = true },
                 onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) },
                 onRevertClicked = { showRevertDialog = true }
