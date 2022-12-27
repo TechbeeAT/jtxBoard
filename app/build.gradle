@@ -108,14 +108,6 @@ android {
         }
     }
 
-    // the flavor alphatest should not be used for the build type release, we filter this here
-    variantFilter { variant ->
-        if (variant.flavors*.name.contains("alphatest") && variant.buildType.name == "release") {
-            // Gradle ignores any variants that satisfy the conditions above.
-            setIgnore(true)
-        }
-    }
-
     compileOptions {
         // Flag to enable support for the new language APIs, this is especially necessary to use java.time for versions < O
         // https://developer.android.com/studio/write/java8-support#library-desugaring
