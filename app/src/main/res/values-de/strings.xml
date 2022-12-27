@@ -216,8 +216,8 @@ Global Strings -->
     <string name="settings_list">"Einstellungen für die Liste"</string>
     <string name="settings_show_subtasks_in_list">"Teilaufgaben in Liste anzeigen"</string>
     <string name="settings_show_attachments_in_list">"Anhänge in Liste anzeigen"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Fortschritt für Teilaufgaben anzeigen"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Fortschritt für Aufgaben anzeigen"</string>
+    <string name="settings_show_progress_for_subtasks">Zeige Fortschritt für Teilaufgaben</string>
+    <string name="settings_show_progress_for_maintasks">Zeige Fortschritt für Hauptaufgaben</string>
     <string name="settings_group_settings_for_subentries">"Einstellungen für Teilaufgaben, Notizen und Journale"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Teilaufgaben von Journalen und Notizen in Aufgabenliste anzeigen"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Notizen zu Journalen und Aufgaben in Notiz-Liste anzeigen"</string>
@@ -462,8 +462,9 @@ Danke!"</string>
     <string name="invalid_timezone_message">"Bitte wählen Sie eine gültige Zeitzone"</string>
     <string name="invalid_url_message">"Bitte geben Sie eine gültige URL ein!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spracherkennung starten"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Zuhören…"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Zuhören …"</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
+    <string name="details_show_hide_elements">Elemente ein-/ausblenden</string>
     <string name="details_attendees_processing_info">"Achtung: Server könnten Teilnehmer automatisch verarbeiten und z.B. iMIP-Nachrichten versenden."</string>
     <string name="details_toast_entry_deleted">"Eintrag verworfen/gelöscht"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Unbekannte Wiederholungs-Regel erkannt!"</string>
@@ -565,6 +566,8 @@ Danke!"</string>
     <string name="menu_view_autosave">"Automatische Speicherung"</string>
     <string name="next">"Weiter"</string>
     <string name="previous">"Zurück"</string>
+    <string name="visible">Sichtbar</string>
+    <string name="invisible">Unsichtbar</string>
     <string name="widget_list_description">"Listenwidget"</string>
     <string name="widget_list_configuration">"Widget-Konfiguration"</string>
     <string name="widget_list_configuration_beta_info">"* Bitte beachten Sie, dass jtx Board eine neue, experimentelle Art zur Platzierung von Widgets verwendet, die in seltenen Fällen noch zu unerwartetem Verhalten führen kann."</string>
