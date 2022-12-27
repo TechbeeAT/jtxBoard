@@ -118,6 +118,7 @@ fun DetailsCardLocation(
                             trailingIcon = {
                                 IconButton(onClick = {
                                     location = ""
+                                    onLocationUpdated(location, geoLat, geoLong)
                                 }) {
                                     if (location.isNotEmpty())
                                         Icon(

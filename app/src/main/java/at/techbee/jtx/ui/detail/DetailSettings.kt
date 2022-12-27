@@ -10,62 +10,176 @@ package at.techbee.jtx.ui.detail
 
 import android.content.SharedPreferences
 import androidx.compose.runtime.mutableStateMapOf
+import at.techbee.jtx.R
+import at.techbee.jtx.database.Module
+
+enum class DetailSettingsOptionGroup { GENERAL, ELEMENT }
+
+enum class DetailSettingsOption(
+    val key: String,
+    val stringResource: Int,
+    val group: DetailSettingsOptionGroup,
+    val default: Boolean,
+    val possibleFor: List<Module>
+    )
+{
+    ENABLE_DTSTART(
+        key = "enableStarted",
+        stringResource = R.string.started,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.TODO)
+    ),
+    ENABLE_DUE(
+        key = "enableDue",
+        stringResource = R.string.due,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.TODO)
+    ),
+    ENABLE_COMPLETED(
+        key = "enableCompleted",
+        stringResource = R.string.completed,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.TODO)
+    ),
+    ENABLE_STATUS(
+        key = "enableStatus",
+        stringResource = R.string.status,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_CLASSIFICATION(
+        key = "enableClassification",
+        stringResource = R.string.classification,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_PRIORITY(
+        key = "enablePriority",
+        stringResource = R.string.priority,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.TODO)
+    ),
+    ENABLE_CATEGORIES(
+        key = "enableCategories",
+        stringResource = R.string.categories,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_ATTENDEES(
+        key = "enableAttendees",
+        stringResource = R.string.attendees,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_RESOURCES(
+        key = "enableResources",
+        stringResource = R.string.resources,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_CONTACT(
+        key = "enableContact",
+        stringResource = R.string.contact,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_LOCATION(
+        key = "enableLocation",
+        stringResource = R.string.location,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_URL(
+        key = "enableURL",
+        stringResource = R.string.url,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_SUBTASKS(
+        key = "enableSubtasks",
+        stringResource = R.string.subtasks,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_SUBNOTES(
+        key = "enableSubnotes",
+        stringResource = R.string.view_feedback_linked_notes,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_ATTACHMENTS(
+        key = "enableAttachments",
+        stringResource = R.string.attachments,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_RECURRENCE(
+        key = "enableRecurrence",
+        stringResource = R.string.recurrence,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_ALARMS(
+        key = "enableAlarms",
+        stringResource = R.string.alarms,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.TODO)
+    ),
+    ENABLE_COMMENTS(
+        key = "enableComments",
+        stringResource = R.string.comments,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_AUTOSAVE(
+        key = "enableAutosave",
+        stringResource = R.string.menu_view_autosave,
+        group = DetailSettingsOptionGroup.GENERAL,
+        default = true,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_MARKDOWN(
+        key = "enableMarkdown",
+        stringResource = R.string.menu_view_markdown_formatting,
+        group = DetailSettingsOptionGroup.GENERAL,
+        default = true,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    )
+}
 
 
 data class DetailSettings(
     val prefs: SharedPreferences
 ) {
-
-    val switchSetting = mutableStateMapOf(
-        Pair(ENABLE_CATEGORIES, prefs.getBoolean(ENABLE_CATEGORIES, true)),
-        Pair(ENABLE_ATTENDEES, prefs.getBoolean(ENABLE_ATTENDEES, false)),
-        Pair(ENABLE_RESOURCES, prefs.getBoolean(ENABLE_RESOURCES, false)),
-        Pair(ENABLE_CONTACT, prefs.getBoolean(ENABLE_CONTACT, false)),
-        Pair(ENABLE_LOCATION, prefs.getBoolean(ENABLE_LOCATION, false)),
-        Pair(ENABLE_URL, prefs.getBoolean(ENABLE_URL, false)),
-        Pair(ENABLE_SUBTASKS, prefs.getBoolean(ENABLE_SUBTASKS, true)),
-        Pair(ENABLE_SUBNOTES, prefs.getBoolean(ENABLE_SUBNOTES, false)),
-        Pair(ENABLE_ATTACHMENTS, prefs.getBoolean(ENABLE_ATTACHMENTS, false)),
-        Pair(ENABLE_RECURRENCE, prefs.getBoolean(ENABLE_RECURRENCE, false)),
-        Pair(ENABLE_ALARMS, prefs.getBoolean(ENABLE_ALARMS, false)),
-        Pair(ENABLE_COMMENTS, prefs.getBoolean(ENABLE_COMMENTS, false)),
-        Pair(ENABLE_AUTOSAVE, prefs.getBoolean(ENABLE_AUTOSAVE, true)),
-        Pair(ENABLE_MARKDOWN, prefs.getBoolean(ENABLE_MARKDOWN, true)),
-        )
-
-    companion object {
-        const val ENABLE_CATEGORIES = "enableCategories"
-        const val ENABLE_ATTENDEES = "enableAttendees"
-        const val ENABLE_RESOURCES = "enableResources"
-        const val ENABLE_CONTACT = "enableContact"
-        const val ENABLE_LOCATION = "enableLocation"
-        const val ENABLE_URL = "enableURL"
-        const val ENABLE_SUBTASKS = "enableSubtasks"
-        const val ENABLE_SUBNOTES = "enableSubnotes"
-        const val ENABLE_ATTACHMENTS = "enableAttachments"
-        const val ENABLE_RECURRENCE = "enableRecurrence"
-        const val ENABLE_ALARMS = "enableAlarms"
-        const val ENABLE_COMMENTS = "enableComments"
-        const val ENABLE_AUTOSAVE = "enableAutosave"
-        const val ENABLE_MARKDOWN = "enableMarkdown"
+    val detailSetting = mutableStateMapOf<DetailSettingsOption, Boolean>().apply {
+        DetailSettingsOption.values().forEach { detailSettingOption ->
+            this[detailSettingOption] = prefs.getBoolean(detailSettingOption.key, detailSettingOption.default)
+        }
     }
 
     fun save() {
         prefs.edit().apply {
-            putBoolean(ENABLE_CATEGORIES, switchSetting[ENABLE_CATEGORIES] ?: true)
-            putBoolean(ENABLE_ATTENDEES, switchSetting[ENABLE_ATTENDEES] ?: true)
-            putBoolean(ENABLE_RESOURCES, switchSetting[ENABLE_RESOURCES] ?: true)
-            putBoolean(ENABLE_CONTACT, switchSetting[ENABLE_CONTACT] ?: true)
-            putBoolean(ENABLE_LOCATION, switchSetting[ENABLE_LOCATION] ?: true)
-            putBoolean(ENABLE_URL, switchSetting[ENABLE_URL] ?: true)
-            putBoolean(ENABLE_SUBTASKS, switchSetting[ENABLE_SUBTASKS] ?: true)
-            putBoolean(ENABLE_SUBNOTES, switchSetting[ENABLE_SUBNOTES] ?: true)
-            putBoolean(ENABLE_ATTACHMENTS, switchSetting[ENABLE_ATTACHMENTS] ?: true)
-            putBoolean(ENABLE_RECURRENCE, switchSetting[ENABLE_RECURRENCE] ?: true)
-            putBoolean(ENABLE_ALARMS, switchSetting[ENABLE_ALARMS] ?: true)
-            putBoolean(ENABLE_COMMENTS, switchSetting[ENABLE_COMMENTS] ?: true)
-            putBoolean(ENABLE_AUTOSAVE, switchSetting[ENABLE_AUTOSAVE] ?: true)
-            putBoolean(ENABLE_MARKDOWN, switchSetting[ENABLE_MARKDOWN] ?: true)
+            DetailSettingsOption.values().forEach { detailSettingOption ->
+                putBoolean(detailSettingOption.key, detailSetting[detailSettingOption] ?: true)
+            }
         }.apply()
     }
 }

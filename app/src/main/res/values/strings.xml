@@ -232,8 +232,8 @@ Global Strings -->
     <string name="settings_list">"Settings for the item list"</string>
     <string name="settings_show_subtasks_in_list">"Show subtasks in list"</string>
     <string name="settings_show_attachments_in_list">"Show attachments in list"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Show progress for subtasks in list"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Show progress for tasks in list"</string>
+    <string name="settings_show_progress_for_subtasks">Show progress for subtasks</string>
+    <string name="settings_show_progress_for_maintasks">Show progress for main-tasks</string>
     <string name="settings_group_settings_for_subentries">"Settings for subtasks, subnotes and subjournals"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Show subtasks of Journals and Notes in Tasklist"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Show subnotes of Journals and Tasks in Noteslist"</string>
@@ -484,6 +484,7 @@ Thank you!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
     <string name="list_quickadd_dialog_sr_listening">"Listening…"</string>
     <string name="details_show_all_options">"Show all options"</string>
+    <string name="details_show_hide_elements">Show/hide elements</string>
     <string name="details_attendees_processing_info">"Attention: Servers might automatically process attendees e.g. by sending iMIP messages."</string>
     <string name="details_toast_entry_deleted">"Entry discarded/deleted"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Unsupported recurrence rule detected!"</string>
@@ -588,6 +589,8 @@ Thank you!"</string>
     <string name="menu_view_autosave">"Autosave"</string>
     <string name="next">"Next"</string>
     <string name="previous">"Previous"</string>
+    <string name="visible">Visible</string>
+    <string name="invisible">Invisible</string>
     <string name="widget_list_description">"List widget"</string>
     <string name="widget_list_configuration">"Widget configuration"</string>
     <string name="widget_list_configuration_beta_info">"* Please note that jtx Board is using a new, experimental way to handle widgets which in rare cases might cause unexpected behaviour."</string>

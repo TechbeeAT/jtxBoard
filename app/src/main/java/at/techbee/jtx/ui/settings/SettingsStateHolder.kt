@@ -31,7 +31,7 @@ class SettingsStateHolder(val context: Context) {
     var settingAutoExpandSubnotes = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_AUTO_EXPAND_SUBNOTES.key, SwitchSetting.SETTING_AUTO_EXPAND_SUBNOTES.default))
     var settingAutoExpandAttachments = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS.key, SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS.default))
 
-    var settingShowProgressForMainTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.key, SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.default))
+    var settingShowProgressForMainTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS.key, SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS.default))
     var settingShowProgressForSubTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS.key, SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS.default))
 
     var settingDefaultJournalsDate = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(

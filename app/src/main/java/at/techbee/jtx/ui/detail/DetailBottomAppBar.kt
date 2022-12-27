@@ -9,8 +9,6 @@
 package at.techbee.jtx.ui.detail
 
 import android.content.ContentResolver
-import android.content.Context
-import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -24,10 +22,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,21 +50,10 @@ import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_ALARMS
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_ATTACHMENTS
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_ATTENDEES
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_CATEGORIES
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_COMMENTS
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_CONTACT
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_LOCATION
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_RECURRENCE
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_RESOURCES
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_SUBNOTES
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_SUBTASKS
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_URL
-import at.techbee.jtx.ui.reusable.elements.LabelledCheckbox
 import at.techbee.jtx.util.SyncUtil
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DetailBottomAppBar(
     icalObject: ICalObject?,
@@ -71,7 +62,7 @@ fun DetailBottomAppBar(
     markdownState: MutableState<MarkdownState>,
     isProActionAvailable: Boolean,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
-    detailSettings: DetailSettings,
+    detailsBottomSheetState: ModalBottomSheetState,
     onDeleteClicked: () -> Unit,
     onCopyRequested: (Module) -> Unit,
     onRevertClicked: () -> Unit,
@@ -81,7 +72,7 @@ fun DetailBottomAppBar(
         return
 
     val context = LocalContext.current
-    var settingsMenuExpanded by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     var copyOptionsExpanded by remember { mutableStateOf(false) }
 
     val syncIconAnimation = rememberInfiniteTransition()
@@ -129,7 +120,15 @@ fun DetailBottomAppBar(
                 isEditMode.value
                         && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
             ) {
-                IconButton(onClick = { settingsMenuExpanded = true }) {
+                IconButton(onClick = {
+                    scope.launch {
+                        if (detailsBottomSheetState.isVisible)
+                            detailsBottomSheetState.hide()
+                        else
+                            detailsBottomSheetState.show()
+                    }
+                }
+                ) {
                     Icon(
                         Icons.Outlined.Settings,
                         contentDescription = stringResource(id = R.string.preferences)
@@ -289,13 +288,17 @@ fun DetailBottomAppBar(
                         Icon(Icons.Outlined.ArrowBack, stringResource(R.string.back))
                     }
                     Divider(
-                        modifier = Modifier.height(40.dp).width(1.dp)
+                        modifier = Modifier
+                            .height(40.dp)
+                            .width(1.dp)
                     )
                 }
             }
             AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = { markdownState.value = MarkdownState.BOLD }) {
@@ -330,153 +333,6 @@ fun DetailBottomAppBar(
                     }
                 }
             }
-
-            // overflow menu
-            DropdownMenu(
-                expanded = settingsMenuExpanded,
-                onDismissRequest = {
-                    detailSettings.save()
-                    settingsMenuExpanded = false
-                }
-            ) {
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.categories),
-                            isChecked = detailSettings.switchSetting[ENABLE_CATEGORIES] ?: true,
-                            onCheckedChanged = { detailSettings.switchSetting[ENABLE_CATEGORIES] = it }
-                        )
-                    },
-                    onClick = { detailSettings.switchSetting[ENABLE_CATEGORIES] = detailSettings.switchSetting[ENABLE_CATEGORIES]?.not() ?: true }
-                )
-
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.subtasks),
-                            isChecked = detailSettings.switchSetting[ENABLE_SUBTASKS] ?: true,
-                            onCheckedChanged = { detailSettings.switchSetting[ENABLE_SUBTASKS] = it }
-                        )
-                    },
-                    onClick = { detailSettings.switchSetting[ENABLE_SUBTASKS] = detailSettings.switchSetting[ENABLE_SUBTASKS]?.not() ?: true }
-                )
-
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.view_feedback_linked_notes),
-                            isChecked = detailSettings.switchSetting[ENABLE_SUBNOTES] ?: false,
-                            onCheckedChanged = { detailSettings.switchSetting[ENABLE_SUBNOTES] = it }
-                        )
-                    },
-                    onClick = { detailSettings.switchSetting[ENABLE_SUBNOTES] = detailSettings.switchSetting[ENABLE_SUBNOTES]?.not() ?: false }
-                )
-
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.resources),
-                            isChecked = detailSettings.switchSetting[ENABLE_RESOURCES] ?: false,
-                            onCheckedChanged = { detailSettings.switchSetting[ENABLE_RESOURCES] = it }
-                        )
-                    },
-                    onClick = { detailSettings.switchSetting[ENABLE_RESOURCES] = detailSettings.switchSetting[ENABLE_RESOURCES]?.not() ?: false }
-                )
-
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.attendees),
-                            isChecked = detailSettings.switchSetting[ENABLE_ATTENDEES] ?: false,
-                            onCheckedChanged = { detailSettings.switchSetting[ENABLE_ATTENDEES]= it }
-                        )
-                    },
-                    onClick = { detailSettings.switchSetting[ENABLE_ATTENDEES] = detailSettings.switchSetting[ENABLE_ATTENDEES]?.not() ?: false }
-                )
-
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.contact),
-                            isChecked = detailSettings.switchSetting[ENABLE_CONTACT] ?: false,
-                            onCheckedChanged = { detailSettings.switchSetting[ENABLE_CONTACT] = it }
-                        )
-                    },
-                    onClick = { detailSettings.switchSetting[ENABLE_CONTACT] = detailSettings.switchSetting[ENABLE_CONTACT]?.not() ?: false }
-                )
-
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.url),
-                            isChecked = detailSettings.switchSetting[ENABLE_URL] ?: false,
-                            onCheckedChanged = { detailSettings.switchSetting[ENABLE_URL] = it }
-                        )
-                    },
-                    onClick = { detailSettings.switchSetting[ENABLE_URL] = detailSettings.switchSetting[ENABLE_URL]?.not() ?: false }
-
-                )
-
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.location),
-                            isChecked = detailSettings.switchSetting[ENABLE_LOCATION] ?: false,
-                            onCheckedChanged = { detailSettings.switchSetting[ENABLE_LOCATION] = it }
-                        )
-                    },
-                    onClick = { detailSettings.switchSetting[ENABLE_LOCATION] = detailSettings.switchSetting[ENABLE_LOCATION]?.not() ?: false }
-                )
-
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.comments),
-                            isChecked = detailSettings.switchSetting[ENABLE_COMMENTS] ?: false,
-                            onCheckedChanged = { detailSettings.switchSetting[ENABLE_COMMENTS] = it }
-                        )
-                    },
-                    onClick = { detailSettings.switchSetting[ENABLE_COMMENTS] = detailSettings.switchSetting[ENABLE_COMMENTS]?.not() ?: false }
-                )
-
-                DropdownMenuItem(
-                    text = {
-                        LabelledCheckbox(
-                            text = stringResource(id = R.string.attachments),
-                            isChecked = detailSettings.switchSetting[ENABLE_ATTACHMENTS] ?: false,
-                            onCheckedChanged = { detailSettings.switchSetting[ENABLE_ATTACHMENTS] = it }
-                        )
-                    },
-                    onClick = { detailSettings.switchSetting[ENABLE_ATTACHMENTS] = detailSettings.switchSetting[ENABLE_ATTACHMENTS]?.not() ?: false }
-                )
-
-                if (icalObject.module == Module.TODO.name) {    //Never show the recurring tab for Journals and Notes, only for Todos
-                    DropdownMenuItem(
-                        text = {
-                            LabelledCheckbox(
-                                text = stringResource(id = R.string.alarms),
-                                isChecked = detailSettings.switchSetting[ENABLE_ALARMS] ?: false,
-                                onCheckedChanged = { detailSettings.switchSetting[ENABLE_ALARMS] = it }
-                            )
-                        },
-                        onClick = { detailSettings.switchSetting[ENABLE_ALARMS] = detailSettings.switchSetting[ENABLE_ALARMS]?.not() ?: false }
-                    )
-                }
-
-                if (icalObject.module != Module.NOTE.name) {   //Never show the recurring tab for Notes
-                    DropdownMenuItem(
-                        text = {
-                            LabelledCheckbox(
-                                text = stringResource(id = R.string.recurrence),
-                                isChecked = detailSettings.switchSetting[ENABLE_RECURRENCE] ?: false,
-                                onCheckedChanged = { detailSettings.switchSetting[ENABLE_RECURRENCE] = it }
-                            )
-                        },
-                        onClick = { detailSettings.switchSetting[ENABLE_RECURRENCE] = detailSettings.switchSetting[ENABLE_RECURRENCE]?.not() ?: false }
-
-                    )
-                }
-            }
         },
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
@@ -509,6 +365,7 @@ fun DetailBottomAppBar(
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View() {
@@ -519,12 +376,6 @@ fun DetailBottomAppBar_Preview_View() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_NOTES,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
-
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
@@ -532,7 +383,7 @@ fun DetailBottomAppBar_Preview_View() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
-            detailSettings = detailSettings,
+            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -541,6 +392,7 @@ fun DetailBottomAppBar_Preview_View() {
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_edit() {
@@ -551,12 +403,6 @@ fun DetailBottomAppBar_Preview_edit() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_NOTES,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
-
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
@@ -564,7 +410,7 @@ fun DetailBottomAppBar_Preview_edit() {
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            detailSettings = detailSettings,
+            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -572,6 +418,7 @@ fun DetailBottomAppBar_Preview_edit() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_edit_markdown() {
@@ -582,12 +429,6 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_NOTES,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
-
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
@@ -595,7 +436,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.OBSERVING) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            detailSettings = detailSettings,
+            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -603,6 +444,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View_readonly() {
@@ -613,12 +455,6 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_NOTES,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
-
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
@@ -626,7 +462,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
-            detailSettings = detailSettings,
+            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -634,6 +470,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View_proOnly() {
@@ -644,12 +481,6 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_NOTES,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
-
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
@@ -657,7 +488,7 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = false,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
-            detailSettings = detailSettings,
+            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -666,6 +497,7 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View_local() {
@@ -676,12 +508,6 @@ fun DetailBottomAppBar_Preview_View_local() {
             this.accountType = LOCAL_ACCOUNT_TYPE
         }
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_NOTES,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
-
         BillingManager.getInstance().initialise(LocalContext.current.applicationContext)
 
         DetailBottomAppBar(
@@ -691,7 +517,7 @@ fun DetailBottomAppBar_Preview_View_local() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            detailSettings = detailSettings,
+            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }

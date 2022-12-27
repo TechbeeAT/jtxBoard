@@ -18,12 +18,21 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.NavigateBefore
 import androidx.compose.material.icons.outlined.NavigateNext
 import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -52,16 +61,6 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_ALARMS
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_ATTACHMENTS
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_ATTENDEES
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_COMMENTS
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_CONTACT
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_LOCATION
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_RECURRENCE
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_RESOURCES
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_SUBNOTES
-import at.techbee.jtx.ui.detail.DetailSettings.Companion.ENABLE_URL
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
@@ -93,6 +92,8 @@ fun DetailScreenContent(
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
     sliderIncrement: Int,
+    showProgressForMainTasks: Boolean,
+    showProgressForSubTasks: Boolean,
     markdownState: MutableState<MarkdownState>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
@@ -213,7 +214,7 @@ fun DetailScreenContent(
 
 
     // save 10 seconds after changed, then reset value
-    if (changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && detailSettings.switchSetting[DetailSettings.ENABLE_AUTOSAVE] != false) {
+    if (changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] != false) {
         LaunchedEffect(changeState) {
             delay((10).seconds.inWholeMilliseconds)
             saveICalObject(
@@ -398,6 +399,9 @@ fun DetailScreenContent(
             DetailsCardDates(
                 icalObject = icalObject,
                 isEditMode = isEditMode.value,
+                enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART]?:true || icalObject.getModuleFromString() == Module.JOURNAL,
+                enableDue = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE]?:true,
+                enableCompleted = detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED]?:true,
                 onDtstartChanged = { datetime, timezone ->
                     icalObject.dtstart = datetime
                     icalObject.dtstartTimezone = timezone
@@ -433,16 +437,20 @@ fun DetailScreenContent(
                             )
 
                         if (description.text.isNotBlank()) {
-                            if(detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] != false)
+                            if(detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false)
                                     MarkdownText(
                                         markdown = description.text.trim(),
-                                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp),
                                         style = TextStyle(textDirection = TextDirection.Content)
                                     )
                             else
                                 Text(
                                     text = description.text.trim(),
-                                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
                                 )
                         }
                     }
@@ -512,7 +520,7 @@ fun DetailScreenContent(
                                 if (
                                     focusState.hasFocus
                                     && markdownState.value == MarkdownState.DISABLED
-                                    && detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] != false
+                                    && detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false
                                 )
                                     markdownState.value = MarkdownState.OBSERVING
                                 else if (!focusState.hasFocus)
@@ -536,32 +544,43 @@ fun DetailScreenContent(
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         showProgressLabel = true,
-                        showSlider = true,
+                        showSlider = showProgressForMainTasks,
                         modifier = Modifier.align(Alignment.End)
                     )
                 }
             }
 
+            AnimatedVisibility((!isEditMode.value && (!icalObject.status.isNullOrEmpty() || !icalObject.classification.isNullOrEmpty() || icalObject.priority in 1..9))
+                    || (isEditMode.value
+                        && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS]?:true
+                            || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION]?:true
+                            || (icalObject.getModuleFromString() == Module.TODO && detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY]?:true)
+                            || showAllOptions)
+                    )
+            ) {
+                DetailsCardStatusClassificationPriority(
+                    icalObject = icalObject,
+                    isEditMode = isEditMode.value,
+                    enableStatus = detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS]?:true || showAllOptions,
+                    enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION]?:true || showAllOptions,
+                    enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY]?:true || showAllOptions,
+                    onStatusChanged = { newStatus ->
+                        icalObject.status = newStatus
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    onClassificationChanged = { newClassification ->
+                        icalObject.classification = newClassification
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    onPriorityChanged = { newPriority ->
+                        icalObject.priority = newPriority
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
-            DetailsCardStatusClassificationPriority(
-                icalObject = icalObject,
-                isEditMode = isEditMode.value,
-                onStatusChanged = { newStatus ->
-                    icalObject.status = newStatus
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                onClassificationChanged = { newClassification ->
-                    icalObject.classification = newClassification
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                onPriorityChanged = { newPriority ->
-                    icalObject.priority = newPriority
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && (detailSettings.switchSetting[DetailSettings.ENABLE_CATEGORIES]?:true || showAllOptions))) {
+            AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES]?:true || showAllOptions))) {
                 DetailsCardCategories(
                     initialCategories = categories.value,
                     isEditMode = isEditMode.value,
@@ -573,11 +592,12 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.switchSetting[DetailSettings.ENABLE_SUBTASKS]?: true || showAllOptions))) {
+            AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS]?: true || showAllOptions))) {
                 DetailsCardSubtasks(
                     subtasks = subtasks.value,
                     isEditMode = isEditMode,
                     sliderIncrement = sliderIncrement,
+                    showSlider = showProgressForSubTasks,
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                         onProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
                     },
@@ -593,7 +613,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.switchSetting[ENABLE_SUBNOTES]?: false || showAllOptions))) {
+            AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES]?: false || showAllOptions))) {
                 DetailsCardSubnotes(
                     subnotes = subnotes.value,
                     isEditMode = isEditMode,
@@ -615,7 +635,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && (detailSettings.switchSetting[ENABLE_RESOURCES]?:false || showAllOptions))) {
+            AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES]?:false || showAllOptions))) {
                 DetailsCardResources(
                     initialResources = resources.value,
                     isEditMode = isEditMode.value,
@@ -627,7 +647,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(attendees.value.isNotEmpty() || (isEditMode.value && (detailSettings.switchSetting[ENABLE_ATTENDEES]?:false || showAllOptions))) {
+            AnimatedVisibility(attendees.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES]?:false || showAllOptions))) {
                 DetailsCardAttendees(
                     initialAttendees = attendees.value,
                     isEditMode = isEditMode.value,
@@ -638,7 +658,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(icalObject.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.switchSetting[ENABLE_CONTACT]?:false || showAllOptions))) {
+            AnimatedVisibility(icalObject.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT]?:false || showAllOptions))) {
                 DetailsCardContact(
                     initialContact = icalObject.contact ?: "",
                     isEditMode = isEditMode.value,
@@ -649,7 +669,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(icalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.switchSetting[ENABLE_URL]?:false || showAllOptions))) {
+            AnimatedVisibility(icalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL]?:false || showAllOptions))) {
                 DetailsCardUrl(
                     initialUrl = icalObject.url ?: "",
                     isEditMode = isEditMode.value,
@@ -660,7 +680,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility((icalObject.location?.isNotEmpty() == true || (icalObject.geoLat != null && icalObject.geoLong != null)) || (isEditMode.value && (detailSettings.switchSetting[ENABLE_LOCATION]?:false || showAllOptions))) {
+            AnimatedVisibility((icalObject.location?.isNotEmpty() == true || (icalObject.geoLat != null && icalObject.geoLong != null)) || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION]?:false || showAllOptions))) {
                 DetailsCardLocation(
                     initialLocation = icalObject.location,
                     initialGeoLat = icalObject.geoLat,
@@ -675,7 +695,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(comments.value.isNotEmpty() || (isEditMode.value && (detailSettings.switchSetting[ENABLE_COMMENTS]?:false || showAllOptions))) {
+            AnimatedVisibility(comments.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS]?:false || showAllOptions))) {
                 DetailsCardComments(
                     initialComments = comments.value,
                     isEditMode = isEditMode.value,
@@ -686,7 +706,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(attachments.value.isNotEmpty() || (isEditMode.value && (detailSettings.switchSetting[ENABLE_ATTACHMENTS]?:false || showAllOptions))) {
+            AnimatedVisibility(attachments.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS]?:false || showAllOptions))) {
                 DetailsCardAttachments(
                     initialAttachments = attachments.value,
                     isEditMode = isEditMode.value,
@@ -698,7 +718,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && (detailSettings.switchSetting[ENABLE_ALARMS]?:false || (showAllOptions && icalObject.module == Module.TODO.name)))) {
+            AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS]?:false || (showAllOptions && icalObject.module == Module.TODO.name)))) {
                 DetailsCardAlarms(
                     alarms = alarms,
                     icalObject = icalObject,
@@ -712,7 +732,7 @@ fun DetailScreenContent(
             AnimatedVisibility(icalObject.rrule != null
                     || icalObject.isRecurLinkedInstance
                     || icalObject.recurOriginalIcalObjectId != null
-                    || (isEditMode.value && (detailSettings.switchSetting[ENABLE_RECURRENCE]?:false || (showAllOptions && icalObject.module != Module.NOTE.name)))
+                    || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE]?:false || (showAllOptions && icalObject.module != Module.NOTE.name)))
             ) {   // only Todos have recur!
                 DetailsCardRecur(
                     icalObject = icalObject,
@@ -825,6 +845,8 @@ fun DetailScreenContent_JOURNAL() {
             isChild = false,
             player = null,
             sliderIncrement = 10,
+            showProgressForMainTasks = true,
+            showProgressForSubTasks = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             goBackRequested = remember { mutableStateOf(false) },
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
@@ -877,6 +899,8 @@ fun DetailScreenContent_TODO_editInitially() {
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
+            showProgressForMainTasks = true,
+            showProgressForSubTasks = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
@@ -925,6 +949,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
+            showProgressForMainTasks = false,
+            showProgressForSubTasks = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
@@ -965,6 +991,8 @@ fun DetailScreenContent_failedLoading() {
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
+            showProgressForMainTasks = true,
+            showProgressForSubTasks = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             deleteICalObject = { },
