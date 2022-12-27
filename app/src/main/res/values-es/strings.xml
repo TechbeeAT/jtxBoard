@@ -52,7 +52,7 @@ Global Strings -->
     <string name="navigation_drawer_board">"Panel"</string>
     <string name="navigation_drawer_sync">"Sincronizar con DAVx⁵"</string>
     <string name="navigation_drawer_about">"Acerca de / Licencia"</string>
-    <string name="navigation_drawer_subtitle">"diarios, notas y tareas"</string>
+    <string name="navigation_drawer_subtitle">"Diarios, notas y tareas"</string>
     <string name="navigation_drawer_beta_feedback">"Comentarios beta"</string>
     <string name="navigation_drawer_settings">"Ajustes"</string>
     <string name="navigation_drawer_news_updates">"Novedades y actualizaciones"</string>
@@ -85,7 +85,7 @@ Global Strings -->
     <string name="list_num_attachments_contentdesc">"Número de adjuntos"</string>
     <string name="list_num_comments_contentdesc">"Número de comentarios"</string>
     <string name="list_dialog_delete_visible_title">"¿Borrar todos los elementos visibles?"</string>
-    <string name="list_dialog_delete_visible_message">"Esto eliminará todas las entradas visibles (%1$d). ¿Está seguro de que quiere continuar? !Esta operación no se puede deshacer!"</string>
+    <string name="list_dialog_delete_visible_message">"Esto eliminará todas las entradas visibles (%1$d). ¿Está seguro de que quiere continuar? ¡Esta operación no se puede deshacer!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Resumen / Descripción"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línea es interpretada como resumen, el resto como descripción. Las etiquetas son interpretadas como categorías (ejemplo: #categoría)."</string>
     <string name="list_item_upload_pending">"Subida pendiente"</string>
@@ -93,7 +93,7 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Ir al original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instancia de recurrencia"</string>
-    <string name="view_recurrence_note_to_original">"Esta entrada es parte de una serie. Editar esta entrada la desvinculará de la serie, continuará como un evento independiente y los cambios en el evento original ya no afectarán esta entrada. "</string>
+    <string name="view_recurrence_note_to_original">"Esta entrada es parte de una serie. Editar esta entrada la desvinculará de la serie, continuará como un evento independiente y los cambios en el evento original ya no afectarán esta entrada."</string>
     <string name="view_fragment_audio_permission">"Permisos de la aplicación"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board necesita permiso para poder grabar audio o utilizar las funcionalidades de conversión de voz a texto. Por favor, conceda permiso para utilizar esta característica."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Añadir nota de voz"</string>
@@ -108,7 +108,7 @@ Global Strings -->
     <string name="view_subtasks_header">"Subtareas"</string>
     <string name="view_progress_label">"Progreso"</string>
     <string name="view_dialog_sure_to_delete_title">"¿Eliminar \"%1$s\"?"</string>
-    <string name="view_dialog_sure_to_delete_message">"¿Está seguro de que desea eliminar  \"%1$s\"?"</string>
+    <string name="view_dialog_sure_to_delete_message">"¿Está seguro de que desea eliminar \"%1$s\"?"</string>
     <string name="view_toast_deleted_successfully">"\"%1$s\" eliminado correctamente"</string>
     <string name="view_dialog_add_note">"Añadir nota"</string>
     <string name="view_dialog_add_note_dialog_hint">"Añada su nota aquí"</string>
@@ -124,8 +124,7 @@ Global Strings -->
     <string name="edit_attendees_helper">"Añadir un colaborador (dirección de correo electrónico). Atención: Los servidores pueden procesar automáticamente a los colaboradores, por ejemplo, enviando mensajes iMIP."</string>
     <string name="edit_resources_hint">"Promotor"</string>
     <string name="edit_resources_helper">"Agregar un recurso"</string>
-    <string name="edit_contact_hint">"
-Jim Dolittle, +1 919 555 1234"</string>
+    <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Información de contacto del responsable o propietario de esta entrada"</string>
     <string name="edit_comment_hint">"Su comentario…"</string>
     <string name="edit_comment_helper">"Añadir un comentario"</string>
@@ -214,8 +213,6 @@ Jim Dolittle, +1 919 555 1234"</string>
     <string name="settings_list">"Ajustes para la lista de elementos"</string>
     <string name="settings_show_subtasks_in_list">"Mostrar subtareas en lista"</string>
     <string name="settings_show_attachments_in_list">"Mostrar adjuntos en lista"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Mostrar progreso de subtareas en lista"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Mostrar progreso de tareas en lista"</string>
     <string name="settings_group_settings_for_subentries">"Ajustes para subtareas, notas secundarias y diarios secundarios"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Mostrar subtareas de diarios y notas en la Lista de tareas"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Mostrar subnotas de diarios y tareas en la Lista de notas"</string>
@@ -223,9 +220,8 @@ Jim Dolittle, +1 919 555 1234"</string>
     <string name="settings_app">"Ajustes de la aplicación"</string>
     <string name="settings_select_mimetype_for_audio">"Seleccionar Mimetype para las notas de audio"</string>
     <!-- Sync fragment -->
-    <string name="sync_coming_soon_heading">"Sincronizar con DAVx⁵ (próximamente)"</string>
-    <string name="sync_coming_soon_text">"jtx Board no proporciona sincronización de servidor en sí misma, pero admitirá la sincronización a través de DAVx⁵. Este método le permitirá usar un servidor CalDAV compatible de su elección para almacenar, respaldar y sincronizar sus datos.
-¡Esta característica aún está en desarrollo y se lanzará pronto! Estén atentos en nuestro sitio web y en Twitter :-)"</string>
+    <string name="sync_coming_soon_heading">"Sincronizar con DAVx⁵"</string>
+    <string name="sync_coming_soon_text">"jtx Board no proporciona sincronización de servidor en sí misma, pero admitirá la sincronización a través de DAVx⁵. Este método le permitirá usar un servidor CalDAV compatible de su elección para almacenar, respaldar y sincronizar sus datos."</string>
     <string name="sync_with_davx5_heading">"Sincronizar con DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"jtx Board no proporciona sincronización de servidor en sí, pero admite sincronización a través de DAVx⁵. Este método le permite usar cualquier servidor CalDAV compatible de su elección para almacenar, respaldar y sincronizar sus datos. * Tenga en cuenta que esta funcionalidad todavía se considera beta. Aunque ha sido probada, aún pueden surgir errores. Si encuentra algún problema, ¡le agradeceríamos sus comentarios!"</string>
     <string name="sync_congratulations">"¡Felicidades! :-)"</string>
@@ -452,7 +448,6 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="invalid_timezone_message">"Por favor, seleccione una zona horaria válida"</string>
     <string name="invalid_url_message">"Por favor, introduzca una URL válida."</string>
     <string name="list_quickadd_dialog_sr_start">"Iniciar reconocimiento de voz"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Escuchando…"</string>
     <string name="details_show_all_options">"Mostrar todas las opciones"</string>
     <string name="details_attendees_processing_info">"Atención: Los servidores pueden procesar automáticamente a los asistentes, por ejemplo, enviando mensajes iMIP."</string>
     <string name="details_toast_entry_deleted">"Entrada descartada/borrada"</string>
