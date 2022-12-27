@@ -215,8 +215,6 @@ Global Strings -->
     <string name="settings_list">"项目列表设置"</string>
     <string name="settings_show_subtasks_in_list">"在列表中显示子任务"</string>
     <string name="settings_show_attachments_in_list">"在列表中显示附件"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"在列表中显示子任务进展"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"在列表中显示任务进展"</string>
     <string name="settings_group_settings_for_subentries">"子任务、子笔记和子日志设置"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"在任务列表中显示日志和笔记的子任务"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"在笔记列表中显示日志和任务的子笔记"</string>
