@@ -123,7 +123,7 @@ fun DetailsScreen(
 
     if (showDeleteDialog) {
         DeleteEntryDialog(
-            icalObject = detailViewModel.icalEntity.value?.property!!,
+            icalObject = icalEntity.value?.property!!,
             onConfirm = { detailViewModel.delete() },
             onDismiss = { showDeleteDialog = false }
         )
@@ -242,7 +242,7 @@ fun DetailsScreen(
                         changedAttachments,
                         changedAlarms
                     )
-                    onLastUsedCollectionChanged(detailViewModel.icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
+                    onLastUsedCollectionChanged(icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
                 },
                 deleteICalObject = { showDeleteDialog = true },
                 onProgressChanged = { itemId, newPercent, _ ->
@@ -275,7 +275,7 @@ fun DetailsScreen(
                 sheetState = detailsBottomSheetState,
                 sheetContent = {
                     DetailOptionsBottomSheet(
-                        module = try { Module.valueOf(detailViewModel.icalEntity.value?.property?.module?: Module.NOTE.name) } catch(e: Exception) { Module.NOTE },
+                        module = try { Module.valueOf(icalEntity.value?.property?.module?: Module.NOTE.name) } catch(e: Exception) { Module.NOTE },
                         detailSettings = detailViewModel.detailSettings,
                         onListSettingsChanged = { detailViewModel.detailSettings.save() },
                         modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = paddingValues.calculateBottomPadding())
