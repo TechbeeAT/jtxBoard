@@ -1,253 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board synchronizuje Dzienniki, Notatki i Zadania"</string>
-    <string name="app_permission_desc">"synchronizuj zawartość jtx Board z innymi aplikacjami jak DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
-    <string name="save">"Zapisz"</string>
-    <string name="cancel">"Anuluj"</string>
-    <string name="delete">"Usuń"</string>
-    <string name="discard">"Odrzuć"</string>
-    <string name="gotit">"Rozumiem"</string>
-    <string name="cont">"Kontynuuj"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Przegląd Dzienników"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Przegląd Notatek"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Przegląd Zadań"</string>
-    <string name="toolbar_text_view_journal_details">"Szczegóły Dziennika"</string>
-    <string name="toolbar_text_view_note_details">"Szczegóły Notatki"</string>
-    <string name="toolbar_text_view_task_details">"Szczegóły Zadania"</string>
-    <string name="toolbar_text_add_journal">"Dodaj Dziennik"</string>
-    <string name="toolbar_text_add_note">"Dodaj Notatkę"</string>
-    <string name="toolbar_text_add_task">"Dodaj Zadanie"</string>
-    <string name="toolbar_text_edit_journal">"Edytuj Dziennik"</string>
-    <string name="toolbar_text_edit_note">"Edytuj Notatkę"</string>
-    <string name="toolbar_text_edit_task">"Edytuj Zadanie"</string>
-    <string name="toolbar_text_filter">"Filtr"</string>
-    <string name="toolbar_text_settings">"Ustawienia"</string>
-    <string name="toolbar_text_about">"O aplikacji"</string>
-    <string name="toolbar_text_sync">"Synchronizuj"</string>
-    <string name="toolbar_text_donate">"Dotacja"</string>
-    <string name="default_local_collection_name">"Lokalne"</string>
-    <string name="default_local_account_name">"Lokalne"</string>
     <!-- Strings for values in properties of an ICalObject -->
-    <string name="journal_status_draft">"Szkic"</string>
-    <string name="journal_status_final">"Skończona"</string>
-    <string name="journal_status_cancelled">"Anulowane"</string>
-    <string name="todo_status_needsaction">"Wymaga działania"</string>
-    <string name="todo_status_completed">"Wykonane"</string>
-    <string name="todo_status_inprocess">"Trwa"</string>
-    <string name="todo_status_cancelled">"Anulowane"</string>
-    <string name="classification_public">"Publiczne"</string>
-    <string name="classification_private">"Prywatne"</string>
-    <string name="classification_confidential">"Poufne"</string>
-    <string name="attendee_role_chair">"Przewodniczący"</string>
-    <string name="attendee_role_required_participant">"Uczestnik wymagany"</string>
-    <string name="attendee_role_optional_participant">"Uczestnik opcjonalny"</string>
     <!-- Navigation Drawer -->
-    <string name="navigation_drawer_subtitle">"dzienniki, notatki i zadania"</string>
-    <string name="navigation_drawer_settings">"Ustawienia"</string>
-    <string name="navigation_drawer_external_links">"Linki zewnętrzne"</string>
-    <string name="navigation_drawer_website">"Strona"</string>
-    <string name="navigation_drawer_support">"Wsparcie"</string>
-    <string name="navigation_drawer_donate">"Dotacja"</string>
     <!-- fragment_ical_list -->
-    <string name="list_tabitem_journals">"Dzienniki"</string>
-    <string name="list_tabitem_notes">"Notatki"</string>
-    <string name="list_tabitem_todos">"Zadania"</string>
-    <string name="list_num_attendees_contentdesc">"Liczba uczestników"</string>
-    <string name="list_num_attachments_contentdesc">"Liczba załączników"</string>
-    <string name="list_num_comments_contentdesc">"Liczba komentarzy"</string>
     <!-- fragment_ical_view -->
-    <string name="view_add_note">"Dodaj notatkę"</string>
-    <string name="view_add_audio_note">"Dodaj audio"</string>
-    <string name="view_fab_edit_entry_contentDesc">"Edytuj wpis"</string>
-    <string name="view_subtasks_header">"Podzadania"</string>
-    <string name="view_dialog_sure_to_delete_message">"Czy jesteś pewny, że chcesz usunąć \"%1$s\"?"</string>
-    <string name="view_dialog_add_note">"Dodaj notatkę"</string>
-    <string name="view_dialog_add_note_dialog_hint">"Dodaj swoją notatkę tutaj"</string>
-    <string name="view_last_modified_text">"Ostatnio zmodyfikowano: %1$s"</string>
     <!-- fragment_ical_edit -->
-    <string name="edit_add_category_helper">"Dodaj kategorię"</string>
-    <string name="edit_attendees_helper">"Dodaj uczestnika (adres e-mail). Uwaga: Serwery mogą automatycznie przetwarzać uczestników np. poprzez wysłanie wiadomości iMIP."</string>
-    <string name="edit_contact_hint">"Jan Kowalski, +48 919 555 123"</string>
-    <string name="edit_comment_hint">"Twój komentarz…"</string>
-    <string name="edit_comment_helper">"Dodaj komentarz"</string>
-    <string name="edit_attachment_button_text">"Dodaj załącznik"</string>
-    <string name="edit_take_picture_button_text">"Zrób zdjęcie"</string>
-    <string name="edit_add_link_button_text">"Dodaj link załącznika"</string>
-    <string name="edit_url_helper">"URL związany z tym wpisem"</string>
-    <string name="edit_location_helper">"Dodaj lokalizację do tego wpisu"</string>
-    <string name="edit_attachment_add_dialog_hint">"Twój załącznik URL (https://…)"</string>
-    <string name="edit_comment_add_dialog_hint">"Twój komentarz"</string>
-    <string name="edit_attachment_beta_info">"* Załączniki są eksperymentalną funkcją. Obecnie tylko małe załączniki (do 100 KB) mogą zostać wyeksportowane jako plik .ics i być zsynchronizowane poprzez DAVx⁵. Jeśli napotkasz jakiekolwiek problem, daj nam znać poprzez fora pomocy technicznej lub zapytania na stronie!"</string>
-    <string name="edit_subtasks_add_hint">"Twoje podzadanie"</string>
-    <string name="edit_subtasks_add_helper">"Dodaj podzadanie"</string>
-    <string name="edit_attachment_delete_attachment">"Usuń załącznik"</string>
-    <string name="edit_attachment_add_link_dialog">"Dodaj link załącznika"</string>
-    <string name="edit_recur_last_occurrence">"Ostatnie wystąpienie"</string>
-    <string name="edit_recur_all_occurrences">"Wszystkie wystąpenia"</string>
-    <string name="edit_recur_repeat_every_x">"Powtarzaj każdego"</string>
-    <string name="edit_recur_x_times">"razy"</string>
-    <string name="edit_datepicker_dialog_select_date">"Wybierz datę"</string>
-    <string name="edit_datepicker_dialog_select_time">"Wybierz czas"</string>
-    <string name="edit_dialog_sure_to_delete_title">"Usunąć \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_title">"Porzucić ten wpis?"</string>
-    <string name="edit_toast_deleted_successfully">"\"%1$s\" pomyślnie usunięty"</string>
-    <string name="edit_dialog_collection_not_found_error_title">"Uwaga"</string>
-    <string name="edit_fragment_app_permission">"Uprawnienia aplikacji"</string>
     <!-- fragment_ical_filter -->
-    <string name="filter_fab_apply_filter_contentdescription">"Zastosuj filtr"</string>
     <!-- fragment_about -->
-    <string name="about_tabitem_translations">"Tłumaczenia"</string>
-    <string name="about_tabitem_libraries">"Biblioteki"</string>
-    <string name="about_tabitem_thanks">"Specjalne podziękowania"</string>
-    <string name="about_app_version">"Wersja: %1$s (%2$d)"</string>
-    <string name="about_app_codename">"Nazwa kodowa: %1$s"</string>
-    <string name="about_app_build_date">"Skompilowano dnia %s"</string>
     <!-- menus -->
-    <string name="menu_list_quick_note">"Szybka notatka"</string>
     <!-- Notification channel for Reminders -->
     <!-- Shortcuts -->
     <!-- Settings fragment -->
-    <string name="settings_app">"Ustawienia aplikacji"</string>
     <!-- Sync fragment -->
-    <string name="sync_congratulations">"Gratulacje! :-)"</string>
-    <string name="sync_check_out_davx5">"Sprawdź DAVx⁵!"</string>
     <!-- Donate fragment -->
-    <string name="donate_thank_you">"Dziękujemy!"</string>
     <!-- Adinfo fragment -->
     <!-- sync content provider -->
-    <string name="about_translations_thanks_to">"Podziękowania dla"</string>
-    <string name="about_translations_for_contributions_in">"za uczestnictwo w"</string>
-    <string name="about_translations_contribution_button">"Dołącz do POEditor.com"</string>
-    <string name="list_welcome_entry_journal_summary">"Gratulacje, to Twój pierwszy wpis dziennika :-)"</string>
-    <string name="list_welcome_entry_note_summary">"Gratulacje, to Twoja pierwsza notatka :-)"</string>
-    <string name="list_welcome_entry_todo_summary">"Gratulacje, to Twoje pierwsze zadanie :-)"</string>
-    <string name="list_welcome_category">"#PierwszeKroki"</string>
     <!-- Permissions -->
-    <string name="add">"Dodaj"</string>
-    <string name="edit">"Edytuj"</string>
-    <string name="reset">"Zresetuj"</string>
-    <string name="apply">"Zastosuj"</string>
-    <string name="not_available_abbreviation">"niedostępny"</string>
-    <string name="collection">"Kolekcja"</string>
-    <string name="toolbar_text_collections">"Kolekcje"</string>
-    <string name="navigation_drawer_collections">"Kolekcje"</string>
-    <string name="edit_dialog_set_attendee_role">"Nadaj role uczestnika"</string>
     <!-- alarms -->
-    <string name="alarms_hours">"Godzina(-ny)"</string>
-    <string name="alarms_days">"Dzień/Dni"</string>
     <!-- fragment_collections -->
     <!-- Fuzzy -->
-    <string name="collections_journals_num">"Dzienniki: %1$s"</string>
     <!-- Fuzzy -->
-    <string name="collections_notes_num">"Notatki: %1$s"</string>
     <!-- Fuzzy -->
-    <string name="collections_tasks_num">"Zadania: %1$s"</string>
-    <string name="collections_dialog_add_local_collection_title">"Dodaj lokalną Kolekcję"</string>
-    <string name="collections_dialog_edit_local_collection_title">"Edytuj lokalną Kolekcję"</string>
-    <string name="collections_dialog_delete_local_title">"Usunąć \"%1$s\"?"</string>
-    <string name="menu_collections_add_local">"Dodaj lokalną Kolekcję"</string>
-    <string name="color">"Kolor"</string>
-    <string name="priority_0_no_priority">"Bez priorytetu"</string>
-    <string name="priority_1_highest">"Najwyższy"</string>
-    <string name="priority_2_higher">"Wyższy"</string>
-    <string name="priority_3_high">"Wysoki"</string>
-    <string name="priority_4_medium_high">"Średnio wysoki"</string>
-    <string name="priority_5_medium">"Średni"</string>
-    <string name="priority_6_medium_low">"Średnio niski"</string>
-    <string name="edit_recur_day">"dzień/dni"</string>
-    <string name="edit_recur_week">"tydzień/tygodnie"</string>
-    <string name="edit_recur_month">"miesiąc/miesiące"</string>
-    <string name="edit_recur_year">"rok/lata"</string>
-    <string name="menu_collection_popup_show_in_davx5">"Pokaż w DAVx⁵"</string>
-    <string name="menu_collection_popup_export_as_ics">"Wyeksportuj jako .ics"</string>
-    <string name="journal">"Dziennik"</string>
-    <string name="note">"Notatka"</string>
-    <string name="task">"Zadanie"</string>
-    <string name="account">"Konto"</string>
-    <string name="classification">"Klasyfikacja"</string>
-    <string name="category">"Kategoria"</string>
-    <string name="priority">"Priorytet"</string>
-    <string name="location">"Lokalizacja"</string>
-    <string name="attendees">"Uczestnicy"</string>
-    <string name="contact">"Kontakt"</string>
-    <string name="relatedto">"Związane z"</string>
-    <string name="comments">"Komentarze"</string>
-    <string name="attachments">"Załączniki"</string>
-    <string name="alarms">"Alarmy"</string>
-    <string name="recurrence">"Powtarzanie"</string>
-    <string name="recurrence_exceptions">"Wyjątki"</string>
-    <string name="summary">"Tytuł"</string>
-    <string name="description">"Opis"</string>
-    <string name="search">"Szukaj"</string>
-    <string name="filter">"Filtr"</string>
-    <string name="sync_now">"Synchornizuj teraz"</string>
-    <string name="categories">"Kategorie"</string>
-    <string name="subtasks">"Podzadania"</string>
-    <string name="priority_7_low">"Niski"</string>
-    <string name="priority_8_lower">"Niższy"</string>
-    <string name="priority_9_lowest">"Najniższy"</string>
-    <string name="menu_collections_popup_move_entries">"Przenieść wpisy"</string>
-    <string name="adinfo_adfree_success_thankyou">"Dziękujemy!"</string>
-    <string name="adinfo_adfree_purchase_date">"Zakupiono dnia %1$s"</string>
-    <string name="filter_created">"Utworzono"</string>
-    <string name="filter_last_modified">"Ostatnio zmodyfikowano"</string>
-    <string name="menu_collection_popup_import_from_ics">"Importuj z .ics"</string>
-    <string name="more">"Więcej"</string>
-    <string name="toolbar_text_buypro">"Kup Pro"</string>
-    <string name="navigation_drawer_buypro">"Kup Pro"</string>
-    <string name="settings_select_theme">"Wybierz motyw"</string>
-    <string name="settings_select_theme_dark">"Ciemny"</string>
-    <string name="settings_select_theme_light">"Jasny"</string>
-    <string name="settings_select_theme_system">"Domyślny systemowy"</string>
-    <string name="donate_dialog_title">"Lubisz jtx Board?"</string>
     <!-- Buy Pro fragment -->
-    <string name="buypro_purchase_header">"Ulepsz do jtx Board Pro"</string>
-    <string name="buypro_purchase_header_thankyou">"Dziękujemy za zakup jtx Board Pro"</string>
-    <string name="buypro_purchase_date">"Kupiono dnia %1$s"</string>
-    <string name="buypro_order_id">"Numer zamówienia: %1$s"</string>
-    <string name="buypro_success_header">"Dziękujemy za zakup jtx Board Pro!"</string>
-    <string name="buypro_success_thankyou">"Dziękujemy!"</string>
-    <string name="menu_list_viewmode_grid">"Widok siatki"</string>
-    <string name="back">"Cofnij"</string>
-    <string name="details">"Szczegóły"</string>
-    <string name="audio_play">"Odtwórz"</string>
-    <string name="audio_record">"Nagraj"</string>
-    <string name="saving">"Zapisywanie…"</string>
-    <string name="saving_pending">"Trwa zapisywanie…"</string>
-    <string name="invalid_timezone_message">"Wybierz poprawną strefę czasową!"</string>
-    <string name="invalid_url_message">"Wprowadź poprawny adres URL!"</string>
-    <string name="list_quickadd_dialog_sr_start">"Rozpocznij rozpoznawanie mowy"</string>
-    <string name="details_show_all_options">"Pokaż wszystkie opcje"</string>
-    <string name="edit_comment">"Edytuj komentarz"</string>
-    <string name="edit_subnote_add_helper">"Dodaj podnotatkę"</string>
-    <string name="edit_subtask">"Edytuj podzadanie"</string>
-    <string name="edit_subnote">"Edytuj podnotatkę"</string>
-    <string name="edit_fragment_app_notification_permission_message">"jtx Board wyświetla powiadomienia, gdy nadejdą alarmy. Aby korzystać z tej funkcji, zezwól na powiadomienia."</string>
     <!-- alarms -->
-    <string name="collections_account_delete_dialog_title">"Usunąć \"%1$s\"?"</string>
-    <string name="dialog_unsaved_changes_title">"Zapisać zmiany?"</string>
-    <string name="dialog_revert_changes_title">"Przywrócić zmiany?"</string>
-    <string name="menu_list_viewmode_compact">"Widok kompaktyowy"</string>
-    <string name="menu_list_viewmode_kanban">"Widok Kanban"</string>
-    <string name="settings_tasks">"Ustawienia Zadań"</string>
-    <string name="settings_default_date_same_day">"Ten sam dzień"</string>
-    <string name="settings_default_date_next_day">"Kolejnego dnia"</string>
-    <string name="settings_default_date_two_days">"Dwa dni później"</string>
-    <string name="settings_default_date_three_days">"Trzy dni później"</string>
-    <string name="settings_default_date_one_week">"Jeden tydzień później"</string>
-    <string name="settings_default_date_two_weeks">"Dwa tygodnie później"</string>
-    <string name="settings_default_date_four_weeks">"Cztery tygodnie później"</string>
-    <string name="close">"Zamknij"</string>
-    <string name="menu_view_share_mail">"Udostępnij poprzez E-Mail"</string>
-    <string name="menu_view_copy_to_clipboard_copied">"Skopiowano"</string>
-    <string name="settings_select_language">"Wybierz język"</string>
-    <string name="settings_select_language_system">"Domyślny systemowy"</string>
     <!-- fragment_ical_list -->
-    <string name="list_date_today">"Dziś"</string>
-    <string name="list_date_tomorrow">"Jutro"</string>
     <!-- Strings for values in properties of an ICalObject -->
 </resources>
