@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board mengsinkronisasikan Jurnal, Catatan, dan Tugas"</string>
+    <string name="app_permission_desc">"Sinkronkan konten jtx Board dengan aplikasi lain seperti DAVx⁵"</string>
+    <!-- Reusable links in different contexts -->
+    <!-- Possible audio formats for settings
+Global Strings -->
+    <string name="save">"Simpan"</string>
+    <string name="cancel">"Batal"</string>
+    <string name="delete">"Hapus"</string>
+    <string name="discard">"Buang"</string>
+    <string name="gotit">"Mengerti"</string>
+    <string name="cont">"Lanjut"</string>
+    <string name="toolbar_text_view_journal_details">"Rincian Jurnal
+"</string>
+    <string name="toolbar_text_view_note_details">"Rincian Catatan"</string>
+    <string name="toolbar_text_view_task_details">"Rincian Tugas"</string>
+    <string name="toolbar_text_add_journal">"Tambah Jurnal"</string>
+    <string name="toolbar_text_add_note">"Tambah Catatan"</string>
+    <string name="toolbar_text_add_task">"Tambah Tugas"</string>
+    <string name="toolbar_text_edit_journal">"Edit Jurnal"</string>
+    <string name="toolbar_text_edit_note">"Edit Catatan"</string>
+    <string name="toolbar_text_edit_task">"Edit Tugas"</string>
+    <string name="toolbar_text_filter">"Saring"</string>
+    <string name="toolbar_text_settings">"Pengaturan"</string>
+    <string name="toolbar_text_about">"Tentang"</string>
+    <string name="toolbar_text_sync">"Sinkronkan"</string>
+    <string name="toolbar_text_donate">"Donasi"</string>
+    <string name="toolbar_text_adinfo">"Info Iklan"</string>
+    <string name="default_local_collection_name">"Lokal"</string>
+    <string name="default_local_account_name">"Lokal"</string>
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Draf"</string>
+    <string name="journal_status_cancelled">"Dibatalkan"</string>
+    <string name="todo_status_needsaction">"Butuh Tindakan"</string>
+    <string name="todo_status_completed">"Selesai"</string>
+    <string name="todo_status_inprocess">"Dalam proses"</string>
+    <string name="todo_status_cancelled">"Dibatalkan"</string>
+    <string name="classification_public">"Publik"</string>
+    <string name="classification_private">"Pribadi"</string>
+    <!-- Navigation Drawer -->
+    <!-- fragment_ical_list -->
+    <!-- fragment_ical_view -->
+    <!-- fragment_ical_edit -->
+    <!-- fragment_ical_filter -->
+    <!-- fragment_about -->
+    <!-- menus -->
+    <!-- Notification channel for Reminders -->
+    <!-- Shortcuts -->
+    <!-- Settings fragment -->
+    <!-- Sync fragment -->
+    <!-- Donate fragment -->
+    <!-- Adinfo fragment -->
+    <!-- sync content provider -->
+    <!-- Permissions -->
+    <!-- alarms -->
+    <!-- fragment_collections -->
+    <!-- Fuzzy -->
+    <!-- Fuzzy -->
+    <!-- Fuzzy -->
+    <!-- Buy Pro fragment -->
+    <!-- alarms -->
+    <!-- fragment_ical_list -->
+    <!-- Strings for values in properties of an ICalObject -->
+</resources>
