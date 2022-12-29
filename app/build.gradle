@@ -22,8 +22,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 201060001
-        versionName "2.01.06-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 201060002
+        versionName "2.01.06-beta02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Stop Putin, stop Raisi - peace for Ukraine, liberty for Iranians!\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -77,8 +77,6 @@ android {
 
     // Enables data binding.
     buildFeatures {
-        dataBinding true
-        viewBinding true
         compose true
     }
     composeOptions {
@@ -105,14 +103,6 @@ android {
         generic {
             dimension 'version'
             versionNameSuffix '.generic'
-        }
-    }
-
-    // the flavor alphatest should not be used for the build type release, we filter this here
-    variantFilter { variant ->
-        if (variant.flavors*.name.contains("alphatest") && variant.buildType.name == "release") {
-            // Gradle ignores any variants that satisfy the conditions above.
-            setIgnore(true)
         }
     }
 
@@ -266,7 +256,7 @@ dependencies {
     testImplementation "androidx.test:core-ktx:1.5.0"
     // Required -- JUnit 4 framework
     testImplementation "androidx.test.ext:junit-ktx:1.1.4"
-    testImplementation "org.mockito:mockito-core:4.10.0"
+    testImplementation "org.mockito:mockito-core:4.11.0"
 
     //About Libraries
     implementation "com.mikepenz:aboutlibraries-core:${version_about_libraries}"

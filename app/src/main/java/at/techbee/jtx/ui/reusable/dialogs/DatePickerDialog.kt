@@ -277,15 +277,9 @@ fun DatePickerDialog(
 
                     newDateTime?.let { dateTime ->
                         when (newTimezone) {
-                            TZ_ALLDAY -> newDateTime = dateTime
-                                .withHour(0)
-                                .withMinute(0)
-                                .withSecond(0)
-                                .withNano(0)
-                                .withZoneSameLocal(ZoneId.of("UTC"))
-                            in TimeZone.getAvailableIDs() -> newDateTime =
-                                dateTime.withZoneSameLocal(ZoneId.of(newTimezone))
-                            null -> newDateTime = dateTime.withZoneSameLocal(ZoneId.systemDefault())
+                            TZ_ALLDAY -> newDateTime = dateTime.withHour(0).withMinute(0).withSecond(0).withNano(0).withZoneSameLocal(ZoneId.of("UTC"))
+                            in TimeZone.getAvailableIDs() -> newDateTime = dateTime.withZoneSameLocal(ZoneId.of(newTimezone)).withNano(0).withSecond(0)
+                            null -> newDateTime = dateTime.withZoneSameLocal(ZoneId.systemDefault()).withNano(0).withSecond(0)
                         }
                     }
 

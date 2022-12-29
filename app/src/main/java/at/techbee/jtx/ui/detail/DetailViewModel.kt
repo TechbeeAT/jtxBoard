@@ -257,16 +257,18 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                if (icalEntity.value?.property != icalObject) {
-                    icalObject.makeDirty()
-                    database.update(icalObject)
+                // removed check as it was causing problems when loading the entry from the widget, somehow it is not reliable enough...
+                // if (icalEntity.value?.property?.equals(icalObject) == false) {
+                icalObject.makeDirty()
+                database.update(icalObject)
 
-                    if (icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                        ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                        toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-                    }
-                    icalObject.recreateRecurring(getApplication())
+                if (icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                 }
+                icalObject.recreateRecurring(getApplication())
+                //}
+
                 Alarm.scheduleNextNotifications(getApplication())
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
