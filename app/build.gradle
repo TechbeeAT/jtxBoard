@@ -139,7 +139,11 @@ import static groovy.io.FileType.DIRECTORIES
  */
 def getLocales() {
     // Initialize the list English, since it's available by default
-    def list = ["en"]
+    def list = ["en", "de", "cs", "el", "es", "fr", "it", "ru", "zh"]
+
+    /*
+    // deactivated script for now in order to have better control over available locales in the app
+    // until a better solution is found together with Crowdin
     // Get all directories inside resources
     def dir = new File(projectDir, "src/main/res")
     dir.traverse(type: DIRECTORIES, maxDepth: 0) { file ->
@@ -154,6 +158,7 @@ def getLocales() {
         // Add to the list the locale of the strings file
         list.add(fileName.substring(fileName.indexOf('-') + 1))
     }
+     */
     // Log the available locales
     println "Supported locales: " + list.join(", ")
     // Return the built list
