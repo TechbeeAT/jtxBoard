@@ -22,8 +22,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 201060002
-        versionName "2.01.06-beta02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 201060003
+        versionName "2.01.06-rc03"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Stop Putin, stop Raisi - peace for Ukraine, liberty for Iranians!\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -129,8 +129,6 @@ android {
 
 
 import groovy.xml.MarkupBuilder
-
-import static groovy.io.FileType.DIRECTORIES
 
 /**
  * Obtains a list of all the available locales
