@@ -197,6 +197,7 @@ Global Strings -->
     <string name="settings_app">"Paramètres de l'application"</string>
     <string name="settings_select_mimetype_for_audio">"Sélectionnez le Mimetype pour les notes audio"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_davx5_heading">"Synchronisation avec DAVx⁵ (bêta)*"</string>
     <string name="sync_basic_info">"jtx Board n'assure pas lui-même la synchronisation serveur, mais prend en charge la synchronisation via DAVx⁵. Cette méthode vous permet d'utiliser un serveur CalDAV compatible de votre choix pour stocker, sauvegarder et synchroniser vos données. * Veuillez noter que cette fonctionnalité est version bêta. Bien que cette fonctionnalité ait été testée, des problèmes peuvent encore survenir. Si vous rencontrez un problème, nous vous remercions de nous en faire part !"</string>
     <string name="sync_congratulations">"Félicitations ! :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"Nous avons détecté DAVx⁵ sur votre téléphone. Si vous n'avez pas encore configuré de comptes, veuillez suivre les instructions sur notre site Web :"</string>
@@ -222,6 +223,7 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="about_translations_thanks_to">"Merci à"</string>
     <string name="about_translations_for_contributions_in">"en contribution à"</string>
     <string name="about_translations_basic_info">"jtx Board est une application open source qui apprécie la participation et la contribution de la communauté open source. Sur cette page, nous aimerions remercier les efforts des membres de la communauté pour les traductions."</string>
+    <string name="about_translations_poeditor">"Traducteurs sur POeditor.com (legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Félicitations, c'est votre premier journal :-)"</string>
     <string name="list_welcome_entry_journal_description">"Les journaux peuvent être utilisés pour conserver vos notes pour une date spécifique. Utilisez cette fonctionnalité par exemple pour les protocoles, les comptes rendus de réunion, les entrées d'agenda, etc. Si vous modifiez cette entrée, vous verrez les options pour ajouter des catégories, des participants, des pièces jointes, … N'hésitez pas à supprimer cette entrée quand vous le souhaitez !"</string>
     <string name="list_welcome_entry_note_summary">"Félicitations, c'est votre première note :-)"</string>
@@ -254,6 +256,7 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="alarms_after_start">"après le début"</string>
     <string name="alarms_before_due">"avant l'échéance"</string>
     <string name="alarms_after_due">"après l'échéance"</string>
+    <string name="alarms_minutes">"Minute(s)"</string>
     <string name="alarms_hours">"Heure(s)"</string>
     <string name="alarms_days">"Jour(s)"</string>
     <!-- fragment_collections -->
