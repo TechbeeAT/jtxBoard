@@ -9,7 +9,6 @@ Global Strings -->
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
-    <!-- fragment_ical_filter -->
     <!-- fragment_about -->
     <!-- menus -->
     <!-- Notification channel for Reminders -->
@@ -17,7 +16,6 @@ Global Strings -->
     <!-- Settings fragment -->
     <!-- Sync fragment -->
     <!-- Donate fragment -->
-    <!-- Adinfo fragment -->
     <!-- sync content provider -->
     <!-- Permissions -->
     <!-- alarms -->
