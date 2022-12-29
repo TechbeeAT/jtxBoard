@@ -62,7 +62,6 @@ Global Strings -->
     <string name="navigation_drawer_website">"Webová stránka"</string>
     <string name="navigation_drawer_support">"Podpora"</string>
     <string name="navigation_drawer_donate">"Darovat"</string>
-    <string name="navigation_drawer_adinfo">"Informace o reklamě"</string>
     <string name="navigation_drawer_privacy_policy">"Zásady ochrany osobních údajů"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Po termínu"</string>

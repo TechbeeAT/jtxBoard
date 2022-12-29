@@ -60,7 +60,6 @@ Global Strings -->
     <string name="navigation_drawer_website">"Ιστοσελίδα"</string>
     <string name="navigation_drawer_support">"Υποστήριξη"</string>
     <string name="navigation_drawer_donate">"Δωρεά"</string>
-    <string name="navigation_drawer_adinfo">"Πληροφορίες διαφημίσεων"</string>
     <string name="navigation_drawer_privacy_policy">"Πολιτική Απορρήτου"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Καθυστερημένα"</string>
