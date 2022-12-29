@@ -284,8 +284,8 @@ fun DatePickerDialog(
                                 .withNano(0)
                                 .withZoneSameLocal(ZoneId.of("UTC"))
                             in TimeZone.getAvailableIDs() -> newDateTime =
-                                dateTime.withZoneSameLocal(ZoneId.of(newTimezone))
-                            null -> newDateTime = dateTime.withZoneSameLocal(ZoneId.systemDefault())
+                                dateTime.withZoneSameLocal(ZoneId.of(newTimezone)).withNano(0).withSecond(0)
+                            null -> newDateTime = dateTime.withZoneSameLocal(ZoneId.systemDefault()).withNano(0).withSecond(0)
                         }
                     }
 
