@@ -543,7 +543,7 @@ fun DetailScreenContent(
                             onProgressChanged(itemId, newPercent, isLinked)
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
-                        showProgressLabel = true,
+                        showProgressLabel = showProgressForMainTasks,
                         showSlider = showProgressForMainTasks,
                         modifier = Modifier.align(Alignment.End)
                     )
