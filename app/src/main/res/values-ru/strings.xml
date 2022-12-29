@@ -60,7 +60,6 @@ Global Strings -->
     <string name="navigation_drawer_website">"Веб-сайт"</string>
     <string name="navigation_drawer_support">"Поддержка"</string>
     <string name="navigation_drawer_donate">"Пожертвования"</string>
-    <string name="navigation_drawer_adinfo">"О рекламе"</string>
     <string name="navigation_drawer_privacy_policy">"Политика конфиденциальности"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Просрочено"</string>
