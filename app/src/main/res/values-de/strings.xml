@@ -62,7 +62,6 @@ Global Strings -->
     <string name="navigation_drawer_website">"Webseite"</string>
     <string name="navigation_drawer_support">"Support"</string>
     <string name="navigation_drawer_donate">"Spenden"</string>
-    <string name="navigation_drawer_adinfo">"Werbeinformation"</string>
     <string name="navigation_drawer_privacy_policy">"Datenschutzerklärung"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Überfällig"</string>
