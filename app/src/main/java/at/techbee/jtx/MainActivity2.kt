@@ -66,9 +66,8 @@ import java.time.ZonedDateTime
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
-//class MainActivity2 : ComponentActivity() {
-class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
-    // or maybe FragmentActivity() was also proposed...
+//class MainActivity2 : ComponentActivity() {   // Using AppCompatActivity activity instead of ComponentActivity
+class MainActivity2 : AppCompatActivity() {
 
     private var lastProcessedIntentHash: Int? = null
     private lateinit var globalStateHolder: GlobalStateHolder
@@ -94,7 +93,6 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //AppCompatDelegate.create(this, null).onCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
 
         // hides the ugly action bar that was before hidden through the Theme XML
