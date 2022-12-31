@@ -66,7 +66,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
         return@map list.groupBy { it.icalObjectId }
     }
 
-    val allCategories = database.getAllCategoriesAsText()   // filter FragmentDialog
+    val allCategories = database.getAllCategoriesAsText()
+    val allResources = database.getAllResourcesAsText()   // filter FragmentDialog
     val allWriteableCollections = database.getAllWriteableCollections()
     val allCollections = database.getAllCollections(module = module.name)
 
@@ -111,6 +112,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         val query = ICal4List.constructQuery(
             module = module,
             searchCategories = listSettings.searchCategories.value,
+            searchResources = listSettings.searchResources.value,
             searchStatusTodo =  listSettings.searchStatusTodo.value,
             searchStatusJournal = listSettings.searchStatusJournal.value,
             searchClassification = listSettings.searchClassification.value,
@@ -132,6 +134,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
             isFilterNoStatusSet = listSettings.isFilterNoStatusSet.value,
             isFilterNoClassificationSet = listSettings.isFilterNoClassificationSet.value,
+            isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value,
+            isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value,
             searchText = listSettings.searchText.value,
             flatView = listSettings.flatView.value,
             searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value

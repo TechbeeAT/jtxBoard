@@ -153,6 +153,7 @@ fun ListWidgetConfigContent(
                                 listSettings = listSettings,
                                 allCollectionsLive = database.getAllCollections(module = selectedModule.value.name),
                                 allCategoriesLive = database.getAllCategoriesAsText(),
+                                allResourcesLive = database.getAllResourcesAsText(),
                                 onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
                                 isWidgetConfig = true
                             )
@@ -184,6 +185,7 @@ fun ListWidgetConfigContent(
                                 ListWidgetConfig().apply {
                                     module = selectedModule.value
                                     searchCategories = listSettings.searchCategories.value
+                                    searchResources = listSettings.searchResources.value
                                     searchStatusTodo = listSettings.searchStatusTodo.value
                                     searchStatusJournal = listSettings.searchStatusJournal.value
                                     searchClassification = listSettings.searchClassification.value
@@ -215,6 +217,8 @@ fun ListWidgetConfigContent(
                                     isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value
                                     isFilterNoStatusSet = listSettings.isFilterNoStatusSet.value
                                     isFilterNoClassificationSet = listSettings.isFilterNoClassificationSet.value
+                                    isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value
+                                    isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value
                                 }
                             )
                         }
@@ -258,6 +262,7 @@ fun WidgetConfigContent_Preview_not_purchased() {
 data class ListWidgetConfig(
     var module: Module = Module.NOTE,
     var searchCategories: List<String> = emptyList(),
+    var searchResources: List<String> = emptyList(),
     var searchStatusTodo: List<StatusTodo> = emptyList(),
     var searchStatusJournal: List<StatusJournal> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
@@ -280,6 +285,8 @@ data class ListWidgetConfig(
     var isFilterNoDatesSet: Boolean = false,
     var isFilterNoStatusSet: Boolean = false,
     var isFilterNoClassificationSet: Boolean = false,
+    var isFilterNoCategorySet: Boolean = false,
+    var isFilterNoResourceSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!
     var viewMode: ViewMode = ViewMode.LIST,
     var flatView: Boolean = false,

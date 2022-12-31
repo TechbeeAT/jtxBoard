@@ -41,6 +41,7 @@ fun ListOptionsBottomSheet(
     listSettings: ListSettings,
     allCollectionsLive: LiveData<List<ICalCollection>>,
     allCategoriesLive: LiveData<List<String>>,
+    allResourcesLive: LiveData<List<String>>,
     onListSettingsChanged: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -94,6 +95,7 @@ fun ListOptionsBottomSheet(
                         listSettings = listSettings,
                         allCollectionsLive = allCollectionsLive,
                         allCategoriesLive = allCategoriesLive,
+                        allResourcesLive = allResourcesLive,
                         onListSettingsChanged = onListSettingsChanged,
                         modifier = modifier
                             .fillMaxSize()
@@ -148,6 +150,7 @@ fun ListOptionsBottomSheet_Preview_TODO() {
                 )
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
+            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             onListSettingsChanged = { }
 
         )
@@ -185,6 +188,7 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
                 )
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
+            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             onListSettingsChanged = { }
         )
     }
