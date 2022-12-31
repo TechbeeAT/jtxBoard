@@ -390,6 +390,8 @@ For more information about the Sync please see:"</string>
     <string name="filter_desc">"Descending"</string>
     <string name="filter_created">"Created"</string>
     <string name="filter_last_modified">"Last modified"</string>
+    <string name="filter_no_category">Without categories</string>
+    <string name="filter_no_resource">Without resources</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Please click on the collection to which the entry/entries should be added!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d added, %2$d skipped. (Exclusive instances of recurring entries.)"</string>
     <string name="menu_collection_popup_import_from_ics">"Import from .ics"</string>
