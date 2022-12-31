@@ -56,24 +56,24 @@ fun DetailOptionsBottomSheet(
                 .toSortedMap(compareBy { it.ordinal })
                 .forEach { (setting, enabled) ->
 
-            FilterChip(
-                selected = enabled,
-                onClick = {
-                    detailSettings.detailSetting[setting] = !detailSettings.detailSetting.getOrDefault(setting, false)
-                    onListSettingsChanged()
-                },
-                label = { Text(stringResource(id = setting.stringResource)) },
-                trailingIcon = {
-                    Crossfade(enabled) {
-                        if(it)
-                            Icon(Icons.Outlined.Visibility, stringResource(id = R.string.visible))
-                        else
-                            Icon(Icons.Outlined.VisibilityOff, stringResource(id = R.string.invisible))
-                    }
-                },
-                modifier = Modifier.padding(end = 4.dp)
-            )
-        }
+                    FilterChip(
+                        selected = enabled,
+                        onClick = {
+                            detailSettings.detailSetting[setting] = !detailSettings.detailSetting.getOrDefault(setting, false)
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = setting.stringResource)) },
+                        trailingIcon = {
+                            Crossfade(enabled) {
+                                if(it)
+                                    Icon(Icons.Outlined.Visibility, stringResource(id = R.string.visible))
+                                else
+                                    Icon(Icons.Outlined.VisibilityOff, stringResource(id = R.string.invisible))
+                            }
+                        },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                }
         }
     }
 }

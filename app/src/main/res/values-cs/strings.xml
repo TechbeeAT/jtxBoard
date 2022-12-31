@@ -62,7 +62,6 @@ Global Strings -->
     <string name="navigation_drawer_website">"Webová stránka"</string>
     <string name="navigation_drawer_support">"Podpora"</string>
     <string name="navigation_drawer_donate">"Darovat"</string>
-    <string name="navigation_drawer_adinfo">"Informace o reklamě"</string>
     <string name="navigation_drawer_privacy_policy">"Zásady ochrany osobních údajů"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Po termínu"</string>
@@ -100,8 +99,6 @@ Global Strings -->
     <string name="view_fragment_audio_permission_message">"jtx Board potřebuje oprávnění k nahrávání zvuku nebo používání funkcí převodu řeči na text. Udělte prosím oprávnění k používání této funkce."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Přidat zvukovou poznámku"</string>
     <string name="view_comment_playbutton_content_desc">"Přehrát zvukový komentář"</string>
-    <string name="view_fragment_audio_start_stop_recording_contentdesc">"Spustit/Zastavit nahrávání"</string>
-    <string name="view_fragment_audio_start_stop_playback_contentdesc">"Přehrát zvukový komentář"</string>
     <string name="view_reccurrence_note_is_exception">"Tato položka je výjimkou z opakujícího se záznamu."</string>
     <string name="view_feedback_linked_notes">"Zpětná vazba / Propojené poznámky"</string>
     <string name="view_add_note">"Přidat poznámku"</string>
@@ -160,26 +157,13 @@ Global Strings -->
     <string name="edit_dialog_sure_to_discard_title">"Zahodit tento záznam?"</string>
     <string name="edit_dialog_sure_to_delete_message">"Opravdu chcete odstranit \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Opravdu chcete zahodit tento záznam? Tento záznam nebude uložen."</string>
-    <string name="edit_toast_deleted_successfully">"\"%1$s\" úspěšně odstraněno"</string>
-    <string name="edit_dialog_collection_not_found_error_title">"Pozor"</string>
-    <string name="edit_dialog_collection_not_found_error_message">"Vybranou sbírku již nelze nalézt, vyberte prosím jinou."</string>
-    <string name="edit_validation_errors_detected">"Opravte prosím následující chyby ověření:"</string>
-    <string name="edit_validation_errors_dialog_header">"Vyskytly se chyby ověření"</string>
-    <string name="edit_validation_errors_summary_or_description_necessary">"Souhrn nebo popis by měly být uvedeny."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Datum termínu nemůže být před datem zahájení."</string>
-    <string name="edit_validation_errors_category_not_confirmed">"Kategorie byla zadána, ale nebyla potvrzena. Potvrďte ji nebo odstraňte."</string>
-    <string name="edit_validation_errors_comment_not_confirmed">"Komentář byl zadán, ale nebyl potvrzen. Potvrďte ho nebo odstraňte."</string>
-    <string name="edit_validation_errors_resource_not_confirmed">"Zdroj byl zadán, ale nebyl potvrzen. Potvrďte ho nebo odstraňte."</string>
-    <string name="edit_validation_errors_attendee_not_confirmed">"Účastník byl zadán, ale nebyl potvrzen. Potvrďte ho nebo odstraňte."</string>
-    <string name="edit_validation_errors_subtask_not_confirmed">"Dílčí úkol byl zadán, ale nebyl potvrzen. Potvrďte ho nebo odstraňte."</string>
     <string name="edit_fragment_app_permission">"Oprávnění aplikace"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board může navrhnout údaje o účastnících na základě vašich kontaktů jako vstupní hodnoty pro vaše záznamy. Pro povolení této funkce je nutné mít u kontaktů oprávnění ke čtení."</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">"Zjištěno nepodporované pravidlo opakování!"</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"Bylo zjištěno neznámé nebo nepodporované pravidlo opakování. Pokud tento záznam uložíte, stávající pravidlo opakování bude odstraněno nebo přepsáno."</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Zjištěna nepodporovaná hodnota (Doba trvání)!"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Pro tento záznam byla na pozadí zjištěna doba trvání. Zpracování doby trvání není v současné době v jtx Board podporováno. Místo toho prosím použijte datum zahájení, termínu a ukončení. Pokud tento záznam uložíte, stávající doba trvání bude odstraněna."</string>
-    <!-- fragment_ical_filter -->
-    <string name="filter_fab_apply_filter_contentdescription">"Použít filtr"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Překlady"</string>
     <string name="about_tabitem_libraries">"Knihovny"</string>
@@ -190,15 +174,12 @@ Global Strings -->
     <string name="about_app_terms">"Podmínky a ujednání"</string>
     <string name="about_thanks_ffg">"Zvláštní poděkování patří FFG za jejich důvěru a finanční podporu při realizaci tohoto projektu."</string>
     <!-- menus -->
-    <string name="menu_edit_clear_dates">"Vymazat data"</string>
     <string name="menu_list_gotodate">"Přejít na datum"</string>
-    <string name="menu_list_clearfilter">"Vymazat filtr"</string>
     <string name="menu_list_quick_journal">"Rychlý Deník"</string>
     <string name="menu_list_quick_note">"Rychlá Poznámka"</string>
     <string name="menu_list_quick_todo">"Rychlý Úkol"</string>
     <string name="menu_list_delete_visible">"Odstranit viditelné"</string>
     <string name="menu_list_syncnow">"Synchronizovat nyní"</string>
-    <string name="menu_view_share_text">"Sdílet"</string>
     <string name="menu_view_share_ics">"Sdílet jako .ics"</string>
     <string name="menu_view_copy_as_journal">"Kopírovat jako Deník"</string>
     <string name="menu_view_copy_as_todo">"Kopírovat jako Úkol"</string>
@@ -216,8 +197,8 @@ Global Strings -->
     <string name="settings_list">"Nastavení seznamu položek"</string>
     <string name="settings_show_subtasks_in_list">"Zobrazit v seznamu dílčí úkoly"</string>
     <string name="settings_show_attachments_in_list">"Zobrazit v seznamu přílohy"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Zobrazit v seznamu průběh pro dílčí úkoly"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Zobrazit v seznamu průběh pro úkoly"</string>
+    <string name="settings_show_progress_for_subtasks">Zobrazit průběh pro dílčí úkoly</string>
+    <string name="settings_show_progress_for_maintasks">Zobrazit průběh pro hlavní úkoly</string>
     <string name="settings_group_settings_for_subentries">"Nastavení pro dílčí úkoly, poznámky a deníky"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Zobrazit dílčí úkoly Deníků a Poznámek v Seznamu úkolů"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Zobrazit dílčí poznámky Deníků a Úkolů v Seznamu poznámek"</string>
@@ -225,8 +206,7 @@ Global Strings -->
     <string name="settings_app">"Nastavení aplikace"</string>
     <string name="settings_select_mimetype_for_audio">"Vybrat Mimetype pro zvukové poznámky"</string>
     <!-- Sync fragment -->
-    <string name="sync_coming_soon_heading">"Synchronizovat s DAVx⁵ (již brzy)"</string>
-    <string name="sync_coming_soon_text">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat."</string>
+    <string name="sync_with_davx5_heading">"Synchronizovat s DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat. * Pamatujte, že tato funkce je stále považována za beta verzi. Přestože byla tato funkce testována, mohou se stále vyskytovat problémy. Pokud narazíte na nějaký problém, budeme rádi za vaši zpětnou vazbu!"</string>
     <string name="sync_congratulations">"Gratulujeme! :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud jste si ještě nenastavili žádný účet, postupujte podle pokynů na našich webových stránkách:"</string>
@@ -245,10 +225,6 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="donate_thank_you">"Děkujeme!"</string>
     <string name="donate_donate_with">"Darovat přes"</string>
     <string name="donate_other_donation_methods">"Pokud byste chtěli zvážit jiný způsob darování, podívejte se na naše webové stránky:"</string>
-    <!-- Adinfo fragment -->
-    <string name="adinfo_button_reset_user_consent">"Obnovit souhlas uživatele"</string>
-    <string name="adinfo_button_manage_subscriptions">"Spravovat předplatné"</string>
-    <string name="attachment_error_on_retrieving_file">"Nepodařilo se načíst soubor."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nebyla nalezena žádná aplikace pro otevření tohoto souboru nebo URL."</string>
     <string name="toast_item_is_now_recu_exception">"Opakující se položka je nyní výjimkou."</string>
     <!-- sync content provider -->
@@ -429,9 +405,7 @@ Děkujeme vám!"</string>
     <string name="buypro_success_description">"Možnosti úpravy vzdálených sbírek, rychlé záznamy, rychlé úpravy pomocí dlouhého kliknutí a dynamické barvy (dostupné od Androidu 12) jsou nyní povoleny."</string>
     <string name="buypro_success_thankyou">"Děkujeme!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Pro možnost upravovat vzdálené sbírky si prosím zakupte balíček Pro."</string>
-    <string name="buypro_snackbar_quick_entries_blocked">"Pro možnost rychlého přidávání si prosím zakupte balíček Pro."</string>
     <string name="buypro_initial_dialog_message">"Dobrý den! jtx Board se dodává ve standardní verzi a verzi Pro. Více informací o jtx Board Pro naleznete v sekci \"Zakoupit Pro\"! Děkujeme!"</string>
-    <string name="view_comment_pausebutton_content_desc">"Pozastavit zvukový komentář"</string>
     <string name="menu_list_viewmode_list">"Zobrazení seznamu"</string>
     <string name="menu_list_viewmode_grid">"Zobrazení mřížky"</string>
     <string name="settings_default_expand_subtasks">"Rozbalovat dílčí úkoly v seznamu ve výchozím nastavení"</string>
@@ -460,8 +434,8 @@ Děkujeme vám!"</string>
     <string name="invalid_timezone_message">"Vyberte platné časové pásmo!"</string>
     <string name="invalid_url_message">"Zadejte platnou URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spustit rozpoznávání řeči"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Naslouchání…"</string>
     <string name="details_show_all_options">"Zobrazit všechny volby"</string>
+    <string name="details_show_hide_elements">Zobrazit/skrýt prvky</string>
     <string name="details_attendees_processing_info">"Pozor: Servery mohou účastníky automaticky zpracovávat např. zasíláním zpráv iMIP."</string>
     <string name="details_toast_entry_deleted">"Záznam byl zahozen nebo odstraněn"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Rozpoznáno nepodporované pravidlo opakování!"</string>
@@ -563,6 +537,8 @@ Děkujeme vám!"</string>
     <string name="menu_view_autosave">"Automaticky ukládat"</string>
     <string name="next">"Další"</string>
     <string name="previous">"Předchozí"</string>
+    <string name="visible">Viditelný</string>
+    <string name="invisible">Neviditelný</string>
     <string name="widget_list_description">"Widget seznamu"</string>
     <string name="widget_list_configuration">"Nastavení seznamu"</string>
     <string name="widget_list_configuration_beta_info">"* Pamatujte, že jtx Board používá nový, experimentální způsob zpracování widgetů, který může ve vzácných případech způsobit neočekávané chování."</string>

@@ -74,7 +74,6 @@ Global Strings -->
     <string name="navigation_drawer_website">"Website"</string>
     <string name="navigation_drawer_support">"Support"</string>
     <string name="navigation_drawer_donate">"Donate"</string>
-    <string name="navigation_drawer_adinfo">"Ad Info"</string>
     <string name="navigation_drawer_privacy_policy">"Privacy Policy"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Overdue"</string>
@@ -112,8 +111,6 @@ Global Strings -->
     <string name="view_fragment_audio_permission_message">"jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Add Audio Note"</string>
     <string name="view_comment_playbutton_content_desc">"Play audio comment"</string>
-    <string name="view_fragment_audio_start_stop_recording_contentdesc">"Start/Stop recording"</string>
-    <string name="view_fragment_audio_start_stop_playback_contentdesc">"Play audio comment"</string>
     <string name="view_reccurrence_note_is_exception">"This item is an exception to a recurring entry."</string>
     <string name="view_feedback_linked_notes">"Feedback / Linked Notes"</string>
     <string name="view_add_note">"Add note"</string>
@@ -174,26 +171,13 @@ Global Strings -->
     <string name="edit_dialog_sure_to_discard_title">"Discard this entry?"</string>
     <string name="edit_dialog_sure_to_delete_message">"Are you sure you want to delete \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Are you sure you want to discard this entry? This entry will not be saved."</string>
-    <string name="edit_toast_deleted_successfully">"\"%1$s\" successfully deleted"</string>
-    <string name="edit_dialog_collection_not_found_error_title">"Attention"</string>
-    <string name="edit_dialog_collection_not_found_error_message">"The selected collection cannot be found anymore, please select another one."</string>
-    <string name="edit_validation_errors_detected">"Please correct the following validation error(s):"</string>
-    <string name="edit_validation_errors_dialog_header">"Validation errors occurred"</string>
-    <string name="edit_validation_errors_summary_or_description_necessary">"A summary or description should be provided."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"The Due date cannot be before the Start date."</string>
-    <string name="edit_validation_errors_category_not_confirmed">"A category was entered but not confirmed. Please confirm or delete."</string>
-    <string name="edit_validation_errors_comment_not_confirmed">"A comment was entered but not confirmed. Please confirm or delete."</string>
-    <string name="edit_validation_errors_resource_not_confirmed">"A resource was entered but not confirmed. Please confirm or delete."</string>
-    <string name="edit_validation_errors_attendee_not_confirmed">"An attendee was entered but not confirmed. Please confirm or delete."</string>
-    <string name="edit_validation_errors_subtask_not_confirmed">"A subtask was entered but not confirmed. Please confirm or delete."</string>
     <string name="edit_fragment_app_permission">"App permission"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board can suggest Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature."</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">"Unsupported recurrence rule detected!"</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"An unknown or unsupported recurrence rule was detected. If you save this entry, the existing recurrence rule will be deleted/overwritten."</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Unsupported value (Duration) detected!"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"A duration was detected for this entry in the background. Handling a duration is currently not supported by jtx Board. Please use the start, due and end date instead. If you save this entry, the existing duration will be deleted."</string>
-    <!-- fragment_ical_filter -->
-    <string name="filter_fab_apply_filter_contentdescription">"Apply filter"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_jtx" translatable="false">"jtx Board"</string>
     <string name="about_tabitem_translations">"Translations"</string>
@@ -206,15 +190,12 @@ Global Strings -->
     <string name="about_app_terms">"Terms &amp; Conditions"</string>
     <string name="about_thanks_ffg">"Special thanks to FFG for their trust and financial support to realize this project."</string>
     <!-- menus -->
-    <string name="menu_edit_clear_dates">"Clear dates"</string>
     <string name="menu_list_gotodate">"Go to date"</string>
-    <string name="menu_list_clearfilter">"Clear filter"</string>
     <string name="menu_list_quick_journal">"Quick Journal"</string>
     <string name="menu_list_quick_note">"Quick Note"</string>
     <string name="menu_list_quick_todo">"Quick Todo"</string>
     <string name="menu_list_delete_visible">"Delete visible"</string>
     <string name="menu_list_syncnow">"Sync now"</string>
-    <string name="menu_view_share_text">"Share"</string>
     <string name="menu_view_share_ics">"Share as .ics"</string>
     <string name="menu_view_copy_as_journal">"Copy as Journal"</string>
     <string name="menu_view_copy_as_todo">"Copy as Todo"</string>
@@ -241,8 +222,6 @@ Global Strings -->
     <string name="settings_app">"App Settings"</string>
     <string name="settings_select_mimetype_for_audio">"Select Mimetype for audio notes"</string>
     <!-- Sync fragment -->
-    <string name="sync_coming_soon_heading">"Sync with DAVx⁵"</string>
-    <string name="sync_coming_soon_text">"jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data."</string>
     <string name="sync_with_davx5_heading">"Sync with DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data. * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!"</string>
     <string name="sync_congratulations">"Congratulations! :-)"</string>
@@ -262,10 +241,6 @@ For more information about the Sync please see:"</string>
     <string name="donate_thank_you">"Thank you!"</string>
     <string name="donate_donate_with">"Donate with"</string>
     <string name="donate_other_donation_methods">"If you would like to consider any other donation method, please check our website:"</string>
-    <!-- Adinfo fragment -->
-    <string name="adinfo_button_reset_user_consent">"Reset user consent"</string>
-    <string name="adinfo_button_manage_subscriptions">"Manage subscription"</string>
-    <string name="attachment_error_on_retrieving_file">"Failed to retrieve file."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"No app was found to open this file/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Recurring item is now an exception."</string>
     <!-- sync content provider -->
@@ -449,9 +424,7 @@ Thank you!"</string>
     <string name="buypro_success_description">"Editing capabilities for remote collections, quick-entries, quick-editing through long click and dynamic colors (available from Android 12) are now enabled."</string>
     <string name="buypro_success_thankyou">"Thank you!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Please purchase the Pro package to enable editing capabilities of remote collections."</string>
-    <string name="buypro_snackbar_quick_entries_blocked">"Please purchase the Pro package to enable quick-add capabilities!"</string>
     <string name="buypro_initial_dialog_message">"Hello! jtx Board comes with a standard and a Pro version. Please check out the \"Buy Pro\" section to find out more about jtx Board Pro! Thank you!"</string>
-    <string name="view_comment_pausebutton_content_desc">"Pause audio comment"</string>
     <string name="menu_list_viewmode_list">"List view"</string>
     <string name="menu_list_viewmode_grid">"Grid view"</string>
     <string name="settings_default_expand_subtasks">"Expand subtasks in list by default"</string>
@@ -482,7 +455,7 @@ Thank you!"</string>
     <string name="invalid_timezone_message">"Please select a valid timezone!"</string>
     <string name="invalid_url_message">"Please enter a valid URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Listening…"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Listening …"</string>
     <string name="details_show_all_options">"Show all options"</string>
     <string name="details_show_hide_elements">Show/hide elements</string>
     <string name="details_attendees_processing_info">"Attention: Servers might automatically process attendees e.g. by sending iMIP messages."</string>

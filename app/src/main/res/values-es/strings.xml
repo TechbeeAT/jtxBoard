@@ -52,7 +52,7 @@ Global Strings -->
     <string name="navigation_drawer_board">"Panel"</string>
     <string name="navigation_drawer_sync">"Sincronizar con DAVx⁵"</string>
     <string name="navigation_drawer_about">"Acerca de / Licencia"</string>
-    <string name="navigation_drawer_subtitle">"diarios, notas y tareas"</string>
+    <string name="navigation_drawer_subtitle">"Diarios, notas y tareas"</string>
     <string name="navigation_drawer_beta_feedback">"Comentarios beta"</string>
     <string name="navigation_drawer_settings">"Ajustes"</string>
     <string name="navigation_drawer_news_updates">"Novedades y actualizaciones"</string>
@@ -60,7 +60,6 @@ Global Strings -->
     <string name="navigation_drawer_website">"Sitio web"</string>
     <string name="navigation_drawer_support">"Soporte"</string>
     <string name="navigation_drawer_donate">"Donar"</string>
-    <string name="navigation_drawer_adinfo">"Información de anuncios"</string>
     <string name="navigation_drawer_privacy_policy">"Política de privacidad"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Atrasado"</string>
@@ -85,7 +84,7 @@ Global Strings -->
     <string name="list_num_attachments_contentdesc">"Número de adjuntos"</string>
     <string name="list_num_comments_contentdesc">"Número de comentarios"</string>
     <string name="list_dialog_delete_visible_title">"¿Borrar todos los elementos visibles?"</string>
-    <string name="list_dialog_delete_visible_message">"Esto eliminará todas las entradas visibles (%1$d). ¿Está seguro de que quiere continuar? !Esta operación no se puede deshacer!"</string>
+    <string name="list_dialog_delete_visible_message">"Esto eliminará todas las entradas visibles (%1$d). ¿Está seguro de que quiere continuar? ¡Esta operación no se puede deshacer!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Resumen / Descripción"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línea es interpretada como resumen, el resto como descripción. Las etiquetas son interpretadas como categorías (ejemplo: #categoría)."</string>
     <string name="list_item_upload_pending">"Subida pendiente"</string>
@@ -93,13 +92,11 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Ir al original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instancia de recurrencia"</string>
-    <string name="view_recurrence_note_to_original">"Esta entrada es parte de una serie. Editar esta entrada la desvinculará de la serie, continuará como un evento independiente y los cambios en el evento original ya no afectarán esta entrada. "</string>
+    <string name="view_recurrence_note_to_original">"Esta entrada es parte de una serie. Editar esta entrada la desvinculará de la serie, continuará como un evento independiente y los cambios en el evento original ya no afectarán esta entrada."</string>
     <string name="view_fragment_audio_permission">"Permisos de la aplicación"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board necesita permiso para poder grabar audio o utilizar las funcionalidades de conversión de voz a texto. Por favor, conceda permiso para utilizar esta característica."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Añadir nota de voz"</string>
     <string name="view_comment_playbutton_content_desc">"Reproducir comentario de audio"</string>
-    <string name="view_fragment_audio_start_stop_recording_contentdesc">"Iniciar / Detener grabación"</string>
-    <string name="view_fragment_audio_start_stop_playback_contentdesc">"Reproducir comentario de audio"</string>
     <string name="view_reccurrence_note_is_exception">"Este elemento es una excepción a una entrada recurrente."</string>
     <string name="view_feedback_linked_notes">"Comentarios / Notas enlazadas"</string>
     <string name="view_add_note">"Añadir nota"</string>
@@ -108,7 +105,7 @@ Global Strings -->
     <string name="view_subtasks_header">"Subtareas"</string>
     <string name="view_progress_label">"Progreso"</string>
     <string name="view_dialog_sure_to_delete_title">"¿Eliminar \"%1$s\"?"</string>
-    <string name="view_dialog_sure_to_delete_message">"¿Está seguro de que desea eliminar  \"%1$s\"?"</string>
+    <string name="view_dialog_sure_to_delete_message">"¿Está seguro de que desea eliminar \"%1$s\"?"</string>
     <string name="view_toast_deleted_successfully">"\"%1$s\" eliminado correctamente"</string>
     <string name="view_dialog_add_note">"Añadir nota"</string>
     <string name="view_dialog_add_note_dialog_hint">"Añada su nota aquí"</string>
@@ -124,8 +121,7 @@ Global Strings -->
     <string name="edit_attendees_helper">"Añadir un colaborador (dirección de correo electrónico). Atención: Los servidores pueden procesar automáticamente a los colaboradores, por ejemplo, enviando mensajes iMIP."</string>
     <string name="edit_resources_hint">"Promotor"</string>
     <string name="edit_resources_helper">"Agregar un recurso"</string>
-    <string name="edit_contact_hint">"
-Jim Dolittle, +1 919 555 1234"</string>
+    <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Información de contacto del responsable o propietario de esta entrada"</string>
     <string name="edit_comment_hint">"Su comentario…"</string>
     <string name="edit_comment_helper">"Añadir un comentario"</string>
@@ -158,26 +154,13 @@ Jim Dolittle, +1 919 555 1234"</string>
     <string name="edit_dialog_sure_to_discard_title">"¿Descartar esta entrada?"</string>
     <string name="edit_dialog_sure_to_delete_message">"¿Está seguro de que quiere eliminar \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"¿Está seguro de que quiere descartar esta entrada? No será guardada."</string>
-    <string name="edit_toast_deleted_successfully">"\"%1$s\" eliminado correctamente"</string>
-    <string name="edit_dialog_collection_not_found_error_title">"Atención"</string>
-    <string name="edit_dialog_collection_not_found_error_message">"La colección seleccionada ya no se encuentra, por favor seleccione otra."</string>
-    <string name="edit_validation_errors_detected">"Por favor, corrija los siguientes errores de validación:"</string>
-    <string name="edit_validation_errors_dialog_header">"Han ocurrido errores de validación"</string>
-    <string name="edit_validation_errors_summary_or_description_necessary">"Es necesario indicar un resumen o descripción."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La fecha de vencimiento no puede ser anterior a la fecha de inicio."</string>
-    <string name="edit_validation_errors_category_not_confirmed">"Una categoría ha sido introducida pero no confirmada. Por favor, confírmela o elimínela."</string>
-    <string name="edit_validation_errors_comment_not_confirmed">"Un comentario ha sido introducido pero no confirmado. Por favor, confírmelo o elimínelo."</string>
-    <string name="edit_validation_errors_resource_not_confirmed">"Un recurso ha sido introducido pero no confirmado. Por favor, confírmelo o elimínelo."</string>
-    <string name="edit_validation_errors_attendee_not_confirmed">"Un colaborador ha sido introducido pero no confirmado. Por favor, confírmelo o elimínelo."</string>
-    <string name="edit_validation_errors_subtask_not_confirmed">"Una subtarea ha sido introducida pero no confirmada. Por favor, confírmela o elimínela."</string>
     <string name="edit_fragment_app_permission">"Permisos de la aplicación"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board puede sugerir datos de colaboradores basados en sus contactos como valores de entrada para sus entradas. Se requiere permiso de lectura en sus contactos para habilitar esta función."</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">"¡Se ha detectado una regla de recurrencia no soportada!"</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"Se ha detectado una regla de repetición desconocida o no soportada. Si guarda esta entrada, la regla de repetición existente será borrada/sobreescrita."</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"¡Valor (duración) no soportado!"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Se detectó una duración para esta entrada en segundo plano. Actualmente, jtx Board no admite el manejo de una duración. Utilice la fecha de inicio, vencimiento y finalización en su lugar. Si guarda esta entrada, se eliminará la duración existente."</string>
-    <!-- fragment_ical_filter -->
-    <string name="filter_fab_apply_filter_contentdescription">"Aplicar filtro"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Traducciones"</string>
     <string name="about_tabitem_libraries">"Librerías"</string>
@@ -188,15 +171,12 @@ Jim Dolittle, +1 919 555 1234"</string>
     <string name="about_app_terms">"Términos y Condiciones"</string>
     <string name="about_thanks_ffg">"Un agradecimiento especial a FFG por su confianza y apoyo financiero para realizar este proyecto."</string>
     <!-- menus -->
-    <string name="menu_edit_clear_dates">"Limpiar fechas"</string>
     <string name="menu_list_gotodate">"Ir a fecha"</string>
-    <string name="menu_list_clearfilter">"Limpiar filtro"</string>
     <string name="menu_list_quick_journal">"Diario rápido"</string>
     <string name="menu_list_quick_note">"Nota rápida"</string>
     <string name="menu_list_quick_todo">"Tarea rápida"</string>
     <string name="menu_list_delete_visible">"Eliminar elementos visibles"</string>
     <string name="menu_list_syncnow">"Sincronizar ahora"</string>
-    <string name="menu_view_share_text">"Compartir"</string>
     <string name="menu_view_share_ics">"Compartir como .ics"</string>
     <string name="menu_view_copy_as_journal">"Copiar como Diario"</string>
     <string name="menu_view_copy_as_todo">"Copiar como Tarea"</string>
@@ -214,8 +194,6 @@ Jim Dolittle, +1 919 555 1234"</string>
     <string name="settings_list">"Ajustes para la lista de elementos"</string>
     <string name="settings_show_subtasks_in_list">"Mostrar subtareas en lista"</string>
     <string name="settings_show_attachments_in_list">"Mostrar adjuntos en lista"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Mostrar progreso de subtareas en lista"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Mostrar progreso de tareas en lista"</string>
     <string name="settings_group_settings_for_subentries">"Ajustes para subtareas, notas secundarias y diarios secundarios"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Mostrar subtareas de diarios y notas en la Lista de tareas"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Mostrar subnotas de diarios y tareas en la Lista de notas"</string>
@@ -223,9 +201,6 @@ Jim Dolittle, +1 919 555 1234"</string>
     <string name="settings_app">"Ajustes de la aplicación"</string>
     <string name="settings_select_mimetype_for_audio">"Seleccionar Mimetype para las notas de audio"</string>
     <!-- Sync fragment -->
-    <string name="sync_coming_soon_heading">"Sincronizar con DAVx⁵ (próximamente)"</string>
-    <string name="sync_coming_soon_text">"jtx Board no proporciona sincronización de servidor en sí misma, pero admitirá la sincronización a través de DAVx⁵. Este método le permitirá usar un servidor CalDAV compatible de su elección para almacenar, respaldar y sincronizar sus datos.
-¡Esta característica aún está en desarrollo y se lanzará pronto! Estén atentos en nuestro sitio web y en Twitter :-)"</string>
     <string name="sync_with_davx5_heading">"Sincronizar con DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"jtx Board no proporciona sincronización de servidor en sí, pero admite sincronización a través de DAVx⁵. Este método le permite usar cualquier servidor CalDAV compatible de su elección para almacenar, respaldar y sincronizar sus datos. * Tenga en cuenta que esta funcionalidad todavía se considera beta. Aunque ha sido probada, aún pueden surgir errores. Si encuentra algún problema, ¡le agradeceríamos sus comentarios!"</string>
     <string name="sync_congratulations">"¡Felicidades! :-)"</string>
@@ -245,10 +220,6 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="donate_thank_you">"¡Gracias!"</string>
     <string name="donate_donate_with">"Donar con"</string>
     <string name="donate_other_donation_methods">"Si desea considerar otro método de donación, por favor, consulte nuestra página web:"</string>
-    <!-- Adinfo fragment -->
-    <string name="adinfo_button_reset_user_consent">"Restablecer el consentimiento del usuario"</string>
-    <string name="adinfo_button_manage_subscriptions">"Gestionar la suscripción"</string>
-    <string name="attachment_error_on_retrieving_file">"Error al recuperar archivo."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"No se ha encontrado ninguna aplicación para abrir este archivo / URL."</string>
     <string name="toast_item_is_now_recu_exception">"El elemento recurrente ahora es una excepción."</string>
     <!-- sync content provider -->
@@ -420,10 +391,8 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="buypro_success_description">"Las capacidades de edición para colecciones remotas, entradas rápidas, edición rápida a través de un clic largo y colores dinámicos (disponibles desde Android 12) ahora están habilitadas."</string>
     <string name="buypro_success_thankyou">"¡Gracias!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Adquiera el paquete Pro para habilitar las capacidades de edición de colecciones remotas."</string>
-    <string name="buypro_snackbar_quick_entries_blocked">"Compre el paquete Pro para habilitar las capacidades de adición rápida."</string>
     <string name="buypro_initial_dialog_message">"¡Hola! jtx Board viene con una versión estándar y otra Pro. ¡Consulte la sección \"Comprar Pro\" para obtener más información sobre jtx Board Pro!
 ¡Gracias!"</string>
-    <string name="view_comment_pausebutton_content_desc">"Pausar comentario de audio"</string>
     <string name="menu_list_viewmode_list">"Vista de lista"</string>
     <string name="menu_list_viewmode_grid">"Vista de rejilla"</string>
     <string name="settings_default_expand_subtasks">"Expandir por defecto subtareas en lista"</string>
@@ -452,7 +421,6 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="invalid_timezone_message">"Por favor, seleccione una zona horaria válida"</string>
     <string name="invalid_url_message">"Por favor, introduzca una URL válida."</string>
     <string name="list_quickadd_dialog_sr_start">"Iniciar reconocimiento de voz"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Escuchando…"</string>
     <string name="details_show_all_options">"Mostrar todas las opciones"</string>
     <string name="details_attendees_processing_info">"Atención: Los servidores pueden procesar automáticamente a los asistentes, por ejemplo, enviando mensajes iMIP."</string>
     <string name="details_toast_entry_deleted">"Entrada descartada/borrada"</string>

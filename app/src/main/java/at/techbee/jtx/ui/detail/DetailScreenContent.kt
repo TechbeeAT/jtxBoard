@@ -433,7 +433,8 @@ fun DetailScreenContent(
                                 summary.trim(),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(8.dp)
+                                    .padding(8.dp),
+                                style = MaterialTheme.typography.titleMedium
                             )
 
                         if (description.text.isNotBlank()) {
@@ -543,7 +544,7 @@ fun DetailScreenContent(
                             onProgressChanged(itemId, newPercent, isLinked)
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
-                        showProgressLabel = true,
+                        showProgressLabel = showProgressForMainTasks,
                         showSlider = showProgressForMainTasks,
                         modifier = Modifier.align(Alignment.End)
                     )

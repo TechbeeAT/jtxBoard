@@ -62,7 +62,6 @@ Global Strings -->
     <string name="navigation_drawer_website">"Webseite"</string>
     <string name="navigation_drawer_support">"Support"</string>
     <string name="navigation_drawer_donate">"Spenden"</string>
-    <string name="navigation_drawer_adinfo">"Werbeinformation"</string>
     <string name="navigation_drawer_privacy_policy">"Datenschutzerklärung"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Überfällig"</string>
@@ -100,8 +99,6 @@ Global Strings -->
     <string name="view_fragment_audio_permission_message">"jtx Board benötigt Ihre Zustimmung, um Audio aufzunehmen und um die Spracherkennung zu nutzen. Bitte geben Sie die Berechtigung, um diese Funktionalität zu nutzen."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Audio-Notiz hinzufügen"</string>
     <string name="view_comment_playbutton_content_desc">"Audio-Notiz abspielen"</string>
-    <string name="view_fragment_audio_start_stop_recording_contentdesc">"Aufnahme starten/stoppen"</string>
-    <string name="view_fragment_audio_start_stop_playback_contentdesc">"Audio-Notiz abspielen"</string>
     <string name="view_reccurrence_note_is_exception">"Dieser Eintrag ist Teil einer Serie."</string>
     <string name="view_feedback_linked_notes">"Verknüpfte Notizen"</string>
     <string name="view_add_note">"Notiz hinzufügen"</string>
@@ -160,26 +157,13 @@ Global Strings -->
     <string name="edit_dialog_sure_to_discard_title">"Diesen Eintrag verwerfen?"</string>
     <string name="edit_dialog_sure_to_delete_message">"Sind Sie sicher, dass Sie \"%1$s\" löschen wollen?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Sind Sie sicher, dass Sie diesen Eintrag verwerfen wollen? Der Eintrag wird nicht gespeichert."</string>
-    <string name="edit_toast_deleted_successfully">"\"%1$s\" erfolgreich gelöscht"</string>
-    <string name="edit_dialog_collection_not_found_error_title">"Achtung"</string>
-    <string name="edit_dialog_collection_not_found_error_message">"Der ausgewählte Ordner konnte nicht mehr gefunden werden, bitte wählen Sie einen anderen."</string>
-    <string name="edit_validation_errors_detected">"Bitte korrigieren Sie die folgenden Validierungsfehler:"</string>
-    <string name="edit_validation_errors_dialog_header">"Validierungsfehler aufgetreten"</string>
-    <string name="edit_validation_errors_summary_or_description_necessary">"Bitte geben Sie eine Zusammenfassung an."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Das Fälligkeitsdatum kann nicht vor dem Startdatum sein."</string>
-    <string name="edit_validation_errors_category_not_confirmed">"Eine Kategorie wurde eingegeben aber nicht bestätigt. Bitte bestätigen oder löschen Sie die Kategorie."</string>
-    <string name="edit_validation_errors_comment_not_confirmed">"Ein Kommentar wurde eingegeben aber nicht bestätigt. Bitte bestätigen oder löschen Sie der Kommentar."</string>
-    <string name="edit_validation_errors_resource_not_confirmed">"Ein Material wurde eingegeben aber nicht bestätigt. Bitte bestätigen oder löschen Sie das Material."</string>
-    <string name="edit_validation_errors_attendee_not_confirmed">"Ein Teilnehmer wurde eingegeben aber nicht bestätigt. Bitte bestätigen oder löschen Sie den Teilnehmer."</string>
-    <string name="edit_validation_errors_subtask_not_confirmed">"Eine Teilaufgabe wurde eingegeben aber nicht bestätigt. Bitte bestätigen oder löschen Sie den Eintrag."</string>
     <string name="edit_fragment_app_permission">"App Berechtigungen"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board kann Teilnehmer basierend auf Ihren Telefonbuch-Kontakten vorschlagen. Die Lese-Berechtigung für Kontakte ist hierfür erforderlich."</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">"Nicht unterstützte Wiederhulungs-Regel festgestellt!"</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"Eine unbekannte oder nicht unterstützte Wiederholungs-Regel wurde festgestellt. Wenn Sie diesen Eintrag speichern, dann wird die aktuelle Regel gelöscht/überschrieben."</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Nicht unterstützter Wert festgestellt (Dauer)!"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Eine Dauer wurde für diesen Eintrag festgestellt. Die Verwendung des Felder für Dauer wird aktuell nicht von jtx Board unterstützt. Bitte verwenden Sie das Start-, Fälligkeits- und Fertiggestellt-Datum stattdessen. Wenn Sie diesen Eintrag speichern, dann wird die aktuelle Dauer gelöscht/überschrieben"</string>
-    <!-- fragment_ical_filter -->
-    <string name="filter_fab_apply_filter_contentdescription">"Filter anwenden"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Übersetzungen"</string>
     <string name="about_tabitem_libraries">"Bibliotheken"</string>
@@ -190,15 +174,12 @@ Global Strings -->
     <string name="about_app_terms">"AGBs"</string>
     <string name="about_thanks_ffg">"Besonderer Dank gilt der FFG für Ihr Vertrauen und die finanzielle Unterstützung um dieses Projekt zu realisieren."</string>
     <!-- menus -->
-    <string name="menu_edit_clear_dates">"Datumsfelder löschen"</string>
     <string name="menu_list_gotodate">"Zu Datum gehen"</string>
-    <string name="menu_list_clearfilter">"Filter löschen"</string>
     <string name="menu_list_quick_journal">"Schnell-Journal"</string>
     <string name="menu_list_quick_note">"Schnell-Notiz"</string>
     <string name="menu_list_quick_todo">"Schnell-Aufgabe"</string>
     <string name="menu_list_delete_visible">"Sichtbare löschen"</string>
     <string name="menu_list_syncnow">"Jetzt synchronisieren"</string>
-    <string name="menu_view_share_text">"Teilen"</string>
     <string name="menu_view_share_ics">"Als .ics teilen"</string>
     <string name="menu_view_copy_as_journal">"Als Journal kopieren"</string>
     <string name="menu_view_copy_as_todo">"Als Aufgabe kopieren"</string>
@@ -216,8 +197,8 @@ Global Strings -->
     <string name="settings_list">"Einstellungen für die Liste"</string>
     <string name="settings_show_subtasks_in_list">"Teilaufgaben in Liste anzeigen"</string>
     <string name="settings_show_attachments_in_list">"Anhänge in Liste anzeigen"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Fortschritt für Teilaufgaben anzeigen"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Fortschritt für Aufgaben anzeigen"</string>
+    <string name="settings_show_progress_for_subtasks">Zeige Fortschritt für Teilaufgaben</string>
+    <string name="settings_show_progress_for_maintasks">Zeige Fortschritt für Hauptaufgaben</string>
     <string name="settings_group_settings_for_subentries">"Einstellungen für Teilaufgaben, Notizen und Journale"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Teilaufgaben von Journalen und Notizen in Aufgabenliste anzeigen"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Notizen zu Journalen und Aufgaben in Notiz-Liste anzeigen"</string>
@@ -225,8 +206,6 @@ Global Strings -->
     <string name="settings_app">"App Einstellungen"</string>
     <string name="settings_select_mimetype_for_audio">"Format für Audio-Notizen wählen"</string>
     <!-- Sync fragment -->
-    <string name="sync_coming_soon_heading">"Sync mit DAVx⁵ (in Kürze erhältlich)"</string>
-    <string name="sync_coming_soon_text">"jtx Board bietet selbst keine Server-Synchronisierung an, unterstützt aber die Synchronisierung durch DAVx⁵. Durch diese Kombination können Sie jeglichen kompatiblen CalDAV-Server verwenden und Ihre Einträge ablegen, sichern und synchronisieren."</string>
     <string name="sync_with_davx5_heading">"Synchronisierung mit DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"jtx Board bietet selbst keine Server-Synchronisierung an, unterstützt aber die Synchronisierung durch DAVx⁵. Durch diese Kombination können Sie jeglichen kompatiblen CalDAV-Server verwenden und Ihre Einträge ablegen, sichern und synchronisieren. * Bitte beachten Sie, dass diese Funktionalität sich noch in einer Beta-Phase befinden. Auch wenn die Synchronisierung ausgiebig getestet wurde können noch Fehler auftreten. Falls Sie ein Problem feststellen, würden wir uns über Ihre Rückmeldung freuen!"</string>
     <string name="sync_congratulations">"Gratulation! :-)"</string>
@@ -246,10 +225,6 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="donate_thank_you">"Dankeschön!"</string>
     <string name="donate_donate_with">"Spenden über"</string>
     <string name="donate_other_donation_methods">"Weitere Optionen zum Spenden finden Sie auf unserer Website:"</string>
-    <!-- Adinfo fragment -->
-    <string name="adinfo_button_reset_user_consent">"Werbezustimmung zurücksetzen"</string>
-    <string name="adinfo_button_manage_subscriptions">"Abo verwalten"</string>
-    <string name="attachment_error_on_retrieving_file">"Die Datei konnte nicht geladen werden."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Es wurde keine App gefunden, um diese Datei/URL zu öffnen."</string>
     <string name="toast_item_is_now_recu_exception">"Wiederkehrender Eintrag ist jetzt eine Ausnahme."</string>
     <!-- sync content provider -->
@@ -430,10 +405,8 @@ Vielen Dank!"</string>
     <string name="buypro_success_description">"Die Bearbeitung von remote Collections, Schnell-Einträgen, Schnell-Bearbeitung durch langen Klick und Dynamic Colors (ab Android 12) sind jetzt aktiviert."</string>
     <string name="buypro_success_thankyou">"Dankeschön!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Bitte kaufe die Pro-Version, um die Bearbeitung von remote Collections zu aktivieren."</string>
-    <string name="buypro_snackbar_quick_entries_blocked">"Bitte kaufe die Pro-Version, um Schnell-Einträge zu aktivieren!"</string>
     <string name="buypro_initial_dialog_message">"Hallo! jtx Board kommt in einer Standard- und einer Pro-Version. Bitte schaue in die \"Pro kaufen\" Sektion für weitere Informationen!
 Danke!"</string>
-    <string name="view_comment_pausebutton_content_desc">"Audiokommentar pausieren"</string>
     <string name="menu_list_viewmode_list">"Listenansicht"</string>
     <string name="menu_list_viewmode_grid">"Rasteransicht"</string>
     <string name="settings_default_expand_subtasks">"Unteraufgaben standardmäßig erweitern"</string>
@@ -462,8 +435,9 @@ Danke!"</string>
     <string name="invalid_timezone_message">"Bitte wählen Sie eine gültige Zeitzone"</string>
     <string name="invalid_url_message">"Bitte geben Sie eine gültige URL ein!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spracherkennung starten"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Zuhören…"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Höre …"</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
+    <string name="details_show_hide_elements">Elemente ein-/ausblenden</string>
     <string name="details_attendees_processing_info">"Achtung: Server könnten Teilnehmer automatisch verarbeiten und z.B. iMIP-Nachrichten versenden."</string>
     <string name="details_toast_entry_deleted">"Eintrag verworfen/gelöscht"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Unbekannte Wiederholungs-Regel erkannt!"</string>
@@ -565,6 +539,8 @@ Danke!"</string>
     <string name="menu_view_autosave">"Automatische Speicherung"</string>
     <string name="next">"Weiter"</string>
     <string name="previous">"Zurück"</string>
+    <string name="visible">Sichtbar</string>
+    <string name="invisible">Unsichtbar</string>
     <string name="widget_list_description">"Listenwidget"</string>
     <string name="widget_list_configuration">"Widget-Konfiguration"</string>
     <string name="widget_list_configuration_beta_info">"* Bitte beachten Sie, dass jtx Board eine neue, experimentelle Art zur Platzierung von Widgets verwendet, die in seltenen Fällen noch zu unerwartetem Verhalten führen kann."</string>
