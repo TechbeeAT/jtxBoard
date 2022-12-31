@@ -60,7 +60,6 @@ Global Strings -->
     <string name="navigation_drawer_website">"Ιστοσελίδα"</string>
     <string name="navigation_drawer_support">"Υποστήριξη"</string>
     <string name="navigation_drawer_donate">"Δωρεά"</string>
-    <string name="navigation_drawer_adinfo">"Πληροφορίες διαφημίσεων"</string>
     <string name="navigation_drawer_privacy_policy">"Πολιτική Απορρήτου"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Καθυστερημένα"</string>
@@ -98,8 +97,6 @@ Global Strings -->
     <string name="view_fragment_audio_permission_message">"Η εφαρμογή jtx Board χρειάζεται την άδεια σας για την εγγραφή ήχου. Παρακαλούμε παραχωρήστε την άδεια χρήσης αυτής της δυνατότητας."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Προσθήκη ηχητικής σημείωσης"</string>
     <string name="view_comment_playbutton_content_desc">"Αναπαραγωγή ηχητικής σημείωσης"</string>
-    <string name="view_fragment_audio_start_stop_recording_contentdesc">"Έναρξη/διακοπή ηχογράφησης"</string>
-    <string name="view_fragment_audio_start_stop_playback_contentdesc">"Αναπαραγωγή σχολίου ήχου"</string>
     <string name="view_reccurrence_note_is_exception">"Αυτό το στοιχείο αποτελεί εξαίρεση σε μια επαναλαμβανόμενη καταχώριση."</string>
     <string name="view_feedback_linked_notes">"Σχόλια / Συνδεδεμένες σημειώσεις"</string>
     <string name="view_add_note">"Προσθήκη σημείωσης"</string>
@@ -156,26 +153,13 @@ Global Strings -->
     <string name="edit_dialog_sure_to_discard_title">"Θέλετε να διαγράψετε αυτή την καταχώριση;"</string>
     <string name="edit_dialog_sure_to_delete_message">"Είστε βέβαιοι ότι θέλετε να διαγράψετε το \"%1$s\";"</string>
     <string name="edit_dialog_sure_to_discard_message">"Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτή την καταχώριση; Αυτή η καταχώρηση δεν θα αποθηκευτεί."</string>
-    <string name="edit_toast_deleted_successfully">"\"%1$s\"Διαγράφηκε επιτυχώς"</string>
-    <string name="edit_dialog_collection_not_found_error_title">"Προσοχή"</string>
-    <string name="edit_dialog_collection_not_found_error_message">"Η επιλεγμένη συλλογή δεν μπορεί να βρεθεί πλέον, παρακαλώ επιλέξτε μία άλλη."</string>
-    <string name="edit_validation_errors_detected">"Διορθώστε τα ακόλουθα σφάλματα επικύρωσης:"</string>
-    <string name="edit_validation_errors_dialog_header">"Παρουσιάστηκαν σφάλματα επικύρωσης"</string>
-    <string name="edit_validation_errors_summary_or_description_necessary">"Θα πρέπει να προσθέσετε μια περίληψη ή μία περιγραφή."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Η ημερομηνία λήξης δεν μπορεί να είναι πριν από την ημερομηνία έναρξης."</string>
-    <string name="edit_validation_errors_category_not_confirmed">"Έγινε εισαγωγή μιας κατηγορίας αλλά δεν επιβεβαιώθηκε. Παρακαλώ επιβεβαιώστε ή διαγράψτε την."</string>
-    <string name="edit_validation_errors_comment_not_confirmed">"Έγινε εισαγωγή σχολίου αλλά δεν επιβεβαιώθηκε. Επιβεβαιώστε ή διαγράψτε το."</string>
-    <string name="edit_validation_errors_resource_not_confirmed">"Έγινε εισαγωγή πηγής αλλά δεν επιβεβαιώθηκε. Επιβεβαιώστε ή διαγράψτε την."</string>
-    <string name="edit_validation_errors_attendee_not_confirmed">"Έγινε εισαγωγή ενός συμμετέχοντα αλλά δεν επιβεβαιώθηκε. Επιβεβαιώστε ή διαγράψτε την."</string>
-    <string name="edit_validation_errors_subtask_not_confirmed">"Έγινε εισαγωγή μιας υποεργασίας αλλά δεν επιβεβαιώθηκε. Επιβεβαιώστε ή διαγράψτε την."</string>
     <string name="edit_fragment_app_permission">"Άδεια εφαρμογής"</string>
     <string name="edit_fragment_app_permission_message">"Η εφαρμογή jtx Board μπορεί να προτείνει δεδομένα συμμετεχόντων με βάση τις επαφές σας ως τιμές εισόδου για τις καταχωρίσεις σας. Απαιτείται να παρέχετε δικαιώματα ανάγνωσης στις επαφές σας για να ενεργοποιηθεί αυτή η δυνατότητα."</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">"Εντοπίστηκε ένας μη υποστηριζόμενος κανόνας επανάληψης!"</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"Εντοπίστηκε ένας άγνωστος ή μη υποστηριζόμενος κανόνας επανάληψης. Εάν αποθηκεύσετε αυτήν την καταχώρηση, ο υπάρχων κανόνας επανάληψης θα διαγραφεί/αντικατασταθεί."</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Εντοπίστηκε μη υποστηριζόμενη τιμή (Διάρκεια)!"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Εντοπίστηκε μια διάρκεια για αυτήν την καταχώρηση στο παρασκήνιο. Ο χειρισμός μιας διάρκειας δεν υποστηρίζεται, προς το παρόν, από το jtx Board. Χρησιμοποιήστε την ημερομηνία έναρξης, κατά την διάρκεια και λήξης. Εάν αποθηκεύσετε αυτήν την καταχώρηση, η υπάρχουσα διάρκεια θα διαγραφεί."</string>
-    <!-- fragment_ical_filter -->
-    <string name="filter_fab_apply_filter_contentdescription">"Εφαρμογή φίλτρου"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Μεταφράσεις"</string>
     <string name="about_tabitem_libraries">"Βιβλιοθήκες"</string>
@@ -186,15 +170,12 @@ Global Strings -->
     <string name="about_app_terms">"Όροι &amp; Προϋποθέσεις"</string>
     <string name="about_thanks_ffg">"Ευχαριστούμε ιδιαιτέρως την FFG για την εμπιστοσύνη και την οικονομική τους υποστήριξη για την υλοποίηση αυτού του έργου."</string>
     <!-- menus -->
-    <string name="menu_edit_clear_dates">"Καθαρισμός ημερομηνιών"</string>
     <string name="menu_list_gotodate">"Σε ημερομηνία"</string>
-    <string name="menu_list_clearfilter">"Διαγραφή φίλτρων"</string>
     <string name="menu_list_quick_journal">"Γρήγορο ημερολόγιο"</string>
     <string name="menu_list_quick_note">"Γρήγορη σημείωση"</string>
     <string name="menu_list_quick_todo">"Γρήγορη εργασία"</string>
     <string name="menu_list_delete_visible">"Διαγραφή ορατών"</string>
     <string name="menu_list_syncnow">"Συγχρονισμός τώρα"</string>
-    <string name="menu_view_share_text">"Κοινοποίηση"</string>
     <string name="menu_view_share_ics">"Κοινοποίησε ως .ics"</string>
     <string name="menu_view_copy_as_journal">"Αντιγραφή ως Ημερολόγιο"</string>
     <string name="menu_view_copy_as_todo">"Αντιγραφή ως Εργασία"</string>
@@ -212,8 +193,6 @@ Global Strings -->
     <string name="settings_list">"Ρυθμίσεις για τη λίστα στοιχείων"</string>
     <string name="settings_show_subtasks_in_list">"Εμφάνιση υποεργασιών στη λίστα"</string>
     <string name="settings_show_attachments_in_list">"Εμφάνιση συνημμένων στη λίστα"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Εμφάνιση προόδου για υποεργασίες στη λίστα"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Εμφάνιση προόδου για εργασίες στη λίστα"</string>
     <string name="settings_group_settings_for_subentries">"Ρυθμίσεις για υποεργασίες, υποσημειώσεις και υποημερολόγια"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Εμφάνιση υποεργασιών των ημερολογίων και των σημειώσεων στη λίστα εργασιών"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Εμφάνιση υποσημειώσεων των ημερολογίων και των εργασιών στη λίστα σημειώσεων"</string>
@@ -221,8 +200,6 @@ Global Strings -->
     <string name="settings_app">"Ρυθμίσεις εφαρμογής"</string>
     <string name="settings_select_mimetype_for_audio">"Επιλέξτε Mimetype για ηχητικές σημειώσεις"</string>
     <!-- Sync fragment -->
-    <string name="sync_coming_soon_heading">"Συγχρονισμός με DAVx⁵ (σύντομα κοντά σας)"</string>
-    <string name="sync_coming_soon_text">"Το jtx Board δεν παρέχει τον συγχρονισμό με τον διακομιστή, αλλά θα υποστηρίζει συγχρονισμό μέσω DAVx⁵. Αυτή η μέθοδος θα σας επιτρέψει να χρησιμοποιήσετε έναν συμβατό διακομιστή CalDAV της επιλογής σας για αποθήκευση, δημιουργία αντιγράφων ασφαλείας και συγχρονισμό των δεδομένων σας."</string>
     <string name="sync_with_davx5_heading">"Συγχρονισμός με DAVx⁵ (beta)*"</string>
     <string name="sync_basic_info">"Το jtx Board δεν παρέχει τον συγχρονισμό με τον διακομιστή, αλλά θα υποστηρίζει συγχρονισμό μέσω DAVx⁵. Αυτή η μέθοδος σάς επιτρέπει να χρησιμοποιείτε οποιονδήποτε συμβατό διακομιστή CalDAV της επιλογής σας για αποθήκευση, δημιουργία αντιγράφων ασφαλείας και συγχρονισμό των δεδομένων σας. * Λάβετε υπόψη σας ότι αυτή η λειτουργία εξακολουθεί να θεωρείται beta. Παρόλο που αυτή η λειτουργία έχει δοκιμαστεί, ενδέχεται να παρουσιαστούν προβλήματα. Εάν αντιμετωπίσετε οποιοδήποτε πρόβλημα, θα εκτιμούσαμε τα σχόλιά σας!"</string>
     <string name="sync_congratulations">"Συγχαρητήρια! :-)"</string>
@@ -242,10 +219,6 @@ Global Strings -->
     <string name="donate_thank_you">"Ευχαριστούμε!"</string>
     <string name="donate_donate_with">"Δωρίστε μέσω"</string>
     <string name="donate_other_donation_methods">"Εάν θέλετε να εξετάσετε οποιαδήποτε άλλη μέθοδο δωρεάς, ελέγξτε τον ιστότοπό μας:"</string>
-    <!-- Adinfo fragment -->
-    <string name="adinfo_button_reset_user_consent">"Επαναφορά συναίνεσης χρήστη"</string>
-    <string name="adinfo_button_manage_subscriptions">"Διαχείριση συνδρομής"</string>
-    <string name="attachment_error_on_retrieving_file">"Η ανάκτηση του αρχείου απέτυχε."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Δεν βρέθηκε εφαρμογή για να ανοίξει αυτό το αρχείο/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Το επαναλαμβανόμενο στοιχείο αποτελεί πλέον εξαίρεση."</string>
     <!-- sync content provider -->
@@ -421,10 +394,8 @@ Global Strings -->
     <string name="buypro_success_description">"Οι δυνατότητες επεξεργασίας για απομακρυσμένες συλλογές, γρήγορες καταχωρίσεις, γρήγορη επεξεργασία μέσω παρατεταμένου κλικ και δυναμικά χρώματα (διαθέσιμα από το Android 12) είναι πλέον ενεργοποιημένες."</string>
     <string name="buypro_success_thankyou">"Ευχαριστούμε!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε τις δυνατότητες επεξεργασίας απομακρυσμένων συλλογών."</string>
-    <string name="buypro_snackbar_quick_entries_blocked">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε τις δυνατότητες γρήγορης προσθήκης!"</string>
     <string name="buypro_initial_dialog_message">"Χαίρεται! Το jtx Board έρχεται με μια τυπική και μια έκδοση Pro. Ρίξτε μια ματιά στην ενότητα \"Buy Pro\" για να μάθετε περισσότερα για το jtx Board Pro!
  Ευχαριστώ!"</string>
-    <string name="view_comment_pausebutton_content_desc">"Σημείωση παύσης ήχου"</string>
     <string name="menu_list_viewmode_list">"Προβολή λίστας"</string>
     <string name="menu_list_viewmode_grid">"Προβολή Grid"</string>
     <string name="settings_default_expand_subtasks">"Ανάπτυξη των δευτερευουσών εργασιών στη λίστα από προεπιλογή"</string>
@@ -452,7 +423,6 @@ Global Strings -->
     <string name="invalid_timezone_message">"Παρακαλώ επιλέξτε μια σωστή ζώνη ώρας!"</string>
     <string name="invalid_url_message">"Παρακαλώ επιλέξτε έναν σωστό σύνδεσμο URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Έναρξη αναγνώρισης φωνής"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Αναπαραγωγή …"</string>
     <string name="details_show_all_options">"Εμφάνιση όλων των επιλογών"</string>
     <string name="details_attendees_processing_info">"Προσοχή: Οι διακομιστές ενδέχεται να επεξεργάζονται αυτόματα τους συμμετέχοντες π.χ. με την αποστολή μηνυμάτων iMIP."</string>
     <string name="details_toast_entry_deleted">"Η εγγραφή απορρίφθηκε/διεγράφη"</string>

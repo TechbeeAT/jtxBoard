@@ -60,7 +60,6 @@ Global Strings -->
     <string name="navigation_drawer_website">"Веб-сайт"</string>
     <string name="navigation_drawer_support">"Поддержка"</string>
     <string name="navigation_drawer_donate">"Пожертвования"</string>
-    <string name="navigation_drawer_adinfo">"О рекламе"</string>
     <string name="navigation_drawer_privacy_policy">"Политика конфиденциальности"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Просрочено"</string>
@@ -96,8 +95,6 @@ Global Strings -->
     <string name="view_fragment_audio_permission_message">"jtx Board требуется разрешение для записи звука или использования функций преобразования речи в текст. Предоставьте разрешение на использование этой функции."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Добавить аудио-заметку"</string>
     <string name="view_comment_playbutton_content_desc">"Воспроизвести аудиокомментарий"</string>
-    <string name="view_fragment_audio_start_stop_recording_contentdesc">"Начать/остановить запись"</string>
-    <string name="view_fragment_audio_start_stop_playback_contentdesc">"Воспроизвести аудиокомментарий"</string>
     <string name="view_reccurrence_note_is_exception">"Этот элемент является исключением из повторяющейся записи."</string>
     <string name="view_feedback_linked_notes">"Обратная связь/связанные заметки"</string>
     <string name="view_add_note">"Добавить заметку"</string>
@@ -145,26 +142,13 @@ Global Strings -->
     <string name="edit_dialog_sure_to_discard_title">"Удалить эту запись?"</string>
     <string name="edit_dialog_sure_to_delete_message">"Вы уверены, что хотите удалить \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Вы уверены, что хотите удалить эту запись? Эта запись не будет сохранена."</string>
-    <string name="edit_toast_deleted_successfully">"\"%1$s\" успешно удалено"</string>
-    <string name="edit_dialog_collection_not_found_error_title">"Внимание"</string>
-    <string name="edit_dialog_collection_not_found_error_message">"Выбранная коллекция не найдена, выберите другую"</string>
-    <string name="edit_validation_errors_detected">"Устраните следующие ошибки проверки:"</string>
-    <string name="edit_validation_errors_dialog_header">"Произошли ошибки проверки"</string>
-    <string name="edit_validation_errors_summary_or_description_necessary">"Необходимо предоставить краткое описание или сводку"</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Дата выполнения не может предшествовать дате начала."</string>
-    <string name="edit_validation_errors_category_not_confirmed">"Категория была указана, но не подтверждена. Подтвердите или удалите."</string>
-    <string name="edit_validation_errors_comment_not_confirmed">"Комментарий был добавлен, но не подтвержден. Подтвердите или удалите."</string>
-    <string name="edit_validation_errors_resource_not_confirmed">"Ресурс был указан, но не подтвержден. Подтвердите или удалите."</string>
-    <string name="edit_validation_errors_attendee_not_confirmed">"Участник был введен, но не подтвержден. Подтвердите или удалите."</string>
-    <string name="edit_validation_errors_subtask_not_confirmed">"Подзадача введена, но не подтверждена. Подтвердите или удалите."</string>
     <string name="edit_fragment_app_permission">"Разрешения приложения"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board может предлагать данные об участниках на основе ваших контактов в качестве входных значений для ваших записей. Для включения этой функции необходимо разрешение на чтение ваших контактов."</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">"Обнаружено неподдерживаемое правило повторения!"</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"Обнаружено неизвестное или неподдерживаемое правило повторения. Если вы сохраните эту запись, существующее правило повторения будет удалено/заменено."</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Обнаружено неподдерживаемое значение (продолжительность)!"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Для этой записи в фоновом режиме обнаружена продолжительность. В настоящее время jtx Board не поддерживает обработку продолжительности. Вместо этого используйте даты начала, срока и окончания. Если вы сохраните эту запись, существующая продолжительность будет удалена."</string>
-    <!-- fragment_ical_filter -->
-    <string name="filter_fab_apply_filter_contentdescription">"Применить фильтр"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Переводы"</string>
     <string name="about_tabitem_libraries">"Библиотеки"</string>
@@ -175,15 +159,12 @@ Global Strings -->
     <string name="about_app_terms">"Условия пользования."</string>
     <string name="about_thanks_ffg">"Особая благодарность FFG за их доверие и финансовую поддержку для реализации этого проекта."</string>
     <!-- menus -->
-    <string name="menu_edit_clear_dates">"Очистка дат"</string>
     <string name="menu_list_gotodate">"Переход к дате"</string>
-    <string name="menu_list_clearfilter">"Очистить фильтр"</string>
     <string name="menu_list_quick_journal">"Быстрый дневник"</string>
     <string name="menu_list_quick_note">"Быстрая заметка"</string>
     <string name="menu_list_quick_todo">"Быстрое задание"</string>
     <string name="menu_list_delete_visible">"Удаление видимых"</string>
     <string name="menu_list_syncnow">"Синхронизировать сейчас"</string>
-    <string name="menu_view_share_text">"Поделиться"</string>
     <string name="menu_view_share_ics">"Поделиться в виде .ics"</string>
     <string name="menu_view_copy_as_journal">"Скопировать как дневник"</string>
     <string name="menu_view_copy_as_todo">"Скопировать как задание"</string>
@@ -201,8 +182,6 @@ Global Strings -->
     <string name="settings_list">"Настройки для списка элементов"</string>
     <string name="settings_show_subtasks_in_list">"Отображать подзадачи в списке"</string>
     <string name="settings_show_attachments_in_list">"Отображать вложения в списке"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Показать ход выполнения подзадач в списке"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Показать ход выполнения задач в списке"</string>
     <string name="settings_group_settings_for_subentries">"Настройки для подзадач, подзаметок и поддневников"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Показать подзадачи дневников и заметок в списке задач"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Показать подзаметки дневников и задач в списке заметок"</string>
@@ -210,7 +189,6 @@ Global Strings -->
     <string name="settings_app">"Настройки приложения"</string>
     <string name="settings_select_mimetype_for_audio">"Выберите Mimetype для аудиозаметок."</string>
     <!-- Sync fragment -->
-    <string name="sync_coming_soon_heading">"Синхронизация с DAVx⁵ (в ближайшее время)"</string>
     <string name="sync_with_davx5_heading">"Синхронизация с DAVx⁵ (бета)*"</string>
     <string name="sync_basic_info">"jtx Board само по себе не обеспечивает синхронизацию с сервером, но поддерживает синхронизацию через DAVx⁵. Этот метод позволяет вам использовать любой совместимый сервер CalDAV по вашему выбору для хранения, резервного копирования и синхронизации ваших данных. * Обратите внимание, что эта функциональность по-прежнему считается бета-версией. Несмотря на то, что эта функция была протестирована, проблемы все еще могут возникать. Если вы столкнулись с какой-либо проблемой, мы будем признательны за ваш отзыв!"</string>
     <string name="sync_congratulations">"Поздравляем! :-)"</string>
@@ -229,10 +207,6 @@ Global Strings -->
     <string name="donate_thank_you">"Спасибо !"</string>
     <string name="donate_donate_with">"Пожертвовать через"</string>
     <string name="donate_other_donation_methods">"Если вы хотите рассмотреть любой другой способ пожертвования, пожалуйста, посетите наш веб-сайт:"</string>
-    <!-- Adinfo fragment -->
-    <string name="adinfo_button_reset_user_consent">"Сбросить согласие пользователя"</string>
-    <string name="adinfo_button_manage_subscriptions">"Управление подпиской"</string>
-    <string name="attachment_error_on_retrieving_file">"Сбой получения файла"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Не найдено ни одного приложения для открытия этого файла/URL."</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Извините, jtx не может синхронизироваться. Пожалуйста, закройте DAVx⁵ и запустите синхронизацию снова."</string>
