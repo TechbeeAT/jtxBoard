@@ -39,12 +39,14 @@ fun ListOptionsFilter(
     listSettings: ListSettings,
     allCollectionsLive: LiveData<List<ICalCollection>>,
     allCategoriesLive: LiveData<List<String>>,
+    allResourcesLive: LiveData<List<String>>,
     onListSettingsChanged: () -> Unit,
     modifier: Modifier = Modifier,
     isWidgetConfig: Boolean = false
 ) {
     val allCollectionsState = allCollectionsLive.observeAsState(emptyList())
     val allCategories by allCategoriesLive.observeAsState(emptyList())
+    val allResources by allResourcesLive.observeAsState(emptyList())
     val allCollections by remember { derivedStateOf { allCollectionsState.value.map { it.displayName ?: "" }.sortedBy { it.lowercase() } } }
     val allAccounts by remember { derivedStateOf { allCollectionsState.value.map { it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } } }
 
@@ -207,10 +209,12 @@ fun ListOptionsFilter(
             icon = Icons.Outlined.Label,
             headline = stringResource(id = R.string.category),
             onResetSelection = {
+                listSettings.isFilterNoCategorySet.value = false
                 listSettings.searchCategories.value = emptyList()
                 onListSettingsChanged()
             },
             onInvertSelection = {
+                listSettings.isFilterNoCategorySet.value = !listSettings.isFilterNoCategorySet.value
                 listSettings.searchCategories.value =
                     allCategories.filter { category ->
                         !listSettings.searchCategories.value.contains(category)
@@ -219,11 +223,20 @@ fun ListOptionsFilter(
             })
         {
             FlowRow(modifier = Modifier.fillMaxWidth()) {
+
+                FilterChip(
+                    selected = listSettings.isFilterNoCategorySet.value,
+                    onClick = {
+                        listSettings.isFilterNoCategorySet.value = !listSettings.isFilterNoCategorySet.value
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = R.string.filter_no_category)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+
                 allCategories.forEach { category ->
                     FilterChip(
-                        selected = listSettings.searchCategories.value.contains(
-                            category
-                        ),
+                        selected = listSettings.searchCategories.value.contains(category),
                         onClick = {
                             listSettings.searchCategories.value =
                                 if (listSettings.searchCategories.value.contains(category))
@@ -452,6 +465,56 @@ fun ListOptionsFilter(
                 }
             }
 
+
+            ////// RESOURCES
+            FilterSection(
+                icon = Icons.Outlined.Label,
+                headline = stringResource(id = R.string.resources),
+                onResetSelection = {
+                    listSettings.isFilterNoResourceSet.value = false
+                    listSettings.searchResources.value = emptyList()
+                    onListSettingsChanged()
+                },
+                onInvertSelection = {
+                    listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
+                    listSettings.searchResources.value =
+                        allResources.filter { resource ->
+                            !listSettings.searchResources.value.contains(resource)
+                        }
+                    onListSettingsChanged()
+                })
+            {
+                FlowRow(modifier = Modifier.fillMaxWidth()) {
+
+                    FilterChip(
+                        selected = listSettings.isFilterNoResourceSet.value,
+                        onClick = {
+                            listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.filter_no_resource)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+
+                    allResources.forEach { resource ->
+                        FilterChip(
+                            selected = listSettings.searchResources.value.contains(resource),
+                            onClick = {
+                                listSettings.searchResources.value =
+                                    if (listSettings.searchResources.value.contains(resource))
+                                        listSettings.searchResources.value.minus(resource)
+                                    else
+                                        listSettings.searchResources.value.plus(resource)
+                                onListSettingsChanged()
+                            },
+                            label = { Text(resource) },
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
+                }
+            }
+
+
             if (!isWidgetConfig) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -504,6 +567,7 @@ fun ListOptionsFilter_Preview_TODO() {
                 )
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
+            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             onListSettingsChanged = { }
 
         )
@@ -541,6 +605,7 @@ fun ListOptionsFilter_Preview_JOURNAL() {
                 )
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
+            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             onListSettingsChanged = { }
         )
     }
