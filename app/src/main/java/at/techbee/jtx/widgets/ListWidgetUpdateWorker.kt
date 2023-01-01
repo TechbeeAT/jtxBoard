@@ -52,7 +52,7 @@ class ListWidgetUpdateWorker(
             val widgetUpdateChannelId = "WIDGET_UPDATE_CHANNEL"
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(widgetUpdateChannelId, "Widget Update Channel", NotificationManager.IMPORTANCE_HIGH)
+                val channel = NotificationChannel(widgetUpdateChannelId, "Widget Update Channel", NotificationManager.IMPORTANCE_MIN)
                 notificationManager.createNotificationChannel(channel)
             }
 
@@ -73,7 +73,7 @@ class ListWidgetUpdateWorker(
                 .setContentTitle(context.getString(R.string.app_name))
                 .setLocalOnly(true)
                 .setVisibility(NotificationCompat.VISIBILITY_SECRET)
-                .setContentText("Activated widget updates")
+                .setContentText(context.getString(R.string.widget_list_compat_updating_widget_notification))
                 .build()
             return ForegroundInfo(1337, notification)
         } else {
