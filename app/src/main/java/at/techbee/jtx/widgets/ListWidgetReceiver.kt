@@ -42,7 +42,7 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
                 .apply {
                     if (delay != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                         setInitialDelay(delay.toJavaDuration())
-                    if(delay == null)
+                    if(delay == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                         setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 }.build()
             WorkManager
