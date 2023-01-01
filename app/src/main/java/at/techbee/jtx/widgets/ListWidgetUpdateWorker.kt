@@ -33,6 +33,7 @@ class ListWidgetUpdateWorker(
     context,
     workerParameters
 ) {
+
     override suspend fun doWork(): Result {
 
         GlanceAppWidgetManager(context).getGlanceIds(ListWidget::class.java).forEach { glanceId ->
@@ -60,6 +61,7 @@ class ListWidgetUpdateWorker(
                         ICal4List.constructQuery(
                             module = listWidgetConfig?.module ?: Module.TODO,
                             searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
+                            searchResources = listWidgetConfig?.searchResources ?: emptyList(),
                             searchStatusTodo = listWidgetConfig?.searchStatusTodo ?: emptyList(),
                             searchStatusJournal = listWidgetConfig?.searchStatusJournal ?: emptyList(),
                             searchClassification = listWidgetConfig?.searchClassification ?: emptyList(),
@@ -81,6 +83,8 @@ class ListWidgetUpdateWorker(
                             isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false,
                             isFilterNoStatusSet = listWidgetConfig?.isFilterNoStatusSet ?: false,
                             isFilterNoClassificationSet = listWidgetConfig?.isFilterNoClassificationSet ?: false,
+                            isFilterNoCategorySet = listWidgetConfig?.isFilterNoCategorySet ?: false,
+                            isFilterNoResourceSet = listWidgetConfig?.isFilterNoResourceSet ?: false,
                             flatView = listWidgetConfig?.flatView?: false,  // always true in Widget, we handle the flat view in the code
                             searchSettingShowOneRecurEntryInFuture = listWidgetConfig?.showOneRecurEntryInFuture ?: false
                         )
