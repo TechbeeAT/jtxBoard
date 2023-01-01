@@ -15,6 +15,7 @@ import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.appwidget.updateAll
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
@@ -33,6 +34,11 @@ class ListWidgetUpdateWorker(
     context,
     workerParameters
 ) {
+
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        return super.getForegroundInfo()
+    }
+
     override suspend fun doWork(): Result {
 
         GlanceAppWidgetManager(context).getGlanceIds(ListWidget::class.java).forEach { glanceId ->
