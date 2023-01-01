@@ -1,0 +1,5 @@
+- Improved markdown-support
+- Added markdown toolbar for description field
+- Added option to show/hide subtasks in widget
+- Edit mode now opens on click on summary/description in read view
+- Bugfixes
