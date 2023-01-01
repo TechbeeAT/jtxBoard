@@ -111,7 +111,7 @@ fun ListQuickAddElement(
 
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(focusRequester) {
+    LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
 

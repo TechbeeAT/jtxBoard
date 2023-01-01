@@ -21,6 +21,7 @@ import at.techbee.jtx.widgets.ListWidgetConfig
 class ListSettings {
 
     var searchCategories: MutableState<List<String>> = mutableStateOf(emptyList())
+    var searchResources: MutableState<List<String>> = mutableStateOf(emptyList())
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
     var searchStatusTodo: MutableState<List<StatusTodo>> = mutableStateOf(emptyList())
     var searchStatusJournal: MutableState<List<StatusJournal>> = mutableStateOf(emptyList())
@@ -44,6 +45,8 @@ class ListSettings {
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoStatusSet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoClassificationSet: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterNoCategorySet: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterNoResourceSet: MutableState<Boolean> = mutableStateOf(false)
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
     var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
     var flatView: MutableState<Boolean> = mutableStateOf(false)
@@ -61,6 +64,7 @@ class ListSettings {
         private const val PREFS_COLLECTION = "prefsCollection"
         private const val PREFS_ACCOUNT = "prefsAccount"
         private const val PREFS_CATEGORIES = "prefsCategories"
+        private const val PREFS_RESOURCES = "prefsResources"
         private const val PREFS_CLASSIFICATION = "prefsClassification"
         private const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
         private const val PREFS_STATUS_TODO = "prefsStatusTodo"
@@ -85,6 +89,8 @@ class ListSettings {
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
         private const val PREFS_FLAT_VIEW = "prefsFlatView"
         private const val PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE = "prefsShowOneRecurEntryInFuture"
+        private const val PREFS_FILTER_NO_CATEGORY_SET = "prefsFilterNoCategorySet"
+        private const val PREFS_FILTER_NO_RESOURCE_SET = "prefsFilterNoResourceSet"
         //private const val PREFS_CHECKBOX_POSITION_END = "prefsCheckboxPosition"
         //private const val PREFS_WIDGET_ALPHA = "prefsWidgetAlpha"
         //private const val PREFS_WIDGET_ALPHA_ENTRIES = "prefsWidgetAlhpaEntries"
@@ -106,9 +112,12 @@ class ListSettings {
             isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
             isFilterNoStatusSet.value = prefs.getBoolean(PREFS_FILTER_NO_STATUS_SET, false)
             isFilterNoClassificationSet.value = prefs.getBoolean(PREFS_FILTER_NO_CLASSIFICATION_SET, false)
+            isFilterNoCategorySet.value = prefs.getBoolean(PREFS_FILTER_NO_CATEGORY_SET, false)
+            isFilterNoResourceSet.value = prefs.getBoolean(PREFS_FILTER_NO_RESOURCE_SET, false)
 
             //searchOrganizers =
             searchCategories.value = prefs.getStringSet(PREFS_CATEGORIES, null)?.toList() ?: emptyList()
+            searchResources.value = prefs.getStringSet(PREFS_RESOURCES, null)?.toList() ?: emptyList()
             searchStatusJournal.value = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_STATUS_JOURNAL, null))
             searchStatusTodo.value = StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_STATUS_TODO, null))
             searchCollection.value = prefs.getStringSet(PREFS_COLLECTION, null)?.toList() ?: emptyList()
@@ -138,8 +147,11 @@ class ListSettings {
             isFilterNoDatesSet.value = listWidgetConfig.isFilterNoDatesSet
             isFilterNoStatusSet.value = listWidgetConfig.isFilterNoStatusSet
             isFilterNoClassificationSet.value = listWidgetConfig.isFilterNoClassificationSet
+            isFilterNoCategorySet.value = listWidgetConfig.isFilterNoCategorySet
+            isFilterNoResourceSet.value = listWidgetConfig.isFilterNoResourceSet
 
             searchCategories.value = listWidgetConfig.searchCategories
+            searchResources.value = listWidgetConfig.searchResources
             searchStatusJournal.value = listWidgetConfig.searchStatusJournal
             searchStatusTodo.value = listWidgetConfig.searchStatusTodo
             searchClassification.value = listWidgetConfig.searchClassification
@@ -176,6 +188,8 @@ class ListSettings {
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
             putBoolean(PREFS_FILTER_NO_STATUS_SET, isFilterNoStatusSet.value)
             putBoolean(PREFS_FILTER_NO_CLASSIFICATION_SET, isFilterNoClassificationSet.value)
+            putBoolean(PREFS_FILTER_NO_CATEGORY_SET, isFilterNoCategorySet.value)
+            putBoolean(PREFS_FILTER_NO_RESOURCE_SET, isFilterNoResourceSet.value)
 
             putString(PREFS_ORDERBY, orderBy.value.name)
             putString(PREFS_SORTORDER, sortOrder.value.name)
@@ -185,6 +199,7 @@ class ListSettings {
             putBoolean(PREFS_EXCLUDE_DONE, isExcludeDone.value)
 
             putStringSet(PREFS_CATEGORIES, searchCategories.value.toSet())
+            putStringSet(PREFS_RESOURCES, searchResources.value.toSet())
             putStringSet(PREFS_STATUS_JOURNAL, StatusJournal.getStringSetFromList(searchStatusJournal.value))
             putStringSet(PREFS_STATUS_TODO, StatusTodo.getStringSetFromList(searchStatusTodo.value))
             putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(searchClassification.value))
@@ -201,6 +216,7 @@ class ListSettings {
 
     fun reset() {
         searchCategories.value = emptyList()
+        searchResources.value = emptyList()
         //searchOrganizer = emptyList()
         searchStatusJournal.value = emptyList()
         searchStatusTodo.value = emptyList()
@@ -219,6 +235,8 @@ class ListSettings {
         isFilterNoDatesSet.value = false
         isFilterNoStatusSet.value = false
         isFilterNoClassificationSet.value = false
+        isFilterNoCategorySet.value = false
+        isFilterNoResourceSet.value = false
     }
 
     fun getLastUsedCollectionId(prefs: SharedPreferences) = prefs.getLong(PREFS_LAST_COLLECTION, 0L)

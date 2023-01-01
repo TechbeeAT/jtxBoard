@@ -1,0 +1,3 @@
+- New search bar
+- Added Czech language support
+- Bugfixes and minor improvements

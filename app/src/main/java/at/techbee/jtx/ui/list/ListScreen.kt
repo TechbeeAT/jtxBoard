@@ -180,6 +180,7 @@ fun ListScreen(
                 listSettings = listViewModel.listSettings,
                 allCollectionsLive = listViewModel.allCollections,
                 allCategoriesLive = listViewModel.allCategories,
+                allResourcesLive = listViewModel.allResources,
                 onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) }
             )
         },
