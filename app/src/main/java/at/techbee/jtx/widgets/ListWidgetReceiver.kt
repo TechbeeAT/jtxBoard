@@ -48,7 +48,7 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
             WorkManager
                 .getInstance(context)
                 .enqueueUniqueWork(
-                    "listWidgetOneTimeWorker",
+                    "listWidgetOneTimeWorker2",
                     ExistingWorkPolicy.APPEND_OR_REPLACE,
                     work
                 )
