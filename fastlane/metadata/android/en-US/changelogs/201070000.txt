@@ -1,0 +1,4 @@
+- new filter by "no category"
+- added filters by resource
+- New option to show/hide status/classification/priority/dates/progress in detail view
+- Bugfixes & smaller improvements

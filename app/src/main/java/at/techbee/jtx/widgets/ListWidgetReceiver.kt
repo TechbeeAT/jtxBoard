@@ -42,13 +42,13 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
                 .apply {
                     if (delay != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                         setInitialDelay(delay.toJavaDuration())
-                    if(delay == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    if(delay == null)
                         setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 }.build()
             WorkManager
                 .getInstance(context)
                 .enqueueUniqueWork(
-                    "listWidgetOneTimeWorker2",
+                    "listWidgetOneTimeWorker",
                     ExistingWorkPolicy.APPEND_OR_REPLACE,
                     work
                 )
