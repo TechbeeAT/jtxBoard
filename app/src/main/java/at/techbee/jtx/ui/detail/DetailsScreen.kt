@@ -21,15 +21,14 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ContentPaste
-import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.Mail
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -148,11 +147,47 @@ fun DetailsScreen(
                 goBack = {
                     goBackRequestedByTopBar.value = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
+                detailTopAppBarMode = settingsStateHolder.detailTopAppBarMode.value,
+                onAddSubnote = { subnoteText -> detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null) },
                 onAddSubtask = { subtaskText -> detailViewModel.addSubEntry(ICalObject.createTask(subtaskText), null) },
                 actions = {
                     val menuExpanded = remember { mutableStateOf(false) }
 
                     OverflowMenu(menuExpanded = menuExpanded) {
+
+                        Text(stringResource(R.string.details_app_bar_behaviour), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 8.dp))
+                        DropdownMenuItem(
+                            text = { Text(
+                                text = stringResource(id = R.string.edit_subtasks_add_helper),
+                                color = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
+                            ) },
+                            onClick = {
+                                settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBTASK
+                                menuExpanded.value = false
+                            },
+                            leadingIcon = { Icon(
+                                imageVector = Icons.Outlined.AddTask,
+                                contentDescription = null,
+                                tint = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
+                            ) }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(
+                                text = stringResource(id = R.string.edit_subnote_add_helper),
+                                color = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
+                            ) },
+                            onClick = {
+                                settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBNOTE
+                                menuExpanded.value = false
+                            },
+                            leadingIcon = { Icon(
+                                imageVector = Icons.Outlined.NoteAdd,
+                                contentDescription = null,
+                                tint = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
+                            ) }
+                        )
+
+                        Divider()
 
                         if (!isEditMode.value) {
                             DropdownMenuItem(

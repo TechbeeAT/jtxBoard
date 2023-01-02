@@ -2,6 +2,7 @@ package at.techbee.jtx.ui.detail
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.NoteAdd
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -25,11 +27,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 
+
+enum class DetailTopAppBarMode { ADD_SUBTASK, ADD_SUBNOTE }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsTopAppBar(
+    detailTopAppBarMode: DetailTopAppBarMode = DetailTopAppBarMode.ADD_SUBTASK,
     goBack: () -> Unit,
     onAddSubtask: (String) -> Unit,
+    onAddSubnote: (String) -> Unit,
     actions: @Composable () -> Unit = { }
 ) {
 
@@ -54,7 +61,14 @@ fun DetailsTopAppBar(
                     textColor = MaterialTheme.colorScheme.onSurfaceVariant),
                 shape = RoundedCornerShape(32.dp),
                 textStyle = MaterialTheme.typography.bodyLarge,
-                placeholder = { Text(stringResource(id = R.string.edit_subtasks_add_helper))},
+                placeholder = {
+                Crossfade(detailTopAppBarMode) {
+                    when(it) {
+                        DetailTopAppBarMode.ADD_SUBTASK -> Text(stringResource(id = R.string.edit_subtasks_add_helper))
+                        DetailTopAppBarMode.ADD_SUBNOTE -> Text(stringResource(id = R.string.edit_subnote_add_helper))
+                    }
+                }
+                    },
                 singleLine = true,
                 maxLines = 1,
                 leadingIcon = {
@@ -69,11 +83,20 @@ fun DetailsTopAppBar(
                     Row {
                         AnimatedVisibility(textFieldText.isNotBlank()) {
                             IconButton(onClick = {
-                                if(textFieldText.isNotBlank())
-                                    onAddSubtask(textFieldText)
+                                if(textFieldText.isNotBlank()) {
+                                    when(detailTopAppBarMode) {
+                                        DetailTopAppBarMode.ADD_SUBTASK -> onAddSubtask(textFieldText)
+                                        DetailTopAppBarMode.ADD_SUBNOTE -> onAddSubnote(textFieldText)
+                                    }
+                                }
                                 textFieldText = ""
                             }) {
-                                Icon(Icons.Outlined.AddTask, stringResource(id = R.string.edit_subtasks_add_helper))
+                                Crossfade(detailTopAppBarMode) {
+                                    when(it) {
+                                        DetailTopAppBarMode.ADD_SUBTASK -> Icon(Icons.Outlined.AddTask, stringResource(id = R.string.edit_subtasks_add_helper))
+                                        DetailTopAppBarMode.ADD_SUBNOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(id = R.string.edit_subnote_add_helper))
+                                    }
+                                }
                             }
                         }
                         actions()
@@ -81,8 +104,12 @@ fun DetailsTopAppBar(
                 },
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
-                    if(textFieldText.isNotBlank())
-                        onAddSubtask(textFieldText)
+                    if(textFieldText.isNotBlank()) {
+                        when(detailTopAppBarMode) {
+                            DetailTopAppBarMode.ADD_SUBTASK -> onAddSubtask(textFieldText)
+                            DetailTopAppBarMode.ADD_SUBNOTE -> onAddSubnote(textFieldText)
+                        }
+                    }
                     textFieldText = ""
                 })
             )
@@ -101,6 +128,7 @@ fun DetailsTopAppBar_Preview_withSubtitle() {
             topBar = {
                 DetailsTopAppBar(
                     goBack = { },
+                    onAddSubnote = { },
                     onAddSubtask = { }
                 )
             },
