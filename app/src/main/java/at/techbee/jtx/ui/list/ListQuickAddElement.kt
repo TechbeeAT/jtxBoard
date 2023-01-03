@@ -16,6 +16,7 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -112,7 +113,8 @@ fun ListQuickAddElement(
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        // try catch block as the FocsRequester might not yet be initialized when the focus is requested (see https://github.com/TechbeeAT/jtxBoard/issues/121)
+        try { focusRequester.requestFocus() } catch (e: IllegalStateException) { Log.w("ListQuickAddElement", e.stackTraceToString())}
     }
 
     val sr: SpeechRecognizer? = when {

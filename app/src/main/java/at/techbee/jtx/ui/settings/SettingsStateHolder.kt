@@ -13,6 +13,7 @@ import android.content.SharedPreferences
 import androidx.compose.runtime.mutableStateOf
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.ui.detail.DetailTopAppBarMode
 import at.techbee.jtx.util.getPackageInfoCompat
 
 class SettingsStateHolder(val context: Context) {
@@ -20,6 +21,7 @@ class SettingsStateHolder(val context: Context) {
     companion object {
         private const val SETTINGS_PRO_INFO_SHOWN = "settingsProInfoShown"
         private const val PREFS_LAST_MODULE = "lastUsedModule"
+        private const val PREFS_DETAIL_TOP_APP_BAR_MODE = "detailTopAppBarMode"
     }
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -59,6 +61,14 @@ class SettingsStateHolder(val context: Context) {
     )
         set(newValue) {
             prefs.edit().putString(PREFS_LAST_MODULE, newValue.value.name).apply()
+            field = newValue
+        }
+
+    var detailTopAppBarMode = mutableStateOf(
+        try { DetailTopAppBarMode.valueOf(prefs.getString(PREFS_DETAIL_TOP_APP_BAR_MODE, null)?: DetailTopAppBarMode.ADD_SUBTASK.name) } catch (e: java.lang.IllegalArgumentException) { DetailTopAppBarMode.ADD_SUBTASK }
+    )
+        set(newValue) {
+            prefs.edit().putString(PREFS_DETAIL_TOP_APP_BAR_MODE, newValue.value.name).apply()
             field = newValue
         }
 
