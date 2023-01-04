@@ -371,6 +371,8 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="filter_desc">"Sestupně"</string>
     <string name="filter_created">"Vytvořeno"</string>
     <string name="filter_last_modified">"Naposledy změněno"</string>
+    <string name="filter_no_category">Bez kategorií</string>
+    <string name="filter_no_resource">Bez zdrojů</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Klikněte na sbírku, do které by měly být záznamy přidány!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d přidáno, %2$d přeskočeno. (Výhradní případy opakujících se záznamů.)"</string>
     <string name="menu_collection_popup_import_from_ics">"Importovat z .ics"</string>
@@ -434,6 +436,8 @@ Děkujeme vám!"</string>
     <string name="invalid_timezone_message">"Vyberte platné časové pásmo!"</string>
     <string name="invalid_url_message">"Zadejte platnou URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spustit rozpoznávání řeči"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Naslouchání…"</string>
+    <string name="details_app_bar_behaviour">"Chování panelu aplikace"</string>
     <string name="details_show_all_options">"Zobrazit všechny volby"</string>
     <string name="details_show_hide_elements">Zobrazit/skrýt prvky</string>
     <string name="details_attendees_processing_info">"Pozor: Servery mohou účastníky automaticky zpracovávat např. zasíláním zpráv iMIP."</string>
@@ -548,6 +552,7 @@ Děkujeme vám!"</string>
     <string name="widget_list_view_settings">"Nastavení zobrazení"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Pozor: V současné době je ve widgetu podporována pouze jedna úroveň hierarchie. Pro zobrazení záznamů nižších úrovní použijte místo toho ploché zobrazení."</string>
     <string name="widget_list_maximum_entries_reached">"Dosažen maximální počet záznamů ve widgetu (%1$d)."</string>
+    <string name="widget_list_compat_updating_widget_notification">"Aktualizace widgetu"</string>
     <string name="opacity">"Neprůhlednost"</string>
     <string name="general">"Obecné"</string>
     <string name="list_collapse">"Sbalit"</string>

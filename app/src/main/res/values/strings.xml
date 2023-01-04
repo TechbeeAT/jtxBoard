@@ -390,6 +390,8 @@ For more information about the Sync please see:"</string>
     <string name="filter_desc">"Descending"</string>
     <string name="filter_created">"Created"</string>
     <string name="filter_last_modified">"Last modified"</string>
+    <string name="filter_no_category">Without categories</string>
+    <string name="filter_no_resource">Without resources</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Please click on the collection to which the entry/entries should be added!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d added, %2$d skipped. (Exclusive instances of recurring entries.)"</string>
     <string name="menu_collection_popup_import_from_ics">"Import from .ics"</string>
@@ -456,6 +458,7 @@ Thank you!"</string>
     <string name="invalid_url_message">"Please enter a valid URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
     <string name="list_quickadd_dialog_sr_listening">"Listening …"</string>
+    <string name="details_app_bar_behaviour">"App bar behaviour"</string>
     <string name="details_show_all_options">"Show all options"</string>
     <string name="details_show_hide_elements">Show/hide elements</string>
     <string name="details_attendees_processing_info">"Attention: Servers might automatically process attendees e.g. by sending iMIP messages."</string>
@@ -573,6 +576,7 @@ Thank you!"</string>
     <string name="widget_list_view_settings">"View settings"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attention: Currently only one level of hierarchy is supported in the widget. In order to see the entries of lower levels, please use the flat view instead."</string>
     <string name="widget_list_maximum_entries_reached">"Maximum number of entries in widget reached (%1$d)."</string>
+    <string name="widget_list_compat_updating_widget_notification">"Updating widget"</string>
     <string name="opacity">"Opacity"</string>
     <string name="link_jtx_mastodon" translatable="false">"https://fosstodon.org/@jtx"</string>
     <string name="mastodon_account_name" translatable="false">"@jtx@fosstodon.org"</string>

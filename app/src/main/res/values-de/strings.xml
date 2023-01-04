@@ -371,6 +371,8 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="filter_desc">"Absteigend"</string>
     <string name="filter_created">"Erstellt"</string>
     <string name="filter_last_modified">"Zuletzt bearbeitet"</string>
+    <string name="filter_no_category">Ohne Kategorien</string>
+    <string name="filter_no_resource">Ohne Materialien</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Bitte klicken Sie auf die Collection, zu der die Einträge hinzugefügt werden sollen!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d hinzugefügt, %2$d übersprungen. (Exklusive Instanzen von wiederkehrenden Einträgen)"</string>
     <string name="menu_collection_popup_import_from_ics">"Von .ics importieren"</string>
@@ -436,6 +438,7 @@ Danke!"</string>
     <string name="invalid_url_message">"Bitte geben Sie eine gültige URL ein!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spracherkennung starten"</string>
     <string name="list_quickadd_dialog_sr_listening">"Höre …"</string>
+    <string name="details_app_bar_behaviour">"App Bar Verhalten"</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
     <string name="details_show_hide_elements">Elemente ein-/ausblenden</string>
     <string name="details_attendees_processing_info">"Achtung: Server könnten Teilnehmer automatisch verarbeiten und z.B. iMIP-Nachrichten versenden."</string>
@@ -550,6 +553,7 @@ Danke!"</string>
     <string name="widget_list_view_settings">"Ansichtsoptionen"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Achtung: Aktuell wird nur eine Hierarchieebene im Widget unterstützt. Um Einträge weiterer Ebenen zu sehen, benutzen Sie bitte die flache Ansicht."</string>
     <string name="widget_list_maximum_entries_reached">"Maximale Anzahl an Einträgen im Widget erreicht (%1$d)."</string>
+    <string name="widget_list_compat_updating_widget_notification">"Aktualisiere Widget"</string>
     <string name="opacity">"Transparenz"</string>
     <string name="general">"Allgemein"</string>
     <string name="list_collapse">"Zuklappen"</string>

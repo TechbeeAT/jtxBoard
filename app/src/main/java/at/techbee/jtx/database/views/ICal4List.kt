@@ -236,6 +236,7 @@ data class ICal4List(
         fun constructQuery(
             module: Module,
             searchCategories: List<String> = emptyList(),
+            searchResources: List<String> = emptyList(),
             searchStatusTodo: List<StatusTodo> = emptyList(),
             searchStatusJournal: List<StatusJournal> = emptyList(),
             searchClassification: List<Classification> = emptyList(),
@@ -257,6 +258,8 @@ data class ICal4List(
             isFilterNoDatesSet: Boolean = false,
             isFilterNoStatusSet: Boolean = false,
             isFilterNoClassificationSet: Boolean = false,
+            isFilterNoCategorySet: Boolean = false,
+            isFilterNoResourceSet: Boolean = false,
             searchText: String? = null,
             flatView: Boolean = false,
             searchSettingShowOneRecurEntryInFuture: Boolean = false
@@ -268,6 +271,8 @@ data class ICal4List(
             var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST "
             if (searchCategories.isNotEmpty())
                 queryString += "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID "
+            if (searchResources.isNotEmpty())
+                queryString += "LEFT JOIN $TABLE_NAME_RESOURCE ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ICALOBJECT_ID "
             if (searchCollection.isNotEmpty() || searchAccount.isNotEmpty())
                 queryString += "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
 
@@ -285,14 +290,37 @@ data class ICal4List(
             }
 
             //CATEGORIES
-            if (searchCategories.isNotEmpty()) {
-                queryString += searchCategories.joinToString (
-                    prefix = "AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN (",
-                    separator = ", ",
-                    transform = { "?" },
-                    postfix = ") "
-                )
-                args.addAll(searchCategories)
+            if (searchCategories.isNotEmpty() || isFilterNoCategorySet) {
+                queryString += "AND ("
+                if (searchCategories.isNotEmpty()) {
+                    queryString += searchCategories.joinToString(
+                        prefix = "$TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN (",
+                        separator = ", ",
+                        transform = { "?" },
+                        postfix = ") " + if(isFilterNoCategorySet) "OR " else ""
+                    )
+                    args.addAll(searchCategories)
+                }
+                if (isFilterNoCategorySet)
+                    queryString += "$VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID FROM $TABLE_NAME_CATEGORY) "
+                queryString += ") "
+            }
+
+            //RESOURCES
+            if (searchResources.isNotEmpty() || isFilterNoResourceSet) {
+                queryString += "AND ("
+                if (searchResources.isNotEmpty()) {
+                    queryString += searchResources.joinToString(
+                        prefix = "$TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_TEXT IN (",
+                        separator = ", ",
+                        transform = { "?" },
+                        postfix = ") " + if(isFilterNoResourceSet) "OR " else ""
+                    )
+                    args.addAll(searchResources)
+                }
+                if (isFilterNoResourceSet)
+                    queryString += "$VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ICALOBJECT_ID FROM $TABLE_NAME_RESOURCE) "
+                queryString += ") "
             }
 
             //STATUS

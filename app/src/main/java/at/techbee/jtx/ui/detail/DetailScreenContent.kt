@@ -433,7 +433,8 @@ fun DetailScreenContent(
                                 summary.trim(),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(8.dp)
+                                    .padding(8.dp),
+                                style = MaterialTheme.typography.titleMedium
                             )
 
                         if (description.text.isNotBlank()) {
