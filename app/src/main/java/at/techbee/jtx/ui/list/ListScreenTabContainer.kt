@@ -51,6 +51,7 @@ import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteSelectedDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
+import at.techbee.jtx.ui.reusable.dialogs.UpdateEntriesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
@@ -120,6 +121,8 @@ fun ListScreenTabContainer(
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteSelectedDialog by remember { mutableStateOf(false) }
+    var showUpdateEntriesDialog by remember { mutableStateOf(false) }
+
 
     fun getActiveViewModel() =
         when (pagerState.currentPage) {
@@ -146,6 +149,14 @@ fun ListScreenTabContainer(
             numEntriesToDelete = getActiveViewModel().selectedEntries.size,
             onConfirm = { getActiveViewModel().deleteSelected() },
             onDismiss = { showDeleteSelectedDialog = false }
+        )
+    }
+
+    if (showUpdateEntriesDialog) {
+        UpdateEntriesDialog(
+            allCategories = emptyList(), //TODO
+            allResources = emptyList(), //TODO
+            onDismiss = { showUpdateEntriesDialog = false }
         )
     }
 
@@ -328,7 +339,8 @@ fun ListScreenTabContainer(
                         }
                     },
                     onGoToDateSelected = { id -> getActiveViewModel().scrollOnceId.postValue(id) },
-                    onDeleteSelectedClicked = { showDeleteSelectedDialog = true }
+                    onDeleteSelectedClicked = { showDeleteSelectedDialog = true },
+                    onUpdateSelectedClicked = { showUpdateEntriesDialog = true }
                 )
             } else if(timeout) {
                 BottomAppBar {
