@@ -437,6 +437,7 @@ Děkujeme vám!"</string>
     <string name="invalid_url_message">"Zadejte platnou URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spustit rozpoznávání řeči"</string>
     <string name="list_quickadd_dialog_sr_listening">"Naslouchání…"</string>
+    <string name="details_app_bar_behaviour">"Chování panelu aplikace"</string>
     <string name="details_show_all_options">"Zobrazit všechny volby"</string>
     <string name="details_show_hide_elements">Zobrazit/skrýt prvky</string>
     <string name="details_attendees_processing_info">"Pozor: Servery mohou účastníky automaticky zpracovávat např. zasíláním zpráv iMIP."</string>

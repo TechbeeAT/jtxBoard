@@ -438,6 +438,7 @@ Danke!"</string>
     <string name="invalid_url_message">"Bitte geben Sie eine gültige URL ein!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spracherkennung starten"</string>
     <string name="list_quickadd_dialog_sr_listening">"Höre …"</string>
+    <string name="details_app_bar_behaviour">"App Bar Verhalten"</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
     <string name="details_show_hide_elements">Elemente ein-/ausblenden</string>
     <string name="details_attendees_processing_info">"Achtung: Server könnten Teilnehmer automatisch verarbeiten und z.B. iMIP-Nachrichten versenden."</string>
