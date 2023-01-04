@@ -296,6 +296,25 @@ fun MainNavHost(
                 }
             )
         }
+
+        composable(
+            DetailDestination.PreFilteredBoard.route,
+            arguments = DetailDestination.PreFilteredBoard.args
+        ) { backStackEntry ->
+
+            val module = backStackEntry.arguments?.getString(DetailDestination.argModule2Open) ?: Module.TODO.name
+            val categories = backStackEntry.arguments?.getString(DetailDestination.argCategory2Filter)
+            val resources = backStackEntry.arguments?.getString(DetailDestination.argResource2Filter)
+
+            settingsStateHolder.lastUsedModule.value = try { Module.valueOf(module) } catch (e: Exception) { return@composable }
+
+            ListScreenTabContainer(
+                navController = navController,
+                globalStateHolder = globalStateHolder,
+                settingsStateHolder = settingsStateHolder
+            )
+        }
+
         composable(NavigationDrawerDestination.COLLECTIONS.name) {
             val collectionsViewModel: CollectionsViewModel = viewModel()
 
