@@ -14,7 +14,9 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.LabelOff
 import androidx.compose.material.icons.outlined.NewLabel
+import androidx.compose.material.icons.outlined.WorkOff
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 
 
@@ -52,9 +55,9 @@ fun UpdateEntriesDialog(
     val allResources by allResourcesLive.observeAsState(emptyList())
 
     val addedCategories = remember { mutableStateListOf<String>() }
-    //val removedCategories = remember { mutableStateListOf<String>() }
+    val removedCategories = remember { mutableStateListOf<String>() }
     val addedResources = remember { mutableStateListOf<String>() }
-    //val removedResources = remember { mutableStateListOf<String>() }
+    val removedResources = remember { mutableStateListOf<String>() }
 
     var updateEntriesDialogMode by remember { mutableStateOf(UpdateEntriesDialogMode.CATEGORIES) }
 
@@ -93,22 +96,32 @@ fun UpdateEntriesDialog(
                     FlowRow(
                         //horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         mainAxisSpacing = 8.dp,
+                        mainAxisAlignment = FlowMainAxisAlignment.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
                         allCategories.forEach {category ->
                             InputChip(
                                 onClick = {
-                                    if(addedCategories.contains(category))
-                                        addedCategories.remove(category)
-                                    else
-                                        addedCategories.add(category)
+                                    when {
+                                        addedCategories.contains(category) -> {
+                                            addedCategories.remove(category)
+                                            removedCategories.add(category)
+                                        }
+                                        removedCategories.contains(category) -> removedCategories.remove(category)
+                                        else -> addedCategories.add(category)
+                                    }
                                 },
                                 label = { Text(category) },
-                                leadingIcon = { Icon(Icons.Outlined.NewLabel, stringResource(id = R.string.add)) },
+                                leadingIcon = {
+                                    if(removedCategories.contains(category))
+                                        Icon(Icons.Outlined.LabelOff, stringResource(id = R.string.delete), tint = MaterialTheme.colorScheme.error)
+                                    else
+                                        Icon(Icons.Outlined.NewLabel, stringResource(id = R.string.add), tint = if(addedCategories.contains(category)) MaterialTheme.colorScheme.primary else LocalContentColor.current)
+                                },
                                 selected = false,
                                 modifier = Modifier
-                                    .alpha(if(addedCategories.contains(category)) 1f else 0.4f)
+                                    .alpha(if(addedCategories.contains(category) || removedCategories.contains(category)) 1f else 0.4f)
                             )
                         }
                     }
@@ -118,21 +131,31 @@ fun UpdateEntriesDialog(
                     FlowRow(
                         //horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         mainAxisSpacing = 8.dp,
+                        mainAxisAlignment = FlowMainAxisAlignment.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
                         allResources.forEach { resource ->
                             InputChip(
                                 onClick = {
-                                    if(addedResources.contains(resource))
-                                        addedResources.remove(resource)
-                                    else
-                                        addedResources.add(resource)
+                                    when {
+                                        addedResources.contains(resource) -> {
+                                            addedResources.remove(resource)
+                                            removedResources.add(resource)
+                                        }
+                                        removedResources.contains(resource) -> removedResources.remove(resource)
+                                        else -> addedResources.add(resource)
+                                    }
                                 },
                                 label = { Text(resource) },
-                                leadingIcon = { Icon(Icons.Outlined.WorkOutline, stringResource(id = R.string.add)) },
+                                leadingIcon = {
+                                    if (removedResources.contains(resource))
+                                        Icon(Icons.Outlined.WorkOff, stringResource(id = R.string.delete), tint = MaterialTheme.colorScheme.error)
+                                    else
+                                        Icon(Icons.Outlined.WorkOutline, stringResource(id = R.string.add), tint = if(addedResources.contains(resource)) MaterialTheme.colorScheme.primary else LocalContentColor.current)
+                                },
                                 selected = false,
-                                modifier = Modifier.alpha(if(addedResources.contains(resource)) 1f else 0.4f)
+                                modifier = Modifier.alpha(if(addedResources.contains(resource) || removedResources.contains(resource)) 1f else 0.4f)
                             )
                         }
                     }
