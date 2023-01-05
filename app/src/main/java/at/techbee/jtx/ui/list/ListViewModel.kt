@@ -25,6 +25,7 @@ import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.util.DateTimeUtils
@@ -213,6 +214,36 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     database.getICalObjectByIdSync(entry.id)?.let { ICalObject.makeRecurringException(it, database) }
                 ICalObject.deleteItemWithChildren(entry.id, database)
                 selectedEntries.clear()
+            }
+        }
+    }
+
+    /**
+     * Adds new categories to the selected entries (if they don't exist already)
+     * @param categories that should be added
+     */
+    fun addCategoriesToSelected(categories: List<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            categories.forEach { category ->
+                selectedEntries.forEach { selected ->
+                    if(database.getCategoryForICalObjectByName(selected, category) == null)
+                        database.insertCategory(Category(icalObjectId = selected, text = category))
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds new resources to the selected entries (if they don't exist already)
+     * @param resources that should be added
+     */
+    fun addResourcesToSelected(resources: List<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            resources.forEach { resource ->
+                selectedEntries.forEach { selected ->
+                    if(database.getResourceForICalObjectByName(selected, resource) == null)
+                        database.insertResource(Resource(icalObjectId = selected, text = resource))
+                }
             }
         }
     }

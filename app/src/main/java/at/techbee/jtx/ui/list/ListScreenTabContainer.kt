@@ -154,8 +154,10 @@ fun ListScreenTabContainer(
 
     if (showUpdateEntriesDialog) {
         UpdateEntriesDialog(
-            allCategories = emptyList(), //TODO
-            allResources = emptyList(), //TODO
+            allCategoriesLive = getActiveViewModel().allCategories,
+            allResourcesLive = getActiveViewModel().allResources,
+            onCategoriesAdded = { newCategories -> getActiveViewModel().addCategoriesToSelected(newCategories) },
+            onResourcesAdded = { newResources -> getActiveViewModel().addResourcesToSelected(newResources) },
             onDismiss = { showUpdateEntriesDialog = false }
         )
     }

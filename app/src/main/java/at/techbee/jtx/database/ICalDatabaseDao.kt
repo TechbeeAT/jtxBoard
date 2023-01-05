@@ -601,6 +601,14 @@ DELETEs by Object
     fun getAlarmsSync(icalobjectId: Long): List<Alarm>?
 
 
+    @Transaction
+    @Query("SELECT * from $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_CATEGORY_TEXT = :category")
+    fun getCategoryForICalObjectByName(iCalObjectId: Long, category: String): Category?
+
+    @Transaction
+    @Query("SELECT * from $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_RESOURCE_TEXT = :resource")
+    fun getResourceForICalObjectByName(iCalObjectId: Long, resource: String): Resource?
+
 
     /** This query returns all ids of child elements of the given [parentKey]  */
     @Transaction
