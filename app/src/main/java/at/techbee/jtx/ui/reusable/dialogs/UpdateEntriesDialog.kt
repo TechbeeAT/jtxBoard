@@ -12,8 +12,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.NewLabel
@@ -31,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
+import com.google.accompanist.flowlayout.FlowRow
 
 
 enum class UpdateEntriesDialogMode { CATEGORIES, RESOURCES }
@@ -91,12 +90,13 @@ fun UpdateEntriesDialog(
                 }
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.CATEGORIES) {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                    FlowRow(
+                        //horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                        mainAxisSpacing = 8.dp,
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
-                        items(allCategories) {category ->
+                        allCategories.forEach {category ->
                             InputChip(
                                 onClick = {
                                     if(addedCategories.contains(category))
@@ -115,12 +115,13 @@ fun UpdateEntriesDialog(
                 }
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.RESOURCES) {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                    FlowRow(
+                        //horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                        mainAxisSpacing = 8.dp,
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
-                        items(allResources.sortedBy { addedResources.contains(it) }) { resource ->
+                        allResources.forEach { resource ->
                             InputChip(
                                 onClick = {
                                     if(addedResources.contains(resource))
