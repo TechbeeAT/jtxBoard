@@ -170,7 +170,7 @@ fun CollectionsScreen(
                                 showCollectionsAddDialog = true
                                 menuExpanded.value = false
                             },
-                            leadingIcon = { Icon(Icons.Outlined.LocalLibrary, null) }
+                            leadingIcon = { Icon(Icons.Outlined.LocalLibrary, null) },
                         )
                         if (isDAVx5available) {
                             DropdownMenuItem(

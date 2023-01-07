@@ -133,7 +133,6 @@ fun DetailsCardLocation(
                                 location = newLocation
                                 onLocationUpdated(newLocation, geoLat, geoLong)
                             },
-                            //colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                             modifier = Modifier.weight(1f)
                         )

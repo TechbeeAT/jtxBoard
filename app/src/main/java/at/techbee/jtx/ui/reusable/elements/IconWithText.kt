@@ -35,13 +35,12 @@ fun IconWithText(icon: ImageVector, iconDesc: String, text: String, modifier: Mo
         Icon(
             icon,
             iconDesc,
-            modifier = Modifier.size(14.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            modifier = Modifier.size(14.dp)
+        )
         Text(
             text,
             modifier = Modifier.padding(start = 2.dp),
-            style = Typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = Typography.labelMedium
         )
     }
 }

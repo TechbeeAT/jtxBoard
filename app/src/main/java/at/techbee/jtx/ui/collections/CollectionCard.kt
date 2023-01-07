@@ -79,7 +79,6 @@ fun CollectionCard(
 
 
     ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = modifier
     ) {
 
@@ -107,7 +106,6 @@ fun CollectionCard(
                         Text(
                             collection.description ?: "",
                             style = Typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
@@ -126,18 +124,15 @@ fun CollectionCard(
                         Text(
                             stringResource(id = R.string.collections_journals_num, numJournals),
                             style = Typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
                             stringResource(id = R.string.collections_notes_num, numNotes),
                             style = Typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 8.dp)
                         )
                         Text(
                             stringResource(id = R.string.collections_tasks_num, numTodos),
                             style = Typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 8.dp)
                         )
                     }

@@ -196,7 +196,13 @@ fun DetailsScreen(
                                     detailViewModel.shareAsText(context)
                                     menuExpanded.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.Mail, null) }
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Mail,
+                                        contentDescription = null,
+                                        tint = Color.Unspecified
+                                    )
+                                }
                             )
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
@@ -204,7 +210,13 @@ fun DetailsScreen(
                                     detailViewModel.shareAsICS(context)
                                     menuExpanded.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.Description, null) }
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Description,
+                                        contentDescription = null,
+                                        tint = Color.Unspecified
+                                    )
+                                }
                             )
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
@@ -216,7 +228,13 @@ fun DetailsScreen(
                                         Toast.makeText(context, context.getText(R.string.menu_view_copy_to_clipboard_copied), Toast.LENGTH_SHORT).show()
                                     menuExpanded.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.ContentPaste, null) }
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.ContentPaste,
+                                        contentDescription = null,
+                                        tint = Color.Unspecified
+                                    )
+                                }
                             )
                         }
 

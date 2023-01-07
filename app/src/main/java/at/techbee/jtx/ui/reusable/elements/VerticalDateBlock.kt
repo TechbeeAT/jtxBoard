@@ -46,7 +46,6 @@ fun VerticalDateBlock(
             Text(
                 it,
                 style = Typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
