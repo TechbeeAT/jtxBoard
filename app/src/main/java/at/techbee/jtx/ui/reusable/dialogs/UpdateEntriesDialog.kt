@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.reusable.dialogs
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -22,7 +21,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
@@ -35,9 +33,12 @@ import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 
 
-enum class UpdateEntriesDialogMode { CATEGORIES, RESOURCES }
+enum class UpdateEntriesDialogMode(val stringResource: Int) {
+    CATEGORIES(R.string.categories),
+    RESOURCES(R.string.resources)
+}
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateEntriesDialog(
     allCategoriesLive: LiveData<List<String>>,
@@ -46,8 +47,8 @@ fun UpdateEntriesDialog(
     //currentResources: List<String>
     //current: ICalCollection,
     //onCollectionChanged: (ICalCollection) -> Unit,
-    onCategoriesAdded: (List<String>) -> Unit,
-    onResourcesAdded: (List<String>) -> Unit,
+    onCategoriesChanged: (addedCategories: List<String>, removedCategories: List<String>) -> Unit,
+    onResourcesChanged: (addedResources: List<String>, removedResources: List<String>) -> Unit,
     onDismiss: () -> Unit
 ) {
 
@@ -63,7 +64,6 @@ fun UpdateEntriesDialog(
 
 
     AlertDialog(
-        //properties = DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = { onDismiss() },
         title = { Text(stringResource(R.string.categories))  },
         text = {
@@ -80,16 +80,15 @@ fun UpdateEntriesDialog(
                     verticalAlignment = Alignment.CenterVertically
                 )
                 {
-                    FilterChip(
-                        selected = updateEntriesDialogMode == UpdateEntriesDialogMode.CATEGORIES,
-                        onClick = { updateEntriesDialogMode = UpdateEntriesDialogMode.CATEGORIES },
-                        label =  { Text(stringResource(id = R.string.categories)) }
-                    )
-                    FilterChip(
-                        selected = updateEntriesDialogMode == UpdateEntriesDialogMode.RESOURCES,
-                        onClick = { updateEntriesDialogMode = UpdateEntriesDialogMode.RESOURCES },
-                        label =  { Text(stringResource(id = R.string.resources)) }
-                    )
+                    UpdateEntriesDialogMode.values().forEach {
+                        FilterChip(
+                            selected = updateEntriesDialogMode == it,
+                            onClick = {
+                                updateEntriesDialogMode = it
+                            },
+                            label =  { Text(stringResource(id = it.stringResource)) }
+                        )
+                    }
                 }
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.CATEGORIES) {
@@ -166,8 +165,8 @@ fun UpdateEntriesDialog(
             TextButton(
                 onClick = {
                     when(updateEntriesDialogMode) {
-                        UpdateEntriesDialogMode.CATEGORIES -> onCategoriesAdded(addedCategories)
-                        UpdateEntriesDialogMode.RESOURCES -> onResourcesAdded(addedResources)
+                        UpdateEntriesDialogMode.CATEGORIES -> onCategoriesChanged(addedCategories, removedCategories)
+                        UpdateEntriesDialogMode.RESOURCES -> onResourcesChanged(addedResources, removedResources)
                     }
                     onDismiss()
                 }
@@ -195,8 +194,8 @@ fun UpdateEntriesDialog_Preview() {
         UpdateEntriesDialog(
             allCategoriesLive = MutableLiveData(listOf("cat1", "Hello")),
             allResourcesLive = MutableLiveData(listOf("1234", "aaa")),
-            onCategoriesAdded = { },
-            onResourcesAdded = { },
+            onCategoriesChanged = { _, _ ->  },
+            onResourcesChanged = {  _, _ -> },
             onDismiss = { }
         )
     }

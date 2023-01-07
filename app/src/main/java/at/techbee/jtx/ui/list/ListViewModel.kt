@@ -220,30 +220,53 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
     /**
      * Adds new categories to the selected entries (if they don't exist already)
-     * @param categories that should be added
+     * @param addedCategories that should be added
+     * @param removedCategories that should be deleted
      */
-    fun addCategoriesToSelected(categories: List<String>) {
+    fun updateCategoriesOfSelected(addedCategories: List<String>, removedCategories: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
-            categories.forEach { category ->
+
+            if(removedCategories.isNotEmpty())
+                database.deleteCategoriesForICalObjects(removedCategories, selectedEntries)
+
+            addedCategories.forEach { category ->
                 selectedEntries.forEach { selected ->
                     if(database.getCategoryForICalObjectByName(selected, category) == null)
                         database.insertCategory(Category(icalObjectId = selected, text = category))
                 }
             }
+            makeSelectedDirty()
         }
     }
 
     /**
      * Adds new resources to the selected entries (if they don't exist already)
-     * @param resources that should be added
+     * @param addedResources that should be added
+     * @param removedResources that should be deleted
      */
-    fun addResourcesToSelected(resources: List<String>) {
+    fun updateResourcesToSelected(addedResources: List<String>, removedResources: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
-            resources.forEach { resource ->
+
+            if(removedResources.isNotEmpty())
+                database.deleteResourcesForICalObjects(removedResources, selectedEntries)
+
+            addedResources.forEach { resource ->
                 selectedEntries.forEach { selected ->
                     if(database.getResourceForICalObjectByName(selected, resource) == null)
                         database.insertResource(Resource(icalObjectId = selected, text = resource))
                 }
+            }
+            makeSelectedDirty()
+        }
+    }
+
+    /**
+     * Updates the currently selected entries to make them dirty
+     */
+    private suspend fun makeSelectedDirty() {
+        selectedEntries.forEach { selected ->
+            database.getICalObjectByIdSync(selected)?.let {
+                database.update(it.apply { makeDirty() })
             }
         }
     }
