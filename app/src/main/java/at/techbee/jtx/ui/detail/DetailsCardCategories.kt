@@ -23,7 +23,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -154,7 +153,6 @@ fun DetailsCardCategories(
                             newCategory = newCategoryName
                             onCategoriesUpdated(categories)
                         },
-                        colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                         modifier = Modifier.fillMaxWidth(),
                         isError = newCategory.isNotEmpty(),
                         keyboardOptions = KeyboardOptions(

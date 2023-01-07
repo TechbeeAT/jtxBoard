@@ -120,7 +120,6 @@ fun DetailsCardSubtasks(
                     },
                     label = { Text(stringResource(id = R.string.edit_subtasks_add_helper)) },
                     onValueChange = { newValue -> newSubtaskText = newValue },
-                    //colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                     isError = newSubtaskText.isNotEmpty(),
                     modifier = Modifier
                         .fillMaxWidth()

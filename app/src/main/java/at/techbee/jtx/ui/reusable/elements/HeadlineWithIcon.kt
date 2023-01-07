@@ -33,11 +33,10 @@ fun HeadlineWithIcon(icon: ImageVector, iconDesc: String, text: String, modifier
             icon,
             iconDesc,
             modifier = Modifier.padding(end = 8.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        )
         Text(
             text,
             style = Typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
     }

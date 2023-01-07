@@ -83,7 +83,6 @@ fun ListCardGrid(
                                         modifier = Modifier
                                             .padding(end = 16.dp)
                                             .weight(1f),
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -97,7 +96,6 @@ fun ListCardGrid(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -108,7 +106,7 @@ fun ListCardGrid(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -162,7 +160,6 @@ fun ListCardGrid(
                             text = iCalObject.description?.trim() ?: "",
                             maxLines = 4,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.fillMaxWidth().padding(end = 8.dp)
                         )
                 }

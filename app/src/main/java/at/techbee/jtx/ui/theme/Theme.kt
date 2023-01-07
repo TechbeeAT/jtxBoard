@@ -55,10 +55,32 @@ private val LightColorScheme = lightColorScheme(
     onSurfaceVariant = md_theme_light_onSurfaceVariant
 )
 
+private val ContrastColorScheme = lightColorScheme(
+    primary = Color.Black,
+    secondary = Color(0xFF272727),
+    tertiary = Color(0xFF505050),
+
+    /* Other default colors to override */
+    background = Color.White,
+    surface = Color.White,
+    onSurface = Color.Black,
+    onPrimary = Color.White,
+    primaryContainer = Color.White,
+    onPrimaryContainer = Color.Black,
+    onSecondary = Color.White,
+    secondaryContainer = Color(0xFF272727),
+    onSecondaryContainer = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color.Black,
+    surfaceVariant = Color(0xFFF0F0F0),
+    onSurfaceVariant = Color.Black
+)
+
 @Composable
 fun JtxBoardTheme(
     darkTheme: Boolean = isSystemInDarkTheme(), // Dynamic color is available on Android 12+ and only if purchased
     trueDarkTheme: Boolean = false,
+    contrastTheme: Boolean = false,
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -66,8 +88,9 @@ fun JtxBoardTheme(
     val activity  = view.context as Activity
     val context = LocalContext.current
 
+    // dynamic colors are only loaded in pro!
     val colorScheme = when {
-        // dynamic colors are only loaded in pro!
+        contrastTheme -> ContrastColorScheme
         trueDarkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicDarkColorScheme(context).copy(background = Color.Black, surface = Color.Black)
         trueDarkTheme -> DarkColorScheme.copy(background = Color.Black, surface = Color.Black)
         darkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicDarkColorScheme(context)

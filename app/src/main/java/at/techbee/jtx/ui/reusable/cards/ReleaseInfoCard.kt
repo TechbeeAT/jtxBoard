@@ -35,7 +35,6 @@ fun ReleaseInfoCard(
     val context = LocalContext.current
 
     ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         onClick = {
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 flags += Intent.FLAG_ACTIVITY_NEW_TASK
