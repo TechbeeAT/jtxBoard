@@ -45,7 +45,12 @@ fun ListCardKanban(
         )
     }
 
-    ElevatedCard(modifier = modifier) {
+    ElevatedCard(
+        colors = CardDefaults.cardColors(
+            containerColor = if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+        ),
+        modifier = modifier
+    ) {
 
         Box {
 
