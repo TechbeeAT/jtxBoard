@@ -424,7 +424,10 @@ fun DetailScreenContent(
             AnimatedVisibility(!isEditMode.value) {
                 SelectionContainer {
                     ElevatedCard(
-                        onClick = { isEditMode.value = true },
+                        onClick = {
+                            if(iCalEntity.value?.ICalCollection?.readonly == false)
+                                isEditMode.value = true
+                        },
                         modifier = Modifier.fillMaxWidth()
                     ) {
 
