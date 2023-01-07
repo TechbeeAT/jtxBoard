@@ -115,6 +115,7 @@ class MainActivity2 : AppCompatActivity() {
                     DropdownSettingOption.THEME_TRUE_DARK -> true
                     else -> isSystemInDarkTheme()
                 },
+                contrastTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_CONTRAST,
                 trueDarkTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_TRUE_DARK,
                 dynamicColor = isProPurchased.value
             ) {

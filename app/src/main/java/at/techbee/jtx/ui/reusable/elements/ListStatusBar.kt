@@ -139,16 +139,14 @@ fun ListStatusBar(
                 Icons.Outlined.Link,
                 stringResource(R.string.url),
                 modifier = Modifier
-                    .size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    .size(14.dp)
             )
         if (hasLocation == true)
             Icon(
                 Icons.Outlined.PinDrop,
                 stringResource(R.string.location),
                 modifier = Modifier
-                    .size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    .size(14.dp)
             )
 
         if (hasContact == true)
@@ -157,8 +155,7 @@ fun ListStatusBar(
                 stringResource(R.string.contact),
                 modifier = Modifier
                     .padding(end = 2.dp)
-                    .size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    .size(14.dp)
             )
 
         if (numSubtasks != null && numSubtasks > 0)
@@ -179,15 +176,13 @@ fun ListStatusBar(
             Icon(
                 painter = painterResource(id = R.drawable.ic_readonly),
                 contentDescription = stringResource(id = R.string.readyonly),
-                modifier = Modifier.size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                modifier = Modifier.size(14.dp)
             )
         if (uploadPending == true)
             Icon(
                 Icons.Outlined.CloudSync,
                 stringResource(R.string.upload_pending),
-                modifier = Modifier.size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                modifier = Modifier.size(14.dp)
             )
 
         if (isRecurringOriginal == true || (isRecurringInstance == true && isLinkedRecurringInstance == true))
@@ -195,16 +190,14 @@ fun ListStatusBar(
                 Icons.Outlined.EventRepeat,
                 stringResource(R.string.list_item_recurring),
                 modifier = Modifier
-                    .size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    .size(14.dp)
             )
         if (isRecurringInstance == true && isLinkedRecurringInstance == false)
             Icon(
                 painter = painterResource(R.drawable.ic_recur_exception),
                 stringResource(R.string.list_item_recurring),
                 modifier = Modifier
-                    .size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    .size(14.dp)
             )
     }
 }

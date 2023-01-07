@@ -10,10 +10,7 @@ package at.techbee.jtx.ui.list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,12 +45,8 @@ fun ListCardKanban(
         )
     }
 
-    ElevatedCard(
-        colors = CardDefaults.cardColors(
-            containerColor = if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
-        ),
-        modifier = modifier
-    ) {
+
+    ElevatedCard(modifier = modifier) {
 
         Box {
 
@@ -87,7 +80,6 @@ fun ListCardKanban(
                                         modifier = Modifier
                                             .padding(end = 16.dp)
                                             .weight(1f),
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -101,7 +93,6 @@ fun ListCardKanban(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -112,7 +103,7 @@ fun ListCardKanban(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -158,7 +149,6 @@ fun ListCardKanban(
                                 text = iCalObject.description?.trim() ?: "",
                                 maxLines = 4,
                                 overflow = TextOverflow.Ellipsis,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.fillMaxWidth()
                             )
                     }

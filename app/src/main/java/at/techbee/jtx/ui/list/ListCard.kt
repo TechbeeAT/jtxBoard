@@ -89,12 +89,7 @@ fun ListCard(
     }
 
 
-    ElevatedCard(
-        colors = CardDefaults.cardColors(
-            containerColor = if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
-        ),
-        modifier = modifier
-    ) {
+    ElevatedCard(modifier = modifier) {
 
         Box {
 
@@ -115,7 +110,6 @@ fun ListCard(
                             style = Typography.labelMedium,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(end = 16.dp).weight(0.2f),
                         )
 
@@ -127,7 +121,6 @@ fun ListCard(
                                 modifier = Modifier
                                     .padding(end = 16.dp)
                                     .weight(0.2f),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                             )
@@ -140,7 +133,6 @@ fun ListCard(
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
                                     modifier = Modifier.padding(end = 16.dp).weight(0.2f),
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     maxLines = 1
                                 )
                             }
@@ -150,7 +142,7 @@ fun ListCard(
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
-                                    color = if(ICalObject.isOverdue(iCalObject.percent, it, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = if(ICalObject.isOverdue(iCalObject.percent, it, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                     modifier = Modifier.padding(end = 16.dp).weight(0.2f),
                                     maxLines = 1
                                 )

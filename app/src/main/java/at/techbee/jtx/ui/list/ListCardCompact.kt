@@ -117,7 +117,6 @@ fun ListCardCompact(
                                     modifier = Modifier
                                         .padding(end = 16.dp)
                                         .weight(1f),
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -133,7 +132,6 @@ fun ListCardCompact(
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -144,7 +142,7 @@ fun ListCardCompact(
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
-                                    color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -193,7 +191,6 @@ fun ListCardCompact(
                             text = iCalObject.description?.trim() ?: "",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.fillMaxWidth()
                         )
                 }
@@ -259,7 +256,6 @@ fun ListCardCompact(
 
                     if (subtask.id != subtasks.last().id)
                         Divider(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             thickness = 1.dp,
                             modifier = Modifier.alpha(0.25f)
                         )

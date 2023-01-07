@@ -239,7 +239,6 @@ fun DetailsCardAttendees(
                                 bringIntoViewRequester.bringIntoView()
                             }
                         },
-                        colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                         isError = newAttendee.isNotEmpty(),
                         modifier = Modifier
                             .fillMaxWidth()

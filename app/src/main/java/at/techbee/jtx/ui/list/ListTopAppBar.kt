@@ -47,8 +47,8 @@ fun ListTopAppBar(
                     .clip(RoundedCornerShape(32.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    unfocusedBorderColor = Color.Transparent,
-                    textColor = MaterialTheme.colorScheme.onSurfaceVariant),
+                    unfocusedBorderColor = Color.Transparent
+                ),
                 shape = RoundedCornerShape(32.dp),
                 textStyle = MaterialTheme.typography.bodyLarge,
                 placeholder = { Text(when(module) {
