@@ -564,6 +564,7 @@ Děkujeme vám!"</string>
     <string name="widget_list_configuration_entries_background">"Pozadí záznamů"</string>
     <string name="widget_list_show_description">"Zobrazit popis"</string>
     <string name="settings_select_theme_true_dark">"Pravá tmavá (AMOLED)"</string>
+    <string name="settings_select_theme_contrast">"Kontrast (e-Ink)"</string>
     <string name="settings_journals">"Nastavení Deníků"</string>
     <string name="settings_default_journals_date">"Nastavit výchozí datum a čas pro deníky"</string>
     <string name="settings_default_journals_date_current_day">"Aktuální den"</string>
