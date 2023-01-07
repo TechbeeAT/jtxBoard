@@ -45,7 +45,6 @@ fun ListCardKanban(
         )
     }
 
-
     ElevatedCard(modifier = modifier) {
 
         Box {

@@ -197,6 +197,8 @@ Global Strings -->
     <string name="settings_list">"Configuració per als elements de llista"</string>
     <string name="settings_show_subtasks_in_list">"Mostra les sub-tasques en una llista"</string>
     <string name="settings_show_attachments_in_list">"Mostra els adjunts en una llista"</string>
+    <string name="settings_show_progress_for_subtasks">Mostra el progrés de les subtasques</string>
+    <string name="settings_show_progress_for_maintasks">Mostra el progrés de les tasques principals</string>
     <string name="settings_group_settings_for_subentries">"Configuració per a sub-tasques, sub-notes i sub-diaris"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Mostra sub-tasques de Diaris i Notes en la llista de tasques"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Mostra les sub-notes de Diaris i Tasques en la llista de notes"</string>
