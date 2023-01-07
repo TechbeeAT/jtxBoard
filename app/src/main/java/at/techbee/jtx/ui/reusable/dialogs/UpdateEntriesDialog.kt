@@ -84,7 +84,13 @@ fun UpdateEntriesDialog(
                         FilterChip(
                             selected = updateEntriesDialogMode == it,
                             onClick = {
-                                updateEntriesDialogMode = it
+                                if(updateEntriesDialogMode != it) {
+                                    addedCategories.clear()
+                                    removedCategories.clear()
+                                    addedResources.clear()
+                                    removedResources.clear()
+                                    updateEntriesDialogMode = it
+                                }
                             },
                             label =  { Text(stringResource(id = it.stringResource)) }
                         )
