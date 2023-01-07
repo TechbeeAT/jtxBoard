@@ -144,6 +144,7 @@ fun DetailsScreen(
     Scaffold(
         topBar = {
             DetailsTopAppBar(
+                readonly = icalEntity.value?.ICalCollection?.readonly ?: true,
                 goBack = {
                     goBackRequestedByTopBar.value = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
