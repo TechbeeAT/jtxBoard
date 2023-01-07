@@ -144,6 +144,7 @@ fun DetailsScreen(
     Scaffold(
         topBar = {
             DetailsTopAppBar(
+                readonly = icalEntity.value?.ICalCollection?.readonly ?: true,
                 goBack = {
                     goBackRequestedByTopBar.value = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
@@ -168,7 +169,7 @@ fun DetailsScreen(
                             leadingIcon = { Icon(
                                 imageVector = Icons.Outlined.AddTask,
                                 contentDescription = null,
-                                tint = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                tint = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                             ) }
                         )
                         DropdownMenuItem(
@@ -183,7 +184,7 @@ fun DetailsScreen(
                             leadingIcon = { Icon(
                                 imageVector = Icons.Outlined.NoteAdd,
                                 contentDescription = null,
-                                tint = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                tint = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                             ) }
                         )
 
@@ -200,7 +201,7 @@ fun DetailsScreen(
                                     Icon(
                                         imageVector = Icons.Outlined.Mail,
                                         contentDescription = null,
-                                        tint = Color.Unspecified
+                                        tint = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             )
@@ -214,7 +215,7 @@ fun DetailsScreen(
                                     Icon(
                                         imageVector = Icons.Outlined.Description,
                                         contentDescription = null,
-                                        tint = Color.Unspecified
+                                        tint = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             )
@@ -232,7 +233,7 @@ fun DetailsScreen(
                                     Icon(
                                         imageVector = Icons.Outlined.ContentPaste,
                                         contentDescription = null,
-                                        tint = Color.Unspecified
+                                        tint = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             )

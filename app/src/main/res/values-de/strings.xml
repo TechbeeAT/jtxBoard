@@ -565,6 +565,7 @@ Danke!"</string>
     <string name="widget_list_configuration_entries_background">"Einträge Hintergrund"</string>
     <string name="widget_list_show_description">"Beschreibung anzeigen"</string>
     <string name="settings_select_theme_true_dark">"Richtig dunkel (AMOLED)"</string>
+    <string name="settings_select_theme_contrast">"Kontrast (e-Ink)"</string>
     <string name="settings_journals">"Journal-Einstellungen"</string>
     <string name="settings_default_journals_date">"Standard-Datum/-Uhrzeit für Journale"</string>
     <string name="settings_default_journals_date_current_day">"Aktueller Tag"</string>
