@@ -236,6 +236,26 @@ open class ListViewModel(application: Application, val module: Module) : Android
         }
     }
 
+    fun moveSelectedToNewCollection(newCollection: ICalCollection) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            selectedEntries.forEach { iCalObjectId ->
+                try {
+                    val newId = ICalObject.updateCollectionWithChildren(iCalObjectId, null, newCollection.collectionId, database, getApplication())
+                    // once the newId is there, the local entries can be deleted (or marked as deleted)
+                    ICalObject.deleteItemWithChildren(iCalObjectId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+                    val newICalObject = database.getICalObjectByIdSync(newId)
+                    if (newICalObject?.rrule != null)
+                        newICalObject.recreateRecurring(getApplication())
+                } catch (e: SQLiteConstraintException) {
+                    Log.w("SQLConstraint", "Corrupted ID: $iCalObjectId")
+                    Log.w("SQLConstraint", e.stackTraceToString())
+                    //sqlConstraintException.value = true
+                }
+            }
+        }
+    }
+
     /**
      * Adds new resources to the selected entries (if they don't exist already)
      * @param addedResources that should be added

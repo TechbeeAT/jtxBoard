@@ -40,7 +40,8 @@ enum class UpdateEntriesDialogMode(val stringResource: Int) {
     RESOURCES(R.string.resources),
     STATUS(R.string.status),
     CLASSIFICATION(R.string.classification),
-    PRIORITY(R.string.priority)
+    PRIORITY(R.string.priority),
+    COLLECTION(R.string.collection)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +50,7 @@ fun UpdateEntriesDialog(
     module: Module,
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
+    allCollectionsLive: LiveData<List<ICalCollection>>,
     //currentCategories: List<String>,
     //currentResources: List<String>
     //current: ICalCollection,
@@ -58,11 +60,13 @@ fun UpdateEntriesDialog(
     onStatusChanged: (Status) -> Unit,
     onClassificationChanged: (Classification) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
+    onCollectionChanged: (ICalCollection) -> Unit,
     onDismiss: () -> Unit
 ) {
 
     val allCategories by allCategoriesLive.observeAsState(emptyList())
     val allResources by allResourcesLive.observeAsState(emptyList())
+    val allCollections by allCollectionsLive.observeAsState(emptyList())
 
     val addedCategories = remember { mutableStateListOf<String>() }
     val removedCategories = remember { mutableStateListOf<String>() }
@@ -71,6 +75,7 @@ fun UpdateEntriesDialog(
     var newStatus by remember { mutableStateOf(Status.NO_STATUS) }
     var newClassification by remember { mutableStateOf(Classification.NO_CLASSIFICATION) }
     var newPriority by remember { mutableStateOf<Int?>(null) }
+    var newCollection by remember { mutableStateOf<ICalCollection?>(null) }
 
     var updateEntriesDialogMode by remember { mutableStateOf(UpdateEntriesDialogMode.CATEGORIES) }
 
@@ -243,6 +248,23 @@ fun UpdateEntriesDialog(
                         }
                     }
                 }
+
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.COLLECTION) {
+                    FlowRow(
+                        mainAxisSpacing = 8.dp,
+                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    {
+                        allCollections.forEach { collection ->
+                            InputChip(
+                                onClick = { newCollection = collection },
+                                label = { Text(collection.displayName ?: collection.collectionId.toString()) },
+                                selected = newCollection == collection,
+                            )
+                        }
+                    }
+                }
             }
         },
         confirmButton = {
@@ -254,6 +276,7 @@ fun UpdateEntriesDialog(
                         UpdateEntriesDialogMode.STATUS -> onStatusChanged(newStatus)
                         UpdateEntriesDialogMode.CLASSIFICATION -> onClassificationChanged(newClassification)
                         UpdateEntriesDialogMode.PRIORITY -> onPriorityChanged(if(newPriority == 0) null else newPriority)
+                        UpdateEntriesDialogMode.COLLECTION -> newCollection?.let { onCollectionChanged(it) }
                     }
                     onDismiss()
                 }
@@ -282,11 +305,13 @@ fun UpdateEntriesDialog_Preview() {
             module = Module.JOURNAL,
             allCategoriesLive = MutableLiveData(listOf("cat1", "Hello")),
             allResourcesLive = MutableLiveData(listOf("1234", "aaa")),
+            allCollectionsLive = MutableLiveData(listOf(ICalCollection())),
             onCategoriesChanged = { _, _ -> },
             onResourcesChanged = { _, _ -> },
             onStatusChanged = {},
             onClassificationChanged = {},
             onPriorityChanged = {},
+            onCollectionChanged = {},
             onDismiss = { }
         )
     }
