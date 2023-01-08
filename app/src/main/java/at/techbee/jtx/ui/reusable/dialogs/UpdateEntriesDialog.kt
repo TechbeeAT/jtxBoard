@@ -29,18 +29,23 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
+import at.techbee.jtx.database.*
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 
 
 enum class UpdateEntriesDialogMode(val stringResource: Int) {
     CATEGORIES(R.string.categories),
-    RESOURCES(R.string.resources)
+    RESOURCES(R.string.resources),
+    STATUS(R.string.status),
+    CLASSIFICATION(R.string.classification),
+    PRIORITY(R.string.priority)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateEntriesDialog(
+    module: Module,
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
     //currentCategories: List<String>,
@@ -49,6 +54,9 @@ fun UpdateEntriesDialog(
     //onCollectionChanged: (ICalCollection) -> Unit,
     onCategoriesChanged: (addedCategories: List<String>, removedCategories: List<String>) -> Unit,
     onResourcesChanged: (addedResources: List<String>, removedResources: List<String>) -> Unit,
+    onStatusChanged: (Status) -> Unit,
+    onClassificationChanged: (Classification?) -> Unit,
+    onPriorityChanged: (Int?) -> Unit,
     onDismiss: () -> Unit
 ) {
 
@@ -59,16 +67,21 @@ fun UpdateEntriesDialog(
     val removedCategories = remember { mutableStateListOf<String>() }
     val addedResources = remember { mutableStateListOf<String>() }
     val removedResources = remember { mutableStateListOf<String>() }
+    var newStatus by remember { mutableStateOf<Status>(Status.NO_STATUS) }
+    val newClassification by remember { mutableStateOf<Classification?>(null) }
+    val newPriority by remember { mutableStateOf<Int?>(null) }
 
     var updateEntriesDialogMode by remember { mutableStateOf(UpdateEntriesDialogMode.CATEGORIES) }
 
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text(stringResource(R.string.categories))  },
+        title = { Text(stringResource(R.string.list_update_entries_dialog_title)) },
         text = {
             Column(
-                modifier = Modifier.padding(8.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -84,7 +97,7 @@ fun UpdateEntriesDialog(
                         FilterChip(
                             selected = updateEntriesDialogMode == it,
                             onClick = {
-                                if(updateEntriesDialogMode != it) {
+                                if (updateEntriesDialogMode != it) {
                                     addedCategories.clear()
                                     removedCategories.clear()
                                     addedResources.clear()
@@ -92,7 +105,7 @@ fun UpdateEntriesDialog(
                                     updateEntriesDialogMode = it
                                 }
                             },
-                            label =  { Text(stringResource(id = it.stringResource)) }
+                            label = { Text(stringResource(id = it.stringResource)) }
                         )
                     }
                 }
@@ -105,7 +118,7 @@ fun UpdateEntriesDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
-                        allCategories.forEach {category ->
+                        allCategories.forEach { category ->
                             InputChip(
                                 onClick = {
                                     when {
@@ -119,14 +132,18 @@ fun UpdateEntriesDialog(
                                 },
                                 label = { Text(category) },
                                 leadingIcon = {
-                                    if(removedCategories.contains(category))
+                                    if (removedCategories.contains(category))
                                         Icon(Icons.Outlined.LabelOff, stringResource(id = R.string.delete), tint = MaterialTheme.colorScheme.error)
                                     else
-                                        Icon(Icons.Outlined.NewLabel, stringResource(id = R.string.add), tint = if(addedCategories.contains(category)) MaterialTheme.colorScheme.primary else LocalContentColor.current)
+                                        Icon(
+                                            Icons.Outlined.NewLabel,
+                                            stringResource(id = R.string.add),
+                                            tint = if (addedCategories.contains(category)) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                                        )
                                 },
                                 selected = false,
                                 modifier = Modifier
-                                    .alpha(if(addedCategories.contains(category) || removedCategories.contains(category)) 1f else 0.4f)
+                                    .alpha(if (addedCategories.contains(category) || removedCategories.contains(category)) 1f else 0.4f)
                             )
                         }
                     }
@@ -134,7 +151,6 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.RESOURCES) {
                     FlowRow(
-                        //horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         mainAxisSpacing = 8.dp,
                         mainAxisAlignment = FlowMainAxisAlignment.Center,
                         modifier = Modifier.fillMaxWidth()
@@ -157,10 +173,33 @@ fun UpdateEntriesDialog(
                                     if (removedResources.contains(resource))
                                         Icon(Icons.Outlined.WorkOff, stringResource(id = R.string.delete), tint = MaterialTheme.colorScheme.error)
                                     else
-                                        Icon(Icons.Outlined.WorkOutline, stringResource(id = R.string.add), tint = if(addedResources.contains(resource)) MaterialTheme.colorScheme.primary else LocalContentColor.current)
+                                        Icon(
+                                            Icons.Outlined.WorkOutline,
+                                            stringResource(id = R.string.add),
+                                            tint = if (addedResources.contains(resource)) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                                        )
                                 },
                                 selected = false,
-                                modifier = Modifier.alpha(if(addedResources.contains(resource) || removedResources.contains(resource)) 1f else 0.4f)
+                                modifier = Modifier.alpha(if (addedResources.contains(resource) || removedResources.contains(resource)) 1f else 0.4f)
+                            )
+                        }
+                    }
+                }
+
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.STATUS) {
+
+                    FlowRow(
+                        mainAxisSpacing = 8.dp,
+                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    {
+
+                        Status.valuesFor(module).forEach { status ->
+                            InputChip(
+                                onClick = { newStatus = status },
+                                label = { Text(stringResource(id = status.stringResource)) },
+                                selected = status == newStatus,
                             )
                         }
                     }
@@ -170,9 +209,12 @@ fun UpdateEntriesDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    when(updateEntriesDialogMode) {
+                    when (updateEntriesDialogMode) {
                         UpdateEntriesDialogMode.CATEGORIES -> onCategoriesChanged(addedCategories, removedCategories)
                         UpdateEntriesDialogMode.RESOURCES -> onResourcesChanged(addedResources, removedResources)
+                        UpdateEntriesDialogMode.STATUS -> onStatusChanged(newStatus)
+                        UpdateEntriesDialogMode.CLASSIFICATION -> onClassificationChanged(newClassification)
+                        UpdateEntriesDialogMode.PRIORITY -> onPriorityChanged(newPriority)
                     }
                     onDismiss()
                 }
@@ -198,10 +240,14 @@ fun UpdateEntriesDialog_Preview() {
     MaterialTheme {
 
         UpdateEntriesDialog(
+            module = Module.JOURNAL,
             allCategoriesLive = MutableLiveData(listOf("cat1", "Hello")),
             allResourcesLive = MutableLiveData(listOf("1234", "aaa")),
-            onCategoriesChanged = { _, _ ->  },
-            onResourcesChanged = {  _, _ -> },
+            onCategoriesChanged = { _, _ -> },
+            onResourcesChanged = { _, _ -> },
+            onStatusChanged = {},
+            onClassificationChanged = {},
+            onPriorityChanged = {},
             onDismiss = { }
         )
     }

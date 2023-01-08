@@ -171,8 +171,8 @@ fun ListScreenCompact_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.PUBLIC.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.PUBLIC.classification
             dtstart = null
             due = null
             numAttachments = 0
@@ -186,8 +186,8 @@ fun ListScreenCompact_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.CONFIDENTIAL.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
             summary =
@@ -195,7 +195,7 @@ fun ListScreenCompact_TODO() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenCompact(
-            groupedList = listOf(icalobject, icalobject2).groupBy { StatusJournal.getStringResource(application, it.status) },
+            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
             subtasksLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
@@ -224,8 +224,8 @@ fun ListScreenCompact_JOURNAL() {
             component = Component.VJOURNAL.name
             module = Module.JOURNAL.name
             percent = 89
-            status = StatusJournal.FINAL.name
-            classification = Classification.PUBLIC.name
+            status = Status.FINAL.status
+            classification = Classification.PUBLIC.classification
             dtstart = null
             due = null
             numAttachments = 0
@@ -239,8 +239,8 @@ fun ListScreenCompact_JOURNAL() {
             component = Component.VJOURNAL.name
             module = Module.JOURNAL.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.CONFIDENTIAL.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
             summary =
@@ -248,7 +248,7 @@ fun ListScreenCompact_JOURNAL() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenCompact(
-            groupedList = listOf(icalobject, icalobject2).groupBy { StatusJournal.getStringResource(application, it.status) },
+            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
             subtasksLive = MutableLiveData(emptyMap()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),

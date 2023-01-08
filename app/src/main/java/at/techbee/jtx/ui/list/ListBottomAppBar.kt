@@ -56,10 +56,9 @@ fun ListBottomAppBar(
 
     val isFilterActive = listSettings.searchCategories.value.isNotEmpty()
                 //|| searchOrganizers.value.isNotEmpty()
-            || (module == Module.JOURNAL && listSettings.searchStatusJournal.value.isNotEmpty())
-            || (module == Module.NOTE && listSettings.searchStatusJournal.value.isNotEmpty())
-            || (module == Module.TODO && listSettings.searchStatusTodo.value.isNotEmpty())
-            || listSettings.searchClassification.value.isNotEmpty() || listSettings.searchCollection.value.isNotEmpty()
+            || (listSettings.searchStatus.value.isNotEmpty())
+            || listSettings.searchClassification.value.isNotEmpty()
+            || listSettings.searchCollection.value.isNotEmpty()
             || listSettings.searchAccount.value.isNotEmpty()
             || listSettings.isExcludeDone.value
             || listSettings.isFilterStartInPast.value
@@ -71,8 +70,6 @@ fun ListBottomAppBar(
             || (module == Module.TODO && listSettings.isFilterDueTomorrow.value)
             || (module == Module.TODO && listSettings.isFilterDueFuture.value)
             || (module == Module.TODO && listSettings.isFilterNoDatesSet.value)
-            || (module == Module.TODO && listSettings.isFilterNoStatusSet.value)
-            || (module == Module.TODO && listSettings.isFilterNoClassificationSet.value)
 
 
     if(showGoToDatePicker) {

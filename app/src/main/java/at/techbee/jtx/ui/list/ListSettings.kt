@@ -12,9 +12,7 @@ package at.techbee.jtx.ui.list
 import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import at.techbee.jtx.database.Classification
-import at.techbee.jtx.database.StatusJournal
-import at.techbee.jtx.database.StatusTodo
+import at.techbee.jtx.database.*
 import at.techbee.jtx.widgets.ListWidgetConfig
 
 
@@ -23,8 +21,7 @@ class ListSettings {
     var searchCategories: MutableState<List<String>> = mutableStateOf(emptyList())
     var searchResources: MutableState<List<String>> = mutableStateOf(emptyList())
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
-    var searchStatusTodo: MutableState<List<StatusTodo>> = mutableStateOf(emptyList())
-    var searchStatusJournal: MutableState<List<StatusJournal>> = mutableStateOf(emptyList())
+    var searchStatus: MutableState<List<Status>> = mutableStateOf(emptyList())
     var searchClassification: MutableState<List<Classification>> = mutableStateOf(emptyList())
     var searchCollection: MutableState<List<String>> = mutableStateOf(emptyList())
     var searchAccount: MutableState<List<String>> = mutableStateOf(emptyList())
@@ -43,8 +40,6 @@ class ListSettings {
     var isFilterStartTomorrow: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
-    var isFilterNoStatusSet: MutableState<Boolean> = mutableStateOf(false)
-    var isFilterNoClassificationSet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoCategorySet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoResourceSet: MutableState<Boolean> = mutableStateOf(false)
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
@@ -66,8 +61,9 @@ class ListSettings {
         private const val PREFS_CATEGORIES = "prefsCategories"
         private const val PREFS_RESOURCES = "prefsResources"
         private const val PREFS_CLASSIFICATION = "prefsClassification"
-        private const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
-        private const val PREFS_STATUS_TODO = "prefsStatusTodo"
+        private const val PREFS_STATUS = "prefsStatus"
+        @Deprecated("Use PREFS_STATUS") private const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
+        @Deprecated("Use PREFS_STATUS") private const val PREFS_STATUS_TODO = "prefsStatusTodo"
         private const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
         private const val PREFS_ORDERBY = "prefsOrderBy"
         private const val PREFS_SORTORDER = "prefsSortOrder"
@@ -83,8 +79,8 @@ class ListSettings {
         private const val PREFS_FILTER_START_TODAY = "prefsFilterStartToday"
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
-        private const val PREFS_FILTER_NO_STATUS_SET = "prefsFilterNoStatusSet"
-        private const val PREFS_FILTER_NO_CLASSIFICATION_SET = "prefsFilterNoClassificationSet"
+        @Deprecated("Use PREFS_STATUS") private const val PREFS_FILTER_NO_STATUS_SET = "prefsFilterNoStatusSet"
+        @Deprecated("Use PREFS_CLASSIFICATION") private const val PREFS_FILTER_NO_CLASSIFICATION_SET = "prefsFilterNoClassificationSet"
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
         private const val PREFS_FLAT_VIEW = "prefsFlatView"
@@ -110,16 +106,32 @@ class ListSettings {
             isFilterStartTomorrow.value = prefs.getBoolean(PREFS_FILTER_START_TOMORROW, false)
             isFilterStartFuture.value = prefs.getBoolean(PREFS_FILTER_START_FUTURE, false)
             isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
-            isFilterNoStatusSet.value = prefs.getBoolean(PREFS_FILTER_NO_STATUS_SET, false)
-            isFilterNoClassificationSet.value = prefs.getBoolean(PREFS_FILTER_NO_CLASSIFICATION_SET, false)
             isFilterNoCategorySet.value = prefs.getBoolean(PREFS_FILTER_NO_CATEGORY_SET, false)
             isFilterNoResourceSet.value = prefs.getBoolean(PREFS_FILTER_NO_RESOURCE_SET, false)
 
             //searchOrganizers =
             searchCategories.value = prefs.getStringSet(PREFS_CATEGORIES, null)?.toList() ?: emptyList()
             searchResources.value = prefs.getStringSet(PREFS_RESOURCES, null)?.toList() ?: emptyList()
-            searchStatusJournal.value = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_STATUS_JOURNAL, null))
-            searchStatusTodo.value = StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_STATUS_TODO, null))
+            searchStatus.value = mutableListOf<Status>().apply {
+                addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
+
+                //Legacy handling
+                prefs.getStringSet(PREFS_STATUS_JOURNAL, null)?.forEach { legacyStatusJournal ->
+                    Status.valuesFor(Module.JOURNAL).find { it.status == legacyStatusJournal }?.let { add(it) }
+                }
+                prefs.getStringSet(PREFS_STATUS_TODO, null)?.forEach { legacyStatusTodo ->
+                    Status.valuesFor(Module.TODO).find { it.status == legacyStatusTodo }?.let { add(it) }
+                }
+                if(prefs.getBoolean(PREFS_FILTER_NO_STATUS_SET, false))
+                    add(Status.NO_STATUS)
+            }
+
+            searchClassification.value = mutableListOf<Classification>().apply {
+                addAll(Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null)))
+                //Legacy handling
+                if(prefs.getBoolean(PREFS_FILTER_NO_CLASSIFICATION_SET, false))
+                    add(Classification.NO_CLASSIFICATION)
+            }
             searchCollection.value = prefs.getStringSet(PREFS_COLLECTION, null)?.toList() ?: emptyList()
             searchAccount.value = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
             orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
@@ -145,16 +157,29 @@ class ListSettings {
             isFilterStartTomorrow.value = listWidgetConfig.isFilterStartTomorrow
             isFilterStartFuture.value = listWidgetConfig.isFilterStartFuture
             isFilterNoDatesSet.value = listWidgetConfig.isFilterNoDatesSet
-            isFilterNoStatusSet.value = listWidgetConfig.isFilterNoStatusSet
-            isFilterNoClassificationSet.value = listWidgetConfig.isFilterNoClassificationSet
             isFilterNoCategorySet.value = listWidgetConfig.isFilterNoCategorySet
             isFilterNoResourceSet.value = listWidgetConfig.isFilterNoResourceSet
 
             searchCategories.value = listWidgetConfig.searchCategories
             searchResources.value = listWidgetConfig.searchResources
-            searchStatusJournal.value = listWidgetConfig.searchStatusJournal
-            searchStatusTodo.value = listWidgetConfig.searchStatusTodo
-            searchClassification.value = listWidgetConfig.searchClassification
+            searchStatus.value = mutableListOf<Status>().apply {
+                addAll(listWidgetConfig.searchStatus)
+                //Legacy handling
+                listWidgetConfig.searchStatusJournal.forEach { legacyStatusJournal ->
+                    Status.valuesFor(Module.JOURNAL).find { it.status == legacyStatusJournal.name }?.let { add(it) }
+                }
+                listWidgetConfig.searchStatusTodo.forEach { legacyStatusTodo ->
+                    Status.valuesFor(Module.TODO).find { it.status == legacyStatusTodo.name }?.let { add(it) }
+                }
+                if(listWidgetConfig.isFilterNoStatusSet)
+                    add(Status.NO_STATUS)
+            }
+            searchClassification.value = mutableListOf<Classification>().apply {
+                addAll(listWidgetConfig.searchClassification)
+                //Legacy handling
+                if(listWidgetConfig.isFilterNoClassificationSet)
+                    add(Classification.NO_CLASSIFICATION)
+            }
             searchCollection.value = listWidgetConfig.searchCollection
             searchAccount.value = listWidgetConfig.searchAccount
             orderBy.value = listWidgetConfig.orderBy
@@ -186,8 +211,6 @@ class ListSettings {
             putBoolean(PREFS_FILTER_START_TOMORROW, isFilterStartTomorrow.value)
             putBoolean(PREFS_FILTER_START_FUTURE, isFilterStartFuture.value)
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
-            putBoolean(PREFS_FILTER_NO_STATUS_SET, isFilterNoStatusSet.value)
-            putBoolean(PREFS_FILTER_NO_CLASSIFICATION_SET, isFilterNoClassificationSet.value)
             putBoolean(PREFS_FILTER_NO_CATEGORY_SET, isFilterNoCategorySet.value)
             putBoolean(PREFS_FILTER_NO_RESOURCE_SET, isFilterNoResourceSet.value)
 
@@ -200,8 +223,7 @@ class ListSettings {
 
             putStringSet(PREFS_CATEGORIES, searchCategories.value.toSet())
             putStringSet(PREFS_RESOURCES, searchResources.value.toSet())
-            putStringSet(PREFS_STATUS_JOURNAL, StatusJournal.getStringSetFromList(searchStatusJournal.value))
-            putStringSet(PREFS_STATUS_TODO, StatusTodo.getStringSetFromList(searchStatusTodo.value))
+            putStringSet(PREFS_STATUS, Status.getStringSetFromList(searchStatus.value))
             putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(searchClassification.value))
             putStringSet(PREFS_COLLECTION, searchCollection.value.toSet())
             putStringSet(PREFS_ACCOUNT, searchAccount.value.toSet())
@@ -211,6 +233,12 @@ class ListSettings {
 
             putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
 
+            //Legacy handling
+            remove(PREFS_STATUS_JOURNAL)
+            remove(PREFS_STATUS_TODO)
+            remove(PREFS_FILTER_NO_STATUS_SET)
+            remove(PREFS_FILTER_NO_CLASSIFICATION_SET)
+
         }.apply()
     }
 
@@ -218,8 +246,7 @@ class ListSettings {
         searchCategories.value = emptyList()
         searchResources.value = emptyList()
         //searchOrganizer = emptyList()
-        searchStatusJournal.value = emptyList()
-        searchStatusTodo.value = emptyList()
+        searchStatus.value = emptyList()
         searchClassification.value = emptyList()
         searchCollection.value = emptyList()
         searchAccount.value = emptyList()
@@ -233,8 +260,6 @@ class ListSettings {
         isFilterDueTomorrow.value = false
         isFilterDueFuture.value = false
         isFilterNoDatesSet.value = false
-        isFilterNoStatusSet.value = false
-        isFilterNoClassificationSet.value = false
         isFilterNoCategorySet.value = false
         isFilterNoResourceSet.value = false
     }

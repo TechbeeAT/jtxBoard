@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -55,25 +56,25 @@ fun ListScreenKanban(
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
-    onStatusChanged: (itemid: Long, status: StatusJournal, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
+    onStatusChanged: (itemid: Long, status: Status, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
 
     val context = LocalContext.current
     val scrollId by scrollOnceId.observeAsState(null)
-    val statusColumns = if(module == Module.TODO) setOf(StatusTodo.`NEEDS-ACTION`.name, StatusTodo.`IN-PROCESS`.name, StatusTodo.COMPLETED.name) else setOf(StatusJournal.DRAFT.name, StatusJournal.FINAL.name)
+    val statusColumns = Status.valuesFor(module)
 
     Row(modifier = Modifier.fillMaxWidth()) {
 
         statusColumns.forEach { status ->
 
             val listState = rememberLazyListState()
-            val listFilteredByStatus = list.value.filter { it.status == status      // below we handle also empty status for todos
-                    || (it.status == null && it.component == Component.VTODO.name && (it.percent == null || it.percent == 0) && status == StatusTodo.`NEEDS-ACTION`.name)
-                    || (it.status == null && it.component == Component.VTODO.name && it.percent in 1..99 && status == StatusTodo.`IN-PROCESS`.name)
-                    || (it.status == null && it.component == Component.VTODO.name && it.percent == 100 && status == StatusTodo.COMPLETED.name)
-                    || (it.status == null && it.component == Component.VJOURNAL.name && status == StatusJournal.FINAL.name)
+            val listFilteredByStatus = list.value.filter { it.status == status.status      // below we handle also empty status for todos
+                    || (it.status == null && it.component == Component.VTODO.name && (it.percent == null || it.percent == 0) && status == Status.NEEDS_ACTION)
+                    || (it.status == null && it.component == Component.VTODO.name && it.percent in 1..99 && status == Status.IN_PROCESS)
+                    || (it.status == null && it.component == Component.VTODO.name && it.percent == 100 && status == Status.COMPLETED)
+                    || (it.status == null && it.component == Component.VJOURNAL.name && status == Status.FINAL)
             }
             if(scrollId != null) {
                 LaunchedEffect(list) {
@@ -97,11 +98,11 @@ fun ListScreenKanban(
 
                 stickyHeader {
                     Text(
-                        if(module == Module.TODO)
-                            StatusTodo.getStringResource(LocalContext.current, status)
-                        else
-                            StatusJournal.getStringResource(LocalContext.current, status),
-                        modifier = Modifier.align(Alignment.CenterVertically).background(MaterialTheme.colorScheme.background).fillMaxWidth(),
+                        text = stringResource(id = status.stringResource),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .background(MaterialTheme.colorScheme.background)
+                            .fillMaxWidth(),
                         style = MaterialTheme.typography.titleSmall,
                         textAlign = TextAlign.Center
                     )
@@ -134,24 +135,44 @@ fun ListScreenKanban(
                             .draggable(
                                 orientation = Orientation.Horizontal,
                                 state = rememberDraggableState { delta ->
-                                    if(iCalObject.isReadOnly)   // no drag state for read only objects!
+                                    if (iCalObject.isReadOnly)   // no drag state for read only objects!
                                         return@rememberDraggableState
-                                    if(abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
+                                    if (abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
                                         offsetX += delta
                                 },
                                 onDragStopped = {
-                                    if(abs(offsetX) > maxOffset / 2) {
-                                        if(iCalObject.component == Component.VTODO.name) {
+                                    if (abs(offsetX) > maxOffset / 2) {
+                                        if (iCalObject.component == Component.VTODO.name) {
                                             when {
-                                                (iCalObject.percent ?: 0) == 0 && offsetX > 0f -> onProgressChanged(iCalObject.id, 1, iCalObject.isLinkedRecurringInstance, true)   // positive change, from Needs Action to In Process
-                                                (iCalObject.percent ?: 0) in 1..99 && offsetX > 0f -> onProgressChanged(iCalObject.id, 100, iCalObject.isLinkedRecurringInstance, true)   // positive change, from In Process to Completed
-                                                (iCalObject.percent ?: 0) == 100 && offsetX < 0f -> onProgressChanged(iCalObject.id, 99, iCalObject.isLinkedRecurringInstance, true)   // negative change, from Completed to In Process
-                                                (iCalObject.percent ?: 0) in 1..99 && offsetX < 0f -> onProgressChanged(iCalObject.id, 0, iCalObject.isLinkedRecurringInstance, true)   // negative change, from In Process to Needs Action
+                                                (iCalObject.percent ?: 0) == 0 && offsetX > 0f -> onProgressChanged(
+                                                    iCalObject.id,
+                                                    1,
+                                                    iCalObject.isLinkedRecurringInstance,
+                                                    true
+                                                )   // positive change, from Needs Action to In Process
+                                                (iCalObject.percent ?: 0) in 1..99 && offsetX > 0f -> onProgressChanged(
+                                                    iCalObject.id,
+                                                    100,
+                                                    iCalObject.isLinkedRecurringInstance,
+                                                    true
+                                                )   // positive change, from In Process to Completed
+                                                (iCalObject.percent ?: 0) == 100 && offsetX < 0f -> onProgressChanged(
+                                                    iCalObject.id,
+                                                    99,
+                                                    iCalObject.isLinkedRecurringInstance,
+                                                    true
+                                                )   // negative change, from Completed to In Process
+                                                (iCalObject.percent ?: 0) in 1..99 && offsetX < 0f -> onProgressChanged(
+                                                    iCalObject.id,
+                                                    0,
+                                                    iCalObject.isLinkedRecurringInstance,
+                                                    true
+                                                )   // negative change, from In Process to Needs Action
                                             }
                                         } else {   // VJOURNAL
                                             when {
-                                                (iCalObject.status == StatusJournal.DRAFT.name && offsetX > 0f) -> onStatusChanged(iCalObject.id, StatusJournal.FINAL, iCalObject.isLinkedRecurringInstance, true)
-                                                (iCalObject.status == StatusJournal.FINAL.name && offsetX < 0f) -> onStatusChanged(iCalObject.id, StatusJournal.DRAFT, iCalObject.isLinkedRecurringInstance, true)
+                                                (iCalObject.status == Status.DRAFT.status && offsetX > 0f) -> onStatusChanged(iCalObject.id, Status.FINAL, iCalObject.isLinkedRecurringInstance, true)
+                                                (iCalObject.status == Status.FINAL.status && offsetX < 0f) -> onStatusChanged(iCalObject.id, Status.DRAFT, iCalObject.isLinkedRecurringInstance, true)
                                             }
                                         }
                                         // make a short vibration
@@ -189,7 +210,7 @@ fun ListScreenKanban_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.PUBLIC.name
             dtstart = null
             due = null
@@ -203,7 +224,7 @@ fun ListScreenKanban_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`NEEDS-ACTION`.name
+            status = Status.NEEDS_ACTION.status
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
@@ -235,7 +256,7 @@ fun ListScreenKanban_JOURNAL() {
             component = Component.VJOURNAL.name
             module = Module.JOURNAL.name
             percent = 89
-            status = StatusJournal.FINAL.name
+            status = Status.FINAL.status
             classification = Classification.PUBLIC.name
             dtstart = null
             due = null
@@ -249,7 +270,7 @@ fun ListScreenKanban_JOURNAL() {
             component = Component.VJOURNAL.name
             module = Module.JOURNAL.name
             percent = 89
-            status = StatusJournal.DRAFT.name
+            status = Status.DRAFT.status
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()

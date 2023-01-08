@@ -120,8 +120,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             module = module,
             searchCategories = listSettings.searchCategories.value,
             searchResources = listSettings.searchResources.value,
-            searchStatusTodo =  listSettings.searchStatusTodo.value,
-            searchStatusJournal = listSettings.searchStatusJournal.value,
+            searchStatus = listSettings.searchStatus.value,
             searchClassification = listSettings.searchClassification.value,
             searchCollection = listSettings.searchCollection.value,
             searchAccount = listSettings.searchAccount.value,
@@ -139,8 +138,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value,
             isFilterStartFuture = listSettings.isFilterStartFuture.value,
             isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
-            isFilterNoStatusSet = listSettings.isFilterNoStatusSet.value,
-            isFilterNoClassificationSet = listSettings.isFilterNoClassificationSet.value,
             isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value,
             isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value,
             searchText = listSettings.searchText.value,
@@ -179,13 +176,13 @@ open class ListViewModel(application: Application, val module: Module) : Android
             toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
     }
 
-    fun updateStatusJournal(itemId: Long, newStatusJournal: StatusJournal, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
+    fun updateStatusJournal(itemId: Long, newStatus: Status, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
             ICalObject.makeRecurringException(currentItem, database)
             val item = database.getSync(itemId)?.property ?: return@launch
-            item.status = newStatusJournal.name
+            item.status = newStatus.status
             database.update(item)
             SyncUtil.notifyContentObservers(getApplication())
             if(scrollOnce)

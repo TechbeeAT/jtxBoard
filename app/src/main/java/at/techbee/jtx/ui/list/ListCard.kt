@@ -161,7 +161,6 @@ fun ListCard(
                         isRecurringOriginal = iCalObject.isRecurringOriginal,
                         isRecurringInstance = iCalObject.isRecurringInstance,
                         isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
-                        component = iCalObject.component,
                         modifier = Modifier.padding(end = 8.dp)
                     )
                 }
@@ -196,7 +195,7 @@ fun ListCard(
                         val summarySize =
                             if (iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
                         val summaryTextDecoration =
-                            if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None
+                            if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -239,13 +238,13 @@ fun ListCard(
                             || iCalObject.numAlarms > 0 || iCalObject.contact?.isNotEmpty() == true
                             || iCalObject.url?.isNotEmpty() == true || iCalObject.location?.isNotEmpty() == true
                             || iCalObject.priority in 1..9 || iCalObject.status in listOf(
-                                StatusJournal.CANCELLED.name,
-                                StatusJournal.DRAFT.name,
-                                StatusTodo.CANCELLED.name
+                                Status.CANCELLED.status,
+                                Status.DRAFT.status,
+                                Status.CANCELLED.status
                             )
                             || iCalObject.classification in listOf(
-                                Classification.CONFIDENTIAL.name,
-                                Classification.PRIVATE.name
+                                Classification.CONFIDENTIAL.classification,
+                                Classification.PRIVATE.classification
                             )
                         )
                             ListStatusBar(
@@ -257,7 +256,6 @@ fun ListCard(
                                 hasURL = iCalObject.url?.isNotBlank() == true,
                                 hasLocation = iCalObject.location?.isNotBlank() == true,
                                 hasContact = iCalObject.contact?.isNotBlank() == true,
-                                component = iCalObject.component,
                                 status = iCalObject.status,
                                 classification = iCalObject.classification,
                                 priority = iCalObject.priority,
@@ -512,7 +510,7 @@ fun ICalObjectListCardPreview_NOTE() {
             module = Module.NOTE.name
             dtstart = null
             dtstartTimezone = null
-            status = StatusJournal.CANCELLED.name
+            status = Status.CANCELLED.status
         }
         ListCard(
             icalobject,
@@ -546,7 +544,7 @@ fun ICalObjectListCardPreview_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
@@ -587,7 +585,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             uploadPending = false
             isRecurringInstance = false
@@ -631,7 +629,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             uploadPending = false
             isRecurringInstance = true
@@ -675,7 +673,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             component = Component.VJOURNAL.name
             module = Module.NOTE.name
             percent = 100
-            status = StatusJournal.FINAL.name
+            status = Status.FINAL.status
             classification = Classification.PUBLIC.name
             uploadPending = false
             isRecurringInstance = true

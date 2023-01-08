@@ -59,13 +59,13 @@ fun ListCardCompact(
                     || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.url?.isNotEmpty() == true || iCalObject.location?.isNotEmpty() == true
                     || iCalObject.contact?.isNotEmpty() == true || iCalObject.isRecurringInstance || iCalObject.isRecurringOriginal || iCalObject.isLinkedRecurringInstance
                     || iCalObject.priority in 1..9 || iCalObject.status in listOf(
-                StatusJournal.CANCELLED.name,
-                StatusJournal.DRAFT.name,
-                StatusTodo.CANCELLED.name
+                Status.CANCELLED.status,
+                Status.DRAFT.status,
+                Status.CANCELLED.status
             )
                     || iCalObject.classification in listOf(
-                Classification.CONFIDENTIAL.name,
-                Classification.PRIVATE.name
+                Classification.CONFIDENTIAL.classification,
+                Classification.PRIVATE.classification
             )
         )
     }
@@ -177,7 +177,7 @@ fun ListCardCompact(
                         if (iCalObject.summary?.isNotBlank() == true)
                             Text(
                                 text = iCalObject.summary?.trim() ?: "",
-                                textDecoration = if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None,
+                                textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight = FontWeight.Bold,
@@ -227,7 +227,6 @@ fun ListCardCompact(
                     isRecurringOriginal = iCalObject.isRecurringOriginal,
                     isRecurringInstance = iCalObject.isRecurringInstance,
                     isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
-                    component = iCalObject.component,
                     status = iCalObject.status,
                     classification = iCalObject.classification,
                     priority = iCalObject.priority,
@@ -318,7 +317,7 @@ fun ListCardCompact_NOTE() {
             module = Module.NOTE.name
             dtstart = null
             dtstartTimezone = null
-            status = StatusJournal.CANCELLED.name
+            status = Status.CANCELLED.status
         }
         ListCardCompact(
             icalobject,
@@ -340,7 +339,7 @@ fun ListCardCompact_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()-1
@@ -370,7 +369,7 @@ fun ListCardCompact_TODO_only_summary() {
             module = Module.TODO.name
             categories = null
             percent = null
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.PUBLIC.name
             dtstart = null
             due = null

@@ -154,10 +154,14 @@ fun ListScreenTabContainer(
 
     if (showUpdateEntriesDialog) {
         UpdateEntriesDialog(
+            module = getActiveViewModel().module,
             allCategoriesLive = getActiveViewModel().allCategories,
             allResourcesLive = getActiveViewModel().allResources,
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
             onResourcesChanged = { addedResources, deletedResources -> getActiveViewModel().updateResourcesToSelected(addedResources, deletedResources) },
+            onStatusChanged = { TODO() },
+            onClassificationChanged = { TODO() },
+            onPriorityChanged = { TODO() },
             onDismiss = { showUpdateEntriesDialog = false }
         )
     }

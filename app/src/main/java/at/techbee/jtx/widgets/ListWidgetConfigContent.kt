@@ -186,8 +186,7 @@ fun ListWidgetConfigContent(
                                     module = selectedModule.value
                                     searchCategories = listSettings.searchCategories.value
                                     searchResources = listSettings.searchResources.value
-                                    searchStatusTodo = listSettings.searchStatusTodo.value
-                                    searchStatusJournal = listSettings.searchStatusJournal.value
+                                    searchStatus = listSettings.searchStatus.value
                                     searchClassification = listSettings.searchClassification.value
                                     searchCollection = listSettings.searchCollection.value
                                     searchAccount = listSettings.searchAccount.value
@@ -215,8 +214,6 @@ fun ListWidgetConfigContent(
                                     isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value
                                     isFilterStartFuture = listSettings.isFilterStartFuture.value
                                     isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value
-                                    isFilterNoStatusSet = listSettings.isFilterNoStatusSet.value
-                                    isFilterNoClassificationSet = listSettings.isFilterNoClassificationSet.value
                                     isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value
                                     isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value
                                 }
@@ -263,9 +260,10 @@ data class ListWidgetConfig(
     var module: Module = Module.NOTE,
     var searchCategories: List<String> = emptyList(),
     var searchResources: List<String> = emptyList(),
+    var searchStatus: List<Status> = emptyList(),
     var searchStatusTodo: List<StatusTodo> = emptyList(),
-    var searchStatusJournal: List<StatusJournal> = emptyList(),
-    var searchClassification: List<Classification> = emptyList(),
+    var searchStatusJournal: List<StatusJournal> = emptyList(),   // TODO: remove
+    var searchClassification: List<Classification> = emptyList(),   // TODO: remove
     var searchCollection: List<String> = emptyList(),
     var searchAccount: List<String> = emptyList(),
     var orderBy: OrderBy = OrderBy.CREATED,
@@ -283,8 +281,8 @@ data class ListWidgetConfig(
     var isFilterStartTomorrow: Boolean = false,
     var isFilterStartFuture: Boolean = false,
     var isFilterNoDatesSet: Boolean = false,
-    var isFilterNoStatusSet: Boolean = false,
-    var isFilterNoClassificationSet: Boolean = false,
+    var isFilterNoStatusSet: Boolean = false,   // TODO: remove
+    var isFilterNoClassificationSet: Boolean = false,  // TODO: remove
     var isFilterNoCategorySet: Boolean = false,
     var isFilterNoResourceSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!

@@ -109,8 +109,7 @@ class ListWidgetUpdateWorker(
                             module = listWidgetConfig?.module ?: Module.TODO,
                             searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
                             searchResources = listWidgetConfig?.searchResources ?: emptyList(),
-                            searchStatusTodo = listWidgetConfig?.searchStatusTodo ?: emptyList(),
-                            searchStatusJournal = listWidgetConfig?.searchStatusJournal ?: emptyList(),
+                            searchStatus = listWidgetConfig?.searchStatus ?: emptyList(),
                             searchClassification = listWidgetConfig?.searchClassification ?: emptyList(),
                             searchCollection = listWidgetConfig?.searchCollection ?: emptyList(),
                             searchAccount = listWidgetConfig?.searchAccount ?: emptyList(),
@@ -128,8 +127,6 @@ class ListWidgetUpdateWorker(
                             isFilterStartTomorrow = listWidgetConfig?.isFilterStartTomorrow ?: false,
                             isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
                             isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false,
-                            isFilterNoStatusSet = listWidgetConfig?.isFilterNoStatusSet ?: false,
-                            isFilterNoClassificationSet = listWidgetConfig?.isFilterNoClassificationSet ?: false,
                             isFilterNoCategorySet = listWidgetConfig?.isFilterNoCategorySet ?: false,
                             isFilterNoResourceSet = listWidgetConfig?.isFilterNoResourceSet ?: false,
                             flatView = listWidgetConfig?.flatView?: false,  // always true in Widget, we handle the flat view in the code

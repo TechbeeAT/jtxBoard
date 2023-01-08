@@ -100,8 +100,8 @@ fun ListScreenGrid_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.PUBLIC.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.PUBLIC.classification
             dtstart = null
             due = null
             numAttachments = 0
@@ -114,8 +114,8 @@ fun ListScreenGrid_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.CONFIDENTIAL.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
             summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
@@ -144,8 +144,8 @@ fun ListScreenGrid_JOURNAL() {
             component = Component.VJOURNAL.name
             module = Module.JOURNAL.name
             percent = 89
-            status = StatusJournal.FINAL.name
-            classification = Classification.PUBLIC.name
+            status = Status.FINAL.status
+            classification = Classification.PUBLIC.classification
             dtstart = null
             due = null
             numAttachments = 0
@@ -158,8 +158,8 @@ fun ListScreenGrid_JOURNAL() {
             component = Component.VJOURNAL.name
             module = Module.JOURNAL.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.CONFIDENTIAL.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
             summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."

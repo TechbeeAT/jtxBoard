@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
@@ -51,13 +52,13 @@ fun ListScreen(
         GroupBy.STATUS -> list.value.sortedBy {
             if (listViewModel.module == Module.TODO && it.percent != 100)
                 try {
-                    StatusTodo.valueOf(it.status ?: StatusTodo.`NEEDS-ACTION`.name).ordinal
+                    Status.valueOf(it.status ?: Status.NO_STATUS.name).ordinal
                 } catch (e: java.lang.IllegalArgumentException) {
                     -1
                 }
             else
                 try {
-                    StatusJournal.valueOf(it.status ?: StatusJournal.FINAL.name).ordinal
+                    Status.valueOf(it.status ?: Status.FINAL.name).ordinal
                 } catch (e: java.lang.IllegalArgumentException) {
                     -1
                 }
@@ -74,13 +75,8 @@ fun ListScreen(
 
     val groupedList = sortedList.groupBy {
         when (listViewModel.listSettings.groupBy.value) {
-            GroupBy.STATUS -> {
-                if (listViewModel.module == Module.TODO)
-                    StatusTodo.getStringResource(context, it.status)
-                else
-                    StatusJournal.getStringResource(context, it.status)
-            }
-            GroupBy.CLASSIFICATION -> Classification.getStringResource(context, it.classification)
+            GroupBy.STATUS -> Status.values().find { status ->  status.status == it.status }?.stringResource?.let { stringResource(id = it)}?: it.status?:""
+            GroupBy.CLASSIFICATION -> Classification.values().find { classif ->  classif.classification == it.classification }?.stringResource?.let { stringResource(id = it)}?: it.classification?:""
             GroupBy.PRIORITY -> {
                 when (it.priority) {
                     null -> stringArrayResource(id = R.array.priority)[0]
