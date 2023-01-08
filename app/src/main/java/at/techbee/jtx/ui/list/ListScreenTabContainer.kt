@@ -159,9 +159,9 @@ fun ListScreenTabContainer(
             allResourcesLive = getActiveViewModel().allResources,
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
             onResourcesChanged = { addedResources, deletedResources -> getActiveViewModel().updateResourcesToSelected(addedResources, deletedResources) },
-            onStatusChanged = { TODO() },
-            onClassificationChanged = { TODO() },
-            onPriorityChanged = { TODO() },
+            onStatusChanged = { newStatus -> getActiveViewModel().updateStatusOfSelected(newStatus) },
+            onClassificationChanged = { newClassification -> getActiveViewModel().updateClassificationOfSelected(newClassification) },
+            onPriorityChanged = { newPriority -> getActiveViewModel().updatePriorityOfSelected(newPriority) },
             onDismiss = { showUpdateEntriesDialog = false }
         )
     }

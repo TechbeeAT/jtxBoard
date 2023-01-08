@@ -23,6 +23,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,7 +56,7 @@ fun UpdateEntriesDialog(
     onCategoriesChanged: (addedCategories: List<String>, removedCategories: List<String>) -> Unit,
     onResourcesChanged: (addedResources: List<String>, removedResources: List<String>) -> Unit,
     onStatusChanged: (Status) -> Unit,
-    onClassificationChanged: (Classification?) -> Unit,
+    onClassificationChanged: (Classification) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -67,9 +68,9 @@ fun UpdateEntriesDialog(
     val removedCategories = remember { mutableStateListOf<String>() }
     val addedResources = remember { mutableStateListOf<String>() }
     val removedResources = remember { mutableStateListOf<String>() }
-    var newStatus by remember { mutableStateOf<Status>(Status.NO_STATUS) }
-    val newClassification by remember { mutableStateOf<Classification?>(null) }
-    val newPriority by remember { mutableStateOf<Int?>(null) }
+    var newStatus by remember { mutableStateOf(Status.NO_STATUS) }
+    var newClassification by remember { mutableStateOf(Classification.NO_CLASSIFICATION) }
+    var newPriority by remember { mutableStateOf<Int?>(null) }
 
     var updateEntriesDialogMode by remember { mutableStateOf(UpdateEntriesDialogMode.CATEGORIES) }
 
@@ -94,6 +95,9 @@ fun UpdateEntriesDialog(
                 )
                 {
                     UpdateEntriesDialogMode.values().forEach {
+                        if(module != Module.TODO && it == UpdateEntriesDialogMode.PRIORITY)
+                            return@forEach
+
                         FilterChip(
                             selected = updateEntriesDialogMode == it,
                             onClick = {
@@ -187,7 +191,6 @@ fun UpdateEntriesDialog(
                 }
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.STATUS) {
-
                     FlowRow(
                         mainAxisSpacing = 8.dp,
                         mainAxisAlignment = FlowMainAxisAlignment.Center,
@@ -204,6 +207,42 @@ fun UpdateEntriesDialog(
                         }
                     }
                 }
+
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.CLASSIFICATION) {
+                    FlowRow(
+                        mainAxisSpacing = 8.dp,
+                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    {
+
+                        Classification.values().forEach { classification ->
+                            InputChip(
+                                onClick = { newClassification = classification },
+                                label = { Text(stringResource(id = classification.stringResource)) },
+                                selected = classification == newClassification,
+                            )
+                        }
+                    }
+                }
+
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.PRIORITY) {
+                    FlowRow(
+                        mainAxisSpacing = 8.dp,
+                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    {
+
+                        stringArrayResource(id = R.array.priority).forEachIndexed { index, prio ->
+                            InputChip(
+                                onClick = { newPriority = index },
+                                label = { Text(prio) },
+                                selected = newPriority == index,
+                            )
+                        }
+                    }
+                }
             }
         },
         confirmButton = {
@@ -214,7 +253,7 @@ fun UpdateEntriesDialog(
                         UpdateEntriesDialogMode.RESOURCES -> onResourcesChanged(addedResources, removedResources)
                         UpdateEntriesDialogMode.STATUS -> onStatusChanged(newStatus)
                         UpdateEntriesDialogMode.CLASSIFICATION -> onClassificationChanged(newClassification)
-                        UpdateEntriesDialogMode.PRIORITY -> onPriorityChanged(newPriority)
+                        UpdateEntriesDialogMode.PRIORITY -> onPriorityChanged(if(newPriority == 0) null else newPriority)
                     }
                     onDismiss()
                 }

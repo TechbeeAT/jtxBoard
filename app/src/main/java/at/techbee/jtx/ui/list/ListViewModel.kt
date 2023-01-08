@@ -269,6 +269,59 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     /**
+     * Updates the status of the selected entries
+     * @param newStatus to be set
+     */
+    fun updateStatusOfSelected(newStatus: Status) {
+        viewModelScope.launch(Dispatchers.IO) {
+            selectedEntries.forEach { iCalObjectId ->
+                database.getICalObjectByIdSync(iCalObjectId)?.let {
+                    it.status = newStatus.status
+                    when {
+                        newStatus == Status.COMPLETED -> it.percent = 100
+                        newStatus == Status.NEEDS_ACTION -> it.percent = 0
+                        newStatus == Status.IN_PROCESS && it.percent !in 1..99 -> it.percent = 1
+                    }
+                    it.makeDirty()
+                    database.update(it)
+                }
+            }
+        }
+    }
+
+    /**
+     * Updates the classification of the selected entries
+     * @param newClassification to be set
+     */
+    fun updateClassificationOfSelected(newClassification: Classification) {
+        viewModelScope.launch(Dispatchers.IO) {
+            selectedEntries.forEach { iCalObjectId ->
+                database.getICalObjectByIdSync(iCalObjectId)?.let {
+                    it.classification = newClassification.classification
+                    it.makeDirty()
+                    database.update(it)
+                }
+            }
+        }
+    }
+
+    /**
+     * Updates the priority of the selected entries
+     * @param newPriority to be set
+     */
+    fun updatePriorityOfSelected(newPriority: Int?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            selectedEntries.forEach { iCalObjectId ->
+                database.getICalObjectByIdSync(iCalObjectId)?.let {
+                    it.priority = newPriority
+                    it.makeDirty()
+                    database.update(it)
+                }
+            }
+        }
+    }
+
+    /**
      * Inserts a new icalobject with categories
      * @param icalObject to be inserted
      * @param categories the list of categories that should be linked to the icalObject
