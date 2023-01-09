@@ -20,27 +20,43 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import kotlinx.coroutines.launch
 
+enum class ListTopAppBarMode { SEARCH, ADD_ENTRY }
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListTopAppBar(
     drawerState: DrawerState,
+    listTopAppBarMode: ListTopAppBarMode,
     module: Module,
     searchText: MutableState<String?>,
     onSearchTextUpdated: () -> Unit,
+    onCreateNewEntry: (String) -> Unit,
     actions: @Composable () -> Unit = { }
 ) {
 
     val coroutineScope = rememberCoroutineScope()
+    var newEntryText by remember { mutableStateOf("")}
 
     CenterAlignedTopAppBar(
         title = {
 
             OutlinedTextField(
-                value = searchText.value ?: "",
+                value = when(listTopAppBarMode) {
+                    ListTopAppBarMode.SEARCH -> searchText.value ?: ""
+                    ListTopAppBarMode.ADD_ENTRY -> newEntryText
+                },
                 onValueChange = {
-                    searchText.value = it.ifBlank { null }
-                    onSearchTextUpdated()
-                                },
+                    when(listTopAppBarMode) {
+                        ListTopAppBarMode.SEARCH -> {
+                            searchText.value = it.ifBlank { null }
+                            onSearchTextUpdated()
+                        }
+                        ListTopAppBarMode.ADD_ENTRY -> {
+                            newEntryText = it
+                        }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
@@ -51,12 +67,34 @@ fun ListTopAppBar(
                 ),
                 shape = RoundedCornerShape(32.dp),
                 textStyle = MaterialTheme.typography.bodyLarge,
-                placeholder = { Text(when(module) {
-                        Module.JOURNAL -> stringResource(id = R.string.search_journals)
-                        Module.NOTE -> stringResource(id = R.string.search_notes)
-                        Module.TODO -> stringResource(id = R.string.search_todos)
+                placeholder = {
+                    Crossfade(listTopAppBarMode) { mode ->
+                        when(mode) {
+                            ListTopAppBarMode.SEARCH -> {
+                                Crossfade(module) { module ->
+                                    Text(
+                                        when (module) {
+                                            Module.JOURNAL -> stringResource(id = R.string.search_journals)
+                                            Module.NOTE -> stringResource(id = R.string.search_notes)
+                                            Module.TODO -> stringResource(id = R.string.search_todos)
+                                        }
+                                    )
+                                }
+                            }
+                            ListTopAppBarMode.ADD_ENTRY -> {
+                                Crossfade(module) { module ->
+                                    Text(
+                                        when (module) {
+                                            Module.JOURNAL -> stringResource(id = R.string.toolbar_text_add_journal)
+                                            Module.NOTE -> stringResource(id = R.string.toolbar_text_add_note)
+                                            Module.TODO -> stringResource(id = R.string.toolbar_text_add_task)
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
-                )},
+                },
                 singleLine = true,
                 maxLines = 1,
                 leadingIcon = {
@@ -105,9 +143,11 @@ fun ListTopAppBar_Preview() {
         Scaffold(
             topBar = { ListTopAppBar(
                 drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+                listTopAppBarMode = ListTopAppBarMode.SEARCH,
                 module = Module.TODO,
                 searchText = remember { mutableStateOf("") },
                 onSearchTextUpdated = { },
+                onCreateNewEntry = { },
                 actions = {
                     IconButton(onClick = { /* doSomething() */ }) {
                         Icon(

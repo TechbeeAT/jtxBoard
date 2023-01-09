@@ -19,14 +19,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.Sync
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -221,9 +221,11 @@ fun ListScreenTabContainer(
         topBar = {
             ListTopAppBar(
                 drawerState = drawerState,
+                listTopAppBarMode = getActiveViewModel().listSettings.topAppBarMode.value,
                 module = listViewModel.module,
                 searchText = listViewModel.listSettings.searchText,
                 onSearchTextUpdated = { listViewModel.updateSearch(saveListSettings = false) },
+                onCreateNewEntry = { newEntryText -> TODO() /* getActiveViewModel().insertQuickItem() */ },
                 actions = {
                     IconButton(
                         onClick = { topBarMenuExpanded = true },
@@ -239,6 +241,52 @@ fun ListScreenTabContainer(
                         expanded = topBarMenuExpanded,
                         onDismissRequest = { topBarMenuExpanded = false }
                     ) {
+                        Text(stringResource(R.string.details_app_bar_behaviour), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 8.dp))
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.search),
+                                    color = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.SEARCH) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                )},
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Search,
+                                    contentDescription = null,
+                                    tint = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.SEARCH) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            },
+                            onClick = {
+                                getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.SEARCH
+                                getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
+                                topBarMenuExpanded = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                when (getActiveViewModel().module) {
+                                    Module.JOURNAL -> Text(text = stringResource(id = R.string.toolbar_text_add_journal), color = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.ADD_ENTRY) MaterialTheme.colorScheme.primary else Color.Unspecified)
+                                    Module.NOTE -> Text(text = stringResource(id = R.string.toolbar_text_add_note), color = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.ADD_ENTRY) MaterialTheme.colorScheme.primary else Color.Unspecified)
+                                    Module.TODO -> Text(text = stringResource(id = R.string.toolbar_text_add_task), color = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.ADD_ENTRY) MaterialTheme.colorScheme.primary else Color.Unspecified)
+                                }
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Add,
+                                    contentDescription = null,
+                                    tint = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.ADD_ENTRY) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                                          },
+                            onClick = {
+                                getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.ADD_ENTRY
+                                getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
+                                topBarMenuExpanded = false
+                            },
+                            trailingIcon = {
+                                Icon(Icons.Outlined.Folder, null)
+                            }
+                        )
+                        Divider()
+
 
                         if(SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)) {
                             DropdownMenuItem(
