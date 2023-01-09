@@ -196,13 +196,26 @@ fun ListScreenTabContainer(
         lastUsedPage.value = pagerState.currentPage
     }
 
-    fun addNewEntry(newICalObject: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) {
-        listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, newICalObject.collectionId)
-        settingsStateHolder.lastUsedModule.value = newICalObject.getModuleFromString()
-        settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
+    fun addNewEntry(
+        module: Module,
+        text: String?,
+        collectionId: Long,
+        attachment: Attachment?,
+        editAfterSaving: Boolean
+    ) {
 
-        globalStateHolder.icalFromIntentString.value = null  // origin was state from import
-        globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+        val newICalObject = when (module) {
+            Module.JOURNAL -> ICalObject.createJournal().apply { this.setDefaultJournalDateFromSettings(context) }
+            Module.NOTE -> ICalObject.createNote()
+            Module.TODO -> ICalObject.createTodo().apply {
+                this.setDefaultDueDateFromSettings(context)
+                this.setDefaultStartDateFromSettings(context)
+            }
+        }
+        newICalObject.collectionId = collectionId
+        newICalObject.parseSummaryAndDescription(text)
+        newICalObject.parseURL(text)
+        val categories = Category.extractHashtagsFromText(text)
 
         //handle autoAlarm
         val autoAlarm = if(settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_DUE && newICalObject.due != null) {
@@ -239,7 +252,15 @@ fun ListScreenTabContainer(
                 module = listViewModel.module,
                 searchText = listViewModel.listSettings.searchText,
                 onSearchTextUpdated = { listViewModel.updateSearch(saveListSettings = false) },
-                onCreateNewEntry = { newEntryText -> TODO() /* getActiveViewModel().insertQuickItem() */ },
+                onCreateNewEntry = { newEntryText ->
+                    addNewEntry(
+                        module = listViewModel.module,
+                        text = newEntryText,
+                        collectionId = listViewModel.listSettings.topAppBarCollectionId.value,
+                        attachment = null,
+                        editAfterSaving = false
+                    )
+                },
                 actions = {
                     IconButton(
                         onClick = { topBarMenuExpanded = true },
@@ -378,28 +399,16 @@ fun ListScreenTabContainer(
                              && !collection.readonly)
                     },
                     onAddNewEntry = {
-                        val lastUsedCollectionId =
-                            listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs)
-                        val proposedCollectionId =
-                            if (allUsableCollections.any { collection -> collection.collectionId == lastUsedCollectionId })
-                                lastUsedCollectionId
-                            else
-                                allUsableCollections.firstOrNull()?.collectionId
-                                    ?: return@ListBottomAppBar
-                        val newICalObject = when (listViewModel.module) {
-                            Module.JOURNAL -> ICalObject.createJournal().apply {
-                                this.setDefaultJournalDateFromSettings(context)
-                                collectionId = proposedCollectionId
-                            }
-                            Module.NOTE -> ICalObject.createNote()
-                                .apply { collectionId = proposedCollectionId }
-                            Module.TODO -> ICalObject.createTodo().apply {
-                                this.setDefaultDueDateFromSettings(context)
-                                this.setDefaultStartDateFromSettings(context)
-                                collectionId = proposedCollectionId
-                            }
-                        }
-                        addNewEntry(newICalObject, emptyList(), null, true)
+                        val lastUsedCollectionId = listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs)
+                        val proposedCollectionId = allUsableCollections.find { collection -> collection.collectionId == lastUsedCollectionId }?.collectionId
+                            ?: allUsableCollections.firstOrNull()?.collectionId
+                            ?: return@ListBottomAppBar
+
+                        listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, proposedCollectionId)
+                        settingsStateHolder.lastUsedModule.value = listViewModel.module
+                        settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
+
+                        addNewEntry(module = listViewModel.module, text = null, collectionId = proposedCollectionId, attachment = null, editAfterSaving = true)
                     },
                     showQuickEntry = showQuickAdd,
                     multiselectEnabled = listViewModel.multiselectEnabled,
@@ -478,11 +487,19 @@ fun ListScreenTabContainer(
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allWriteableCollections = allUsableCollections,
                                     presetCollectionId = listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
-                                    onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
-                                        addNewEntry(newICalObject, categories, attachment, editAfterSaving)
+                                    onSaveEntry = { module, text, attachment, collectionId,  editAfterSaving ->
+
+                                        listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, collectionId)
+                                        settingsStateHolder.lastUsedModule.value = module
+                                        settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
+
+                                        globalStateHolder.icalFromIntentString.value = null  // origin was state from import
+                                        globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+
+                                        addNewEntry(module, text, collectionId, attachment, editAfterSaving)
                                         scope.launch {
                                             pagerState.scrollToPage(
-                                                when (newICalObject.getModuleFromString()) {
+                                                when (module) {
                                                     Module.JOURNAL -> ListTabDestination.Journals.tabIndex
                                                     Module.NOTE -> ListTabDestination.Notes.tabIndex
                                                     Module.TODO -> ListTabDestination.Tasks.tabIndex
