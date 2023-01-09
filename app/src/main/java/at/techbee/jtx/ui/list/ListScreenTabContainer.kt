@@ -175,6 +175,7 @@ fun ListScreenTabContainer(
             presetCollectionId = getActiveViewModel().listSettings.topAppBarCollectionId.value,
             allCollectionsLive = getActiveViewModel().allCollections,
             onCollectionConfirmed = { selectedCollection ->
+                getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.ADD_ENTRY
                 getActiveViewModel().listSettings.topAppBarCollectionId.value = selectedCollection.collectionId
                 getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
             },
@@ -312,9 +313,15 @@ fun ListScreenTabContainer(
                                 )
                                           },
                             onClick = {
-                                getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.ADD_ENTRY
-                                getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
-                                topBarMenuExpanded = false
+                                if(listViewModel.listSettings.topAppBarCollectionId.value == 0L
+                                    || allWriteableCollections.value.none { collection -> collection.collectionId == listViewModel.listSettings.topAppBarCollectionId.value }) {
+                                    showCollectionSelectorDialog = true
+                                    topBarMenuExpanded = false
+                                } else {
+                                    getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.ADD_ENTRY
+                                    getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
+                                    topBarMenuExpanded = false
+                                }
                             },
                             trailingIcon = {
                                 IconButton(onClick = {

@@ -1,11 +1,15 @@
 package at.techbee.jtx.ui.list
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -14,6 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -126,8 +133,31 @@ fun ListTopAppBar(
                     }
                 },
                 trailingIcon = {
-                    actions()
-                }
+                    Row {
+                        AnimatedVisibility(listTopAppBarMode == ListTopAppBarMode.ADD_ENTRY && newEntryText.isNotEmpty()) {
+                            IconButton(onClick = {
+                                onCreateNewEntry(newEntryText)
+                                newEntryText = ""
+                            }) {
+                                Crossfade(module) {
+                                    when (it) {
+                                        Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
+                                        Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
+                                        Module.TODO -> Icon(Icons.Outlined.AddTask, stringResource(R.string.toolbar_text_add_task))
+                                    }
+                                }
+                            }
+                        }
+                        actions()
+                    }
+                },
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    if(listTopAppBarMode == ListTopAppBarMode.ADD_ENTRY && newEntryText.isNotBlank()) {
+                        onCreateNewEntry(newEntryText)
+                        newEntryText = ""
+                    }
+                })
             )
         }
     )
@@ -144,6 +174,35 @@ fun ListTopAppBar_Preview() {
             topBar = { ListTopAppBar(
                 drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
                 listTopAppBarMode = ListTopAppBarMode.SEARCH,
+                module = Module.TODO,
+                searchText = remember { mutableStateOf("") },
+                onSearchTextUpdated = { },
+                onCreateNewEntry = { },
+                actions = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(
+                            imageVector = Icons.Outlined.MoreVert,
+                            contentDescription = "Localized description"
+                        )
+                    }
+                }
+            ) },
+            content = {  }
+        )
+    }
+}
+
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
+@Composable
+fun ListTopAppBar_Preview_add_entry() {
+    MaterialTheme {
+        Scaffold(
+            topBar = { ListTopAppBar(
+                drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+                listTopAppBarMode = ListTopAppBarMode.ADD_ENTRY,
                 module = Module.TODO,
                 searchText = remember { mutableStateOf("") },
                 onSearchTextUpdated = { },
