@@ -49,6 +49,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
+import at.techbee.jtx.ui.reusable.dialogs.CollectionSelectorDialog
 import at.techbee.jtx.ui.reusable.dialogs.DeleteSelectedDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.UpdateEntriesDialog
@@ -122,7 +123,7 @@ fun ListScreenTabContainer(
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteSelectedDialog by remember { mutableStateOf(false) }
     var showUpdateEntriesDialog by remember { mutableStateOf(false) }
-
+    var showCollectionSelectorDialog by remember { mutableStateOf(false) }
 
     fun getActiveViewModel() =
         when (pagerState.currentPage) {
@@ -165,6 +166,19 @@ fun ListScreenTabContainer(
             onPriorityChanged = { newPriority -> getActiveViewModel().updatePriorityOfSelected(newPriority) },
             onCollectionChanged = { newCollection -> getActiveViewModel().moveSelectedToNewCollection(newCollection) },
             onDismiss = { showUpdateEntriesDialog = false }
+        )
+    }
+
+    if (showCollectionSelectorDialog) {
+        CollectionSelectorDialog(
+            module = getActiveViewModel().module,
+            presetCollectionId = getActiveViewModel().listSettings.topAppBarCollectionId.value,
+            allCollectionsLive = getActiveViewModel().allCollections,
+            onCollectionConfirmed = { selectedCollection ->
+                getActiveViewModel().listSettings.topAppBarCollectionId.value = selectedCollection.collectionId
+                getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
+            },
+            onDismiss = { showCollectionSelectorDialog = false }
         )
     }
 
@@ -282,7 +296,12 @@ fun ListScreenTabContainer(
                                 topBarMenuExpanded = false
                             },
                             trailingIcon = {
-                                Icon(Icons.Outlined.Folder, null)
+                                IconButton(onClick = {
+                                    showCollectionSelectorDialog = true
+                                    topBarMenuExpanded = false
+                                }) {
+                                    Icon(Icons.Outlined.Folder, null)
+                                }
                             }
                         )
                         Divider()
