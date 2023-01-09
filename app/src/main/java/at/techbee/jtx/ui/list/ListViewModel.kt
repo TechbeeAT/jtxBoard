@@ -238,10 +238,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
     fun moveSelectedToNewCollection(newCollection: ICalCollection) {
         viewModelScope.launch(Dispatchers.IO) {
+            val newEntries = mutableListOf<Long>()
 
             selectedEntries.forEach { iCalObjectId ->
                 try {
                     val newId = ICalObject.updateCollectionWithChildren(iCalObjectId, null, newCollection.collectionId, database, getApplication())
+                    newEntries.add(newId)
                     // once the newId is there, the local entries can be deleted (or marked as deleted)
                     ICalObject.deleteItemWithChildren(iCalObjectId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
                     val newICalObject = database.getICalObjectByIdSync(newId)
@@ -253,6 +255,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     //sqlConstraintException.value = true
                 }
             }
+            selectedEntries.clear()
+            selectedEntries.addAll(newEntries)
         }
     }
 
