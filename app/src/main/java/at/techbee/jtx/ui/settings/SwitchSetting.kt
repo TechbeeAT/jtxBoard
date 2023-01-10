@@ -11,10 +11,7 @@ package at.techbee.jtx.ui.settings
 import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AlarmOff
-import androidx.compose.material.icons.outlined.Attachment
-import androidx.compose.material.icons.outlined.Note
-import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,6 +27,24 @@ enum class SwitchSetting(
     val subtitle: Int? = null,
     val default: Boolean
 ) {
+    SETTING_ENABLE_JOURNALS(
+        key = "settings_enable_journals",
+        icon = { Icon(Icons.Outlined.EventNote, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_modules_enable_journals,
+        default = true
+    ),
+    SETTING_ENABLE_NOTES(
+        key = "settings_enable_notes",
+        icon = { Icon(Icons.Outlined.NoteAdd, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_modules_enable_notes,
+        default = true
+    ),
+    SETTING_ENABLE_TASKS(
+        key = "settings_enable_tasks",
+        icon = { Icon(Icons.Outlined.AddTask, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_modules_enable_tasks,
+        default = true
+    ),
     SETTING_AUTO_EXPAND_SUBTASKS(
         key = "settings_auto_expand_subtasks",
         icon = { Icon(Icons.Outlined.TaskAlt, contentDescription = null, modifier = Modifier.padding(16.dp)) },
