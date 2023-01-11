@@ -20,6 +20,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -124,6 +126,7 @@ fun ListScreenTabContainer(
     var showDeleteSelectedDialog by remember { mutableStateOf(false) }
     var showUpdateEntriesDialog by remember { mutableStateOf(false) }
     var showCollectionSelectorDialog by remember { mutableStateOf(false) }
+
 
     fun getActiveViewModel() =
         when (pagerState.currentPage) {
