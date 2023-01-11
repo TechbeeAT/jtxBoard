@@ -434,7 +434,7 @@ Thank you!"</string>
     <string name="settings_default_expand_attachments">"Expand attachments in list by default"</string>
     <string name="title_activity_list_screen">"ListScreen"</string>
     <string name="link_paypal" translatable="false">"https://www.paypal.com/donate?hosted_button_id=8BVX7PUVVTCWY"</string>
-    <string name="link_jtx_donate" translatable="false">"https://jtx.techbee.at/app/donate"</string>
+    <string name="link_jtx_donate" translatable="false">"https://jtx.techbee.at/contribute"</string>
     <string name="permission_coarse_location_granted">"Coarse location permission granted"</string>
     <string name="permission_coarse_location_denied">"Coarse location permission denied"</string>
     <string name="sorry">"Sorry"</string>
