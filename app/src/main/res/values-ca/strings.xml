@@ -85,8 +85,6 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Nombre d'assistents"</string>
     <string name="list_num_attachments_contentdesc">"Nombre d'adjunts"</string>
     <string name="list_num_comments_contentdesc">"Nombre de comentaris"</string>
-    <string name="list_dialog_delete_visible_title">"Elimina tots els visibles?"</string>
-    <string name="list_dialog_delete_visible_message">"Aquesta acció elimina totes les entrades visibles (%1$d). Estàs segur que vols seguir? Aquesta operació no es pot desfer!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Sumari/Descripció"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línia s'interpreta com a sumari, la resta com a la descripció. Els coixinets s'interpreten com a categories (ex #categoria)."</string>
     <string name="list_item_upload_pending">"Pujada pendent"</string>
