@@ -47,6 +47,9 @@ class ListSettings {
     var flatView: MutableState<Boolean> = mutableStateOf(false)
     var showOneRecurEntryInFuture: MutableState<Boolean> = mutableStateOf(false)
 
+    var topAppBarCollectionId: MutableState<Long> = mutableStateOf(0L)   // list view only
+    var topAppBarMode: MutableState<ListTopAppBarMode> = mutableStateOf(ListTopAppBarMode.SEARCH)   // list view only
+
     var checkboxPositionEnd: MutableState<Boolean> = mutableStateOf(false)  // widget only
     var widgetAlpha: MutableState<Float> = mutableStateOf(1F)  // widget only
     var widgetAlphaEntries: MutableState<Float> = mutableStateOf(1F)  // widget only
@@ -87,6 +90,10 @@ class ListSettings {
         private const val PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE = "prefsShowOneRecurEntryInFuture"
         private const val PREFS_FILTER_NO_CATEGORY_SET = "prefsFilterNoCategorySet"
         private const val PREFS_FILTER_NO_RESOURCE_SET = "prefsFilterNoResourceSet"
+
+        private const val PREFS_TOPAPPBAR_MODE = "topAppBarMode"
+        private const val PREFS_TOPAPPBAR_COLLECTION_ID = "topAppBarCollectionId"
+
         //private const val PREFS_CHECKBOX_POSITION_END = "prefsCheckboxPosition"
         //private const val PREFS_WIDGET_ALPHA = "prefsWidgetAlpha"
         //private const val PREFS_WIDGET_ALPHA_ENTRIES = "prefsWidgetAlhpaEntries"
@@ -144,6 +151,10 @@ class ListSettings {
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
 
             showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
+
+            topAppBarCollectionId.value = prefs.getLong(PREFS_TOPAPPBAR_COLLECTION_ID, 0L)
+            topAppBarMode.value = try { ListTopAppBarMode.valueOf(prefs.getString(PREFS_TOPAPPBAR_MODE, null)?:ListTopAppBarMode.SEARCH.name) } catch (e: IllegalArgumentException) { ListTopAppBarMode.SEARCH }
+
         }
 
         fun fromListWidgetConfig(listWidgetConfig: ListWidgetConfig) = ListSettings().apply {
@@ -232,6 +243,9 @@ class ListSettings {
             putBoolean(PREFS_FLAT_VIEW, flatView.value)
 
             putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
+
+            putLong(PREFS_TOPAPPBAR_COLLECTION_ID, topAppBarCollectionId.value)
+            putString(PREFS_TOPAPPBAR_MODE, topAppBarMode.value.name)
 
             //Legacy handling
             remove(PREFS_STATUS_JOURNAL)

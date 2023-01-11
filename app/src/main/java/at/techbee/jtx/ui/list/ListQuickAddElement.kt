@@ -54,10 +54,8 @@ import androidx.core.content.ContextCompat
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.ui.reusable.cards.AttachmentCard
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
@@ -73,7 +71,7 @@ fun ListQuickAddElement(
     presetAttachment: Attachment? = null,
     allWriteableCollections: List<ICalCollection>,
     presetCollectionId: Long,
-    onSaveEntry: (newEntry: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) -> Unit,
+    onSaveEntry: (module: Module, newEntryText: String, attachment: Attachment?, collectionId: Long, editAfterSaving: Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
 
@@ -135,22 +133,7 @@ fun ListQuickAddElement(
             return
 
         if (currentText.text.isNotBlank()) {
-            val newICalObject = when (currentModule) {
-                Module.JOURNAL -> ICalObject.createJournal().apply {
-                    this.setDefaultJournalDateFromSettings(context)
-                }
-                Module.NOTE -> ICalObject.createNote()
-                Module.TODO -> ICalObject.createTodo().apply {
-                    this.setDefaultDueDateFromSettings(context)
-                    this.setDefaultStartDateFromSettings(context)
-                }
-                else -> ICalObject.createNote()  // Fallback, can't actually reach it
-            }
-            newICalObject.collectionId = currentCollection!!.collectionId
-            newICalObject.parseSummaryAndDescription(currentText.text)
-            newICalObject.parseURL(currentText.text)
-            val categories = Category.extractHashtagsFromText(currentText.text)
-            onSaveEntry(newICalObject, categories, currentAttachment, goToEdit)
+            onSaveEntry(currentModule!!, currentText.text, currentAttachment, currentCollection!!.collectionId, goToEdit)
             currentText = TextFieldValue(text = "")
             if(goToEdit)
                 onDismiss()
@@ -397,7 +380,7 @@ fun ListQuickAddElement_Preview() {
             presetModule = Module.JOURNAL,
             allWriteableCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
-            onSaveEntry = { _, _, _, _ -> },
+            onSaveEntry = { _, _, _, _, _ -> },
             presetText = "This is my preset text",
             presetAttachment = Attachment(filename = "My File.PDF"),
             presetCollectionId = 0L,
@@ -429,7 +412,7 @@ fun ListQuickAddElement_Preview_empty() {
             presetModule = Module.JOURNAL,
             allWriteableCollections = listOf(collection3),
             onDismiss = { },
-            onSaveEntry = { _, _, _, _ -> },
+            onSaveEntry = { _, _, _, _, _ -> },
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
