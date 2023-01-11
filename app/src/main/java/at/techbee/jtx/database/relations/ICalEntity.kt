@@ -15,7 +15,6 @@ import androidx.room.Relation
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.ICalObject.Companion.getLatLongString
 import at.techbee.jtx.database.ICalObject.Companion.getMapLink
@@ -143,13 +142,13 @@ data class ICalEntity(
                 property.priority = null
                 property.percent = null
 
-                if(property.status != StatusJournal.FINAL.name || property.status != StatusJournal.DRAFT.name || property.status != StatusJournal.CANCELLED.name)
-                    property.status = StatusJournal.FINAL.name
+                if(Status.valuesFor(Module.JOURNAL).none { it.status == property.status })
+                    property.status = Status.FINAL.status
 
             } else if (newModule == Module.TODO) {
                 property.component = Component.VTODO.name
-                if(property.status != StatusTodo.COMPLETED.name || property.status != StatusTodo.`IN-PROCESS`.name || property.status != StatusTodo.`NEEDS-ACTION`.name || property.status != StatusTodo.CANCELLED.name)
-                    property.status = StatusTodo.`NEEDS-ACTION`.name
+                if(Status.valuesFor(Module.TODO).none { it.status == property.status })
+                    property.status = Status.NEEDS_ACTION.status
             }
 
             // reset the ids of all list properties to make sure that they get inserted as new ones

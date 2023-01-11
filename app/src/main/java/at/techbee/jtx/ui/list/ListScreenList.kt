@@ -25,6 +25,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,6 +53,7 @@ fun ListScreenList(
     groupedList: Map<String, List<ICal4List>>,
     subtasksLive: LiveData<Map<String?, List<ICal4List>>>,
     subnotesLive: LiveData<Map<String?, List<ICal4List>>>,
+    selectedEntries: SnapshotStateList<Long>,
     attachmentsLive: LiveData<Map<Long, List<Attachment>>>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
@@ -61,7 +63,8 @@ fun ListScreenList(
     settingShowProgressMaintasks: MutableState<Boolean>,
     settingShowProgressSubtasks: MutableState<Boolean>,
     settingProgressIncrement: MutableState<DropdownSettingOption>,
-    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit,
+    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
@@ -142,10 +145,11 @@ fun ListScreenList(
                         }
                     }
 
-                    ICalObjectListCard(
+                    ListCard(
                         iCalObject,
                         currentSubtasks ?: emptyList(),
                         currentSubnotes ?: emptyList(),
+                        selected = selectedEntries.contains(iCalObject.id),
                         attachments = currentAttachments ?: emptyList(),
                         isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
                         isSubnotesExpandedDefault = isSubnotesExpandedDefault.value,
@@ -153,7 +157,8 @@ fun ListScreenList(
                         settingShowProgressMaintasks = settingShowProgressMaintasks.value,
                         settingShowProgressSubtasks = settingShowProgressSubtasks.value,
                         progressIncrement = settingProgressIncrement.value.getProgressStepKeyAsInt(),
-                        goToDetail = goToDetail,
+                        onClick = onClick,
+                        onLongClick = onLongClick,
                         onProgressChanged = onProgressChanged,
                         onExpandedChanged = onExpandedChanged,
                         player = mediaPlayer,
@@ -163,18 +168,10 @@ fun ListScreenList(
                             .clip(jtxCardCornerShape)
                             .animateItemPlacement()
                             .combinedClickable(
-                                onClick = {
-                                    goToDetail(
-                                        iCalObject.id,
-                                        false,
-                                        groupedList.flatMap { it.value })
-                                },
+                                onClick = { onClick(iCalObject.id, groupedList.flatMap { it.value })  },
                                 onLongClick = {
                                     if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToDetail(
-                                            iCalObject.id,
-                                            true,
-                                            groupedList.flatMap { it.value })
+                                        onLongClick(iCalObject.id, groupedList.flatMap { it.value })
                                 }
                             )
                             .testTag("benchmark:ListCard")
@@ -202,8 +199,8 @@ fun ListScreenList_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.PUBLIC.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.PUBLIC.classification
             dtstart = null
             due = null
             numAttachments = 0
@@ -217,8 +214,8 @@ fun ListScreenList_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.CONFIDENTIAL.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
             summary =
@@ -226,14 +223,10 @@ fun ListScreenList_TODO() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenList(
-            groupedList = listOf(icalobject, icalobject2).groupBy {
-                StatusTodo.getStringResource(
-                    application,
-                    it.status
-                )
-            },
+            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
             subtasksLive = MutableLiveData(emptyMap()),
             subnotesLive = MutableLiveData(emptyMap()),
+            selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
             isSubtasksExpandedDefault = remember { mutableStateOf(true) },
@@ -243,7 +236,8 @@ fun ListScreenList_TODO() {
             settingShowProgressSubtasks = remember { mutableStateOf(true) },
             settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> },
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _ -> }
         )
@@ -270,8 +264,8 @@ fun ListScreenList_JOURNAL() {
             component = Component.VJOURNAL.name
             module = Module.JOURNAL.name
             percent = 89
-            status = StatusJournal.FINAL.name
-            classification = Classification.PUBLIC.name
+            status = Status.FINAL.status
+            classification = Classification.PUBLIC.classification
             dtstart = null
             due = null
             numAttachments = 0
@@ -285,8 +279,8 @@ fun ListScreenList_JOURNAL() {
             component = Component.VJOURNAL.name
             module = Module.JOURNAL.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.CONFIDENTIAL.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
             summary =
@@ -294,14 +288,10 @@ fun ListScreenList_JOURNAL() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenList(
-            groupedList = listOf(icalobject, icalobject2).groupBy {
-                StatusJournal.getStringResource(
-                    application,
-                    it.status
-                )
-            },
+            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
             subtasksLive = MutableLiveData(emptyMap()),
             subnotesLive = MutableLiveData(emptyMap()),
+            selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
             isSubtasksExpandedDefault = remember { mutableStateOf(false) },
@@ -311,7 +301,8 @@ fun ListScreenList_JOURNAL() {
             settingShowProgressSubtasks = remember { mutableStateOf(false) },
             settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> },
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _ -> }
         )

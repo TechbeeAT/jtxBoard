@@ -72,7 +72,7 @@ private val ContrastColorScheme = lightColorScheme(
     onSecondaryContainer = Color.White,
     onTertiary = Color.White,
     onBackground = Color.Black,
-    surfaceVariant = Color(0xFFF0F0F0),
+    surfaceVariant = Color(0xFFD1D1D1),
     onSurfaceVariant = Color.Black
 )
 

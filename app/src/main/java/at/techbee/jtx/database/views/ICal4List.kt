@@ -190,8 +190,8 @@ data class ICal4List(
                 null,
                 null,
                 null,
-                status = StatusJournal.DRAFT.name,
-                classification = Classification.CONFIDENTIAL.name,
+                status = Status.DRAFT.status,
+                classification = Classification.CONFIDENTIAL.classification,
                 null,
                 null,
                 null,
@@ -237,8 +237,7 @@ data class ICal4List(
             module: Module,
             searchCategories: List<String> = emptyList(),
             searchResources: List<String> = emptyList(),
-            searchStatusTodo: List<StatusTodo> = emptyList(),
-            searchStatusJournal: List<StatusJournal> = emptyList(),
+            searchStatus: List<Status> = emptyList(),
             searchClassification: List<Classification> = emptyList(),
             searchCollection: List<String> = emptyList(),
             searchAccount: List<String> = emptyList(),
@@ -256,8 +255,6 @@ data class ICal4List(
             isFilterStartTomorrow: Boolean = false,
             isFilterStartFuture: Boolean = false,
             isFilterNoDatesSet: Boolean = false,
-            isFilterNoStatusSet: Boolean = false,
-            isFilterNoClassificationSet: Boolean = false,
             isFilterNoCategorySet: Boolean = false,
             isFilterNoResourceSet: Boolean = false,
             searchText: String? = null,
@@ -323,20 +320,13 @@ data class ICal4List(
                 queryString += ") "
             }
 
-            //STATUS
-            val searchStatus = mutableListOf<String>().apply {
-                addAll(searchStatusJournal.map { it.toString() })
-                addAll(searchStatusTodo.map { it.toString() })
-            }
-            if ((searchStatus.isNotEmpty() || isFilterNoStatusSet)) {
+            if (searchStatus.isNotEmpty()) {
                 queryString += "AND ("
                 queryString += searchStatus.joinToString(separator = "OR ", transform = { "$COLUMN_STATUS = ? " })
-                args.addAll(searchStatus.map { it })
+                args.addAll(searchStatus.map { it.status ?:"" })
 
-                if(searchStatus.isNotEmpty() && isFilterNoStatusSet)
-                    queryString += "OR "
-                if (isFilterNoStatusSet)
-                    queryString += "$COLUMN_STATUS IS NULL"
+                if (searchStatus.contains(Status.NO_STATUS))
+                    queryString += "OR $COLUMN_STATUS IS NULL"
                 queryString += ") "
             }
 
@@ -366,15 +356,13 @@ data class ICal4List(
                 queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
 
             //CLASSIFICATION
-            if ((searchClassification.isNotEmpty() || isFilterNoClassificationSet)) {
+            if (searchClassification.isNotEmpty()) {
                 queryString += "AND ("
                 queryString += searchClassification.joinToString(separator = "OR ", transform = { "$COLUMN_CLASSIFICATION = ? " })
-                args.addAll(searchClassification.map { it.toString() })
+                args.addAll(searchClassification.map { it.classification ?: ""})
 
-                if(searchClassification.isNotEmpty() && isFilterNoClassificationSet)
-                    queryString += "OR "
-                if (isFilterNoClassificationSet)
-                    queryString += "$COLUMN_CLASSIFICATION IS NULL"
+                if(searchClassification.contains(Classification.NO_CLASSIFICATION))
+                    queryString += "OR $COLUMN_CLASSIFICATION IS NULL"
                 queryString += ") "
             }
 

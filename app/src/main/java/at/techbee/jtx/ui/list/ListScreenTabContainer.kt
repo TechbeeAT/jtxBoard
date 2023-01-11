@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.rememberModalBottomSheetState
@@ -50,8 +49,9 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
-import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
+import at.techbee.jtx.ui.reusable.dialogs.DeleteSelectedDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
+import at.techbee.jtx.ui.reusable.dialogs.UpdateEntriesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
@@ -120,7 +120,9 @@ fun ListScreenTabContainer(
     }
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
-    var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
+    var showDeleteSelectedDialog by remember { mutableStateOf(false) }
+    var showUpdateEntriesDialog by remember { mutableStateOf(false) }
+
 
     fun getActiveViewModel() =
         when (pagerState.currentPage) {
@@ -142,11 +144,27 @@ fun ListScreenTabContainer(
     var showSearch by remember { mutableStateOf(false) }
     val showQuickAdd = remember { mutableStateOf(false) }
 
-    if (showDeleteAllVisibleDialog) {
-        DeleteVisibleDialog(
-            numEntriesToDelete = getActiveViewModel().iCal4List.value?.filter { entry -> !entry.isReadOnly}?.size ?: 0,
-            onConfirm = { getActiveViewModel().deleteVisible() },
-            onDismiss = { showDeleteAllVisibleDialog = false }
+    if (showDeleteSelectedDialog) {
+        DeleteSelectedDialog(
+            numEntriesToDelete = getActiveViewModel().selectedEntries.size,
+            onConfirm = { getActiveViewModel().deleteSelected() },
+            onDismiss = { showDeleteSelectedDialog = false }
+        )
+    }
+
+    if (showUpdateEntriesDialog) {
+        UpdateEntriesDialog(
+            module = getActiveViewModel().module,
+            allCategoriesLive = getActiveViewModel().allCategories,
+            allResourcesLive = getActiveViewModel().allResources,
+            allCollectionsLive = getActiveViewModel().allWriteableCollections,
+            onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
+            onResourcesChanged = { addedResources, deletedResources -> getActiveViewModel().updateResourcesToSelected(addedResources, deletedResources) },
+            onStatusChanged = { newStatus -> getActiveViewModel().updateStatusOfSelected(newStatus) },
+            onClassificationChanged = { newClassification -> getActiveViewModel().updateClassificationOfSelected(newClassification) },
+            onPriorityChanged = { newPriority -> getActiveViewModel().updatePriorityOfSelected(newPriority) },
+            onCollectionChanged = { newCollection -> getActiveViewModel().moveSelectedToNewCollection(newCollection) },
+            onDismiss = { showUpdateEntriesDialog = false }
         )
     }
 
@@ -237,21 +255,6 @@ fun ListScreenTabContainer(
                             )
                             Divider()
                         }
-                        if(getActiveViewModel().iCal4List.value?.isNotEmpty() == true) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        stringResource(id = R.string.menu_list_delete_visible)
-                                    )
-                                },
-                                leadingIcon = { Icon(Icons.Outlined.DeleteOutline, null) },
-                                onClick = {
-                                    showDeleteAllVisibleDialog = true
-                                    topBarMenuExpanded = false
-                                }
-                            )
-                            Divider()
-                        }
                         ViewMode.values().forEach { viewMode ->
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
@@ -332,6 +335,8 @@ fun ListScreenTabContainer(
                         addNewEntry(newICalObject, emptyList(), null, true)
                     },
                     showQuickEntry = showQuickAdd,
+                    multiselectEnabled = listViewModel.multiselectEnabled,
+                    selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,
                     onFilterIconClicked = {
                         scope.launch {
@@ -341,13 +346,17 @@ fun ListScreenTabContainer(
                                 filterBottomSheetState.show()
                         }
                     },
-                    onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) }
+                    onGoToDateSelected = { id -> getActiveViewModel().scrollOnceId.postValue(id) },
+                    onDeleteSelectedClicked = { showDeleteSelectedDialog = true },
+                    onUpdateSelectedClicked = { showUpdateEntriesDialog = true }
                 )
             } else if(timeout) {
                 BottomAppBar {
                     Text(
                         text = stringResource(R.string.list_snackbar_no_collection),
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -430,29 +439,17 @@ fun ListScreenTabContainer(
                                     count = 3,
                                     userScrollEnabled = !filterBottomSheetState.isVisible,
                                 ) { page ->
-                                    when (page) {
-                                        ListTabDestination.Journals.tabIndex -> {
-                                            ListScreen(
-                                                listViewModel = icalListViewModelJournals,
-                                                navController = navController,
-                                                filterBottomSheetState = filterBottomSheetState,
-                                            )
-                                        }
-                                        ListTabDestination.Notes.tabIndex -> {
-                                            ListScreen(
-                                                listViewModel = icalListViewModelNotes,
-                                                navController = navController,
-                                                filterBottomSheetState = filterBottomSheetState,
-                                            )
-                                        }
-                                        ListTabDestination.Tasks.tabIndex -> {
-                                            ListScreen(
-                                                listViewModel = icalListViewModelTodos,
-                                                navController = navController,
-                                                filterBottomSheetState = filterBottomSheetState,
-                                            )
-                                        }
-                                    }
+
+                                    ListScreen(
+                                        listViewModel = when (page) {
+                                            ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
+                                            ListTabDestination.Notes.tabIndex -> icalListViewModelNotes
+                                            ListTabDestination.Tasks.tabIndex -> icalListViewModelTodos
+                                            else -> icalListViewModelJournals
+                                        },
+                                        navController = navController,
+                                        filterBottomSheetState = filterBottomSheetState,
+                                    )
                                 }
 
                                 if(globalStateHolder.isSyncInProgress.value) {
