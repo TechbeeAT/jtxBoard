@@ -85,8 +85,6 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Počet účastníků"</string>
     <string name="list_num_attachments_contentdesc">"Počet příloh"</string>
     <string name="list_num_comments_contentdesc">"Počet komentářů"</string>
-    <string name="list_dialog_delete_visible_title">"Odstranit všechny viditelné?"</string>
-    <string name="list_dialog_delete_visible_message">"Tato akce odstraní všechny viditelné záznamy (%1$d). Opravdu chcete pokračovat? Tuto operaci nelze vrátit zpět!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Souhrn/Popis"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"První řádek je interpretován jako souhrn, zbytek jako popis. Hashtagy jsou interpretovány jako kategorie (např. #kategorie)."</string>
     <string name="list_item_upload_pending">"Čekání na nahrání"</string>
