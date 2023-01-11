@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.cards
 
+import android.accounts.Account
 import android.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -189,7 +190,7 @@ fun CollectionCard(
                                     text = { Text(stringResource(id = R.string.menu_collection_popup_show_in_davx5)) },
                                     leadingIcon = { Icon(Icons.Outlined.Sync, null) },
                                     onClick = {
-                                        SyncUtil.openDAVx5AccountsActivity(context)
+                                        SyncUtil.openDAVx5AccountActivity(Account(collection.accountName, collection.accountType), context)
                                         menuExpanded = false
                                     }
                                 )
