@@ -84,7 +84,7 @@ enum class DetailSettingsOption(
         stringResource = R.string.resources,
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
-        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+        possibleFor = listOf(Module.TODO)
     ),
     ENABLE_CONTACT(
         key = "enableContact",
@@ -166,9 +166,7 @@ enum class DetailSettingsOption(
 }
 
 
-data class DetailSettings(
-    val prefs: SharedPreferences
-) {
+data class DetailSettings(val prefs: SharedPreferences) {
     val detailSetting = mutableStateMapOf<DetailSettingsOption, Boolean>().apply {
         DetailSettingsOption.values().forEach { detailSettingOption ->
             this[detailSettingOption] = prefs.getBoolean(detailSettingOption.key, detailSettingOption.default)
