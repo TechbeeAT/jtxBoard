@@ -43,6 +43,7 @@ class ListSettings {
     var isFilterNoCategorySet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoResourceSet: MutableState<Boolean> = mutableStateOf(false)
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
+    var newEntryText: MutableState<String> = mutableStateOf("")    // newEntryText is not saved!
     var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
     var flatView: MutableState<Boolean> = mutableStateOf(false)
     var showOneRecurEntryInFuture: MutableState<Boolean> = mutableStateOf(false)

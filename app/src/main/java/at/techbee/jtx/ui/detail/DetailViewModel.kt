@@ -11,7 +11,6 @@ package at.techbee.jtx.ui.detail
 import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.SharedPreferences
 import android.database.sqlite.SQLiteConstraintException
 import android.media.MediaPlayer
 import android.net.Uri
@@ -56,7 +55,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var navigateToId = mutableStateOf<Long?>(null)
     var changeState = mutableStateOf(DetailChangeState.UNCHANGED)
     var toastMessage = mutableStateOf<String?>(null)
-    lateinit var detailSettings: DetailSettings
+    val detailSettings: DetailSettings = DetailSettings()
 
     val mediaPlayer = MediaPlayer()
 
@@ -105,15 +104,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
             isChild = database.isChild(icalObjectId)
-
-
-            val prefs: SharedPreferences = when (icalEntity.value?.property?.getModuleFromString()) {
-                Module.JOURNAL -> _application.getSharedPreferences(PREFS_DETAIL_JOURNALS, Context.MODE_PRIVATE)
-                Module.NOTE -> _application.getSharedPreferences(PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
-                Module.TODO -> _application.getSharedPreferences(PREFS_DETAIL_TODOS, Context.MODE_PRIVATE)
-                else -> _application.getSharedPreferences(PREFS_DETAIL_JOURNALS, Context.MODE_PRIVATE)
-            }
-            detailSettings = DetailSettings(prefs)
         }
 
         viewModelScope.launch(Dispatchers.IO) {

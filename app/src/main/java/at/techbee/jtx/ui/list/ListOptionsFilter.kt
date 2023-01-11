@@ -395,49 +395,51 @@ fun ListOptionsFilter(
 
 
             ////// RESOURCES
-            FilterSection(
-                icon = Icons.Outlined.Label,
-                headline = stringResource(id = R.string.resources),
-                onResetSelection = {
-                    listSettings.isFilterNoResourceSet.value = false
-                    listSettings.searchResources.value = emptyList()
-                    onListSettingsChanged()
-                },
-                onInvertSelection = {
-                    listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
-                    listSettings.searchResources.value =
-                        allResources.filter { resource ->
-                            !listSettings.searchResources.value.contains(resource)
-                        }
-                    onListSettingsChanged()
-                })
-            {
-                FlowRow(modifier = Modifier.fillMaxWidth()) {
+            if (module == Module.TODO) {
+                FilterSection(
+                    icon = Icons.Outlined.Label,
+                    headline = stringResource(id = R.string.resources),
+                    onResetSelection = {
+                        listSettings.isFilterNoResourceSet.value = false
+                        listSettings.searchResources.value = emptyList()
+                        onListSettingsChanged()
+                    },
+                    onInvertSelection = {
+                        listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
+                        listSettings.searchResources.value =
+                            allResources.filter { resource ->
+                                !listSettings.searchResources.value.contains(resource)
+                            }
+                        onListSettingsChanged()
+                    })
+                {
+                    FlowRow(modifier = Modifier.fillMaxWidth()) {
 
-                    FilterChip(
-                        selected = listSettings.isFilterNoResourceSet.value,
-                        onClick = {
-                            listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = R.string.filter_no_resource)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-
-                    allResources.forEach { resource ->
                         FilterChip(
-                            selected = listSettings.searchResources.value.contains(resource),
+                            selected = listSettings.isFilterNoResourceSet.value,
                             onClick = {
-                                listSettings.searchResources.value =
-                                    if (listSettings.searchResources.value.contains(resource))
-                                        listSettings.searchResources.value.minus(resource)
-                                    else
-                                        listSettings.searchResources.value.plus(resource)
+                                listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
                                 onListSettingsChanged()
                             },
-                            label = { Text(resource) },
+                            label = { Text(stringResource(id = R.string.filter_no_resource)) },
                             modifier = Modifier.padding(end = 4.dp)
                         )
+
+                        allResources.forEach { resource ->
+                            FilterChip(
+                                selected = listSettings.searchResources.value.contains(resource),
+                                onClick = {
+                                    listSettings.searchResources.value =
+                                        if (listSettings.searchResources.value.contains(resource))
+                                            listSettings.searchResources.value.minus(resource)
+                                        else
+                                            listSettings.searchResources.value.plus(resource)
+                                    onListSettingsChanged()
+                                },
+                                label = { Text(resource) },
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                        }
                     }
                 }
             }

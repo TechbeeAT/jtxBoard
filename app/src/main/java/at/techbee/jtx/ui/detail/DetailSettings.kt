@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.detail
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.mutableStateMapOf
 import at.techbee.jtx.R
@@ -84,7 +85,7 @@ enum class DetailSettingsOption(
         stringResource = R.string.resources,
         group = DetailSettingsOptionGroup.ELEMENT,
         default = false,
-        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+        possibleFor = listOf(Module.TODO)
     ),
     ENABLE_CONTACT(
         key = "enableContact",
@@ -166,20 +167,46 @@ enum class DetailSettingsOption(
 }
 
 
-data class DetailSettings(
-    val prefs: SharedPreferences
-) {
-    val detailSetting = mutableStateMapOf<DetailSettingsOption, Boolean>().apply {
-        DetailSettingsOption.values().forEach { detailSettingOption ->
-            this[detailSettingOption] = prefs.getBoolean(detailSettingOption.key, detailSettingOption.default)
-        }
-    }
+class DetailSettings {
+    val detailSetting = mutableStateMapOf<DetailSettingsOption, Boolean>()
+    private var currentModule: Module? = null
+    private var prefs: SharedPreferences? = null
 
     fun save() {
-        prefs.edit().apply {
+        prefs?.edit().apply {
             DetailSettingsOption.values().forEach { detailSettingOption ->
-                putBoolean(detailSettingOption.key, detailSetting[detailSettingOption] ?: true)
+                this?.putBoolean(detailSettingOption.key, detailSetting[detailSettingOption] ?: true)
             }
-        }.apply()
+        }?.apply()
+    }
+
+    fun load(module: Module, context: Context) {
+        if(currentModule != module || detailSetting.isEmpty() || prefs == null) {
+            currentModule = module
+            prefs = when (module) {
+                Module.JOURNAL -> context.getSharedPreferences(DetailViewModel.PREFS_DETAIL_JOURNALS, Context.MODE_PRIVATE)
+                Module.NOTE -> context.getSharedPreferences(DetailViewModel.PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
+                Module.TODO -> context.getSharedPreferences(DetailViewModel.PREFS_DETAIL_TODOS, Context.MODE_PRIVATE)
+            }
+
+            // bugfix handling - before always journal prefs were used. those settings are now initially
+            // applied to all settings. TODO: Delete in future
+            // checking for category is just one example (instead of checking for all keys)
+            if(prefs?.contains(DetailSettingsOption.ENABLE_CATEGORIES.key) == false) {
+                context.getSharedPreferences(DetailViewModel.PREFS_DETAIL_JOURNALS, Context.MODE_PRIVATE).let { legacy ->
+                    prefs?.edit().apply {
+                        DetailSettingsOption.values().forEach { detailSettingOption ->
+                            this?.putBoolean(detailSettingOption.key, legacy.getBoolean(detailSettingOption.key, true))
+                        }
+                    }?.apply()
+                }
+            }
+
+            detailSetting.apply {
+                DetailSettingsOption.values().forEach { detailSettingOption ->
+                    prefs?.getBoolean(detailSettingOption.key, detailSettingOption.default)?.let { this[detailSettingOption] = it }
+                }
+            }
+        }
     }
 }

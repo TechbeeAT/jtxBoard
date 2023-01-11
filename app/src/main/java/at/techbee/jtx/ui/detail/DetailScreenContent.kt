@@ -8,8 +8,6 @@
 
 package at.techbee.jtx.ui.detail
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -641,7 +639,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES]?:false || showAllOptions))) {
+            AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value  && icalObject.getModuleFromString() == Module.TODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES]?:false || showAllOptions))) {
                 DetailsCardResources(
                     initialResources = resources.value,
                     isEditMode = isEditMode.value,
@@ -835,12 +833,7 @@ fun DetailScreenContent_JOURNAL() {
             Category(2, 1, "My Dog likes Cats", null, null),
             Category(3, 1, "This is a very long category", null, null),
         )
-
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_JOURNALS,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
+        val detailSettings = DetailSettings()
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
@@ -884,11 +877,7 @@ fun DetailScreenContent_TODO_editInitially() {
         entity.property.description = "Hello World, this \nis my description."
         entity.property.contact = "John Doe, +1 555 5545"
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_TODOS,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
+        val detailSettings = DetailSettings()
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
@@ -934,11 +923,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
         entity.property.description = "Hello World, this \nis my description."
         entity.property.contact = "John Doe, +1 555 5545"
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_TODOS,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
+        val detailSettings = DetailSettings()
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
@@ -976,11 +961,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
 fun DetailScreenContent_failedLoading() {
     MaterialTheme {
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_TODOS,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
+        val detailSettings = DetailSettings()
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(null) },

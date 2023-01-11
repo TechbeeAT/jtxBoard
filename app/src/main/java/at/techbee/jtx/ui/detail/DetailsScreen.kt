@@ -88,6 +88,9 @@ fun DetailsScreen(
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
     val isProActionAvailable by remember(isProPurchased, icalEntity) { derivedStateOf { isProPurchased.value || icalEntity.value?.ICalCollection?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
 
+    icalEntity.value?.property?.getModuleFromString()?.let {
+        detailViewModel.detailSettings.load(it, context)
+    }
 
     if (navigateUp && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.CHANGESAVING) {
         if (returnToLauncher) {
@@ -158,34 +161,42 @@ fun DetailsScreen(
 
                         Text(stringResource(R.string.details_app_bar_behaviour), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 8.dp))
                         DropdownMenuItem(
-                            text = { Text(
-                                text = stringResource(id = R.string.edit_subtasks_add_helper),
-                                color = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
-                            ) },
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.edit_subtasks_add_helper),
+                                    color = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                )
+                            },
                             onClick = {
                                 settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBTASK
                                 menuExpanded.value = false
                             },
-                            leadingIcon = { Icon(
-                                imageVector = Icons.Outlined.AddTask,
-                                contentDescription = null,
-                                tint = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-                            ) }
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.AddTask,
+                                    contentDescription = null,
+                                    tint = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
                         )
                         DropdownMenuItem(
-                            text = { Text(
-                                text = stringResource(id = R.string.edit_subnote_add_helper),
-                                color = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
-                            ) },
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.edit_subnote_add_helper),
+                                    color = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                )
+                            },
                             onClick = {
                                 settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBNOTE
                                 menuExpanded.value = false
                             },
-                            leadingIcon = { Icon(
-                                imageVector = Icons.Outlined.NoteAdd,
-                                contentDescription = null,
-                                tint = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-                            ) }
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.NoteAdd,
+                                    contentDescription = null,
+                                    tint = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
                         )
 
                         Divider()
@@ -330,7 +341,11 @@ fun DetailsScreen(
                 sheetState = detailsBottomSheetState,
                 sheetContent = {
                     DetailOptionsBottomSheet(
-                        module = try { Module.valueOf(icalEntity.value?.property?.module?: Module.NOTE.name) } catch(e: Exception) { Module.NOTE },
+                        module = try {
+                            Module.valueOf(icalEntity.value?.property?.module ?: Module.NOTE.name)
+                        } catch (e: Exception) {
+                            Module.NOTE
+                        },
                         detailSettings = detailViewModel.detailSettings,
                         onListSettingsChanged = { detailViewModel.detailSettings.save() },
                         modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = paddingValues.calculateBottomPadding())
