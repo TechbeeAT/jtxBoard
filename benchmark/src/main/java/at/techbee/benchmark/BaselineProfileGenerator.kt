@@ -19,6 +19,11 @@ import org.junit.runner.RunWith
  *
  * Run this benchmark from Studio to see startup measurements, and captured system traces
  * for investigating your app's performance.
+ *
+ * Execute the following command to generate the baseline profile:
+ * ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -P android.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile
+ * Follow the instructions in the video to copy the generated file to the main folder:
+ * https://www.youtube.com/watch?v=hqYnZ5qCw8Y
  */
 @RunWith(AndroidJUnit4::class)
 class BaselineProfileGenerator {
@@ -29,6 +34,8 @@ class BaselineProfileGenerator {
     fun generate() = rule.collectBaselineProfile("at.techbee.jtx") {
         pressHome()
         startActivityAndWait()
-        device.wait(Until.hasObject(By.res("benchmark:ListCard")), 30_000)
+        device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
+        device.findObject(By.res(BENCHMARK_TAG_LISTCARD)).click()
+        device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 30_000)
     }
 }
