@@ -37,13 +37,13 @@ fun ListTopAppBar(
     listTopAppBarMode: ListTopAppBarMode,
     module: Module,
     searchText: MutableState<String?>,
+    newEntryText: MutableState<String>,
     onSearchTextUpdated: () -> Unit,
     onCreateNewEntry: (String) -> Unit,
     actions: @Composable () -> Unit = { }
 ) {
 
     val coroutineScope = rememberCoroutineScope()
-    var newEntryText by remember { mutableStateOf("")}
 
     CenterAlignedTopAppBar(
         title = {
@@ -51,7 +51,7 @@ fun ListTopAppBar(
             OutlinedTextField(
                 value = when(listTopAppBarMode) {
                     ListTopAppBarMode.SEARCH -> searchText.value ?: ""
-                    ListTopAppBarMode.ADD_ENTRY -> newEntryText
+                    ListTopAppBarMode.ADD_ENTRY -> newEntryText.value
                 },
                 onValueChange = {
                     when(listTopAppBarMode) {
@@ -60,7 +60,7 @@ fun ListTopAppBar(
                             onSearchTextUpdated()
                         }
                         ListTopAppBarMode.ADD_ENTRY -> {
-                            newEntryText = it
+                            newEntryText.value = it
                         }
                     }
                 },
@@ -134,10 +134,10 @@ fun ListTopAppBar(
                 },
                 trailingIcon = {
                     Row {
-                        AnimatedVisibility(listTopAppBarMode == ListTopAppBarMode.ADD_ENTRY && newEntryText.isNotEmpty()) {
+                        AnimatedVisibility(listTopAppBarMode == ListTopAppBarMode.ADD_ENTRY && newEntryText.value.isNotEmpty()) {
                             IconButton(onClick = {
-                                onCreateNewEntry(newEntryText)
-                                newEntryText = ""
+                                onCreateNewEntry(newEntryText.value)
+                                newEntryText.value = ""
                             }) {
                                 Crossfade(module) {
                                     when (it) {
@@ -153,9 +153,9 @@ fun ListTopAppBar(
                 },
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
-                    if(listTopAppBarMode == ListTopAppBarMode.ADD_ENTRY && newEntryText.isNotBlank()) {
-                        onCreateNewEntry(newEntryText)
-                        newEntryText = ""
+                    if(listTopAppBarMode == ListTopAppBarMode.ADD_ENTRY && newEntryText.value.isNotBlank()) {
+                        onCreateNewEntry(newEntryText.value)
+                        newEntryText.value = ""
                     }
                 })
             )
@@ -176,6 +176,7 @@ fun ListTopAppBar_Preview() {
                 listTopAppBarMode = ListTopAppBarMode.SEARCH,
                 module = Module.TODO,
                 searchText = remember { mutableStateOf("") },
+                newEntryText = remember { mutableStateOf("") },
                 onSearchTextUpdated = { },
                 onCreateNewEntry = { },
                 actions = {
@@ -205,6 +206,7 @@ fun ListTopAppBar_Preview_add_entry() {
                 listTopAppBarMode = ListTopAppBarMode.ADD_ENTRY,
                 module = Module.TODO,
                 searchText = remember { mutableStateOf("") },
+                newEntryText = remember { mutableStateOf("") },
                 onSearchTextUpdated = { },
                 onCreateNewEntry = { },
                 actions = {

@@ -20,8 +20,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -269,6 +267,7 @@ fun ListScreenTabContainer(
                 listTopAppBarMode = getActiveViewModel().listSettings.topAppBarMode.value,
                 module = listViewModel.module,
                 searchText = listViewModel.listSettings.searchText,
+                newEntryText = listViewModel.listSettings.newEntryText,
                 onSearchTextUpdated = { listViewModel.updateSearch(saveListSettings = false) },
                 onCreateNewEntry = { newEntryText ->
                     addNewEntry(
@@ -311,6 +310,7 @@ fun ListScreenTabContainer(
                             onClick = {
                                 getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.SEARCH
                                 getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
+                                getActiveViewModel().listSettings.newEntryText.value = ""
                                 topBarMenuExpanded = false
                             }
                         )
@@ -339,6 +339,7 @@ fun ListScreenTabContainer(
                                     getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
                                     topBarMenuExpanded = false
                                 }
+                                getActiveViewModel().listSettings.searchText.value = null
                             },
                             trailingIcon = {
                                 IconButton(onClick = {
@@ -432,7 +433,8 @@ fun ListScreenTabContainer(
                         settingsStateHolder.lastUsedModule.value = listViewModel.module
                         settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
 
-                        addNewEntry(module = listViewModel.module, text = null, collectionId = proposedCollectionId, attachment = null, editAfterSaving = true)
+                        addNewEntry(module = listViewModel.module, text = listViewModel.listSettings.newEntryText.value.ifEmpty { null }, collectionId = proposedCollectionId, attachment = null, editAfterSaving = true)
+                        listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
                     multiselectEnabled = listViewModel.multiselectEnabled,
