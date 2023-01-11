@@ -83,8 +83,6 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Número de asistentes"</string>
     <string name="list_num_attachments_contentdesc">"Número de adjuntos"</string>
     <string name="list_num_comments_contentdesc">"Número de comentarios"</string>
-    <string name="list_dialog_delete_visible_title">"¿Borrar todos los elementos visibles?"</string>
-    <string name="list_dialog_delete_visible_message">"Esto eliminará todas las entradas visibles (%1$d). ¿Está seguro de que quiere continuar? ¡Esta operación no se puede deshacer!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Resumen / Descripción"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línea es interpretada como resumen, el resto como descripción. Las etiquetas son interpretadas como categorías (ejemplo: #categoría)."</string>
     <string name="list_item_upload_pending">"Subida pendiente"</string>
