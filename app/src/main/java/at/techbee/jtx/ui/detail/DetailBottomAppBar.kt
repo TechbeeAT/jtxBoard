@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.detail
 
+import android.accounts.Account
 import android.content.ContentResolver
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -95,7 +96,7 @@ fun DetailBottomAppBar(
             null
         else {
             ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-                isSyncInProgress = SyncUtil.isJtxSyncRunning(context)
+                isSyncInProgress = SyncUtil.isJtxSyncRunningForAccount(Account(collection.accountName, collection.accountType))
             }
         }
         onDispose {
