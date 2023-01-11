@@ -83,8 +83,6 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Αριθμός συμμετεχόντων"</string>
     <string name="list_num_attachments_contentdesc">"Αριθμός συνημμένων"</string>
     <string name="list_num_comments_contentdesc">"Αριθμός σχολίων"</string>
-    <string name="list_dialog_delete_visible_title">"Διαγραφή όλων των ορατών;"</string>
-    <string name="list_dialog_delete_visible_message">"Αυτή η ενέργεια διαγράφει όλες τις ορατές καταχωρήσεις. (%1$d). Είστε σίγουροι ότι θέλετε να συνεχίσετε; Αυτή η λειτουργία δεν μπορεί να ανακληθεί!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Περίληψη/Περιγραφή"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Η πρώτη γραμμή ερμηνεύεται ως περίληψη, η υπόλοιπη ως περιγραφή. Τα hashtags ερμηνεύονται ως κατηγορίες (πχ. #category)."</string>
     <string name="list_item_upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>

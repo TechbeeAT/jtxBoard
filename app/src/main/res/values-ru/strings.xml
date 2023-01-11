@@ -83,8 +83,6 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Количество участников"</string>
     <string name="list_num_attachments_contentdesc">"Количество вложений"</string>
     <string name="list_num_comments_contentdesc">"Количество комментариев"</string>
-    <string name="list_dialog_delete_visible_title">"Удалить все видимые?"</string>
-    <string name="list_dialog_delete_visible_message">"Это действие удалит все видимые записи (%1$d). Вы уверены, что хотите продолжить? Эту операцию отменить невозможно!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Сводка/Описание"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Первая строка интерпретируется как сводка, остальные — как описание. Хэштеги интерпретируются как категории (например, #категория)."</string>
     <string name="list_item_upload_pending">"Ожидающие загрузки"</string>

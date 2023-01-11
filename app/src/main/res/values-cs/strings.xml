@@ -85,8 +85,8 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Počet účastníků"</string>
     <string name="list_num_attachments_contentdesc">"Počet příloh"</string>
     <string name="list_num_comments_contentdesc">"Počet komentářů"</string>
-    <string name="list_dialog_delete_visible_title">"Odstranit všechny viditelné?"</string>
-    <string name="list_dialog_delete_visible_message">"Tato akce odstraní všechny viditelné záznamy (%1$d). Opravdu chcete pokračovat? Tuto operaci nelze vrátit zpět!"</string>
+    <string name="list_dialog_delete_selected_title">Odstranit vybrané záznamy?</string>
+    <string name="list_dialog_delete_selected_message">Tato akce odstraní všechny vybrané záznamy (%1$d). Opravdu chcete pokračovat? Tuto operaci nelze vrátit zpět!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Souhrn/Popis"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"První řádek je interpretován jako souhrn, zbytek jako popis. Hashtagy jsou interpretovány jako kategorie (např. #kategorie)."</string>
     <string name="list_item_upload_pending">"Čekání na nahrání"</string>
@@ -410,6 +410,10 @@ Děkujeme vám!"</string>
     <string name="buypro_initial_dialog_message">"Dobrý den! jtx Board se dodává ve standardní verzi a verzi Pro. Více informací o jtx Board Pro naleznete v sekci \"Zakoupit Pro\"! Děkujeme!"</string>
     <string name="menu_list_viewmode_list">"Zobrazení seznamu"</string>
     <string name="menu_list_viewmode_grid">"Zobrazení mřížky"</string>
+    <string name="settings_modules">"Aktivní moduly"</string>
+    <string name="settings_modules_enable_journals">"Deníky"</string>
+    <string name="settings_modules_enable_notes">"Poznámky"</string>
+    <string name="settings_modules_enable_tasks">"Úkoly"</string>
     <string name="settings_default_expand_subtasks">"Rozbalovat dílčí úkoly v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_subnotes">"Rozbalovat dílčí poznámky v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_attachments">"Rozbalovat přílohy v seznamu ve výchozím nastavení"</string>
@@ -437,6 +441,7 @@ Děkujeme vám!"</string>
     <string name="invalid_url_message">"Zadejte platnou URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spustit rozpoznávání řeči"</string>
     <string name="list_quickadd_dialog_sr_listening">"Naslouchání…"</string>
+    <string name="list_update_entries_dialog_title">"Aktualizovat záznamy"</string>
     <string name="details_app_bar_behaviour">"Chování panelu aplikace"</string>
     <string name="details_show_all_options">"Zobrazit všechny volby"</string>
     <string name="details_show_hide_elements">Zobrazit/skrýt prvky</string>
@@ -470,6 +475,7 @@ Děkujeme vám!"</string>
     <string name="dialog_revert_changes_title">"Vrátit změny?"</string>
     <string name="dialog_revert_changes_message">"Opravdu chcete zahodit své změny a vrátit obsah do stavu před zahájením úprav?"</string>
     <string name="dialog_revert_changes_message2">"Pozor: Dílčí úkoly a poznámky jsou samostatné záznamy a nelze je vrátit zpět."</string>
+    <string name="dialog_collection_new_entries_title">"Sbírka pro nové záznamy"</string>
     <string name="menu_list_viewmode_compact">"Kompaktní zobrazení"</string>
     <string name="menu_list_viewmode_kanban">"Zobrazení Kanban"</string>
     <string name="settings_details">"Nastavení pro podrobnosti položky"</string>
@@ -541,6 +547,9 @@ Děkujeme vám!"</string>
     <string name="menu_view_autosave">"Automaticky ukládat"</string>
     <string name="next">"Další"</string>
     <string name="previous">"Předchozí"</string>
+    <string name="x_selected">%1$d/%2$d vybraných</string>
+    <string name="select_all">Vybrat vše</string>
+    <string name="select_none">Zrušit výběr</string>
     <string name="visible">Viditelný</string>
     <string name="invisible">Neviditelný</string>
     <string name="widget_list_description">"Widget seznamu"</string>
