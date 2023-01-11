@@ -97,8 +97,8 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Number of attendees"</string>
     <string name="list_num_attachments_contentdesc">"Number of attachments"</string>
     <string name="list_num_comments_contentdesc">"Number of comments"</string>
-    <string name="list_dialog_delete_visible_title">"Delete all visible?"</string>
-    <string name="list_dialog_delete_visible_message">"This action deletes all visible entries (%1$d). Are you sure that you want to proceed? This operation cannot be undone!"</string>
+    <string name="list_dialog_delete_selected_title">Delete selected entries?</string>
+    <string name="list_dialog_delete_selected_message">This action deletes all selected entries (%1$d). Are you sure that you want to proceed? This operation cannot be undone!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Summary/Description"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
     <string name="list_item_upload_pending">"Upload pending"</string>
@@ -458,6 +458,7 @@ Thank you!"</string>
     <string name="invalid_url_message">"Please enter a valid URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
     <string name="list_quickadd_dialog_sr_listening">"Listening …"</string>
+    <string name="list_update_entries_dialog_title">"Update entries"</string>
     <string name="details_app_bar_behaviour">"App bar behaviour"</string>
     <string name="details_show_all_options">"Show all options"</string>
     <string name="details_show_hide_elements">Show/hide elements</string>
@@ -565,6 +566,9 @@ Thank you!"</string>
     <string name="menu_view_autosave">"Autosave"</string>
     <string name="next">"Next"</string>
     <string name="previous">"Previous"</string>
+    <string name="x_selected">%1$d/%2$d selected</string>
+    <string name="select_all">Select all</string>
+    <string name="select_none">Select none</string>
     <string name="visible">Visible</string>
     <string name="invisible">Invisible</string>
     <string name="widget_list_description">"List widget"</string>

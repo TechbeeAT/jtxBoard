@@ -35,6 +35,7 @@ import at.techbee.jtx.util.DateTimeUtils
 @Composable
 fun ListCardKanban(
     iCalObject: ICal4List,
+    selected: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -44,7 +45,12 @@ fun ListCardKanban(
         )
     }
 
-    ElevatedCard(modifier = modifier) {
+    ElevatedCard(
+        colors = CardDefaults.cardColors(
+            containerColor = if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+        ),
+        modifier = modifier
+    ) {
 
         Box {
 
@@ -133,7 +139,7 @@ fun ListCardKanban(
                         if (iCalObject.summary?.isNotBlank() == true)
                             Text(
                                 text = iCalObject.summary?.trim() ?: "",
-                                textDecoration = if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None,
+                                textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
                                 maxLines = 4,
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight = FontWeight.Bold,
@@ -162,7 +168,6 @@ fun ListCardKanban(
                         isRecurringOriginal = iCalObject.isRecurringOriginal,
                         isRecurringInstance = iCalObject.isRecurringInstance,
                         isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
-                        component = iCalObject.component,
                         modifier = Modifier.fillMaxWidth().padding(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 4.dp).weight(0.2f)
                     )
                 }
@@ -181,6 +186,7 @@ fun ListCardKanban_JOURNAL() {
         }
         ListCardKanban(
             icalobject,
+            selected = false,
             modifier = Modifier
                 .width(150.dp)
                 .height(150.dp)
@@ -198,10 +204,11 @@ fun ListCardKanban_NOTE() {
             module = Module.NOTE.name
             dtstart = null
             dtstartTimezone = null
-            status = StatusJournal.CANCELLED.name
+            status = Status.CANCELLED.status
         }
         ListCardKanban(
             icalobject,
+            selected = true,
             modifier = Modifier.width(150.dp).height(150.dp)
         )
     }
@@ -216,7 +223,7 @@ fun ListCardKanban_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
@@ -229,7 +236,8 @@ fun ListCardKanban_TODO() {
             isReadOnly = true
         }
         ListCardKanban(
-            icalobject
+            icalobject,
+            selected = false,
         )
     }
 }

@@ -11,6 +11,7 @@ package at.techbee.jtx.widgets
 import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
@@ -27,7 +28,10 @@ import androidx.glance.layout.*
 import androidx.glance.text.*
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.widgets.elements.ListEntry
@@ -60,13 +64,13 @@ class ListWidget : GlanceAppWidget() {
             GroupBy.STATUS -> list.sortedBy {
                 if (listWidgetConfig.module == Module.TODO && it.percent != 100)
                     try {
-                        StatusTodo.valueOf(it.status ?: StatusTodo.`NEEDS-ACTION`.name).ordinal
+                        Status.valueOf(it.status ?: Status.NEEDS_ACTION.name).ordinal
                     } catch (e: java.lang.IllegalArgumentException) {
                         -1
                     }
                 else
                     try {
-                        StatusJournal.valueOf(it.status ?: StatusJournal.FINAL.name).ordinal
+                        Status.valueOf(it.status ?: Status.FINAL.name).ordinal
                     } catch (e: java.lang.IllegalArgumentException) {
                         -1
                     }
@@ -85,13 +89,8 @@ class ListWidget : GlanceAppWidget() {
         
         val groupedList = sortedList.groupBy {
             when (listWidgetConfig?.groupBy) {
-                GroupBy.STATUS -> {
-                    if (listWidgetConfig.module == Module.TODO)
-                        StatusTodo.getStringResource(context, it.status)
-                    else
-                        StatusJournal.getStringResource(context, it.status)
-                }
-                GroupBy.CLASSIFICATION -> Classification.getStringResource(context, it.classification)
+                GroupBy.STATUS -> Status.values().find { status -> status.status == it.status}?.stringResource?.let { stringRes -> stringResource(id = stringRes) }?: it.status?: stringResource(id = R.string.status_no_status)
+                GroupBy.CLASSIFICATION -> Classification.values().find { classif -> classif.classification == it.classification}?.stringResource?.let { stringRes -> stringResource(id = stringRes) }?: it.classification?:stringResource(id = R.string.classification_no_classification)
                 GroupBy.PRIORITY -> {
                     when (it.priority) {
                         null -> context.resources.getStringArray(R.array.priority)[0]

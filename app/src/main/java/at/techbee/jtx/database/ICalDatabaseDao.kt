@@ -491,6 +491,20 @@ DELETEs by Object
 
 
     /**
+     * Deletes the given categories in [categories] for the given iCalObjectIds in [iCalObjectIds]
+     */
+    @Query("DELETE FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_TEXT IN (:categories) AND $COLUMN_CATEGORY_ICALOBJECT_ID IN (:iCalObjectIds)")
+    fun deleteCategoriesForICalObjects(categories: List<String>, iCalObjectIds: List<Long>)
+
+    /**
+     * Deletes the given categories in [resources] for the given iCalObjectIds in [iCalObjectIds]
+     */
+    @Query("DELETE FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_TEXT IN (:resources) AND $COLUMN_RESOURCE_ICALOBJECT_ID IN (:iCalObjectIds)")
+    fun deleteResourcesForICalObjects(resources: List<String>, iCalObjectIds: List<Long>)
+
+
+
+    /**
      * Delete entities through a RawQuery.
      * This is especially used for the Content Provider
      *
@@ -600,6 +614,14 @@ DELETEs by Object
     @Query("SELECT * from alarm WHERE icalObjectId = :icalobjectId")
     fun getAlarmsSync(icalobjectId: Long): List<Alarm>?
 
+
+    @Transaction
+    @Query("SELECT * from $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_CATEGORY_TEXT = :category")
+    fun getCategoryForICalObjectByName(iCalObjectId: Long, category: String): Category?
+
+    @Transaction
+    @Query("SELECT * from $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_RESOURCE_TEXT = :resource")
+    fun getResourceForICalObjectByName(iCalObjectId: Long, resource: String): Resource?
 
 
     /** This query returns all ids of child elements of the given [parentKey]  */
