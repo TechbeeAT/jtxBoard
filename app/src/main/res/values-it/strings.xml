@@ -85,8 +85,6 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Numero di partecipanti"</string>
     <string name="list_num_attachments_contentdesc">"Numero di allegati"</string>
     <string name="list_num_comments_contentdesc">"Numero di commenti"</string>
-    <string name="list_dialog_delete_visible_title">"Eliminare tutti gli elementi visibili?"</string>
-    <string name="list_dialog_delete_visible_message">"Questa azione elimina tutti gli elementi visibili (%1$d). Sei sicuro di voler continuare? Questa operazione è irreversibile!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Riassunto/Descrizione"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La prima riga è interpretata come riassunto, il resto come descrizione. Gli hashtag sono interpretati come categorie (es. #categoria)."</string>
     <string name="list_item_upload_pending">"Caricamento in sospeso"</string>
