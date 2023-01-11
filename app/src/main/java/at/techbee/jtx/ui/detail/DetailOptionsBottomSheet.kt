@@ -8,8 +8,6 @@
 
 package at.techbee.jtx.ui.detail
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,7 +18,6 @@ import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -82,13 +79,7 @@ fun DetailOptionsBottomSheet(
 @Composable
 fun DetailOptionsBottomSheet_Preview_TODO() {
     MaterialTheme {
-
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_NOTES,
-            Context.MODE_PRIVATE
-        )
-
-        val detailSettings = DetailSettings(prefs)
+        val detailSettings = DetailSettings()
 
         DetailOptionsBottomSheet(
             module = Module.TODO,
@@ -103,13 +94,7 @@ fun DetailOptionsBottomSheet_Preview_TODO() {
 @Composable
 fun DetailOptionsBottomSheet_Preview_JOURNAL() {
     MaterialTheme {
-
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_NOTES,
-            Context.MODE_PRIVATE
-        )
-
-        val detailSettings = DetailSettings(prefs)
+        val detailSettings = DetailSettings()
 
         DetailOptionsBottomSheet(
             module = Module.JOURNAL,
