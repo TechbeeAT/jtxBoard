@@ -247,7 +247,6 @@ class ListSettings {
             putLong(PREFS_TOPAPPBAR_COLLECTION_ID, topAppBarCollectionId.value)
             putString(PREFS_TOPAPPBAR_MODE, topAppBarMode.value.name)
 
-
             //Legacy handling
             remove(PREFS_STATUS_JOURNAL)
             remove(PREFS_STATUS_TODO)
