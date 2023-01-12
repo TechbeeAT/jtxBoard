@@ -347,7 +347,7 @@ fun DetailScreenContent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(Icons.Outlined.Folder, stringResource(id = R.string.collection))
-                            Text(iCalEntity.value?.ICalCollection?.displayName + iCalEntity.value?.ICalCollection?.accountName?.let { " (" + it + ")" })
+                            Text(iCalEntity.value?.ICalCollection?.displayName + iCalEntity.value?.ICalCollection?.accountName?.let { " ($it)" })
                         }
                     }
                 }
@@ -537,6 +537,7 @@ fun DetailScreenContent(
             if (icalObject.module == Module.TODO.name) {
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     ProgressElement(
+                        label = null,
                         iCalObjectId = icalObject.id,
                         progress = icalObject.percent,
                         isReadOnly = iCalEntity.value?.ICalCollection?.readonly == true,
@@ -547,7 +548,6 @@ fun DetailScreenContent(
                             onProgressChanged(itemId, newPercent, isLinked)
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
-                        showProgressLabel = showProgressForMainTasks,
                         showSlider = showProgressForMainTasks,
                         modifier = Modifier.align(Alignment.End)
                     )
