@@ -195,6 +195,10 @@ fun ListWidgetConfigContent(
                                     orderBy2 = listSettings.orderBy2.value
                                     sortOrder2 = listSettings.sortOrder2.value
                                     groupBy = listSettings.groupBy.value
+                                    subtasksOrderBy = listSettings.subtasksOrderBy.value
+                                    subtasksSortOrder = listSettings.subtasksSortOrder.value
+                                    subnotesOrderBy = listSettings.subnotesOrderBy.value
+                                    subnotesSortOrder = listSettings.subnotesSortOrder.value
                                     flatView = listSettings.flatView.value
                                     checkboxPositionEnd = listSettings.checkboxPositionEnd.value
                                     showOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
@@ -271,6 +275,10 @@ data class ListWidgetConfig(
     var orderBy2: OrderBy = OrderBy.SUMMARY,
     var sortOrder2: SortOrder = SortOrder.ASC,
     var groupBy: GroupBy? = null,
+    var subtasksOrderBy: OrderBy = OrderBy.CREATED,
+    var subtasksSortOrder: SortOrder = SortOrder.ASC,
+    var subnotesOrderBy: OrderBy = OrderBy.CREATED,
+    var subnotesSortOrder: SortOrder = SortOrder.ASC,
     var isExcludeDone: Boolean = false,
     var isFilterOverdue: Boolean = false,
     var isFilterDueToday: Boolean = false,

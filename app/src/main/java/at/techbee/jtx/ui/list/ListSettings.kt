@@ -30,6 +30,10 @@ class ListSettings {
     var orderBy2: MutableState<OrderBy> = mutableStateOf(OrderBy.SUMMARY)
     var sortOrder2: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var groupBy: MutableState<GroupBy?> = mutableStateOf(null)
+    var subtasksOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
+    var subtasksSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var subnotesOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
+    var subnotesSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var isExcludeDone: MutableState<Boolean> = mutableStateOf(false)
     var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
@@ -74,6 +78,10 @@ class ListSettings {
         private const val PREFS_ORDERBY2 = "prefsOrderBy2"
         private const val PREFS_SORTORDER2 = "prefsSortOrder2"
         private const val PREFS_GROUPBY = "prefsGroupBy"
+        private const val PREFS_SUBTASKS_ORDERBY = "prefsSubtasksOrderBy"
+        private const val PREFS_SUBTASKS_SORTORDER = "prefsSubtasksSortOrder"
+        private const val PREFS_SUBNOTES_ORDERBY = "prefsSubnotesOrderBy"
+        private const val PREFS_SUBNOTES_SORTORDER = "prefsSubnotesSortOrder"
         private const val PREFS_FILTER_OVERDUE = "prefsFilterOverdue"
         private const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
@@ -142,11 +150,17 @@ class ListSettings {
             }
             searchCollection.value = prefs.getStringSet(PREFS_COLLECTION, null)?.toList() ?: emptyList()
             searchAccount.value = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
+
             orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
             sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
             orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
             sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
             groupBy.value = prefs.getString(PREFS_GROUPBY, null)?.let { try { GroupBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } }
+
+            subtasksOrderBy.value = prefs.getString(PREFS_SUBTASKS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
+            subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+            subnotesOrderBy.value = prefs.getString(PREFS_SUBNOTES_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
+            subnotesSortOrder.value = prefs.getString(PREFS_SUBNOTES_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
 
             viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
@@ -194,11 +208,17 @@ class ListSettings {
             }
             searchCollection.value = listWidgetConfig.searchCollection
             searchAccount.value = listWidgetConfig.searchAccount
+
             orderBy.value = listWidgetConfig.orderBy
             sortOrder.value = listWidgetConfig.sortOrder
             orderBy2.value = listWidgetConfig.orderBy2
             sortOrder2.value = listWidgetConfig.sortOrder2
             groupBy.value = listWidgetConfig.groupBy
+
+            subtasksOrderBy.value = listWidgetConfig.subtasksOrderBy
+            subtasksSortOrder.value = listWidgetConfig.subtasksSortOrder
+            subnotesOrderBy.value = listWidgetConfig.subnotesOrderBy
+            subnotesSortOrder.value = listWidgetConfig.subnotesSortOrder
 
             flatView.value = listWidgetConfig.flatView
             viewMode.value = listWidgetConfig.viewMode
@@ -231,6 +251,12 @@ class ListSettings {
             putString(PREFS_ORDERBY2, orderBy2.value.name)
             putString(PREFS_SORTORDER2, sortOrder2.value.name)
             groupBy.value?.name?.let { putString(PREFS_GROUPBY, it) } ?: remove(PREFS_GROUPBY)
+
+            putString(PREFS_SUBTASKS_ORDERBY, subtasksOrderBy.value.name)
+            putString(PREFS_SUBTASKS_SORTORDER, subtasksSortOrder.value.name)
+            putString(PREFS_SUBNOTES_ORDERBY, subnotesOrderBy.value.name)
+            putString(PREFS_SUBNOTES_SORTORDER, subnotesSortOrder.value.name)
+
             putBoolean(PREFS_EXCLUDE_DONE, isExcludeDone.value)
 
             putStringSet(PREFS_CATEGORIES, searchCategories.value.toSet())

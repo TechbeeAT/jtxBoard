@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.ui.theme.Typography
 
 @Composable
-fun HeadlineWithIcon(icon: ImageVector, iconDesc: String, text: String, modifier: Modifier = Modifier) {
+fun HeadlineWithIcon(icon: ImageVector, iconDesc: String?, text: String, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
