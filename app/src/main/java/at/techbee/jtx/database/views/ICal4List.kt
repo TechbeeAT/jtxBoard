@@ -9,6 +9,7 @@
 package at.techbee.jtx.database.views
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
@@ -280,9 +281,23 @@ data class ICal4List(
             //TEXT
             searchText?.let { text ->
                 if (text.length >= 2) {
-                    queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) "
-                    args.add("%" + text + "%")
-                    args.add("%" + text + "%")
+                    queryString += "AND ("
+
+                    queryString += "$VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ? "
+                    args.add("%$text%")
+                    args.add("%$text%")
+
+                    // Search in Subtasks
+                    queryString += "OR $VIEW_NAME_ICAL4LIST.$COLUMN_UID IN (SELECT DISTINCT $VIEW_NAME_ICAL4LIST.vtodoUidOfParent from $VIEW_NAME_ICAL4LIST WHERE (isChildOfJournal = 1 OR isChildOfNote = 1 OR isChildOfTodo = 1) AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) ) "
+                    args.add("%$text%")
+                    args.add("%$text%")
+
+                    // Search in Subtasks
+                    queryString += "OR $VIEW_NAME_ICAL4LIST.$COLUMN_UID IN (SELECT DISTINCT $VIEW_NAME_ICAL4LIST.vjournalUidOfParent from $VIEW_NAME_ICAL4LIST WHERE (isChildOfJournal = 1 OR isChildOfNote = 1 OR isChildOfTodo = 1) AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) ) "
+                    args.add("%$text%")
+                    args.add("%$text%")
+
+                    queryString += ") "
                 }
             }
 
@@ -407,7 +422,7 @@ data class ICal4List(
             queryString += orderBy2.queryAppendix
             sortOrder2.let { queryString += it.queryAppendix }
 
-            //Log.println(Log.INFO, "queryString", queryString)
+            Log.println(Log.INFO, "queryString", queryString)
             //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
             return SimpleSQLiteQuery(queryString, args.toArray())
         }
