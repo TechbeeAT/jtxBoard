@@ -135,16 +135,6 @@ SELECTs (global selects without parameter)
     /**
      * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
      * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY $COLUMN_SORT_INDEX")
-    fun getAllSubtasks(): LiveData<List<ICal4List>>
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
      * @param parents a list of UIDs of the parents for which the subtasks shall be returned
      * @return a list of [ICalObject] as List<[ICalObject]>
      */
@@ -152,16 +142,6 @@ SELECTs (global selects without parameter)
     @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (:parents) ORDER BY $COLUMN_SORT_INDEX")
     fun getSubtasksSyncOf(parents: List<String>): List<ICal4List>
 
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY $COLUMN_SORT_INDEX")
-    fun getAllSubnotes(): LiveData<List<ICal4List>>
 
 
     /**
@@ -595,6 +575,9 @@ DELETEs by Object
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4List>
 
+    @Transaction
+    @RawQuery(observedEntities = [ICal4List::class])
+    fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
 
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")

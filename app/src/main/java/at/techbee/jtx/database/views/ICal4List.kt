@@ -426,6 +426,9 @@ data class ICal4List(
             //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
             return SimpleSQLiteQuery(queryString, args.toArray())
         }
+
+        fun getQueryForAllSubEntries(component: Component, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
     }
 
 

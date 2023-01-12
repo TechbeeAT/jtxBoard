@@ -55,13 +55,19 @@ open class ListViewModel(application: Application, val module: Module) : Android
         database.getIcal4List(it)
     }
 
-    private val allSubtasksList: LiveData<List<ICal4List>> = database.getAllSubtasks()
-    val allSubtasksMap = Transformations.map(allSubtasksList) { list ->
+    private var allSubtasksQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var allSubtasks: LiveData<List<ICal4List>> = Transformations.switchMap(allSubtasksQuery) {
+        database.getSubEntries(it)
+    }
+    val allSubtasksMap = Transformations.map(allSubtasks) { list ->
         return@map list.groupBy { it.vtodoUidOfParent }
     }
 
-    private val allSubnotesList: LiveData<List<ICal4List>> = database.getAllSubnotes()
-    val allSubnotesMap = Transformations.map(allSubnotesList) { list ->
+    private var allSubnotesQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var allSubnotes: LiveData<List<ICal4List>> = Transformations.switchMap(allSubnotesQuery) {
+        database.getSubEntries(it)
+    }
+    val allSubnotesMap = Transformations.map(allSubnotes) { list ->
         return@map list.groupBy { it.vjournalUidOfParent }
     }
 
@@ -145,6 +151,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
             searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
         )
         listQuery.postValue(query)
+
+        allSubtasksQuery.postValue(ICal4List.getQueryForAllSubEntries(Component.VTODO, listSettings.subtasksOrderBy.value, listSettings.subtasksSortOrder.value))
+        allSubnotesQuery.postValue(ICal4List.getQueryForAllSubEntries(Component.VJOURNAL, listSettings.subnotesOrderBy.value, listSettings.subnotesSortOrder.value))
         if(saveListSettings)
             listSettings.saveToPrefs(prefs)
     }
