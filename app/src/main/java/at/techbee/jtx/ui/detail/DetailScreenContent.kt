@@ -104,6 +104,7 @@ fun DetailScreenContent(
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
+    updateSortOrder: (list: List<ICal4List>, from: Int, to: Int) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     goBack: () -> Unit
 ) {
@@ -613,7 +614,8 @@ fun DetailScreenContent(
                         )
                     },
                     onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                    goToDetail = goToDetail
+                    goToDetail = goToDetail,
+                    updateSortOrder = updateSortOrder
                 )
             }
 
@@ -861,7 +863,8 @@ fun DetailScreenContent_JOURNAL() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            updateSortOrder = { _, _, _ -> }
         )
     }
 }
@@ -905,7 +908,8 @@ fun DetailScreenContent_TODO_editInitially() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            updateSortOrder = { _, _, _ -> }
         )
     }
 }
@@ -951,7 +955,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            updateSortOrder = { _, _, _ -> }
         )
     }
 }
@@ -989,7 +994,8 @@ fun DetailScreenContent_failedLoading() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            updateSortOrder = { _, _, _ -> }
         )
     }
 }

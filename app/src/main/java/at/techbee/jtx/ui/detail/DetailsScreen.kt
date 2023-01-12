@@ -334,6 +334,7 @@ fun DetailsScreen(
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },
+                updateSortOrder = { list, from, to -> detailViewModel.updateSortOrder(list, from, to) },
                 modifier = Modifier.padding(paddingValues)
             )
 

@@ -9,13 +9,13 @@
 package at.techbee.jtx.ui.detail
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -26,6 +26,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -42,6 +43,10 @@ import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
+import org.burnoutcrew.reorderable.rememberReorderableLazyListState
+import org.burnoutcrew.reorderable.reorderable
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -56,12 +61,16 @@ fun DetailsCardSubtasks(
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubtaskDeleted: (subtaskId: Long) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    updateSortOrder: (list: List<ICal4List>, from: Int, to: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val headline = stringResource(id = R.string.subtasks)
     var newSubtaskText by rememberSaveable { mutableStateOf("") }
 
+    val state = rememberReorderableLazyListState(onMove = { from, to ->
+        updateSortOrder(subtasks, from.index, to.index)
+    })
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -73,30 +82,42 @@ fun DetailsCardSubtasks(
             HeadlineWithIcon(icon = Icons.Outlined.Task, iconDesc = headline, text = headline)
 
             AnimatedVisibility(subtasks.isNotEmpty()) {
-                Column(
+                LazyColumn(
+                    state = state.listState,
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .reorderable(state)
+                        .detectReorderAfterLongPress(state)
+                        .heightIn(max = 400.dp)
                 ) {
-                    subtasks.forEach { subtask ->
-                        SubtaskCard(
-                            subtask = subtask,
-                            isEditMode = isEditMode.value,
-                            showProgress = showSlider,
-                            sliderIncrement = sliderIncrement,
-                            onProgressChanged = onProgressChanged,
-                            onDeleteClicked = { icalObjectId ->  onSubtaskDeleted(icalObjectId) },
-                            onSubtaskUpdated = { newText -> onSubtaskUpdated(subtask.id, newText) },
-                            modifier = Modifier
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                onClick = { if(!isEditMode.value) goToDetail(subtask.id, false, subtasks.map { it.id }) },
-                                onLongClick = {
-                                    if (!isEditMode.value &&!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToDetail(subtask.id, true, subtasks.map { it.id })
-                                }
+                    items(subtasks, { it.id }) { subtask ->
+                        ReorderableItem(state, key = subtask.id) { isDragging ->
+                            val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
+
+                            SubtaskCard(
+                                subtask = subtask,
+                                isEditMode = isEditMode.value,
+                                showProgress = showSlider,
+                                sliderIncrement = sliderIncrement,
+                                onProgressChanged = onProgressChanged,
+                                onDeleteClicked = { icalObjectId -> onSubtaskDeleted(icalObjectId) },
+                                onSubtaskUpdated = { newText -> onSubtaskUpdated(subtask.id, newText) },
+                                modifier = Modifier
+                                    .clip(jtxCardCornerShape)
+                                    .shadow(elevation.value)
+                                        /* Deactivated for testing // TODO REACTIVATE again!
+                                    .combinedClickable(
+                                        onClick = { if (!isEditMode.value) goToDetail(subtask.id, false, subtasks.map { it.id }) },
+                                        onLongClick = {
+                                            if (!isEditMode.value && !subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                                goToDetail(subtask.id, true, subtasks.map { it.id })
+                                        }
+                                    )
+
+                                         */
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -156,7 +177,8 @@ fun DetailsCardSubtasks_Preview() {
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            updateSortOrder = { _, _, _ -> }
         )
     }
 }
@@ -181,7 +203,8 @@ fun DetailsCardSubtasks_Preview_edit() {
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            updateSortOrder = { _, _, _ -> }
         )
     }
 }
@@ -206,7 +229,8 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            updateSortOrder = { _, _, _ -> }
         )
     }
 }

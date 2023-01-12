@@ -367,6 +367,20 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun updateSortOrder(list: List<ICal4List>, from: Int, to: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            list.toMutableList().apply {
+                add(to, removeAt(from))
+            }.forEachIndexed { index, item ->
+                database.getICalObjectById(item.id)?.let {
+                    it.sortIndex = index
+                    it.makeDirty()
+                    database.update(it)
+                }
+            }
+        }
+    }
+
     fun createCopy(newModule: Module) {
         icalEntity.value?.let { createCopy(it, newModule) }
     }
