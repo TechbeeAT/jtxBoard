@@ -143,9 +143,8 @@ class SyncUtil {
             try {
                 context?.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                //Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
                 Log.w(TAG, "DAVx5 should be there but opening the Activity failed. \n${e.stackTraceToString()}")
-                openDAVx5AccountsActivity(context)
             }
         }
 
