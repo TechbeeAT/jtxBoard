@@ -1,12 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board Көндәлектәрҙе, Яҙмаларҙы &amp; Мәсьәләләрҙе синхронлаштыра"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="save">"Һаҡларға"</string>
+    <string name="cancel">"Кире ҡайтарырға"</string>
+    <string name="ok">"ЯРАЙ"</string>
+    <string name="delete">"Юйырға"</string>
+    <string name="discard">"Ташларға"</string>
+    <string name="gotit">"Аңлашылды"</string>
+    <string name="cont">"Дауам итергә"</string>
+    <string name="toolbar_text_jtx_board_journals_overview">"Көндәлектәрҙе Күҙәтеү"</string>
+    <string name="toolbar_text_jtx_board_notes_overview">"Яҙмаларҙы Күҙәтеү"</string>
+    <string name="toolbar_text_jtx_board_tasks_overview">"Мәсьәләләрҙе Күҙәтеү"</string>
+    <string name="toolbar_text_view_journal_details">"Көндәлектектең Ентеклелектәре"</string>
+    <string name="toolbar_text_view_note_details">"Яҙманың Ентеклелектәре"</string>
+    <string name="toolbar_text_view_task_details">"Мәсьәләнең Ентеклелектәре"</string>
+    <string name="toolbar_text_add_journal">"Көндәлекте Ҡушырға"</string>
+    <string name="toolbar_text_add_note">"Яҙманы Ҡушырға"</string>
+    <string name="toolbar_text_add_task">"Мәсьәләне Ҡушырға"</string>
+    <string name="toolbar_text_edit_journal">"Көндәлекте Үҙгәртергә"</string>
+    <string name="toolbar_text_edit_note">"Яҙманы Үҙгәртергә"</string>
+    <string name="toolbar_text_edit_task">"Мәсьәләне Үҙгәртергә"</string>
+    <string name="toolbar_text_filter">"Фильтр"</string>
+    <string name="toolbar_text_settings">"Көйләүҙәр"</string>
+    <string name="toolbar_text_about">"Тураһында"</string>
+    <string name="toolbar_text_sync">"Синхронизация"</string>
+    <string name="toolbar_text_donate">"Ҡорбан итергә"</string>
+    <string name="toolbar_text_adinfo">"Реклама Тураһында"</string>
+    <string name="default_local_collection_name">"Урындағы"</string>
+    <string name="default_local_account_name">"Урындағы"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Ҡаралама"</string>
+    <string name="journal_status_final">"Һуңғы"</string>
+    <string name="journal_status_cancelled">"Кире ҡайтарылған"</string>
+    <string name="todo_status_needsaction">"Хәрәкәттәр талап итә"</string>
+    <string name="todo_status_completed">"Тамамланды"</string>
+    <string name="todo_status_inprocess">"Эш барышында"</string>
+    <string name="todo_status_cancelled">"Кире ҡайтарылған"</string>
+    <string name="classification_public">"Асыҡ"</string>
+    <string name="classification_private">"Хосуси"</string>
+    <string name="classification_confidential">"Конфиденциаль"</string>
+    <string name="attendee_role_chair">"Ултырғыс"</string>
+    <string name="attendee_role_required_participant">"Мотлаҡ Ҡатнашыусы"</string>
+    <string name="attendee_role_optional_participant">"Мотлаҡ түгел ҡатнашыусы"</string>
+    <string name="attendee_role_non_participant">"Ҡатнашыусы түгел / Мәғлүмәттәр"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Навигация панелен асырға"</string>
+    <string name="navigation_drawer_close">"Навигация панелен ябырға"</string>
+    <string name="navigation_drawer_board">"Таҡта"</string>
+    <string name="navigation_drawer_sync">"DAVx⁵ менән синхронизация"</string>
+    <string name="navigation_drawer_about">"Тураһында / Лицензия"</string>
+    <string name="navigation_drawer_subtitle">"көндәлектәр, яҙмалар &amp; мәсьәләләр"</string>
+    <string name="navigation_drawer_beta_feedback">"Бета версия тураһында баһа бирергә"</string>
+    <string name="navigation_drawer_settings">"Көйләүҙәр"</string>
+    <string name="navigation_drawer_news_updates">"Яңылыҡтар &amp; яңыртыуҙар"</string>
+    <string name="navigation_drawer_external_links">"Тышҡы һылтанмалар"</string>
+    <string name="navigation_drawer_website">"Веб-сайт"</string>
+    <string name="navigation_drawer_support">"Ярҙам"</string>
+    <string name="navigation_drawer_donate">"Ҡорбан итергә"</string>
+    <string name="navigation_drawer_privacy_policy">"Йәшеренлек Сәйәсәте"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"Иҫкергән"</string>
+    <string name="list_due_today">"Бөгөнгә"</string>
+    <string name="list_due_tomorrow">"Иртәгәгә"</string>
+    <string name="list_due_inXdays">"%d көндәрҙән"</string>
+    <string name="list_due_inXhours">"%d сәғәттәрҙән"</string>
+    <string name="list_start_past">"Үткәндә башлау"</string>
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
     <!-- fragment_about -->
