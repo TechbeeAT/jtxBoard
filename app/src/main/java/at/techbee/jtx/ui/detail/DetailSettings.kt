@@ -13,6 +13,8 @@ import android.content.SharedPreferences
 import androidx.compose.runtime.mutableStateMapOf
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.ui.list.ListSettings
+import at.techbee.jtx.ui.list.ListViewModel
 
 enum class DetailSettingsOptionGroup { GENERAL, ELEMENT }
 
@@ -172,6 +174,8 @@ class DetailSettings {
     private var currentModule: Module? = null
     private var prefs: SharedPreferences? = null
 
+    var listSettings: ListSettings? = null  // List settings get overwritten on load but will not be saved!
+
     fun save() {
         prefs?.edit().apply {
             DetailSettingsOption.values().forEach { detailSettingOption ->
@@ -207,6 +211,14 @@ class DetailSettings {
                     prefs?.getBoolean(detailSettingOption.key, detailSettingOption.default)?.let { this[detailSettingOption] = it }
                 }
             }
+
+            //Load some settings from ListSettings
+            listSettings = when (module) {
+                Module.JOURNAL -> context.getSharedPreferences(ListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
+                Module.NOTE -> context.getSharedPreferences(ListViewModel.PREFS_LIST_NOTES, Context.MODE_PRIVATE)
+                Module.TODO -> context.getSharedPreferences(ListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
+            }.let { ListSettings.fromPrefs(it)  }
+
         }
     }
 }

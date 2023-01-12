@@ -144,38 +144,6 @@ SELECTs (global selects without parameter)
 
 
     /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICal4List]>>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vtodoUidOfParent = :uid ORDER BY $COLUMN_SORT_INDEX")
-    fun getAllSubtasksOf(uid: String): LiveData<List<ICal4List>>
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $TABLE_NAME_ICALOBJECT.* from $TABLE_NAME_ICALOBJECT INNER JOIN $TABLE_NAME_RELATEDTO ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT = :uid AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $TABLE_NAME_ICALOBJECT.$COLUMN_COMPONENT = 'VTODO' AND $TABLE_NAME_ICALOBJECT.$COLUMN_DELETED = 0 ORDER BY $COLUMN_SORT_INDEX")
-    fun getAllSubtasksAsICalObjectOf(uid: String): LiveData<List<ICalObject>>
-
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICal4List]>>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vjournalUidOfParent = :uid ORDER BY $COLUMN_SORT_INDEX")
-    fun getAllSubnotesOf(uid: String): LiveData<List<ICal4List>>
-    
-
-    /**
      * Retrieve an list of all  [Attachment]
      * @return a list of [Attachment] as LiveData<List<[Attachment]>>
      */

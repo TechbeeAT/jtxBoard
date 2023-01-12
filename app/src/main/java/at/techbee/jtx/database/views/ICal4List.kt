@@ -445,6 +445,25 @@ data class ICal4List(
          */
         fun getQueryForAllSubEntriesOfParents(component: Component, parents: List<String>, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
             SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (${parents.joinToString(separator = ",", transform = { "'$it'" })}) ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+
+        /**
+         * Returns all subtasks of a given entry by its UID
+         * @param parentUid: UID of parent for which the sub-entries should be returned
+         * @param orderBy
+         * @param sortOrder
+         */
+        fun getQueryForAllSubtasksForParentUID(parentUid: String, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vtodoUidOfParent = '$parentUid' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+
+        /**
+         * Returns all subnotes/subjournals of a given entry by its UID
+         * @param parentUid: UID of parent for which the sub-entries should be returned
+         * @param orderBy
+         * @param sortOrder
+         */
+        fun getQueryForAllSubnotesForParentUID(parentUid: String, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vjournalUidOfParent = '$parentUid' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+
     }
 
 

@@ -25,6 +25,8 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.OrderBy
+import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
@@ -95,12 +97,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             icalEntity = database.get(icalObjectId)
 
             relatedSubnotes = Transformations.switchMap(icalEntity) {
-                it?.property?.uid?.let { parentUid -> database.getAllSubnotesOf(parentUid) }
+                it?.property?.uid?.let { parentUid ->
+                    database.getIcal4List(ICal4List.getQueryForAllSubnotesForParentUID(parentUid, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
+                }
             }
 
             relatedSubtasks = Transformations.switchMap(icalEntity) {
                 it?.property?.uid?.let { parentUid ->
-                    database.getAllSubtasksOf(parentUid)
+                    database.getIcal4List(ICal4List.getQueryForAllSubtasksForParentUID(parentUid, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
             isChild = database.isChild(icalObjectId)
