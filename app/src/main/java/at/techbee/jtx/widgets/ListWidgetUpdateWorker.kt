@@ -25,10 +25,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
-import at.techbee.jtx.database.Classification
-import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
@@ -154,8 +151,10 @@ class ListWidgetUpdateWorker(
 
                 val entries = if(allEntries.isEmpty()) emptyList() else if (allEntries.size > ListWidget.MAX_ENTRIES) allEntries.subList(0,ListWidget.MAX_ENTRIES) else allEntries
 
-                val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubtasksSyncOf(entries.map { it.uid?:"" })
-                val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubnotesSyncOf(entries.map { it.uid?:"" })
+                val subtasksQuery = ICal4List.getQueryForAllSubEntriesOfParents(Component.VTODO, entries.map { it.uid ?:"" }, listWidgetConfig?.subtasksOrderBy ?: OrderBy.CREATED, listWidgetConfig?.subtasksSortOrder ?: SortOrder.ASC)
+                val subnotesQuery = ICal4List.getQueryForAllSubEntriesOfParents(Component.VJOURNAL, entries.map { it.uid ?:"" }, listWidgetConfig?.subnotesOrderBy ?: OrderBy.CREATED, listWidgetConfig?.subnotesSortOrder ?: SortOrder.ASC)
+                val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subtasksQuery)
+                val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subnotesQuery)
 
                 pref.toMutablePreferences().apply {
                     this[ListWidgetReceiver.list] = entries.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()

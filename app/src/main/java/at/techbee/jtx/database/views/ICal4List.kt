@@ -427,8 +427,24 @@ data class ICal4List(
             return SimpleSQLiteQuery(queryString, args.toArray())
         }
 
+        /**
+         * Returns all sub-entries
+         * @param component: Use Component.VTODO to get all subtasks, use Component.VJOURNAL to get all subnotes/subjournals
+         * @param orderBy
+         * @param sortOrder
+         */
         fun getQueryForAllSubEntries(component: Component, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
             SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+
+        /**
+         * Returns all sub-entries
+         * @param component: Use Component.VTODO to get all subtasks, use Component.VJOURNAL to get all subnotes/subjournals
+         * @param parents: UID of parents for which the sub-entries should be returned
+         * @param orderBy
+         * @param sortOrder
+         */
+        fun getQueryForAllSubEntriesOfParents(component: Component, parents: List<String>, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (${parents.joinToString(separator = ",", transform = { "'$it'" })}) ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
     }
 
 
