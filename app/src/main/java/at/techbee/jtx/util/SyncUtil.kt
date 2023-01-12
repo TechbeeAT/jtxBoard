@@ -135,16 +135,24 @@ class SyncUtil {
          * Starts an intent to open DAVx5 Accounts Activity (to add a new account)
          */
         fun openDAVx5AccountActivity(account: Account, context: Context?) {
+            if(context == null)
+                return
+
             // open davx5
             val intent = Intent(Intent.ACTION_MAIN)
             intent.setClassName(DAVX5_PACKAGE_NAME,"${DAVX5_PACKAGE_NAME}.ui.account.AccountActivity")
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("account", account)
-            try {
-                context?.startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
-                Log.w(TAG, "DAVx5 should be there but opening the Activity failed. \n${e.stackTraceToString()}")
+
+            if(intent.resolveActivity(context.packageManager) != null) {
+                try {
+                    context.startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
+                    Log.w(TAG, "DAVx5 should be there but opening the Activity failed. \n${e.stackTraceToString()}")
+                }
+            } else {
+                openDAVx5AccountsActivity(context)
             }
         }
 
