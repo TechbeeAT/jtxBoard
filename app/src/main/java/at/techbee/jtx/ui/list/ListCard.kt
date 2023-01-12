@@ -401,6 +401,7 @@ fun ListCard(
 
                 if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
                     ProgressElement(
+                        label = null,
                         iCalObjectId = iCalObject.id,
                         progress = iCalObject.percent,
                         isReadOnly = iCalObject.isReadOnly,
