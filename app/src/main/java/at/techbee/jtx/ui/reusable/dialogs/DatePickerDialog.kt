@@ -75,7 +75,7 @@ fun DatePickerDialog(
     }
     var newTimezone by rememberSaveable {
         mutableStateOf(
-            if(enforceTime)
+            if(enforceTime && timezone == TZ_ALLDAY)
                 null
             else
                 timezone
@@ -151,7 +151,7 @@ fun DatePickerDialog(
 
                         Tab(selected = selectedTab == tabIndexTimezone,
                             onClick = { selectedTab = tabIndexTimezone },
-                            enabled = newTimezone != TZ_ALLDAY && newTimezone != null,
+                            enabled = newDateTime != null && newTimezone != TZ_ALLDAY && newTimezone != null,
                             text = {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -263,31 +263,62 @@ fun DatePickerDialog(
             }
         },
         confirmButton = {
-            TextButton(
-                onClick = {
-                    if (newTimezone != null && newTimezone != TZ_ALLDAY && !TimeZone.getAvailableIDs()
-                            .contains(newTimezone)
+
+            Row {
+
+                AnimatedVisibility((!dateOnly || allowNull) && selectedTab == tabIndexDate) {
+                    TextButton(
+                        onClick = {
+                            selectedTab = tabIndexTime
+                            if(newTimezone == TZ_ALLDAY)
+                                newTimezone = null
+                        },
+                        enabled = newDateTime != null && !dateOnly
                     ) {
-                        selectedTab = tabIndexTimezone
-                        return@TextButton
+                        Text(stringResource(id = if(newTimezone == TZ_ALLDAY) R.string.edit_datepicker_dialog_add_time else R.string.edit_datepicker_dialog_edit_time))
                     }
-
-                    if(enforceTime && newTimezone == TZ_ALLDAY)
-                        newTimezone = null
-
-                    newDateTime?.let { dateTime ->
-                        when (newTimezone) {
-                            TZ_ALLDAY -> newDateTime = dateTime.withHour(0).withMinute(0).withSecond(0).withNano(0).withZoneSameLocal(ZoneId.of("UTC"))
-                            in TimeZone.getAvailableIDs() -> newDateTime = dateTime.withZoneSameLocal(ZoneId.of(newTimezone)).withNano(0).withSecond(0)
-                            null -> newDateTime = dateTime.withZoneSameLocal(ZoneId.systemDefault()).withNano(0).withSecond(0)
-                        }
-                    }
-
-                    onConfirm(newDateTime?.toInstant()?.toEpochMilli(), newTimezone)
-                    onDismiss()
                 }
-            ) {
-                Text(stringResource(id = R.string.ok))
+
+                AnimatedVisibility(selectedTab == tabIndexTime) {
+                    TextButton(
+                        onClick = {
+                            selectedTab = tabIndexTimezone
+                            if(newTimezone == null)
+                                newTimezone = defaultTimezone
+                                  },
+                        enabled = newDateTime != null
+                    ) {
+                        Text(stringResource(id = if(newTimezone == null) R.string.edit_datepicker_dialog_add_timezone else R.string.edit_datepicker_dialog_edit_timezone))
+                    }
+                }
+
+
+                TextButton(
+                    onClick = {
+                        if (newTimezone != null && newTimezone != TZ_ALLDAY && !TimeZone.getAvailableIDs()
+                                .contains(newTimezone)
+                        ) {
+                            selectedTab = tabIndexTimezone
+                            return@TextButton
+                        }
+
+                        if(enforceTime && newTimezone == TZ_ALLDAY)
+                            newTimezone = null
+
+                        newDateTime?.let { dateTime ->
+                            when (newTimezone) {
+                                TZ_ALLDAY -> newDateTime = dateTime.withHour(0).withMinute(0).withSecond(0).withNano(0).withZoneSameLocal(ZoneId.of("UTC"))
+                                in TimeZone.getAvailableIDs() -> newDateTime = dateTime.withZoneSameLocal(ZoneId.of(newTimezone)).withNano(0).withSecond(0)
+                                null -> newDateTime = dateTime.withZoneSameLocal(ZoneId.systemDefault()).withNano(0).withSecond(0)
+                            }
+                        }
+
+                        onConfirm(newDateTime?.toInstant()?.toEpochMilli(), newTimezone)
+                        onDismiss()
+                    }
+                ) {
+                    Text(stringResource(id = R.string.ok))
+                }
             }
         },
         dismissButton = {

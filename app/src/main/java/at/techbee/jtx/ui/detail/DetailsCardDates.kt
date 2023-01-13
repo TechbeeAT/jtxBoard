@@ -67,7 +67,7 @@ fun DetailsCardDates(
                 && (dtstart != null || (isEditMode && (enableDtstart || icalObject.getModuleFromString() == Module.JOURNAL)))) {
                 HorizontalDateCard(
                     datetime = dtstart,
-                    timezone = if((icalObject.due != null && icalObject.dueTimezone == TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone == TZ_ALLDAY)) TZ_ALLDAY else dtstartTimezone,
+                    timezone = if((due != null && dueTimezone == TZ_ALLDAY) || (completed != null && completedTimezone == TZ_ALLDAY)) TZ_ALLDAY else dtstartTimezone,
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
                         if((due ?: Long.MAX_VALUE) <= (datetime ?: Long.MIN_VALUE)) {
