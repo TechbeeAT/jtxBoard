@@ -373,6 +373,8 @@ Per a més informació sobre la sincronització, per favor mira:"</string>
     <string name="filter_last_modified">"Última modificació"</string>
     <string name="filter_no_category">Sense categories</string>
     <string name="filter_no_resource">Sense recursos</string>
+    <string name="filter_subtasks_order_by">Ordena sub-tasques per</string>
+    <string name="filter_subnotes_order_by">Ordena les notes enllaçades per</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Per favor, fes clic a la col·lecció a la qual vols afegir l'entrada o entrades!"</string>
     <string name="collections_snackbar_x_items_added">"S'ha afegit %1$d, i s'ha saltat %2$d. (Excloent instàncies d'elements recurrents.)"</string>
     <string name="menu_collection_popup_import_from_ics">"Importa des d'un .ics"</string>
