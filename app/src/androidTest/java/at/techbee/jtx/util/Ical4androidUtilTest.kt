@@ -15,8 +15,9 @@ import android.net.Uri
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.SyncContentProviderTest
 import at.techbee.jtx.database.ICalDatabase
-import org.junit.Assert.*
 import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.io.ByteArrayOutputStream
@@ -62,19 +63,9 @@ class Ical4androidUtilTest {
 
 
     @Test
-    fun getICSFormatFromProvider() {
-        val ics = Ical4androidUtil.getICSFormatFromProvider(defaultTestAccount, context, defaultCollectionId!!, defaultICalObjectId!!)
-        assertTrue(ics?.contains("BEGIN:VCALENDAR") == true)
-        assertTrue(ics?.contains("BEGIN:VJOURNAL") == true)
-        assertTrue(ics?.contains("SUMMARY:summary") == true)
-        assertTrue(ics?.contains("END:VJOURNAL") == true)
-        assertTrue(ics?.contains("END:VCALENDAR") == true)
-    }
-
-    @Test
     fun writeICSFormatFromProviderToOS() {
         val os = ByteArrayOutputStream()
-        Ical4androidUtil.writeICSFormatFromProviderToOS(defaultTestAccount, context, defaultCollectionId!!, defaultICalObjectId!!, os)
+        Ical4androidUtil.writeICSFormatFromProviderToOS(defaultTestAccount, context, defaultCollectionId!!, listOf(defaultICalObjectId!!), os)
 
         val ics = os.toString()
         assertTrue(ics.contains("BEGIN:VCALENDAR"))
