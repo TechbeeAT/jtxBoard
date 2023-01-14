@@ -150,6 +150,10 @@ Global Strings -->
     <string name="edit_recur_toast_requires_start_date">"Wiederholungen benötigen ein Start-Datum!"</string>
     <string name="edit_datepicker_dialog_select_date">"Datum auswählen"</string>
     <string name="edit_datepicker_dialog_select_time">"Zeit auswählen"</string>
+    <string name="edit_datepicker_dialog_add_time">"Zeit hinzufügen"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Zeit bearbeiten"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Zeitzone hinzufügen"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Zeitzone bearbeiten"</string>
     <string name="edit_task_started_add">"Start-Datum/Zeit auswählen"</string>
     <string name="edit_task_due_add">"Fälligkeit-Datum/Zeit auswählen"</string>
     <string name="edit_task_completed_add">"Fertiggestellt-Datum/Zeit auswählen"</string>
