@@ -49,7 +49,8 @@ fun TimezoneAutocompleteTextfield(
     var timezonesFiltered by remember { mutableStateOf(TimeZone.getAvailableIDs()) }
 
     LaunchedEffect(listState) {
-        listState.animateScrollToItem(timezonesFiltered.indexOf(selectedTimezone))   // scroll to selected timezone
+        if(timezonesFiltered.indexOf(selectedTimezone) > -1)
+            listState.animateScrollToItem(timezonesFiltered.indexOf(selectedTimezone))   // scroll to selected timezone
     }
 
     Column(modifier = modifier) {
