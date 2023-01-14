@@ -45,7 +45,6 @@ import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
-import at.techbee.jtx.ui.settings.SettingsStateHolder
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -67,7 +66,6 @@ fun DetailsScreen(
         else -> null
     }
 
-    val settingsStateHolder = SettingsStateHolder(context)
     val detailsBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
@@ -151,7 +149,7 @@ fun DetailsScreen(
                 goBack = {
                     goBackRequestedByTopBar.value = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
-                detailTopAppBarMode = settingsStateHolder.detailTopAppBarMode.value,
+                detailTopAppBarMode = detailViewModel.settingsStateHolder.detailTopAppBarMode.value,
                 onAddSubnote = { subnoteText -> detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null) },
                 onAddSubtask = { subtaskText -> detailViewModel.addSubEntry(ICalObject.createTask(subtaskText), null) },
                 actions = {
@@ -164,18 +162,18 @@ fun DetailsScreen(
                             text = {
                                 Text(
                                     text = stringResource(id = R.string.edit_subtasks_add_helper),
-                                    color = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                    color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
                                 )
                             },
                             onClick = {
-                                settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBTASK
+                                detailViewModel.settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBTASK
                                 menuExpanded.value = false
                             },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Outlined.AddTask,
                                     contentDescription = null,
-                                    tint = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                    tint = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         )
@@ -183,18 +181,18 @@ fun DetailsScreen(
                             text = {
                                 Text(
                                     text = stringResource(id = R.string.edit_subnote_add_helper),
-                                    color = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                    color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
                                 )
                             },
                             onClick = {
-                                settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBNOTE
+                                detailViewModel.settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBNOTE
                                 menuExpanded.value = false
                             },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Outlined.NoteAdd,
                                     contentDescription = null,
-                                    tint = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                    tint = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         )
@@ -290,9 +288,9 @@ fun DetailsScreen(
                 allResources = allResources.value,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
-                sliderIncrement = settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
-                showProgressForMainTasks = settingsStateHolder.settingShowProgressForMainTasks.value,
-                showProgressForSubTasks = settingsStateHolder.settingShowProgressForSubTasks.value,
+                sliderIncrement = detailViewModel.settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
+                showProgressForMainTasks = detailViewModel.settingsStateHolder.settingShowProgressForMainTasks.value,
+                showProgressForSubTasks = detailViewModel.settingsStateHolder.settingShowProgressForSubTasks.value,
                 goBackRequested = goBackRequestedByTopBar,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->

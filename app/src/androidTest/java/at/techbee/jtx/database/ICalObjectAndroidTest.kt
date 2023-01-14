@@ -353,8 +353,8 @@ class ICalObjectAndroidTest {
 
                 val children = database.getRelatedChildren(newParent?.id ?: 0L)
                 assertEquals(3, children.size)
-                assertEquals(2L, database.getICalObjectById(children[0])?.collectionId)
-                assertEquals(2L, database.getICalObjectById(children[1])?.collectionId)
+                assertEquals(2L, database.getICalObjectById(children[0].id)?.collectionId)
+                assertEquals(2L, database.getICalObjectById(children[1].id)?.collectionId)
             }
         }
     }

@@ -346,6 +346,14 @@ fun SettingsScreen(
                             scope.launch(Dispatchers.IO) { Alarm.scheduleNextNotifications(context) }
                         }
                     )
+                    SwitchSetting(
+                        setting = SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES,
+                        initiallyChecked = settingsStateHolder.updateParentWhenSubtaskChanges.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.updateParentWhenSubtaskChanges.value = it
+                            SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES.save(it, context)
+                        }
+                    )
                 }
             },
             navController = navController,

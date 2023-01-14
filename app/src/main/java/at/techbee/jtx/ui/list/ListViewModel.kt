@@ -28,6 +28,7 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getPackageInfoCompat
@@ -48,6 +49,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     val listSettings = ListSettings.fromPrefs(prefs)
+    val settingsStateHolder = SettingsStateHolder(_application)
 
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
@@ -56,7 +58,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     private var allSubtasksQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubtasks: LiveData<List<ICal4List>> = Transformations.switchMap(allSubtasksQuery) {
+    private var allSubtasks: LiveData<List<ICal4List>> = Transformations.switchMap(allSubtasksQuery) {
         database.getSubEntries(it)
     }
     val allSubtasksMap = Transformations.map(allSubtasks) { list ->
@@ -64,7 +66,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     private var allSubnotesQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubnotes: LiveData<List<ICal4List>> = Transformations.switchMap(allSubnotesQuery) {
+    private var allSubnotes: LiveData<List<ICal4List>> = Transformations.switchMap(allSubnotesQuery) {
         database.getSubEntries(it)
     }
     val allSubnotesMap = Transformations.map(allSubnotes) { list ->
@@ -177,6 +179,13 @@ open class ListViewModel(application: Application, val module: Module) : Android
             val item = database.getSync(itemId)?.property  ?: return@launch
             item.setUpdatedProgress(newPercent)
             database.update(item)
+
+            if(settingsStateHolder.updateParentWhenSubtaskChanges.value) {
+                ICalObject.findTopParent(item.id, database)?.let {
+                    ICalObject.updateProgressOfParents(it.id, database)
+                }
+            }
+
             SyncUtil.notifyContentObservers(getApplication())
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)

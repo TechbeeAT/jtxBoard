@@ -182,6 +182,7 @@ fun DetailScreenContent(
     iCalEntity.value?.property?.flags?.let { icalObject.flags = it }
     iCalEntity.value?.property?.scheduleTag?.let { icalObject.scheduleTag = it }
     iCalEntity.value?.property?.fileName?.let { icalObject.fileName = it }
+    iCalEntity.value?.property?.percent?.let { icalObject.percent = it }
 
     val categories =
         rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }

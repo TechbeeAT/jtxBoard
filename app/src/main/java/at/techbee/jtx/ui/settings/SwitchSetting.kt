@@ -89,6 +89,12 @@ enum class SwitchSetting(
     icon = { Icon(Icons.Outlined.AlarmOff, contentDescription = null, modifier = Modifier.padding(16.dp)) },
     title = R.string.settings_disable_alarms_for_readonly,
     default = false
+    ),
+    SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES(
+        key = "settings_update_parent_when_subtask_changes",
+        icon = { Icon(Icons.Outlined.DoneAll, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_update_parent_when_subtask_changes,
+        default = false
     )
     ;
     fun save(newSwitchValue: Boolean, context: Context) {

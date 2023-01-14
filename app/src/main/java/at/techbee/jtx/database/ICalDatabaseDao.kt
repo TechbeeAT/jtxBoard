@@ -128,8 +128,27 @@ SELECTs (global selects without parameter)
      * @return a list of [Relatedto] as List<Relatedto>
      */
     @Transaction
-    @Query("SELECT * FROM relatedto")
+    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO")
     fun getAllRelatedto(): LiveData<List<Relatedto>>
+
+    /**
+     * Retrieve an list of all Relatedto ([Relatedto]) as a List
+     *
+     * @return a list of [Relatedto] as List<Relatedto>
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO")
+    fun getAllRelatedtoSync(): List<Relatedto>
+
+    /**
+     * Retrieve the UID of a specific ICalObjectID
+     * @param uid ot find
+     * @return ICalObject of the UID
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid")
+    fun getICalObjectFor(uid: String): ICalObject?
+
 
 
     /**
@@ -558,8 +577,13 @@ DELETEs by Object
 
     /** This query returns all ids of child elements of the given [parentKey]  */
     @Transaction
-    @Query("SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID IN (SELECT rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO rel INNER JOIN $TABLE_NAME_ICALOBJECT ical ON rel.$COLUMN_RELATEDTO_TEXT = ical.$COLUMN_UID AND ical.$COLUMN_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')" )
-    suspend fun getRelatedChildren(parentKey: Long): List<Long>
+    @Query("SELECT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID IN (SELECT rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO rel INNER JOIN $TABLE_NAME_ICALOBJECT ical ON rel.$COLUMN_RELATEDTO_TEXT = ical.$COLUMN_UID AND ical.$COLUMN_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')" )
+    suspend fun getRelatedChildren(parentKey: Long): List<ICalObject>
+
+    /** This query returns the average progress of the given ICalObjectIds  */
+    @Transaction
+    @Query("SELECT AVG(IFNULL($COLUMN_PERCENT, 0)) FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN (:iCalObjectIds)" )
+    suspend fun getAverageProgressOf(iCalObjectIds: List<Long>): Int?
 
     @Transaction
     @Query("SELECT * from $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectid AND $COLUMN_RELATEDTO_TEXT = :linkedUID AND $COLUMN_RELATEDTO_RELTYPE = :reltype")
