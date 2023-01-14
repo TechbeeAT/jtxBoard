@@ -67,12 +67,12 @@ class NotificationPublisher : BroadcastReceiver() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val alarm = database.getAlarmSync(alarmId) ?: return@launch
                     val icalobject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return@launch
-                    icalobject.setUpdatedProgress(100)
+                    icalobject.setUpdatedProgress(100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                     database.update(icalobject)
 
-                    if(settingsStateHolder.updateParentWhenSubtaskChanges.value) {
+                    if(settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value) {
                         ICalObject.findTopParent(icalObjectId, database)?.let {
-                            ICalObject.updateProgressOfParents(it.id, database)
+                            ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                         }
                     }
 

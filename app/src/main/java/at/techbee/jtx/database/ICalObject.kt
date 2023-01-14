@@ -851,16 +851,16 @@ data class ICalObject(
             return topParent
         }
 
-        suspend fun updateProgressOfParents(parentId: Long, database: ICalDatabaseDao) {
+        suspend fun updateProgressOfParents(parentId: Long, database: ICalDatabaseDao, keepInSync: Boolean) {
 
             val children = database.getRelatedChildren(parentId).filter { it.module == Module.TODO.name }
             if(children.isNotEmpty()) {
                 children.forEach { child ->
-                    updateProgressOfParents(child.id, database)
+                    updateProgressOfParents(child.id, database, keepInSync)
                 }
                 val newProgress = children.map { it.percent ?:0 }.average().toInt()
                 val parent = database.getICalObjectByIdSync(parentId)
-                parent?.setUpdatedProgress(newProgress)
+                parent?.setUpdatedProgress(newProgress, keepInSync)
                 parent?.let { database.update(it) }
             }
         }
@@ -942,25 +942,27 @@ data class ICalObject(
     }
 
 
-    fun setUpdatedProgress(newPercent: Int?) {
+    fun setUpdatedProgress(newPercent: Int?, keepInSync: Boolean) {
 
         percent = if(newPercent == 0) null else newPercent
-        if(status?.isNotEmpty() == true)                   // we only update the status if it was set to a value, if it's null, we skip this part
+
+        if(keepInSync) {
             status = when (newPercent) {
                 100 -> Status.COMPLETED.status
                 in 1..99 -> Status.IN_PROCESS.status
                 else -> Status.NEEDS_ACTION.status
             }
 
-        if (completed == null && percent == 100) {
-            completedTimezone = dueTimezone?:dtstartTimezone
-            completed = if(completedTimezone == TZ_ALLDAY)
-                DateTimeUtils.getTodayAsLong()
-            else
-                System.currentTimeMillis()
-        } else if (completed != null && percent != 100) {
-            completed = null
-            completedTimezone = null
+            if (completed == null && percent == 100) {
+                completedTimezone = dueTimezone ?: dtstartTimezone
+                completed = if (completedTimezone == TZ_ALLDAY)
+                    DateTimeUtils.getTodayAsLong()
+                else
+                    System.currentTimeMillis()
+            } else if (completed != null && percent != 100) {
+                completed = null
+                completedTimezone = null
+            }
         }
 
         makeDirty()

@@ -95,6 +95,12 @@ enum class SwitchSetting(
         icon = { Icon(Icons.Outlined.DoneAll, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_update_parent_when_subtask_changes,
         default = false
+    ),
+    SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC(
+    key = "settings_keep_status_progress_completed_in_sync",
+    icon = { Icon(Icons.Outlined.PublishedWithChanges, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+    title = R.string.settings_keep_status_progress_completed_in_sync,
+    default = true
     )
     ;
     fun save(newSwitchValue: Boolean, context: Context) {

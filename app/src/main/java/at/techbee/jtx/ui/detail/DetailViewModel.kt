@@ -129,11 +129,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
                     toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                 }
-                item.setUpdatedProgress(newPercent)
+                item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                 database.update(item)
-                if(settingsStateHolder.updateParentWhenSubtaskChanges.value) {
+                if(settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value) {
                     ICalObject.findTopParent(id, database)?.let {
-                        ICalObject.updateProgressOfParents(it.id, database)
+                        ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                     }
                 }
                 SyncUtil.notifyContentObservers(getApplication())

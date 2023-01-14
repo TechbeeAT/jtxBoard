@@ -291,6 +291,7 @@ fun DetailsScreen(
                 sliderIncrement = detailViewModel.settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
                 showProgressForMainTasks = detailViewModel.settingsStateHolder.settingShowProgressForMainTasks.value,
                 showProgressForSubTasks = detailViewModel.settingsStateHolder.settingShowProgressForSubTasks.value,
+                keepStatusProgressCompletedInSync = detailViewModel.settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 goBackRequested = goBackRequestedByTopBar,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->

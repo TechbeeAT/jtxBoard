@@ -51,7 +51,8 @@ class SettingsStateHolder(val context: Context) {
     var settingDisableAlarmsReadonly = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.key, SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.default))
     var settingAutoAlarm = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key) } ?: DropdownSetting.SETTING_AUTO_ALARM.default )
-    var updateParentWhenSubtaskChanges = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES.key, SwitchSetting.SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES.default))
+    var settingUpdateParentWhenSubtaskChanges = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES.key, SwitchSetting.SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES.default))
+    var settingKeepStatusProgressCompletedInSync = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.key, SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.default))
 
 
     //invisible settings

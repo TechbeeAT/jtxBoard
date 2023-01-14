@@ -531,6 +531,7 @@ Thank you!"</string>
     <string name="settings_progress_step">"Set the step for the progress slider"</string>
     <string name="settings_disable_alarms_for_readonly">"Disable alarms for readonly collections"</string>
     <string name="settings_update_parent_when_subtask_changes">"Update parent progress when subtask changes"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Keep status, progress &amp; completed in sync (update accordingly)"</string>
     <string name="sync_button_go_to_collections">"Go to Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Please purchase the Pro package to enable this feature."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>

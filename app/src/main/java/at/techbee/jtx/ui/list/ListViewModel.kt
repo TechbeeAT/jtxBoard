@@ -177,12 +177,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
             ICalObject.makeRecurringException(currentItem, database)
             val item = database.getSync(itemId)?.property  ?: return@launch
-            item.setUpdatedProgress(newPercent)
+            item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
             database.update(item)
 
-            if(settingsStateHolder.updateParentWhenSubtaskChanges.value) {
+            if(settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value) {
                 ICalObject.findTopParent(item.id, database)?.let {
-                    ICalObject.updateProgressOfParents(it.id, database)
+                    ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                 }
             }
 

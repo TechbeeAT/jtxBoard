@@ -348,10 +348,18 @@ fun SettingsScreen(
                     )
                     SwitchSetting(
                         setting = SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES,
-                        initiallyChecked = settingsStateHolder.updateParentWhenSubtaskChanges.value,
+                        initiallyChecked = settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value,
                         onCheckedChanged = {
-                            settingsStateHolder.updateParentWhenSubtaskChanges.value = it
+                            settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value = it
                             SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES.save(it, context)
+                        }
+                    )
+                    SwitchSetting(
+                        setting = SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC,
+                        initiallyChecked = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingKeepStatusProgressCompletedInSync.value = it
+                            SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.save(it, context)
                         }
                     )
                 }
