@@ -150,6 +150,10 @@ Global Strings -->
     <string name="edit_recur_toast_requires_start_date">"Opakování vyžaduje nastavení počátečního data!"</string>
     <string name="edit_datepicker_dialog_select_date">"Vybrat datum"</string>
     <string name="edit_datepicker_dialog_select_time">"Vybrat čas"</string>
+    <string name="edit_datepicker_dialog_add_time">"Přidat čas"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Upravit čas"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Přidat časové pásmo"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Upravit časové pásmo"</string>
     <string name="edit_task_started_add">"Vyberte datum nebo čas zahájení"</string>
     <string name="edit_task_due_add">"Vyberte datum nebo čas termínu"</string>
     <string name="edit_task_completed_add">"Vyberte datum nebo čas dokončení"</string>
