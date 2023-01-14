@@ -150,6 +150,10 @@ Global Strings -->
     <string name="edit_recur_toast_requires_start_date">"Cal establir una data d'inici a la recurrència!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleccionar data"</string>
     <string name="edit_datepicker_dialog_select_time">"Seleccionar hora"</string>
+    <string name="edit_datepicker_dialog_add_time">"Afegir temps"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Editar temps"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Afegir fus horari"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Editar fus horari"</string>
     <string name="edit_task_started_add">"Tria una data/hora d'inici"</string>
     <string name="edit_task_due_add">"Tria una data/hora d'expiració"</string>
     <string name="edit_task_completed_add">"Tria una data/hora de compleció"</string>
