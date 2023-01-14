@@ -148,6 +148,16 @@ fun ListTopAppBar(
                                 }
                             }
                         }
+
+                        AnimatedVisibility(listTopAppBarMode == ListTopAppBarMode.SEARCH && searchText.value?.isNotEmpty() == true) {
+                            IconButton(onClick = {
+                                searchText.value = null
+                                onSearchTextUpdated()
+                            }) {
+                                Icon(Icons.Outlined.SearchOff, stringResource(R.string.delete))
+                            }
+                        }
+
                         actions()
                     }
                 },
