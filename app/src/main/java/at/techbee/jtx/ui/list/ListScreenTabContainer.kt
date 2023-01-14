@@ -346,7 +346,7 @@ fun ListScreenTabContainer(
                                     showCollectionSelectorDialog = true
                                     topBarMenuExpanded = false
                                 }) {
-                                    Icon(Icons.Outlined.Folder, null)
+                                    Icon(Icons.Outlined.Folder, stringResource(id = R.string.collection))
                                 }
                             }
                         )
