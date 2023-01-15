@@ -57,7 +57,7 @@ fun ListScreenKanban(
     subtasksLive: LiveData<Map<String?, List<ICal4List>>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
-    settingKeepStatusProgressCompletedInSync: Boolean,
+    settingLinkProgressToSubtasks: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
     onStatusChanged: (itemid: Long, status: Status, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
@@ -143,7 +143,7 @@ fun ListScreenKanban(
                                 state = rememberDraggableState { delta ->
                                     if (iCalObject.isReadOnly)   // no drag state for read only objects!
                                         return@rememberDraggableState
-                                    if (settingKeepStatusProgressCompletedInSync && currentSubtasks?.isNotEmpty() == true)
+                                    if (settingLinkProgressToSubtasks && currentSubtasks?.isNotEmpty() == true)
                                         return@rememberDraggableState  // no drag is status depends on subtasks
                                     if (abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
                                         offsetX += delta
@@ -245,7 +245,7 @@ fun ListScreenKanban_TODO() {
             subtasksLive = MutableLiveData(emptyMap()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
-            settingKeepStatusProgressCompletedInSync = false,
+            settingLinkProgressToSubtasks = false,
             onProgressChanged = { _, _, _, _ -> },
             onStatusChanged = {_, _, _, _ -> },
             onClick = { _, _ -> },
@@ -293,7 +293,7 @@ fun ListScreenKanban_JOURNAL() {
             subtasksLive = MutableLiveData(emptyMap()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
-            settingKeepStatusProgressCompletedInSync = false,
+            settingLinkProgressToSubtasks = false,
             onProgressChanged = { _, _, _, _ -> },
             onStatusChanged = {_, _, _, _ -> },
             onClick = { _, _ -> },

@@ -180,7 +180,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
             database.update(item)
 
-            if(settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value) {
+            if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
                 ICalObject.findTopParent(item.id, database)?.let {
                     ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                 }

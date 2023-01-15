@@ -131,7 +131,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
                 item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                 database.update(item)
-                if(settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value) {
+                if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
                     ICalObject.findTopParent(id, database)?.let {
                         ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                     }

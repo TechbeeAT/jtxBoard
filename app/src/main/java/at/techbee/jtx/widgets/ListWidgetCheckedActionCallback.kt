@@ -33,7 +33,7 @@ class ListWidgetCheckedActionCallback: ActionCallback {
         val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return
         iCalObject.setUpdatedProgress(if(iCalObject.percent == 100) null else 100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
         database.update(iCalObject)
-        if(settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value) {
+        if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
             ICalObject.findTopParent(iCalObject.id, database)?.let {
                 ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
             }

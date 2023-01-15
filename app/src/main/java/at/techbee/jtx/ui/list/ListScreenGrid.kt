@@ -38,7 +38,7 @@ fun ListScreenGrid(
     subtasksLive: LiveData<Map<String?, List<ICal4List>>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
-    settingKeepStatusProgressCompletedInSync: Boolean,
+    settingLinkProgressToSubtasks: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
@@ -77,7 +77,7 @@ fun ListScreenGrid(
             ListCardGrid(
                 iCalObject,
                 selected = selectedEntries.contains(iCalObject.id),
-                progressUpdateDisabled = settingKeepStatusProgressCompletedInSync && currentSubtasks?.isNotEmpty() == true,
+                progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks?.isNotEmpty() == true,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(jtxCardCornerShape)
@@ -133,7 +133,7 @@ fun ListScreenGrid_TODO() {
             subtasksLive = MutableLiveData(emptyMap()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
-            settingKeepStatusProgressCompletedInSync = false,
+            settingLinkProgressToSubtasks = false,
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -179,7 +179,7 @@ fun ListScreenGrid_JOURNAL() {
             subtasksLive = MutableLiveData(emptyMap()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
-            settingKeepStatusProgressCompletedInSync = false,
+            settingLinkProgressToSubtasks = false,
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }

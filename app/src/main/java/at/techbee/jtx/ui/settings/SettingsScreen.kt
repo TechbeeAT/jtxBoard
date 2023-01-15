@@ -347,11 +347,11 @@ fun SettingsScreen(
                         }
                     )
                     SwitchSetting(
-                        setting = SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES,
-                        initiallyChecked = settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value,
+                        setting = SETTING_LINK_PROGRESS_TO_SUBTASKS,
+                        initiallyChecked = settingsStateHolder.settingLinkProgressToSubtasks.value,
                         onCheckedChanged = {
-                            settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value = it
-                            SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES.save(it, context)
+                            settingsStateHolder.settingLinkProgressToSubtasks.value = it
+                            SETTING_LINK_PROGRESS_TO_SUBTASKS.save(it, context)
                         }
                     )
                     SwitchSetting(

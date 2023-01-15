@@ -70,7 +70,7 @@ class NotificationPublisher : BroadcastReceiver() {
                     icalobject.setUpdatedProgress(100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                     database.update(icalobject)
 
-                    if(settingsStateHolder.settingUpdateParentWhenSubtaskChanges.value) {
+                    if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
                         ICalObject.findTopParent(icalObjectId, database)?.let {
                             ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                         }

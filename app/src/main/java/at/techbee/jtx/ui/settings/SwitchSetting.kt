@@ -90,10 +90,11 @@ enum class SwitchSetting(
     title = R.string.settings_disable_alarms_for_readonly,
     default = false
     ),
-    SETTING_UPDATE_PARENT_WHEN_SUBTASK_CHANGES(
-        key = "settings_update_parent_when_subtask_changes",
+    SETTING_LINK_PROGRESS_TO_SUBTASKS(
+        key = "settings_link_progress_to_subtasks",
         icon = { Icon(Icons.Outlined.DoneAll, contentDescription = null, modifier = Modifier.padding(16.dp)) },
-        title = R.string.settings_update_parent_when_subtask_changes,
+        title = R.string.settings_link_progress_to_subtasks,
+        subtitle = R.string.settings_attention_experimental_feature,
         default = false
     ),
     SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC(
