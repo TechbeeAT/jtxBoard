@@ -42,7 +42,7 @@ class ICalObjectTest {
 
         assertEquals("setUpdatedProgress_no_change", task.summary)
         assertNull(task.percent)
-        assertNull(task.status)
+        assertEquals(Status.NEEDS_ACTION.status, task.status)
         assertNotNull(task.lastModified)
         assertEquals(true, task.dirty)
     }
@@ -71,8 +71,8 @@ class ICalObjectTest {
 
         assertEquals("setUpdatedProgress_in_Progress", task.summary)
         assertEquals(50, task.percent)
-        //assertEquals(StatusTodo.`IN-PROCESS`.name, task.status)
-        assertNull(task.status)
+        assertEquals(Status.IN_PROCESS.status, task.status)
+        //assertNull(task.status)
         //assertNotNull(task.dtstart)
         //assertNull(task.completed)
         assertNotNull(task.lastModified)
