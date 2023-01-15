@@ -36,6 +36,7 @@ import at.techbee.jtx.util.DateTimeUtils
 fun ListCardGrid(
     iCalObject: ICal4List,
     selected: Boolean,
+    progressUpdateDisabled: Boolean,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
@@ -147,7 +148,7 @@ fun ListCardGrid(
                         if (iCalObject.module == Module.TODO.name)
                             Checkbox(
                                 checked = iCalObject.percent == 100,
-                                enabled = !iCalObject.isReadOnly,
+                                enabled = !iCalObject.isReadOnly && !progressUpdateDisabled,
                                 onCheckedChange = {
                                     onProgressChanged(
                                         iCalObject.id,
@@ -197,6 +198,7 @@ fun ListCardGrid_JOURNAL() {
         ListCardGrid(
             icalobject,
             selected = false,
+            progressUpdateDisabled = false,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier
                 .width(150.dp)
         )
@@ -218,6 +220,7 @@ fun ListCardGrid_NOTE() {
         ListCardGrid(
             icalobject,
             selected = true,
+            progressUpdateDisabled = false,
             onProgressChanged = { _, _, _ -> },
             modifier = Modifier.width(150.dp)
         )
@@ -248,6 +251,7 @@ fun ListCardGrid_TODO() {
         ListCardGrid(
             icalobject,
             selected = false,
+            progressUpdateDisabled = false,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }
@@ -278,6 +282,7 @@ fun ListCardGrid_TODO_short() {
         ListCardGrid(
             icalobject,
             selected = false,
+            progressUpdateDisabled = false,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }

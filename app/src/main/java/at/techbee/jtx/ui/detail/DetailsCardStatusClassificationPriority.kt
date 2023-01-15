@@ -32,6 +32,7 @@ fun DetailsCardStatusClassificationPriority(
     enableStatus: Boolean,
     enableClassification: Boolean,
     enablePriority: Boolean,
+    allowStatusChange: Boolean,
     onStatusChanged: (String?) -> Unit,
     onClassificationChanged: (String?) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
@@ -71,6 +72,7 @@ fun DetailsCardStatusClassificationPriority(
                 )
             } else if(isEditMode && (enableStatus || !icalObject.status.isNullOrEmpty())) {
                 AssistChip(
+                    enabled = allowStatusChange,
                     label = {
                         Text(Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "")
 
@@ -232,6 +234,7 @@ fun DetailsCardStatusClassificationPriority_Journal_Preview() {
             enableStatus = false,
             enableClassification = false,
             enablePriority = false,
+            allowStatusChange = true,
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -249,6 +252,7 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview() {
             enableStatus = true,
             enableClassification = true,
             enablePriority = true,
+            allowStatusChange = true,
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -266,6 +270,7 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview2() {
             enableStatus = true,
             enableClassification = false,
             enablePriority = false,
+            allowStatusChange = false,
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }

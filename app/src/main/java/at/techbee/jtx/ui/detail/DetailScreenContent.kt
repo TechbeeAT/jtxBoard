@@ -405,6 +405,7 @@ fun DetailScreenContent(
                 enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART]?:true || icalObject.value.getModuleFromString() == Module.JOURNAL,
                 enableDue = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE]?:true,
                 enableCompleted = detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED]?:true,
+                allowCompletedChange = !(keepStatusProgressCompletedInSync && subtasks.value.isNotEmpty()),
                 onDtstartChanged = { datetime, timezone ->
                     icalObject.value.dtstart = datetime
                     icalObject.value.dtstartTimezone = timezone
@@ -555,7 +556,7 @@ fun DetailScreenContent(
                         label = null,
                         iCalObjectId = icalObject.value.id,
                         progress = icalObject.value.percent,
-                        isReadOnly = iCalEntity.value?.ICalCollection?.readonly == true,
+                        isReadOnly = iCalEntity.value?.ICalCollection?.readonly == true || (keepStatusProgressCompletedInSync && subtasks.value.isNotEmpty()),
                         isLinkedRecurringInstance = icalObject.value.isRecurLinkedInstance,
                         sliderIncrement = sliderIncrement,
                         onProgressChanged = { itemId, newPercent, isLinked ->
@@ -584,6 +585,7 @@ fun DetailScreenContent(
                     enableStatus = detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS]?:true || showAllOptions,
                     enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION]?:true || showAllOptions,
                     enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY]?:true || showAllOptions,
+                    allowStatusChange = !(keepStatusProgressCompletedInSync && subtasks.value.isNotEmpty()),
                     onStatusChanged = { newStatus ->
                         icalObject.value.status = newStatus
                         if(keepStatusProgressCompletedInSync) {

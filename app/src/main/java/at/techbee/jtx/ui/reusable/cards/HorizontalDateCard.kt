@@ -44,6 +44,7 @@ fun HorizontalDateCard(
     labelTop: String? = null,
     pickerMinDate: Long? = null,
     pickerMaxDate: Long? = null,
+    enabled: Boolean = true,
     onDateTimeChanged: (Long?, String?) -> Unit = { _, _ -> }
 ) {
 
@@ -58,6 +59,7 @@ fun HorizontalDateCard(
         colors = if(isEditMode) CardDefaults.outlinedCardColors() else CardDefaults.elevatedCardColors(),
         elevation = if(isEditMode) CardDefaults.outlinedCardElevation() else CardDefaults.elevatedCardElevation(),
         border = CardDefaults.outlinedCardBorder(enabled = isEditMode),
+        enabled = !isEditMode || enabled,
         modifier = modifier
     ) {
 

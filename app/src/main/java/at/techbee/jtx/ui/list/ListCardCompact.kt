@@ -47,6 +47,7 @@ fun ListCardCompact(
     iCalObject: ICal4List,
     subtasks: List<ICal4List>,
     selected: Boolean,
+    progressUpdateDisabled: Boolean,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
@@ -199,7 +200,7 @@ fun ListCardCompact(
                 if (iCalObject.module == Module.TODO.name)
                     Checkbox(
                         checked = iCalObject.percent == 100,
-                        enabled = !iCalObject.isReadOnly,
+                        enabled = !iCalObject.isReadOnly && !progressUpdateDisabled,
                         onCheckedChange = {
                             onProgressChanged(
                                 iCalObject.id,
@@ -278,6 +279,7 @@ fun ListCardCompact_JOURNAL() {
             icalobject,
             emptyList(),
             selected = false,
+            progressUpdateDisabled = true,
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -300,6 +302,7 @@ fun ListCardCompact_JOURNAL2() {
             icalobject,
             emptyList(),
             selected = true,
+            progressUpdateDisabled = true,
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -323,6 +326,7 @@ fun ListCardCompact_NOTE() {
             icalobject,
             emptyList(),
             selected = false,
+            progressUpdateDisabled = true,
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -350,6 +354,7 @@ fun ListCardCompact_TODO() {
             icalobject,
             subtasks = listOf(icalobject, icalobject),
             selected = false,
+            progressUpdateDisabled = true,
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -394,6 +399,7 @@ fun ListCardCompact_TODO_only_summary() {
             icalobject,
             subtasks = listOf(icalobject, icalobject),
             selected = false,
+            progressUpdateDisabled = true,
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }

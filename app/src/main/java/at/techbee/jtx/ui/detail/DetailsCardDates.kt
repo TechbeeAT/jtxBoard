@@ -37,6 +37,7 @@ fun DetailsCardDates(
     enableDtstart: Boolean,
     enableDue: Boolean,
     enableCompleted: Boolean,
+    allowCompletedChange: Boolean,
     onDtstartChanged: (Long?, String?) -> Unit,
     onDueChanged: (Long?, String?) -> Unit,
     onCompletedChanged: (Long?, String?) -> Unit,
@@ -134,7 +135,8 @@ fun DetailsCardDates(
                     labelTop = stringResource(id = R.string.completed),
                     allowNull = icalObject.module == Module.TODO.name,
                     dateOnly = (icalObject.dtstart != null && icalObject.dtstartTimezone == TZ_ALLDAY) || (icalObject.due != null && icalObject.dueTimezone == TZ_ALLDAY),
-                    enforceTime = (icalObject.dtstart != null && icalObject.dtstartTimezone != TZ_ALLDAY) || (icalObject.due != null && icalObject.dueTimezone != TZ_ALLDAY)
+                    enforceTime = (icalObject.dtstart != null && icalObject.dtstartTimezone != TZ_ALLDAY) || (icalObject.due != null && icalObject.dueTimezone != TZ_ALLDAY),
+                    enabled = allowCompletedChange
                 )
             }
         }
@@ -151,6 +153,7 @@ fun DetailsCardDates_Journal_Preview() {
             enableDtstart = true,
             enableDue = false,
             enableCompleted = false,
+            allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -175,6 +178,7 @@ fun DetailsCardDates_Todo_Preview() {
             enableDtstart = true,
             enableDue = false,
             enableCompleted = false,
+            allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -194,6 +198,7 @@ fun DetailsCardDates_Journal_edit_Preview() {
             enableDtstart = true,
             enableDue = true,
             enableCompleted = false,
+            allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -216,6 +221,7 @@ fun DetailsCardDates_Todo_edit_Preview() {
             enableDtstart = true,
             enableDue = false,
             enableCompleted = true,
+            allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -237,6 +243,7 @@ fun DetailsCardDates_Todo_edit_Preview_completed_hidden() {
             enableDtstart = true,
             enableDue = false,
             enableCompleted = false,
+            allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -254,6 +261,7 @@ fun DetailsCardDates_Note_edit_Preview() {
             enableDtstart = true,
             enableDue = true,
             enableCompleted = true,
+            allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
@@ -271,6 +279,7 @@ fun DetailsCardDates_Note_Preview() {
             enableDtstart = true,
             enableDue = true,
             enableCompleted = true,
+            allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
