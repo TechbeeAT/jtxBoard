@@ -42,7 +42,7 @@ Contributions are always welcome! Whether financial support, translations, code 
 
 For communication with the team and other people, please use the forums to get in touch either directly on Gitlab or through the support form on [https://jtx.techbee.at](https://jtx.techbee.at)
 
-<img src="https://jtx.techbee.at/wp-content/uploads/2021/12/header-image.png" alt="jtx Board Banner with Screenshot" width="70%">
+<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/featureGraphic.jpg" alt="jtx Board Banner with Screenshot" width="70%">
 
 
 ### Flavors
@@ -66,4 +66,27 @@ jtx Board uses/requests the following permissions:
 
 
 ### Troubleshooting
-If you have any troubles with the synchronization, please check first the following article [https://jtx.techbee.at/troubles-with-the-synchronization-see-what-could-go-wrong] or the following discussion https://gitlab.com/techbeeat1/jtx/-/issues/250 before opening an issue.
+If you have any troubles with the synchronization, please check first the following article [https://jtx.techbee.at/troubles-with-the-synchronization-see-what-could-go-wrong]  before opening an issue.
+
+
+### Screenshots
+[<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot1.jpeg"
+    height="200">](https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot1.jpeg)
+[<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpeg"
+    height="200">](https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot2.jpeg)
+[<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg"
+    height="200">](https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot3.jpeg)
+[<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg"
+    height="200">](https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot4.jpeg)
+[<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot5.jpeg"
+    height="200">](https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot5.jpeg)
+[<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot6.jpeg"
+    height="200">](https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot6.jpeg)
+[<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot7.jpeg"
+    height="200">](https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot7.jpeg)
+[<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot8.jpeg"
+    height="200">](https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot8.jpeg)
+[<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot9.jpeg"
+    height="200">](https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot9.jpeg)
+[<img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot10.jpeg"
+    height="200">](https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot10.jpeg)
