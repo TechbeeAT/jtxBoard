@@ -181,10 +181,13 @@ fun DetailScreenContent(
     iCalEntity.value?.property?.flags?.let { icalObject.value.flags = it }
     iCalEntity.value?.property?.scheduleTag?.let { icalObject.value.scheduleTag = it }
     iCalEntity.value?.property?.fileName?.let { icalObject.value.fileName = it }
-    iCalEntity.value?.property?.status?.let { icalObject.value.status = it }
-    iCalEntity.value?.property?.percent?.let { icalObject.value.percent = it }
-    iCalEntity.value?.property?.completed?.let { icalObject.value.completed = it }
-    iCalEntity.value?.property?.completedTimezone?.let { icalObject.value.completedTimezone = it }
+    if((iCalEntity.value?.property?.sequence?:0) > icalObject.value.sequence) {
+        icalObject.value.status = iCalEntity.value?.property?.status
+        icalObject.value.percent = iCalEntity.value?.property?.percent
+        icalObject.value.completed = iCalEntity.value?.property?.completed
+        icalObject.value.completedTimezone = iCalEntity.value?.property?.completedTimezone
+        icalObject.value = icalObject.value
+    }
 
 
     val categories =

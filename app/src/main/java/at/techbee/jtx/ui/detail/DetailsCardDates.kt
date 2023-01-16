@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.detail
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -89,7 +90,7 @@ fun DetailsCardDates(
                 )
             }
 
-            if(icalObject.module == Module.TODO.name
+            AnimatedVisibility (icalObject.module == Module.TODO.name
                 && (icalObject.due != null || (isEditMode && enableDue))) {
                 HorizontalDateCard(
                     datetime = icalObject.due,
@@ -120,7 +121,7 @@ fun DetailsCardDates(
                     enforceTime = (icalObject.dtstart != null && icalObject.dtstartTimezone != TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone != TZ_ALLDAY)
                 )
             }
-            if(icalObject.module == Module.TODO.name
+            AnimatedVisibility (icalObject.module == Module.TODO.name
                 && (icalObject.completed != null || (isEditMode && enableCompleted))) {
                 HorizontalDateCard(
                     datetime = icalObject.completed,
