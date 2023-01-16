@@ -31,6 +31,8 @@ Global Strings -->
     <string name="toolbar_text_sync">"Sincronización"</string>
     <string name="toolbar_text_donate">"Donar"</string>
     <string name="toolbar_text_adinfo">"Información sobre publicidad"</string>
+    <string name="default_local_collection_name">"Local"</string>
+    <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Borrador"</string>
     <string name="journal_status_final">"Definitivo"</string>
@@ -83,6 +85,7 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Número de asistentes"</string>
     <string name="list_num_attachments_contentdesc">"Número de adjuntos"</string>
     <string name="list_num_comments_contentdesc">"Número de comentarios"</string>
+    <string name="list_dialog_delete_selected_title">¿Eliminar entradas seleccionadas?</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Resumen / Descripción"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línea es interpretada como resumen, el resto como descripción. Las etiquetas son interpretadas como categorías (ejemplo: #categoría)."</string>
     <string name="list_item_upload_pending">"Subida pendiente"</string>
