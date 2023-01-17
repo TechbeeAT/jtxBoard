@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.util.DateTimeUtils
+import at.techbee.jtx.util.getPackageInfoCompat
 import com.amazon.device.iap.PurchasingListener
 import com.amazon.device.iap.PurchasingService
 import com.amazon.device.iap.model.ProductDataResponse
@@ -63,6 +64,11 @@ class BillingManager :
      * The initialisiation also calls querySkuDetails().
      */
     override fun initialise(context: Context) {
+
+        val firstInstall = context.packageManager?.getPackageInfoCompat(context.packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
+        if(firstInstall < 1674514800000L)
+            return
+
 
         if (billingPrefs == null)
             billingPrefs = context.getSharedPreferences(PREFS_BILLING, Context.MODE_PRIVATE)
