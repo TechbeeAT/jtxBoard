@@ -73,12 +73,6 @@
         <intent>
             <action android:name="android.speech.RecognitionService" />
         </intent>
-
-        <!--  only for Amazon IAP - doublecheck if really necessary
-        <package android:name="com.amazon.venezia"/>
-        <package android:name="com.amazon.sdktestclient" />
-        -->
-
     </queries>
 
     <application

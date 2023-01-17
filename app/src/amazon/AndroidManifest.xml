@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <queries>
-        <!--  only for Amazon IAP - doublecheck if really necessary
+        <!--  only for Amazon IAP - doublecheck if really necessary --> <!--
         <package android:name="com.amazon.venezia"/>
         <package android:name="com.amazon.sdktestclient" />
         -->

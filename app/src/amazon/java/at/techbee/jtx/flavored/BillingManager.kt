@@ -14,6 +14,7 @@ import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
+import at.techbee.jtx.util.DateTimeUtils
 import com.amazon.device.iap.PurchasingListener
 import com.amazon.device.iap.PurchasingService
 import com.amazon.device.iap.model.ProductDataResponse
@@ -31,7 +32,6 @@ class BillingManager :
         private lateinit var INSTANCE: BillingManager
 
         private const val IN_APP_PRODUCT_PRO = "jtx_board_pro"
-
         private const val PREFS_BILLING = "sharedPreferencesBilling"
         private const val PREFS_BILLING_PURCHASED = "prefsBillingPurchased"
 
@@ -50,7 +50,6 @@ class BillingManager :
     }
 
     override val isProPurchased = MutableLiveData(true)
-    override val isProPurchasedLoaded = MutableLiveData(false)
     override val proPrice = MutableLiveData("")
     override val proPurchaseDate = MutableLiveData("")
     override val proOrderId = MutableLiveData("")
@@ -82,14 +81,16 @@ class BillingManager :
                 when (response?.requestStatus) {
                     PurchaseResponse.RequestStatus.SUCCESSFUL -> {
                         val receipt = response.receipt
-                        proPurchaseDate.value = receipt.purchaseDate.toInstant().toString() // TODO: Format!
-                        proOrderId.value = receipt.receiptId
+                        proPurchaseDate.postValue(DateTimeUtils.convertLongToFullDateTimeString(receipt.purchaseDate.toInstant().toEpochMilli(), null))
+                        proOrderId.postValue(receipt.receiptId)
+                        isProPurchased.postValue(true)
                         billingPrefs?.edit()?.putBoolean(PREFS_BILLING_PURCHASED, true)?.apply()
                     }
                     PurchaseResponse.RequestStatus.ALREADY_PURCHASED -> {
                         val receipt = response.receipt
-                        proPurchaseDate.value = receipt.purchaseDate.toInstant().toString() // TODO: Format!
-                        proOrderId.value = receipt.receiptId
+                        proPurchaseDate.postValue(DateTimeUtils.convertLongToFullDateTimeString(receipt.purchaseDate.toInstant().toEpochMilli(), null))
+                        proOrderId.postValue(receipt.receiptId)
+                        isProPurchased.postValue(true)
                         billingPrefs?.edit()?.putBoolean(PREFS_BILLING_PURCHASED, true)?.apply()
                     }
                     else -> {
@@ -105,33 +106,32 @@ class BillingManager :
             override fun onPurchaseUpdatesResponse(response: PurchaseUpdatesResponse?) {
                 when (response?.requestStatus) {
                     PurchaseUpdatesResponse.RequestStatus.SUCCESSFUL -> {
-                        if (response.receipts.all { it.isCanceled }) {
+                        if (response.receipts.isEmpty() || response.receipts.all { it.isCanceled }) {
                             billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASED)?.apply()
-                            isProPurchased.value = false
+                            isProPurchased.postValue(false)
                         } else {
                             val receipt = response.receipts.last { !it.isCanceled }
-                            proPurchaseDate.value = receipt.purchaseDate.toInstant().toString() // TODO: Format!
-                            proOrderId.value = receipt.receiptId
+                            proPurchaseDate.postValue(DateTimeUtils.convertLongToFullDateTimeString(receipt.purchaseDate.toInstant().toEpochMilli(), null))
+                            proOrderId.postValue(receipt.receiptId)
+                            isProPurchased.postValue(true)
                             billingPrefs?.edit()?.putBoolean(PREFS_BILLING_PURCHASED, true)?.apply()
-                            isProPurchased.value = true
                         }
                     }
                     else -> {}
                 }
-                isProPurchasedLoaded.value = true
             }
 
         })
 
         PurchasingService.getUserData()
-        PurchasingService.getProductData(setOf("at.techbee.jtx")) // Triggers PurchasingListener.onProductDataResponse()
+        PurchasingService.getProductData(setOf(IN_APP_PRODUCT_PRO)) // Triggers PurchasingListener.onProductDataResponse()
         PurchasingService.getPurchaseUpdates(true)
 
     }
 
 
     /**
-     * This function launches the billing flow from Amazon appstoer.
+     * This function launches the billing flow from Amazon appstore.
      * It shows a bar on the bottom of the page where the user can buy the item.
      */
     override fun launchBillingFlow(activity: Activity) {
