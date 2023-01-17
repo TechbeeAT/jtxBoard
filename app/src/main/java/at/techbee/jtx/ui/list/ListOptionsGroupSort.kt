@@ -160,6 +160,83 @@ fun ListOptionsGroupSort(
                 )
             }
         }
+
+        Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+        // SORT ORDER FOR SUBTASKS
+        HeadlineWithIcon(
+            icon = Icons.Outlined.Sort,
+            iconDesc = null,
+            text = stringResource(id = R.string.filter_subtasks_order_by),
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
+            OrderBy.getValuesFor(Module.TODO).forEach { orderBy ->
+                FilterChip(
+                    selected = listSettings.subtasksOrderBy.value == orderBy,
+                    onClick = {
+                        if (listSettings.subtasksOrderBy.value != orderBy)
+                            listSettings.subtasksOrderBy.value = orderBy
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = orderBy.stringResource)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
+            SortOrder.values().forEach { sortOrder ->
+                FilterChip(
+                    selected = listSettings.subtasksSortOrder.value == sortOrder,
+                    onClick = {
+                        if (listSettings.subtasksSortOrder.value != sortOrder)
+                            listSettings.subtasksSortOrder.value = sortOrder
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = sortOrder.stringResource)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
+
+
+        Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+        // SORT ORDER FOR SUBNOTES
+        HeadlineWithIcon(
+            icon = Icons.Outlined.Sort,
+            iconDesc = null,
+            text = stringResource(id = R.string.filter_subnotes_order_by),
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
+            OrderBy.getValuesFor(Module.NOTE).forEach { orderBy ->
+                FilterChip(
+                    selected = listSettings.subnotesOrderBy.value == orderBy,
+                    onClick = {
+                        if (listSettings.subnotesOrderBy.value != orderBy)
+                            listSettings.subnotesOrderBy.value = orderBy
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = orderBy.stringResource)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
+        FlowRow(modifier = Modifier.fillMaxWidth()) {
+            SortOrder.values().forEach { sortOrder ->
+                FilterChip(
+                    selected = listSettings.subnotesSortOrder.value == sortOrder,
+                    onClick = {
+                        if (listSettings.subnotesSortOrder.value != sortOrder)
+                            listSettings.subnotesSortOrder.value = sortOrder
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = sortOrder.stringResource)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
     }
 }
 

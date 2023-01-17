@@ -178,20 +178,20 @@ class ListViewModelTest {
         listViewModel = listViewModelNotes
         listViewModel.iCal4List.observeForever {  }
 
-        database.insertICalObject(ICalObject(summary="Note1", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.CANCELLED.name))
-        database.insertICalObject(ICalObject(summary="Note2", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.DRAFT.name))
-        database.insertICalObject(ICalObject(summary="Note3", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.FINAL.name))
-        database.insertICalObject(ICalObject(summary="Note4", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.CANCELLED.name))
+        database.insertICalObject(ICalObject(summary="Note1", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = Status.CANCELLED.status))
+        database.insertICalObject(ICalObject(summary="Note2", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = Status.DRAFT.status))
+        database.insertICalObject(ICalObject(summary="Note3", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = Status.FINAL.status))
+        database.insertICalObject(ICalObject(summary="Note4", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = Status.CANCELLED.status))
 
-        listViewModel.listSettings.searchStatusJournal.value = listViewModel.listSettings.searchStatusJournal.value.plus(StatusJournal.DRAFT)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.DRAFT)
         listViewModel.updateSearch()
         assertEquals(1, listViewModel.iCal4List.value?.size)
 
-        listViewModel.listSettings.searchStatusJournal.value = listViewModel.listSettings.searchStatusJournal.value.plus(StatusJournal.CANCELLED)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.CANCELLED)
         listViewModel.updateSearch()
         assertEquals(3, listViewModel.iCal4List.value?.size)
 
-        listViewModel.listSettings.searchStatusJournal.value = listViewModel.listSettings.searchStatusJournal.value.plus(StatusJournal.FINAL)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.FINAL)
         listViewModel.updateSearch()
         assertEquals(4, listViewModel.iCal4List.value?.size)
     }
@@ -202,21 +202,21 @@ class ListViewModelTest {
         listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
 
-        database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, status = StatusTodo.CANCELLED.name))
-        database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  status = StatusTodo.`NEEDS-ACTION`.name))
-        database.insertICalObject(ICalObject(summary="Task2", module = Module.TODO.name, component = Component.VTODO.name,  status = StatusTodo.`IN-PROCESS`.name))
-        database.insertICalObject(ICalObject(summary="Task3", module = Module.TODO.name, component = Component.VTODO.name,  status = StatusTodo.`IN-PROCESS`.name))
-        database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  status = StatusTodo.COMPLETED.name))
+        database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, status = Status.CANCELLED.status))
+        database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  status = Status.NEEDS_ACTION.status))
+        database.insertICalObject(ICalObject(summary="Task2", module = Module.TODO.name, component = Component.VTODO.name,  status = Status.IN_PROCESS.status))
+        database.insertICalObject(ICalObject(summary="Task3", module = Module.TODO.name, component = Component.VTODO.name,  status = Status.IN_PROCESS.status))
+        database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  status = Status.COMPLETED.status))
 
-        listViewModel.listSettings.searchStatusTodo.value = listViewModel.listSettings.searchStatusTodo.value.plus(StatusTodo.`NEEDS-ACTION`)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.NEEDS_ACTION)
         listViewModel.updateSearch()
         assertEquals(1, listViewModel.iCal4List.value?.size)
 
-        listViewModel.listSettings.searchStatusTodo.value = listViewModel.listSettings.searchStatusTodo.value.plus(StatusTodo.`IN-PROCESS`)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.IN_PROCESS)
         listViewModel.updateSearch()
         assertEquals(3, listViewModel.iCal4List.value?.size)
 
-        listViewModel.listSettings.searchStatusTodo.value = listViewModel.listSettings.searchStatusTodo.value.plus(StatusTodo.COMPLETED)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.COMPLETED)
         listViewModel.updateSearch()
         assertEquals(4, listViewModel.iCal4List.value?.size)
     }
@@ -251,8 +251,8 @@ class ListViewModelTest {
         listViewModel = listViewModelTodos
         listViewModel.clearFilter()
         assertEquals(0, listViewModel.listSettings.searchCategories.value.size)
-        assertEquals(0, listViewModel.listSettings.searchStatusJournal.value.size)
-        assertEquals(0, listViewModel.listSettings.searchStatusTodo.value.size)
+        assertEquals(0, listViewModel.listSettings.searchStatus.value.size)
+        assertEquals(0, listViewModel.listSettings.searchStatus.value.size)
         assertEquals(0, listViewModel.listSettings.searchClassification.value.size)
         assertEquals(0, listViewModel.listSettings.searchCollection.value.size)
     }
@@ -306,9 +306,10 @@ class ListViewModelTest {
         listViewModel.listSettings.searchClassification.value = listViewModel.listSettings.searchClassification.value.plus(Classification.PUBLIC)
         listViewModel.updateSearch()
         assertEquals(2, listViewModel.iCal4List.value?.size)
+        listViewModel.selectedEntries.addAll(listViewModel.iCal4List.value!!.map { it.id })
 
         withContext(Dispatchers.IO) {
-            listViewModel.deleteVisible()
+            listViewModel.deleteSelected()
             Thread.sleep(100)
             listViewModel.listSettings.searchClassification.value = emptyList()
             listViewModel.updateSearch()

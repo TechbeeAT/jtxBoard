@@ -9,6 +9,7 @@
 package at.techbee.jtx.database.views
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
@@ -190,8 +191,8 @@ data class ICal4List(
                 null,
                 null,
                 null,
-                status = StatusJournal.DRAFT.name,
-                classification = Classification.CONFIDENTIAL.name,
+                status = Status.DRAFT.status,
+                classification = Classification.CONFIDENTIAL.classification,
                 null,
                 null,
                 null,
@@ -237,8 +238,7 @@ data class ICal4List(
             module: Module,
             searchCategories: List<String> = emptyList(),
             searchResources: List<String> = emptyList(),
-            searchStatusTodo: List<StatusTodo> = emptyList(),
-            searchStatusJournal: List<StatusJournal> = emptyList(),
+            searchStatus: List<Status> = emptyList(),
             searchClassification: List<Classification> = emptyList(),
             searchCollection: List<String> = emptyList(),
             searchAccount: List<String> = emptyList(),
@@ -256,8 +256,6 @@ data class ICal4List(
             isFilterStartTomorrow: Boolean = false,
             isFilterStartFuture: Boolean = false,
             isFilterNoDatesSet: Boolean = false,
-            isFilterNoStatusSet: Boolean = false,
-            isFilterNoClassificationSet: Boolean = false,
             isFilterNoCategorySet: Boolean = false,
             isFilterNoResourceSet: Boolean = false,
             searchText: String? = null,
@@ -283,9 +281,23 @@ data class ICal4List(
             //TEXT
             searchText?.let { text ->
                 if (text.length >= 2) {
-                    queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) "
-                    args.add("%" + text + "%")
-                    args.add("%" + text + "%")
+                    queryString += "AND ("
+
+                    queryString += "$VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ? "
+                    args.add("%$text%")
+                    args.add("%$text%")
+
+                    // Search in Subtasks
+                    queryString += "OR $VIEW_NAME_ICAL4LIST.$COLUMN_UID IN (SELECT DISTINCT $VIEW_NAME_ICAL4LIST.vtodoUidOfParent from $VIEW_NAME_ICAL4LIST WHERE (isChildOfJournal = 1 OR isChildOfNote = 1 OR isChildOfTodo = 1) AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) ) "
+                    args.add("%$text%")
+                    args.add("%$text%")
+
+                    // Search in Subtasks
+                    queryString += "OR $VIEW_NAME_ICAL4LIST.$COLUMN_UID IN (SELECT DISTINCT $VIEW_NAME_ICAL4LIST.vjournalUidOfParent from $VIEW_NAME_ICAL4LIST WHERE (isChildOfJournal = 1 OR isChildOfNote = 1 OR isChildOfTodo = 1) AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) ) "
+                    args.add("%$text%")
+                    args.add("%$text%")
+
+                    queryString += ") "
                 }
             }
 
@@ -323,20 +335,13 @@ data class ICal4List(
                 queryString += ") "
             }
 
-            //STATUS
-            val searchStatus = mutableListOf<String>().apply {
-                addAll(searchStatusJournal.map { it.toString() })
-                addAll(searchStatusTodo.map { it.toString() })
-            }
-            if ((searchStatus.isNotEmpty() || isFilterNoStatusSet)) {
+            if (searchStatus.isNotEmpty()) {
                 queryString += "AND ("
                 queryString += searchStatus.joinToString(separator = "OR ", transform = { "$COLUMN_STATUS = ? " })
-                args.addAll(searchStatus.map { it })
+                args.addAll(searchStatus.map { it.status ?:"" })
 
-                if(searchStatus.isNotEmpty() && isFilterNoStatusSet)
-                    queryString += "OR "
-                if (isFilterNoStatusSet)
-                    queryString += "$COLUMN_STATUS IS NULL"
+                if (searchStatus.contains(Status.NO_STATUS))
+                    queryString += "OR $COLUMN_STATUS IS NULL"
                 queryString += ") "
             }
 
@@ -366,15 +371,13 @@ data class ICal4List(
                 queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
 
             //CLASSIFICATION
-            if ((searchClassification.isNotEmpty() || isFilterNoClassificationSet)) {
+            if (searchClassification.isNotEmpty()) {
                 queryString += "AND ("
                 queryString += searchClassification.joinToString(separator = "OR ", transform = { "$COLUMN_CLASSIFICATION = ? " })
-                args.addAll(searchClassification.map { it.toString() })
+                args.addAll(searchClassification.map { it.classification ?: ""})
 
-                if(searchClassification.isNotEmpty() && isFilterNoClassificationSet)
-                    queryString += "OR "
-                if (isFilterNoClassificationSet)
-                    queryString += "$COLUMN_CLASSIFICATION IS NULL"
+                if(searchClassification.contains(Classification.NO_CLASSIFICATION))
+                    queryString += "OR $COLUMN_CLASSIFICATION IS NULL"
                 queryString += ") "
             }
 
@@ -419,10 +422,48 @@ data class ICal4List(
             queryString += orderBy2.queryAppendix
             sortOrder2.let { queryString += it.queryAppendix }
 
-            //Log.println(Log.INFO, "queryString", queryString)
+            Log.println(Log.INFO, "queryString", queryString)
             //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
             return SimpleSQLiteQuery(queryString, args.toArray())
         }
+
+        /**
+         * Returns all sub-entries
+         * @param component: Use Component.VTODO to get all subtasks, use Component.VJOURNAL to get all subnotes/subjournals
+         * @param orderBy
+         * @param sortOrder
+         */
+        fun getQueryForAllSubEntries(component: Component, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+
+        /**
+         * Returns all sub-entries
+         * @param component: Use Component.VTODO to get all subtasks, use Component.VJOURNAL to get all subnotes/subjournals
+         * @param parents: UID of parents for which the sub-entries should be returned
+         * @param orderBy
+         * @param sortOrder
+         */
+        fun getQueryForAllSubEntriesOfParents(component: Component, parents: List<String>, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (${parents.joinToString(separator = ",", transform = { "'$it'" })}) ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+
+        /**
+         * Returns all subtasks of a given entry by its UID
+         * @param parentUid: UID of parent for which the sub-entries should be returned
+         * @param orderBy
+         * @param sortOrder
+         */
+        fun getQueryForAllSubtasksForParentUID(parentUid: String, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vtodoUidOfParent = '$parentUid' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+
+        /**
+         * Returns all subnotes/subjournals of a given entry by its UID
+         * @param parentUid: UID of parent for which the sub-entries should be returned
+         * @param orderBy
+         * @param sortOrder
+         */
+        fun getQueryForAllSubnotesForParentUID(parentUid: String, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vjournalUidOfParent = '$parentUid' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+
     }
 
 

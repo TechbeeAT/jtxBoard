@@ -25,6 +25,10 @@ class SettingsStateHolder(val context: Context) {
     }
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    var settingEnableJournals = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ENABLE_JOURNALS.key, SwitchSetting.SETTING_ENABLE_JOURNALS.default))
+    var settingEnableNotes = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ENABLE_NOTES.key, SwitchSetting.SETTING_ENABLE_NOTES.default))
+    var settingEnableTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ENABLE_TASKS.key, SwitchSetting.SETTING_ENABLE_TASKS.default))
+
     var settingTheme = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_THEME.key, DropdownSetting.SETTING_THEME.default.key) } ?: DropdownSetting.SETTING_THEME.default )
     var settingAudioFormat = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(

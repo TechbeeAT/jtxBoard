@@ -19,8 +19,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,6 +95,7 @@ class MainActivity2 : AppCompatActivity() {
         setIntent(intent)
     }
 
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -115,12 +119,17 @@ class MainActivity2 : AppCompatActivity() {
                     DropdownSettingOption.THEME_TRUE_DARK -> true
                     else -> isSystemInDarkTheme()
                 },
+                contrastTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_CONTRAST,
                 trueDarkTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_TRUE_DARK,
                 dynamicColor = isProPurchased.value
             ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .semantics {
+                                   testTagsAsResourceId = true
+                        },
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.merge(TextStyle(textDirection = TextDirection.Content))) {

@@ -8,8 +8,6 @@
 
 package at.techbee.jtx.ui.detail
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -41,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
@@ -348,7 +347,7 @@ fun DetailScreenContent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(Icons.Outlined.Folder, stringResource(id = R.string.collection))
-                            Text(iCalEntity.value?.ICalCollection?.displayName + iCalEntity.value?.ICalCollection?.accountName?.let { " (" + it + ")" })
+                            Text(iCalEntity.value?.ICalCollection?.displayName + iCalEntity.value?.ICalCollection?.accountName?.let { " ($it)" })
                         }
                     }
                 }
@@ -424,7 +423,10 @@ fun DetailScreenContent(
             AnimatedVisibility(!isEditMode.value) {
                 SelectionContainer {
                     ElevatedCard(
-                        onClick = { isEditMode.value = true },
+                        onClick = {
+                            if(iCalEntity.value?.ICalCollection?.readonly == false)
+                                isEditMode.value = true
+                        },
                         modifier = Modifier.fillMaxWidth()
                     ) {
 
@@ -433,7 +435,8 @@ fun DetailScreenContent(
                                 summary.trim(),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(8.dp),
+                                    .padding(8.dp)
+                                    .testTag("benchmark:DetailSummary"),
                                 style = MaterialTheme.typography.titleMedium
                             )
 
@@ -534,6 +537,7 @@ fun DetailScreenContent(
             if (icalObject.module == Module.TODO.name) {
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     ProgressElement(
+                        label = null,
                         iCalObjectId = icalObject.id,
                         progress = icalObject.percent,
                         isReadOnly = iCalEntity.value?.ICalCollection?.readonly == true,
@@ -544,7 +548,6 @@ fun DetailScreenContent(
                             onProgressChanged(itemId, newPercent, isLinked)
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
-                        showProgressLabel = showProgressForMainTasks,
                         showSlider = showProgressForMainTasks,
                         modifier = Modifier.align(Alignment.End)
                     )
@@ -636,7 +639,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES]?:false || showAllOptions))) {
+            AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value  && icalObject.getModuleFromString() == Module.TODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES]?:false || showAllOptions))) {
                 DetailsCardResources(
                     initialResources = resources.value,
                     isEditMode = isEditMode.value,
@@ -830,12 +833,7 @@ fun DetailScreenContent_JOURNAL() {
             Category(2, 1, "My Dog likes Cats", null, null),
             Category(3, 1, "This is a very long category", null, null),
         )
-
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_JOURNALS,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
+        val detailSettings = DetailSettings()
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
@@ -879,11 +877,7 @@ fun DetailScreenContent_TODO_editInitially() {
         entity.property.description = "Hello World, this \nis my description."
         entity.property.contact = "John Doe, +1 555 5545"
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_TODOS,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
+        val detailSettings = DetailSettings()
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
@@ -929,11 +923,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
         entity.property.description = "Hello World, this \nis my description."
         entity.property.contact = "John Doe, +1 555 5545"
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_TODOS,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
+        val detailSettings = DetailSettings()
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
@@ -971,11 +961,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
 fun DetailScreenContent_failedLoading() {
     MaterialTheme {
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
-            DetailViewModel.PREFS_DETAIL_TODOS,
-            Context.MODE_PRIVATE
-        )
-        val detailSettings = DetailSettings(prefs)
+        val detailSettings = DetailSettings()
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(null) },

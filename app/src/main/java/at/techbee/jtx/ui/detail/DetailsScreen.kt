@@ -88,6 +88,9 @@ fun DetailsScreen(
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
     val isProActionAvailable by remember(isProPurchased, icalEntity) { derivedStateOf { isProPurchased.value || icalEntity.value?.ICalCollection?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
 
+    icalEntity.value?.property?.getModuleFromString()?.let {
+        detailViewModel.detailSettings.load(it, context)
+    }
 
     if (navigateUp && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.CHANGESAVING) {
         if (returnToLauncher) {
@@ -144,6 +147,7 @@ fun DetailsScreen(
     Scaffold(
         topBar = {
             DetailsTopAppBar(
+                readonly = icalEntity.value?.ICalCollection?.readonly ?: true,
                 goBack = {
                     goBackRequestedByTopBar.value = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
@@ -157,34 +161,42 @@ fun DetailsScreen(
 
                         Text(stringResource(R.string.details_app_bar_behaviour), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 8.dp))
                         DropdownMenuItem(
-                            text = { Text(
-                                text = stringResource(id = R.string.edit_subtasks_add_helper),
-                                color = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
-                            ) },
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.edit_subtasks_add_helper),
+                                    color = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                )
+                            },
                             onClick = {
                                 settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBTASK
                                 menuExpanded.value = false
                             },
-                            leadingIcon = { Icon(
-                                imageVector = Icons.Outlined.AddTask,
-                                contentDescription = null,
-                                tint = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
-                            ) }
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.AddTask,
+                                    contentDescription = null,
+                                    tint = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
                         )
                         DropdownMenuItem(
-                            text = { Text(
-                                text = stringResource(id = R.string.edit_subnote_add_helper),
-                                color = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
-                            ) },
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.edit_subnote_add_helper),
+                                    color = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                )
+                            },
                             onClick = {
                                 settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBNOTE
                                 menuExpanded.value = false
                             },
-                            leadingIcon = { Icon(
-                                imageVector = Icons.Outlined.NoteAdd,
-                                contentDescription = null,
-                                tint = if(settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
-                            ) }
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.NoteAdd,
+                                    contentDescription = null,
+                                    tint = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
                         )
 
                         Divider()
@@ -196,7 +208,13 @@ fun DetailsScreen(
                                     detailViewModel.shareAsText(context)
                                     menuExpanded.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.Mail, null) }
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Mail,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
                             )
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
@@ -204,7 +222,13 @@ fun DetailsScreen(
                                     detailViewModel.shareAsICS(context)
                                     menuExpanded.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.Description, null) }
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Description,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
                             )
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
@@ -216,7 +240,13 @@ fun DetailsScreen(
                                         Toast.makeText(context, context.getText(R.string.menu_view_copy_to_clipboard_copied), Toast.LENGTH_SHORT).show()
                                     menuExpanded.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.ContentPaste, null) }
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.ContentPaste,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
                             )
                         }
 
@@ -311,7 +341,11 @@ fun DetailsScreen(
                 sheetState = detailsBottomSheetState,
                 sheetContent = {
                     DetailOptionsBottomSheet(
-                        module = try { Module.valueOf(icalEntity.value?.property?.module?: Module.NOTE.name) } catch(e: Exception) { Module.NOTE },
+                        module = try {
+                            Module.valueOf(icalEntity.value?.property?.module ?: Module.NOTE.name)
+                        } catch (e: Exception) {
+                            Module.NOTE
+                        },
                         detailSettings = detailViewModel.detailSettings,
                         onListSettingsChanged = { detailViewModel.detailSettings.save() },
                         modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = paddingValues.calculateBottomPadding())

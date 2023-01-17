@@ -146,8 +146,7 @@ fun AttachmentCard(
                     Text(
                         text = UiUtil.getAttachmentSizeString(it),
                         maxLines = 1,
-                        fontStyle = FontStyle.Italic,
-                        color = MaterialTheme.colorScheme.secondary
+                        fontStyle = FontStyle.Italic
                     )
                 }
             }

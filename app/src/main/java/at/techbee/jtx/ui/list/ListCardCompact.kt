@@ -34,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
 import at.techbee.jtx.ui.reusable.elements.ListStatusBar
 import at.techbee.jtx.ui.theme.Typography
@@ -47,9 +46,11 @@ import at.techbee.jtx.util.DateTimeUtils
 fun ListCardCompact(
     iCalObject: ICal4List,
     subtasks: List<ICal4List>,
+    selected: Boolean,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
-    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit
+    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
 
     val statusBarVisible by remember {
@@ -58,13 +59,13 @@ fun ListCardCompact(
                     || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.url?.isNotEmpty() == true || iCalObject.location?.isNotEmpty() == true
                     || iCalObject.contact?.isNotEmpty() == true || iCalObject.isRecurringInstance || iCalObject.isRecurringOriginal || iCalObject.isLinkedRecurringInstance
                     || iCalObject.priority in 1..9 || iCalObject.status in listOf(
-                StatusJournal.CANCELLED.name,
-                StatusJournal.DRAFT.name,
-                StatusTodo.CANCELLED.name
+                Status.CANCELLED.status,
+                Status.DRAFT.status,
+                Status.CANCELLED.status
             )
                     || iCalObject.classification in listOf(
-                Classification.CONFIDENTIAL.name,
-                Classification.PRIVATE.name
+                Classification.CONFIDENTIAL.classification,
+                Classification.PRIVATE.classification
             )
         )
     }
@@ -72,7 +73,11 @@ fun ListCardCompact(
         iCalObject.colorItem?.let { Color(it) } ?: iCalObject.colorCollection?.let { Color(it) }
         ?: Color.Transparent
 
-    Row(modifier = modifier.height(IntrinsicSize.Min)) {
+    Row(
+        modifier = modifier
+            .height(IntrinsicSize.Min)
+            .background(if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface)
+    ) {
 
         Box(
             modifier = Modifier
@@ -112,7 +117,6 @@ fun ListCardCompact(
                                     modifier = Modifier
                                         .padding(end = 16.dp)
                                         .weight(1f),
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -128,7 +132,6 @@ fun ListCardCompact(
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -139,7 +142,7 @@ fun ListCardCompact(
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
-                                    color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -174,7 +177,7 @@ fun ListCardCompact(
                         if (iCalObject.summary?.isNotBlank() == true)
                             Text(
                                 text = iCalObject.summary?.trim() ?: "",
-                                textDecoration = if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None,
+                                textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight = FontWeight.Bold,
@@ -188,7 +191,6 @@ fun ListCardCompact(
                             text = iCalObject.description?.trim() ?: "",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.fillMaxWidth()
                         )
                 }
@@ -225,7 +227,6 @@ fun ListCardCompact(
                     isRecurringOriginal = iCalObject.isRecurringOriginal,
                     isRecurringInstance = iCalObject.isRecurringInstance,
                     isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
-                    component = iCalObject.component,
                     status = iCalObject.status,
                     classification = iCalObject.classification,
                     priority = iCalObject.priority,
@@ -244,17 +245,16 @@ fun ListCardCompact(
                             .padding(start = 8.dp, end = 8.dp)
                             .clip(jtxCardCornerShape)
                             .combinedClickable(
-                                onClick = { goToDetail(subtask.id, false, subtasks) },
+                                onClick = { onClick(subtask.id, subtasks) },
                                 onLongClick = {
-                                    if (!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToDetail(subtask.id, true, subtasks)
+                                    if (!subtask.isReadOnly)
+                                        onLongClick(subtask.id, subtasks)
                                 }
                             )
                     )
 
                     if (subtask.id != subtasks.last().id)
                         Divider(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             thickness = 1.dp,
                             modifier = Modifier.alpha(0.25f)
                         )
@@ -277,8 +277,10 @@ fun ListCardCompact_JOURNAL() {
         ListCardCompact(
             icalobject,
             emptyList(),
+            selected = false,
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> }
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> }
         )
     }
 }
@@ -297,8 +299,10 @@ fun ListCardCompact_JOURNAL2() {
         ListCardCompact(
             icalobject,
             emptyList(),
+            selected = true,
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> }
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> }
         )
     }
 }
@@ -313,13 +317,15 @@ fun ListCardCompact_NOTE() {
             module = Module.NOTE.name
             dtstart = null
             dtstartTimezone = null
-            status = StatusJournal.CANCELLED.name
+            status = Status.CANCELLED.status
         }
         ListCardCompact(
             icalobject,
             emptyList(),
+            selected = false,
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> }
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> }
         )
     }
 }
@@ -333,7 +339,7 @@ fun ListCardCompact_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()-1
@@ -343,8 +349,10 @@ fun ListCardCompact_TODO() {
         ListCardCompact(
             icalobject,
             subtasks = listOf(icalobject, icalobject),
+            selected = false,
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> }
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> }
         )
     }
 }
@@ -361,7 +369,7 @@ fun ListCardCompact_TODO_only_summary() {
             module = Module.TODO.name
             categories = null
             percent = null
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.PUBLIC.name
             dtstart = null
             due = null
@@ -385,8 +393,10 @@ fun ListCardCompact_TODO_only_summary() {
         ListCardCompact(
             icalobject,
             subtasks = listOf(icalobject, icalobject),
+            selected = false,
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> }
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> }
         )
     }
 }

@@ -30,10 +30,7 @@ fun TranslatorCard(
     modifier: Modifier = Modifier
 ) {
 
-    ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        modifier = modifier
-    ) {
+    ElevatedCard(modifier = modifier) {
 
         Row(
             modifier

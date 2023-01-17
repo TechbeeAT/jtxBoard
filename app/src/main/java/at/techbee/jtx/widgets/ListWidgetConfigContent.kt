@@ -186,8 +186,7 @@ fun ListWidgetConfigContent(
                                     module = selectedModule.value
                                     searchCategories = listSettings.searchCategories.value
                                     searchResources = listSettings.searchResources.value
-                                    searchStatusTodo = listSettings.searchStatusTodo.value
-                                    searchStatusJournal = listSettings.searchStatusJournal.value
+                                    searchStatus = listSettings.searchStatus.value
                                     searchClassification = listSettings.searchClassification.value
                                     searchCollection = listSettings.searchCollection.value
                                     searchAccount = listSettings.searchAccount.value
@@ -196,6 +195,10 @@ fun ListWidgetConfigContent(
                                     orderBy2 = listSettings.orderBy2.value
                                     sortOrder2 = listSettings.sortOrder2.value
                                     groupBy = listSettings.groupBy.value
+                                    subtasksOrderBy = listSettings.subtasksOrderBy.value
+                                    subtasksSortOrder = listSettings.subtasksSortOrder.value
+                                    subnotesOrderBy = listSettings.subnotesOrderBy.value
+                                    subnotesSortOrder = listSettings.subnotesSortOrder.value
                                     flatView = listSettings.flatView.value
                                     checkboxPositionEnd = listSettings.checkboxPositionEnd.value
                                     showOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
@@ -215,8 +218,6 @@ fun ListWidgetConfigContent(
                                     isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value
                                     isFilterStartFuture = listSettings.isFilterStartFuture.value
                                     isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value
-                                    isFilterNoStatusSet = listSettings.isFilterNoStatusSet.value
-                                    isFilterNoClassificationSet = listSettings.isFilterNoClassificationSet.value
                                     isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value
                                     isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value
                                 }
@@ -263,9 +264,10 @@ data class ListWidgetConfig(
     var module: Module = Module.NOTE,
     var searchCategories: List<String> = emptyList(),
     var searchResources: List<String> = emptyList(),
+    var searchStatus: List<Status> = emptyList(),
     var searchStatusTodo: List<StatusTodo> = emptyList(),
-    var searchStatusJournal: List<StatusJournal> = emptyList(),
-    var searchClassification: List<Classification> = emptyList(),
+    var searchStatusJournal: List<StatusJournal> = emptyList(),   // TODO: remove
+    var searchClassification: List<Classification> = emptyList(),   // TODO: remove
     var searchCollection: List<String> = emptyList(),
     var searchAccount: List<String> = emptyList(),
     var orderBy: OrderBy = OrderBy.CREATED,
@@ -273,6 +275,10 @@ data class ListWidgetConfig(
     var orderBy2: OrderBy = OrderBy.SUMMARY,
     var sortOrder2: SortOrder = SortOrder.ASC,
     var groupBy: GroupBy? = null,
+    var subtasksOrderBy: OrderBy = OrderBy.CREATED,
+    var subtasksSortOrder: SortOrder = SortOrder.ASC,
+    var subnotesOrderBy: OrderBy = OrderBy.CREATED,
+    var subnotesSortOrder: SortOrder = SortOrder.ASC,
     var isExcludeDone: Boolean = false,
     var isFilterOverdue: Boolean = false,
     var isFilterDueToday: Boolean = false,
@@ -283,8 +289,8 @@ data class ListWidgetConfig(
     var isFilterStartTomorrow: Boolean = false,
     var isFilterStartFuture: Boolean = false,
     var isFilterNoDatesSet: Boolean = false,
-    var isFilterNoStatusSet: Boolean = false,
-    var isFilterNoClassificationSet: Boolean = false,
+    var isFilterNoStatusSet: Boolean = false,   // TODO: remove
+    var isFilterNoClassificationSet: Boolean = false,  // TODO: remove
     var isFilterNoCategorySet: Boolean = false,
     var isFilterNoResourceSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!

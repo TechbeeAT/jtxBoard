@@ -134,49 +134,6 @@ SELECTs (global selects without parameter)
 
     /**
      * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY $COLUMN_SORT_INDEX")
-    fun getAllSubtasks(): LiveData<List<ICal4List>>
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     * @param parents a list of UIDs of the parents for which the subtasks shall be returned
-     * @return a list of [ICalObject] as List<[ICalObject]>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (:parents) ORDER BY $COLUMN_SORT_INDEX")
-    fun getSubtasksSyncOf(parents: List<String>): List<ICal4List>
-
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY $COLUMN_SORT_INDEX")
-    fun getAllSubnotes(): LiveData<List<ICal4List>>
-
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     * @param parents a list of UIDs of the parents for which the subnotes shall be returned
-     * @return a list of [ICalObject] as List<[ICalObject]>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT'  AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (:parents) ORDER BY $COLUMN_SORT_INDEX")
-    fun getSubnotesSyncOf(parents: List<String>): List<ICal4List>
-
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
      * by checking if the [ICalObject.id] is listed as a [Relatedto.linkedICalObjectId].
      *
      * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
@@ -185,38 +142,6 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT")
     fun getAllAttachments(): LiveData<List<Attachment>>
 
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICal4List]>>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vtodoUidOfParent = :uid ORDER BY $COLUMN_SORT_INDEX")
-    fun getAllSubtasksOf(uid: String): LiveData<List<ICal4List>>
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $TABLE_NAME_ICALOBJECT.* from $TABLE_NAME_ICALOBJECT INNER JOIN $TABLE_NAME_RELATEDTO ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT = :uid AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $TABLE_NAME_ICALOBJECT.$COLUMN_COMPONENT = 'VTODO' AND $TABLE_NAME_ICALOBJECT.$COLUMN_DELETED = 0 ORDER BY $COLUMN_SORT_INDEX")
-    fun getAllSubtasksAsICalObjectOf(uid: String): LiveData<List<ICalObject>>
-
-
-    /**
-     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICal4List]>>
-     */
-    @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vjournalUidOfParent = :uid ORDER BY $COLUMN_SORT_INDEX")
-    fun getAllSubnotesOf(uid: String): LiveData<List<ICal4List>>
-    
 
     /**
      * Retrieve an list of all  [Attachment]
@@ -491,6 +416,20 @@ DELETEs by Object
 
 
     /**
+     * Deletes the given categories in [categories] for the given iCalObjectIds in [iCalObjectIds]
+     */
+    @Query("DELETE FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_TEXT IN (:categories) AND $COLUMN_CATEGORY_ICALOBJECT_ID IN (:iCalObjectIds)")
+    fun deleteCategoriesForICalObjects(categories: List<String>, iCalObjectIds: List<Long>)
+
+    /**
+     * Deletes the given categories in [resources] for the given iCalObjectIds in [iCalObjectIds]
+     */
+    @Query("DELETE FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_TEXT IN (:resources) AND $COLUMN_RESOURCE_ICALOBJECT_ID IN (:iCalObjectIds)")
+    fun deleteResourcesForICalObjects(resources: List<String>, iCalObjectIds: List<Long>)
+
+
+
+    /**
      * Delete entities through a RawQuery.
      * This is especially used for the Content Provider
      *
@@ -581,6 +520,13 @@ DELETEs by Object
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4List>
 
+    @Transaction
+    @RawQuery(observedEntities = [ICal4List::class])
+    fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
+
+    @Transaction
+    @RawQuery(observedEntities = [ICal4List::class])
+    fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4List>
 
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")
@@ -600,6 +546,14 @@ DELETEs by Object
     @Query("SELECT * from alarm WHERE icalObjectId = :icalobjectId")
     fun getAlarmsSync(icalobjectId: Long): List<Alarm>?
 
+
+    @Transaction
+    @Query("SELECT * from $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_CATEGORY_TEXT = :category")
+    fun getCategoryForICalObjectByName(iCalObjectId: Long, category: String): Category?
+
+    @Transaction
+    @Query("SELECT * from $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_RESOURCE_TEXT = :resource")
+    fun getResourceForICalObjectByName(iCalObjectId: Long, resource: String): Resource?
 
 
     /** This query returns all ids of child elements of the given [parentKey]  */

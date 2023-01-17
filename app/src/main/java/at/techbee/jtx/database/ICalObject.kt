@@ -516,7 +516,7 @@ data class ICalObject(
             module = Module.JOURNAL.name,
             dtstart = DateTimeUtils.getTodayAsLong(),
             dtstartTimezone = TZ_ALLDAY,
-            status = StatusJournal.FINAL.name,
+            status = Status.FINAL.status,
             summary = summary,
             dirty = true
         )
@@ -526,7 +526,7 @@ data class ICalObject(
         fun createNote(summary: String?) = ICalObject(
             component = Component.VJOURNAL.name,
             module = Module.NOTE.name,
-            status = StatusJournal.FINAL.name,
+            status = Status.FINAL.status,
             summary = summary,
             dirty = true
         )
@@ -922,10 +922,9 @@ data class ICalObject(
         percent = if(newPercent == 0) null else newPercent
         if(status?.isNotEmpty() == true)                   // we only update the status if it was set to a value, if it's null, we skip this part
             status = when (newPercent) {
-                100 -> StatusTodo.COMPLETED.name
-                in 1..99 -> StatusTodo.`IN-PROCESS`.name
-                0 -> StatusTodo.`NEEDS-ACTION`.name
-                else -> StatusTodo.`NEEDS-ACTION`.name      // should never happen!
+                100 -> Status.COMPLETED.status
+                in 1..99 -> Status.IN_PROCESS.status
+                else -> Status.NEEDS_ACTION.status
             }
 
         if (completed == null && percent == 100) {
@@ -1393,121 +1392,92 @@ data class ICalObject(
  * @param [stringResource] is a reference to the String Resource within JTX
  */
 @Parcelize
+@Deprecated("Use Status instead")
 enum class StatusJournal(val stringResource: Int) : Parcelable {
 
     DRAFT(R.string.journal_status_draft),
     FINAL(R.string.journal_status_final),
     CANCELLED(R.string.journal_status_cancelled);
-
-    companion object {
-
-        fun getStringResource(context: Context, name: String?): String {
-            return if(name == null)
-                context.getString(R.string.status_no_status)
-            else if(values().any { it.name == name })
-                context.getString(valueOf(name).stringResource)
-            else
-                name
-        }
-
-        fun getListFromStringList(stringList: Set<String>?): MutableList<StatusJournal> {
-            val list = mutableListOf<StatusJournal>()
-            stringList?.forEach { string ->
-                when (string) {
-                    DRAFT.name -> list.add(DRAFT)
-                    FINAL.name -> list.add(FINAL)
-                    CANCELLED.name -> list.add(CANCELLED)
-                }
-            }
-            return list
-        }
-
-        fun getStringSetFromList(list: List<StatusJournal>): Set<String> {
-            val set = mutableListOf<String>()
-            list.forEach {
-                set.add(it.name)
-            }
-            return set.toSet()
-        }
-    }
 }
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Todos
  * The possible values differ for Todos and Journals/Notes
  * @param [stringResource] is a reference to the String Resource within JTX
  */
+@Deprecated("Use Status instead")
 @Parcelize
 enum class StatusTodo(val stringResource: Int) : Parcelable {
-
     `NEEDS-ACTION`(R.string.todo_status_needsaction),
     COMPLETED(R.string.todo_status_completed),
     `IN-PROCESS`(R.string.todo_status_inprocess),
     CANCELLED(R.string.todo_status_cancelled);
+}
+
+
+
+/** This enum class defines the possible values for the attribute [ICalObject.status] for Journals, Notes and Todos
+ * The possible values differ for Todos and Journals/Notes, use valuesFor(Module) to get the right values for a module
+ * @param [stringResource] is a reference to the String Resource within jtx Board
+ */
+@Parcelize
+enum class Status(val status: String?, val stringResource: Int) : Parcelable {
+
+    NO_STATUS(null, R.string.status_no_status),
+
+    NEEDS_ACTION("NEEDS-ACTION", R.string.todo_status_needsaction),
+    IN_PROCESS("IN-PROCESS", R.string.todo_status_inprocess),
+    COMPLETED("COMPLETED", R.string.todo_status_completed),
+
+    DRAFT("DRAFT", R.string.journal_status_draft),
+    FINAL("FINAL", R.string.journal_status_final),
+
+    CANCELLED("CANCELLED", R.string.todo_status_cancelled);
 
     companion object {
 
-        fun getStringResource(context: Context, name: String?): String {
-            return if(name == null)
-                context.getString(R.string.status_no_status)
-            else if(values().any { it.name == name })
-                context.getString(valueOf(name).stringResource)
-            else
-                name
+        fun valuesFor(module: Module): List<Status> {
+            return when (module) {
+                Module.JOURNAL, Module.NOTE -> listOf(NO_STATUS, DRAFT, FINAL, CANCELLED)
+                Module.TODO -> listOf(NO_STATUS, NEEDS_ACTION, IN_PROCESS, COMPLETED, CANCELLED)
+            }
         }
 
-        fun getListFromStringList(stringList: Set<String>?): MutableList<StatusTodo> {
-            val list = mutableListOf<StatusTodo>()
+        fun getListFromStringList(stringList: Set<String>?): MutableList<Status> {
+            val list = mutableListOf<Status>()
             stringList?.forEach { string ->
-                when (string) {
-                    `NEEDS-ACTION`.name -> list.add(`NEEDS-ACTION`)
-                    COMPLETED.name -> list.add(COMPLETED)
-                    `IN-PROCESS`.name -> list.add(`IN-PROCESS`)
-                    CANCELLED.name -> list.add(CANCELLED)
-                }
+                values().find { it.status == string || it.name == string }?.let { status -> list.add(status) }
             }
             return list
         }
 
-        fun getStringSetFromList(list: List<StatusTodo>): Set<String> {
+        fun getStringSetFromList(list: List<Status>): Set<String> {
             val set = mutableListOf<String>()
             list.forEach {
-                set.add(it.name)
+                set.add(it.status ?: it.name)
             }
             return set.toSet()
         }
     }
 }
 
+
 /** This enum class defines the possible values for the attribute [ICalObject.classification]
  * @param [stringResource] is a reference to the String Resource within JTX
  */
 @Parcelize
-enum class Classification(val stringResource: Int) : Parcelable {
+enum class Classification(val classification: String?, val stringResource: Int) : Parcelable {
 
-    PUBLIC(R.string.classification_public),
-    PRIVATE(R.string.classification_private),
-    CONFIDENTIAL(R.string.classification_confidential);
+    NO_CLASSIFICATION(null, R.string.classification_no_classification),
+    PUBLIC("PUBLIC", R.string.classification_public),
+    PRIVATE("PRIVATE", R.string.classification_private),
+    CONFIDENTIAL("CONFIDENTIAL", R.string.classification_confidential);
 
     companion object {
-
-        fun getStringResource(context: Context, name: String?): String {
-
-            return if(name == null)
-                context.getString(R.string.classification_no_classification)
-            else if(values().any { it.name == name })
-                context.getString(valueOf(name).stringResource)
-            else
-                name
-        }
 
         fun getListFromStringList(stringList: Set<String>?): MutableList<Classification> {
             val list = mutableListOf<Classification>()
             stringList?.forEach { string ->
-                when (string) {
-                    PUBLIC.name -> list.add(PUBLIC)
-                    PRIVATE.name -> list.add(PRIVATE)
-                    CONFIDENTIAL.name -> list.add(CONFIDENTIAL)
-                }
+                values().find { it.classification == string || it.name == string }?.let { status -> list.add(status) }
             }
             return list
         }
@@ -1515,7 +1485,7 @@ enum class Classification(val stringResource: Int) : Parcelable {
         fun getStringSetFromList(list: List<Classification>): Set<String> {
             val set = mutableListOf<String>()
             list.forEach {
-                set.add(it.name)
+                set.add(it.classification ?: it.name)
             }
             return set.toSet()
         }

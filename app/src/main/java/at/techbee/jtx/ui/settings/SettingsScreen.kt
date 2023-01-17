@@ -188,6 +188,49 @@ fun SettingsScreen(
                             .padding(top = 8.dp)
                             .alpha(0.5f)
                     )
+
+
+
+                    Text(
+                        text = stringResource(id = R.string.settings_modules),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
+                    )
+
+                    SwitchSetting(
+                        setting = SETTING_ENABLE_JOURNALS,
+                        initiallyChecked = settingsStateHolder.settingEnableJournals.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingEnableJournals.value = it
+                            SETTING_ENABLE_JOURNALS.save(it, context)
+                        },
+                        enabled = !(!settingsStateHolder.settingEnableNotes.value && !settingsStateHolder.settingEnableTasks.value)
+                    )
+                    SwitchSetting(
+                        setting = SETTING_ENABLE_NOTES,
+                        initiallyChecked = settingsStateHolder.settingEnableNotes.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingEnableNotes.value = it
+                            SETTING_ENABLE_NOTES.save(it, context)
+                        },
+                        enabled = !(!settingsStateHolder.settingEnableJournals.value && !settingsStateHolder.settingEnableTasks.value)
+                    )
+                    SwitchSetting(
+                        setting = SETTING_ENABLE_TASKS,
+                        initiallyChecked = settingsStateHolder.settingEnableTasks.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingEnableTasks.value = it
+                            SETTING_ENABLE_TASKS.save(it, context)
+                        },
+                        enabled = !(!settingsStateHolder.settingEnableJournals.value && !settingsStateHolder.settingEnableNotes.value)
+                    )
+
+                    Divider(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .alpha(0.5f)
+                    )
+
                     Text(
                         text = stringResource(id = R.string.settings_list),
                         style = MaterialTheme.typography.labelMedium,

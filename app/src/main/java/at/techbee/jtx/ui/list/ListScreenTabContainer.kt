@@ -19,15 +19,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.Sync
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -50,8 +49,10 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
-import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
+import at.techbee.jtx.ui.reusable.dialogs.CollectionSelectorDialog
+import at.techbee.jtx.ui.reusable.dialogs.DeleteSelectedDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
+import at.techbee.jtx.ui.reusable.dialogs.UpdateEntriesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
@@ -82,13 +83,25 @@ fun ListScreenTabContainer(
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
-    val screens = listOf(ListTabDestination.Journals, ListTabDestination.Notes, ListTabDestination.Tasks)
+    val enabledTabs = mutableListOf<ListTabDestination>().apply {
+        if(settingsStateHolder.settingEnableJournals.value)
+            add(ListTabDestination.Journals)
+        if(settingsStateHolder.settingEnableNotes.value)
+            add(ListTabDestination.Notes)
+        if(settingsStateHolder.settingEnableTasks.value)
+            add(ListTabDestination.Tasks)
+    }.toList()
     val pagerState = rememberPagerState(
-        initialPage = when(settingsStateHolder.lastUsedModule.value) {
-            Module.JOURNAL -> ListTabDestination.Journals.tabIndex
-            Module.NOTE -> ListTabDestination.Notes.tabIndex
-            Module.TODO -> ListTabDestination.Tasks.tabIndex
-        }
+        initialPage =
+            if(enabledTabs.any { tab -> tab.module == settingsStateHolder.lastUsedModule.value }) {
+                when (settingsStateHolder.lastUsedModule.value) {
+                    Module.JOURNAL -> enabledTabs.indexOf(ListTabDestination.Journals)
+                    Module.NOTE -> enabledTabs.indexOf(ListTabDestination.Notes)
+                    Module.TODO -> enabledTabs.indexOf(ListTabDestination.Tasks)
+                }
+            } else {
+                0
+            }
     )
 
     val icalListViewModelJournals: ListViewModelJournals = viewModel()
@@ -96,17 +109,20 @@ fun ListScreenTabContainer(
     val icalListViewModelTodos: ListViewModelTodos = viewModel()
 
     val listViewModel = when(pagerState.currentPage) {
-        ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
-        ListTabDestination.Notes.tabIndex -> icalListViewModelNotes
-        ListTabDestination.Tasks.tabIndex -> icalListViewModelTodos
+        enabledTabs.indexOf(ListTabDestination.Journals) -> icalListViewModelJournals
+        enabledTabs.indexOf(ListTabDestination.Notes) -> icalListViewModelNotes
+        enabledTabs.indexOf(ListTabDestination.Tasks) -> icalListViewModelTodos
         else -> icalListViewModelJournals  // fallback, should not happen
     }
     val allWriteableCollections = listViewModel.allWriteableCollections.observeAsState(emptyList())
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
     val allUsableCollections by remember(allWriteableCollections) {
         derivedStateOf {
-            allWriteableCollections.value.filter {
-                it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value        // filter remote collections if pro was not purchased
+            allWriteableCollections.value.filter { collection ->
+                (collection.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value)        // filter remote collections if pro was not purchased
+                        && (enabledTabs.any { it.module == Module.JOURNAL || it.module == Module.NOTE} && collection.supportsVJOURNAL
+                            || enabledTabs.any { it.module == Module.TODO} && collection.supportsVTODO
+                        )
             }
         }
     }
@@ -120,14 +136,16 @@ fun ListScreenTabContainer(
     }
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
-    var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
+    var showDeleteSelectedDialog by remember { mutableStateOf(false) }
+    var showUpdateEntriesDialog by remember { mutableStateOf(false) }
+    var showCollectionSelectorDialog by remember { mutableStateOf(false) }
 
-    fun getActiveViewModel() =
-        when (pagerState.currentPage) {
-            ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
-            ListTabDestination.Notes.tabIndex -> icalListViewModelNotes
-            ListTabDestination.Tasks.tabIndex  -> icalListViewModelTodos
-            else -> icalListViewModelJournals
+
+    fun getActiveViewModel() = when (pagerState.currentPage) {
+            enabledTabs.indexOf(ListTabDestination.Journals) -> icalListViewModelJournals
+            enabledTabs.indexOf(ListTabDestination.Notes) -> icalListViewModelNotes
+            enabledTabs.indexOf(ListTabDestination.Tasks) -> icalListViewModelTodos
+            else -> icalListViewModelJournals  // fallback, should not happen
         }
 
     val goToEdit = getActiveViewModel().goToEdit.observeAsState()
@@ -142,11 +160,41 @@ fun ListScreenTabContainer(
     var showSearch by remember { mutableStateOf(false) }
     val showQuickAdd = remember { mutableStateOf(false) }
 
-    if (showDeleteAllVisibleDialog) {
-        DeleteVisibleDialog(
-            numEntriesToDelete = getActiveViewModel().iCal4List.value?.filter { entry -> !entry.isReadOnly}?.size ?: 0,
-            onConfirm = { getActiveViewModel().deleteVisible() },
-            onDismiss = { showDeleteAllVisibleDialog = false }
+    if (showDeleteSelectedDialog) {
+        DeleteSelectedDialog(
+            numEntriesToDelete = getActiveViewModel().selectedEntries.size,
+            onConfirm = { getActiveViewModel().deleteSelected() },
+            onDismiss = { showDeleteSelectedDialog = false }
+        )
+    }
+
+    if (showUpdateEntriesDialog) {
+        UpdateEntriesDialog(
+            module = getActiveViewModel().module,
+            allCategoriesLive = getActiveViewModel().allCategories,
+            allResourcesLive = getActiveViewModel().allResources,
+            allCollectionsLive = getActiveViewModel().allWriteableCollections,
+            onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
+            onResourcesChanged = { addedResources, deletedResources -> getActiveViewModel().updateResourcesToSelected(addedResources, deletedResources) },
+            onStatusChanged = { newStatus -> getActiveViewModel().updateStatusOfSelected(newStatus) },
+            onClassificationChanged = { newClassification -> getActiveViewModel().updateClassificationOfSelected(newClassification) },
+            onPriorityChanged = { newPriority -> getActiveViewModel().updatePriorityOfSelected(newPriority) },
+            onCollectionChanged = { newCollection -> getActiveViewModel().moveSelectedToNewCollection(newCollection) },
+            onDismiss = { showUpdateEntriesDialog = false }
+        )
+    }
+
+    if (showCollectionSelectorDialog) {
+        CollectionSelectorDialog(
+            module = getActiveViewModel().module,
+            presetCollectionId = getActiveViewModel().listSettings.topAppBarCollectionId.value,
+            allCollectionsLive = getActiveViewModel().allCollections,
+            onCollectionConfirmed = { selectedCollection ->
+                getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.ADD_ENTRY
+                getActiveViewModel().listSettings.topAppBarCollectionId.value = selectedCollection.collectionId
+                getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
+            },
+            onDismiss = { showCollectionSelectorDialog = false }
         )
     }
 
@@ -164,13 +212,26 @@ fun ListScreenTabContainer(
         lastUsedPage.value = pagerState.currentPage
     }
 
-    fun addNewEntry(newICalObject: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) {
-        listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, newICalObject.collectionId)
-        settingsStateHolder.lastUsedModule.value = newICalObject.getModuleFromString()
-        settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
+    fun addNewEntry(
+        module: Module,
+        text: String?,
+        collectionId: Long,
+        attachment: Attachment?,
+        editAfterSaving: Boolean
+    ) {
 
-        globalStateHolder.icalFromIntentString.value = null  // origin was state from import
-        globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+        val newICalObject = when (module) {
+            Module.JOURNAL -> ICalObject.createJournal().apply { this.setDefaultJournalDateFromSettings(context) }
+            Module.NOTE -> ICalObject.createNote()
+            Module.TODO -> ICalObject.createTodo().apply {
+                this.setDefaultDueDateFromSettings(context)
+                this.setDefaultStartDateFromSettings(context)
+            }
+        }
+        newICalObject.collectionId = collectionId
+        newICalObject.parseSummaryAndDescription(text)
+        newICalObject.parseURL(text)
+        val categories = Category.extractHashtagsFromText(text)
 
         //handle autoAlarm
         val autoAlarm = if(settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_DUE && newICalObject.due != null) {
@@ -203,9 +264,20 @@ fun ListScreenTabContainer(
         topBar = {
             ListTopAppBar(
                 drawerState = drawerState,
+                listTopAppBarMode = getActiveViewModel().listSettings.topAppBarMode.value,
                 module = listViewModel.module,
                 searchText = listViewModel.listSettings.searchText,
+                newEntryText = listViewModel.listSettings.newEntryText,
                 onSearchTextUpdated = { listViewModel.updateSearch(saveListSettings = false) },
+                onCreateNewEntry = { newEntryText ->
+                    addNewEntry(
+                        module = listViewModel.module,
+                        text = newEntryText,
+                        collectionId = listViewModel.listSettings.topAppBarCollectionId.value,
+                        attachment = null,
+                        editAfterSaving = false
+                    )
+                },
                 actions = {
                     IconButton(
                         onClick = { topBarMenuExpanded = true },
@@ -221,6 +293,65 @@ fun ListScreenTabContainer(
                         expanded = topBarMenuExpanded,
                         onDismissRequest = { topBarMenuExpanded = false }
                     ) {
+                        Text(stringResource(R.string.details_app_bar_behaviour), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 8.dp))
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.search),
+                                    color = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.SEARCH) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                )},
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Search,
+                                    contentDescription = null,
+                                    tint = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.SEARCH) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            },
+                            onClick = {
+                                getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.SEARCH
+                                getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
+                                getActiveViewModel().listSettings.newEntryText.value = ""
+                                topBarMenuExpanded = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                when (getActiveViewModel().module) {
+                                    Module.JOURNAL -> Text(text = stringResource(id = R.string.toolbar_text_add_journal), color = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.ADD_ENTRY) MaterialTheme.colorScheme.primary else Color.Unspecified)
+                                    Module.NOTE -> Text(text = stringResource(id = R.string.toolbar_text_add_note), color = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.ADD_ENTRY) MaterialTheme.colorScheme.primary else Color.Unspecified)
+                                    Module.TODO -> Text(text = stringResource(id = R.string.toolbar_text_add_task), color = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.ADD_ENTRY) MaterialTheme.colorScheme.primary else Color.Unspecified)
+                                }
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Add,
+                                    contentDescription = null,
+                                    tint = if(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.ADD_ENTRY) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                                          },
+                            onClick = {
+                                if(listViewModel.listSettings.topAppBarCollectionId.value == 0L
+                                    || allWriteableCollections.value.none { collection -> collection.collectionId == listViewModel.listSettings.topAppBarCollectionId.value }) {
+                                    showCollectionSelectorDialog = true
+                                    topBarMenuExpanded = false
+                                } else {
+                                    getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.ADD_ENTRY
+                                    getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
+                                    topBarMenuExpanded = false
+                                }
+                                getActiveViewModel().listSettings.searchText.value = null
+                            },
+                            trailingIcon = {
+                                IconButton(onClick = {
+                                    showCollectionSelectorDialog = true
+                                    topBarMenuExpanded = false
+                                }) {
+                                    Icon(Icons.Outlined.Folder, stringResource(id = R.string.collection))
+                                }
+                            }
+                        )
+                        Divider()
+
 
                         if(SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)) {
                             DropdownMenuItem(
@@ -232,21 +363,6 @@ fun ListScreenTabContainer(
                                 leadingIcon = { Icon(Icons.Outlined.Sync, null) },
                                 onClick = {
                                     SyncUtil.syncAllAccounts(context)
-                                    topBarMenuExpanded = false
-                                }
-                            )
-                            Divider()
-                        }
-                        if(getActiveViewModel().iCal4List.value?.isNotEmpty() == true) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        stringResource(id = R.string.menu_list_delete_visible)
-                                    )
-                                },
-                                leadingIcon = { Icon(Icons.Outlined.DeleteOutline, null) },
-                                onClick = {
-                                    showDeleteAllVisibleDialog = true
                                     topBarMenuExpanded = false
                                 }
                             )
@@ -308,30 +424,21 @@ fun ListScreenTabContainer(
                              && !collection.readonly)
                     },
                     onAddNewEntry = {
-                        val lastUsedCollectionId =
-                            listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs)
-                        val proposedCollectionId =
-                            if (allUsableCollections.any { collection -> collection.collectionId == lastUsedCollectionId })
-                                lastUsedCollectionId
-                            else
-                                allUsableCollections.firstOrNull()?.collectionId
-                                    ?: return@ListBottomAppBar
-                        val newICalObject = when (listViewModel.module) {
-                            Module.JOURNAL -> ICalObject.createJournal().apply {
-                                this.setDefaultJournalDateFromSettings(context)
-                                collectionId = proposedCollectionId
-                            }
-                            Module.NOTE -> ICalObject.createNote()
-                                .apply { collectionId = proposedCollectionId }
-                            Module.TODO -> ICalObject.createTodo().apply {
-                                this.setDefaultDueDateFromSettings(context)
-                                this.setDefaultStartDateFromSettings(context)
-                                collectionId = proposedCollectionId
-                            }
-                        }
-                        addNewEntry(newICalObject, emptyList(), null, true)
+                        val lastUsedCollectionId = listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs)
+                        val proposedCollectionId = allUsableCollections.find { collection -> collection.collectionId == lastUsedCollectionId }?.collectionId
+                            ?: allUsableCollections.firstOrNull()?.collectionId
+                            ?: return@ListBottomAppBar
+
+                        listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, proposedCollectionId)
+                        settingsStateHolder.lastUsedModule.value = listViewModel.module
+                        settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
+
+                        addNewEntry(module = listViewModel.module, text = listViewModel.listSettings.newEntryText.value.ifEmpty { null }, collectionId = proposedCollectionId, attachment = null, editAfterSaving = true)
+                        listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
+                    multiselectEnabled = listViewModel.multiselectEnabled,
+                    selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,
                     onFilterIconClicked = {
                         scope.launch {
@@ -341,13 +448,17 @@ fun ListScreenTabContainer(
                                 filterBottomSheetState.show()
                         }
                     },
-                    onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) }
+                    onGoToDateSelected = { id -> getActiveViewModel().scrollOnceId.postValue(id) },
+                    onDeleteSelectedClicked = { showDeleteSelectedDialog = true },
+                    onUpdateSelectedClicked = { showUpdateEntriesDialog = true }
                 )
             } else if(timeout) {
                 BottomAppBar {
                     Text(
                         text = stringResource(R.string.list_snackbar_no_collection),
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -358,32 +469,30 @@ fun ListScreenTabContainer(
                     drawerState,
                     mainContent = {
                         Column {
-                            TabRow(
-                                selectedTabIndex = pagerState.currentPage    // adding the indicator might make a smooth movement of the tabIndicator, but Accompanist does not support all components (TODO: Check again in future) https://www.geeksforgeeks.org/tab-layout-in-android-using-jetpack-compose/
-                            ) {
-                                screens.forEach { screen ->
-                                    Tab(selected = pagerState.currentPage == screen.tabIndex,
-                                        onClick = {
-                                            scope.launch {
-                                                pagerState.scrollToPage(screen.tabIndex)
-                                            }
-                                            settingsStateHolder.lastUsedModule.value =
-                                                when (screen) {
-                                                    ListTabDestination.Journals -> Module.JOURNAL
-                                                    ListTabDestination.Notes -> Module.NOTE
-                                                    ListTabDestination.Tasks -> Module.TODO
+
+                            if(enabledTabs.size > 1) {
+                                TabRow(
+                                    selectedTabIndex = pagerState.currentPage    // adding the indicator might make a smooth movement of the tabIndicator, but Accompanist does not support all components (TODO: Check again in future) https://www.geeksforgeeks.org/tab-layout-in-android-using-jetpack-compose/
+                                ) {
+                                    enabledTabs.forEach { enabledTab ->
+                                        Tab(
+                                            selected = pagerState.currentPage == enabledTabs.indexOf(enabledTab),
+                                            onClick = {
+                                                scope.launch {
+                                                    pagerState.scrollToPage(enabledTabs.indexOf(enabledTab))
                                                 }
-                                            settingsStateHolder.lastUsedModule =
-                                                settingsStateHolder.lastUsedModule  // in order to save
-                                        },
-                                        text = {
-                                            Text(
-                                                text = stringResource(id = screen.titleResource),
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                        }
-                                    )
+                                                settingsStateHolder.lastUsedModule.value = enabledTab.module
+                                                settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule  // in order to save
+                                            },
+                                            text = {
+                                                Text(
+                                                    text = stringResource(id = enabledTab.titleResource),
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis
+                                                )
+                                            },
+                                        )
+                                    }
                                 }
                             }
 
@@ -397,21 +506,26 @@ fun ListScreenTabContainer(
                                         getActiveViewModel().module    // coming from button
                                     else
                                         globalStateHolder.icalFromIntentModule.value,   // coming from intent
+                                    enabledModules = enabledTabs.map { it.module },
                                     presetText = globalStateHolder.icalFromIntentString.value
                                         ?: "",    // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allWriteableCollections = allUsableCollections,
                                     presetCollectionId = listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
-                                    onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
-                                        addNewEntry(newICalObject, categories, attachment, editAfterSaving)
+                                    onSaveEntry = { module, text, attachment, collectionId,  editAfterSaving ->
+
+                                        listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, collectionId)
+                                        settingsStateHolder.lastUsedModule.value = module
+                                        settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
+
+                                        globalStateHolder.icalFromIntentString.value = null  // origin was state from import
+                                        globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+
+                                        addNewEntry(module, text, collectionId, attachment, editAfterSaving)
                                         scope.launch {
-                                            pagerState.scrollToPage(
-                                                when (newICalObject.getModuleFromString()) {
-                                                    Module.JOURNAL -> ListTabDestination.Journals.tabIndex
-                                                    Module.NOTE -> ListTabDestination.Notes.tabIndex
-                                                    Module.TODO -> ListTabDestination.Tasks.tabIndex
-                                                }
-                                            )
+                                            val index = enabledTabs.indexOf(enabledTabs.find { tab -> tab.module == module })
+                                            if(index >=0)
+                                                pagerState.scrollToPage(index)
                                         }
                                     },
                                     onDismiss = {
@@ -427,32 +541,19 @@ fun ListScreenTabContainer(
                             Box {
                                 HorizontalPager(
                                     state = pagerState,
-                                    count = 3,
+                                    count = enabledTabs.size,
                                     userScrollEnabled = !filterBottomSheetState.isVisible,
                                 ) { page ->
-                                    when (page) {
-                                        ListTabDestination.Journals.tabIndex -> {
-                                            ListScreen(
-                                                listViewModel = icalListViewModelJournals,
-                                                navController = navController,
-                                                filterBottomSheetState = filterBottomSheetState,
-                                            )
-                                        }
-                                        ListTabDestination.Notes.tabIndex -> {
-                                            ListScreen(
-                                                listViewModel = icalListViewModelNotes,
-                                                navController = navController,
-                                                filterBottomSheetState = filterBottomSheetState,
-                                            )
-                                        }
-                                        ListTabDestination.Tasks.tabIndex -> {
-                                            ListScreen(
-                                                listViewModel = icalListViewModelTodos,
-                                                navController = navController,
-                                                filterBottomSheetState = filterBottomSheetState,
-                                            )
-                                        }
-                                    }
+
+                                    ListScreen(
+                                        listViewModel = when (enabledTabs[page].module) {
+                                            Module.JOURNAL -> icalListViewModelJournals
+                                            Module.NOTE -> icalListViewModelNotes
+                                            Module.TODO -> icalListViewModelTodos
+                                        },
+                                        navController = navController,
+                                        filterBottomSheetState = filterBottomSheetState,
+                                    )
                                 }
 
                                 if(globalStateHolder.isSyncInProgress.value) {

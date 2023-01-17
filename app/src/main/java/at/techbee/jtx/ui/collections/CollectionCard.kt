@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.cards
 
+import android.accounts.Account
 import android.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -79,7 +80,6 @@ fun CollectionCard(
 
 
     ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = modifier
     ) {
 
@@ -107,7 +107,6 @@ fun CollectionCard(
                         Text(
                             collection.description ?: "",
                             style = Typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
@@ -126,18 +125,15 @@ fun CollectionCard(
                         Text(
                             stringResource(id = R.string.collections_journals_num, numJournals),
                             style = Typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
                             stringResource(id = R.string.collections_notes_num, numNotes),
                             style = Typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 8.dp)
                         )
                         Text(
                             stringResource(id = R.string.collections_tasks_num, numTodos),
                             style = Typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 8.dp)
                         )
                     }
@@ -194,7 +190,7 @@ fun CollectionCard(
                                     text = { Text(stringResource(id = R.string.menu_collection_popup_show_in_davx5)) },
                                     leadingIcon = { Icon(Icons.Outlined.Sync, null) },
                                     onClick = {
-                                        SyncUtil.openDAVx5AccountsActivity(context)
+                                        SyncUtil.openDAVx5AccountActivity(Account(collection.accountName, collection.accountType), context)
                                         menuExpanded = false
                                     }
                                 )

@@ -113,7 +113,6 @@ fun BuyProCardPurchased(
     val orderId by orderIdLive.observeAsState("-")
 
     ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = modifier
     ) {
 

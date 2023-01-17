@@ -11,7 +11,6 @@ package at.techbee.jtx.ui.detail
 import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.SharedPreferences
 import android.database.sqlite.SQLiteConstraintException
 import android.media.MediaPlayer
 import android.net.Uri
@@ -26,11 +25,14 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.OrderBy
+import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
@@ -56,7 +58,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var navigateToId = mutableStateOf<Long?>(null)
     var changeState = mutableStateOf(DetailChangeState.UNCHANGED)
     var toastMessage = mutableStateOf<String?>(null)
-    lateinit var detailSettings: DetailSettings
+    val detailSettings: DetailSettings = DetailSettings()
 
     val mediaPlayer = MediaPlayer()
 
@@ -96,24 +98,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             icalEntity = database.get(icalObjectId)
 
             relatedSubnotes = Transformations.switchMap(icalEntity) {
-                it?.property?.uid?.let { parentUid -> database.getAllSubnotesOf(parentUid) }
+                it?.property?.uid?.let { parentUid ->
+                    database.getIcal4List(ICal4List.getQueryForAllSubnotesForParentUID(parentUid, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
+                }
             }
 
             relatedSubtasks = Transformations.switchMap(icalEntity) {
                 it?.property?.uid?.let { parentUid ->
-                    database.getAllSubtasksOf(parentUid)
+                    database.getIcal4List(ICal4List.getQueryForAllSubtasksForParentUID(parentUid, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
             isChild = database.isChild(icalObjectId)
-
-
-            val prefs: SharedPreferences = when (icalEntity.value?.property?.getModuleFromString()) {
-                Module.JOURNAL -> _application.getSharedPreferences(PREFS_DETAIL_JOURNALS, Context.MODE_PRIVATE)
-                Module.NOTE -> _application.getSharedPreferences(PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
-                Module.TODO -> _application.getSharedPreferences(PREFS_DETAIL_TODOS, Context.MODE_PRIVATE)
-                else -> _application.getSharedPreferences(PREFS_DETAIL_JOURNALS, Context.MODE_PRIVATE)
-            }
-            detailSettings = DetailSettings(prefs)
         }
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -549,7 +544,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * @param [iCalEntity] for which the content should be put in a file that is returned as Uri
      * @return the uri for the file with the [iCalEntity] content in as .ics format or null
      */
-    private fun createContentUri(iCalEntity: ICalEntity): Uri? {
+    private suspend fun createContentUri(iCalEntity: ICalEntity): Uri? {
         val icsFile = writeIcsFile(iCalEntity) ?: return null
 
         val context = getApplication<Application>()
@@ -560,23 +555,27 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * @param [iCalEntity] for which the content should be put in a file
      * @return a file with the [iCalEntity] content in as .ics format or null
      */
-    private fun writeIcsFile(iCalEntity: ICalEntity): File? {
+    private suspend fun writeIcsFile(iCalEntity: ICalEntity): File? {
         val context = getApplication<Application>()
         val account = iCalEntity.ICalCollection?.getAccount() ?: return null
         val collectionId = iCalEntity.property.collectionId
-        val iCalObjectId = iCalEntity.property.id
+        val parentId = iCalEntity.property.id
+        val parentWithChildrenIds = mutableListOf(parentId)
+        addChildrenOf(parentId, parentWithChildrenIds)
 
         return try {
             val outputFile = File(context.externalCacheDir, "ics_file.ics")
 
-            FileOutputStream(outputFile).use { outputStream ->
-                Ical4androidUtil.writeICSFormatFromProviderToOS(
-                    account,
-                    context,
-                    collectionId,
-                    iCalObjectId,
-                    outputStream
-                )
+            withContext(Dispatchers.IO) {
+                FileOutputStream(outputFile).use { outputStream ->
+                    Ical4androidUtil.writeICSFormatFromProviderToOS(
+                        account,
+                        context,
+                        collectionId,
+                        parentWithChildrenIds,
+                        outputStream
+                    )
+                }
             }
 
             outputFile
@@ -586,6 +585,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             null
         }
+    }
+
+    /**
+     * Adds the children of an entry to the list recursively
+     * @param parent whose children ICalObjectIds should be added to
+     * @param list
+     */
+    private suspend fun addChildrenOf(parent: Long, list: MutableList<Long>) {
+        val children = database.getRelatedChildren(parent)
+        list.addAll(children)
+        children.forEach { addChildrenOf(it, list) }
     }
     
     enum class DetailChangeState { UNCHANGED, CHANGEUNSAVED, CHANGESAVING, CHANGESAVED }

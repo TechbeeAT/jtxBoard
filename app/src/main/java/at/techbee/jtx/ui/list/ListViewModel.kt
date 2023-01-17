@@ -13,17 +13,21 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getPackageInfoCompat
@@ -51,13 +55,19 @@ open class ListViewModel(application: Application, val module: Module) : Android
         database.getIcal4List(it)
     }
 
-    private val allSubtasksList: LiveData<List<ICal4List>> = database.getAllSubtasks()
-    val allSubtasksMap = Transformations.map(allSubtasksList) { list ->
+    private var allSubtasksQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var allSubtasks: LiveData<List<ICal4List>> = Transformations.switchMap(allSubtasksQuery) {
+        database.getSubEntries(it)
+    }
+    val allSubtasksMap = Transformations.map(allSubtasks) { list ->
         return@map list.groupBy { it.vtodoUidOfParent }
     }
 
-    private val allSubnotesList: LiveData<List<ICal4List>> = database.getAllSubnotes()
-    val allSubnotesMap = Transformations.map(allSubnotesList) { list ->
+    private var allSubnotesQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var allSubnotes: LiveData<List<ICal4List>> = Transformations.switchMap(allSubnotesQuery) {
+        database.getSubEntries(it)
+    }
+    val allSubnotesMap = Transformations.map(allSubnotes) { list ->
         return@map list.groupBy { it.vjournalUidOfParent }
     }
 
@@ -76,6 +86,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val scrollOnceId = MutableLiveData<Long?>(null)
     var goToEdit = MutableLiveData<Long?>(null)
     var toastMessage = mutableStateOf<String?>(null)
+
+    val selectedEntries = mutableStateListOf<Long>()
+    val multiselectEnabled = mutableStateOf(false)
 
 
     init {
@@ -113,8 +126,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             module = module,
             searchCategories = listSettings.searchCategories.value,
             searchResources = listSettings.searchResources.value,
-            searchStatusTodo =  listSettings.searchStatusTodo.value,
-            searchStatusJournal = listSettings.searchStatusJournal.value,
+            searchStatus = listSettings.searchStatus.value,
             searchClassification = listSettings.searchClassification.value,
             searchCollection = listSettings.searchCollection.value,
             searchAccount = listSettings.searchAccount.value,
@@ -132,8 +144,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value,
             isFilterStartFuture = listSettings.isFilterStartFuture.value,
             isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
-            isFilterNoStatusSet = listSettings.isFilterNoStatusSet.value,
-            isFilterNoClassificationSet = listSettings.isFilterNoClassificationSet.value,
             isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value,
             isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value,
             searchText = listSettings.searchText.value,
@@ -141,6 +151,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
             searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
         )
         listQuery.postValue(query)
+
+        allSubtasksQuery.postValue(ICal4List.getQueryForAllSubEntries(Component.VTODO, listSettings.subtasksOrderBy.value, listSettings.subtasksSortOrder.value))
+        allSubnotesQuery.postValue(ICal4List.getQueryForAllSubEntries(Component.VJOURNAL, listSettings.subnotesOrderBy.value, listSettings.subnotesSortOrder.value))
         if(saveListSettings)
             listSettings.saveToPrefs(prefs)
     }
@@ -172,13 +185,13 @@ open class ListViewModel(application: Application, val module: Module) : Android
             toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
     }
 
-    fun updateStatusJournal(itemId: Long, newStatusJournal: StatusJournal, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
+    fun updateStatusJournal(itemId: Long, newStatus: Status, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
             ICalObject.makeRecurringException(currentItem, database)
             val item = database.getSync(itemId)?.property ?: return@launch
-            item.status = newStatusJournal.name
+            item.status = newStatus.status
             database.update(item)
             SyncUtil.notifyContentObservers(getApplication())
             if(scrollOnce)
@@ -190,16 +203,153 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     /*
-    Deletes all entries that are currently visible (present in iCal4List)
+    Deletes selected entries
      */
-    fun deleteVisible() {
+    fun deleteSelected() {
         viewModelScope.launch(Dispatchers.IO) {
-            iCal4List.value?.forEach { entry ->
-                if(entry.isReadOnly || entry.isLinkedRecurringInstance)
+            val selectedICal4List = database.getIcal4ListSync(
+                SupportSQLiteQueryBuilder
+                    .builder(VIEW_NAME_ICAL4LIST)
+                    .selection("$COLUMN_ID IN (${selectedEntries.joinToString(separator = ",", transform = { "?"})})", selectedEntries.toTypedArray())
+                    .create()
+            )
+            selectedICal4List.forEach { entry ->
+                if(entry.isReadOnly)
                     return@forEach
-                else
-                    ICalObject.deleteItemWithChildren(entry.id, database)
+                if(entry.isLinkedRecurringInstance)
+                    database.getICalObjectByIdSync(entry.id)?.let { ICalObject.makeRecurringException(it, database) }
+                ICalObject.deleteItemWithChildren(entry.id, database)
+                selectedEntries.clear()
+            }
+        }
+    }
 
+    /**
+     * Adds new categories to the selected entries (if they don't exist already)
+     * @param addedCategories that should be added
+     * @param removedCategories that should be deleted
+     */
+    fun updateCategoriesOfSelected(addedCategories: List<String>, removedCategories: List<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            if(removedCategories.isNotEmpty())
+                database.deleteCategoriesForICalObjects(removedCategories, selectedEntries)
+
+            addedCategories.forEach { category ->
+                selectedEntries.forEach { selected ->
+                    if(database.getCategoryForICalObjectByName(selected, category) == null)
+                        database.insertCategory(Category(icalObjectId = selected, text = category))
+                }
+            }
+            makeSelectedDirty()
+        }
+    }
+
+    fun moveSelectedToNewCollection(newCollection: ICalCollection) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val newEntries = mutableListOf<Long>()
+
+            selectedEntries.forEach { iCalObjectId ->
+                try {
+                    val newId = ICalObject.updateCollectionWithChildren(iCalObjectId, null, newCollection.collectionId, database, getApplication())
+                    newEntries.add(newId)
+                    // once the newId is there, the local entries can be deleted (or marked as deleted)
+                    ICalObject.deleteItemWithChildren(iCalObjectId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+                    val newICalObject = database.getICalObjectByIdSync(newId)
+                    if (newICalObject?.rrule != null)
+                        newICalObject.recreateRecurring(getApplication())
+                } catch (e: SQLiteConstraintException) {
+                    Log.w("SQLConstraint", "Corrupted ID: $iCalObjectId")
+                    Log.w("SQLConstraint", e.stackTraceToString())
+                    //sqlConstraintException.value = true
+                }
+            }
+            selectedEntries.clear()
+            selectedEntries.addAll(newEntries)
+        }
+    }
+
+    /**
+     * Adds new resources to the selected entries (if they don't exist already)
+     * @param addedResources that should be added
+     * @param removedResources that should be deleted
+     */
+    fun updateResourcesToSelected(addedResources: List<String>, removedResources: List<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            if(removedResources.isNotEmpty())
+                database.deleteResourcesForICalObjects(removedResources, selectedEntries)
+
+            addedResources.forEach { resource ->
+                selectedEntries.forEach { selected ->
+                    if(database.getResourceForICalObjectByName(selected, resource) == null)
+                        database.insertResource(Resource(icalObjectId = selected, text = resource))
+                }
+            }
+            makeSelectedDirty()
+        }
+    }
+
+    /**
+     * Updates the currently selected entries to make them dirty
+     */
+    private suspend fun makeSelectedDirty() {
+        selectedEntries.forEach { selected ->
+            database.getICalObjectByIdSync(selected)?.let {
+                database.update(it.apply { makeDirty() })
+            }
+        }
+    }
+
+    /**
+     * Updates the status of the selected entries
+     * @param newStatus to be set
+     */
+    fun updateStatusOfSelected(newStatus: Status) {
+        viewModelScope.launch(Dispatchers.IO) {
+            selectedEntries.forEach { iCalObjectId ->
+                database.getICalObjectByIdSync(iCalObjectId)?.let {
+                    it.status = newStatus.status
+                    when {
+                        newStatus == Status.COMPLETED -> it.percent = 100
+                        newStatus == Status.NEEDS_ACTION -> it.percent = 0
+                        newStatus == Status.IN_PROCESS && it.percent !in 1..99 -> it.percent = 1
+                    }
+                    it.makeDirty()
+                    database.update(it)
+                }
+            }
+        }
+    }
+
+    /**
+     * Updates the classification of the selected entries
+     * @param newClassification to be set
+     */
+    fun updateClassificationOfSelected(newClassification: Classification) {
+        viewModelScope.launch(Dispatchers.IO) {
+            selectedEntries.forEach { iCalObjectId ->
+                database.getICalObjectByIdSync(iCalObjectId)?.let {
+                    it.classification = newClassification.classification
+                    it.makeDirty()
+                    database.update(it)
+                }
+            }
+        }
+    }
+
+    /**
+     * Updates the priority of the selected entries
+     * @param newPriority to be set
+     */
+    fun updatePriorityOfSelected(newPriority: Int?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            selectedEntries.forEach { iCalObjectId ->
+                database.getICalObjectByIdSync(iCalObjectId)?.let {
+                    it.priority = newPriority
+                    it.makeDirty()
+                    database.update(it)
+                }
             }
         }
     }

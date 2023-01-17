@@ -97,8 +97,8 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Number of attendees"</string>
     <string name="list_num_attachments_contentdesc">"Number of attachments"</string>
     <string name="list_num_comments_contentdesc">"Number of comments"</string>
-    <string name="list_dialog_delete_visible_title">"Delete all visible?"</string>
-    <string name="list_dialog_delete_visible_message">"This action deletes all visible entries (%1$d). Are you sure that you want to proceed? This operation cannot be undone!"</string>
+    <string name="list_dialog_delete_selected_title">Delete selected entries?</string>
+    <string name="list_dialog_delete_selected_message">This action deletes all selected entries (%1$d). Are you sure that you want to proceed? This operation cannot be undone!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Summary/Description"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
     <string name="list_item_upload_pending">"Upload pending"</string>
@@ -164,6 +164,10 @@ Global Strings -->
     <string name="edit_recur_toast_requires_start_date">"Recurrence requires a start-date to be set!"</string>
     <string name="edit_datepicker_dialog_select_date">"Select date"</string>
     <string name="edit_datepicker_dialog_select_time">"Select time"</string>
+    <string name="edit_datepicker_dialog_add_time">"Add time"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Edit time"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Add timezone"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Edit timezone"</string>
     <string name="edit_task_started_add">"Pick started date/time"</string>
     <string name="edit_task_due_add">"Pick due date/time"</string>
     <string name="edit_task_completed_add">"Pick completed date/time"</string>
@@ -392,6 +396,8 @@ For more information about the Sync please see:"</string>
     <string name="filter_last_modified">"Last modified"</string>
     <string name="filter_no_category">Without categories</string>
     <string name="filter_no_resource">Without resources</string>
+    <string name="filter_subtasks_order_by">Order subtasks by</string>
+    <string name="filter_subnotes_order_by">Order linked notes by</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Please click on the collection to which the entry/entries should be added!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d added, %2$d skipped. (Exclusive instances of recurring entries.)"</string>
     <string name="menu_collection_popup_import_from_ics">"Import from .ics"</string>
@@ -429,12 +435,16 @@ Thank you!"</string>
     <string name="buypro_initial_dialog_message">"Hello! jtx Board comes with a standard and a Pro version. Please check out the \"Buy Pro\" section to find out more about jtx Board Pro! Thank you!"</string>
     <string name="menu_list_viewmode_list">"List view"</string>
     <string name="menu_list_viewmode_grid">"Grid view"</string>
+    <string name="settings_modules">"Active modules"</string>
+    <string name="settings_modules_enable_journals">"Journals"</string>
+    <string name="settings_modules_enable_notes">"Notes"</string>
+    <string name="settings_modules_enable_tasks">"Tasks"</string>
     <string name="settings_default_expand_subtasks">"Expand subtasks in list by default"</string>
     <string name="settings_default_expand_subnotes">"Expand subnotes in list by default"</string>
     <string name="settings_default_expand_attachments">"Expand attachments in list by default"</string>
     <string name="title_activity_list_screen">"ListScreen"</string>
     <string name="link_paypal" translatable="false">"https://www.paypal.com/donate?hosted_button_id=8BVX7PUVVTCWY"</string>
-    <string name="link_jtx_donate" translatable="false">"https://jtx.techbee.at/app/donate"</string>
+    <string name="link_jtx_donate" translatable="false">"https://jtx.techbee.at/contribute"</string>
     <string name="permission_coarse_location_granted">"Coarse location permission granted"</string>
     <string name="permission_coarse_location_denied">"Coarse location permission denied"</string>
     <string name="sorry">"Sorry"</string>
@@ -458,6 +468,7 @@ Thank you!"</string>
     <string name="invalid_url_message">"Please enter a valid URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
     <string name="list_quickadd_dialog_sr_listening">"Listening …"</string>
+    <string name="list_update_entries_dialog_title">"Update entries"</string>
     <string name="details_app_bar_behaviour">"App bar behaviour"</string>
     <string name="details_show_all_options">"Show all options"</string>
     <string name="details_show_hide_elements">Show/hide elements</string>
@@ -491,6 +502,7 @@ Thank you!"</string>
     <string name="dialog_revert_changes_title">"Revert changes?"</string>
     <string name="dialog_revert_changes_message">"Are you sure you want to discard your changes and revert contents to the state before you started editing?"</string>
     <string name="dialog_revert_changes_message2">"Attention: Subtasks and subnotes are separate entries and cannot be reverted."</string>
+    <string name="dialog_collection_new_entries_title">"Collection for new entries"</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>
@@ -565,6 +577,9 @@ Thank you!"</string>
     <string name="menu_view_autosave">"Autosave"</string>
     <string name="next">"Next"</string>
     <string name="previous">"Previous"</string>
+    <string name="x_selected">%1$d/%2$d selected</string>
+    <string name="select_all">Select all</string>
+    <string name="select_none">Select none</string>
     <string name="visible">Visible</string>
     <string name="invisible">Invisible</string>
     <string name="widget_list_description">"List widget"</string>
@@ -590,6 +605,7 @@ Thank you!"</string>
     <string name="widget_list_configuration_entries_background">"Entries background"</string>
     <string name="widget_list_show_description">"Show description"</string>
     <string name="settings_select_theme_true_dark">"True Dark (AMOLED)"</string>
+    <string name="settings_select_theme_contrast">"Contrast (e-Ink)"</string>
     <string name="settings_journals">"Journals Settings"</string>
     <string name="settings_default_journals_date">"Set a default date/time for journals"</string>
     <string name="settings_default_journals_date_current_day">"Current day"</string>

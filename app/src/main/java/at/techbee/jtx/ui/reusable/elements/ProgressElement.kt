@@ -16,28 +16,25 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 
 @Composable
 fun ProgressElement(
+    label: String?,
     iCalObjectId: Long,
     progress: Int?,
     isReadOnly: Boolean,
     isLinkedRecurringInstance: Boolean,
     sliderIncrement: Int,
     modifier: Modifier = Modifier,
-    showProgressLabel: Boolean = true,
     showSlider: Boolean = true,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
@@ -65,13 +62,16 @@ fun ProgressElement(
         modifier = modifier
     ) {
 
+        Text(
+            text = label ?: if (showSlider) stringResource(id = R.string.progress) else stringResource(id = R.string.completed),
+            modifier = Modifier
+                .padding(start = 8.dp, end = 8.dp)
+                .weight(1f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = if(label == null && !showSlider) TextAlign.End else null
+        )
 
-        if(showProgressLabel) {
-            Text(
-                stringResource(id = R.string.progress),
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-        }
         if(showSlider) {
             Slider(
                 value = sliderPosition,
@@ -93,9 +93,12 @@ fun ProgressElement(
                 text = String.format("%.0f%%", sliderPosition),
                 maxLines = 1,
                 textAlign = TextAlign.End,
-                modifier = Modifier.padding(horizontal = 8.dp).width(50.dp)
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .width(50.dp)
             )
         }
+
         Checkbox(
             checked = sliderPosition == 100f,
             onCheckedChange = {
@@ -112,6 +115,7 @@ fun ProgressElement(
 fun ProgressElementPreview() {
     MaterialTheme {
         ProgressElement(
+            label = null,
             iCalObjectId = 1L,
             progress = 57,
             isReadOnly = false,
@@ -126,6 +130,7 @@ fun ProgressElementPreview() {
 fun ProgressElementPreview_readonly() {
     MaterialTheme {
         ProgressElement(
+            label = null,
             iCalObjectId = 1L,
             progress = 57,
             isReadOnly = true,
@@ -137,9 +142,10 @@ fun ProgressElementPreview_readonly() {
 
 @Preview(showBackground = true)
 @Composable
-fun ProgressElementPreview_increment25() {
+fun ProgressElementPreview_increment25_with_label() {
     MaterialTheme {
         ProgressElement(
+            label = "could be a subtask",
             iCalObjectId = 1L,
             progress = 100,
             isReadOnly = false,
@@ -156,13 +162,13 @@ fun ProgressElementPreview_increment25() {
 fun ProgressElementPreview_without_label() {
     MaterialTheme {
         ProgressElement(
+            label = null,
             iCalObjectId = 1L,
             progress = 8,
             isReadOnly = false,
             isLinkedRecurringInstance = false,
             onProgressChanged = { _, _, _ -> },
             sliderIncrement = 1,
-            showProgressLabel = false
         )
 
     }
@@ -173,13 +179,13 @@ fun ProgressElementPreview_without_label() {
 fun ProgressElementPreview_without_label_and_slider() {
     MaterialTheme {
         ProgressElement(
+            label = null,
             iCalObjectId = 1L,
             progress = 100,
             isReadOnly = false,
             isLinkedRecurringInstance = false,
             onProgressChanged = { _, _, _ -> },
             sliderIncrement = 1,
-            showProgressLabel = false,
             showSlider = false
         )
 

@@ -25,8 +25,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
@@ -109,9 +108,24 @@ class ListWidgetUpdateWorker(
                             module = listWidgetConfig?.module ?: Module.TODO,
                             searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
                             searchResources = listWidgetConfig?.searchResources ?: emptyList(),
-                            searchStatusTodo = listWidgetConfig?.searchStatusTodo ?: emptyList(),
-                            searchStatusJournal = listWidgetConfig?.searchStatusJournal ?: emptyList(),
-                            searchClassification = listWidgetConfig?.searchClassification ?: emptyList(),
+                            searchStatus = mutableListOf<Status>().apply {
+                                listWidgetConfig?.searchStatus?.let { addAll(it) }
+                                //Legacy, delete in future
+                                if(listWidgetConfig?.isFilterNoStatusSet == true)
+                                    add(Status.NO_STATUS)
+                                listWidgetConfig?.searchStatusJournal?.forEach { searchStatusJournal ->
+                                    Status.valuesFor(Module.JOURNAL).find { searchStatusJournal.name == it.status }?.let { add(it) }
+                                }
+                                listWidgetConfig?.searchStatusTodo?.forEach { searchStatusTodo ->
+                                    Status.valuesFor(Module.TODO).find { searchStatusTodo.name == it.status }?.let { add(it) }
+                                }
+                            },
+                            searchClassification = mutableListOf<Classification>().apply {
+                                listWidgetConfig?.searchClassification?.let { addAll(it) }
+                                //Legacy, delete in future
+                                if(listWidgetConfig?.isFilterNoClassificationSet == true)
+                                    add(Classification.NO_CLASSIFICATION)
+                            },
                             searchCollection = listWidgetConfig?.searchCollection ?: emptyList(),
                             searchAccount = listWidgetConfig?.searchAccount ?: emptyList(),
                             orderBy = listWidgetConfig?.orderBy ?: OrderBy.CREATED,
@@ -128,8 +142,6 @@ class ListWidgetUpdateWorker(
                             isFilterStartTomorrow = listWidgetConfig?.isFilterStartTomorrow ?: false,
                             isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
                             isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false,
-                            isFilterNoStatusSet = listWidgetConfig?.isFilterNoStatusSet ?: false,
-                            isFilterNoClassificationSet = listWidgetConfig?.isFilterNoClassificationSet ?: false,
                             isFilterNoCategorySet = listWidgetConfig?.isFilterNoCategorySet ?: false,
                             isFilterNoResourceSet = listWidgetConfig?.isFilterNoResourceSet ?: false,
                             flatView = listWidgetConfig?.flatView?: false,  // always true in Widget, we handle the flat view in the code
@@ -139,8 +151,10 @@ class ListWidgetUpdateWorker(
 
                 val entries = if(allEntries.isEmpty()) emptyList() else if (allEntries.size > ListWidget.MAX_ENTRIES) allEntries.subList(0,ListWidget.MAX_ENTRIES) else allEntries
 
-                val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubtasksSyncOf(entries.map { it.uid?:"" })
-                val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubnotesSyncOf(entries.map { it.uid?:"" })
+                val subtasksQuery = ICal4List.getQueryForAllSubEntriesOfParents(Component.VTODO, entries.map { it.uid ?:"" }, listWidgetConfig?.subtasksOrderBy ?: OrderBy.CREATED, listWidgetConfig?.subtasksSortOrder ?: SortOrder.ASC)
+                val subnotesQuery = ICal4List.getQueryForAllSubEntriesOfParents(Component.VJOURNAL, entries.map { it.uid ?:"" }, listWidgetConfig?.subnotesOrderBy ?: OrderBy.CREATED, listWidgetConfig?.subnotesSortOrder ?: SortOrder.ASC)
+                val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subtasksQuery)
+                val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subnotesQuery)
 
                 pref.toMutablePreferences().apply {
                     this[ListWidgetReceiver.list] = entries.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()

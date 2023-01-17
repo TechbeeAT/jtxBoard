@@ -10,10 +10,7 @@ package at.techbee.jtx.ui.list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +35,7 @@ import at.techbee.jtx.util.DateTimeUtils
 @Composable
 fun ListCardKanban(
     iCalObject: ICal4List,
+    selected: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -48,7 +46,9 @@ fun ListCardKanban(
     }
 
     ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+        ),
         modifier = modifier
     ) {
 
@@ -84,7 +84,6 @@ fun ListCardKanban(
                                         modifier = Modifier
                                             .padding(end = 16.dp)
                                             .weight(1f),
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -98,7 +97,6 @@ fun ListCardKanban(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -109,7 +107,7 @@ fun ListCardKanban(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -141,7 +139,7 @@ fun ListCardKanban(
                         if (iCalObject.summary?.isNotBlank() == true)
                             Text(
                                 text = iCalObject.summary?.trim() ?: "",
-                                textDecoration = if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None,
+                                textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
                                 maxLines = 4,
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight = FontWeight.Bold,
@@ -155,7 +153,6 @@ fun ListCardKanban(
                                 text = iCalObject.description?.trim() ?: "",
                                 maxLines = 4,
                                 overflow = TextOverflow.Ellipsis,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.fillMaxWidth()
                             )
                     }
@@ -171,7 +168,6 @@ fun ListCardKanban(
                         isRecurringOriginal = iCalObject.isRecurringOriginal,
                         isRecurringInstance = iCalObject.isRecurringInstance,
                         isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
-                        component = iCalObject.component,
                         modifier = Modifier.fillMaxWidth().padding(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 4.dp).weight(0.2f)
                     )
                 }
@@ -190,6 +186,7 @@ fun ListCardKanban_JOURNAL() {
         }
         ListCardKanban(
             icalobject,
+            selected = false,
             modifier = Modifier
                 .width(150.dp)
                 .height(150.dp)
@@ -207,10 +204,11 @@ fun ListCardKanban_NOTE() {
             module = Module.NOTE.name
             dtstart = null
             dtstartTimezone = null
-            status = StatusJournal.CANCELLED.name
+            status = Status.CANCELLED.status
         }
         ListCardKanban(
             icalobject,
+            selected = true,
             modifier = Modifier.width(150.dp).height(150.dp)
         )
     }
@@ -225,7 +223,7 @@ fun ListCardKanban_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
@@ -238,7 +236,8 @@ fun ListCardKanban_TODO() {
             isReadOnly = true
         }
         ListCardKanban(
-            icalobject
+            icalobject,
+            selected = false,
         )
     }
 }

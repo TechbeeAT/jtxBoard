@@ -35,6 +35,7 @@ import at.techbee.jtx.util.DateTimeUtils
 @Composable
 fun ListCardGrid(
     iCalObject: ICal4List,
+    selected: Boolean,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
@@ -47,7 +48,9 @@ fun ListCardGrid(
 
 
     ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+        ),
         modifier = modifier
     ) {
 
@@ -83,7 +86,6 @@ fun ListCardGrid(
                                         modifier = Modifier
                                             .padding(end = 16.dp)
                                             .weight(1f),
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -97,7 +99,6 @@ fun ListCardGrid(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -108,7 +109,7 @@ fun ListCardGrid(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -134,7 +135,7 @@ fun ListCardGrid(
                         if (iCalObject.summary?.isNotBlank() == true)
                             Text(
                                 text = iCalObject.summary?.trim() ?: "",
-                                textDecoration = if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None,
+                                textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
                                 maxLines = 4,
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight = FontWeight.Bold,
@@ -162,7 +163,6 @@ fun ListCardGrid(
                             text = iCalObject.description?.trim() ?: "",
                             maxLines = 4,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.fillMaxWidth().padding(end = 8.dp)
                         )
                 }
@@ -178,7 +178,6 @@ fun ListCardGrid(
                         isRecurringOriginal = iCalObject.isRecurringOriginal,
                         isRecurringInstance = iCalObject.isRecurringInstance,
                         isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
-                        component = iCalObject.component,
                         modifier = Modifier.fillMaxWidth().padding(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 4.dp)
                     )
                 }
@@ -197,6 +196,7 @@ fun ListCardGrid_JOURNAL() {
         }
         ListCardGrid(
             icalobject,
+            selected = false,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier
                 .width(150.dp)
         )
@@ -213,10 +213,11 @@ fun ListCardGrid_NOTE() {
             module = Module.NOTE.name
             dtstart = null
             dtstartTimezone = null
-            status = StatusJournal.CANCELLED.name
+            status = Status.CANCELLED.status
         }
         ListCardGrid(
             icalobject,
+            selected = true,
             onProgressChanged = { _, _, _ -> },
             modifier = Modifier.width(150.dp)
         )
@@ -232,7 +233,7 @@ fun ListCardGrid_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
+            status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
@@ -246,6 +247,7 @@ fun ListCardGrid_TODO() {
         }
         ListCardGrid(
             icalobject,
+            selected = false,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }
@@ -261,8 +263,8 @@ fun ListCardGrid_TODO_short() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.CONFIDENTIAL.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
             summary = "Lorem"
@@ -275,6 +277,7 @@ fun ListCardGrid_TODO_short() {
         }
         ListCardGrid(
             icalobject,
+            selected = false,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }

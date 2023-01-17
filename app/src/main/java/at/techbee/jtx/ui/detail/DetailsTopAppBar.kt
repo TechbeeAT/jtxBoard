@@ -34,6 +34,7 @@ enum class DetailTopAppBarMode { ADD_SUBTASK, ADD_SUBNOTE }
 @Composable
 fun DetailsTopAppBar(
     detailTopAppBarMode: DetailTopAppBarMode = DetailTopAppBarMode.ADD_SUBTASK,
+    readonly: Boolean,
     goBack: () -> Unit,
     onAddSubtask: (String) -> Unit,
     onAddSubnote: (String) -> Unit,
@@ -51,6 +52,7 @@ fun DetailsTopAppBar(
                 onValueChange = {
                     textFieldText = it
                 },
+                enabled = !readonly,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
@@ -127,6 +129,7 @@ fun DetailsTopAppBar_Preview_withSubtitle() {
         Scaffold(
             topBar = {
                 DetailsTopAppBar(
+                    readonly = false,
                     goBack = { },
                     onAddSubnote = { },
                     onAddSubtask = { }
