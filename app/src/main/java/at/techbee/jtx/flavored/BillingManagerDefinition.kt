@@ -15,8 +15,8 @@ import androidx.lifecycle.MutableLiveData
 
 interface BillingManagerDefinition {
 
-    var isProPurchased: LiveData<Boolean>
-    var isProPurchasedLoaded: MutableLiveData<Boolean>
+    val isProPurchased: LiveData<Boolean>
+    val isProPurchasedLoaded: MutableLiveData<Boolean>
 
     val proPrice: LiveData<String?>
     val proPurchaseDate: LiveData<String?>

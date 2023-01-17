@@ -103,6 +103,10 @@ android {
             dimension 'version'
             versionNameSuffix '.gplay'
         }
+        amazon {
+            dimension 'version'
+            versionNameSuffix '.amazon'
+        }
         ose {
             dimension 'version'
             versionNameSuffix '.ose'
@@ -235,6 +239,12 @@ dependencies {
     // Google request for review
     gplayImplementation "com.google.android.play:review:$version_review"
     gplayImplementation "com.google.android.play:review-ktx:$version_review"
+
+    // Amazon billing & maps support
+    amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.3'
+    amazonImplementation "com.google.maps.android:maps-compose:2.8.0"
+    amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
+    amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
 
     // Google Maps
     gplayImplementation "com.google.maps.android:maps-compose:2.8.0"

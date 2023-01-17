@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_AMAZON
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -373,7 +374,7 @@ fun ListScreenTabContainer(
                                 text = stringResource(id = viewMode.stringResource),
                                 isSelected = getActiveViewModel().listSettings.viewMode.value == viewMode,
                                 onClick = {
-                                    if ((BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !isProPurchased.value)) {
+                                    if (((BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == BUILD_FLAVOR_AMAZON) && !isProPurchased.value)) {
                                         Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
                                     } else {
                                         getActiveViewModel().listSettings.viewMode.value = viewMode
