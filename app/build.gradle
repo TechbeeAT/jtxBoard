@@ -22,8 +22,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 202000011
-        versionName "2.02.00-beta11"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 202010001
+        versionName "2.02.01-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Make love, not war!\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -102,6 +102,10 @@ android {
         gplay {
             dimension 'version'
             versionNameSuffix '.gplay'
+        }
+        amazon {
+            dimension 'version'
+            versionNameSuffix '.amazon'
         }
         ose {
             dimension 'version'
@@ -236,6 +240,12 @@ dependencies {
     gplayImplementation "com.google.android.play:review:$version_review"
     gplayImplementation "com.google.android.play:review-ktx:$version_review"
 
+    // Amazon billing & maps support
+    amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.3'
+    amazonImplementation "com.google.maps.android:maps-compose:2.8.0"
+    amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
+    amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
+
     // Google Maps
     gplayImplementation "com.google.maps.android:maps-compose:2.8.0"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
@@ -246,7 +256,7 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$version_work"
 
     //support for java.time for older Android versions (<O)
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.0")
 
     androidTestImplementation "androidx.test.ext:junit-ktx:1.1.5"
     //androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0-alpha07"
@@ -273,7 +283,7 @@ dependencies {
     implementation "com.mikepenz:aboutlibraries-compose:${version_about_libraries}"
 
     // Compose Color Picker
-    implementation "com.godaddy.android.colorpicker:compose-color-picker-android:0.5.1"
+    implementation "com.godaddy.android.colorpicker:compose-color-picker-android:0.6.0"
 
     // appcompat for language selection
     implementation "androidx.appcompat:appcompat:$version_appcompat"

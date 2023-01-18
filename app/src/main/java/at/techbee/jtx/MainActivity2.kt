@@ -81,6 +81,7 @@ class MainActivity2 : AppCompatActivity() {
 
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
+        const val BUILD_FLAVOR_AMAZON = "amazon"
         const val BUILD_FLAVOR_GENERIC = "generic"
 
         const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
@@ -101,7 +102,7 @@ class MainActivity2 : AppCompatActivity() {
 
         // hides the ugly action bar that was before hidden through the Theme XML
         window.requestFeature(Window.FEATURE_ACTION_BAR)
-        actionBar?.hide()
+        supportActionBar?.hide()
 
         globalStateHolder = GlobalStateHolder(this)
         settingsStateHolder = SettingsStateHolder(this)

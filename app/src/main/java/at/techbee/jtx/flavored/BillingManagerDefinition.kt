@@ -10,14 +10,13 @@ package at.techbee.jtx.flavored
 
 import android.app.Activity
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import at.techbee.jtx.R
 
 interface BillingManagerDefinition {
 
-    var isProPurchased: LiveData<Boolean>
-    var isProPurchasedLoaded: MutableLiveData<Boolean>
-
+    val isProPurchased: LiveData<Boolean>
     val proPrice: LiveData<String?>
     val proPurchaseDate: LiveData<String?>
     val proOrderId: LiveData<String?>
@@ -35,4 +34,6 @@ interface BillingManagerDefinition {
      * The passed skuDetails are currently BillingManager.proProductDetails.
      */
     fun launchBillingFlow(activity: Activity)
+
+    fun getErrorToast(context: Context): Toast = Toast.makeText(context, context.getString(R.string.buypro_purchase_init_error_message), Toast.LENGTH_LONG)
 }
