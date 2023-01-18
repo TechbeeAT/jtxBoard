@@ -193,11 +193,7 @@ class BillingManager :
             // Launch the billing flow
             billingClient?.launchBillingFlow(activity, billingFlowParams)
         } else {
-            Toast.makeText(
-                activity,
-                "Ooops, something went wrong there. Please check your internet connection or try again later!",
-                Toast.LENGTH_LONG
-            ).show()
+            getErrorToast(context).show()
             initialise(activity)
         }
     }

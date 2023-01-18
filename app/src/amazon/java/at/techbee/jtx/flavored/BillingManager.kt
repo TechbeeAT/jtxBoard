@@ -69,7 +69,6 @@ class BillingManager :
         if(firstInstall < 1674514800000L)
             return
 
-
         if (billingPrefs == null)
             billingPrefs = context.getSharedPreferences(PREFS_BILLING, Context.MODE_PRIVATE)
         isProPurchased.value = billingPrefs?.getBoolean(PREFS_BILLING_PURCHASED, true) ?: true
@@ -85,14 +84,7 @@ class BillingManager :
 
             override fun onPurchaseResponse(response: PurchaseResponse?) {
                 when (response?.requestStatus) {
-                    PurchaseResponse.RequestStatus.SUCCESSFUL -> {
-                        val receipt = response.receipt
-                        proPurchaseDate.postValue(DateTimeUtils.convertLongToFullDateTimeString(receipt.purchaseDate.toInstant().toEpochMilli(), null))
-                        proOrderId.postValue(receipt.receiptId)
-                        isProPurchased.postValue(true)
-                        billingPrefs?.edit()?.putBoolean(PREFS_BILLING_PURCHASED, true)?.apply()
-                    }
-                    PurchaseResponse.RequestStatus.ALREADY_PURCHASED -> {
+                    PurchaseResponse.RequestStatus.SUCCESSFUL, PurchaseResponse.RequestStatus.ALREADY_PURCHASED -> {
                         val receipt = response.receipt
                         proPurchaseDate.postValue(DateTimeUtils.convertLongToFullDateTimeString(receipt.purchaseDate.toInstant().toEpochMilli(), null))
                         proOrderId.postValue(receipt.receiptId)
@@ -100,11 +92,7 @@ class BillingManager :
                         billingPrefs?.edit()?.putBoolean(PREFS_BILLING_PURCHASED, true)?.apply()
                     }
                     else -> {
-                        Toast.makeText(
-                            context,
-                            "Ooops, something went wrong there. Please check your internet connection or try again later!",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        getErrorToast(context).show()
                     }
                 }
             }
@@ -113,7 +101,7 @@ class BillingManager :
                 when (response?.requestStatus) {
                     PurchaseUpdatesResponse.RequestStatus.SUCCESSFUL -> {
                         if (response.receipts.isEmpty() || response.receipts.all { it.isCanceled }) {
-                            billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASED)?.apply()
+                            billingPrefs?.edit()?.putBoolean(PREFS_BILLING_PURCHASED, false)?.apply()
                             isProPurchased.postValue(false)
                         } else {
                             val receipt = response.receipts.last { !it.isCanceled }
@@ -126,7 +114,6 @@ class BillingManager :
                     else -> {}
                 }
             }
-
         })
 
         PurchasingService.getUserData()

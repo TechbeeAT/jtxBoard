@@ -10,7 +10,9 @@ package at.techbee.jtx.flavored
 
 import android.app.Activity
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
+import at.techbee.jtx.R
 
 interface BillingManagerDefinition {
 
@@ -32,4 +34,6 @@ interface BillingManagerDefinition {
      * The passed skuDetails are currently BillingManager.proProductDetails.
      */
     fun launchBillingFlow(activity: Activity)
+
+    fun getErrorToast(context: Context): Toast = Toast.makeText(context, context.getString(R.string.buypro_purchase_init_error_message), Toast.LENGTH_LONG)
 }
