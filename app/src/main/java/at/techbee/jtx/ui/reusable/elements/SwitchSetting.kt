@@ -1,7 +1,12 @@
 package at.techbee.jtx.ui.reusable.elements
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +21,8 @@ fun SwitchSetting(
     setting: SwitchSetting,
     initiallyChecked: Boolean,
     onCheckedChanged: (checked: Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
 
     var checked by remember { mutableStateOf(initiallyChecked) }
@@ -53,7 +59,8 @@ fun SwitchSetting(
                 checked = it
                 onCheckedChanged(it)
             },
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(12.dp),
+            enabled = enabled
         )
 
 

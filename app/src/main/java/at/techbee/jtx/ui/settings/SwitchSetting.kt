@@ -27,6 +27,24 @@ enum class SwitchSetting(
     val subtitle: Int? = null,
     val default: Boolean
 ) {
+    SETTING_ENABLE_JOURNALS(
+        key = "settings_enable_journals",
+        icon = { Icon(Icons.Outlined.EventNote, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_modules_enable_journals,
+        default = true
+    ),
+    SETTING_ENABLE_NOTES(
+        key = "settings_enable_notes",
+        icon = { Icon(Icons.Outlined.NoteAdd, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_modules_enable_notes,
+        default = true
+    ),
+    SETTING_ENABLE_TASKS(
+        key = "settings_enable_tasks",
+        icon = { Icon(Icons.Outlined.AddTask, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_modules_enable_tasks,
+        default = true
+    ),
     SETTING_AUTO_EXPAND_SUBTASKS(
         key = "settings_auto_expand_subtasks",
         icon = { Icon(Icons.Outlined.TaskAlt, contentDescription = null, modifier = Modifier.padding(16.dp)) },
@@ -48,13 +66,13 @@ enum class SwitchSetting(
         title = R.string.settings_default_expand_attachments,
         default = false
     ),
-    SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST(
+    SETTING_SHOW_PROGRESS_FOR_MAINTASKS(
         key = "settings_show_progress_for_maintasks_in_list",
         icon = { Icon(
             painterResource(id = R.drawable.ic_progress_task), null, modifier = Modifier.padding(
             16.dp
         ))  },
-        title = R.string.settings_show_progress_for_maintasks_in_list,
+        title = R.string.settings_show_progress_for_maintasks,
         default = false
     ),
     SETTING_SHOW_PROGRESS_FOR_SUBTASKS(
@@ -63,7 +81,7 @@ enum class SwitchSetting(
             painterResource(id = R.drawable.ic_progress_subtask), null, modifier = Modifier.padding(
             16.dp
         ))  },
-        title = R.string.settings_show_progress_for_subtasks_in_list,
+        title = R.string.settings_show_progress_for_subtasks,
         default = false
     ),
     SETTING_DISABLE_ALARMS_FOR_READONLY(

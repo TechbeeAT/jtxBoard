@@ -19,20 +19,20 @@
 buildscript {
 
     ext {
-        version_core = "1.8.0"
-        version_coroutine = "1.6.1"
+        version_core = "1.9.0"
+        version_coroutine = "1.6.4"
         version_appcompat = "1.6.0-rc01"
-        version_gradle = '7.3.1'
-        version_kotlin = "1.7.10"
-        version_room = '2.4.3'
+        version_gradle = '7.4.0'
+        version_kotlin = "1.7.20"
+        version_room = '2.5.0'
         version_work = "2.7.1"
         version_billing = "5.1.0"
         version_review = "2.0.1"
-        version_compose = "1.3.1"
+        version_compose = "1.3.3"
         version_about_libraries = "10.5.2"
-        version_accompanist = "0.26.5-rc"
         version_huawei = "1.7.3.300"
         version_huawei_iap = "6.3.0.300"
+        version_accompanist = "0.28.0"
     }
 
     repositories {

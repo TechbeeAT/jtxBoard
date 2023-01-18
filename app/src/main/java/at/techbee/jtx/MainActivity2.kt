@@ -14,12 +14,18 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -32,6 +38,7 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.JtxReviewManager
 import at.techbee.jtx.ui.GlobalStateHolder
+import at.techbee.jtx.ui.about.AboutScreen
 import at.techbee.jtx.ui.about.AboutViewModel
 import at.techbee.jtx.ui.buypro.BuyProScreen
 import at.techbee.jtx.ui.collections.CollectionsScreen
@@ -46,7 +53,6 @@ import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
-import at.techbee.jtx.ui.reusable.screens.AboutScreen
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -63,9 +69,8 @@ import java.time.ZonedDateTime
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
-//class MainActivity2 : ComponentActivity() {
-class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
-    // or maybe FragmentActivity() was also proposed...
+//class MainActivity2 : ComponentActivity() {   // Using AppCompatActivity activity instead of ComponentActivity
+class MainActivity2 : AppCompatActivity() {
 
     private var lastProcessedIntentHash: Int? = null
     private lateinit var globalStateHolder: GlobalStateHolder
@@ -76,6 +81,7 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
 
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
+        const val BUILD_FLAVOR_AMAZON = "amazon"
         const val BUILD_FLAVOR_GENERIC = "generic"
         const val BUILD_FLAVOR_HUAWEI = "huawei"
 
@@ -86,8 +92,13 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
         const val INTENT_EXTRA_ITEM2SHOW = "item2show"
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+    }
+
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        //AppCompatDelegate.create(this, null).onCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
 
         // hides the ugly action bar that was before hidden through the Theme XML
@@ -102,21 +113,30 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
         BillingManager.getInstance().initialise(this)
 
         setContent {
-            val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
+            val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
             JtxBoardTheme(
                 darkTheme = when (settingsStateHolder.settingTheme.value) {
                     DropdownSettingOption.THEME_LIGHT -> false
                     DropdownSettingOption.THEME_DARK -> true
+                    DropdownSettingOption.THEME_TRUE_DARK -> true
                     else -> isSystemInDarkTheme()
                 },
-                dynamicColor = isProPurchased.value ?: false
+                contrastTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_CONTRAST,
+                trueDarkTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_TRUE_DARK,
+                dynamicColor = isProPurchased.value
             ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .semantics {
+                                   testTagsAsResourceId = true
+                        },
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    MainNavHost(this, globalStateHolder, settingsStateHolder)
+                    CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.merge(TextStyle(textDirection = TextDirection.Content))) {
+                        MainNavHost(this, globalStateHolder, settingsStateHolder)
+                    }
                 }
             }
         }
@@ -186,6 +206,7 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
                     }
                 }
             }
+            setResult(Activity.RESULT_OK)
         }
         lastProcessedIntentHash = intent.hashCode()
     }
@@ -220,7 +241,7 @@ fun MainNavHost(
     settingsStateHolder: SettingsStateHolder
 ) {
     val navController = rememberNavController()
-    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
+    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
     var showOSEDonationDialog by remember { mutableStateOf(false) }
 
     NavHost(
@@ -239,10 +260,10 @@ fun MainNavHost(
             arguments = DetailDestination.Detail.args
         ) { backStackEntry ->
 
-            val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId)
-                ?: return@composable
+            val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId) ?: return@composable
             val icalObjectIdList = backStackEntry.arguments?.getString(DetailDestination.argICalObjectIdList)?.let { Json.decodeFromString<List<Long>>(it)} ?: listOf(icalObjectId)
             val editImmediately = backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) ?: false
+            val returnToLauncher = backStackEntry.arguments?.getBoolean(DetailDestination.argReturnToLauncher) ?: false
 
             /*
             backStackEntry.savedStateHandle[DetailDestination.argICalObjectId] = icalObjectId
@@ -256,6 +277,7 @@ fun MainNavHost(
                 navController = navController,
                 detailViewModel = detailViewModel,
                 editImmediately = editImmediately,
+                returnToLauncher = returnToLauncher,
                 icalObjectIdList = icalObjectIdList,
                 onRequestReview = {
                     if (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
@@ -304,7 +326,8 @@ fun MainNavHost(
         composable(NavigationDrawerDestination.ABOUT.name) {
             val viewModel: AboutViewModel = viewModel()
             AboutScreen(
-                translators = viewModel.translators,
+                translatorsPoeditor = viewModel.translatorsPoeditor,
+                translatorsCrowdin = viewModel.translatorsCrowdin,
                 releaseinfo = viewModel.releaseinfos,
                 navController = navController
             )
@@ -335,10 +358,10 @@ fun MainNavHost(
 
     globalStateHolder.icalObject2Open.value?.let { id ->
         globalStateHolder.icalObject2Open.value = null
-        navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false))
+        navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false, returnToLauncher = true))
     }
 
-    if (!settingsStateHolder.proInfoShown.value && isProPurchased.value == false) {
+    if (!settingsStateHolder.proInfoShown.value && !isProPurchased.value) {
         ProInfoDialog(
             onOK = {
                 settingsStateHolder.proInfoShown.value = true

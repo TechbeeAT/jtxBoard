@@ -16,15 +16,18 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mic
+import androidx.compose.material.icons.outlined.MicOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -38,12 +41,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
@@ -51,10 +54,8 @@ import androidx.core.content.ContextCompat
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.ui.reusable.cards.AttachmentCard
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
@@ -65,12 +66,13 @@ import java.util.*
 @Composable
 fun ListQuickAddElement(
     presetModule: Module?,
+    enabledModules: List<Module>,
     modifier: Modifier = Modifier,
     presetText: String = "",
     presetAttachment: Attachment? = null,
     allWriteableCollections: List<ICalCollection>,
     presetCollectionId: Long,
-    onSaveEntry: (newEntry: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) -> Unit,
+    onSaveEntry: (module: Module, newEntryText: String, attachment: Attachment?, collectionId: Long, editAfterSaving: Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
 
@@ -78,8 +80,7 @@ fun ListQuickAddElement(
         return
 
     val context = LocalContext.current
-    val permissionLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
     var showAudioPermissionDialog by rememberSaveable { mutableStateOf(false) }
     var currentCollection by rememberSaveable {
         mutableStateOf(
@@ -94,24 +95,28 @@ fun ListQuickAddElement(
                 && ((presetModule == Module.JOURNAL && currentCollection?.supportsVJOURNAL == true)
                         || (presetModule == Module.NOTE && currentCollection?.supportsVJOURNAL == true)
                         || (presetModule == Module.TODO && currentCollection?.supportsVTODO == true))
-                )
+                && enabledModules.contains(presetModule)
+            )
                 presetModule
-            else if (currentCollection?.supportsVJOURNAL == true)
+            else if (enabledModules.contains(Module.JOURNAL) && currentCollection?.supportsVJOURNAL == true)
                 Module.JOURNAL
-            else if (currentCollection?.supportsVTODO == true)
+            else if (enabledModules.contains(Module.NOTE) && currentCollection?.supportsVJOURNAL == true)
+                Module.NOTE
+            else if (enabledModules.contains(Module.TODO) && currentCollection?.supportsVTODO == true)
                 Module.TODO
             else
                 null
         )
     }
-    var currentText by rememberSaveable { mutableStateOf(presetText) }
+    var currentText by remember { mutableStateOf(TextFieldValue(text = presetText, selection = TextRange(presetText.length))) }
     val currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
     var noTextError by rememberSaveable { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(focusRequester) {
-        focusRequester.requestFocus()
+    LaunchedEffect(Unit) {
+        // try catch block as the FocsRequester might not yet be initialized when the focus is requested (see https://github.com/TechbeeAT/jtxBoard/issues/121)
+        try { focusRequester.requestFocus() } catch (e: IllegalStateException) { Log.w("ListQuickAddElement", e.stackTraceToString())}
     }
 
     val sr: SpeechRecognizer? = when {
@@ -131,22 +136,9 @@ fun ListQuickAddElement(
         if(currentCollection == null || currentModule == null)
             return
 
-        if (currentText.isNotBlank()) {
-            val newICalObject = when (currentModule) {
-                Module.JOURNAL -> ICalObject.createJournal()
-                Module.NOTE -> ICalObject.createNote()
-                Module.TODO -> ICalObject.createTodo().apply {
-                    this.setDefaultDueDateFromSettings(context)
-                    this.setDefaultStartDateFromSettings(context)
-                }
-                else -> ICalObject.createNote()  // Fallback, can't actually reach it
-            }
-            newICalObject.collectionId = currentCollection!!.collectionId
-            newICalObject.parseSummaryAndDescription(currentText)
-            newICalObject.parseURL(currentText)
-            val categories = Category.extractHashtagsFromText(currentText)
-            onSaveEntry(newICalObject, categories, currentAttachment, goToEdit)
-            currentText = ""
+        if (currentText.text.isNotBlank()) {
+            onSaveEntry(currentModule!!, currentText.text, currentAttachment, currentCollection!!.collectionId, goToEdit)
+            currentText = TextFieldValue(text = "")
             if(goToEdit)
                 onDismiss()
         } else {
@@ -160,31 +152,39 @@ fun ListQuickAddElement(
         text = {
             Column(modifier = modifier) {
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .horizontalScroll(rememberScrollState())
-                        .align(Alignment.CenterHorizontally)
-                ) {
-                    FilterChip(
-                        selected = currentModule == Module.JOURNAL,
-                        onClick = { currentModule = Module.JOURNAL },
-                        label = { Text(stringResource(id = R.string.journal)) },
-                        enabled = currentCollection?.supportsVJOURNAL == true
-                    )
-                    FilterChip(
-                        selected = currentModule == Module.NOTE,
-                        onClick = { currentModule = Module.NOTE },
-                        label = { Text(stringResource(id = R.string.note)) },
-                        enabled = currentCollection?.supportsVJOURNAL == true
-                    )
-                    FilterChip(
-                        selected = currentModule == Module.TODO,
-                        onClick = { currentModule = Module.TODO },
-                        label = { Text(stringResource(id = R.string.task)) },
-                        enabled = currentCollection?.supportsVTODO == true
-                    )
+                if(currentModule == null || enabledModules.size > 1) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .horizontalScroll(rememberScrollState())
+                            .align(Alignment.CenterHorizontally)
+                    ) {
+                        if (enabledModules.contains(Module.JOURNAL)) {
+                            FilterChip(
+                                selected = currentModule == Module.JOURNAL,
+                                onClick = { currentModule = Module.JOURNAL },
+                                label = { Text(stringResource(id = R.string.journal)) },
+                                enabled = currentCollection?.supportsVJOURNAL == true
+                            )
+                        }
+                        if (enabledModules.contains(Module.NOTE)) {
+                            FilterChip(
+                                selected = currentModule == Module.NOTE,
+                                onClick = { currentModule = Module.NOTE },
+                                label = { Text(stringResource(id = R.string.note)) },
+                                enabled = currentCollection?.supportsVJOURNAL == true
+                            )
+                        }
+                        if (enabledModules.contains(Module.TODO)) {
+                            FilterChip(
+                                selected = currentModule == Module.TODO,
+                                onClick = { currentModule = Module.TODO },
+                                label = { Text(stringResource(id = R.string.task)) },
+                                enabled = currentCollection?.supportsVTODO == true
+                            )
+                        }
+                    }
                 }
 
                 CollectionsSpinner(
@@ -214,11 +214,7 @@ fun ListQuickAddElement(
                             IconButton(onClick = {
 
                                 // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
-                                if (ContextCompat.checkSelfPermission(
-                                        context,
-                                        Manifest.permission.RECORD_AUDIO
-                                    ) != PackageManager.PERMISSION_GRANTED
-                                )
+                                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
                                     showAudioPermissionDialog = true
                                 else {
                                     val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -241,7 +237,7 @@ fun ListQuickAddElement(
 
                                         override fun onRmsChanged(p0: Float) {}
                                         override fun onBufferReceived(p0: ByteArray?) {}
-                                        override fun onError(errorCode: Int) {}
+                                        override fun onError(errorCode: Int) { srListening = false }
                                         override fun onPartialResults(bundle: Bundle?) {
                                             val data: ArrayList<String>? =
                                                 bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
@@ -253,23 +249,30 @@ fun ListQuickAddElement(
 
                                         override fun onEvent(p0: Int, p1: Bundle?) {}
                                         override fun onResults(bundle: Bundle?) {
+                                            srListening = false
                                             srTextResult = ""
                                             val data: ArrayList<String>? =
                                                 bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                                            if (currentText.isNotBlank())   // add a return if there is already text present to add it in a new line
-                                                currentText += "\n"
+                                            if (currentText.text.isNotBlank())   // add a return if there is already text present to add it in a new line
+                                                currentText = TextFieldValue(currentText.text + System.lineSeparator())
                                             // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
-                                            if (data?.isNotEmpty() == true)
-                                                currentText += data[0]
+                                            if (data?.isNotEmpty() == true) {
+                                                currentText = TextFieldValue(currentText.text + data[0], selection = TextRange(currentText.text.length + data[0].length))
+                                                sr.startListening(srIntent)
+                                                srListening = true
+                                            }
                                         }
                                     })
+                                    srListening = true
                                     sr.startListening(srIntent)
                                 }
                             }) {
-                                Icon(
-                                    Icons.Outlined.Mic,
-                                    stringResource(id = R.string.list_quickadd_dialog_sr_start)
-                                )
+                                Crossfade(srListening) { listening ->
+                                if (listening)
+                                    Icon(Icons.Outlined.Mic, stringResource(id = R.string.list_quickadd_dialog_sr_listening), tint = MaterialTheme.colorScheme.primary)
+                                else
+                                    Icon(Icons.Outlined.MicOff, stringResource(id = R.string.list_quickadd_dialog_sr_start))
+                                }
                             }
                         }
                     },
@@ -282,8 +285,7 @@ fun ListQuickAddElement(
                         capitalization = KeyboardCapitalization.Sentences,
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Default
-                    ),
-                    textStyle = TextStyle(textDirection = TextDirection.Content)
+                    )
                 )
 
                 Text(
@@ -292,12 +294,6 @@ fun ListQuickAddElement(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
-                AnimatedVisibility(srListening) {
-                    Text(
-                        stringResource(id = R.string.list_quickadd_dialog_sr_listening),
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                }
                 AnimatedVisibility(srTextResult.isNotBlank()) {
                     Text(srTextResult, modifier = Modifier.padding(vertical = 8.dp))
                 }
@@ -329,7 +325,7 @@ fun ListQuickAddElement(
 
                     TextButton(
                         onClick = { saveEntry(goToEdit = true) },
-                        enabled = currentText.isNotEmpty() && currentCollection?.readonly == false,
+                        enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false,
                         modifier = Modifier.weight(0.4f)
                     ) {
                         Text(stringResource(id = R.string.save_and_edit), textAlign = TextAlign.Center)
@@ -340,7 +336,7 @@ fun ListQuickAddElement(
                             saveEntry(goToEdit = false)
                             onDismiss()
                                   },
-                        enabled = currentText.isNotEmpty() && currentCollection?.readonly == false,
+                        enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false,
                         modifier = Modifier.weight(0.3f)
                     ) {
                         Text(stringResource(id = R.string.save), textAlign = TextAlign.Center)
@@ -355,7 +351,10 @@ fun ListQuickAddElement(
     if (showAudioPermissionDialog) {
         RequestPermissionDialog(
             text = stringResource(id = R.string.view_fragment_audio_permission_message),
-            onConfirm = { permissionLauncher.launch(Manifest.permission.RECORD_AUDIO) }
+            onConfirm = {
+                permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                showAudioPermissionDialog = false
+            }
         )
     }
 }
@@ -370,7 +369,9 @@ fun ListQuickAddElement_Preview() {
             displayName = "Collection Display Name",
             description = "Here comes the desc",
             accountName = "My account",
-            accountType = "LOCAL"
+            accountType = "LOCAL",
+            supportsVJOURNAL = true,
+            supportsVTODO = true
         )
         val collection2 = ICalCollection(
             collectionId = 2L,
@@ -391,13 +392,16 @@ fun ListQuickAddElement_Preview() {
 
         ListQuickAddElement(
             presetModule = Module.JOURNAL,
+            enabledModules = Module.values().toList(),
             allWriteableCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
-            onSaveEntry = { _, _, _, _ -> },
+            onSaveEntry = { _, _, _, _, _ -> },
             presetText = "This is my preset text",
             presetAttachment = Attachment(filename = "My File.PDF"),
             presetCollectionId = 0L,
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
     }
 }
@@ -421,14 +425,49 @@ fun ListQuickAddElement_Preview_empty() {
 
         ListQuickAddElement(
             presetModule = Module.JOURNAL,
+            enabledModules = Module.values().toList(),
             allWriteableCollections = listOf(collection3),
             onDismiss = { },
-            onSaveEntry = { _, _, _, _ -> },
+            onSaveEntry = { _, _, _, _, _ -> },
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
     }
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun ListQuickAddElement_Preview_only_one_enabled() {
+    MaterialTheme {
+
+        val collection3 = ICalCollection(
+            collectionId = 3L,
+            color = Color.Cyan.toArgb(),
+            displayName = null,
+            description = "Here comes the desc",
+            accountName = "My account",
+            accountType = "LOCAL",
+            readonly = false,
+            supportsVJOURNAL = true
+        )
+
+        ListQuickAddElement(
+            presetModule = Module.JOURNAL,
+            enabledModules = listOf(Module.JOURNAL),
+            allWriteableCollections = listOf(collection3),
+            onDismiss = { },
+            onSaveEntry = { _, _, _, _, _ -> },
+            presetText = "",
+            presetAttachment = null,
+            presetCollectionId = 0L,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
+    }
+}

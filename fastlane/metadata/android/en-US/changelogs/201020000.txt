@@ -1,0 +1,6 @@
+- Group by option is now available for widget
+- Sort and group screen have been merged
+- Overdue tasks are now highlighted in the widget
+- Added option to show/hide description in widget
+- Added "limit recurring" option in widget
+- Bugfixes

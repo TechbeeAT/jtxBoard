@@ -26,9 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
-import at.techbee.jtx.database.Component
-import at.techbee.jtx.database.StatusJournal
-import at.techbee.jtx.database.StatusTodo
+import at.techbee.jtx.database.Status
 
 @Composable
 fun ListStatusBar(
@@ -46,7 +44,6 @@ fun ListStatusBar(
     hasURL: Boolean? = null,
     hasLocation: Boolean? = null,
     hasContact: Boolean? = null,
-    component: String,
     status: String? = null,
     classification: String? = null,
     priority: Int? = null,
@@ -58,16 +55,9 @@ fun ListStatusBar(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
         ) {
-        val statusText: String? = when {
-            component == Component.VTODO.name && status == StatusTodo.CANCELLED.name -> stringResource(
-                id = R.string.todo_status_cancelled
-            )
-            component == Component.VJOURNAL.name && status == StatusJournal.DRAFT.name -> stringResource(
-                id = R.string.journal_status_draft
-            )
-            component == Component.VJOURNAL.name && status == StatusJournal.CANCELLED.name -> stringResource(
-                id = R.string.journal_status_cancelled
-            )
+        val statusText: String? = when(status) {
+            Status.CANCELLED.status -> stringResource(id = Status.CANCELLED.stringResource)
+            Status.DRAFT.status -> stringResource(id = Status.DRAFT.stringResource)
             else -> null
         }
         val classificationText: String? = when (classification) {
@@ -139,16 +129,14 @@ fun ListStatusBar(
                 Icons.Outlined.Link,
                 stringResource(R.string.url),
                 modifier = Modifier
-                    .size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    .size(14.dp)
             )
         if (hasLocation == true)
             Icon(
                 Icons.Outlined.PinDrop,
                 stringResource(R.string.location),
                 modifier = Modifier
-                    .size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    .size(14.dp)
             )
 
         if (hasContact == true)
@@ -157,8 +145,7 @@ fun ListStatusBar(
                 stringResource(R.string.contact),
                 modifier = Modifier
                     .padding(end = 2.dp)
-                    .size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    .size(14.dp)
             )
 
         if (numSubtasks != null && numSubtasks > 0)
@@ -179,15 +166,13 @@ fun ListStatusBar(
             Icon(
                 painter = painterResource(id = R.drawable.ic_readonly),
                 contentDescription = stringResource(id = R.string.readyonly),
-                modifier = Modifier.size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                modifier = Modifier.size(14.dp)
             )
         if (uploadPending == true)
             Icon(
                 Icons.Outlined.CloudSync,
                 stringResource(R.string.upload_pending),
-                modifier = Modifier.size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                modifier = Modifier.size(14.dp)
             )
 
         if (isRecurringOriginal == true || (isRecurringInstance == true && isLinkedRecurringInstance == true))
@@ -195,16 +180,14 @@ fun ListStatusBar(
                 Icons.Outlined.EventRepeat,
                 stringResource(R.string.list_item_recurring),
                 modifier = Modifier
-                    .size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    .size(14.dp)
             )
         if (isRecurringInstance == true && isLinkedRecurringInstance == false)
             Icon(
                 painter = painterResource(R.drawable.ic_recur_exception),
                 stringResource(R.string.list_item_recurring),
                 modifier = Modifier
-                    .size(14.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    .size(14.dp)
             )
     }
 }
@@ -228,9 +211,8 @@ fun ListStatusBar_Preview1() {
             isRecurringOriginal = false,
             isRecurringInstance = false,
             isLinkedRecurringInstance = false,
-            component = Component.VJOURNAL.name,
-            status = StatusJournal.FINAL.name,
-            classification = Classification.PUBLIC.name,
+            status = Status.FINAL.status,
+            classification = Classification.PUBLIC.classification,
             priority = null
         )
     }
@@ -255,9 +237,8 @@ fun ListStatusBar_Preview2() {
             isRecurringOriginal = true,
             isRecurringInstance = false,
             isLinkedRecurringInstance = false,
-            component = Component.VJOURNAL.name,
-            status = StatusJournal.DRAFT.name,
-            classification = Classification.CONFIDENTIAL.name,
+            status = Status.DRAFT.status,
+            classification = Classification.CONFIDENTIAL.classification,
             priority = null
         )
     }
@@ -284,9 +265,8 @@ fun ListStatusBar_Preview3() {
             isRecurringOriginal = false,
             isRecurringInstance = true,
             isLinkedRecurringInstance = false,
-            component = Component.VJOURNAL.name,
-            status = StatusJournal.DRAFT.name,
-            classification = Classification.CONFIDENTIAL.name,
+            status = Status.DRAFT.status,
+            classification = Classification.CONFIDENTIAL.classification,
             priority = 2
         )
     }

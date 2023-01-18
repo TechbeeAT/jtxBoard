@@ -41,6 +41,7 @@ fun ListOptionsBottomSheet(
     listSettings: ListSettings,
     allCollectionsLive: LiveData<List<ICalCollection>>,
     allCategoriesLive: LiveData<List<String>>,
+    allResourcesLive: LiveData<List<String>>,
     onListSettingsChanged: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -48,9 +49,7 @@ fun ListOptionsBottomSheet(
     val scope = rememberCoroutineScope()
 
     val tabIndexFilter = 0
-    val tabIndexSortOrder = 1
-    val tabIndexGroupBy = 2
-
+    val tabIndexGroupSort = 1
 
     val pagerState = rememberPagerState(initialPage = tabIndexFilter)
 
@@ -77,27 +76,17 @@ fun ListOptionsBottomSheet(
                 selected = false,
                 onClick = {
                     scope.launch {
-                        pagerState.scrollToPage(tabIndexSortOrder)
+                        pagerState.scrollToPage(tabIndexGroupSort)
                     }
                 },
-                content = { Text(stringResource(id = R.string.filter_order_by)) },
-                modifier = Modifier.height(50.dp)
-            )
-            Tab(
-                selected = false,
-                onClick = {
-                    scope.launch {
-                        pagerState.scrollToPage(tabIndexGroupBy)
-                    }
-                },
-                content = { Text(stringResource(id = R.string.filter_group_by)) },
+                content = { Text(stringResource(id = R.string.filter_group_sort)) },
                 modifier = Modifier.height(50.dp)
             )
         }
 
         HorizontalPager(
             state = pagerState,
-            count = 3
+            count = 2
         ) { page ->
             when (page) {
                 tabIndexFilter -> {
@@ -106,6 +95,7 @@ fun ListOptionsBottomSheet(
                         listSettings = listSettings,
                         allCollectionsLive = allCollectionsLive,
                         allCategoriesLive = allCategoriesLive,
+                        allResourcesLive = allResourcesLive,
                         onListSettingsChanged = onListSettingsChanged,
                         modifier = modifier
                             .fillMaxSize()
@@ -113,19 +103,8 @@ fun ListOptionsBottomSheet(
                             .padding(8.dp),
                     )
                 }
-                tabIndexSortOrder -> {
-                    ListOptionsSortOrder(
-                        module = module,
-                        listSettings = listSettings,
-                        onListSettingsChanged = onListSettingsChanged,
-                        modifier = modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(8.dp),
-                    )
-                }
-                tabIndexGroupBy -> {
-                    ListOptionsGroupBy(
+                tabIndexGroupSort -> {
+                    ListOptionsGroupSort(
                         module = module,
                         listSettings = listSettings,
                         onListSettingsChanged = onListSettingsChanged,
@@ -171,6 +150,7 @@ fun ListOptionsBottomSheet_Preview_TODO() {
                 )
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
+            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             onListSettingsChanged = { }
 
         )
@@ -208,6 +188,7 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
                 )
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
+            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             onListSettingsChanged = { }
         )
     }

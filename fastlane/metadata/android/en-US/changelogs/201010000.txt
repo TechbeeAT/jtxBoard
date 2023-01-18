@@ -1,0 +1,6 @@
+jtx Board 2.1 is here and finally comes with a beautiful, fully configurable widget :-)
+
+- change opacity of widget
+- list groups are now expandable/collapsable
+- added options for smaller recurring rules (minutely, hourly)
+- support automatic list character on newline when editing the description

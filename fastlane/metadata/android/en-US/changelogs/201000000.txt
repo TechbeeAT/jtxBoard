@@ -1,0 +1,3 @@
+jtx Board 2.1 is here and finally comes with a beautiful, fully configurable widget :-)
+
+Please note: Due to technical constraints the widget is currently available from Android 9

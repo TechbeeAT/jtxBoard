@@ -31,9 +31,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -86,8 +84,7 @@ fun CollectionsScreenContent(
                 Text(
                     stringResource(id = R.string.collections_info),
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    style = TextStyle(textDirection = TextDirection.Content)
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
 

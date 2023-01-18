@@ -25,11 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.BuildConfig
@@ -106,8 +104,7 @@ fun DetailsCardLocation(
                         HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
                         Text(
                             text = location,
-                            modifier = Modifier.fillMaxWidth(),
-                            style = TextStyle(textDirection = TextDirection.Content)
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 } else {
@@ -121,6 +118,7 @@ fun DetailsCardLocation(
                             trailingIcon = {
                                 IconButton(onClick = {
                                     location = ""
+                                    onLocationUpdated(location, geoLat, geoLong)
                                 }) {
                                     if (location.isNotEmpty())
                                         Icon(
@@ -135,13 +133,11 @@ fun DetailsCardLocation(
                                 location = newLocation
                                 onLocationUpdated(newLocation, geoLat, geoLong)
                             },
-                            //colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
-                            modifier = Modifier.weight(1f),
-                            textStyle = TextStyle(textDirection = TextDirection.Content)
+                            modifier = Modifier.weight(1f)
                         )
 
-                        if(BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY) {
+                        if(BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_AMAZON) {
                             IconButton(onClick = { showLocationPickerDialog = true }) {
                                 Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
                             }

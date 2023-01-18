@@ -27,14 +27,10 @@ import at.techbee.jtx.ui.theme.Typography
 @Composable
 fun TranslatorCard(
     name: String,
-    languages: String,
     modifier: Modifier = Modifier
 ) {
 
-    ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        modifier = modifier
-    ) {
+    ElevatedCard(modifier = modifier) {
 
         Row(
             modifier
@@ -54,14 +50,6 @@ fun TranslatorCard(
                     style = Typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-                Text(
-                    stringResource(id = R.string.about_translations_for_contributions_in),
-                    style = Typography.bodyMedium
-                )
-                Text(
-                    languages,
-                    style = Typography.titleMedium
-                )
             }
 
             Icon(Icons.Outlined.Translate, null, modifier = Modifier
@@ -77,8 +65,6 @@ fun TranslatorCard(
 @Composable
 fun TranslatorCard_Preview() {
     MaterialTheme {
-        TranslatorCard(
-            "Patrick", "German, English"
-        )
+        TranslatorCard("Patrick")
     }
 }

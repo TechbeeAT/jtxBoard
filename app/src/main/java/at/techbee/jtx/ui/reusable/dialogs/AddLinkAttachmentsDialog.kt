@@ -24,8 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -63,8 +61,7 @@ fun AddAttachmentLinkDialog(
                     singleLine = true,
                     isError = noValidUrlError,
                     leadingIcon = { Icon(Icons.Outlined.AddLink, null) },
-                    placeholder = { Text("https://www.example.com") },
-                    textStyle = TextStyle(textDirection = TextDirection.Content)
+                    placeholder = { Text("https://www.example.com") }
                 )
 
                 AnimatedVisibility(noValidUrlError) {

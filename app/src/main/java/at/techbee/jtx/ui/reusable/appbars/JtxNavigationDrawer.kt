@@ -72,7 +72,9 @@ fun JtxNavigationDrawerMenu(
     val context = LocalContext.current
 
     ModalDrawerSheet(
-        modifier = Modifier.verticalScroll(rememberScrollState())
+        modifier = Modifier.verticalScroll(rememberScrollState()),
+        drawerContainerColor = MaterialTheme.colorScheme.surface,
+        drawerContentColor = MaterialTheme.colorScheme.onSurface,
     ) {
 
         Row(
@@ -117,13 +119,13 @@ fun JtxNavigationDrawerMenu(
 
                 NavigationDrawerItem(
                     icon = {
-                        item.icon?.let { Icon(it, contentDescription = null) }
+                        item.icon?.let { Icon(it, contentDescription = null, tint = if(item.name == navController.currentDestination?.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface) }
                             ?: item.iconResource?.let {
                                 Image(
                                     painterResource(id = it),
                                     null,
                                     modifier = Modifier.size(24.dp),
-                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.secondaryContainer))
+                                    colorFilter = ColorFilter.tint(if(item.name == navController.currentDestination?.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface)
                                 )
                             }
                     },
@@ -133,6 +135,14 @@ fun JtxNavigationDrawerMenu(
                         item.navigationAction(navController, context)
                         onCloseDrawer()
                     },
+                    colors = NavigationDrawerItemDefaults.colors(
+                        unselectedContainerColor = MaterialTheme.colorScheme.surface,
+                        unselectedIconColor = MaterialTheme.colorScheme.surface,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurface,
+                        selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.onPrimary,
+                        selectedIconColor = MaterialTheme.colorScheme.onPrimary
+                    ),
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
             }

@@ -11,6 +11,7 @@ package at.techbee.jtx.widgets
 import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
@@ -23,12 +24,16 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
-import androidx.glance.appwidget.lazy.items
 import androidx.glance.layout.*
 import androidx.glance.text.*
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
+import at.techbee.jtx.ui.list.GroupBy
+import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.widgets.elements.ListEntry
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -45,8 +50,8 @@ class ListWidget : GlanceAppWidget() {
 
         val context = LocalContext.current
 
-        Log.d("ListWidget","appWidgetId in ListWidget: ${GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)}")
-        Log.d("ListWidget","glanceId in ListWidget: ${LocalGlanceId.current}")
+        Log.d("ListWidget", "appWidgetId in ListWidget: ${GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)}")
+        Log.d("ListWidget", "glanceId in ListWidget: ${LocalGlanceId.current}")
 
         val prefs = currentState<Preferences>()
         val listWidgetConfig = prefs[ListWidgetReceiver.filterConfig]?.let { filterConfig ->
@@ -54,6 +59,55 @@ class ListWidget : GlanceAppWidget() {
         }
 
         val list = prefs[ListWidgetReceiver.list]?.map { Json.decodeFromString<ICal4ListWidget>(it) } ?: emptyList()
+        // first apply a proper sort order, then group
+        var sortedList = when (listWidgetConfig?.groupBy) {
+            GroupBy.STATUS -> list.sortedBy {
+                if (listWidgetConfig.module == Module.TODO && it.percent != 100)
+                    try {
+                        Status.valueOf(it.status ?: Status.NEEDS_ACTION.name).ordinal
+                    } catch (e: java.lang.IllegalArgumentException) {
+                        -1
+                    }
+                else
+                    try {
+                        Status.valueOf(it.status ?: Status.FINAL.name).ordinal
+                    } catch (e: java.lang.IllegalArgumentException) {
+                        -1
+                    }
+            }
+            GroupBy.CLASSIFICATION -> list.sortedBy {
+                try {
+                    Classification.valueOf(it.classification ?: Classification.PUBLIC.name).ordinal
+                } catch (e: java.lang.IllegalArgumentException) {
+                    -1
+                }
+            }
+            else -> list
+        }
+        if ((listWidgetConfig?.groupBy == GroupBy.STATUS || listWidgetConfig?.groupBy == GroupBy.CLASSIFICATION) && listWidgetConfig.sortOrder == SortOrder.DESC)
+            sortedList = sortedList.asReversed()
+        
+        val groupedList = sortedList.groupBy {
+            when (listWidgetConfig?.groupBy) {
+                GroupBy.STATUS -> Status.values().find { status -> status.status == it.status}?.stringResource?.let { stringRes -> stringResource(id = stringRes) }?: it.status?: stringResource(id = R.string.status_no_status)
+                GroupBy.CLASSIFICATION -> Classification.values().find { classif -> classif.classification == it.classification}?.stringResource?.let { stringRes -> stringResource(id = stringRes) }?: it.classification?:stringResource(id = R.string.classification_no_classification)
+                GroupBy.PRIORITY -> {
+                    when (it.priority) {
+                        null -> context.resources.getStringArray(R.array.priority)[0]
+                        in 0..9 -> context.resources.getStringArray(R.array.priority)[it.priority?:0]
+                        else -> it.priority.toString()
+                    }
+                }
+                GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = context)
+                GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = context)
+                GroupBy.DUE -> ICalObject.getDueTextInfo(due = it.due, dueTimezone = it.dueTimezone, percent = it.percent, daysOnly = true, context = context)
+                else -> {
+                    it.module
+                }
+            }
+        }
+
+
         val subtasks = prefs[ListWidgetReceiver.subtasks]?.map { Json.decodeFromString<ICal4ListWidget>(it) } ?: emptyList()
         val subnotes = prefs[ListWidgetReceiver.subnotes]?.map { Json.decodeFromString<ICal4ListWidget>(it) } ?: emptyList()
         val listExceedLimits = prefs[ListWidgetReceiver.listExceedsLimits] ?: false
@@ -61,12 +115,6 @@ class ListWidget : GlanceAppWidget() {
         val subtasksGrouped = subtasks.groupBy { it.vtodoUidOfParent }
         val subnotesGrouped = subnotes.groupBy { it.vjournalUidOfParent }
 
-        val finalList: MutableList<ICal4ListWidget> = mutableListOf()
-        list.forEach { parent ->
-            finalList.add(parent)
-            subtasksGrouped[parent.uid]?.let { finalList.addAll(it) }
-            subnotesGrouped[parent.uid]?.let { finalList.addAll(it) }
-        }
 
         val mainIntent = Intent(context, MainActivity2::class.java)
             .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -76,6 +124,7 @@ class ListWidget : GlanceAppWidget() {
         val textColor = GlanceTheme.colors.onPrimaryContainer
         val entryColor = GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig?.widgetAlphaEntries ?: 1F)
         val entryTextColor = GlanceTheme.colors.onSurface
+        val entryOverdueTextColor = GlanceTheme.colors.error
 
         GlanceTheme {
             Column(
@@ -147,46 +196,116 @@ class ListWidget : GlanceAppWidget() {
                     )
                 }
 
-                if (finalList.isNotEmpty()) {
+                if (groupedList.isNotEmpty()) {
                     LazyColumn(
                         modifier = GlanceModifier
                             .padding(bottom = 2.dp, start = 2.dp, end = 2.dp, top = 0.dp)
                             .cornerRadius(8.dp)
                     ) {
 
-                        items(
-                            if (listWidgetConfig?.flatView == false) finalList else list
-                        ) { entry ->
-
-                            if (listWidgetConfig?.isExcludeDone == true && entry.percent == 100)
-                                return@items
-
-                            if (entry.summary.isNullOrEmpty() && entry.description.isNullOrEmpty())
-                                return@items
-
-                            ListEntry(
-                                obj = entry,
-                                entryColor = entryColor,
-                                textColor = entryTextColor,
-                                checkboxEnd = listWidgetConfig?.checkboxPositionEnd ?: false,
-                                modifier = GlanceModifier
-                                    .fillMaxWidth()
-                                    .padding(
-                                        bottom = 2.dp,
-                                        start = if ((entry.isChildOfTodo || entry.isChildOfNote || entry.isChildOfJournal) && listWidgetConfig?.flatView == false) 16.dp else 0.dp
+                        groupedList.forEach { (key, group) ->
+                            if (groupedList.keys.size > 1) {
+                                item {
+                                    Text(
+                                        text = key,
+                                        style = TextStyle(
+                                            color = GlanceTheme.colors.onPrimaryContainer,
+                                            //fontSize = 16.sp,
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                        modifier = GlanceModifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                     )
-                            )
+                                }
+                            }
+
+                            group.forEach group@ { entry ->
+                                if (listWidgetConfig?.isExcludeDone == true && entry.percent == 100)
+                                    return@group
+
+                                if (entry.summary.isNullOrEmpty() && entry.description.isNullOrEmpty())
+                                    return@group
+
+                                item {
+                                    ListEntry(
+                                        obj = entry,
+                                        entryColor = entryColor,
+                                        textColor = entryTextColor,
+                                        textColorOverdue = entryOverdueTextColor,
+                                        checkboxEnd = listWidgetConfig?.checkboxPositionEnd ?: false,
+                                        showDescription = listWidgetConfig?.showDescription ?: true,
+                                        modifier = GlanceModifier
+                                            .fillMaxWidth()
+                                            .padding(
+                                                bottom = 2.dp,
+                                            )
+                                    )
+                                }
+
+                                if (listWidgetConfig?.flatView == false && listWidgetConfig.showSubtasks) {
+                                    subtasksGrouped[entry.uid]?.forEach subtasks@ { subtask ->
+
+                                        if (listWidgetConfig.isExcludeDone && subtask.percent == 100)
+                                            return@subtasks
+
+                                        if (subtask.summary.isNullOrEmpty() && subtask.description.isNullOrEmpty())
+                                            return@subtasks
+
+                                        item {
+                                            ListEntry(
+                                                obj = subtask,
+                                                entryColor = entryColor,
+                                                textColor = entryTextColor,
+                                                textColorOverdue = entryOverdueTextColor,
+                                                checkboxEnd = listWidgetConfig.checkboxPositionEnd,
+                                                showDescription = listWidgetConfig.showDescription,
+                                                modifier = GlanceModifier
+                                                    .fillMaxWidth()
+                                                    .padding(
+                                                        bottom = 2.dp,
+                                                        start = 16.dp
+                                                    )
+                                            )
+                                        }
+                                    }
+                                }
+
+                                if (listWidgetConfig?.flatView == false && listWidgetConfig.showSubnotes) {
+                                    subnotesGrouped[entry.uid]?.forEach subnotes@ { subnote ->
+
+                                        if (subnote.summary.isNullOrEmpty() && subnote.description.isNullOrEmpty())
+                                            return@subnotes
+
+                                        item {
+                                            ListEntry(
+                                                obj = subnote,
+                                                entryColor = entryColor,
+                                                textColor = entryTextColor,
+                                                textColorOverdue = entryOverdueTextColor,
+                                                checkboxEnd = listWidgetConfig.checkboxPositionEnd,
+                                                showDescription = listWidgetConfig.showDescription,
+                                                modifier = GlanceModifier
+                                                    .fillMaxWidth()
+                                                    .padding(
+                                                        bottom = 2.dp,
+                                                        start = 16.dp
+                                                    )
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         }
 
-                        if(listExceedLimits)
+
+                        if (listExceedLimits)
                             item {
                                 Text(
                                     text = context.getString(R.string.widget_list_maximum_entries_reached, MAX_ENTRIES),
                                     style = TextStyle(
-                                            color = textColor,
-                                            fontSize = 10.sp,
-                                            fontStyle = FontStyle.Italic,
-                                            textAlign = TextAlign.Center
+                                        color = textColor,
+                                        fontSize = 10.sp,
+                                        fontStyle = FontStyle.Italic,
+                                        textAlign = TextAlign.Center
                                     ),
                                     modifier = GlanceModifier.fillMaxWidth().padding(8.dp)
                                 )

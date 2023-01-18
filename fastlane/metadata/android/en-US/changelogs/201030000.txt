@@ -1,0 +1,6 @@
+- Added filters by "no status" and "no classification"
+- Added option to choose a default date/time for journals
+- Journals list grouped by date now shows all dates in groups
+- Added true dark mode
+- Backstack-improvements
+- Bugfixes

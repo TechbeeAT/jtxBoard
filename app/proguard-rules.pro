@@ -19,6 +19,10 @@
     public static ** valueOf(java.lang.String);
 }
 
+-dontwarn com.amazon.**
+-keep class com.amazon.** {*;}
+-keepattributes *Annotation*
+
 # Great resource with explanations:
 # https://medium.com/androiddevelopers/troubleshooting-proguard-issues-on-android-bce9de4f8a74
 

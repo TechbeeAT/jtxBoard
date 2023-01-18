@@ -8,24 +8,16 @@
 
 package at.techbee.jtx.database
 
-import android.content.Context
 import android.net.Uri
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import net.fortuna.ical4j.model.Recur
 import org.junit.Assert.*
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import java.util.*
 
 
-@RunWith(MockitoJUnitRunner::class)
 class ICalObjectTest {
-
-    @Mock
-    private lateinit var mockContext: Context
 
 
     @Test
@@ -58,13 +50,13 @@ class ICalObjectTest {
     @Test
     fun setUpdatedProgress_needs_action() {
         val task = ICalObject.createTask("setUpdatedProgress_needs_action_in_Progress")
-        task.status = StatusTodo.`NEEDS-ACTION`.name
+        task.status = Status.NEEDS_ACTION.status
         task.setUpdatedProgress(1)
         task.setUpdatedProgress(0)
 
         assertEquals("setUpdatedProgress_needs_action_in_Progress", task.summary)
         assertNull(task.percent)
-        assertEquals(StatusTodo.`NEEDS-ACTION`.name, task.status)
+        assertEquals(Status.NEEDS_ACTION.status, task.status)
         //assertNotNull(task.dtstart)
         //assertNull(task.completed)
         assertNotNull(task.lastModified)
@@ -91,12 +83,12 @@ class ICalObjectTest {
     @Test
     fun setUpdatedProgress_completed() {
         val task = ICalObject.createTask("setUpdatedProgress_completed")
-        task.status = StatusTodo.`NEEDS-ACTION`.name
+        task.status = Status.NEEDS_ACTION.status
         task.setUpdatedProgress(100)
 
         assertEquals("setUpdatedProgress_completed", task.summary)
         assertEquals(100, task.percent)
-        assertEquals(StatusTodo.COMPLETED.name, task.status)
+        assertEquals(Status.COMPLETED.status, task.status)
         //assertNotNull(task.dtstart)
         //assertNotNull(task.completed)
         assertNotNull(task.lastModified)
@@ -145,7 +137,7 @@ class ICalObjectTest {
         val createdObject = ICalObject(
             component = Component.VJOURNAL.name,
             module = Module.JOURNAL.name,
-            status = StatusJournal.FINAL.name,
+            status = Status.FINAL.status,
             dirty = true,
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
@@ -165,7 +157,7 @@ class ICalObjectTest {
         val createdObject = ICalObject(
             component = Component.VJOURNAL.name,
             module = Module.NOTE.name,
-            status = StatusJournal.FINAL.name,
+            status = Status.FINAL.status,
             dirty = true,
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
@@ -184,7 +176,7 @@ class ICalObjectTest {
         val createdObject = ICalObject(
             component = Component.VJOURNAL.name,
             module = Module.NOTE.name,
-            status = StatusJournal.FINAL.name,
+            status = Status.FINAL.status,
             dirty = true,
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
@@ -203,7 +195,7 @@ class ICalObjectTest {
         val createdObject = ICalObject(
             component = Component.VJOURNAL.name,
             module = Module.NOTE.name,
-            status = StatusJournal.FINAL.name,
+            status = Status.FINAL.status,
             dirty = true,
             summary = "Test Summary",
             // dates and uid must be set explicitely to make the objects equal
@@ -635,22 +627,22 @@ class ICalObjectTest {
     }
 
     @Test
-    fun statusJournal_getListFromStringList() {
+    fun status_getListFromStringList_Journal() {
 
-        val statusList = StatusJournal.getListFromStringList(listOf("DRAFT", "FINAL", "CANCELLED").toSet())
-        assertTrue(statusList.contains(StatusJournal.CANCELLED))
-        assertTrue(statusList.contains(StatusJournal.DRAFT))
-        assertTrue(statusList.contains(StatusJournal.FINAL))
+        val statusList = Status.getListFromStringList(listOf("DRAFT", "FINAL", "CANCELLED").toSet())
+        assertTrue(statusList.contains(Status.CANCELLED))
+        assertTrue(statusList.contains(Status.DRAFT))
+        assertTrue(statusList.contains(Status.FINAL))
     }
 
     @Test
-    fun statusTodo_getListFromStringList() {
+    fun status_getListFromStringList_Todo() {
 
-        val statusList = StatusTodo.getListFromStringList(listOf("CANCELLED", "IN-PROCESS", "COMPLETED", "NEEDS-ACTION").toSet())
-        assertTrue(statusList.contains(StatusTodo.CANCELLED))
-        assertTrue(statusList.contains(StatusTodo.`IN-PROCESS`))
-        assertTrue(statusList.contains(StatusTodo.COMPLETED))
-        assertTrue(statusList.contains(StatusTodo.`NEEDS-ACTION`))
+        val statusList = Status.getListFromStringList(listOf("CANCELLED", "IN-PROCESS", "COMPLETED", "NEEDS-ACTION").toSet())
+        assertTrue(statusList.contains(Status.CANCELLED))
+        assertTrue(statusList.contains(Status.IN_PROCESS))
+        assertTrue(statusList.contains(Status.COMPLETED))
+        assertTrue(statusList.contains(Status.NEEDS_ACTION))
     }
 
     @Test
@@ -661,14 +653,26 @@ class ICalObjectTest {
 
     @Test
     fun statusJournal_getStringSetFromList() {
-        val statusJournals = listOf(StatusJournal.FINAL, StatusJournal.DRAFT, StatusJournal.CANCELLED)
-        assertEquals(listOf("DRAFT", "FINAL", "CANCELLED").toSet(), StatusJournal.getStringSetFromList(statusJournals))
+        val statusJournals = listOf(Status.FINAL, Status.DRAFT, Status.CANCELLED)
+        assertEquals(listOf("DRAFT", "FINAL", "CANCELLED").toSet(), Status.getStringSetFromList(statusJournals))
     }
 
     @Test
     fun statusTodo_getStringSetFromList() {
-        val statusTodos = listOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.COMPLETED, StatusTodo.`IN-PROCESS`, StatusTodo.CANCELLED)
-        assertEquals(listOf("CANCELLED", "IN-PROCESS", "COMPLETED", "NEEDS-ACTION").toSet(), StatusTodo.getStringSetFromList(statusTodos))
+        val statusTodos = listOf(Status.NEEDS_ACTION, Status.COMPLETED, Status.IN_PROCESS, Status.CANCELLED)
+        assertEquals(listOf("CANCELLED", "IN-PROCESS", "COMPLETED", "NEEDS-ACTION").toSet(), Status.getStringSetFromList(statusTodos))
+    }
+
+    @Test
+    fun status_getStringSetFromList_Journals() {
+        val status = Status.valuesFor(Module.JOURNAL)
+        assertEquals(listOf("NO_STATUS", "DRAFT", "FINAL", "CANCELLED").toSet(), Status.getStringSetFromList(status))
+    }
+
+    @Test
+    fun status_getStringSetFromList_Todos() {
+        val status = Status.valuesFor(Module.TODO)
+        assertEquals(listOf("NO_STATUS", "CANCELLED", "IN-PROCESS", "COMPLETED", "NEEDS-ACTION").toSet(), Status.getStringSetFromList(status))
     }
 
     @Test

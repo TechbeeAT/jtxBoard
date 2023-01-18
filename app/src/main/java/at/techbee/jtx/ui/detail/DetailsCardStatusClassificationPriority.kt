@@ -16,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,20 +30,21 @@ import at.techbee.jtx.database.*
 fun DetailsCardStatusClassificationPriority(
     icalObject: ICalObject,
     isEditMode: Boolean,
+    enableStatus: Boolean,
+    enableClassification: Boolean,
+    enablePriority: Boolean,
     onStatusChanged: (String?) -> Unit,
     onClassificationChanged: (String?) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    val context = LocalContext.current
-
-    var status by rememberSaveable { mutableStateOf(icalObject.status) }
-    var classification by rememberSaveable { mutableStateOf(icalObject.classification) }
-    var priority by rememberSaveable { mutableStateOf(icalObject.priority) }
+    var currentStatus by rememberSaveable { mutableStateOf(icalObject.status) }
+    var currentClassification by rememberSaveable { mutableStateOf( icalObject.classification) }
+    var currentPriority by rememberSaveable { mutableStateOf(icalObject.priority) }
 
     // we don't show the block in view mode if all three values are null
-    if(!isEditMode && status == null && classification == null && priority == null)
+    if(!isEditMode && currentStatus == null && currentClassification == null && currentPriority == null)
         return
 
 
@@ -60,13 +60,10 @@ fun DetailsCardStatusClassificationPriority(
             var classificationMenuExpanded by remember { mutableStateOf(false) }
             var priorityMenuExpanded by remember { mutableStateOf(false) }
 
-            if(!isEditMode && !status.isNullOrEmpty()) {
+            if(!isEditMode && !currentStatus.isNullOrEmpty()) {
                 ElevatedAssistChip(
                     label = {
-                        if (icalObject.component == Component.VJOURNAL.name)
-                            Text(StatusJournal.getStringResource(context, status), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        else
-                            Text(StatusTodo.getStringResource(context, status), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(Status.values().find { it.status == currentStatus }?.stringResource?.let { stringResource(id = it) }?: currentStatus?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
                     },
                     leadingIcon = {
                         Icon(
@@ -77,53 +74,26 @@ fun DetailsCardStatusClassificationPriority(
                     onClick = { },
                     modifier = Modifier.weight(0.33f)
                 )
-            } else if(isEditMode) {
+            } else if(isEditMode && (enableStatus || !currentStatus.isNullOrEmpty())) {
                 AssistChip(
                     label = {
-                        if (icalObject.component == Component.VJOURNAL.name)
-                            Text(StatusJournal.getStringResource(context, status), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        else
-                            Text(StatusTodo.getStringResource(context, status), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(Status.values().find { it.status == currentStatus }?.stringResource?.let { stringResource(id = it) }?: currentStatus?: "")
 
                         DropdownMenu(
                             expanded = statusMenuExpanded,
                             onDismissRequest = { statusMenuExpanded = false }
                         ) {
 
-                            DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.status_no_status)) },
-                                onClick = {
-                                    status = null
-                                    statusMenuExpanded = false
-                                    onStatusChanged(null)
-                                    //icalObject.status = status
-                                }
-                            )
-
-                            if (icalObject.component == Component.VJOURNAL.name) {
-                                StatusJournal.values().forEach { statusJournal ->
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(id = statusJournal.stringResource)) },
-                                        onClick = {
-                                            status = statusJournal.name
-                                            statusMenuExpanded = false
-                                            onStatusChanged(statusJournal.name)
-                                            //icalObject.status = status
-                                        }
-                                    )
-                                }
-                            } else {
-                                StatusTodo.values().forEach { statusTodo ->
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(id = statusTodo.stringResource)) },
-                                        onClick = {
-                                            status = statusTodo.name
-                                            statusMenuExpanded = false
-                                            onStatusChanged(statusTodo.name)
-                                            //icalObject.status = status
-                                        }
-                                    )
-                                }
+                            Status.valuesFor(icalObject.getModuleFromString()).forEach { status ->
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(id = status.stringResource)) },
+                                    onClick = {
+                                        currentStatus = status.status
+                                        statusMenuExpanded = false
+                                        onStatusChanged(status.status)
+                                        //icalObject.status = status
+                                    }
+                                )
                             }
                         }
                     },
@@ -139,10 +109,10 @@ fun DetailsCardStatusClassificationPriority(
             }
 
 
-            if(!isEditMode && !classification.isNullOrEmpty()) {
+            if(!isEditMode && !currentClassification.isNullOrEmpty()) {
                 ElevatedAssistChip(
                     label = {
-                        Text( Classification.getStringResource(context, classification), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text( Classification.values().find { it.classification == currentClassification}?.stringResource?.let { stringResource(id = it)}?: currentClassification?:"", maxLines = 1, overflow = TextOverflow.Ellipsis)
                             },
                     leadingIcon = {
                         Icon(
@@ -153,11 +123,11 @@ fun DetailsCardStatusClassificationPriority(
                     onClick = { },
                     modifier = Modifier.weight(0.33f)
                 )
-            } else if(isEditMode) {
+            } else if(isEditMode && (enableClassification || !currentClassification.isNullOrEmpty())) {
                 AssistChip(
                     label = {
                         Text(
-                            Classification.getStringResource(context, classification),
+                            Classification.values().find { it.classification == currentClassification }?.stringResource?.let { stringResource(id = it) }?: currentClassification?: "",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -167,22 +137,13 @@ fun DetailsCardStatusClassificationPriority(
                             onDismissRequest = { classificationMenuExpanded = false }
                         ) {
 
-                            DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.classification_no_classification)) },
-                                onClick = {
-                                    classification = null
-                                    classificationMenuExpanded = false
-                                    onClassificationChanged(null)
-                                }
-                            )
-
                             Classification.values().forEach { clazzification ->
                                 DropdownMenuItem(
                                     text = { Text(stringResource(id = clazzification.stringResource)) },
                                     onClick = {
-                                        classification = clazzification.name
+                                        currentClassification = clazzification.classification
                                         classificationMenuExpanded = false
-                                        onClassificationChanged(clazzification.name)
+                                        onClassificationChanged(clazzification.classification)
                                     }
                                 )
                             }
@@ -202,12 +163,12 @@ fun DetailsCardStatusClassificationPriority(
             val priorityStrings = stringArrayResource(id = R.array.priority)
             if (icalObject.component == Component.VTODO.name) {
 
-                if(!isEditMode && priority in 1..9) {
+                if(!isEditMode && currentPriority in 1..9) {
                     ElevatedAssistChip(
                         label = {
                             Text(
-                                if (priority in priorityStrings.indices)
-                                    stringArrayResource(id = R.array.priority)[priority?:0]
+                                if (currentPriority in priorityStrings.indices)
+                                    stringArrayResource(id = R.array.priority)[currentPriority?:0]
                                 else
                                     stringArrayResource(id = R.array.priority)[0],
                                 maxLines = 1,
@@ -223,12 +184,12 @@ fun DetailsCardStatusClassificationPriority(
                         onClick = { },
                         modifier = Modifier.weight(0.33f)
                     )
-                } else if(isEditMode) {
+                } else if(isEditMode && (enablePriority || currentPriority in 1..9)) {
                     AssistChip(
                         label = {
                             Text(
-                                if (priority in priorityStrings.indices)
-                                    stringArrayResource(id = R.array.priority)[priority?:0]
+                                if (currentPriority in priorityStrings.indices)
+                                    stringArrayResource(id = R.array.priority)[currentPriority?:0]
                                 else
                                     stringArrayResource(id = R.array.priority)[0],
                                 maxLines = 1,
@@ -243,9 +204,9 @@ fun DetailsCardStatusClassificationPriority(
                                     DropdownMenuItem(
                                         text = { Text(prio) },
                                         onClick = {
-                                            priority = index
+                                            currentPriority = index
                                             priorityMenuExpanded = false
-                                            onPriorityChanged(priority)
+                                            onPriorityChanged(currentPriority)
                                         }
                                     )
                                 }
@@ -273,6 +234,9 @@ fun DetailsCardStatusClassificationPriority_Journal_Preview() {
         DetailsCardStatusClassificationPriority(
             icalObject = ICalObject.createJournal(),
             isEditMode = false,
+            enableStatus = false,
+            enableClassification = false,
+            enablePriority = false,
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -287,6 +251,9 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview() {
         DetailsCardStatusClassificationPriority(
             icalObject = ICalObject.createTodo(),
             isEditMode = true,
+            enableStatus = true,
+            enableClassification = true,
+            enablePriority = true,
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -294,3 +261,19 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardStatusClassificationPriority_Todo_Preview2() {
+    MaterialTheme {
+        DetailsCardStatusClassificationPriority(
+            icalObject = ICalObject.createTodo(),
+            isEditMode = true,
+            enableStatus = true,
+            enableClassification = false,
+            enablePriority = false,
+            onStatusChanged = { },
+            onClassificationChanged = { },
+            onPriorityChanged = { }
+        )
+    }
+}

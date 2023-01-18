@@ -19,10 +19,18 @@ enum class DropdownSettingOption(
     THEME_SYSTEM("system", R.string.settings_select_theme_system),
     THEME_LIGHT("light", R.string.settings_select_theme_light),
     THEME_DARK("dark", R.string.settings_select_theme_dark),
+    THEME_TRUE_DARK("truedark", R.string.settings_select_theme_true_dark),
+    THEME_CONTRAST("contrast", R.string.settings_select_theme_contrast),
 
     AUDIO_FORMAT_3GPP("audio/3gpp", R.string.settings_audio_format_3gpp),
     AUDIO_FORMAT_AAC("audio/aac", R.string.settings_audio_format_aac),
     AUDIO_FORMAT_OGG("audio/ogg", R.string.settings_audio_format_ogg),
+
+    DEFAULT_JOURNALS_DATE_CURRENT_DAY("current_day", R.string.settings_default_journals_date_current_day),
+    DEFAULT_JOURNALS_DATE_CURRENT_HOUR("current_hour", R.string.settings_default_journals_date_current_hour),
+    DEFAULT_JOURNALS_DATE_CURRENT_15MIN("current_15min", R.string.settings_default_journals_date_current_15min),
+    DEFAULT_JOURNALS_DATE_CURRENT_5MIN("current_5min", R.string.settings_default_journals_date_current_5min),
+    DEFAULT_JOURNALS_DATE_CURRENT_MIN("current_min", R.string.settings_default_journals_date_current_min),
 
     DEFAULT_DATE_NONE("null", R.string.settings_default_date_none),
     DEFAULT_DATE_SAME_DAY("P0D", R.string.settings_default_date_same_day),

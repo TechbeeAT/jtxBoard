@@ -1,6 +1,11 @@
 package at.techbee.jtx.widgets
 
 
+import androidx.room.ColumnInfo
+import at.techbee.jtx.database.COLUMN_CLASSIFICATION
+import at.techbee.jtx.database.COLUMN_PERCENT
+import at.techbee.jtx.database.COLUMN_PRIORITY
+import at.techbee.jtx.database.COLUMN_STATUS
 import at.techbee.jtx.database.views.ICal4List
 
 
@@ -14,11 +19,15 @@ data class ICal4ListWidget(
 
     var dtstart: Long?,
     var dtstartTimezone: String?,
-     var percent: Int?,
+    var percent: Int?,
 
     var due: Long?,
     var dueTimezone: String?,
     var uid: String?,
+
+    var status: String?,
+    var classification: String?,
+    var priority: Int?,
 
     var isChildOfJournal: Boolean,
     var isChildOfNote: Boolean,
@@ -43,6 +52,9 @@ data class ICal4ListWidget(
                 due = iCal4List.due,
                 dueTimezone = iCal4List.dueTimezone,
                 uid = iCal4List.uid,
+                status = iCal4List.status,
+                classification = iCal4List.classification,
+                priority = iCal4List.priority,
                 isChildOfJournal = iCal4List.isChildOfJournal,
                 isChildOfNote = iCal4List.isChildOfNote,
                 isChildOfTodo = iCal4List.isChildOfTodo,

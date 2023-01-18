@@ -95,20 +95,15 @@ fun SettingsScreen(
                             settingsStateHolder.settingTheme.value = selection
                             SETTING_THEME.save(selection, context = context)
                             when (selection) {
-                                DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(
-                                    AppCompatDelegate.MODE_NIGHT_YES
-                                )
-                                DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(
-                                    AppCompatDelegate.MODE_NIGHT_NO
-                                )
+                                DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                                DropdownSettingOption.THEME_TRUE_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                                DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                                 else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                             }
                         }
                     )
 
-
                     /* Special Handling for Language Selector */
-
                     val appCompatLocales = AppCompatDelegate.getApplicationLocales()
                     var defaultLocale: Locale? = null
                     if(!appCompatLocales.isEmpty) {
@@ -193,6 +188,49 @@ fun SettingsScreen(
                             .padding(top = 8.dp)
                             .alpha(0.5f)
                     )
+
+
+
+                    Text(
+                        text = stringResource(id = R.string.settings_modules),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
+                    )
+
+                    SwitchSetting(
+                        setting = SETTING_ENABLE_JOURNALS,
+                        initiallyChecked = settingsStateHolder.settingEnableJournals.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingEnableJournals.value = it
+                            SETTING_ENABLE_JOURNALS.save(it, context)
+                        },
+                        enabled = !(!settingsStateHolder.settingEnableNotes.value && !settingsStateHolder.settingEnableTasks.value)
+                    )
+                    SwitchSetting(
+                        setting = SETTING_ENABLE_NOTES,
+                        initiallyChecked = settingsStateHolder.settingEnableNotes.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingEnableNotes.value = it
+                            SETTING_ENABLE_NOTES.save(it, context)
+                        },
+                        enabled = !(!settingsStateHolder.settingEnableJournals.value && !settingsStateHolder.settingEnableTasks.value)
+                    )
+                    SwitchSetting(
+                        setting = SETTING_ENABLE_TASKS,
+                        initiallyChecked = settingsStateHolder.settingEnableTasks.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingEnableTasks.value = it
+                            SETTING_ENABLE_TASKS.save(it, context)
+                        },
+                        enabled = !(!settingsStateHolder.settingEnableJournals.value && !settingsStateHolder.settingEnableNotes.value)
+                    )
+
+                    Divider(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .alpha(0.5f)
+                    )
+
                     Text(
                         text = stringResource(id = R.string.settings_list),
                         style = MaterialTheme.typography.labelMedium,
@@ -220,21 +258,6 @@ fun SettingsScreen(
                             settingsStateHolder.settingAutoExpandAttachments.value = it
                             SETTING_AUTO_EXPAND_ATTACHMENTS.save(it, context)
                         })
-                    SwitchSetting(
-                        setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST,
-                        initiallyChecked = settingsStateHolder.settingShowProgressForMainTasks.value,
-                        onCheckedChanged = {
-                            settingsStateHolder.settingShowProgressForMainTasks.value = it
-                            SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.save(it, context)
-                        })
-                    SwitchSetting(
-                        setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
-                        initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
-                        onCheckedChanged = {
-                            settingsStateHolder.settingShowProgressForSubTasks.value = it
-                            SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
-                        })
-
 
                     Divider(
                         modifier = Modifier
@@ -242,9 +265,18 @@ fun SettingsScreen(
                             .alpha(0.5f)
                     )
                     Text(
-                        text = stringResource(id = R.string.settings_details),
+                        text = stringResource(id = R.string.settings_journals),
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
+                    )
+
+                    DropdownSetting(
+                        setting = SETTING_DEFAULT_JOURNALS_DATE,
+                        preselected = settingsStateHolder.settingDefaultJournalsDate.value,
+                        onSelectionChanged = { selection ->
+                            settingsStateHolder.settingDefaultJournalsDate.value = selection
+                            SETTING_DEFAULT_JOURNALS_DATE.save(selection, context = context)
+                        }
                     )
 
                     Divider(
@@ -257,6 +289,21 @@ fun SettingsScreen(
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
                     )
+
+                    SwitchSetting(
+                        setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS,
+                        initiallyChecked = settingsStateHolder.settingShowProgressForMainTasks.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingShowProgressForMainTasks.value = it
+                            SETTING_SHOW_PROGRESS_FOR_MAINTASKS.save(it, context)
+                        })
+                    SwitchSetting(
+                        setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
+                        initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingShowProgressForSubTasks.value = it
+                            SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
+                        })
 
                     DropdownSetting(
                         setting = SETTING_DEFAULT_START_DATE,

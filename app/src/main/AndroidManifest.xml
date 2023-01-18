@@ -66,7 +66,6 @@
         android:required="false" />
 
     <queries>
-
         <!-- package visiblity – which apps do we need to see? -->
         <package android:name="at.bitfire.davdroid" />
 
@@ -86,6 +85,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+        <profileable
+            android:shell="true"
+            tools:targetApi="q" />
 
         <provider
             android:name=".SyncContentProvider"
@@ -138,14 +140,16 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-
         <activity
             android:name=".ListWidgetConfigActivity"
-            android:exported="false" >
+            android:clearTaskOnLaunch="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
-
         </activity>
 
         <receiver android:name=".NotificationPublisher" />

@@ -128,7 +128,7 @@ class ICalObjectAndroidTest {
             dtstartTimezone = TimeZone.getTimeZone("Europe/Vienna").id,
             dtend = null,
             dtendTimezone = null,
-            status = StatusJournal.FINAL.name,
+            status = Status.FINAL.status,
             classification = Classification.PUBLIC.name,
             url = "https://techbee.at",
             contact = "Techbee",
@@ -460,20 +460,5 @@ class ICalObjectAndroidTest {
                 R.string.edit_recur_x_times
             )
         assertTrue(item.getRecurInfo(context)?.contains(expectedString) == true)
-    }
-
-    @Test
-    fun statusJournal_getStringResource_cancelled() {
-        assertEquals(context.getString(R.string.journal_status_cancelled), StatusJournal.getStringResource(context, StatusJournal.CANCELLED.name))
-    }
-
-    @Test
-    fun statusTodo_getStringResource_cancelled() {
-        assertEquals(context.getString(R.string.todo_status_needsaction), StatusTodo.getStringResource(context, StatusTodo.`NEEDS-ACTION`.name))
-    }
-
-    @Test
-    fun classification_getStringResource_confidential() {
-        assertEquals(context.getString(R.string.classification_confidential), Classification.getStringResource(context, Classification.CONFIDENTIAL.name))
     }
 }

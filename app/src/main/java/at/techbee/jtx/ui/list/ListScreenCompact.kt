@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.ArrowDropUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -37,7 +38,6 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
@@ -46,10 +46,12 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 fun ListScreenCompact(
     groupedList: Map<String, List<ICal4List>>,
     subtasksLive: LiveData<Map<String?, List<ICal4List>>>,
+    selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
-    goToDetail: (itemId: Long, editMode: Boolean, list: List<ICal4List>) -> Unit
+    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
 
     val subtasks by subtasksLive.observeAsState(emptyMap())
@@ -123,20 +125,22 @@ fun ListScreenCompact(
                     ListCardCompact(
                         iCalObject,
                         subtasks = currentSubtasks ?: emptyList(),
+                        selected = selectedEntries.contains(iCalObject.id),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 4.dp, bottom = 4.dp)
                             .animateItemPlacement()
                             .clip(jtxCardCornerShape)
                             .combinedClickable(
-                                onClick = { goToDetail(iCalObject.id, false, groupedList.flatMap { it.value }) },
+                                onClick = { onClick(iCalObject.id, groupedList.flatMap { it.value }) },
                                 onLongClick = {
-                                    if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToDetail(iCalObject.id, false, groupedList.flatMap { it.value })
+                                    if (!iCalObject.isReadOnly)
+                                        onLongClick(iCalObject.id, groupedList.flatMap { it.value })
                                 }
                             ),
                         onProgressChanged = onProgressChanged,
-                        goToDetail = goToDetail
+                        onClick = onClick,
+                        onLongClick = onLongClick
                     )
 
                     if (iCalObject != group.last())
@@ -167,8 +171,8 @@ fun ListScreenCompact_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.PUBLIC.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.PUBLIC.classification
             dtstart = null
             due = null
             numAttachments = 0
@@ -182,8 +186,8 @@ fun ListScreenCompact_TODO() {
             component = Component.VTODO.name
             module = Module.TODO.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.CONFIDENTIAL.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
             summary =
@@ -191,12 +195,14 @@ fun ListScreenCompact_TODO() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenCompact(
-            groupedList = listOf(icalobject, icalobject2).groupBy { StatusJournal.getStringResource(application, it.status) },
+            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
             subtasksLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
+            selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> }
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> }
         )
     }
 }
@@ -218,8 +224,8 @@ fun ListScreenCompact_JOURNAL() {
             component = Component.VJOURNAL.name
             module = Module.JOURNAL.name
             percent = 89
-            status = StatusJournal.FINAL.name
-            classification = Classification.PUBLIC.name
+            status = Status.FINAL.status
+            classification = Classification.PUBLIC.classification
             dtstart = null
             due = null
             numAttachments = 0
@@ -233,8 +239,8 @@ fun ListScreenCompact_JOURNAL() {
             component = Component.VJOURNAL.name
             module = Module.JOURNAL.name
             percent = 89
-            status = StatusTodo.`IN-PROCESS`.name
-            classification = Classification.CONFIDENTIAL.name
+            status = Status.IN_PROCESS.status
+            classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
             summary =
@@ -242,12 +248,14 @@ fun ListScreenCompact_JOURNAL() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenCompact(
-            groupedList = listOf(icalobject, icalobject2).groupBy { StatusJournal.getStringResource(application, it.status) },
+            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
             subtasksLive = MutableLiveData(emptyMap()),
+            selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
             onProgressChanged = { _, _, _ -> },
-            goToDetail = { _, _, _ -> }
+            onClick = { _, _ -> },
+            onLongClick = { _, _ -> }
         )
     }
 }

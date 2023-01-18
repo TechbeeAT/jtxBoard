@@ -16,7 +16,6 @@ import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.getOrAwaitValue
 import at.techbee.jtx.ui.list.ListViewModel
 import at.techbee.jtx.ui.list.ListViewModelJournals
 import at.techbee.jtx.ui.list.ListViewModelNotes
@@ -46,18 +45,28 @@ class ListViewModelTest {
     private lateinit var application: Application
     private lateinit var listViewModel: ListViewModel
 
+    private lateinit var listViewModelJournals: ListViewModelJournals
+    private lateinit var listViewModelNotes: ListViewModelNotes
+    private lateinit var listViewModelTodos: ListViewModelTodos
+
     @Before
-    fun setup() = runTest {
+    fun setup() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
         ICalDatabase.switchToInMemory(context)
         application = context.applicationContext as Application
         database = ICalDatabase.getInstance(context).iCalDatabaseDao
         database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests", readonly = false, supportsVJOURNAL = true, supportsVTODO = true))
         database.insertCollectionSync(ICalCollection(collectionId = 2L, displayName = "testcollection readonly", readonly = true, supportsVJOURNAL = true, supportsVTODO = true))
+
+        listViewModelJournals = ListViewModelJournals(application)
+        listViewModelNotes = ListViewModelNotes(application)
+        listViewModelTodos = ListViewModelTodos(application)
+
+        database.deleteAllICalObjects()    // make sure welcome entries get deleted
     }
 
     @After
-    fun closeDb() = runTest {
+    fun closeDb()  {
         database.deleteAllICalObjects()
         ICalDatabase.getInstance(context).close()
     }
@@ -66,17 +75,18 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Module_Journal() = runTest {
 
-        listViewModel = ListViewModelJournals(application)
+        listViewModel = listViewModelJournals
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createJournal())
         database.insertICalObject(ICalObject.createJournal())
-        assertEquals(2, listViewModel.iCal4List.getOrAwaitValue(100).size)
+        assertEquals(2, listViewModel.iCal4List.value?.size)
     }
+
 
     @Test
     fun updateSearch_filter_Module_Note() = runTest {
 
-        listViewModel = ListViewModelNotes(application)
+        listViewModel = listViewModelNotes
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createNote("Note1"))
         assertEquals(1, listViewModel.iCal4List.value?.size)
@@ -86,7 +96,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Module_Todo() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createTask("Task1"))
         database.insertICalObject(ICalObject.createTask("Task2"))
@@ -97,7 +107,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Text() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createTask("Task1_abc_Text"))
         database.insertICalObject(ICalObject.createTask("Task2_asdf_Text"))
@@ -110,7 +120,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Categories() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
 
         val id1 = database.insertICalObject(ICalObject.createTask("Task1"))
@@ -139,7 +149,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Collections() = runTest {
 
-        listViewModel = ListViewModelNotes(application)
+        listViewModel = listViewModelNotes
         listViewModel.iCal4List.observeForever {  }
 
         val col1 = database.insertCollectionSync(ICalCollection(displayName = "ABC"))
@@ -165,23 +175,23 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_StatusJournal() = runTest {
 
-        listViewModel = ListViewModelNotes(application)
+        listViewModel = listViewModelNotes
         listViewModel.iCal4List.observeForever {  }
 
-        database.insertICalObject(ICalObject(summary="Note1", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.CANCELLED.name))
-        database.insertICalObject(ICalObject(summary="Note2", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.DRAFT.name))
-        database.insertICalObject(ICalObject(summary="Note3", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.FINAL.name))
-        database.insertICalObject(ICalObject(summary="Note4", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.CANCELLED.name))
+        database.insertICalObject(ICalObject(summary="Note1", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = Status.CANCELLED.status))
+        database.insertICalObject(ICalObject(summary="Note2", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = Status.DRAFT.status))
+        database.insertICalObject(ICalObject(summary="Note3", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = Status.FINAL.status))
+        database.insertICalObject(ICalObject(summary="Note4", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = Status.CANCELLED.status))
 
-        listViewModel.listSettings.searchStatusJournal.value = listViewModel.listSettings.searchStatusJournal.value.plus(StatusJournal.DRAFT)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.DRAFT)
         listViewModel.updateSearch()
         assertEquals(1, listViewModel.iCal4List.value?.size)
 
-        listViewModel.listSettings.searchStatusJournal.value = listViewModel.listSettings.searchStatusJournal.value.plus(StatusJournal.CANCELLED)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.CANCELLED)
         listViewModel.updateSearch()
         assertEquals(3, listViewModel.iCal4List.value?.size)
 
-        listViewModel.listSettings.searchStatusJournal.value = listViewModel.listSettings.searchStatusJournal.value.plus(StatusJournal.FINAL)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.FINAL)
         listViewModel.updateSearch()
         assertEquals(4, listViewModel.iCal4List.value?.size)
     }
@@ -189,24 +199,24 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_StatusTodo() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
 
-        database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, status = StatusTodo.CANCELLED.name))
-        database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  status = StatusTodo.`NEEDS-ACTION`.name))
-        database.insertICalObject(ICalObject(summary="Task2", module = Module.TODO.name, component = Component.VTODO.name,  status = StatusTodo.`IN-PROCESS`.name))
-        database.insertICalObject(ICalObject(summary="Task3", module = Module.TODO.name, component = Component.VTODO.name,  status = StatusTodo.`IN-PROCESS`.name))
-        database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  status = StatusTodo.COMPLETED.name))
+        database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, status = Status.CANCELLED.status))
+        database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  status = Status.NEEDS_ACTION.status))
+        database.insertICalObject(ICalObject(summary="Task2", module = Module.TODO.name, component = Component.VTODO.name,  status = Status.IN_PROCESS.status))
+        database.insertICalObject(ICalObject(summary="Task3", module = Module.TODO.name, component = Component.VTODO.name,  status = Status.IN_PROCESS.status))
+        database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  status = Status.COMPLETED.status))
 
-        listViewModel.listSettings.searchStatusTodo.value = listViewModel.listSettings.searchStatusTodo.value.plus(StatusTodo.`NEEDS-ACTION`)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.NEEDS_ACTION)
         listViewModel.updateSearch()
         assertEquals(1, listViewModel.iCal4List.value?.size)
 
-        listViewModel.listSettings.searchStatusTodo.value = listViewModel.listSettings.searchStatusTodo.value.plus(StatusTodo.`IN-PROCESS`)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.IN_PROCESS)
         listViewModel.updateSearch()
         assertEquals(3, listViewModel.iCal4List.value?.size)
 
-        listViewModel.listSettings.searchStatusTodo.value = listViewModel.listSettings.searchStatusTodo.value.plus(StatusTodo.COMPLETED)
+        listViewModel.listSettings.searchStatus.value = listViewModel.listSettings.searchStatus.value.plus(Status.COMPLETED)
         listViewModel.updateSearch()
         assertEquals(4, listViewModel.iCal4List.value?.size)
     }
@@ -214,7 +224,7 @@ class ListViewModelTest {
     @Test
     fun updateSearch_filter_Classification() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
 
         database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, classification = Classification.PUBLIC.name))
@@ -238,18 +248,18 @@ class ListViewModelTest {
 
     @Test
     fun clearFilter() {
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.clearFilter()
         assertEquals(0, listViewModel.listSettings.searchCategories.value.size)
-        assertEquals(0, listViewModel.listSettings.searchStatusJournal.value.size)
-        assertEquals(0, listViewModel.listSettings.searchStatusTodo.value.size)
+        assertEquals(0, listViewModel.listSettings.searchStatus.value.size)
+        assertEquals(0, listViewModel.listSettings.searchStatus.value.size)
         assertEquals(0, listViewModel.listSettings.searchClassification.value.size)
         assertEquals(0, listViewModel.listSettings.searchCollection.value.size)
     }
 
     @Test
     fun updateProgress() = runTest {
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         val id = database.insertICalObject(ICalObject.createTask("Test").apply { percent = 0 })
 
         withContext(Dispatchers.IO) {
@@ -262,7 +272,7 @@ class ListViewModelTest {
 
     @Test
     fun updateProgress_withUnlink() = runTest {
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         val item = ICalObject.createTask("Test").apply { percent = 22 }
         item.isRecurLinkedInstance = true
 
@@ -284,7 +294,7 @@ class ListViewModelTest {
     @Test
     fun deleteVisible() = runTest {
 
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.iCal4List.observeForever {  }
 
         database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, classification = Classification.PUBLIC.name))
@@ -296,9 +306,10 @@ class ListViewModelTest {
         listViewModel.listSettings.searchClassification.value = listViewModel.listSettings.searchClassification.value.plus(Classification.PUBLIC)
         listViewModel.updateSearch()
         assertEquals(2, listViewModel.iCal4List.value?.size)
+        listViewModel.selectedEntries.addAll(listViewModel.iCal4List.value!!.map { it.id })
 
         withContext(Dispatchers.IO) {
-            listViewModel.deleteVisible()
+            listViewModel.deleteSelected()
             Thread.sleep(100)
             listViewModel.listSettings.searchClassification.value = emptyList()
             listViewModel.updateSearch()
@@ -309,14 +320,14 @@ class ListViewModelTest {
 
     @Test
     fun getAllCollections() {
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.allWriteableCollections.observeForever {  }
         assertEquals(1, listViewModel.allWriteableCollections.value?.size)
     }
 
     @Test
     fun getAllCategories() = runTest {
-        listViewModel = ListViewModelTodos(application)
+        listViewModel = listViewModelTodos
         listViewModel.allCategories.observeForever {  }
 
         val id1 = database.insertICalObject(ICalObject.createTask("Task1"))

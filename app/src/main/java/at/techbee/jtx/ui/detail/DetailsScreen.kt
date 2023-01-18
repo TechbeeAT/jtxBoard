@@ -10,23 +10,35 @@ package at.techbee.jtx.ui.detail
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
+import android.content.ContextWrapper
 import android.os.Build
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
@@ -36,26 +48,34 @@ import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
+    returnToLauncher: Boolean = false,
     icalObjectIdList: List<Long>,
     onLastUsedCollectionChanged: (Module, Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
     //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
+    fun Context.getActivity(): AppCompatActivity? = when (this) {
+        is AppCompatActivity -> this
+        is ContextWrapper -> baseContext.getActivity()
+        else -> null
+    }
+
     val settingsStateHolder = SettingsStateHolder(context)
+    val detailsBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     val goBackRequestedByTopBar = remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showRevertDialog by remember { mutableStateOf(false) }
     var navigateUp by remember { mutableStateOf(false) }
-
+    val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
@@ -65,9 +85,21 @@ fun DetailsScreen(
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val allWriteableCollections = detailViewModel.allWriteableCollections.observeAsState(emptyList())
 
+    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
+    val isProActionAvailable by remember(isProPurchased, icalEntity) { derivedStateOf { isProPurchased.value || icalEntity.value?.ICalCollection?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
+
+    icalEntity.value?.property?.getModuleFromString()?.let {
+        detailViewModel.detailSettings.load(it, context)
+    }
+
     if (navigateUp && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.CHANGESAVING) {
-        onRequestReview()
-        navController.navigateUp()
+        if (returnToLauncher) {
+            context.getActivity()?.finish()
+        } else {
+            onRequestReview()
+            navigateUp = false
+            navController.navigateUp()
+        }
     }
 
     if (detailViewModel.entryDeleted.value) {
@@ -94,7 +126,7 @@ fun DetailsScreen(
 
     if (showDeleteDialog) {
         DeleteEntryDialog(
-            icalObject = detailViewModel.icalEntity.value?.property!!,
+            icalObject = icalEntity.value?.property!!,
             onConfirm = { detailViewModel.delete() },
             onDismiss = { showDeleteDialog = false }
         )
@@ -115,21 +147,74 @@ fun DetailsScreen(
     Scaffold(
         topBar = {
             DetailsTopAppBar(
-                title = stringResource(id = R.string.details),
+                readonly = icalEntity.value?.ICalCollection?.readonly ?: true,
                 goBack = {
                     goBackRequestedByTopBar.value = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
+                detailTopAppBarMode = settingsStateHolder.detailTopAppBarMode.value,
+                onAddSubnote = { subnoteText -> detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null) },
+                onAddSubtask = { subtaskText -> detailViewModel.addSubEntry(ICalObject.createTask(subtaskText), null) },
                 actions = {
-                    if (!isEditMode.value) {
-                        val menuExpanded = remember { mutableStateOf(false) }
-                        OverflowMenu(menuExpanded = menuExpanded) {
+                    val menuExpanded = remember { mutableStateOf(false) }
+
+                    OverflowMenu(menuExpanded = menuExpanded) {
+
+                        Text(stringResource(R.string.details_app_bar_behaviour), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 8.dp))
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.edit_subtasks_add_helper),
+                                    color = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                )
+                            },
+                            onClick = {
+                                settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBTASK
+                                menuExpanded.value = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.AddTask,
+                                    contentDescription = null,
+                                    tint = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.edit_subnote_add_helper),
+                                    color = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                )
+                            },
+                            onClick = {
+                                settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBNOTE
+                                menuExpanded.value = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.NoteAdd,
+                                    contentDescription = null,
+                                    tint = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        )
+
+                        Divider()
+
+                        if (!isEditMode.value) {
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_share_mail)) },
                                 onClick = {
                                     detailViewModel.shareAsText(context)
                                     menuExpanded.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.Mail, null) }
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Mail,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
                             )
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
@@ -137,7 +222,13 @@ fun DetailsScreen(
                                     detailViewModel.shareAsICS(context)
                                     menuExpanded.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.Description, null) }
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Description,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
                             )
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
@@ -149,32 +240,38 @@ fun DetailsScreen(
                                         Toast.makeText(context, context.getText(R.string.menu_view_copy_to_clipboard_copied), Toast.LENGTH_SHORT).show()
                                     menuExpanded.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.ContentPaste, null) }
-                            )
-
-                            Divider()
-
-                            CheckboxWithText(
-                                text = stringResource(id = R.string.menu_view_markdown_formatting),
-                                onCheckedChange = {
-                                    detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] = it
-                                    detailViewModel.detailSettings.save()
-                                },
-                                isSelected = detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_MARKDOWN] ?: true,
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.ContentPaste,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
                             )
                         }
-                    } else {
-                        val menuExpanded = remember { mutableStateOf(false) }
-                        OverflowMenu(menuExpanded = menuExpanded) {
+
+
+                        if (isEditMode.value) {
                             CheckboxWithText(
                                 text = stringResource(id = R.string.menu_view_autosave),
                                 onCheckedChange = {
-                                    detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_AUTOSAVE] = it
+                                    detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] = it
                                     detailViewModel.detailSettings.save()
                                 },
-                                isSelected = detailViewModel.detailSettings.switchSetting[DetailSettings.ENABLE_AUTOSAVE] ?: true,
+                                isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] ?: true,
                             )
                         }
+
+                        Divider()
+
+                        CheckboxWithText(
+                            text = stringResource(id = R.string.menu_view_markdown_formatting),
+                            onCheckedChange = {
+                                detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] = it
+                                detailViewModel.detailSettings.save()
+                            },
+                            isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] ?: true,
+                        )
                     }
                 }
             )
@@ -194,7 +291,10 @@ fun DetailsScreen(
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
                 sliderIncrement = settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
+                showProgressForMainTasks = settingsStateHolder.settingShowProgressForMainTasks.value,
+                showProgressForSubTasks = settingsStateHolder.settingShowProgressForSubTasks.value,
                 goBackRequested = goBackRequestedByTopBar,
+                markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                     if (changedICalObject.isRecurLinkedInstance)
                         changedICalObject.isRecurLinkedInstance = false
@@ -208,7 +308,7 @@ fun DetailsScreen(
                         changedAttachments,
                         changedAlarms
                     )
-                    onLastUsedCollectionChanged(detailViewModel.icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
+                    onLastUsedCollectionChanged(icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
                 },
                 deleteICalObject = { showDeleteDialog = true },
                 onProgressChanged = { itemId, newPercent, _ ->
@@ -236,14 +336,34 @@ fun DetailsScreen(
                 goBack = { navigateUp = true },
                 modifier = Modifier.padding(paddingValues)
             )
+
+            ModalBottomSheetLayout(
+                sheetState = detailsBottomSheetState,
+                sheetContent = {
+                    DetailOptionsBottomSheet(
+                        module = try {
+                            Module.valueOf(icalEntity.value?.property?.module ?: Module.NOTE.name)
+                        } catch (e: Exception) {
+                            Module.NOTE
+                        },
+                        detailSettings = detailViewModel.detailSettings,
+                        onListSettingsChanged = { detailViewModel.detailSettings.save() },
+                        modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = paddingValues.calculateBottomPadding())
+                    )
+                },
+                sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+                sheetContentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface)
+            ) { }
         },
         bottomBar = {
             DetailBottomAppBar(
                 icalObject = icalEntity.value?.property,
                 collection = icalEntity.value?.ICalCollection,
                 isEditMode = isEditMode,
+                markdownState = markdownState,
+                isProActionAvailable = isProActionAvailable,
                 changeState = detailViewModel.changeState,
-                detailSettings = detailViewModel.detailSettings,
+                detailsBottomSheetState = detailsBottomSheetState,
                 onDeleteClicked = { showDeleteDialog = true },
                 onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) },
                 onRevertClicked = { showRevertDialog = true }
