@@ -137,7 +137,7 @@ fun DetailsCardLocation(
                             modifier = Modifier.weight(1f)
                         )
 
-                        if(BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY) {
+                        if(BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_AMAZON) {
                             IconButton(onClick = { showLocationPickerDialog = true }) {
                                 Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
                             }

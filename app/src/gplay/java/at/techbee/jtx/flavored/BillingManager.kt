@@ -58,8 +58,6 @@ class BillingManager :
 
 
     override lateinit var isProPurchased: LiveData<Boolean>
-    override var isProPurchasedLoaded = MutableLiveData(false)
-
     override val proPrice = Transformations.map(proProductDetails) {
         it?.oneTimePurchaseOfferDetails?.formattedPrice ?: ""
     }
@@ -222,13 +220,11 @@ class BillingManager :
             if (purchaseList.isEmpty()) {
                 billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASE_STATE)?.apply()
                 proPurchase.postValue(null)
-                isProPurchasedLoaded.postValue(true)
             } else {
                 CoroutineScope(Dispatchers.IO).launch {
                     purchaseList.forEach { purchase ->
                         handlePurchase(purchase)
                     }
-                    isProPurchasedLoaded.postValue(true)
                 }
             }
         }

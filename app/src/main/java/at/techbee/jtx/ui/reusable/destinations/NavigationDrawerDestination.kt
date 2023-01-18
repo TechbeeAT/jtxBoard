@@ -125,6 +125,7 @@ enum class NavigationDrawerDestination (
         fun valuesFor(flavor: String): List<NavigationDrawerDestination> {
             return when(flavor) {
                 MainActivity2.BUILD_FLAVOR_GOOGLEPLAY -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_AMAZON -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
                 MainActivity2.BUILD_FLAVOR_OSE -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, MASTODON, WEBSITE, NEWS, SUPPORT, PRIVACY)
                 MainActivity2.BUILD_FLAVOR_GENERIC -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
                 else -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
