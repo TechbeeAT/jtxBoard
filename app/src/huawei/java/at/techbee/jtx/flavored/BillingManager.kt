@@ -18,11 +18,8 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.util.DateTimeUtils
 import com.huawei.hms.iap.Iap
 import com.huawei.hms.iap.IapApiException
-import com.huawei.hms.iap.entity.InAppPurchaseData
+import com.huawei.hms.iap.entity.*
 import com.huawei.hms.iap.entity.InAppPurchaseData.PurchaseState
-import com.huawei.hms.iap.entity.OwnedPurchasesReq
-import com.huawei.hms.iap.entity.ProductInfoReq
-import com.huawei.hms.iap.entity.PurchaseIntentReq
 import com.huawei.hms.support.api.client.Status
 import org.json.JSONException
 
@@ -72,7 +69,29 @@ class BillingManager :
             billingPrefs = context.getSharedPreferences(PREFS_BILLING, Context.MODE_PRIVATE)
         isProPurchased.value = billingPrefs?.getBoolean(PREFS_BILLING_PURCHASED, true) ?: true
 
+        val isEnvReadyTask = Iap.getIapClient(context).isEnvReady
+        isEnvReadyTask.addOnSuccessListener {
+            // Obtain the execution result.
+            //val carrierId = result.carrierId
+            obtainProduct(context)
+            obtainPurchases(context)
 
+        }.addOnFailureListener { e ->
+            if (e is IapApiException) {
+                if (e.status.statusCode == OrderStatusCode.ORDER_HWID_NOT_LOGIN) {
+                    getErrorToast(context).show()
+                } else if (e.status.statusCode == OrderStatusCode.ORDER_ACCOUNT_AREA_NOT_SUPPORTED) {
+                    // The current country/region does not support HUAWEI IAP.
+                    isProPurchased.postValue(true)
+                    billingPrefs?.edit()?.putBoolean(PREFS_BILLING_PURCHASED, true)?.apply()
+                }
+            } else {
+                // Other external errors.
+            }
+        }
+    }
+
+    private fun obtainProduct(context: Context) {
         val req = ProductInfoReq().apply {
             priceType = 1 // priceType: 0: consumable; 1: non-consumable; 2: subscription
             productIds = arrayListOf(IN_APP_PRODUCT_PRO)
@@ -88,8 +107,9 @@ class BillingManager :
         }.addOnFailureListener { e ->
             Log.w("BillingManager", e.stackTraceToString())
         }
+    }
 
-
+    private fun obtainPurchases(context: Context) {
         val ownedPurchasesReq = OwnedPurchasesReq().apply {
             this.priceType = 1   // Set priceType to 1 (non-consumable).
         }
@@ -124,7 +144,7 @@ class BillingManager :
         val req = PurchaseIntentReq().apply {    // Construct a PurchaseIntentReq object.
             productId = IN_APP_PRODUCT_PRO  // Only those products already configured in AppGallery Connect can be purchased through the createPurchaseIntent API.
             priceType = 1 // priceType: 0: consumable; 1: non-consumable; 2: subscription
-            developerPayload = "test"
+            //developerPayload = "test"
         }
 
 // Call the createPurchaseIntent API to create a managed product order.
