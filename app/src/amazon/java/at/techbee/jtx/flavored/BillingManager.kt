@@ -51,9 +51,9 @@ class BillingManager :
     }
 
     override val isProPurchased = MutableLiveData(true)
-    override val proPrice = MutableLiveData("")
-    override val proPurchaseDate = MutableLiveData("")
-    override val proOrderId = MutableLiveData("")
+    override val proPrice = MutableLiveData("-")
+    override val proPurchaseDate = MutableLiveData("-")
+    override val proOrderId = MutableLiveData("-")
 
     private var billingPrefs: SharedPreferences? = null
 
