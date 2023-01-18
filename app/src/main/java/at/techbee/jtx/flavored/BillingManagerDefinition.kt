@@ -11,13 +11,10 @@ package at.techbee.jtx.flavored
 import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 
 interface BillingManagerDefinition {
 
-    var isProPurchased: LiveData<Boolean>
-    var isProPurchasedLoaded: MutableLiveData<Boolean>
-
+    val isProPurchased: LiveData<Boolean>
     val proPrice: LiveData<String?>
     val proPurchaseDate: LiveData<String?>
     val proOrderId: LiveData<String?>
