@@ -283,7 +283,7 @@ dependencies {
     implementation "com.mikepenz:aboutlibraries-compose:${version_about_libraries}"
 
     // Compose Color Picker
-    implementation "com.godaddy.android.colorpicker:compose-color-picker-android:0.5.1"
+    implementation "com.godaddy.android.colorpicker:compose-color-picker-android:0.6.0"
 
     // appcompat for language selection
     implementation "androidx.appcompat:appcompat:$version_appcompat"
