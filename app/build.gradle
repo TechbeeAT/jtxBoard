@@ -23,8 +23,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 202000012
-        versionName "2.02.00-rc12"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 202010001
+        versionName "2.02.01-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Make love, not war!\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -264,7 +264,7 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$version_work"
 
     //support for java.time for older Android versions (<O)
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.0")
 
     androidTestImplementation "androidx.test.ext:junit-ktx:1.1.5"
     //androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0-alpha07"
