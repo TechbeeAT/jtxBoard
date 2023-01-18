@@ -102,7 +102,7 @@ class MainActivity2 : AppCompatActivity() {
 
         // hides the ugly action bar that was before hidden through the Theme XML
         window.requestFeature(Window.FEATURE_ACTION_BAR)
-        actionBar?.hide()
+        supportActionBar?.hide()
 
         globalStateHolder = GlobalStateHolder(this)
         settingsStateHolder = SettingsStateHolder(this)

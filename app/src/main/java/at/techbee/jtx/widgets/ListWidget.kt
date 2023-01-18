@@ -174,6 +174,7 @@ class ListWidget : GlanceAppWidget() {
                             fontWeight = FontWeight.Bold
                         ),
                         modifier = GlanceModifier
+                            .clickable(actionStartActivity(mainIntent))
                             .defaultWeight()
                     )
 
