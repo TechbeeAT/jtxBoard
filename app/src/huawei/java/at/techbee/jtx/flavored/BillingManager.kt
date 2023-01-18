@@ -15,11 +15,16 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
+import at.techbee.jtx.util.DateTimeUtils
 import com.huawei.hms.iap.Iap
 import com.huawei.hms.iap.IapApiException
+import com.huawei.hms.iap.entity.InAppPurchaseData
+import com.huawei.hms.iap.entity.InAppPurchaseData.PurchaseState
+import com.huawei.hms.iap.entity.OwnedPurchasesReq
 import com.huawei.hms.iap.entity.ProductInfoReq
 import com.huawei.hms.iap.entity.PurchaseIntentReq
 import com.huawei.hms.support.api.client.Status
+import org.json.JSONException
 
 
 class BillingManager :
@@ -57,27 +62,70 @@ class BillingManager :
 
     override fun initialise(context: Context) {
 
+        /*
+        val firstInstall = context.packageManager?.getPackageInfoCompat(context.packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
+        if(firstInstall < 1674514800000L)
+            return
+         */
+
+        if (billingPrefs == null)
+            billingPrefs = context.getSharedPreferences(PREFS_BILLING, Context.MODE_PRIVATE)
+        isProPurchased.value = billingPrefs?.getBoolean(PREFS_BILLING_PURCHASED, true) ?: true
+
+
         val req = ProductInfoReq().apply {
             priceType = 1 // priceType: 0: consumable; 1: non-consumable; 2: subscription
             productIds = arrayListOf(IN_APP_PRODUCT_PRO)
         }
-        val task = Iap.getIapClient(context).obtainProductInfo(req)
-        task.addOnSuccessListener { result ->
+        val obtainProductInfoTask = Iap.getIapClient(context).obtainProductInfo(req)
+        obtainProductInfoTask.addOnSuccessListener { result ->
             // Obtain the product details returned upon a successful API call.
+            Log.d("BillingManager",  "productId" + result.productInfoList.firstOrNull()?.productId)
+            Log.d("BillingManager",  "price" + result.productInfoList.firstOrNull()?.price)
+
             val product = result.productInfoList.firstOrNull() ?: return@addOnSuccessListener
             proPrice.postValue(product.price)
         }.addOnFailureListener { e ->
             Log.w("BillingManager", e.stackTraceToString())
         }
 
+
+        val ownedPurchasesReq = OwnedPurchasesReq().apply {
+            this.priceType = 1   // Set priceType to 1 (non-consumable).
+        }
+        val obtainOwnedPurchasesTask = Iap.getIapClient(context).obtainOwnedPurchases(ownedPurchasesReq)
+        obtainOwnedPurchasesTask.addOnSuccessListener { result ->
+            // Obtain the execution result.
+            try {
+                val inAppPurchaseDataBean = result?.inAppPurchaseDataList?.map { InAppPurchaseData(it) }
+                val lastPurchase = inAppPurchaseDataBean?.findLast { it.purchaseState == PurchaseState.PURCHASED || it.purchaseState == PurchaseState.INITIALIZED || it.purchaseState == PurchaseState.PENDING }
+                Log.d("BillingManager", "lastPurchase: ${lastPurchase?.purchaseTime} - orderId: ${lastPurchase?.orderID} - purchase size: ${inAppPurchaseDataBean?.size}")
+                if (lastPurchase != null) {
+                    proPurchaseDate.postValue(DateTimeUtils.convertLongToFullDateTimeString(lastPurchase.purchaseTime, null))
+                    proOrderId.postValue(lastPurchase.orderID)
+                    isProPurchased.postValue(true)
+                    billingPrefs?.edit()?.putBoolean(PREFS_BILLING_PURCHASED, true)?.apply()
+                    return@addOnSuccessListener
+                }
+            } catch (e: JSONException) {
+                Log.w("BillingManager", e.stackTraceToString())
+            }
+
+            // if no early return, it was not purchased
+            billingPrefs?.edit()?.putBoolean(PREFS_BILLING_PURCHASED, false)?.apply()
+            isProPurchased.postValue(false)
+        }.addOnFailureListener { e ->
+            Log.w("BillingManager", e.stackTraceToString())
+        }
     }
 
     override fun launchBillingFlow(activity: Activity) {
 
-        val req = PurchaseIntentReq()   // Construct a PurchaseIntentReq object.
-        req.productId = "pro"  // Only those products already configured in AppGallery Connect can be purchased through the createPurchaseIntent API.
-        req.priceType = 1 // priceType: 0: consumable; 1: non-consumable; 2: subscription
-        req.developerPayload = "test"
+        val req = PurchaseIntentReq().apply {    // Construct a PurchaseIntentReq object.
+            productId = IN_APP_PRODUCT_PRO  // Only those products already configured in AppGallery Connect can be purchased through the createPurchaseIntent API.
+            priceType = 1 // priceType: 0: consumable; 1: non-consumable; 2: subscription
+            developerPayload = "test"
+        }
 
 // Call the createPurchaseIntent API to create a managed product order.
         val task = Iap.getIapClient(activity).createPurchaseIntent(req)
@@ -92,6 +140,7 @@ class BillingManager :
                 }
             }
         }.addOnFailureListener { e ->
+            getErrorToast(activity).show()
             if (e is IapApiException) {
                 Log.w("BillingManager", "${e.statusCode} - ${e.status}")
             } else {
