@@ -22,8 +22,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 202000011
-        versionName "2.02.00-beta11"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 202000012
+        versionName "2.02.00-rc12"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Make love, not war!\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -102,6 +102,10 @@ android {
         gplay {
             dimension 'version'
             versionNameSuffix '.gplay'
+        }
+        amazon {
+            dimension 'version'
+            versionNameSuffix '.amazon'
         }
         ose {
             dimension 'version'
@@ -236,6 +240,12 @@ dependencies {
     gplayImplementation "com.google.android.play:review:$version_review"
     gplayImplementation "com.google.android.play:review-ktx:$version_review"
 
+    // Amazon billing & maps support
+    amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.3'
+    amazonImplementation "com.google.maps.android:maps-compose:2.8.0"
+    amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
+    amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
+
     // Google Maps
     gplayImplementation "com.google.maps.android:maps-compose:2.8.0"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
@@ -266,7 +276,7 @@ dependencies {
     testImplementation "androidx.test:core-ktx:1.5.0"
     // Required -- JUnit 4 framework
     testImplementation "androidx.test.ext:junit-ktx:1.1.5"
-    testImplementation "org.mockito:mockito-core:4.11.0"
+    testImplementation "org.mockito:mockito-core:5.0.0"
 
     //About Libraries
     implementation "com.mikepenz:aboutlibraries-core:${version_about_libraries}"

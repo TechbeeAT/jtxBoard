@@ -81,6 +81,7 @@ class MainActivity2 : AppCompatActivity() {
 
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
+        const val BUILD_FLAVOR_AMAZON = "amazon"
         const val BUILD_FLAVOR_GENERIC = "generic"
 
         const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
