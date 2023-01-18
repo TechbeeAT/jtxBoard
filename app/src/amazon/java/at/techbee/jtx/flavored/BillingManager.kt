@@ -11,7 +11,6 @@ package at.techbee.jtx.flavored
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.widget.Toast
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.util.DateTimeUtils
