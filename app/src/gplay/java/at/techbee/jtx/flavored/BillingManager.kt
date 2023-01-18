@@ -12,7 +12,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -193,7 +192,7 @@ class BillingManager :
             // Launch the billing flow
             billingClient?.launchBillingFlow(activity, billingFlowParams)
         } else {
-            getErrorToast(context).show()
+            getErrorToast(activity).show()
             initialise(activity)
         }
     }
