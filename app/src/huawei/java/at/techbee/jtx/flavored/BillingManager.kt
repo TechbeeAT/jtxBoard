@@ -11,12 +11,13 @@ package at.techbee.jtx.flavored
 import android.app.Activity
 import android.content.Context
 import android.content.IntentSender
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.huawei.hms.iap.Iap
 import com.huawei.hms.iap.IapApiException
+import com.huawei.hms.iap.entity.ProductInfoReq
 import com.huawei.hms.iap.entity.PurchaseIntentReq
 import com.huawei.hms.support.api.client.Status
 
@@ -28,6 +29,10 @@ class BillingManager :
 
         @Volatile
         private lateinit var INSTANCE: BillingManager
+
+        private const val IN_APP_PRODUCT_PRO = "pro"
+        private const val PREFS_BILLING = "sharedPreferencesBilling"
+        private const val PREFS_BILLING_PURCHASED = "prefsBillingPurchased"
 
         fun getInstance(): BillingManager {
             synchronized(this) {
@@ -43,19 +48,35 @@ class BillingManager :
         }
     }
 
-    override var isProPurchased: LiveData<Boolean> = MutableLiveData(false)   // always true for OSE flavor
-    override var isProPurchasedLoaded = MutableLiveData(false)
-    override val proPrice = MutableLiveData("")
+    override val isProPurchased = MutableLiveData(true)
+    override val proPrice = MutableLiveData("-")
     override val proPurchaseDate = MutableLiveData("-")
     override val proOrderId = MutableLiveData("-")
 
-    override fun initialise(context: Context) { /* nothing to do for this flavor */ }
+    private var billingPrefs: SharedPreferences? = null
+
+    override fun initialise(context: Context) {
+
+        val req = ProductInfoReq().apply {
+            priceType = 1 // priceType: 0: consumable; 1: non-consumable; 2: subscription
+            productIds = arrayListOf(IN_APP_PRODUCT_PRO)
+        }
+        val task = Iap.getIapClient(context).obtainProductInfo(req)
+        task.addOnSuccessListener { result ->
+            // Obtain the product details returned upon a successful API call.
+            val product = result.productInfoList.firstOrNull() ?: return@addOnSuccessListener
+            proPrice.postValue(product.price)
+        }.addOnFailureListener { e ->
+            Log.w("BillingManager", e.stackTraceToString())
+        }
+
+    }
 
     override fun launchBillingFlow(activity: Activity) {
 
         val req = PurchaseIntentReq()   // Construct a PurchaseIntentReq object.
         req.productId = "pro"  // Only those products already configured in AppGallery Connect can be purchased through the createPurchaseIntent API.
-        req.priceType = 0 // priceType: 0: consumable; 1: non-consumable; 2: subscription
+        req.priceType = 1 // priceType: 0: consumable; 1: non-consumable; 2: subscription
         req.developerPayload = "test"
 
 // Call the createPurchaseIntent API to create a managed product order.
@@ -66,7 +87,9 @@ class BillingManager :
             if (status.hasResolution()) {
                 try {
                     status.startResolutionForResult(activity, 1)
-                } catch (exp: IntentSender.SendIntentException) {    }
+                } catch (e: IntentSender.SendIntentException) {
+                    Log.w("BillingManager", e.stackTraceToString())
+                }
             }
         }.addOnFailureListener { e ->
             if (e is IapApiException) {
