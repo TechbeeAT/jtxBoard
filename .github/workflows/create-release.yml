@@ -41,6 +41,15 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
           CROWDIN_API_KEY: ${{ secrets.crowdin_api_key }}
           
+      - name: Build signed package for Amazon
+        run: ./gradlew app:assembleAmazonRelease
+        env:
+          ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.android_keystore_password }}
+          ANDROID_KEY_ALIAS: ${{ secrets.android_key_alias }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
+          CROWDIN_API_KEY: ${{ secrets.crowdin_api_key }}
+          
       - name: Build app bundle release (AAB) for Gplay
         run: ./gradlew app:bundleGplayRelease
         env:
