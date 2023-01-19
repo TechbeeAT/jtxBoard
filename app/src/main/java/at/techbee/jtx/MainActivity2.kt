@@ -82,6 +82,7 @@ class MainActivity2 : AppCompatActivity() {
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
         const val BUILD_FLAVOR_AMAZON = "amazon"
+        const val BUILD_FLAVOR_HUAWEI = "huawei"
         const val BUILD_FLAVOR_GENERIC = "generic"
 
         const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
@@ -208,6 +209,9 @@ class MainActivity2 : AppCompatActivity() {
             setResult(Activity.RESULT_OK)
         }
         lastProcessedIntentHash = intent.hashCode()
+
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI)
+            BillingManager.getInstance().initialise(this)  // only Huawei needs to call the update functions again
     }
 
     override fun onPause() {

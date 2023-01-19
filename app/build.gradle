@@ -12,6 +12,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: "kotlinx-serialization"
+//apply plugin: "com.huawei.agconnect"
 
 
 android {
@@ -114,6 +115,10 @@ android {
         generic {
             dimension 'version'
             versionNameSuffix '.generic'
+        }
+        huawei {
+            dimension 'version'
+            versionNameSuffix '.huawei'
         }
     }
 
@@ -245,6 +250,9 @@ dependencies {
     amazonImplementation "com.google.maps.android:maps-compose:2.8.0"
     amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
+
+    // Huawei billing
+    huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
 
     // Google Maps
     gplayImplementation "com.google.maps.android:maps-compose:2.8.0"
