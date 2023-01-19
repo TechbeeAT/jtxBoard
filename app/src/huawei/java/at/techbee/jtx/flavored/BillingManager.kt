@@ -125,6 +125,14 @@ class BillingManager :
                     proOrderId.postValue(lastPurchase.orderID)
                     isProPurchased.postValue(true)
                     billingPrefs?.edit()?.putBoolean(PREFS_BILLING_PURCHASED, true)?.apply()
+
+                    //ONLY FOR TESTING - consume purchase to start purchase again - this will be called in onResume!
+                    val req = ConsumeOwnedPurchaseReq().apply { purchaseToken = lastPurchase.purchaseToken }
+                    val task = Iap.getIapClient(context).consumeOwnedPurchase(req)
+                    task.addOnSuccessListener { // Consume success
+                        Log.i("IAP","consumeOwnedPurchase success")
+                    }.addOnFailureListener {  }
+
                     return@addOnSuccessListener
                 }
             } catch (e: JSONException) {
