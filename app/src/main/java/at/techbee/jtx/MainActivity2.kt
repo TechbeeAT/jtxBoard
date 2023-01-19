@@ -209,6 +209,9 @@ class MainActivity2 : AppCompatActivity() {
             setResult(Activity.RESULT_OK)
         }
         lastProcessedIntentHash = intent.hashCode()
+
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI)
+            BillingManager.getInstance().initialise(this)  // only Huawei needs to call the update functions again
     }
 
     override fun onPause() {
