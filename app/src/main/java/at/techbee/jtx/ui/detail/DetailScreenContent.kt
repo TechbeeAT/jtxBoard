@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.detail
 import android.media.MediaPlayer
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -80,6 +81,7 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun DetailScreenContent(
     iCalEntity: State<ICalEntity?>,
+    scrollState: ScrollState,
     isEditMode: MutableState<Boolean>,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     subtasks: State<List<ICal4List>>,
@@ -105,6 +107,8 @@ fun DetailScreenContent(
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    onSubtasksPlaced: (y: Float) -> Unit,
+    onSubnotesPlaced: (y: Float) -> Unit,
     goBack: () -> Unit
 ) {
 
@@ -320,7 +324,7 @@ fun DetailScreenContent(
         )
     }
 
-    Box(modifier = modifier.verticalScroll(rememberScrollState())) {
+    Box(modifier = modifier.verticalScroll(scrollState)) {
 
         ColoredEdge(color, iCalEntity.value?.ICalCollection?.color)
 
@@ -613,6 +617,7 @@ fun DetailScreenContent(
                         )
                     },
                     onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
+                    onSubtasksPlaced = onSubtasksPlaced,
                     goToDetail = goToDetail
                 )
             }
@@ -634,6 +639,7 @@ fun DetailScreenContent(
                         )
                     },
                     onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
+                    onSubnotesPlaced = onSubnotesPlaced,
                     player = player,
                     goToDetail = goToDetail
                 )
@@ -837,6 +843,7 @@ fun DetailScreenContent_JOURNAL() {
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
+            scrollState = rememberScrollState(),
             isEditMode = remember { mutableStateOf(false) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             subtasks = remember { mutableStateOf(emptyList()) },
@@ -861,7 +868,9 @@ fun DetailScreenContent_JOURNAL() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            onSubtasksPlaced = { },
+            onSubnotesPlaced = { }
         )
     }
 }
@@ -881,6 +890,7 @@ fun DetailScreenContent_TODO_editInitially() {
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
+            scrollState = rememberScrollState(),
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             subtasks = remember { mutableStateOf(emptyList()) },
@@ -905,7 +915,9 @@ fun DetailScreenContent_TODO_editInitially() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            onSubtasksPlaced = { },
+            onSubnotesPlaced = { }
         )
     }
 }
@@ -927,6 +939,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
+            scrollState = rememberScrollState(),
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             subtasks = remember { mutableStateOf(emptyList()) },
@@ -951,7 +964,9 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            onSubtasksPlaced = { },
+            onSubnotesPlaced = { }
         )
     }
 }
@@ -965,6 +980,7 @@ fun DetailScreenContent_failedLoading() {
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(null) },
+            scrollState = rememberScrollState(),
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             subtasks = remember { mutableStateOf(emptyList()) },
@@ -989,7 +1005,9 @@ fun DetailScreenContent_failedLoading() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            onSubtasksPlaced = { },
+            onSubnotesPlaced = { }
         )
     }
 }

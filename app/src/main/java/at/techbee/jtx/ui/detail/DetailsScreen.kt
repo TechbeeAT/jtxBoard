@@ -17,6 +17,7 @@ import android.os.Build
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
@@ -46,6 +47,7 @@ import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -66,9 +68,11 @@ fun DetailsScreen(
         is ContextWrapper -> baseContext.getActivity()
         else -> null
     }
+    val scope = rememberCoroutineScope()
 
     val settingsStateHolder = SettingsStateHolder(context)
     val detailsBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val scrollState = rememberScrollState()
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     val goBackRequestedByTopBar = remember { mutableStateOf(false) }
@@ -76,6 +80,8 @@ fun DetailsScreen(
     var showRevertDialog by remember { mutableStateOf(false) }
     var navigateUp by remember { mutableStateOf(false) }
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
+    val subnotesPositionYEnd = remember { mutableStateOf(0f) }
+    val subtasksPositionYEnd = remember { mutableStateOf(0f) }
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
@@ -152,8 +158,14 @@ fun DetailsScreen(
                     goBackRequestedByTopBar.value = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 detailTopAppBarMode = settingsStateHolder.detailTopAppBarMode.value,
-                onAddSubnote = { subnoteText -> detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null) },
-                onAddSubtask = { subtaskText -> detailViewModel.addSubEntry(ICalObject.createTask(subtaskText), null) },
+                onAddSubnote = { subnoteText ->
+                    detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null)
+                    scope.launch { scrollState.animateScrollTo((subnotesPositionYEnd.value - 350.dp.value).toInt()) }
+                },
+                onAddSubtask = { subtaskText ->
+                    detailViewModel.addSubEntry(ICalObject.createTask(subtaskText), null)
+                    scope.launch { scrollState.animateScrollTo((subtasksPositionYEnd.value - 350.dp.value).toInt()) }
+                },
                 actions = {
                     val menuExpanded = remember { mutableStateOf(false) }
 
@@ -281,6 +293,7 @@ fun DetailsScreen(
             DetailScreenContent(
                 iCalEntity = icalEntity,
                 isEditMode = isEditMode,
+                scrollState = scrollState,
                 changeState = detailViewModel.changeState,
                 subtasks = subtasks,
                 subnotes = subnotes,
@@ -334,6 +347,8 @@ fun DetailsScreen(
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },
+                onSubtasksPlaced = { subtasksPositionYEnd.value = it },
+                onSubnotesPlaced = { subnotesPositionYEnd.value = it },
                 modifier = Modifier.padding(paddingValues)
             )
 

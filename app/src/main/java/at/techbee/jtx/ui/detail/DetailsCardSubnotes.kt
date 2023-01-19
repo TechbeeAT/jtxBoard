@@ -25,6 +25,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -54,6 +56,7 @@ fun DetailsCardSubnotes(
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     player: MediaPlayer?,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    onSubnotesPlaced: (y: Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -78,6 +81,10 @@ fun DetailsCardSubnotes(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
         ) {
+            Box(modifier = Modifier
+                .size(0.dp)
+                .onGloballyPositioned { onSubnotesPlaced(it.positionInRoot().y)}
+            )
 
             HeadlineWithIcon(icon = Icons.Outlined.Note, iconDesc = headline, text = headline)
 
@@ -173,7 +180,8 @@ fun DetailsCardSubnotes_Preview() {
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             player = null,
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            onSubnotesPlaced = { }
         )
     }
 }
@@ -196,7 +204,8 @@ fun DetailsCardSubnotes_Preview_edit() {
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             player = null,
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            onSubnotesPlaced = { }
         )
     }
 }

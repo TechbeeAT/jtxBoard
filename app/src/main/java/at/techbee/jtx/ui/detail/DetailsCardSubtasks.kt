@@ -12,10 +12,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -27,6 +24,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -56,6 +55,7 @@ fun DetailsCardSubtasks(
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubtaskDeleted: (subtaskId: Long) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    onSubtasksPlaced: (y: Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -69,6 +69,10 @@ fun DetailsCardSubtasks(
                 .fillMaxWidth()
                 .padding(8.dp),
         ) {
+            Box(modifier = Modifier
+                .size(0.dp)
+                .onGloballyPositioned { onSubtasksPlaced(it.positionInRoot().y)}
+            )
 
             HeadlineWithIcon(icon = Icons.Outlined.Task, iconDesc = headline, text = headline)
 
@@ -90,12 +94,12 @@ fun DetailsCardSubtasks(
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
-                                onClick = { if(!isEditMode.value) goToDetail(subtask.id, false, subtasks.map { it.id }) },
-                                onLongClick = {
-                                    if (!isEditMode.value &&!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToDetail(subtask.id, true, subtasks.map { it.id })
-                                }
-                            )
+                                    onClick = { if (!isEditMode.value) goToDetail(subtask.id, false, subtasks.map { it.id }) },
+                                    onLongClick = {
+                                        if (!isEditMode.value && !subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                            goToDetail(subtask.id, true, subtasks.map { it.id })
+                                    }
+                                )
                         )
                     }
                 }
@@ -156,7 +160,8 @@ fun DetailsCardSubtasks_Preview() {
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            onSubtasksPlaced = { }
         )
     }
 }
@@ -181,7 +186,8 @@ fun DetailsCardSubtasks_Preview_edit() {
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            onSubtasksPlaced = { }
         )
     }
 }
@@ -206,7 +212,8 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            onSubtasksPlaced = { }
         )
     }
 }
