@@ -16,6 +16,7 @@ import android.util.Log
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.util.DateTimeUtils
+import at.techbee.jtx.util.getPackageInfoCompat
 import com.huawei.hms.iap.Iap
 import com.huawei.hms.iap.IapApiException
 import com.huawei.hms.iap.entity.*
@@ -59,11 +60,9 @@ class BillingManager :
 
     override fun initialise(context: Context) {
 
-        /*
         val firstInstall = context.packageManager?.getPackageInfoCompat(context.packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
-        if(firstInstall < 1674514800000L)
+        if(firstInstall < 1674082800000L)
             return
-         */
 
         if (billingPrefs == null)
             billingPrefs = context.getSharedPreferences(PREFS_BILLING, Context.MODE_PRIVATE)
