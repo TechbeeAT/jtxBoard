@@ -43,7 +43,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
 
         // Huawei - only for use in Huawei branch
-        //maven { url 'https://developer.huawei.com/repo/' }
+        maven { url 'https://developer.huawei.com/repo/' }
     }
 
     dependencies {
@@ -52,7 +52,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$version_kotlin"
         // Huawei - only for use in Huawei branch
-        //classpath "com.huawei.agconnect:agcp:$version_huawei"
+        classpath "com.huawei.agconnect:agcp:$version_huawei"
     }
 }
 
@@ -64,7 +64,7 @@ allprojects {
         // ical4android
         maven { url 'https://jitpack.io' }
         // Huawei - only for use in Huawei branch
-        //maven { url 'https://developer.huawei.com/repo/' }
+        maven { url 'https://developer.huawei.com/repo/' }
     }
 }
 

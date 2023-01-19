@@ -12,7 +12,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: "kotlinx-serialization"
-//apply plugin: "com.huawei.agconnect"
+apply plugin: "com.huawei.agconnect"
 
 
 android {
