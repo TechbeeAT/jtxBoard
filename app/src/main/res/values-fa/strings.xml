@@ -1,14 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board وقایع روزانه، یادداشت ها و &amp; کارها را همگام سازی می کند"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="save">"ذخیره"</string>
+    <string name="cancel">"لغو"</string>
+    <string name="ok">"باشه"</string>
+    <string name="delete">"حذف"</string>
+    <string name="discard">"ول کن"</string>
+    <string name="gotit">"فهمیدم"</string>
+    <string name="cont">"ادامه"</string>
+    <string name="toolbar_text_jtx_board_journals_overview">"مرور وقایع روزانه"</string>
+    <string name="toolbar_text_jtx_board_notes_overview">"مرور یادداشت ها"</string>
+    <string name="toolbar_text_jtx_board_tasks_overview">"مرور کارها"</string>
+    <string name="toolbar_text_view_journal_details">"جزییات وقایع روزانه"</string>
+    <string name="toolbar_text_view_note_details">"جزئیات یادداشت"</string>
+    <string name="toolbar_text_view_task_details">"جزئیات کار"</string>
+    <string name="toolbar_text_add_journal">"افزودن واقعه روزانه"</string>
+    <string name="toolbar_text_add_note">"افزودن یادداشت"</string>
+    <string name="toolbar_text_edit_note">"ویرایش یادداشت"</string>
+    <string name="toolbar_text_filter">"صافی"</string>
+    <string name="toolbar_text_settings">"تنظیمات"</string>
+    <string name="toolbar_text_about">"درباره"</string>
+    <string name="toolbar_text_sync">"همگام سازی"</string>
+    <string name="toolbar_text_donate">"کمک مالی"</string>
+    <string name="toolbar_text_adinfo">"اطلاعات تبلیغ"</string>
+    <string name="default_local_collection_name">"محلی"</string>
+    <string name="default_local_account_name">"محلی"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"پیش‌نویس"</string>
+    <string name="journal_status_final">"نهایی"</string>
+    <string name="journal_status_cancelled">"لغو شده"</string>
+    <string name="todo_status_needsaction">"نیازمند اقدام"</string>
+    <string name="todo_status_completed">"تکمیل‌شده"</string>
+    <string name="todo_status_inprocess">"در روند انجام"</string>
+    <string name="todo_status_cancelled">"لغو شده"</string>
+    <string name="classification_public">"عمومی"</string>
+    <string name="classification_private">"خصوصی"</string>
+    <string name="classification_confidential">"محرمانه"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"بازکردن کشوی ناوبری"</string>
+    <string name="navigation_drawer_close">"بستن کشوی ناوبری"</string>
+    <string name="navigation_drawer_board">"تابلو"</string>
+    <string name="navigation_drawer_sync">"همگام سازی با DAVx⁵"</string>
+    <string name="navigation_drawer_about">"درباره / مجوز"</string>
+    <string name="navigation_drawer_subtitle">"وقایع روزانه، یادداشت ها و &amp; کارها"</string>
+    <string name="navigation_drawer_beta_feedback">"بازخورد آزمایشی"</string>
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
+    <string name="view_feedback_linked_notes">"بازخورد / یادداشت پیوندخورده"</string>
+    <string name="view_add_note">"افزودن یادداشت"</string>
+    <string name="view_add_audio_note">"افزودن صدا"</string>
+    <string name="view_subtasks_header">"کارهای فرعی"</string>
+    <string name="view_progress_label">"پیشرفت"</string>
+    <string name="view_dialog_sure_to_delete_title">"\"%1$s\" حذف شود؟"</string>
+    <string name="view_dialog_sure_to_delete_message">"مطمئنی می خوای \"%1$s\" رو حذف کنی؟"</string>
+    <string name="view_toast_deleted_successfully">"\"%1$s\" با موفقیت حذف شد"</string>
+    <string name="view_dialog_add_note">"افزودن یادداشت"</string>
+    <string name="view_dialog_add_note_dialog_hint">"یادداشت خود را اینجا بنویسید"</string>
+    <string name="view_created_text">"ایجاد شد: %1$s"</string>
+    <string name="view_last_modified_text">"آخرین اصلاح: %1$s"</string>
+    <string name="view_due">"موعد"</string>
+    <string name="view_completed">"تکمیل‌شده"</string>
+    <string name="view_started">"آغاز (شده)"</string>
     <!-- fragment_ical_edit -->
+    <string name="edit_add_category_hint">"#دسته_بندی_من"</string>
+    <string name="edit_add_category_helper">"افزودن یک دسته"</string>
+    <string name="edit_attendees_hint">"johanna@example.com"</string>
+    <string name="edit_comment_hint">"نظر شما …"</string>
+    <string name="edit_comment_helper">"افزودن یک نظر"</string>
+    <string name="edit_attachment_button_text">"افزودن پیوست"</string>
+    <string name="edit_take_picture_button_text">"گرفتن عکس"</string>
+    <string name="edit_add_link_button_text">"افزودن پیوست پیوند"</string>
+    <string name="edit_attachment_add_dialog_hint">"پیوند پیوستی شما (https://…)"</string>
+    <string name="edit_comment_add_dialog_hint">"نظر شما"</string>
+    <string name="edit_subtasks_add_hint">"کارفرعی شما"</string>
+    <string name="edit_subtasks_add_helper">"افزودن کارفرعی"</string>
+    <string name="edit_attachment_delete_attachment">"حذف پیوست"</string>
+    <string name="edit_recur_repeat_every_x">"تکرار شود هر"</string>
+    <string name="edit_recur_on_weekday">"در"</string>
+    <string name="edit_recur_on_the_x_day_of_month">"در"</string>
+    <string name="edit_recur_x_day_of_the_month">"روز از ماه"</string>
+    <string name="edit_recur_x_times">"بار"</string>
     <!-- fragment_about -->
     <!-- menus -->
     <!-- Notification channel for Reminders -->
