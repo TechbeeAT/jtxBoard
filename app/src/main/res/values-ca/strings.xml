@@ -415,6 +415,7 @@ Gràcies!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Per favor, compra el paquet Pro per a habilitar les funcions d'edició de col·leccions remotes."</string>
     <string name="buypro_initial_dialog_message">"Hola! jtx Board té una versió estàndard i una Pro. Per favor, llig la secció \"Compra el Pro\" per a saber més sobre jtx Board Pro!
 Gràcies!"</string>
+    <string name="buypro_purchase_init_error_message">"Per favor, comprova la teva connexió a Internet o torna-ho a provar més tard!"</string>
     <string name="menu_list_viewmode_list">"Vista en llista"</string>
     <string name="menu_list_viewmode_grid">"Vista de graella"</string>
     <string name="settings_modules">"Mòduls actius"</string>

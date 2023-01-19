@@ -19,6 +19,22 @@
     public static ** valueOf(java.lang.String);
 }
 
+#Amazon
+-dontwarn com.amazon.**
+-keep class com.amazon.** {*;}
+-keepattributes *Annotation*
+
+#Huawei
+-dontwarn com.huawei.**
+#-keepattributes *Annotation*
+-keepattributes Exceptions
+-keepattributes InnerClasses
+-keepattributes Signature
+-keepattributes SourceFile,LineNumberTable
+-keep class com.huawei.hianalytics.**{*;}
+-keep class com.huawei.updatesdk.**{*;}
+-keep class com.huawei.hms.**{*;}
+
 # Great resource with explanations:
 # https://medium.com/androiddevelopers/troubleshooting-proguard-issues-on-android-bce9de4f8a74
 

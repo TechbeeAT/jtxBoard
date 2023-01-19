@@ -433,6 +433,7 @@ Thank you!"</string>
     <string name="buypro_success_thankyou">"Thank you!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Please purchase the Pro package to enable editing capabilities of remote collections."</string>
     <string name="buypro_initial_dialog_message">"Hello! jtx Board comes with a standard and a Pro version. Please check out the \"Buy Pro\" section to find out more about jtx Board Pro! Thank you!"</string>
+    <string name="buypro_purchase_init_error_message">"Please check your internet connection or try again later!"</string>
     <string name="menu_list_viewmode_list">"List view"</string>
     <string name="menu_list_viewmode_grid">"Grid view"</string>
     <string name="settings_modules">"Active modules"</string>

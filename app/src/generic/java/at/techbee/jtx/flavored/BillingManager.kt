@@ -38,7 +38,6 @@ class BillingManager :
     }
 
     override var isProPurchased: LiveData<Boolean> = MutableLiveData(true)   // always true for OSE flavor
-    override var isProPurchasedLoaded = MutableLiveData(false)
     override val proPrice = MutableLiveData("")
     override val proPurchaseDate = MutableLiveData("-")
     override val proOrderId = MutableLiveData("-")

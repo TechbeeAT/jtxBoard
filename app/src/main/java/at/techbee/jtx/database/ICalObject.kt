@@ -750,7 +750,7 @@ data class ICalObject(
         fun getMapLink(geoLat: Double?, geoLong: Double?, flavor: String): Uri? {
             return if(geoLat != null || geoLong != null) {
                 try {
-                    if (flavor == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY)
+                    if (flavor == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY || flavor == MainActivity2.BUILD_FLAVOR_AMAZON)
                         Uri.parse("https://www.google.com/maps/search/?api=1&query=$geoLat%2C$geoLong")
                     else
                         Uri.parse("https://www.openstreetmap.org/#map=15/$geoLat/$geoLong")

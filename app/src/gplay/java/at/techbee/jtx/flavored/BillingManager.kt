@@ -12,7 +12,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -58,8 +57,6 @@ class BillingManager :
 
 
     override lateinit var isProPurchased: LiveData<Boolean>
-    override var isProPurchasedLoaded = MutableLiveData(false)
-
     override val proPrice = Transformations.map(proProductDetails) {
         it?.oneTimePurchaseOfferDetails?.formattedPrice ?: ""
     }
@@ -195,11 +192,7 @@ class BillingManager :
             // Launch the billing flow
             billingClient?.launchBillingFlow(activity, billingFlowParams)
         } else {
-            Toast.makeText(
-                activity,
-                "Ooops, something went wrong there. Please check your internet connection or try again later!",
-                Toast.LENGTH_LONG
-            ).show()
+            getErrorToast(activity).show()
             initialise(activity)
         }
     }
@@ -222,13 +215,11 @@ class BillingManager :
             if (purchaseList.isEmpty()) {
                 billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASE_STATE)?.apply()
                 proPurchase.postValue(null)
-                isProPurchasedLoaded.postValue(true)
             } else {
                 CoroutineScope(Dispatchers.IO).launch {
                     purchaseList.forEach { purchase ->
                         handlePurchase(purchase)
                     }
-                    isProPurchasedLoaded.postValue(true)
                 }
             }
         }

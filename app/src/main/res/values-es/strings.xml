@@ -31,6 +31,8 @@ Global Strings -->
     <string name="toolbar_text_sync">"Sincronización"</string>
     <string name="toolbar_text_donate">"Donar"</string>
     <string name="toolbar_text_adinfo">"Información sobre publicidad"</string>
+    <string name="default_local_collection_name">"Local"</string>
+    <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Borrador"</string>
     <string name="journal_status_final">"Definitivo"</string>
@@ -83,6 +85,8 @@ Global Strings -->
     <string name="list_num_attendees_contentdesc">"Número de asistentes"</string>
     <string name="list_num_attachments_contentdesc">"Número de adjuntos"</string>
     <string name="list_num_comments_contentdesc">"Número de comentarios"</string>
+    <string name="list_dialog_delete_selected_title">¿Eliminar entradas seleccionadas?</string>
+    <string name="list_dialog_delete_selected_message">Esta acción eliminará todas las entradas seleccionadas (%1$d). ¿Está seguro? ¡Esta operación no se puede deshacer!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Resumen / Descripción"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línea es interpretada como resumen, el resto como descripción. Las etiquetas son interpretadas como categorías (ejemplo: #categoría)."</string>
     <string name="list_item_upload_pending">"Subida pendiente"</string>
@@ -116,6 +120,7 @@ Global Strings -->
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#micategoría"</string>
     <string name="edit_add_category_helper">"Añadir una categoría"</string>
+    <string name="edit_attendees_hint">"juan@ejemplo.com"</string>
     <string name="edit_attendees_helper">"Añadir un colaborador (dirección de correo electrónico). Atención: Los servidores pueden procesar automáticamente a los colaboradores, por ejemplo, enviando mensajes iMIP."</string>
     <string name="edit_resources_hint">"Promotor"</string>
     <string name="edit_resources_helper">"Agregar un recurso"</string>
@@ -145,6 +150,10 @@ Global Strings -->
     <string name="edit_recur_toast_requires_start_date">"¡La repetición requiere que se establezca una fecha de inicio!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleccionar fecha"</string>
     <string name="edit_datepicker_dialog_select_time">"Seleccionar hora"</string>
+    <string name="edit_datepicker_dialog_add_time">"Añadir hora"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Editar hora"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Añadir zona horaria"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Editar zona horaria"</string>
     <string name="edit_task_started_add">"Elegir fecha / hora de inicio"</string>
     <string name="edit_task_due_add">"Elegir fecha / hora de vencimiento"</string>
     <string name="edit_task_completed_add">"Elegir fecha / hora de completado"</string>
@@ -192,6 +201,7 @@ Global Strings -->
     <string name="settings_list">"Ajustes para la lista de elementos"</string>
     <string name="settings_show_subtasks_in_list">"Mostrar subtareas en lista"</string>
     <string name="settings_show_attachments_in_list">"Mostrar adjuntos en lista"</string>
+    <string name="settings_show_progress_for_subtasks">Mostrar progreso para subtareas</string>
     <string name="settings_group_settings_for_subentries">"Ajustes para subtareas, notas secundarias y diarios secundarios"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Mostrar subtareas de diarios y notas en la Lista de tareas"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Mostrar subnotas de diarios y tareas en la Lista de notas"</string>
