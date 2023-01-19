@@ -415,6 +415,7 @@ Vielen Dank!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Bitte kaufe die Pro-Version, um die Bearbeitung von remote Collections zu aktivieren."</string>
     <string name="buypro_initial_dialog_message">"Hallo! jtx Board kommt in einer Standard- und einer Pro-Version. Bitte schaue in die \"Pro kaufen\" Sektion für weitere Informationen!
 Danke!"</string>
+    <string name="buypro_purchase_init_error_message">"Bitte überprüfen Sie Ihre Internetverbindung und probieren Sie es später noch einmal!"</string>
     <string name="menu_list_viewmode_list">"Listenansicht"</string>
     <string name="menu_list_viewmode_grid">"Rasteransicht"</string>
     <string name="settings_modules">"Aktive Module"</string>

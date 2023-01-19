@@ -414,6 +414,7 @@ Děkujeme vám!"</string>
     <string name="buypro_success_thankyou">"Děkujeme!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Pro možnost upravovat vzdálené sbírky si prosím zakupte balíček Pro."</string>
     <string name="buypro_initial_dialog_message">"Dobrý den! jtx Board se dodává ve standardní verzi a verzi Pro. Více informací o jtx Board Pro naleznete v sekci \"Zakoupit Pro\"! Děkujeme!"</string>
+    <string name="buypro_purchase_init_error_message">"Zkontrolujte své připojení k internetu nebo to zkuste znovu později!"</string>
     <string name="menu_list_viewmode_list">"Zobrazení seznamu"</string>
     <string name="menu_list_viewmode_grid">"Zobrazení mřížky"</string>
     <string name="settings_modules">"Aktivní moduly"</string>
