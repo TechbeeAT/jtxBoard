@@ -314,6 +314,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:$version_accompanist"
     implementation "com.google.accompanist:accompanist-pager-indicators:$version_accompanist"
     implementation "com.google.accompanist:accompanist-flowlayout:$version_accompanist"
+    implementation "com.google.accompanist:accompanist-navigation-animation:$version_accompanist"
 
     implementation "androidx.glance:glance-appwidget:1.0.0-alpha05"
 

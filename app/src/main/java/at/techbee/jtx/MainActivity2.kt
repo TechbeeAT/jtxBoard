@@ -12,6 +12,9 @@ import android.os.Bundle
 import android.view.Window
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalTextStyle
@@ -28,9 +31,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_OSE
 import at.techbee.jtx.database.Module
@@ -61,6 +61,9 @@ import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidgetReceiver
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
@@ -233,21 +236,24 @@ class MainActivity2 : AppCompatActivity() {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainNavHost(
     activity: Activity,
     globalStateHolder: GlobalStateHolder,
     settingsStateHolder: SettingsStateHolder
 ) {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
     var showOSEDonationDialog by remember { mutableStateOf(false) }
 
-    NavHost(
+    AnimatedNavHost(
         navController = navController,
         startDestination = NavigationDrawerDestination.BOARD.name
     ) {
-        composable(NavigationDrawerDestination.BOARD.name) {
+        composable(
+            route = NavigationDrawerDestination.BOARD.name
+        ) {
             ListScreenTabContainer(
                 navController = navController,
                 globalStateHolder = globalStateHolder,
@@ -256,7 +262,9 @@ fun MainNavHost(
         }
         composable(
             DetailDestination.Detail.route,
-            arguments = DetailDestination.Detail.args
+            arguments = DetailDestination.Detail.args,
+            enterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(700)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(700)) }
         ) { backStackEntry ->
 
             val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId) ?: return@composable
@@ -304,7 +312,11 @@ fun MainNavHost(
                 }
             )
         }
-        composable(NavigationDrawerDestination.COLLECTIONS.name) {
+        composable(
+            route = NavigationDrawerDestination.COLLECTIONS.name,
+            //enterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Up, animationSpec = tween(700)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(700)) }
+        ) {
             val collectionsViewModel: CollectionsViewModel = viewModel()
 
             CollectionsScreen(
@@ -313,7 +325,11 @@ fun MainNavHost(
                 globalStateHolder = globalStateHolder
             )
         }
-        composable(NavigationDrawerDestination.SYNC.name) {
+        composable(
+            route = NavigationDrawerDestination.SYNC.name,
+            //enterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Up, animationSpec = tween(700)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(700)) }
+        ) {
             val viewModel: SyncViewModel = viewModel()
             SyncScreen(
                 remoteCollectionsLive = viewModel.remoteCollections,
