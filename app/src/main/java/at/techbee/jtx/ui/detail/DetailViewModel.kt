@@ -605,5 +605,5 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         children.forEach { addChildrenOf(it.id, list) }
     }
     
-    enum class DetailChangeState { UNCHANGED, CHANGEUNSAVED, CHANGESAVING, CHANGESAVED }
+    enum class DetailChangeState { UNCHANGED, CHANGEUNSAVED, SAVINGREQUESTED, CHANGESAVING, CHANGESAVED }
 }

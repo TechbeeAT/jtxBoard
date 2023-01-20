@@ -286,8 +286,7 @@ fun MainNavHost(
                     if (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
                         JtxReviewManager(activity).showIfApplicable()
                     else if (BuildConfig.FLAVOR == BUILD_FLAVOR_OSE)
-                        showOSEDonationDialog =
-                            JtxReviewManager(activity).showIfApplicable() || BuildConfig.DEBUG
+                        showOSEDonationDialog = JtxReviewManager(activity).showIfApplicable()
                 },
                 onLastUsedCollectionChanged = { module, collectionId ->
                     val prefs: SharedPreferences = when (module) {

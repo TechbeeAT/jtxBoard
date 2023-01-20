@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.detail
 
 import android.media.MediaPlayer
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -58,7 +57,6 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
-import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
@@ -95,9 +93,7 @@ fun DetailScreenContent(
     markdownState: MutableState<MarkdownState>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
-    goBackRequested: MutableState<Boolean>,    // Workaround to also go Back from Top menu
     saveICalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
-    deleteICalObject: () -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onMoveToNewCollection: (icalObject: ICalObject, newCollection: ICalCollection) -> Unit,
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
@@ -190,17 +186,14 @@ fun DetailScreenContent(
     }
 
 
-    val categories =
-        rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
+    val categories = rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
     val resources = rememberSaveable { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
     val attendees = rememberSaveable { mutableStateOf(iCalEntity.value?.attendees ?: emptyList()) }
     val comments = rememberSaveable { mutableStateOf(iCalEntity.value?.comments ?: emptyList()) }
-    val attachments =
-        rememberSaveable { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
+    val attachments = rememberSaveable { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
     val alarms = rememberSaveable { mutableStateOf(iCalEntity.value?.alarms ?: emptyList()) }
 
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
-    var showUnsavedChangesDialog by rememberSaveable { mutableStateOf(false) }
     var showAllOptions by rememberSaveable { mutableStateOf(false) }
 
 
@@ -233,16 +226,6 @@ fun DetailScreenContent(
                 alarms.value
             )
         }
-    }
-
-    fun processGoBack() {
-        if(isEditMode.value && icalObject.value.summary.isNullOrEmpty() && icalObject.value.description.isNullOrEmpty())
-            deleteICalObject()
-        else if(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED)
-            showUnsavedChangesDialog = true
-        else
-            goBack()
-        goBackRequested.value = false
     }
 
     /**
@@ -284,35 +267,6 @@ fun DetailScreenContent(
             alarms.value = alarms.value.plus(autoAlarm)
     }
 
-    if(goBackRequested.value)
-        processGoBack()
-
-    BackHandler {
-        processGoBack()
-    }
-
-    if(showUnsavedChangesDialog) {
-        UnsavedChangesDialog(
-            onSave = {
-                showUnsavedChangesDialog = false
-                saveICalObject(
-                    icalObject.value,
-                    categories.value,
-                    comments.value,
-                    attendees.value,
-                    resources.value,
-                    attachments.value,
-                    alarms.value
-                )
-                goBack()
-            },
-            onDiscard = {
-                showUnsavedChangesDialog = false
-                goBack()
-            }
-        )
-    }
-
     if (showColorPicker) {
         ColorPickerDialog(
             initialColor = color,
@@ -325,6 +279,18 @@ fun DetailScreenContent(
             onDismiss = {
                 showColorPicker = false
             }
+        )
+    }
+
+    if(changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED) {
+        saveICalObject(
+            icalObject.value,
+            categories.value,
+            comments.value,
+            attendees.value,
+            resources.value,
+            attachments.value,
+            alarms.value
         )
     }
 
@@ -886,14 +852,12 @@ fun DetailScreenContent_JOURNAL() {
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
-            goBackRequested = remember { mutableStateOf(false) },
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             saveICalObject = { _, _, _, _, _, _, _ -> },
-            deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
@@ -926,7 +890,6 @@ fun DetailScreenContent_TODO_editInitially() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = false,
             player = null,
-            goBackRequested = remember { mutableStateOf(false) },
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
@@ -939,7 +902,6 @@ fun DetailScreenContent_TODO_editInitially() {
             linkProgressToSubtasks = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
-            deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
@@ -974,7 +936,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = true,
             player = null,
-            goBackRequested = remember { mutableStateOf(false) },
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
@@ -987,7 +948,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             linkProgressToSubtasks = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
-            deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
@@ -1014,7 +974,6 @@ fun DetailScreenContent_failedLoading() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = true,
             player = null,
-            goBackRequested = remember { mutableStateOf(false) },
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
@@ -1027,7 +986,6 @@ fun DetailScreenContent_failedLoading() {
             linkProgressToSubtasks = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
-            deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },

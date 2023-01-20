@@ -15,6 +15,7 @@ import android.content.Context.CLIPBOARD_SERVICE
 import android.content.ContextWrapper
 import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
@@ -44,6 +45,7 @@ import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
+import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 
 
@@ -69,9 +71,9 @@ fun DetailsScreen(
     val detailsBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
-    val goBackRequestedByTopBar = remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showRevertDialog by remember { mutableStateOf(false) }
+    var showUnsavedChangesDialog by rememberSaveable { mutableStateOf(false) }
     var navigateUp by remember { mutableStateOf(false) }
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
 
@@ -90,13 +92,43 @@ fun DetailsScreen(
         detailViewModel.detailSettings.load(it, context)
     }
 
-    if (navigateUp && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.CHANGESAVING) {
+
+    BackHandler {
+        navigateUp = true
+    }
+
+    if (navigateUp) {
         if (returnToLauncher) {
             context.getActivity()?.finish()
-        } else {
-            onRequestReview()
             navigateUp = false
-            navController.navigateUp()
+        }
+
+        when(detailViewModel.changeState.value) {
+            DetailViewModel.DetailChangeState.UNCHANGED -> {
+                if (isEditMode.value
+                    && detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED
+                    && icalEntity.value?.property?.sequence == 0L
+                    && icalEntity.value?.property?.summary == null
+                    && icalEntity.value?.property?.description == null
+                ) {
+                    showDeleteDialog = true
+                } else {
+                    navController.navigateUp()
+                    navigateUp = false
+                }
+            }
+            DetailViewModel.DetailChangeState.CHANGEUNSAVED -> { showUnsavedChangesDialog = true }
+            DetailViewModel.DetailChangeState.SAVINGREQUESTED -> { /* do nothing, wait until saved */ }
+            DetailViewModel.DetailChangeState.CHANGESAVING -> { /* do nothing, wait until saved */ }
+            DetailViewModel.DetailChangeState.CHANGESAVED -> {
+                showUnsavedChangesDialog = false
+                if(isEditMode.value)
+                    isEditMode.value = false
+                else
+                    navController.navigateUp()
+                onRequestReview()
+                navigateUp = false
+            }
         }
     }
 
@@ -123,17 +155,35 @@ fun DetailsScreen(
     }
 
     if (showDeleteDialog) {
-        DeleteEntryDialog(
-            icalObject = icalEntity.value?.property!!,
-            onConfirm = { detailViewModel.delete() },
-            onDismiss = { showDeleteDialog = false }
-        )
+        icalEntity.value?.property?.let {
+            DeleteEntryDialog(
+                icalObject = it,
+                onConfirm = {
+                    showDeleteDialog = false
+                    detailViewModel.delete()
+                },
+                onDismiss = { showDeleteDialog = false }
+            )
+        }
     }
 
     if (showRevertDialog) {
         RevertChangesDialog(
             onConfirm = { detailViewModel.revert() },
             onDismiss = { showRevertDialog = false }
+        )
+    }
+
+    if(showUnsavedChangesDialog) {
+        UnsavedChangesDialog(
+            onSave = {
+                showUnsavedChangesDialog = false
+                detailViewModel.changeState.value = DetailViewModel.DetailChangeState.SAVINGREQUESTED
+            },
+            onDiscard = {
+                showUnsavedChangesDialog = false
+                detailViewModel.changeState.value = DetailViewModel.DetailChangeState.UNCHANGED
+            }
         )
     }
 
@@ -147,7 +197,7 @@ fun DetailsScreen(
             DetailsTopAppBar(
                 readonly = icalEntity.value?.ICalCollection?.readonly ?: true,
                 goBack = {
-                    goBackRequestedByTopBar.value = true
+                    navigateUp = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 detailTopAppBarMode = detailViewModel.settingsStateHolder.detailTopAppBarMode.value,
                 onAddSubnote = { subnoteText -> detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null) },
@@ -293,7 +343,6 @@ fun DetailsScreen(
                 showProgressForSubTasks = detailViewModel.settingsStateHolder.settingShowProgressForSubTasks.value,
                 keepStatusProgressCompletedInSync = detailViewModel.settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 linkProgressToSubtasks = detailViewModel.settingsStateHolder.settingLinkProgressToSubtasks.value,
-                goBackRequested = goBackRequestedByTopBar,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                     if (changedICalObject.isRecurLinkedInstance)
@@ -310,7 +359,6 @@ fun DetailsScreen(
                     )
                     onLastUsedCollectionChanged(icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
                 },
-                deleteICalObject = { showDeleteDialog = true },
                 onProgressChanged = { itemId, newPercent, _ ->
                     detailViewModel.updateProgress(itemId, newPercent)
                 },
