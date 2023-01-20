@@ -95,6 +95,9 @@ fun DetailsScreen(
     if (navigateUp && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.CHANGESAVING) {
         if (returnToLauncher) {
             context.getActivity()?.finish()
+        } else if(isEditMode.value && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.UNCHANGED) {
+            isEditMode.value = false
+            navigateUp = false
         } else {
             onRequestReview()
             navigateUp = false
