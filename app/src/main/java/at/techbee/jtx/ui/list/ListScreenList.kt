@@ -149,7 +149,7 @@ fun ListScreenList(
                         iCalObject,
                         currentSubtasks ?: emptyList(),
                         currentSubnotes ?: emptyList(),
-                        selected = selectedEntries.contains(iCalObject.id),
+                        selected = selectedEntries,
                         attachments = currentAttachments ?: emptyList(),
                         isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
                         isSubnotesExpandedDefault = isSubnotesExpandedDefault.value,

@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.reusable.cards
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import at.techbee.jtx.database.views.ICal4List
 @Composable
 fun SubtaskCardCompact(
     subtask: ICal4List,
+    selected: Boolean,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
@@ -32,7 +34,9 @@ fun SubtaskCardCompact(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .background(if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface)
     ) {
 
         var subtaskText = subtask.summary?:subtask.description?:""
@@ -71,6 +75,7 @@ fun SubtaskCardCompactPreview() {
             this.isReadOnly = false
             this.numSubtasks = 0
         },
+            selected = false,
             onProgressChanged = { _, _, _ -> }
         )
     }
@@ -87,6 +92,7 @@ fun SubtaskCardCompactPreview_readonly() {
             this.isReadOnly = true
             this.numSubtasks = 7
         },
+            selected = true,
             onProgressChanged = { _, _, _ -> }
         )
     }

@@ -39,6 +39,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
+import at.techbee.jtx.ui.reusable.dialogs.EditSubtaskDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
@@ -79,18 +80,34 @@ fun DetailsCardSubtasks(
                         .fillMaxWidth()
                 ) {
                     subtasks.forEach { subtask ->
+
+                        var showEditSubtaskDialog by remember { mutableStateOf(false) }
+
+                        if (showEditSubtaskDialog) {
+                            EditSubtaskDialog(
+                                text = subtask.summary,
+                                onConfirm = { newText -> onSubtaskUpdated(subtask.id, newText) },
+                                onDismiss = { showEditSubtaskDialog = false }
+                            )
+                        }
+
                         SubtaskCard(
                             subtask = subtask,
+                            selected = false,
                             isEditMode = isEditMode.value,
                             showProgress = showSlider,
                             sliderIncrement = sliderIncrement,
                             onProgressChanged = onProgressChanged,
                             onDeleteClicked = { icalObjectId ->  onSubtaskDeleted(icalObjectId) },
-                            onSubtaskUpdated = { newText -> onSubtaskUpdated(subtask.id, newText) },
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
-                                onClick = { if(!isEditMode.value) goToDetail(subtask.id, false, subtasks.map { it.id }) },
+                                onClick = {
+                                    if(!isEditMode.value)
+                                        goToDetail(subtask.id, false, subtasks.map { it.id })
+                                    else
+                                        showEditSubtaskDialog = true
+                                          },
                                 onLongClick = {
                                     if (!isEditMode.value &&!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                         goToDetail(subtask.id, true, subtasks.map { it.id })
