@@ -48,8 +48,30 @@ Global Strings -->
     <string name="navigation_drawer_about">"درباره / مجوز"</string>
     <string name="navigation_drawer_subtitle">"وقایع روزانه، یادداشت ها و &amp; کارها"</string>
     <string name="navigation_drawer_beta_feedback">"بازخورد آزمایشی"</string>
+    <string name="navigation_drawer_settings">"تنظیمات"</string>
+    <string name="navigation_drawer_news_updates">"اخبار &amp; بروزرسانی ها"</string>
+    <string name="navigation_drawer_external_links">"پیوندهای خارجی"</string>
+    <string name="navigation_drawer_website">"وب سایت"</string>
+    <string name="navigation_drawer_support">"پشتیبانی"</string>
+    <string name="navigation_drawer_donate">"حمایت مالی"</string>
+    <string name="navigation_drawer_privacy_policy">"سیاست حریم خصوصی"</string>
     <!-- fragment_ical_list -->
+    <string name="list_start_today">"برنانه ریزی شده برای آغاز در امروز"</string>
+    <string name="list_tabitem_notes">"یادداشت ها"</string>
+    <string name="list_fab_add_contentdesc">"افزودن مورد جدید"</string>
+    <string name="list_progress">"پیش رفت"</string>
+    <string name="list_expand">"گشودن"</string>
+    <string name="list_dialog_contribution_title">"یادداشت بر تبلیغات"</string>
+    <string name="list_dialog_contribution_more_information">"یافتن موارد بیشتر"</string>
+    <string name="list_num_attachments_contentdesc">"تعداد پیوست ها"</string>
+    <string name="list_num_comments_contentdesc">"تعداد نظرات"</string>
+    <string name="list_dialog_delete_selected_title">ورودی های انتخابی حذف شوند؟</string>
+    <string name="list_quickadd_dialog_summary_description_hint">"خلاصه/توضیحات"</string>
+    <string name="list_item_upload_pending">"در صف بارگذاری"</string>
     <!-- fragment_ical_view -->
+    <string name="view_fragment_audio_permission">"مجوز برنامه"</string>
+    <string name="view_fragment_audio_dialog_add_audio_note">"افزودن یادداشت صوتی"</string>
+    <string name="view_comment_playbutton_content_desc">"پخش نظر صوتی"</string>
     <string name="view_feedback_linked_notes">"بازخورد / یادداشت پیوندخورده"</string>
     <string name="view_add_note">"افزودن یادداشت"</string>
     <string name="view_add_audio_note">"افزودن صدا"</string>
@@ -84,20 +106,120 @@ Global Strings -->
     <string name="edit_recur_on_the_x_day_of_month">"در"</string>
     <string name="edit_recur_x_day_of_the_month">"روز از ماه"</string>
     <string name="edit_recur_x_times">"بار"</string>
+    <string name="edit_dialog_sure_to_delete_title">"\"%1$s\" حذف شود؟"</string>
+    <string name="edit_dialog_sure_to_discard_title">"این ورودی ول شود؟"</string>
+    <string name="edit_dialog_sure_to_delete_message">"مطمئنی می خوای \"%1$s\" رو حذف کنی؟"</string>
+    <string name="edit_dialog_sure_to_discard_message">"مطمئنی می خوای این ورودی رو ول کنی؟ این ورودی ذخیره نمی شه."</string>
+    <string name="edit_fragment_app_permission">"مجوز برنامه"</string>
     <!-- fragment_about -->
+    <string name="about_tabitem_translations">"ترجمه‌ها"</string>
+    <string name="about_tabitem_libraries">"کتابخانه ها"</string>
+    <string name="about_tabitem_thanks">"سپاس ویژه"</string>
+    <string name="about_app_version">"نسخه: %1$s (%2$d)"</string>
+    <string name="about_app_terms">"شرایط &amp; ضوابط"</string>
+    <string name="about_thanks_ffg">"سپاس ویژه به FFG برای اعتماد و حمایت مالی شان برای تحقق این پروژه."</string>
     <!-- menus -->
+    <string name="menu_list_gotodate">"برو به تاریخ"</string>
+    <string name="menu_list_quick_note">"یادداشت فوری"</string>
+    <string name="menu_list_syncnow">"اکنون همگام‌سازی شود"</string>
+    <string name="menu_view_share_ics">"اشتراک گذاری با پسوند ics"</string>
+    <string name="menu_view_copy_as_note">"رونوشت به عنوان یادداشت"</string>
+    <string name="menu_view_copy_item">"ایجاد رونوشت"</string>
     <!-- Notification channel for Reminders -->
     <!-- Shortcuts -->
+    <string name="shortcut_addNote_longLabel">"افزودن یادداشت"</string>
     <!-- Settings fragment -->
+    <string name="settings_enforce_dark_theme">"اجبار نمایه تیره"</string>
+    <string name="settings_show_subtasks_in_list">"نمایش کارهای فارعی در فهرست"</string>
+    <string name="settings_show_attachments_in_list">"نمایش پیوست ها در فهرست"</string>
+    <string name="settings_show_progress_for_subtasks">نمایش پیش رفت برای کارهای فرعی</string>
+    <string name="settings_show_progress_for_maintasks">نمایش پیش رفت برای کارهای قبلی</string>
+    <string name="settings_app">"تنظیمات برنامه"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_davx5_heading">"همگام سازی با DAVx⁵ (آزمایشی)"</string>
     <!-- Donate fragment -->
     <!-- sync content provider -->
+    <string name="list_welcome_entry_note_summary">"تبریک، این اولین ورودی یادداشت شماست :-)"</string>
+    <string name="list_welcome_category">"
+#قدم_اول"</string>
+    <string name="save_and_edit">"ذخیره &amp; ویرایش"</string>
+    <string name="list_quickadd_dialog_sr_endicon_contentdesc">"استفاده از گفتار به متن"</string>
+    <string name="list_quickadd_dialog_sr_start_listening">"موتور گفتار به متن در حال گوش دادن است."</string>
+    <string name="list_quickadd_dialog_sr_stop_listening">"موتور گرفتار به متن گوش کردن را متوقف کرده."</string>
+    <string name="list_quickadd_dialog_sr_error">"متاسفیم، موتور گفتار به متن با خطایی مواجه شده است. (%1$s)"</string>
     <!-- Permissions -->
+    <string name="permission_read_contacts_granted">"مجوز خواندن مخاطبین داده شد"</string>
+    <string name="permission_read_contacts_denied">"مجوز خواندن مخاطبین رد شد"</string>
+    <string name="permission_record_audio_granted">"مجوز ضبط صدا داده شد"</string>
+    <string name="permission_record_audio_denied">"مجوز ضبط صدا رد شد"</string>
+    <string name="add">"افزودن"</string>
+    <string name="edit">"ویرایش"</string>
+    <string name="reset">"بازنشانی"</string>
+    <string name="apply">"اعمال"</string>
+    <string name="not_available_abbreviation">"n/a"</string>
+    <string name="collection">"مجموعه"</string>
+    <string name="toolbar_text_collections">"مجموعه ها"</string>
+    <string name="navigation_drawer_collections">"مجموعه ها"</string>
     <!-- alarms -->
+    <string name="alarms_onstart">"در هنگام شروع"</string>
+    <string name="alarms_custom">"سفارشی"</string>
+    <string name="alarms_before_start">"قبل از شروع"</string>
+    <string name="alarms_after_start">"پس از شروع"</string>
+    <string name="alarms_minutes">"دقیقه"</string>
+    <string name="alarms_hours">"ساعت"</string>
+    <string name="alarms_days">"روز"</string>
     <!-- fragment_collections -->
+    <string name="collections_local_collections">"مجموعه های محلی"</string>
     <!-- Fuzzy -->
     <!-- Fuzzy -->
+    <string name="collections_notes_num">"یادداشت ها: %1$s"</string>
     <!-- Fuzzy -->
+    <string name="collections_local_nolocalcollections">"مجموعه ای محلی یافت نشد"</string>
+    <string name="collections_collection_menu">"منوی مجموعه"</string>
+    <string name="collections_dialog_add_local_collection_title">"افزودن مجموعه محلی"</string>
+    <string name="collections_dialog_edit_local_collection_title">"ویرایش مجموعه محلی"</string>
+    <string name="collections_dialog_delete_local_title">"\"%1$s\" حذف شود؟"</string>
+    <string name="menu_collections_add_local">"افزودن مجموعه محلی"</string>
+    <string name="navigation_drawer_website_news">"اخبار &amp; یادداشت های انتشار"</string>
+    <string name="organizer">"مؤسس"</string>
+    <string name="contact">"تماس"</string>
+    <string name="relatedto">"مرتبط با"</string>
+    <string name="comments">"نظرات"</string>
+    <string name="attachments">"پیوست‌ها"</string>
+    <string name="alarms">"هشدارها"</string>
+    <string name="recurrence_exceptions">"استثناءها"</string>
+    <string name="recurrence_additions">"اضافات"</string>
+    <string name="summary">"خلاصه"</string>
+    <string name="description">"توضیحات"</string>
+    <string name="search">"جستجو"</string>
+    <string name="search_notes">جستجوی یادداشت‌ها</string>
+    <string name="filter">"صافی"</string>
+    <string name="sync_now">"اکنون همگام‌سازی شود"</string>
+    <string name="completed">"تکمیل‌شده"</string>
+    <string name="started">"آغاز (شده)"</string>
+    <string name="add_time_switch">"افزودن زمان"</string>
+    <string name="add_timezone_switch">"افزودن منطقه زمانی"</string>
+    <string name="progress">"پیش رفت"</string>
+    <string name="categories">"دسته‌ها"</string>
+    <string name="subtasks">"کارهای فرعی"</string>
+    <string name="priority_7_low">"٧ - کم"</string>
+    <string name="priority_8_lower">"٨ - کم تر"</string>
+    <string name="priority_9_lowest">"٩ - کم‌ترین"</string>
+    <string name="view_share_repeats">"این ورودی تکرار می شود هر"</string>
+    <string name="collections_dialog_move_title">"تمام ورودی ها از \"%1$s\" انتقال یابد به"</string>
+    <string name="menu_collections_popup_move_entries">"انتقال ورودی ها"</string>
+    <string name="adinfo_adfree_success_thankyou">"متشکریم!"</string>
+    <string name="adinfo_adfree_purchase_date">"خریداری شده در %1$s"</string>
+    <string name="adinfo_adfree_order_id">"شناسه سفارش: %1$s"</string>
+    <string name="list_no_dates_set">"تاریخی تنظفم نشد"</string>
+    <string name="filter_order_by">"ترتیب بر اساس"</string>
+    <string name="filter_asc">"صعودی"</string>
+    <string name="filter_desc">"نزولی"</string>
+    <string name="filter_created">"ایجاد شده"</string>
+    <string name="filter_last_modified">"آخرین اصلاح"</string>
+    <string name="filter_no_category">بدون دسته</string>
+    <string name="filter_subtasks_order_by">ترتیب کارهای فرعی بر اساس</string>
+    <string name="filter_subnotes_order_by">ترتیب پیوندها بر اساس</string>
     <!-- Buy Pro fragment -->
     <!-- alarms -->
     <!-- fragment_ical_list -->
