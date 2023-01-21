@@ -14,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.detail.DetailTopAppBarMode
-import at.techbee.jtx.util.getPackageInfoCompat
 
 class SettingsStateHolder(val context: Context) {
 
@@ -78,6 +77,7 @@ class SettingsStateHolder(val context: Context) {
             field = newValue
         }
 
+    /*
     var showJtx20releaseinfo = mutableStateOf(prefs.getBoolean("jtx_2.0_beta_info_shown", context.packageManager.getPackageInfoCompat(context.packageName, 0).firstInstallTime < 1665260058251))
         set(newValue) {
             prefs.edit().putBoolean("jtx_2.0_beta_info_shown", newValue.value).apply()
@@ -89,6 +89,7 @@ class SettingsStateHolder(val context: Context) {
             prefs.edit().putBoolean("showV20009releaseInfo", newValue.value).apply()
             field = newValue
         }
+     */
 }
 
 

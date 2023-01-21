@@ -222,8 +222,10 @@ dependencies {
 
     // Android KTX
     implementation "androidx.core:core-ktx:$version_core"
-
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+
+    // Android Annotations
+    implementation "androidx.annotation:annotation:1.5.0"
 
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$version_room"
