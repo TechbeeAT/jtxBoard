@@ -506,10 +506,6 @@ DELETEs by Object
     suspend fun updateCollection(collection: ICalCollection)
 
     @Transaction
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_PERCENT = :progress, $COLUMN_STATUS = :status, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
-    suspend fun updateProgress(id: Long, progress: Int, status: String, lastModified: Long)
-
-    @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = 1, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:id)")
     suspend fun updateToDeleted(id: Long, lastModified: Long)
 
