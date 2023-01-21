@@ -460,7 +460,7 @@ fun DetailScreenContent(
                                         && it.text.length > description.text.length  // excludes backspace!
 
                             val before = it.getTextBeforeSelection(Int.MAX_VALUE)
-                            val after = if(it.selection.start < it.annotatedString.lastIndex) it.annotatedString.subSequence(it.selection.start, it.annotatedString.lastIndex) else AnnotatedString("")
+                            val after = if(it.selection.start < it.annotatedString.lastIndex) it.annotatedString.subSequence(it.selection.start, it.annotatedString.lastIndex+1) else AnnotatedString("")
                             val lines =  before.split(System.lineSeparator())
                             val previous = if(lines.lastIndex > 1) lines[lines.lastIndex-1] else before
                             val nextLineStartWith = when {
