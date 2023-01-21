@@ -56,7 +56,7 @@ fun ListCard(
     iCalObject: ICal4List,
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
-    selected: Boolean,
+    selected: List<Long>,
     attachments: List<Attachment>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
@@ -92,7 +92,7 @@ fun ListCard(
 
     ElevatedCard(
         colors = CardDefaults.cardColors(
-            containerColor = if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+            containerColor = if(selected.contains(iCalObject.id)) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
         ),
         modifier = modifier
     ) {
@@ -419,10 +419,10 @@ fun ListCard(
 
                             SubtaskCard(
                                 subtask = subtask,
+                                selected = selected.contains(subtask.id),
                                 showProgress = settingShowProgressSubtasks,
                                 onProgressChanged = onProgressChanged,
                                 onDeleteClicked = { },   // no edit possible here
-                                onSubtaskUpdated = { },  // no edit possible here
                                 sliderIncrement = progressIncrement,
                                 modifier = Modifier
                                     .padding(start = 8.dp, end = 8.dp)
@@ -445,6 +445,7 @@ fun ListCard(
 
                             SubnoteCard(
                                 subnote = subnote,
+                                selected = selected.contains(subnote.id),
                                 player = player,
                                 modifier = Modifier
                                     .padding(start = 8.dp, end = 8.dp)
@@ -458,7 +459,6 @@ fun ListCard(
                                     ),
                                 isEditMode = false, //no editing here
                                 onDeleteClicked = { }, //no editing here
-                                onSubnoteUpdated = { } //no editing here
                             )
                         }
                     }
@@ -490,7 +490,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            selected = false,
+            selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
             progressUpdateDisabled = false,
@@ -526,7 +526,7 @@ fun ICalObjectListCardPreview_NOTE() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            selected = false,
+            selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
             progressUpdateDisabled = false,
@@ -567,7 +567,7 @@ fun ICalObjectListCardPreview_TODO() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            selected = true,
+            selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
@@ -610,7 +610,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            selected = false,
+            selected = listOf(),
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
@@ -654,7 +654,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            selected = false,
+            selected = listOf(),
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
@@ -699,7 +699,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             icalobject,
             emptyList(),
             emptyList(),
-            selected = false,
+            selected = listOf(),
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             attachments = listOf(),

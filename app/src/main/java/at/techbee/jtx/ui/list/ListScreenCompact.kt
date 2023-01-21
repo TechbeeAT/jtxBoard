@@ -126,8 +126,8 @@ fun ListScreenCompact(
                     ListCardCompact(
                         iCalObject,
                         subtasks = currentSubtasks ?: emptyList(),
-                        selected = selectedEntries.contains(iCalObject.id),
                         progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks?.isNotEmpty() == true,
+                        selected = selectedEntries,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 4.dp, bottom = 4.dp)

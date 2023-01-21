@@ -46,8 +46,8 @@ import at.techbee.jtx.util.DateTimeUtils
 fun ListCardCompact(
     iCalObject: ICal4List,
     subtasks: List<ICal4List>,
-    selected: Boolean,
     progressUpdateDisabled: Boolean,
+    selected: List<Long>,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
@@ -77,7 +77,7 @@ fun ListCardCompact(
     Row(
         modifier = modifier
             .height(IntrinsicSize.Min)
-            .background(if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface)
+            .background(if(selected.contains(iCalObject.id)) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface)
     ) {
 
         Box(
@@ -241,6 +241,7 @@ fun ListCardCompact(
 
                     SubtaskCardCompact(
                         subtask = subtask,
+                        selected = selected.contains(subtask.id),
                         onProgressChanged = onProgressChanged,
                         modifier = Modifier
                             .padding(start = 8.dp, end = 8.dp)
@@ -278,8 +279,8 @@ fun ListCardCompact_JOURNAL() {
         ListCardCompact(
             icalobject,
             emptyList(),
-            selected = false,
             progressUpdateDisabled = true,
+            selected = emptyList(),
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -301,8 +302,8 @@ fun ListCardCompact_JOURNAL2() {
         ListCardCompact(
             icalobject,
             emptyList(),
-            selected = true,
             progressUpdateDisabled = true,
+            selected = emptyList(),
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -325,8 +326,8 @@ fun ListCardCompact_NOTE() {
         ListCardCompact(
             icalobject,
             emptyList(),
-            selected = false,
             progressUpdateDisabled = true,
+            selected = emptyList(),
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -353,8 +354,8 @@ fun ListCardCompact_TODO() {
         ListCardCompact(
             icalobject,
             subtasks = listOf(icalobject, icalobject),
-            selected = false,
             progressUpdateDisabled = true,
+            selected = emptyList(),
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -398,8 +399,8 @@ fun ListCardCompact_TODO_only_summary() {
         ListCardCompact(
             icalobject,
             subtasks = listOf(icalobject, icalobject),
-            selected = false,
             progressUpdateDisabled = true,
+            selected = emptyList(),
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
