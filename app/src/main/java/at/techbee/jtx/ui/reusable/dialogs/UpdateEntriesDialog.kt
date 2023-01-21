@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -41,7 +42,7 @@ import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 
 
-enum class UpdateEntriesDialogMode(val stringResource: Int) {
+enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     CATEGORIES(R.string.categories),
     RESOURCES(R.string.resources),
     STATUS(R.string.status),

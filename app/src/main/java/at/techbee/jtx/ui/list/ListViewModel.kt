@@ -13,6 +13,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
@@ -464,7 +465,7 @@ open class ListViewModelTodos(application: Application) : ListViewModel(applicat
 
 
 
-enum class OrderBy(val stringResource: Int, val queryAppendix: String) {
+enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String) {
     START_VTODO(R.string.started, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
     START_VJOURNAL(R.string.date, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
     DUE(R.string.due, "$COLUMN_DUE IS NULL, $COLUMN_DUE "),
@@ -487,12 +488,12 @@ enum class OrderBy(val stringResource: Int, val queryAppendix: String) {
     }
 }
 
-enum class SortOrder(val stringResource: Int, val queryAppendix: String) {
+enum class SortOrder(@StringRes val stringResource: Int, val queryAppendix: String) {
     ASC(R.string.filter_asc, "ASC"),
     DESC(R.string.filter_desc, "DESC")
 }
 
-enum class GroupBy(val stringResource: Int) {
+enum class GroupBy(@StringRes val stringResource: Int) {
     PRIORITY(R.string.priority),
     STATUS(R.string.status),
     CLASSIFICATION(R.string.classification),
@@ -523,7 +524,7 @@ enum class GroupBy(val stringResource: Int) {
     }
 }
 
-enum class ViewMode(val stringResource: Int) {
+enum class ViewMode(@StringRes val stringResource: Int) {
     LIST(R.string.menu_list_viewmode_list),
     GRID(R.string.menu_list_viewmode_grid),
     COMPACT(R.string.menu_list_viewmode_compact),

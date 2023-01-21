@@ -15,6 +15,7 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
 import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.compose.ui.graphics.Color
 import androidx.core.util.PatternsCompat
@@ -1422,7 +1423,7 @@ data class ICalObject(
  */
 @Parcelize
 @Deprecated("Use Status instead")
-enum class StatusJournal(val stringResource: Int) : Parcelable {
+enum class StatusJournal(@StringRes val stringResource: Int) : Parcelable {
 
     DRAFT(R.string.journal_status_draft),
     FINAL(R.string.journal_status_final),
@@ -1435,7 +1436,7 @@ enum class StatusJournal(val stringResource: Int) : Parcelable {
  */
 @Deprecated("Use Status instead")
 @Parcelize
-enum class StatusTodo(val stringResource: Int) : Parcelable {
+enum class StatusTodo(@StringRes val stringResource: Int) : Parcelable {
     `NEEDS-ACTION`(R.string.todo_status_needsaction),
     COMPLETED(R.string.todo_status_completed),
     `IN-PROCESS`(R.string.todo_status_inprocess),
@@ -1449,7 +1450,7 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
  * @param [stringResource] is a reference to the String Resource within jtx Board
  */
 @Parcelize
-enum class Status(val status: String?, val stringResource: Int) : Parcelable {
+enum class Status(val status: String?, @StringRes val stringResource: Int) : Parcelable {
 
     NO_STATUS(null, R.string.status_no_status),
 
@@ -1494,7 +1495,7 @@ enum class Status(val status: String?, val stringResource: Int) : Parcelable {
  * @param [stringResource] is a reference to the String Resource within JTX
  */
 @Parcelize
-enum class Classification(val classification: String?, val stringResource: Int) : Parcelable {
+enum class Classification(val classification: String?, @StringRes val stringResource: Int) : Parcelable {
 
     NO_CLASSIFICATION(null, R.string.classification_no_classification),
     PUBLIC("PUBLIC", R.string.classification_public),

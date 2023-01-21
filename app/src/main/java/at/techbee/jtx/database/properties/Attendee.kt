@@ -11,6 +11,7 @@ package at.techbee.jtx.database.properties
 import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CoPresent
 import androidx.compose.material.icons.filled.Info
@@ -255,7 +256,7 @@ enum class Cutype  {
  * @param [icon] is a reference to the Drawable Resource within JTX
 
  */
-enum class Role (val stringResource: Int, val icon: ImageVector) {
+enum class Role (@StringRes val stringResource: Int, val icon: ImageVector) {
         CHAIR (R.string.attendee_role_chair, Icons.Default.CoPresent),            //Indicates chair of the calendar entity
         `REQ-PARTICIPANT`(R.string.attendee_role_required_participant, Icons.Default.Person),  //Indicates a participant whose participation is required
         `OPT-PARTICIPANT`(R.string.attendee_role_optional_participant, Icons.Outlined.Person),  //Indicates a participant whose participation is optional
