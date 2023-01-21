@@ -39,6 +39,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioNoteDialog
+import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
@@ -88,16 +89,31 @@ fun DetailsCardSubnotes(
                         .fillMaxWidth()
                 ) {
                     subnotes.forEach { subnote ->
+
+                        var showEditSubnoteDialog by remember { mutableStateOf(false) }
+
+                        if (showEditSubnoteDialog) {
+                            EditSubnoteDialog(
+                                text = subnote.summary,
+                                onConfirm = { newText -> onSubnoteUpdated(subnote.id, newText) },
+                                onDismiss = { showEditSubnoteDialog = false }
+                            )
+                        }
+
                         SubnoteCard(
                             subnote = subnote,
+                            selected = false,
                             isEditMode = isEditMode.value,
                             onDeleteClicked = { icalObjectId ->  onSubnoteDeleted(icalObjectId) },
-                            onSubnoteUpdated = { newText -> onSubnoteUpdated(subnote.id, newText) },
                             player = player,
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
-                                    onClick = { if(!isEditMode.value) goToDetail(subnote.id, false, subnotes.map { it.id }) },
+                                    onClick = {
+                                        if(!isEditMode.value)
+                                            goToDetail(subnote.id, false, subnotes.map { it.id })
+                                        else showEditSubnoteDialog = true
+                                              },
                                     onLongClick = {
                                         if (!isEditMode.value &&!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                             goToDetail(subnote.id, true, subnotes.map { it.id })

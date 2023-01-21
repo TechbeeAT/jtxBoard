@@ -161,7 +161,7 @@ fun DetailsCardLocation(
                 )
             }
 
-            AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode) {
+            AnimatedVisibility(geoLat != null && geoLong != null) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -169,8 +169,9 @@ fun DetailsCardLocation(
                 ) {
                     Text(ICalObject.getLatLongString(geoLat, geoLong) ?: "")
 
+                    AnimatedVisibility(!isEditMode) {
                         IconButton(onClick = {
-                            val geoUri = if(location.isNotEmpty())
+                            val geoUri = if (location.isNotEmpty())
                                 Uri.parse("geo:0,0?q=$geoLat,$geoLong(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
                             else
                                 Uri.parse("geo:$geoLat,$geoLong")
@@ -186,7 +187,16 @@ fun DetailsCardLocation(
                         }) {
                             Icon(Icons.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
                         }
-
+                    }
+                    AnimatedVisibility(isEditMode) {
+                        IconButton(onClick = {
+                            geoLat = null
+                            geoLong = null
+                            onLocationUpdated(location, null, null)
+                        }) {
+                            Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
+                        }
+                    }
                 }
             }
         }

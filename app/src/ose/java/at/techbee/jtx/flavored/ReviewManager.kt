@@ -19,7 +19,6 @@ import java.time.ZonedDateTime
 class JtxReviewManager(val activity: Activity) : ReviewManagerDefinition {
 
     private val daysToFirstDialog = if(BuildConfig.DEBUG) 1L else 30L
-    //private val daysToNextDialog = if(BuildConfig.DEBUG) 1L else 90L
 
     override var nextRequestOn: Long
         get() = PreferenceManager.getDefaultSharedPreferences(activity).getLong(PREFS_NEXT_REQUEST, 0L)

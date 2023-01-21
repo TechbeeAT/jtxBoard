@@ -46,9 +46,7 @@ fun MapComposable(
 
     val context = LocalContext.current
     var location by remember { mutableStateOf(initialLocation ?: "") }
-    var geoLat by remember { mutableStateOf(initialGeoLat) }
-    var geoLong by remember { mutableStateOf(initialGeoLong) }
-
+    val marker = rememberMarkerState(null, LatLng(initialGeoLat?:0.0, initialGeoLong?:0.0))
     val coarseLocationPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.ACCESS_COARSE_LOCATION) else null
 
     val uiSettings by remember {
@@ -71,15 +69,9 @@ fun MapComposable(
         )
     }
 
-    var marker by remember { mutableStateOf(
-        if(geoLat != null && geoLong != null)
-            LatLng(geoLat!!, geoLong!!)
-        else
-            null
-    )}
     val cameraPositionState = rememberCameraPositionState {
-        position = if(marker != null)
-            CameraPosition.fromLatLngZoom(marker!!, 15f)
+        position = if(marker.position != LatLng(0.0, 0.0))
+            CameraPosition.fromLatLngZoom(marker.position, 15f)
         else
             CameraPosition.fromLatLngZoom(LatLng(54.5260,15.2551), 0f)
     }
@@ -91,7 +83,7 @@ fun MapComposable(
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
             fusedLocationClient.lastLocation.addOnSuccessListener { knownLocation: Location? ->
                 knownLocation?.let { lastKnownLocation ->
-                    if(marker != null)
+                    if(marker.position != LatLng(0.0, 0.0))
                         return@addOnSuccessListener
                     cameraPositionState.move(
                         CameraUpdateFactory.newCameraPosition(
@@ -104,7 +96,6 @@ fun MapComposable(
                 }
             }
         }
-
     }
 
     GoogleMap(
@@ -113,26 +104,23 @@ fun MapComposable(
         onPOIClick = { poi ->
             if(isEditMode) {
                 location = poi.name
-                geoLat = poi.latLng.latitude
-                geoLong = poi.latLng.longitude
-                onLocationUpdated(location, geoLat, geoLong)
-                marker = LatLng(poi.latLng.latitude, poi.latLng.longitude)
+                marker.position = poi.latLng
+                onLocationUpdated(location, marker.position.latitude, marker.position.longitude)
             }
         },
         onMapClick = {
             if(isEditMode) {
-                geoLat = it.latitude
-                geoLong = it.longitude
-                onLocationUpdated(location, geoLat, geoLong)
-                marker = LatLng(it.latitude, it.longitude)
+                location = ""
+                marker.position = it
+                onLocationUpdated(location, marker.position.latitude, marker.position.longitude)
             }
         },
         properties = properties,
         uiSettings = uiSettings
     ) {
-        marker?.let {
+        if(marker.position != LatLng(0.0, 0.0)) {
             Marker(
-                state = MarkerState(position = it),
+                state = marker,
                 title = location,
                 //snippet = "Marker in Singapore"
             )
@@ -151,9 +139,10 @@ fun DetailsCardLocation_Preview_Wien() {
             isEditMode = false,
             enableCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
-            modifier = Modifier.fillMaxWidth()
-                                .height(200.dp)
-                                .padding(top = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(top = 8.dp)
         )
     }
 }
