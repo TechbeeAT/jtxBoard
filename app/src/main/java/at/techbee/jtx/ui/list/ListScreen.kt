@@ -131,6 +131,7 @@ fun ListScreen(
                     settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks,
                     settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
                     settingProgressIncrement = settingsStateHolder.settingStepForProgress,
+                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
@@ -149,8 +150,10 @@ fun ListScreen(
             ViewMode.GRID -> {
                 ListScreenGrid(
                     list = list,
+                    subtasksLive = listViewModel.allSubtasksMap,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
+                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
@@ -165,6 +168,7 @@ fun ListScreen(
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
+                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
@@ -176,8 +180,10 @@ fun ListScreen(
                 ListScreenKanban(
                     module = listViewModel.module,
                     list = list,
+                    subtasksLive = listViewModel.allSubtasksMap,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
+                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance, scrollOnce ->

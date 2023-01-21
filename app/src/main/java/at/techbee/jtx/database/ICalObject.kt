@@ -594,8 +594,8 @@ data class ICalObject(
                 return // do nothing, the item was never saved in DB
 
             val children = database.getRelatedChildren(id)
-            children.forEach { childId ->
-                    deleteItemWithChildren(childId, database)    // call the function again to recursively delete all children, then delete the item
+            children.forEach { child ->
+                    deleteItemWithChildren(child.id, database)    // call the function again to recursively delete all children, then delete the item
             }
 
             database.deleteRecurringInstances(id)      // recurring instances are always physically deleted
@@ -627,8 +627,8 @@ data class ICalObject(
 
             // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
             val children = database.getRelatedChildren(id)
-            children.forEach { childId ->
-                updateCollectionWithChildren(childId, newParentId, newCollectionId, database, context)
+            children.forEach { child ->
+                updateCollectionWithChildren(child.id, newParentId, newCollectionId, database, context)
             }
             return newParentId
         }
@@ -839,6 +839,31 @@ data class ICalObject(
                 else -> context.getString(R.string.list_due_inXdays, daysLeft+1)
             }
         }
+
+        suspend fun findTopParent(iCalObjectId: Long, database: ICalDatabaseDao): ICalObject? {
+
+            val allRelatedTo = database.getAllRelatedtoSync()
+            var topParent = database.getICalObjectById(iCalObjectId)
+            while(allRelatedTo.any { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}) {
+                val parentUID = allRelatedTo.find { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}?.text
+                parentUID?.let { uid -> database.getICalObjectFor(uid)?.let { topParent = it } }
+            }
+            return topParent
+        }
+
+        suspend fun updateProgressOfParents(parentId: Long, database: ICalDatabaseDao, keepInSync: Boolean) {
+
+            val children = database.getRelatedChildren(parentId).filter { it.module == Module.TODO.name }
+            if(children.isNotEmpty()) {
+                children.forEach { child ->
+                    updateProgressOfParents(child.id, database, keepInSync)
+                }
+                val newProgress = children.map { it.percent ?:0 }.average().toInt()
+                val parent = database.getICalObjectByIdSync(parentId)
+                parent?.setUpdatedProgress(newProgress, keepInSync)
+                parent?.let { database.update(it) }
+            }
+        }
     }
 
 
@@ -917,31 +942,35 @@ data class ICalObject(
     }
 
 
-    fun setUpdatedProgress(newPercent: Int?) {
+    fun setUpdatedProgress(newPercent: Int?, keepInSync: Boolean) {
 
         percent = if(newPercent == 0) null else newPercent
-        if(status?.isNotEmpty() == true)                   // we only update the status if it was set to a value, if it's null, we skip this part
+
+        if(keepInSync) {
             status = when (newPercent) {
                 100 -> Status.COMPLETED.status
                 in 1..99 -> Status.IN_PROCESS.status
                 else -> Status.NEEDS_ACTION.status
             }
 
-        if (completed == null && percent == 100) {
-            completedTimezone = dueTimezone?:dtstartTimezone
-            completed = if(completedTimezone == TZ_ALLDAY)
-                DateTimeUtils.getTodayAsLong()
-            else
-                System.currentTimeMillis()
-        } else if (completed != null && percent != 100) {
-            completed = null
-            completedTimezone = null
+            if (completed == null && percent == 100) {
+                completedTimezone = dueTimezone ?: dtstartTimezone
+                completed = if (completedTimezone == TZ_ALLDAY)
+                    DateTimeUtils.getTodayAsLong()
+                else
+                    System.currentTimeMillis()
+            } else if (completed != null && percent != 100) {
+                completed = null
+                completedTimezone = null
+            }
         }
 
         makeDirty()
 
         return
     }
+
+
 
     /**
      * Sets the dirty flag, updates sequence and lastModified value, makes recurring entry an exception

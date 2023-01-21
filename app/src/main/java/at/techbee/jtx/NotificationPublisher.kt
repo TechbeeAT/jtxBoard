@@ -14,7 +14,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +34,7 @@ class NotificationPublisher : BroadcastReceiver() {
         val alarmId = intent.getLongExtra(ALARM_ID, intent.getLongExtra(NOTIFICATION_ID, 0L))
         val icalObjectId = intent.getLongExtra(ICALOBJECT_ID, 0L)
         val isImplicitAlarm = intent.getBooleanExtra(IS_IMPLICIT_ALARM, false)
+        val settingsStateHolder = SettingsStateHolder(context)
 
         if(alarmId == 0L && !isImplicitAlarm)
             return
@@ -64,8 +67,15 @@ class NotificationPublisher : BroadcastReceiver() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val alarm = database.getAlarmSync(alarmId) ?: return@launch
                     val icalobject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return@launch
-                    icalobject.setUpdatedProgress(100)
+                    icalobject.setUpdatedProgress(100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                     database.update(icalobject)
+
+                    if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
+                        ICalObject.findTopParent(icalObjectId, database)?.let {
+                            ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+                        }
+                    }
+
                     SyncUtil.notifyContentObservers(context)
                     Alarm.scheduleNextNotifications(context)
                 }

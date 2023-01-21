@@ -46,6 +46,7 @@ import at.techbee.jtx.util.DateTimeUtils
 fun ListCardCompact(
     iCalObject: ICal4List,
     subtasks: List<ICal4List>,
+    progressUpdateDisabled: Boolean,
     selected: List<Long>,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
@@ -199,7 +200,7 @@ fun ListCardCompact(
                 if (iCalObject.module == Module.TODO.name)
                     Checkbox(
                         checked = iCalObject.percent == 100,
-                        enabled = !iCalObject.isReadOnly,
+                        enabled = !iCalObject.isReadOnly && !progressUpdateDisabled,
                         onCheckedChange = {
                             onProgressChanged(
                                 iCalObject.id,
@@ -278,6 +279,7 @@ fun ListCardCompact_JOURNAL() {
         ListCardCompact(
             icalobject,
             emptyList(),
+            progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
@@ -300,6 +302,7 @@ fun ListCardCompact_JOURNAL2() {
         ListCardCompact(
             icalobject,
             emptyList(),
+            progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
@@ -323,6 +326,7 @@ fun ListCardCompact_NOTE() {
         ListCardCompact(
             icalobject,
             emptyList(),
+            progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
@@ -350,6 +354,7 @@ fun ListCardCompact_TODO() {
         ListCardCompact(
             icalobject,
             subtasks = listOf(icalobject, icalobject),
+            progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },
@@ -394,6 +399,7 @@ fun ListCardCompact_TODO_only_summary() {
         ListCardCompact(
             icalobject,
             subtasks = listOf(icalobject, icalobject),
+            progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _, _ -> },
             onClick = { _, _ -> },

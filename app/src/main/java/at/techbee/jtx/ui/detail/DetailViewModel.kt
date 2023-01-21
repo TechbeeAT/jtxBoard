@@ -27,6 +27,7 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
@@ -59,6 +60,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var changeState = mutableStateOf(DetailChangeState.UNCHANGED)
     var toastMessage = mutableStateOf<String?>(null)
     val detailSettings: DetailSettings = DetailSettings()
+    val settingsStateHolder = SettingsStateHolder(_application)
 
     val mediaPlayer = MediaPlayer()
 
@@ -127,8 +129,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
                     toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                 }
-                item.setUpdatedProgress(newPercent)
+                item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                 database.update(item)
+                if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
+                    ICalObject.findTopParent(id, database)?.let {
+                        ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+                    }
+                }
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $id")
@@ -432,7 +439,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
                 val children = database.getRelatedChildren(icalEntityToCopy.property.id)
                 children.forEach { child ->
-                    database.getSync(child)?.let {
+                    database.getSync(child.id)?.let {
                         createCopy(
                             icalEntityToCopy = it,
                             newModule = it.property.getModuleFromString(),
@@ -594,8 +601,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      */
     private suspend fun addChildrenOf(parent: Long, list: MutableList<Long>) {
         val children = database.getRelatedChildren(parent)
-        list.addAll(children)
-        children.forEach { addChildrenOf(it, list) }
+        list.addAll(children.map { it.id })
+        children.forEach { addChildrenOf(it.id, list) }
     }
     
     enum class DetailChangeState { UNCHANGED, CHANGEUNSAVED, SAVINGREQUESTED, CHANGESAVING, CHANGESAVED }
