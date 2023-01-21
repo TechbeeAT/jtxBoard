@@ -43,6 +43,14 @@ fun ProgressElement(
         progress?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
     ) }
 
+    //If the progress gets updated in the meantime in the DB, we should get aware and udpate the UI
+    var sliding by remember { mutableStateOf(false) }
+    var lastKnownProgress by remember { mutableStateOf(progress) }
+    if(!sliding && sliderPosition != (progress?.toFloat()?:0f) && progress != lastKnownProgress) {
+        sliderPosition = progress?.toFloat() ?: 0f
+        lastKnownProgress = progress
+    }
+
     /**
      * When the Element gets reused/recycled e.g. when activating the option hide completed in the
      * list view, the element would disappear and the next icalobject would take its place.
@@ -77,9 +85,13 @@ fun ProgressElement(
                 value = sliderPosition,
                 valueRange = 0F..100F,
                 steps = (100 / sliderIncrement) - 1,
-                onValueChange = { sliderPosition = it },
+                onValueChange = {
+                    sliderPosition = it
+                    sliding = true
+                                },
                 onValueChangeFinished = {
                     sliderPosition = sliderPosition / sliderIncrement * sliderIncrement
+                    sliding = false
                     onProgressChanged(
                         iCalObjectId,
                         (sliderPosition / sliderIncrement * sliderIncrement).toInt(),

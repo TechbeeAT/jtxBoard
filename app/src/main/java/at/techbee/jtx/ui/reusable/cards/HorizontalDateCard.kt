@@ -44,83 +44,58 @@ fun HorizontalDateCard(
     labelTop: String? = null,
     pickerMinDate: Long? = null,
     pickerMaxDate: Long? = null,
+    enabled: Boolean = true,
     onDateTimeChanged: (Long?, String?) -> Unit = { _, _ -> }
 ) {
 
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
 
-    if (isEditMode) {
-        OutlinedCard(
-            onClick = { showDatePickerDialog = true },
-            modifier = modifier
-        ) {
+    Card(
+        onClick = {
+            if(isEditMode)
+                showDatePickerDialog = true
+                  },
+        shape = if(isEditMode) CardDefaults.outlinedShape else CardDefaults.elevatedShape,
+        colors = if(isEditMode) CardDefaults.outlinedCardColors() else CardDefaults.elevatedCardColors(),
+        elevation = if(isEditMode) CardDefaults.outlinedCardElevation() else CardDefaults.elevatedCardElevation(),
+        border = CardDefaults.outlinedCardBorder(enabled = isEditMode),
+        enabled = !isEditMode || enabled,
+        modifier = modifier
+    ) {
 
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)) {
 
-                labelTop?.let { label ->
-                    Text(
-                        text = label,
-                        style = MaterialTheme.typography.labelSmall
-                    )
-                }
-
-                if (datetime != null) {
-                    Text(
-                        DateTimeUtils.convertLongToFullDateTimeString(
-                            datetime,
-                            timezone
-                        )
-                    )
-                } else {
-                    Text(
-                        text = stringResource(id = R.string.not_set2),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            labelTop?.let { label ->
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelSmall
+                )
             }
-        }
-    } else {
-        ElevatedCard(
-            modifier = modifier
-        ) {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                labelTop?.let { label ->
-                    Text(
-                        text = label,
-                        style = MaterialTheme.typography.labelSmall,
-                        fontStyle = FontStyle.Italic
-                    )
-                }
-
-                if (datetime != null) {
+            if (datetime != null) {
+                Text(
+                    DateTimeUtils.convertLongToFullDateTimeString(
+                        datetime,
+                        timezone
+                    ),
+                    fontStyle = if(!isEditMode) FontStyle.Italic else null,
+                    fontWeight = if(!isEditMode) FontWeight.Bold else null
+                )
+                if(!isEditMode && timezone != null && timezone != TZ_ALLDAY && timezone != ZoneId.systemDefault().id) {
                     Text(
                         DateTimeUtils.convertLongToFullDateTimeString(
                             datetime,
-                            timezone
-                        ),
-                        fontStyle = FontStyle.Italic,
-                        fontWeight = FontWeight.Bold
-                    )
-                    if(timezone != null && timezone != TZ_ALLDAY && timezone != ZoneId.systemDefault().id) {
-                        Text(
-                            DateTimeUtils.convertLongToFullDateTimeString(
-                                datetime,
-                                ZoneId.systemDefault().id
-                            )
+                            ZoneId.systemDefault().id
                         )
-                    }
-                } else {
-                    Text(
-                        text = stringResource(id = R.string.not_set2)
                     )
                 }
+            } else {
+                Text(
+                    text = stringResource(id = R.string.not_set2),
+                    fontStyle = if(!isEditMode) FontStyle.Italic else null
+                )
             }
         }
     }

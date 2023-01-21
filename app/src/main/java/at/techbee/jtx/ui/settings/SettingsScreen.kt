@@ -346,6 +346,22 @@ fun SettingsScreen(
                             scope.launch(Dispatchers.IO) { Alarm.scheduleNextNotifications(context) }
                         }
                     )
+                    SwitchSetting(
+                        setting = SETTING_LINK_PROGRESS_TO_SUBTASKS,
+                        initiallyChecked = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingLinkProgressToSubtasks.value = it
+                            SETTING_LINK_PROGRESS_TO_SUBTASKS.save(it, context)
+                        }
+                    )
+                    SwitchSetting(
+                        setting = SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC,
+                        initiallyChecked = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingKeepStatusProgressCompletedInSync.value = it
+                            SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.save(it, context)
+                        }
+                    )
                 }
             },
             navController = navController,

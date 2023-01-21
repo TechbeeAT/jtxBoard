@@ -20,6 +20,7 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import org.junit.Assert.*
@@ -353,8 +354,8 @@ class ICalObjectAndroidTest {
 
                 val children = database.getRelatedChildren(newParent?.id ?: 0L)
                 assertEquals(3, children.size)
-                assertEquals(2L, database.getICalObjectById(children[0])?.collectionId)
-                assertEquals(2L, database.getICalObjectById(children[1])?.collectionId)
+                assertEquals(2L, database.getICalObjectById(children[0].id)?.collectionId)
+                assertEquals(2L, database.getICalObjectById(children[1].id)?.collectionId)
             }
         }
     }
@@ -460,5 +461,72 @@ class ICalObjectAndroidTest {
                 R.string.edit_recur_x_times
             )
         assertTrue(item.getRecurInfo(context)?.contains(expectedString) == true)
+    }
+
+    @Test
+    fun updateProgressOfParents_keepInSync() = runBlocking {
+        val parentId = database.insertICalObject(ICalObject.createTodo().apply { uid = "parent" })
+        val child1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1" })
+        val child2Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child2" })
+
+        database.getICalObjectByIdSync(child1Id)?.let {
+            it.setUpdatedProgress(25, true)
+            database.update(it)
+        }
+        database.getICalObjectByIdSync(child2Id)?.let {
+            it.setUpdatedProgress(75, true)
+            database.update(it)
+        }
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child2Id, reltype =  Reltype.PARENT.name, text = "parent"))
+
+        ICalObject.updateProgressOfParents(parentId, database, true)
+        val parent = database.getICalObjectByIdSync(parentId)
+        assertEquals(50, parent?.percent)
+        assertEquals(Status.IN_PROCESS.status, parent?.status)
+    }
+
+
+    @Test
+    fun updateProgressOfParents_NOT_keepInSync() = runBlocking {
+        val parentId = database.insertICalObject(ICalObject.createTodo().apply { uid = "parent" })
+        val child1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1" })
+        val child2Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child2" })
+
+        database.getICalObjectByIdSync(child1Id)?.let {
+            it.setUpdatedProgress(25, true)
+            database.update(it)
+        }
+        database.getICalObjectByIdSync(child2Id)?.let {
+            it.setUpdatedProgress(75, true)
+            database.update(it)
+        }
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child2Id, reltype =  Reltype.PARENT.name, text = "parent"))
+
+        ICalObject.updateProgressOfParents(parentId, database, false)
+        val parent = database.getICalObjectByIdSync(parentId)
+        assertEquals(50, parent?.percent)
+        assertEquals(Status.NO_STATUS.status, parent?.status)
+    }
+
+
+    @Test
+    fun findTopParent_Test() = runBlocking {
+        val parentId = database.insertICalObject(ICalObject.createTodo().apply { uid = "parent" })
+        val child1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1" })
+        val child1of1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1of1Id" })
+        val child2of1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child2of1Id" })
+        val child1of2of1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1of2of1Id" })
+        val child2Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child2" })
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child2Id, reltype =  Reltype.PARENT.name, text = "parent"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1of1Id, reltype =  Reltype.PARENT.name, text = "child1"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child2of1Id, reltype =  Reltype.PARENT.name, text = "child1"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1of2of1Id, reltype =  Reltype.PARENT.name, text = "child2of1Id"))
+
+        val actualParent = database.getICalObjectById(parentId) ?: throw AssertionError("entry not found")
+        val retrievedParent = ICalObject.findTopParent(parentId, database) ?: throw AssertionError("retrieved entry null")
+        assertEquals(actualParent, retrievedParent)
     }
 }

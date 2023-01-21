@@ -89,6 +89,19 @@ enum class SwitchSetting(
     icon = { Icon(Icons.Outlined.AlarmOff, contentDescription = null, modifier = Modifier.padding(16.dp)) },
     title = R.string.settings_disable_alarms_for_readonly,
     default = false
+    ),
+    SETTING_LINK_PROGRESS_TO_SUBTASKS(
+        key = "settings_link_progress_to_subtasks",
+        icon = { Icon(Icons.Outlined.DoneAll, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_link_progress_to_subtasks,
+        subtitle = R.string.settings_attention_experimental_feature,
+        default = false
+    ),
+    SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC(
+    key = "settings_keep_status_progress_completed_in_sync",
+    icon = { Icon(Icons.Outlined.PublishedWithChanges, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+    title = R.string.settings_keep_status_progress_completed_in_sync,
+    default = true
     )
     ;
     fun save(newSwitchValue: Boolean, context: Context) {
