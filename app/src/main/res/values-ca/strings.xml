@@ -508,6 +508,9 @@ Gràcies!"</string>
     <string name="settings_progress_step_50">"Incrementa per 50 (2 passes)"</string>
     <string name="settings_progress_step">"Estableix el pas del control lliscant"</string>
     <string name="settings_disable_alarms_for_readonly">"Deshabilita alarmes per a col·leccions de només lectura"</string>
+    <string name="settings_link_progress_to_subtasks">"Enllaça el progrés a les sub-tasques"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Mantè l'estat, progrés i completat en sincronització"</string>
+    <string name="settings_attention_experimental_feature">"Atenció: Aquesta és una funció experimental"</string>
     <string name="sync_button_go_to_collections">"Ves a les Col·leccions"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Per favor, compra el paquet Pro per a habilitar aquesta funció."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
