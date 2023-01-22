@@ -172,17 +172,15 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
 
-    fun updateProgress(itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
+    fun updateProgress(itemId: Long, newPercent: Int, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
-            ICalObject.makeRecurringException(currentItem, database)
-            val item = database.getSync(itemId)?.property  ?: return@launch
-            item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-            database.update(item)
+            currentItem.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+            database.update(currentItem)
 
             if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
-                ICalObject.findTopParent(item.id, database)?.let {
+                ICalObject.findTopParent(currentItem.id, database)?.let {
                     ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                 }
             }
@@ -191,25 +189,18 @@ open class ListViewModel(application: Application, val module: Module) : Android
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
         }
-        if(isLinkedRecurringInstance)
-            toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
     }
 
-    fun updateStatusJournal(itemId: Long, newStatus: Status, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
+    fun updateStatus(itemId: Long, newStatus: Status, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
-            ICalObject.makeRecurringException(currentItem, database)
-            val item = database.getSync(itemId)?.property ?: return@launch
-            item.status = newStatus.status
-            database.update(item)
+            currentItem.status = newStatus.status
+            database.update(currentItem)
             SyncUtil.notifyContentObservers(getApplication())
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
         }
-        if(isLinkedRecurringInstance)
-            toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-
     }
 
     /*
@@ -226,8 +217,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
             selectedICal4List.forEach { entry ->
                 if(entry.isReadOnly)
                     return@forEach
-                if(entry.isLinkedRecurringInstance)
-                    database.getICalObjectByIdSync(entry.id)?.let { ICalObject.makeRecurringException(it, database) }
+                if(entry.recurid != null)
+                    database.getICalObjectByIdSync(entry.id)?.let { ICalObject.unlinkFromSeries(it, database) }
                 ICalObject.deleteItemWithChildren(entry.id, database)
                 selectedEntries.clear()
             }

@@ -316,19 +316,6 @@ value type for this property is TEXT.
  */
 const val COLUMN_RSTATUS = "rstatus"
 
-/**
- * Stores the reference to the original event from which the recurring event was derived.
- * This value is NULL for the orignal event.
- * Type: [Long]
- */
-const val COLUMN_RECUR_ORIGINALICALOBJECTID = "recur_original_icalobjectid"
-
-/**
- * Marks recurring instances that have not been changed. Those must be excluded from the sync as they are still instances of the original item.
- * Type: [Boolean]
- */
-const val COLUMN_RECUR_ISLINKEDINSTANCE = "recur_islinkedinstance"
-
 
 /**
  * Purpose:  This property specifies a color used for displaying the calendar, event, todo, or journal data.
@@ -468,8 +455,6 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_EXDATE) var exdate: String? = null,   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
     @ColumnInfo(name = COLUMN_RDATE)  var rdate: String? = null,     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
     @ColumnInfo(name = COLUMN_RECURID) var recurid: String? = null,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
-    @ColumnInfo(name = COLUMN_RECUR_ORIGINALICALOBJECTID) var recurOriginalIcalObjectId: Long? = null,
-    @ColumnInfo(name = COLUMN_RECUR_ISLINKEDINSTANCE) var isRecurLinkedInstance: Boolean = false,
 
     @ColumnInfo(name = COLUMN_RSTATUS) var rstatus: String? = null,
 
@@ -599,11 +584,11 @@ data class ICalObject(
                     deleteItemWithChildren(child.id, database)    // call the function again to recursively delete all children, then delete the item
             }
 
-            database.deleteRecurringInstances(id)      // recurring instances are always physically deleted
+            database.getICalObjectByIdSync(id)?.let { database.deleteRecurringInstances(it.uid) }  // recurring instances are always physically deleted
             val item = database.getSync(id)?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
             when {
-                item.property.isRecurLinkedInstance -> {
-                    makeRecurringException(item.property, database)   // if the current item
+                item.property.recurid != null -> {
+                    unlinkFromSeries(item.property, database)   // if the current item
                     database.deleteICalObjectsbyId(id)
                 }
                 item.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE -> database.deleteICalObjectsbyId(item.property.id) // Elements in local collection are physically deleted
@@ -715,19 +700,21 @@ data class ICalObject(
                 return 0L
             }
 
-        fun makeRecurringException(item: ICalObject, database: ICalDatabaseDao) {
-            if(item.isRecurLinkedInstance) {
-
-                item.recurOriginalIcalObjectId?.let { originalId ->
-                    val newExceptionList = addLongToCSVString(database.getRecurExceptions(originalId), item.dtstart)
+        suspend fun unlinkFromSeries(item: ICalObject, database: ICalDatabaseDao): ICalObject {
+            item.recurid?.let { recurId ->
+                database.getRecurSeriesElement(recurId)?.let { series ->
+                    val newExceptionList = addLongToCSVString(database.getRecurExceptions(series.id), item.dtstart)
                     database.setRecurExceptions(
-                        originalId,
-                        newExceptionList,
-                        System.currentTimeMillis()
+                        series.id,
+                        newExceptionList
                     )
-                    database.setAsRecurException(item.id, System.currentTimeMillis())
                 }
             }
+            item.uid = generateNewUID()
+            item.recurid = null
+            item.makeDirty()
+            database.update(item)
+            return item
         }
 
         /**
@@ -980,7 +967,6 @@ data class ICalObject(
         lastModified = System.currentTimeMillis()
         sequence += 1
         dirty = true
-        isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
     }
 
     /**
@@ -1154,7 +1140,7 @@ data class ICalObject(
     fun recreateRecurring(context: Context) {
 
         val database = ICalDatabase.getInstance(context).iCalDatabaseDao
-        database.deleteRecurringInstances(id)
+        database.deleteUnchangedRecurringInstances(uid)
         if(dtstart == null || rrule.isNullOrEmpty())
             return
 
@@ -1166,9 +1152,28 @@ data class ICalObject(
 
         getInstancesFromRrule().forEach { recurrenceDate ->
             val instance = original.copy()
+
+            instance.property.recurid = when {
+                instance.property.dtstartTimezone == TZ_ALLDAY -> DtStart(Date(instance.property.dtstart!!)).value
+                instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
+                else -> {
+                    val timezone =
+                        TimeZoneRegistryFactory.getInstance().createRegistry()
+                            .getTimeZone(instance.property.dtstartTimezone)
+                    val withTimezone =
+                        DtStart(DateTime(instance.property.dtstart!!))
+                    withTimezone.timeZone = timezone
+                    withTimezone.value
+                }
+            }
+
+            if(database.getRecurInstance(uid = uid, dtstart = recurrenceDate) != null)
+                return@forEach   // skip the entry if there is an existing linked entry that was changed (and therefore not deleted before)
+
+
             instance.property.id = 0L
-            instance.property.recurOriginalIcalObjectId = id
-            instance.property.uid = generateNewUID()
+            //instance.property.recurOriginalIcalObjectId = id
+            //instance.property.uid = generateNewUID()
             instance.property.dtstamp = System.currentTimeMillis()
             instance.property.created = System.currentTimeMillis()
             instance.property.lastModified = System.currentTimeMillis()
@@ -1180,21 +1185,6 @@ data class ICalObject(
             instance.property.eTag = null
             instance.property.scheduleTag = null
             instance.property.dirty = false
-            instance.property.isRecurLinkedInstance = true
-
-            instance.property.recurid = when {
-                    instance.property.dtstartTimezone == TZ_ALLDAY -> DtStart(Date(instance.property.dtstart!!)).value
-                    instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
-                    else -> {
-                        val timezone =
-                            TimeZoneRegistryFactory.getInstance().createRegistry()
-                                .getTimeZone(instance.property.dtstartTimezone)
-                        val withTimezone =
-                            DtStart(DateTime(instance.property.dtstart!!))
-                        withTimezone.timeZone = timezone
-                        withTimezone.value
-                }
-            }
 
             instance.property.dtstart = recurrenceDate
 
@@ -1294,9 +1284,7 @@ data class ICalObject(
 
         var recurInfo = ""
 
-        if(recurOriginalIcalObjectId != null && !this.isRecurLinkedInstance)
-            recurInfo += context.getString(R.string.view_share_exception_of_series) + System.lineSeparator()
-        else if (recurOriginalIcalObjectId != null && this.isRecurLinkedInstance)
+       if (this.recurid != null)
             recurInfo += context.getString(R.string.view_share_part_of_series) + System.lineSeparator()
 
         val recur: Recur

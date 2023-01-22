@@ -8,10 +8,14 @@
 
 package at.techbee.jtx.ui.reusable.cards
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,13 +26,12 @@ import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 
-@SuppressLint("UnrememberedMutableState")
 @Composable
 fun SubtaskCardCompact(
     subtask: ICal4List,
     selected: Boolean,
     modifier: Modifier = Modifier,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit
 ) {
 
     Row(
@@ -55,7 +58,7 @@ fun SubtaskCardCompact(
         Checkbox(
             checked = subtask.percent == 100,
             onCheckedChange = {
-                onProgressChanged(subtask.id, if(subtask.percent == 100) 0 else 100, subtask.isLinkedRecurringInstance)
+                onProgressChanged(subtask.id, if(subtask.percent == 100) 0 else 100)
             },
             enabled = !subtask.isReadOnly,
         )
@@ -76,7 +79,7 @@ fun SubtaskCardCompactPreview() {
             this.numSubtasks = 0
         },
             selected = false,
-            onProgressChanged = { _, _, _ -> }
+            onProgressChanged = { _, _ -> }
         )
     }
 }
@@ -93,7 +96,7 @@ fun SubtaskCardCompactPreview_readonly() {
             this.numSubtasks = 7
         },
             selected = true,
-            onProgressChanged = { _, _, _ -> }
+            onProgressChanged = { _, _ -> }
         )
     }
 }

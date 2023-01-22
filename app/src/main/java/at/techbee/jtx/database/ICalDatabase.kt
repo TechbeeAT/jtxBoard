@@ -43,7 +43,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 18,
+    version = 19,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -61,6 +61,7 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 15, to = 16),  // view updates
         AutoMigration (from = 16, to = 17),  // view updates
         AutoMigration (from = 17, to = 18),  // room update
+        AutoMigration (from = 18, to = 19, spec = ICalDatabase.AutoMigration18to19::class),  // removed recur columns
     ]
 )
 //@TypeConverters(Converters::class)
@@ -74,6 +75,13 @@ abstract class ICalDatabase : RoomDatabase() {
 
     @DeleteColumn(tableName = TABLE_NAME_ALARM, columnName = "trigger")
     class AutoMigration2to3: AutoMigrationSpec
+
+    @DeleteColumn.Entries(
+        DeleteColumn(tableName = TABLE_NAME_ICALOBJECT, columnName = "recur_original_icalobjectid"),
+        DeleteColumn(tableName = TABLE_NAME_ICALOBJECT, columnName = "recur_islinkedinstance")
+    )
+    class AutoMigration18to19: AutoMigrationSpec
+
 
     /**
      * Define a companion object, this allows us to add functions on the SleepDatabase class.

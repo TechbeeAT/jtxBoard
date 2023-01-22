@@ -380,7 +380,6 @@ For more information about the Sync please see:"</string>
     <string name="priority_9_lowest">"9 - Lowest"</string>
     <string name="list_due_future">"Due in future"</string>
     <string name="view_share_part_of_series">"This entry is part of a series."</string>
-    <string name="view_share_exception_of_series">"This entry is an exception of a series."</string>
     <string name="view_share_repeats">"This entry repeats every"</string>
     <string name="collections_dialog_move_title">"Move all entries from \"%1$s\" to"</string>
     <string name="collection_dialog_move_info">"Please note: Only writeable collections and collections with support for the same components (Journals, Notes, Tasks) can be selected."</string>
@@ -479,6 +478,11 @@ Thank you!"</string>
     <string name="details_recur_unknown_rrule_dialog_message">"An unknown or unsupported recurrence rule was detected. If you continue, the existing recurrence rule will be deleted/overwritten."</string>
     <string name="details_entry_could_not_be_loaded">"This entry was either deleted in the background or could not be loaded."</string>
     <string name="details_attachment_beta_info">"* Synchronizing attachments is an experimental feature. We strongly encourage to use only small attachments (up to 100 KB) as larger ones could lead to long synchronization times and unexpected behaviour."</string>
+    <string name="details_unchanged_part_of_series">"This entry is part of a series. This entry will copy any changes made for the series."</string>
+    <string name="details_changed_part_of_series">"This entry is part of a series but was changed. This entry will not be affected by changes of the series."</string>
+    <string name="details_series_attention_subentries">"Attention: Series-elements mirror the subtasks and linked notes from the series. If you would like to change subtasks and linked notes only for a series-element, please unlink it from the series first."</string>
+    <string name="details_go_to_series">"Go to series"</string>
+    <string name="details_unlink_from_series">"Unlink from series"</string>
     <string name="edit_comment">"Edit comment"</string>
     <string name="edit_subnote_add_helper">"Add a subnote"</string>
     <string name="edit_subtask">"Edit subtask"</string>

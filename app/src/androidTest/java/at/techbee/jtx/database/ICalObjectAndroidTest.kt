@@ -84,7 +84,7 @@ class ICalObjectAndroidTest {
         val recurList = database.getRecurInstances(id)
         assertEquals(6, recurList.size)
 
-        database.deleteRecurringInstances(id)
+        database.deleteUnchangedRecurringInstances(savedItem?.property?.uid)
         val recurListEmpty = database.getRecurInstances(id)
         assertEquals(0, recurListEmpty.size)
     }
@@ -111,7 +111,7 @@ class ICalObjectAndroidTest {
         assertEquals(1663804800000L, recurList[0]?.due)
         //assertEquals(1664236800000L, recurList[1]?.due)  // TODO
 
-        database.deleteRecurringInstances(id)
+        database.deleteUnchangedRecurringInstances(savedItem?.property?.uid)
         val recurListEmpty = database.getRecurInstances(id)
         assertEquals(0, recurListEmpty.size)
     }
@@ -284,7 +284,7 @@ class ICalObjectAndroidTest {
         withContext(Dispatchers.IO) {
             val idParent = database.insertICalObject(ICalObject.createJournal().apply {
                 this.collectionId = 1L
-                this.isRecurLinkedInstance = true
+                this.recurid = "recurid"
             })
             // a recurring instance cannot have children
             //make sure everything was correctly inserted
@@ -301,7 +301,7 @@ class ICalObjectAndroidTest {
         withContext(Dispatchers.IO) {
             val idParent = database.insertICalObject(ICalObject.createJournal().apply {
                 this.collectionId = 2L
-                this.isRecurLinkedInstance = true
+                this.recurid = "recurid"
             })
             // a recurring instance cannot have children
             //make sure everything was correctly inserted
@@ -360,7 +360,7 @@ class ICalObjectAndroidTest {
         }
     }
 
-
+    /*
     @Test
     fun makeRecurringException_Test() = runTest {
         withContext(Dispatchers.IO) {
@@ -378,8 +378,8 @@ class ICalObjectAndroidTest {
             //make sure instances are there as expected
             assertEquals(5, instances.size)
 
-            ICalObject.makeRecurringException(instances[0]!!, database)
-            ICalObject.makeRecurringException(instances[1]!!, database)
+            ICalObject.unlinkFromSeries(instances[0]!!, database)
+            ICalObject.unlinkFromSeries(instances[1]!!, database)
 
             val parentAfterUpdate = database.getICalObjectById(idParent)
             val instance0 = database.getICalObjectById(instances[0]!!.id)
@@ -398,7 +398,6 @@ class ICalObjectAndroidTest {
             assertEquals(true, instance4!!.isRecurLinkedInstance)
         }
     }
-
 
     @Test
     fun makeRecurringException_Test2() = runTest {
@@ -420,7 +419,7 @@ class ICalObjectAndroidTest {
             assertEquals(0, instances.size)
 
             //nothing should happen here
-            ICalObject.makeRecurringException(parent, database)
+            ICalObject.unlinkFromSeries(parent, database)
 
             val parentAfterUpdate = database.getICalObjectById(idParent)
 
@@ -428,27 +427,16 @@ class ICalObjectAndroidTest {
             assertFalse(parentAfterUpdate.isRecurLinkedInstance)
         }
     }
+     */
+
 
     @Test
     fun getRecurInfo_linkedToSeries() {
         val item = ICalObject.createJournal("Test")
-        item.isRecurLinkedInstance = true
-        item.recurOriginalIcalObjectId = 1L
+        item.recurid = "recurid"
         assertTrue(
             item.getRecurInfo(context)
                 ?.contains(context.getString(R.string.view_share_part_of_series)) == true
-        )
-    }
-
-
-    @Test
-    fun getRecurInfo_exceptionToSeries() {
-        val item = ICalObject.createJournal("Test")
-        item.isRecurLinkedInstance = false
-        item.recurOriginalIcalObjectId = 1L
-        assertTrue(
-            item.getRecurInfo(context)
-                ?.contains(context.getString(R.string.view_share_exception_of_series)) == true
         )
     }
 

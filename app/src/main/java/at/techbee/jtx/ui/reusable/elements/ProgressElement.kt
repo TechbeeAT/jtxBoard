@@ -32,11 +32,10 @@ fun ProgressElement(
     iCalObjectId: Long,
     progress: Int?,
     isReadOnly: Boolean,
-    isLinkedRecurringInstance: Boolean,
     sliderIncrement: Int,
     modifier: Modifier = Modifier,
     showSlider: Boolean = true,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit
 ) {
 
     var sliderPosition by remember { mutableStateOf(
@@ -95,7 +94,6 @@ fun ProgressElement(
                     onProgressChanged(
                         iCalObjectId,
                         (sliderPosition / sliderIncrement * sliderIncrement).toInt(),
-                        isLinkedRecurringInstance
                     )
                 },
                 modifier = Modifier.weight(1f),
@@ -115,7 +113,7 @@ fun ProgressElement(
             checked = sliderPosition == 100f,
             onCheckedChange = {
                 sliderPosition = if (it) 100f else 0f     // update comes from state change!
-                onProgressChanged(iCalObjectId, if (it) 100 else 0, isLinkedRecurringInstance)
+                onProgressChanged(iCalObjectId, if (it) 100 else 0)
             },
             enabled = !isReadOnly
         )
@@ -131,9 +129,8 @@ fun ProgressElementPreview() {
             iCalObjectId = 1L,
             progress = 57,
             isReadOnly = false,
-            isLinkedRecurringInstance = false,
             sliderIncrement = 50,
-            onProgressChanged = { _, _, _ -> })
+            onProgressChanged = { _, _ -> })
     }
 }
 
@@ -146,9 +143,8 @@ fun ProgressElementPreview_readonly() {
             iCalObjectId = 1L,
             progress = 57,
             isReadOnly = true,
-            isLinkedRecurringInstance = false,
             sliderIncrement = 5,
-            onProgressChanged = { _, _, _ -> })
+            onProgressChanged = { _, _ -> })
     }
 }
 
@@ -161,8 +157,7 @@ fun ProgressElementPreview_increment25_with_label() {
             iCalObjectId = 1L,
             progress = 100,
             isReadOnly = false,
-            isLinkedRecurringInstance = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             sliderIncrement = 20
         )
 
@@ -178,8 +173,7 @@ fun ProgressElementPreview_without_label() {
             iCalObjectId = 1L,
             progress = 8,
             isReadOnly = false,
-            isLinkedRecurringInstance = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             sliderIncrement = 1,
         )
 
@@ -195,8 +189,7 @@ fun ProgressElementPreview_without_label_and_slider() {
             iCalObjectId = 1L,
             progress = 100,
             isReadOnly = false,
-            isLinkedRecurringInstance = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             sliderIncrement = 1,
             showSlider = false
         )

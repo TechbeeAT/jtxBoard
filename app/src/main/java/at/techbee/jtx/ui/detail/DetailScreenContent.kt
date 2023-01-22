@@ -94,14 +94,17 @@ fun DetailScreenContent(
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     saveICalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onMoveToNewCollection: (icalObject: ICalObject, newCollection: ICalCollection) -> Unit,
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
-    goBack: () -> Unit
-) {
+    goToSeriesElement: (editMode: Boolean) -> Unit,
+    goBack: () -> Unit,
+    unlinkFromSeries: () -> Unit
+
+    ) {
 
     val context = LocalContext.current
     val localInspectionMode = LocalInspectionMode.current
@@ -182,6 +185,8 @@ fun DetailScreenContent(
         icalObject.value.percent = iCalEntity.value?.property?.percent
         icalObject.value.completed = iCalEntity.value?.property?.completed
         icalObject.value.completedTimezone = iCalEntity.value?.property?.completedTimezone
+        icalObject.value.sequence = iCalEntity.value?.property?.sequence?:0
+        icalObject.value.recurid = iCalEntity.value?.property?.recurid
         icalObject.value = icalObject.value
     }
 
@@ -527,11 +532,10 @@ fun DetailScreenContent(
                         iCalObjectId = icalObject.value.id,
                         progress = icalObject.value.percent,
                         isReadOnly = iCalEntity.value?.ICalCollection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
-                        isLinkedRecurringInstance = icalObject.value.isRecurLinkedInstance,
                         sliderIncrement = sliderIncrement,
-                        onProgressChanged = { itemId, newPercent, isLinked ->
+                        onProgressChanged = { itemId, newPercent ->
                             icalObject.value.setUpdatedProgress(newPercent, keepStatusProgressCompletedInSync)
-                            onProgressChanged(itemId, newPercent, isLinked)
+                            onProgressChanged(itemId, newPercent)
                             icalObject.value = icalObject.value
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
@@ -601,8 +605,8 @@ fun DetailScreenContent(
                     isEditMode = isEditMode,
                     sliderIncrement = sliderIncrement,
                     showSlider = showProgressForSubTasks,
-                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
-                        onProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
+                    onProgressChanged = { itemId, newPercent ->
+                        onProgressChanged(itemId, newPercent)
                     },
                     onSubtaskAdded = { subtask -> onSubEntryAdded(subtask, null) },
                     onSubtaskUpdated = { icalObjectId, newText ->
@@ -736,19 +740,21 @@ fun DetailScreenContent(
             }
 
             AnimatedVisibility(icalObject.value.rrule != null
-                    || icalObject.value.isRecurLinkedInstance
-                    || icalObject.value.recurOriginalIcalObjectId != null
+                    || icalObject.value.recurid != null
                     || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE]?:false || (showAllOptions && icalObject.value.module != Module.NOTE.name)))
             ) {   // only Todos have recur!
                 DetailsCardRecur(
                     icalObject = icalObject.value,
                     isEditMode = isEditMode.value,
+                    hasChildren = subtasks.value.isNotEmpty() || subnotes.value.isNotEmpty(),
                     onRecurUpdated = { updatedRRule ->
                         icalObject.value.rrule = updatedRRule?.toString()
                         icalObject.value = icalObject.value
                         changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
-                    goToDetail = goToDetail
+                    goToDetail = goToDetail,
+                    goToSeriesElement = goToSeriesElement,
+                    unlinkFromSeries = unlinkFromSeries
                 )
             }
 
@@ -858,13 +864,15 @@ fun DetailScreenContent_JOURNAL() {
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             saveICalObject = { _, _, _, _, _, _, _ -> },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            goToSeriesElement = {  },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -902,13 +910,15 @@ fun DetailScreenContent_TODO_editInitially() {
             linkProgressToSubtasks = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            goToSeriesElement = { },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -948,13 +958,15 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             linkProgressToSubtasks = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            goToSeriesElement = {  },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -986,13 +998,15 @@ fun DetailScreenContent_failedLoading() {
             linkProgressToSubtasks = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            goBack = { }
+            goBack = { },
+            goToSeriesElement = { },
+            unlinkFromSeries = { }
         )
     }
 }

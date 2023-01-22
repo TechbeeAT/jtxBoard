@@ -46,7 +46,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var icalEntity: LiveData<ICalEntity?>
     lateinit var relatedSubnotes: LiveData<List<ICal4List>>
     lateinit var relatedSubtasks: LiveData<List<ICal4List>>
-    //lateinit var recurInstances: LiveData<List<ICalObject?>>
+    lateinit var seriesElementId: LiveData<Long?>
     lateinit var isChild: LiveData<Boolean>
     private var originalEntry: ICalEntity? = null
 
@@ -85,6 +85,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             relatedSubnotes = MutableLiveData(emptyList())
             relatedSubtasks = MutableLiveData(emptyList())
+            seriesElementId = MutableLiveData(null)
             isChild = MutableLiveData(false)
 
             /*
@@ -110,6 +111,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     database.getIcal4List(ICal4List.getQueryForAllSubtasksForParentUID(parentUid, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
+            seriesElementId = Transformations.switchMap(icalEntity) {
+                database.getSeriesICalObjectIdByUID(it?.property?.uid)
+            }
             isChild = database.isChild(icalObjectId)
         }
 
@@ -125,10 +129,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             changeState.value = DetailChangeState.CHANGESAVING
             val item = database.getICalObjectById(id) ?: return@launch
             try {
-                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-                }
                 item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                 database.update(item)
                 if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
@@ -162,6 +162,19 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 sqlConstraintException.value = true
             } finally {
                 changeState.value = DetailChangeState.CHANGESAVED
+            }
+        }
+    }
+
+    fun unlinkFromSeries() {
+        viewModelScope.launch(Dispatchers.IO) {
+            icalEntity.value?.property?.let { mainICalObject ->
+                val children = database.getRelatedChildren(mainICalObject.id)
+                val updatedEntry = ICalObject.unlinkFromSeries(mainICalObject, database)
+                children.forEach { child ->
+                    val childEntity = database.getSync(child.id) ?: return@forEach
+                    createCopy(childEntity, child.getModuleFromString(), updatedEntry.uid)
+                }
             }
         }
     }
@@ -264,10 +277,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 icalObject.makeDirty()
                 database.update(icalObject)
 
-                if (icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-                }
+                //TODO: Unlink if date changed?
+                //if (icalEntity.value?.property?.recurid != null) {
+                //    ICalObject.unlinkFromSeries(icalEntity.value?.property!!, database)
+                //    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
+                //}
                 icalObject.recreateRecurring(getApplication())
                 //}
 
@@ -324,10 +338,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         text = icalEntity.value?.property?.uid!!
                     )
                 )
-                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-                }
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", e.stackTraceToString())
@@ -345,9 +355,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
+                if(icalEntity.value?.property?.recurid != null) {
+                    ICalObject.unlinkFromSeries(icalEntity.value?.property!!, database)
+                    //toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                 }
                 icalEntity.value?.property?.id?.let { id ->
                     ICalObject.deleteItemWithChildren(id, database)
@@ -384,10 +394,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun createCopy(icalEntityToCopy: ICalEntity, newModule: Module, newParentUID: String? = null) {
-        val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
+        changeState.value = DetailChangeState.CHANGESAVING
 
         viewModelScope.launch(Dispatchers.IO) {
-            changeState.value = DetailChangeState.CHANGESAVING
+            val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
             try {
                 val newId = database.insertICalObject(newEntity.property)
                 newEntity.alarms?.forEach { alarm ->

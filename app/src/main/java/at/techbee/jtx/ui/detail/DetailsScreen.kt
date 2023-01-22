@@ -60,7 +60,6 @@ fun DetailsScreen(
     onLastUsedCollectionChanged: (Module, Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
-    //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     fun Context.getActivity(): AppCompatActivity? = when (this) {
         is AppCompatActivity -> this
@@ -80,6 +79,7 @@ fun DetailsScreen(
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
     val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
+    val seriesElementId = detailViewModel.seriesElementId.observeAsState(null)
     val isChild = detailViewModel.isChild.observeAsState(false)
     val allCategories = detailViewModel.allCategories.observeAsState(emptyList())
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
@@ -345,9 +345,6 @@ fun DetailsScreen(
                 linkProgressToSubtasks = detailViewModel.settingsStateHolder.settingLinkProgressToSubtasks.value,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
-                    if (changedICalObject.isRecurLinkedInstance)
-                        changedICalObject.isRecurLinkedInstance = false
-
                     detailViewModel.save(
                         changedICalObject,
                         changedCategories,
@@ -359,7 +356,7 @@ fun DetailsScreen(
                     )
                     onLastUsedCollectionChanged(icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
                 },
-                onProgressChanged = { itemId, newPercent, _ ->
+                onProgressChanged = { itemId, newPercent ->
                     detailViewModel.updateProgress(itemId, newPercent)
                 },
                 onMoveToNewCollection = { icalObject, newCollection ->
@@ -381,7 +378,11 @@ fun DetailsScreen(
                 },
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
+                goToSeriesElement = { editMode ->
+                    seriesElementId.value?.let { navController.navigate(DetailDestination.Detail.getRoute(it, emptyList(), editMode)) }
+                                    },
                 goBack = { navigateUp = true },
+                unlinkFromSeries = { detailViewModel.unlinkFromSeries() },
                 modifier = Modifier.padding(paddingValues)
             )
 

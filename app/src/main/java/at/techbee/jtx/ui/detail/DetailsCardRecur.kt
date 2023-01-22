@@ -20,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,8 +47,11 @@ import java.util.*
 fun DetailsCardRecur(
     icalObject: ICalObject,
     isEditMode: Boolean,
+    hasChildren: Boolean,
     onRecurUpdated: (Recur?) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    goToSeriesElement: (editMode: Boolean) -> Unit,
+    unlinkFromSeries: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -167,7 +171,7 @@ fun DetailsCardRecur(
                     text = headline
                 )
 
-                AnimatedVisibility(isEditMode && icalObject.recurOriginalIcalObjectId == null) {
+                AnimatedVisibility(isEditMode && icalObject.recurid == null) {
                     Switch(
                         checked = isRecurActivated,
                         enabled = icalObject.dtstart != null,
@@ -513,24 +517,33 @@ fun DetailsCardRecur(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if(icalObject.recurOriginalIcalObjectId != null) {
+                if(icalObject.recurid != null) {
                     Button(
-                        onClick = { icalObject.recurOriginalIcalObjectId?.let { goToDetail(it, false, emptyList()) } }
+                        onClick = {
+                            goToSeriesElement(isEditMode)
+                        }
                     ) {
-                        Text(stringResource(id = R.string.view_recurrence_go_to_original_button))
+                        Text(stringResource(id = R.string.details_go_to_series))
                     }
-                    if(icalObject.isRecurLinkedInstance) {
-                        Text(
-                            text = stringResource(id = R.string.view_recurrence_note_to_original),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(id = R.string.view_reccurrence_note_is_exception),
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                    Button(
+                        onClick = { unlinkFromSeries() }
+                    ) {
+                        Text(stringResource(id = R.string.details_unlink_from_series))
                     }
+                    Text(
+                        text = stringResource(id = if(icalObject.sequence == 0L) R.string.details_unchanged_part_of_series else R.string.details_changed_part_of_series),
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
+            }
+
+            AnimatedVisibility(hasChildren) {
+                Text(
+                    text = stringResource(id = R.string.details_series_attention_subentries),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
 
             if(isEditMode)
@@ -609,8 +622,11 @@ fun DetailsCardRecur_Preview() {
                 rdate = "1661890454701,1661990454701"
             },
             isEditMode = false,
+            hasChildren = false,
             onRecurUpdated = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            goToSeriesElement = { },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -636,15 +652,18 @@ fun DetailsCardRecur_Preview_edit() {
                 rrule = recur.toString()
             },
             isEditMode = true,
+            hasChildren = false,
             onRecurUpdated = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            goToSeriesElement = { },
+            unlinkFromSeries = { }
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardRecur_Preview_linked_instance() {
+fun DetailsCardRecur_Preview_unchanged_recur() {
     MaterialTheme {
 
         DetailsCardRecur(
@@ -653,19 +672,22 @@ fun DetailsCardRecur_Preview_linked_instance() {
                 dtstartTimezone = null
                 due = System.currentTimeMillis()
                 dueTimezone = null
-                isRecurLinkedInstance = true
-                recurOriginalIcalObjectId = 1L
+                recurid = "uid"
+                sequence = 0L
             },
             isEditMode = false,
+            hasChildren = false,
             onRecurUpdated = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            goToSeriesElement = { },
+            unlinkFromSeries = { }
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardRecur_Preview_linked_exception() {
+fun DetailsCardRecur_Preview_changed_recur() {
     MaterialTheme {
 
         DetailsCardRecur(
@@ -674,17 +696,18 @@ fun DetailsCardRecur_Preview_linked_exception() {
                 dtstartTimezone = null
                 due = System.currentTimeMillis()
                 dueTimezone = null
-                isRecurLinkedInstance = false
-                recurOriginalIcalObjectId = 1L
+                recurid = "uid"
+                sequence = 1L
             },
             isEditMode = false,
+            hasChildren = true,
             onRecurUpdated = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            goToSeriesElement = { },
+            unlinkFromSeries = { }
         )
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable
@@ -699,8 +722,11 @@ fun DetailsCardRecur_Preview_off() {
                 dueTimezone = null
             },
             isEditMode = false,
+            hasChildren = false,
             onRecurUpdated = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            goToSeriesElement = { },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -718,8 +744,11 @@ fun DetailsCardRecur_Preview_edit_off() {
                 dueTimezone = null
             },
             isEditMode = true,
+            hasChildren = false,
             onRecurUpdated = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            goToSeriesElement = { },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -737,8 +766,11 @@ fun DetailsCardRecur_Preview_edit_no_dtstart() {
                 dueTimezone = null
             },
             isEditMode = true,
+            hasChildren = false,
             onRecurUpdated = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            goToSeriesElement = { },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -756,8 +788,11 @@ fun DetailsCardRecur_Preview_view_no_dtstart() {
                 dueTimezone = null
             },
             isEditMode = false,
+            hasChildren = false,
             onRecurUpdated = { },
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            goToSeriesElement = { },
+            unlinkFromSeries = { }
         )
     }
 }
