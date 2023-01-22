@@ -508,6 +508,9 @@ Danke!"</string>
     <string name="settings_progress_step_50">"Inkrement 50 (2 Stufen)"</string>
     <string name="settings_progress_step">"Schritte für den Fortschritt-Slider"</string>
     <string name="settings_disable_alarms_for_readonly">"Alarme für schreibgeschützte Collections deaktivieren"</string>
+    <string name="settings_link_progress_to_subtasks">"Fortschritt mit Unteraufgaben verknüpfen"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Status, Fortschritt und Fertiggestellt synchron halten"</string>
+    <string name="settings_attention_experimental_feature">"Achtung: Dies ist eine experimentelle Funktion"</string>
     <string name="sync_button_go_to_collections">"Zu den Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Bitte kaufen Sie jtx Board Pro, um diese Funktion zu nutzen."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
