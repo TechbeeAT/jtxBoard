@@ -507,6 +507,9 @@ Děkujeme vám!"</string>
     <string name="settings_progress_step_50">"Přírůstek o 50 (2 kroky)"</string>
     <string name="settings_progress_step">"Nastavit krok pro posuvník průběhu"</string>
     <string name="settings_disable_alarms_for_readonly">"Zakázat budíky pro sbírky pouze pro čtení"</string>
+    <string name="settings_link_progress_to_subtasks">"Propojit průběh do dílčích úkolů"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Ponechat stav, průběh a dokončení při synchronizaci"</string>
+    <string name="settings_attention_experimental_feature">"Pozor: Toto je experimentální funkce"</string>
     <string name="sync_button_go_to_collections">"Přejít na Sbírky"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Pro povolení této funkce si zakupte prosím balíček Pro."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>

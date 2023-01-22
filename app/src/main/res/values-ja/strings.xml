@@ -1,20 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtxボード同期 ジャーナル, ノート &amp; タスク"</string>
+    <string name="app_permission_desc">"jtx Board コンテンツを DAVx5 のような他のアプリケーションと同期する"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="save">"保存する"</string>
+    <string name="cancel">"中止"</string>
+    <string name="ok">"はい"</string>
+    <string name="delete">"削除する"</string>
+    <string name="discard">"変更を破棄"</string>
+    <string name="gotit">"わかりました"</string>
+    <string name="cont">"続ける"</string>
+    <string name="toolbar_text_jtx_board_journals_overview">"ジャーナルの概要"</string>
+    <string name="toolbar_text_jtx_board_notes_overview">"ノートの概要"</string>
+    <string name="toolbar_text_jtx_board_tasks_overview">"タスクの概要"</string>
+    <string name="toolbar_text_view_journal_details">"ジャーナルの詳細"</string>
+    <string name="toolbar_text_view_note_details">"ノートの詳細"</string>
+    <string name="toolbar_text_view_task_details">"タスクの詳細"</string>
+    <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
+    <string name="toolbar_text_add_note">"ノートを追加"</string>
+    <string name="toolbar_text_add_task">"タスクを追加"</string>
+    <string name="toolbar_text_edit_journal">"ジャーナルを編集"</string>
+    <string name="toolbar_text_edit_note">"ノートを編集"</string>
+    <string name="toolbar_text_edit_task">"タスクを編集"</string>
+    <string name="toolbar_text_filter">"絞り込み"</string>
+    <string name="toolbar_text_settings">"設定"</string>
+    <string name="toolbar_text_about">"このアプリについて"</string>
+    <string name="toolbar_text_sync">"同期する"</string>
+    <string name="toolbar_text_donate">"寄付する"</string>
+    <string name="toolbar_text_adinfo">"広告について"</string>
+    <string name="default_local_collection_name">"ローカル"</string>
+    <string name="default_local_account_name">"ローカル"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"ドラフト（下書き）"</string>
+    <string name="journal_status_final">"ファイナル（決定稿）"</string>
+    <string name="journal_status_cancelled">"中止しました"</string>
+    <string name="todo_status_needsaction">"アクションが必要です"</string>
+    <string name="todo_status_completed">"完了"</string>
+    <string name="todo_status_inprocess">"処理中"</string>
+    <string name="todo_status_cancelled">"中止しました"</string>
+    <string name="classification_public">"公開"</string>
+    <string name="classification_private">"非公開"</string>
+    <string name="classification_confidential">"機密"</string>
+    <string name="attendee_role_optional_participant">"任意参加者"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"ナビゲーション・ドロワーを開く"</string>
+    <string name="navigation_drawer_close">"ナビゲーション・ドロワーを閉じる"</string>
+    <string name="navigation_drawer_board">"ボード"</string>
+    <string name="navigation_drawer_sync">"DAVx5 と同期"</string>
+    <string name="navigation_drawer_about">"ライセンスについて"</string>
+    <string name="navigation_drawer_subtitle">"ジャーナル, ノート, タスク"</string>
+    <string name="navigation_drawer_beta_feedback">"ベータ版へのフィードバック"</string>
+    <string name="navigation_drawer_settings">"設定"</string>
+    <string name="navigation_drawer_news_updates">"ニュース &amp; アップデート"</string>
+    <string name="navigation_drawer_external_links">"外部 リンク"</string>
+    <string name="navigation_drawer_website">"Web サイト"</string>
+    <string name="navigation_drawer_support">"お問い合わせ"</string>
+    <string name="navigation_drawer_donate">"寄付する"</string>
+    <string name="navigation_drawer_privacy_policy">"個人情報保護方針"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"期限を過ぎました"</string>
+    <string name="list_due_today">"今日が期限"</string>
+    <string name="list_due_tomorrow">"明日が期限"</string>
+    <string name="list_due_inXdays">"期限まで %d 日"</string>
+    <string name="list_due_inXhours">"期限まで %d 時間"</string>
+    <string name="list_start_past">"過去に開始"</string>
+    <string name="list_start_today">"本日の開始予定"</string>
+    <string name="list_start_tomorrow">"明日から始める"</string>
+    <string name="list_start_inXhours">"%d 時間後に開始予定"</string>
+    <string name="list_start_inXdays">"%d 日後に開始予定"</string>
+    <string name="list_tabitem_journals">"ジャーナル"</string>
+    <string name="list_tabitem_notes">"メモ"</string>
+    <string name="list_tabitem_todos">"タスク"</string>
+    <string name="list_fab_add_contentdesc">"新規アイテムを追加"</string>
+    <string name="list_progress">"進捗状況"</string>
+    <string name="list_expand">"展開する"</string>
+    <string name="list_dialog_contribution_title">"広告に関する注意"</string>
+    <string name="list_dialog_contribution_more_information">"詳細を見る"</string>
+    <string name="list_num_attendees_contentdesc">"出席者数"</string>
+    <string name="list_num_attachments_contentdesc">"添付ファイル数"</string>
+    <string name="list_num_comments_contentdesc">"コメント数"</string>
+    <string name="list_dialog_delete_selected_title">選択した項目を削除しますか？</string>
+    <string name="list_dialog_delete_selected_message">このアクションは選択されたすべての項目 (%1$d) を削除します。続行してもよろしいですか? この操作は元に戻せません!</string>
+    <string name="list_quickadd_dialog_summary_description_hint">"概要/説明"</string>
+    <string name="list_quickadd_dialog_summary_description_helper">"最初の行はサマリとして解釈され、残りは説明として解釈されます。ハッシュタグはカテゴリとして解釈されます (例: #category)。"</string>
+    <string name="list_item_upload_pending">"アップロード処理待ち"</string>
+    <string name="list_item_recurring">"定期的なイベント"</string>
     <!-- fragment_ical_view -->
+    <string name="view_recurrence_go_to_original_button">"オリジナルへ移動"</string>
+    <string name="view_recurrence_note_to_original_dialog_header">"反復インスタンス"</string>
+    <string name="view_recurrence_note_to_original">"このエントリはシリーズの一部です。 この項目を編集すると、シリーズのリンクが解除されます。独立したイベントとして残り、元のイベントの変更はこのエントリには影響しません。"</string>
+    <string name="view_fragment_audio_permission">"アプリのアクセス許可"</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board は音声を録音するために権限を必要とします。この機能を使用する権限を許可してください。"</string>
+    <string name="view_fragment_audio_dialog_add_audio_note">"音声メモを追加"</string>
+    <string name="view_comment_playbutton_content_desc">"音声コメントを再生"</string>
+    <string name="view_reccurrence_note_is_exception">"このアイテムは定期反復エントリから除外されます。"</string>
+    <string name="view_feedback_linked_notes">"フィードバック / リンクされたメモ"</string>
+    <string name="view_add_note">"メモを追加"</string>
+    <string name="view_add_audio_note">"音声を追加する"</string>
+    <string name="view_fab_edit_entry_contentDesc">"項目を編集"</string>
+    <string name="view_subtasks_header">"サブタスク"</string>
+    <string name="view_progress_label">"進行状況"</string>
+    <string name="view_dialog_sure_to_delete_title">"\"%1$s\" を削除しますか？"</string>
+    <string name="view_dialog_sure_to_delete_message">"\"%1$s\" を削除してもよろしいですか？"</string>
+    <string name="view_toast_deleted_successfully">"\"%1$s\" は正常に削除されました"</string>
+    <string name="view_dialog_add_note">"ノートを追加"</string>
+    <string name="view_dialog_add_note_dialog_hint">"ここにノートを追加"</string>
+    <string name="view_toast_entry_does_not_exist_anymore">"リクエストされた項目は存在しません。"</string>
+    <string name="view_created_text">"作成日時: %1$s"</string>
+    <string name="view_last_modified_text">"最終更新日時: %1$s"</string>
+    <string name="view_due">"期限"</string>
+    <string name="view_completed">"完了"</string>
+    <string name="view_started">"開始"</string>
     <!-- fragment_ical_edit -->
+    <string name="edit_add_category_hint">"#mycategory"</string>
+    <string name="edit_take_picture_button_text">"写真を撮る"</string>
+    <string name="edit_add_link_button_text">"ファイルを添付"</string>
+    <string name="edit_subtasks_add_helper">"サブタスクを追加"</string>
+    <string name="edit_attachment_delete_attachment">"添付ファイルを削除"</string>
+    <string name="edit_attachment_add_link_dialog">"添付ファイルへのリンクを追加"</string>
+    <string name="edit_recur_on_weekday">"曜日"</string>
+    <string name="edit_recur_on_the_x_day_of_month">"日"</string>
+    <string name="edit_recur_toast_requires_start_date">"反復には開始日を設定する必要があります！"</string>
+    <string name="edit_task_started_add">"開始日時を選ぶ"</string>
+    <string name="edit_task_due_add">"期限の日時を選ぶ"</string>
+    <string name="edit_task_completed_add">"完了した日時を選ぶ"</string>
+    <string name="edit_dialog_sure_to_delete_title">"%1$s を削除しますか？"</string>
+    <string name="edit_dialog_sure_to_discard_title">"このエントリを破棄しますか？"</string>
+    <string name="edit_dialog_sure_to_delete_message">"\"%1$s\" を削除してよろしいですか？"</string>
+    <string name="edit_dialog_sure_to_discard_message">"このエントリを破棄してよろしいですか？ 破棄すると保存されません。"</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"開始日よりも前の期日は選べません。"</string>
     <!-- fragment_about -->
+    <string name="about_tabitem_translations">"翻訳"</string>
     <!-- menus -->
+    <string name="menu_list_quick_todo">"クイック ToDo"</string>
+    <string name="menu_list_syncnow">"今すぐ同期"</string>
+    <string name="menu_view_share_ics">".ics ファイルとして共有"</string>
+    <string name="menu_view_copy_item">"複製を作成"</string>
     <!-- Notification channel for Reminders -->
+    <string name="notification_channel_reminder_name">"ToDo の期限リマインダ"</string>
     <!-- Shortcuts -->
+    <string name="shortcut_addJournal_longLabel">"ジャーナルを追加"</string>
+    <string name="shortcut_addNote_longLabel">"メモを追加"</string>
+    <string name="shortcut_addTodo_longLabel">"ToDo を追加"</string>
     <!-- Settings fragment -->
+    <string name="settings_enforce_dark_theme">"ダークテーマを強制"</string>
+    <string name="settings_app">"アプリの設定"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_davx5_heading">"DAVx⁵ と同期 (beta)*"</string>
+    <string name="sync_button_add_account_in_davx5">"DAVx⁵ にアカウントを追加"</string>
+    <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ の起動に失敗。手動で DAVx⁵ アプリを起動してください。"</string>
     <!-- Donate fragment -->
     <!-- sync content provider -->
     <!-- Permissions -->
