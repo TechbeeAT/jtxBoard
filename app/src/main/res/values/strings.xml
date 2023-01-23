@@ -24,6 +24,7 @@ Global Strings -->
     <string name="discard">"Discard"</string>
     <string name="gotit">"Got it"</string>
     <string name="cont">"Continue"</string>
+    <string name="website">"Website"</string>
     <string name="toolbar_text_jtx_board" translatable="false">"jtx Board"</string>
     <string name="toolbar_text_jtx_board_journals_overview">"Journals Overview"</string>
     <string name="toolbar_text_jtx_board_notes_overview">"Notes Overview"</string>
