@@ -187,6 +187,7 @@ fun DetailScreenContent(
         icalObject.value.completedTimezone = iCalEntity.value?.property?.completedTimezone
         icalObject.value.sequence = iCalEntity.value?.property?.sequence?:0
         icalObject.value.recurid = iCalEntity.value?.property?.recurid
+        icalObject.value.uid = iCalEntity.value?.property?.uid!!
         icalObject.value = icalObject.value
     }
 
