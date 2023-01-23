@@ -9,12 +9,18 @@
 package at.techbee.jtx.ui.reusable.elements
 
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.DeleteSweep
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.SwapHoriz
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -31,6 +37,9 @@ fun FilterSection(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
     ) {
+
+    var expanded by remember { mutableStateOf(false) }
+    
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Top,
@@ -46,13 +55,33 @@ fun FilterSection(
                 icon = icon,
                 iconDesc = headline,
                 text = headline,
+                modifier = Modifier.weight(1f)
             )
             Row {
-                IconButton(onClick = { onInvertSelection() }) {
-                    Icon(Icons.Outlined.SwapHoriz, stringResource(id = R.string.invert_selection))
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(Icons.Outlined.MoreVert, stringResource(id = R.string.more))
                 }
-                IconButton(onClick = { onResetSelection() }) {
-                    Icon(Icons.Outlined.DeleteSweep, stringResource(id = R.string.delete))
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        leadingIcon = { Icon(Icons.Outlined.SwapHoriz, null) },
+                        text = { Text(stringResource(id = R.string.invert_selection)) },
+                        onClick = {
+                            onInvertSelection()
+                            expanded = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        leadingIcon = { Icon(Icons.Outlined.DeleteSweep, null) },
+                        text = { Text(stringResource(id = R.string.clear_selection)) },
+                        onClick = {
+                            onResetSelection()
+                            expanded = false
+                        }
+                    )
                 }
             }
         }
