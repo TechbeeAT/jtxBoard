@@ -603,7 +603,7 @@ DELETEs by Object
     // This query returns all IcalObjects that have a specific ICalObjectId in the field for the OriginalIcalObjectId (ie. all generated items for a recurring entry)
     @Transaction
     @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NOT NULL")
-    fun getRecurInstances(uid: Long): List<ICalObject?>
+    fun getRecurInstances(uid: String): List<ICalObject?>
 
     @Transaction
     @Query("SELECT $COLUMN_EXDATE from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :originalId")
@@ -646,6 +646,6 @@ DELETEs by Object
     fun deleteRecurringInstances(uid: String?)
 
     @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_DTSTART = :dtstart")
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_DTSTART = :dtstart AND $COLUMN_RECURID IS NOT NULL")
     fun getRecurInstance(uid: String?, dtstart: Long): ICalObject?
 }

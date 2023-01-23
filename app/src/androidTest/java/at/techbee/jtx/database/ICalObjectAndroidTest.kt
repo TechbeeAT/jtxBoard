@@ -78,14 +78,15 @@ class ICalObjectAndroidTest {
         }
 
         val id = database.insertICalObject(item)
-        val savedItem = database.getSync(id)
-        savedItem?.property?.recreateRecurring(context)
+        val savedItem = database.getICalObjectByIdSync(id)
+        savedItem?.recreateRecurring(context)
+        val savedItemUID = savedItem?.uid ?: throw AssertionError("UID was null")
 
-        val recurList = database.getRecurInstances(id)
+        val recurList = database.getRecurInstances(uid = savedItemUID)
         assertEquals(6, recurList.size)
 
-        database.deleteUnchangedRecurringInstances(savedItem?.property?.uid)
-        val recurListEmpty = database.getRecurInstances(id)
+        database.deleteUnchangedRecurringInstances(savedItemUID)
+        val recurListEmpty = database.getRecurInstances(savedItemUID)
         assertEquals(0, recurListEmpty.size)
     }
 
@@ -102,17 +103,18 @@ class ICalObjectAndroidTest {
         }
 
         val id = database.insertICalObject(item)
-        val savedItem = database.getSync(id)
-        savedItem?.property?.recreateRecurring(context)
+        val savedItem = database.getICalObjectByIdSync(id)
+        savedItem?.recreateRecurring(context)
+        val savedItemUID = savedItem?.uid ?: throw AssertionError("UID was null")
 
-        val recurList = database.getRecurInstances(id)
+        val recurList = database.getRecurInstances(savedItemUID)
         assertEquals(7, recurList.size)
 
         assertEquals(1663804800000L, recurList[0]?.due)
         //assertEquals(1664236800000L, recurList[1]?.due)  // TODO
 
-        database.deleteUnchangedRecurringInstances(savedItem?.property?.uid)
-        val recurListEmpty = database.getRecurInstances(id)
+        database.deleteUnchangedRecurringInstances(savedItemUID)
+        val recurListEmpty = database.getRecurInstances(savedItemUID)
         assertEquals(0, recurListEmpty.size)
     }
 
