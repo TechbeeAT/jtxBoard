@@ -407,6 +407,7 @@ fun DetailScreenContent(
                     icalObject.value = icalObject.value
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
+                unlinkFromSeries = unlinkFromSeries
             )
 
             AnimatedVisibility(!isEditMode.value) {

@@ -42,6 +42,7 @@ fun DetailsCardDates(
     onDtstartChanged: (Long?, String?) -> Unit,
     onDueChanged: (Long?, String?) -> Unit,
     onCompletedChanged: (Long?, String?) -> Unit,
+    unlinkFromSeries: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -86,7 +87,9 @@ fun DetailsCardDates(
                         null,
                     allowNull = icalObject.module == Module.TODO.name,
                     dateOnly = (icalObject.due != null && icalObject.dueTimezone == TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone == TZ_ALLDAY),
-                    enforceTime = (icalObject.due != null && icalObject.dueTimezone != TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone != TZ_ALLDAY)
+                    enforceTime = (icalObject.due != null && icalObject.dueTimezone != TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone != TZ_ALLDAY),
+                    needsUnlinkBeforeEditing = icalObject.recurid?.isNotEmpty() == true,
+                    unlinkFromSeries = unlinkFromSeries
                 )
             }
 
@@ -157,7 +160,8 @@ fun DetailsCardDates_Journal_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -182,7 +186,8 @@ fun DetailsCardDates_Todo_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -202,7 +207,8 @@ fun DetailsCardDates_Journal_edit_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -225,7 +231,8 @@ fun DetailsCardDates_Todo_edit_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -247,7 +254,8 @@ fun DetailsCardDates_Todo_edit_Preview_completed_hidden() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -265,7 +273,8 @@ fun DetailsCardDates_Note_edit_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            unlinkFromSeries = { }
         )
     }
 }
@@ -283,7 +292,8 @@ fun DetailsCardDates_Note_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            unlinkFromSeries = { }
         )
     }
 }
