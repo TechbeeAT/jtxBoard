@@ -13,24 +13,9 @@ Global Strings -->
     <string name="discard">"丢弃"</string>
     <string name="gotit">"明白"</string>
     <string name="cont">"继续"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"日志概览"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"笔记概览"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"任务概览"</string>
-    <string name="toolbar_text_view_journal_details">"日志详情"</string>
-    <string name="toolbar_text_view_note_details">"笔记详情"</string>
-    <string name="toolbar_text_view_task_details">"任务详情"</string>
     <string name="toolbar_text_add_journal">"添加日志"</string>
     <string name="toolbar_text_add_note">"添加笔记"</string>
     <string name="toolbar_text_add_task">"添加任务"</string>
-    <string name="toolbar_text_edit_journal">"编辑日志"</string>
-    <string name="toolbar_text_edit_note">"编辑笔记"</string>
-    <string name="toolbar_text_edit_task">"编辑任务"</string>
-    <string name="toolbar_text_filter">"过滤"</string>
-    <string name="toolbar_text_settings">"设置"</string>
-    <string name="toolbar_text_about">"关于"</string>
-    <string name="toolbar_text_sync">"同步"</string>
-    <string name="toolbar_text_donate">"捐赠"</string>
-    <string name="toolbar_text_adinfo">"广告信息"</string>
     <string name="default_local_collection_name">"位置"</string>
     <string name="default_local_account_name">"位置"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -80,11 +65,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"添加新项目"</string>
     <string name="list_progress">"进展"</string>
     <string name="list_expand">"扩展"</string>
-    <string name="list_dialog_contribution_title">"广告须知"</string>
-    <string name="list_dialog_contribution_more_information">"了解更多"</string>
-    <string name="list_num_attendees_contentdesc">"参加人数"</string>
-    <string name="list_num_attachments_contentdesc">"附件数量"</string>
-    <string name="list_num_comments_contentdesc">"评论数量"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"摘要/说明"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"第一行被提取为摘要，其余当做为说明。hashtags被提取为类别（例如#category）。"</string>
     <string name="list_item_upload_pending">"上传挂起"</string>
