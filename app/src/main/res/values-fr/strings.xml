@@ -12,23 +12,9 @@ Global Strings -->
     <string name="discard">"Rejeter"</string>
     <string name="gotit">"D'accord"</string>
     <string name="cont">"Continuer"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Aperçu des journaux"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Aperçu des notes"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Aperçu des tâches"</string>
-    <string name="toolbar_text_view_journal_details">"Détails du journal"</string>
-    <string name="toolbar_text_view_note_details">"Détails de la note"</string>
-    <string name="toolbar_text_view_task_details">"Détails de la tâche"</string>
     <string name="toolbar_text_add_journal">"Ajouter un journal"</string>
     <string name="toolbar_text_add_note">"Ajouter une note"</string>
     <string name="toolbar_text_add_task">"Ajouter une tâche"</string>
-    <string name="toolbar_text_edit_journal">"Modifier le journal"</string>
-    <string name="toolbar_text_edit_note">"Modifier la note"</string>
-    <string name="toolbar_text_edit_task">"Modifier la tâche"</string>
-    <string name="toolbar_text_filter">"Filtre"</string>
-    <string name="toolbar_text_settings">"Paramètres"</string>
-    <string name="toolbar_text_about">"À propos de"</string>
-    <string name="toolbar_text_donate">"Faire un don"</string>
-    <string name="toolbar_text_adinfo">"Information sur la publicité"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Brouillon"</string>
     <string name="journal_status_final">"Définitif"</string>
@@ -73,11 +59,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Ajouter un nouvel élément"</string>
     <string name="list_progress">"Progression"</string>
     <string name="list_expand">"Développer"</string>
-    <string name="list_dialog_contribution_title">"Note sur les publicités"</string>
-    <string name="list_dialog_contribution_more_information">"Savoir plus"</string>
-    <string name="list_num_attendees_contentdesc">"Nombre de participants"</string>
-    <string name="list_num_attachments_contentdesc">"Nombre de pièces jointes"</string>
-    <string name="list_num_comments_contentdesc">"Nombre de commentaires"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Résumé/Description"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La première ligne est interprétée comme un résumé, le reste comme une description. Les hashtags sont interprétés comme des catégories (par exemple #catégorie)."</string>
     <string name="list_item_upload_pending">"Chargement en cours"</string>

@@ -12,24 +12,9 @@ Global Strings -->
     <string name="discard">"Hylkää"</string>
     <string name="gotit">"Hyväksy"</string>
     <string name="cont">"Jatka"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Päiväkirjojen kooste"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Muistiinpanojen kooste"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Tehtävien kooste"</string>
-    <string name="toolbar_text_view_journal_details">"Päiväkirjan tiedot"</string>
-    <string name="toolbar_text_view_note_details">"Muistiinpanon tiedot"</string>
-    <string name="toolbar_text_view_task_details">"Tehtävän tiedot"</string>
     <string name="toolbar_text_add_journal">"Lisää päiväkirja"</string>
     <string name="toolbar_text_add_note">"Lisää muistiinpano"</string>
     <string name="toolbar_text_add_task">"Lisää tehtävä"</string>
-    <string name="toolbar_text_edit_journal">"Muokkaa päiväkirjaa"</string>
-    <string name="toolbar_text_edit_note">"Muokkaa muistiinpanoa"</string>
-    <string name="toolbar_text_edit_task">"Muokkaa tehtävää"</string>
-    <string name="toolbar_text_filter">"Suodata"</string>
-    <string name="toolbar_text_settings">"Asetukset"</string>
-    <string name="toolbar_text_about">"Tietoja"</string>
-    <string name="toolbar_text_sync">"Sykronointi"</string>
-    <string name="toolbar_text_donate">"Lahjoita"</string>
-    <string name="toolbar_text_adinfo">"Tietoa mainoksista"</string>
     <string name="default_local_collection_name">"Paikallinen"</string>
     <string name="default_local_account_name">"Paikallinen"</string>
     <!-- Strings for values in properties of an ICalObject -->

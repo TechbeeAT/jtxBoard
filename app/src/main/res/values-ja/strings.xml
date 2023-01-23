@@ -13,24 +13,9 @@ Global Strings -->
     <string name="discard">"変更を破棄"</string>
     <string name="gotit">"わかりました"</string>
     <string name="cont">"続ける"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"ジャーナルの概要"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"ノートの概要"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"タスクの概要"</string>
-    <string name="toolbar_text_view_journal_details">"ジャーナルの詳細"</string>
-    <string name="toolbar_text_view_note_details">"ノートの詳細"</string>
-    <string name="toolbar_text_view_task_details">"タスクの詳細"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"ノートを追加"</string>
     <string name="toolbar_text_add_task">"タスクを追加"</string>
-    <string name="toolbar_text_edit_journal">"ジャーナルを編集"</string>
-    <string name="toolbar_text_edit_note">"ノートを編集"</string>
-    <string name="toolbar_text_edit_task">"タスクを編集"</string>
-    <string name="toolbar_text_filter">"絞り込み"</string>
-    <string name="toolbar_text_settings">"設定"</string>
-    <string name="toolbar_text_about">"このアプリについて"</string>
-    <string name="toolbar_text_sync">"同期する"</string>
-    <string name="toolbar_text_donate">"寄付する"</string>
-    <string name="toolbar_text_adinfo">"広告について"</string>
     <string name="default_local_collection_name">"ローカル"</string>
     <string name="default_local_account_name">"ローカル"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -77,11 +62,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"新規アイテムを追加"</string>
     <string name="list_progress">"進捗状況"</string>
     <string name="list_expand">"展開する"</string>
-    <string name="list_dialog_contribution_title">"広告に関する注意"</string>
-    <string name="list_dialog_contribution_more_information">"詳細を見る"</string>
-    <string name="list_num_attendees_contentdesc">"出席者数"</string>
-    <string name="list_num_attachments_contentdesc">"添付ファイル数"</string>
-    <string name="list_num_comments_contentdesc">"コメント数"</string>
     <string name="list_dialog_delete_selected_title">選択した項目を削除しますか？</string>
     <string name="list_dialog_delete_selected_message">このアクションは選択されたすべての項目 (%1$d) を削除します。続行してもよろしいですか? この操作は元に戻せません!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"概要/説明"</string>

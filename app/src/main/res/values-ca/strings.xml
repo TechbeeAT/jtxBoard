@@ -13,24 +13,10 @@ Global Strings -->
     <string name="discard">"Descartar"</string>
     <string name="gotit">"D'acord"</string>
     <string name="cont">"Continuar"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Entrades de Diari"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Notes"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Tasques"</string>
-    <string name="toolbar_text_view_journal_details">"Detalls de l'Entrada"</string>
-    <string name="toolbar_text_view_note_details">"Detalls de la Nota"</string>
-    <string name="toolbar_text_view_task_details">"Detalls de la Tasca"</string>
+    <string name="website">"Lloc web"</string>
     <string name="toolbar_text_add_journal">"Afegir Entrada"</string>
     <string name="toolbar_text_add_note">"Afegir Nota"</string>
     <string name="toolbar_text_add_task">"Afegir Tasca"</string>
-    <string name="toolbar_text_edit_journal">"Editar Entrada"</string>
-    <string name="toolbar_text_edit_note">"Editar Nota"</string>
-    <string name="toolbar_text_edit_task">"Editar Tasca"</string>
-    <string name="toolbar_text_filter">"Filtre"</string>
-    <string name="toolbar_text_settings">"Configuració"</string>
-    <string name="toolbar_text_about">"Sobre"</string>
-    <string name="toolbar_text_sync">"Sincronitza"</string>
-    <string name="toolbar_text_donate">"Donar"</string>
-    <string name="toolbar_text_adinfo">"Informació d'Anuncis"</string>
     <string name="default_local_collection_name">"Local"</string>
     <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -80,11 +66,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Afegir un nou element"</string>
     <string name="list_progress">"Progrés"</string>
     <string name="list_expand">"Expandir"</string>
-    <string name="list_dialog_contribution_title">"Nota sobre el anuncis"</string>
-    <string name="list_dialog_contribution_more_information">"Saber més"</string>
-    <string name="list_num_attendees_contentdesc">"Nombre d'assistents"</string>
-    <string name="list_num_attachments_contentdesc">"Nombre d'adjunts"</string>
-    <string name="list_num_comments_contentdesc">"Nombre de comentaris"</string>
     <string name="list_dialog_delete_selected_title">Eliminar les entrades seleccionades?</string>
     <string name="list_dialog_delete_selected_message">Aquesta acció elimina totes les entrades seleccionades (%1$d). Segur que vols seguir? Aquesta operació no es pot desfer!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Sumari/Descripció"</string>
@@ -425,7 +406,6 @@ Gràcies!"</string>
     <string name="settings_default_expand_subtasks">"Expandeix les tasques en llista per defecte"</string>
     <string name="settings_default_expand_subnotes">"Expandeix les sub-notes en llista per defecte"</string>
     <string name="settings_default_expand_attachments">"Expandeix els adjunts en llista per defecte"</string>
-    <string name="title_activity_list_screen">"Pantalla de Llista"</string>
     <string name="permission_coarse_location_granted">"S'ha donat accés a la ubicació aproximada"</string>
     <string name="permission_coarse_location_denied">"S'ha denegat l'accés a la ubicació aproximada"</string>
     <string name="sorry">"Disculpa"</string>
