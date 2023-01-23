@@ -456,6 +456,7 @@ Thank you!"</string>
     <string name="timezone">"Timezone"</string>
     <string name="not_set2">"Not set"</string>
     <string name="invert_selection">"Invert selection"</string>
+    <string name="clear_selection">"Clear selection"</string>
     <string name="preferences">"Preferences"</string>
     <string name="revert">"Revert"</string>
     <string name="audio_play">"Play"</string>
