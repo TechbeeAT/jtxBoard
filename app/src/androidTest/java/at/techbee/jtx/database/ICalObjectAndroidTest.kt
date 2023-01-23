@@ -120,6 +120,35 @@ class ICalObjectAndroidTest {
 
 
     @Test
+    fun unlink_from_series() = runTest {
+
+        val item = ICalObject.createTodo().apply {
+            // from  fun getInstancesFromRrule_Journal_WEEKLY_withExceptions()
+            this.dtstart = 1663718400000L
+            this.due = 1663804800000L
+            this.rrule = "FREQ=DAILY;COUNT=5"
+            this.uid = "series"
+        }
+
+        val id = database.insertICalObject(item)
+        val savedItem = database.getICalObjectByIdSync(id)
+        savedItem?.recreateRecurring(context)
+        val savedItemUID = savedItem?.uid ?: throw AssertionError("UID was null")
+
+        val recurList = database.getRecurInstances(savedItemUID)
+        assertEquals(5, recurList.size)
+
+        assertEquals(1663718400000L, recurList[0]?.dtstart)
+        val firstInstance = database.getRecurInstance("series", recurList[0]?.dtstart ?: 0L) ?: throw AssertionError("firstInstance not found")
+        ICalObject.unlinkFromSeries(firstInstance, database)
+
+        val firstInstanceAfter = database.getICalObjectByIdSync(firstInstance.id) ?: throw AssertionError("firstInstance not found")
+        assertNotEquals("series", firstInstanceAfter.uid)
+        assertNull(firstInstanceAfter.recurid)
+    }
+
+
+    @Test
     fun createFromContentValues() {
 
         val sampleICalObject = ICalObject(
