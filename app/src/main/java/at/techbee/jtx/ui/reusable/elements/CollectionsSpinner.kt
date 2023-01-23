@@ -45,7 +45,7 @@ fun CollectionsSpinner(
             ) {
 
                 Text(
-                    text = selected.displayName + selected.accountName?.let { " (" + it + ")" },
+                    text = selected.displayName + selected.accountName?.let { " ($it)" },
                     modifier = Modifier.weight(1f)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
