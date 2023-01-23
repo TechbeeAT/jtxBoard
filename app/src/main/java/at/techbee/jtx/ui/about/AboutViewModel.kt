@@ -13,13 +13,23 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.BuildConfig
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.util.withContext
 import org.json.JSONException
-import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.List
+import kotlin.collections.MutableMap
+import kotlin.collections.MutableSet
+import kotlin.collections.emptyList
+import kotlin.collections.mutableListOf
+import kotlin.collections.mutableSetOf
+import kotlin.collections.set
 
 
 class AboutViewModel(application: Application) : AndroidViewModel(application) {
@@ -27,6 +37,7 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
     val translatorsPoeditor: MutableState<List<String>> = mutableStateOf(emptyList())
     val translatorsCrowdin: MutableState<List<String>> = mutableStateOf(emptyList())
     val releaseinfos: MutableLiveData<MutableSet<Release>> = MutableLiveData(mutableSetOf())
+    val libraries = Libs.Builder().withContext(application).build()
     private val app = application
 
     init {

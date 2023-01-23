@@ -331,6 +331,7 @@ fun MainNavHost(
                 translatorsPoeditor = viewModel.translatorsPoeditor,
                 translatorsCrowdin = viewModel.translatorsCrowdin,
                 releaseinfo = viewModel.releaseinfos,
+                libraries = viewModel.libraries,
                 navController = navController
             )
         }
