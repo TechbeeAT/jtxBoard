@@ -13,24 +13,9 @@ Global Strings -->
     <string name="discard">"Zahodit"</string>
     <string name="gotit">"Rozumím"</string>
     <string name="cont">"Pokračovat"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Přehled Deníků"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Přehled Poznámek"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Přehled Úkolů"</string>
-    <string name="toolbar_text_view_journal_details">"Podrobnosti o Deníku"</string>
-    <string name="toolbar_text_view_note_details">"Podrobnosti o Poznámce"</string>
-    <string name="toolbar_text_view_task_details">"Podrobnosti o Úkolu"</string>
     <string name="toolbar_text_add_journal">"Přidat Deník"</string>
     <string name="toolbar_text_add_note">"Přidat Poznámku"</string>
     <string name="toolbar_text_add_task">"Přidat Úkol"</string>
-    <string name="toolbar_text_edit_journal">"Upravit Deník"</string>
-    <string name="toolbar_text_edit_note">"Upravit Poznámku"</string>
-    <string name="toolbar_text_edit_task">"Upravit Úkol"</string>
-    <string name="toolbar_text_filter">"Filtrovat"</string>
-    <string name="toolbar_text_settings">"Nastavení"</string>
-    <string name="toolbar_text_about">"O aplikaci"</string>
-    <string name="toolbar_text_sync">"Synchronizovat"</string>
-    <string name="toolbar_text_donate">"Darovat"</string>
-    <string name="toolbar_text_adinfo">"Přidat informaci"</string>
     <string name="default_local_collection_name">"Místní"</string>
     <string name="default_local_account_name">"Místní"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -80,11 +65,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Přidat novou položku"</string>
     <string name="list_progress">"Průběh"</string>
     <string name="list_expand">"Rozbalit"</string>
-    <string name="list_dialog_contribution_title">"Poznámka k reklamám"</string>
-    <string name="list_dialog_contribution_more_information">"Zjistit více"</string>
-    <string name="list_num_attendees_contentdesc">"Počet účastníků"</string>
-    <string name="list_num_attachments_contentdesc">"Počet příloh"</string>
-    <string name="list_num_comments_contentdesc">"Počet komentářů"</string>
     <string name="list_dialog_delete_selected_title">Odstranit vybrané záznamy?</string>
     <string name="list_dialog_delete_selected_message">Tato akce odstraní všechny vybrané záznamy (%1$d). Opravdu chcete pokračovat? Tuto operaci nelze vrátit zpět!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Souhrn/Popis"</string>
@@ -424,7 +404,6 @@ Děkujeme vám!"</string>
     <string name="settings_default_expand_subtasks">"Rozbalovat dílčí úkoly v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_subnotes">"Rozbalovat dílčí poznámky v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_attachments">"Rozbalovat přílohy v seznamu ve výchozím nastavení"</string>
-    <string name="title_activity_list_screen">"ObrazovkaSeznamu"</string>
     <string name="permission_coarse_location_granted">"Oprávnění k přibližné poloze uděleno"</string>
     <string name="permission_coarse_location_denied">"Oprávnění k přibližné poloze zamítnuto"</string>
     <string name="sorry">"Omlouváme se"</string>

@@ -13,24 +13,10 @@ Global Strings -->
     <string name="discard">"Verwerfen"</string>
     <string name="gotit">"Alles klar"</string>
     <string name="cont">"Weiter"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Journale Überblick"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Notizen Überblick"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Aufgaben Überblick"</string>
-    <string name="toolbar_text_view_journal_details">"Journal Details"</string>
-    <string name="toolbar_text_view_note_details">"Notiz Details"</string>
-    <string name="toolbar_text_view_task_details">"Aufgabe Details"</string>
+    <string name="website">"Webseite"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
     <string name="toolbar_text_add_note">"Notiz hinzufügen"</string>
     <string name="toolbar_text_add_task">"Aufgabe hinzufügen"</string>
-    <string name="toolbar_text_edit_journal">"Journal bearbeiten"</string>
-    <string name="toolbar_text_edit_note">"Notiz bearbeiten"</string>
-    <string name="toolbar_text_edit_task">"Aufgabe bearbeiten"</string>
-    <string name="toolbar_text_filter">"Filter"</string>
-    <string name="toolbar_text_settings">"Einstellungen"</string>
-    <string name="toolbar_text_about">"Über"</string>
-    <string name="toolbar_text_sync">"Synchronisierung"</string>
-    <string name="toolbar_text_donate">"Spenden"</string>
-    <string name="toolbar_text_adinfo">"Werbeinformation"</string>
     <string name="default_local_collection_name">"Lokal"</string>
     <string name="default_local_account_name">"Lokal"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -80,11 +66,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Neuen Eintrag hinzufügen"</string>
     <string name="list_progress">"Fortschritt"</string>
     <string name="list_expand">"Erweitern"</string>
-    <string name="list_dialog_contribution_title">"Information zur Werbung"</string>
-    <string name="list_dialog_contribution_more_information">"Mehr erfahren"</string>
-    <string name="list_num_attendees_contentdesc">"Anzahl der Teilnehmer"</string>
-    <string name="list_num_attachments_contentdesc">"Anzahl der Anhänge"</string>
-    <string name="list_num_comments_contentdesc">"Anzahl der Kommentare"</string>
     <string name="list_dialog_delete_selected_title">Markierte Einträge löschen?</string>
     <string name="list_dialog_delete_selected_message">Diese Aktion löscht alle markierten Einträge (%1$d). Sind Sie sicher, dass Sie fortfahren wollen? Diese Aktion kann nicht rückgängig gemacht werden!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Zusammenfassung/Beschreibung"</string>
@@ -425,7 +406,6 @@ Danke!"</string>
     <string name="settings_default_expand_subtasks">"Unteraufgaben standardmäßig erweitern"</string>
     <string name="settings_default_expand_subnotes">"Unternotizen standardmäßig erweitern"</string>
     <string name="settings_default_expand_attachments">"Anhänge standardmäßig erweitern"</string>
-    <string name="title_activity_list_screen">"Listenansicht"</string>
     <string name="permission_coarse_location_granted">"Standort-Berechtigung erteilt"</string>
     <string name="permission_coarse_location_denied">"Standort-Berechtigung verweigert"</string>
     <string name="sorry">"Sorry"</string>
@@ -435,6 +415,7 @@ Danke!"</string>
     <string name="timezone">"Zeitzone"</string>
     <string name="not_set2">"Nicht gesetzt"</string>
     <string name="invert_selection">"Auswahl umkehren"</string>
+    <string name="clear_selection">"Auswahl aufheben"</string>
     <string name="preferences">"Einstellungen"</string>
     <string name="revert">"Zurücksetzen"</string>
     <string name="audio_play">"Abspielen"</string>

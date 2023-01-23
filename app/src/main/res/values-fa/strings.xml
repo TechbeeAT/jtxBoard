@@ -12,21 +12,8 @@ Global Strings -->
     <string name="discard">"ول کن"</string>
     <string name="gotit">"فهمیدم"</string>
     <string name="cont">"ادامه"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"مرور وقایع روزانه"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"مرور یادداشت ها"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"مرور کارها"</string>
-    <string name="toolbar_text_view_journal_details">"جزییات وقایع روزانه"</string>
-    <string name="toolbar_text_view_note_details">"جزئیات یادداشت"</string>
-    <string name="toolbar_text_view_task_details">"جزئیات کار"</string>
     <string name="toolbar_text_add_journal">"افزودن واقعه روزانه"</string>
     <string name="toolbar_text_add_note">"افزودن یادداشت"</string>
-    <string name="toolbar_text_edit_note">"ویرایش یادداشت"</string>
-    <string name="toolbar_text_filter">"صافی"</string>
-    <string name="toolbar_text_settings">"تنظیمات"</string>
-    <string name="toolbar_text_about">"درباره"</string>
-    <string name="toolbar_text_sync">"همگام سازی"</string>
-    <string name="toolbar_text_donate">"کمک مالی"</string>
-    <string name="toolbar_text_adinfo">"اطلاعات تبلیغ"</string>
     <string name="default_local_collection_name">"محلی"</string>
     <string name="default_local_account_name">"محلی"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -61,10 +48,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"افزودن مورد جدید"</string>
     <string name="list_progress">"پیش رفت"</string>
     <string name="list_expand">"گشودن"</string>
-    <string name="list_dialog_contribution_title">"یادداشت بر تبلیغات"</string>
-    <string name="list_dialog_contribution_more_information">"یافتن موارد بیشتر"</string>
-    <string name="list_num_attachments_contentdesc">"تعداد پیوست ها"</string>
-    <string name="list_num_comments_contentdesc">"تعداد نظرات"</string>
     <string name="list_dialog_delete_selected_title">ورودی های انتخابی حذف شوند؟</string>
     <string name="list_quickadd_dialog_summary_description_hint">"خلاصه/توضیحات"</string>
     <string name="list_item_upload_pending">"در صف بارگذاری"</string>

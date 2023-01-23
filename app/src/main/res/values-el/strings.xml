@@ -12,24 +12,9 @@ Global Strings -->
     <string name="discard">"Απόρριψη"</string>
     <string name="gotit">"Το κατάλαβα"</string>
     <string name="cont">"Συνέχεια"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Επισκόπηση Ημερολογίων"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Επισκόπηση Σημειώσεων"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Επισκόπηση Εργασιών"</string>
-    <string name="toolbar_text_view_journal_details">"Λεπτομέριες Ημερολογίων"</string>
-    <string name="toolbar_text_view_note_details">"Λεπτομέριες Σημειώσεων"</string>
-    <string name="toolbar_text_view_task_details">"Λεπτομέριες Εργασιών"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
     <string name="toolbar_text_add_note">"Προσθήκη σημείωσης"</string>
     <string name="toolbar_text_add_task">"Προσθήκη εργασίας"</string>
-    <string name="toolbar_text_edit_journal">"Επεξεργασία ημερολογίου"</string>
-    <string name="toolbar_text_edit_note">"Επεξεργασία σημείωσης"</string>
-    <string name="toolbar_text_edit_task">"Επεξεργασία εργασίας"</string>
-    <string name="toolbar_text_filter">"Φίλτρα"</string>
-    <string name="toolbar_text_settings">"Ρυθμίσεις"</string>
-    <string name="toolbar_text_about">"Σχετικά"</string>
-    <string name="toolbar_text_sync">"Συγχρονισμός"</string>
-    <string name="toolbar_text_donate">"Δωρεά"</string>
-    <string name="toolbar_text_adinfo">"Πληροφορίες διαφημίσεων"</string>
     <string name="default_local_collection_name">"Τοπικές"</string>
     <string name="default_local_account_name">"Τοπικές"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -78,11 +63,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Προσθήκη νέου"</string>
     <string name="list_progress">"Πρόοδος"</string>
     <string name="list_expand">"Επέκταση"</string>
-    <string name="list_dialog_contribution_title">"Σημείωση για τις διαφημίσεις"</string>
-    <string name="list_dialog_contribution_more_information">"Περισσότερα"</string>
-    <string name="list_num_attendees_contentdesc">"Αριθμός συμμετεχόντων"</string>
-    <string name="list_num_attachments_contentdesc">"Αριθμός συνημμένων"</string>
-    <string name="list_num_comments_contentdesc">"Αριθμός σχολίων"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Περίληψη/Περιγραφή"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Η πρώτη γραμμή ερμηνεύεται ως περίληψη, η υπόλοιπη ως περιγραφή. Τα hashtags ερμηνεύονται ως κατηγορίες (πχ. #category)."</string>
     <string name="list_item_upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>
@@ -399,7 +379,6 @@ Global Strings -->
     <string name="settings_default_expand_subtasks">"Ανάπτυξη των δευτερευουσών εργασιών στη λίστα από προεπιλογή"</string>
     <string name="settings_default_expand_subnotes">"Ανάπτυξη των δευτερευουσών σημειώσεων στη λίστα από προεπιλογή"</string>
     <string name="settings_default_expand_attachments">"Ανάπτυξη των επισυναπτωμένων στην λίστα από προεπιλογή"</string>
-    <string name="title_activity_list_screen">"Λίστα Οθόνης"</string>
     <string name="permission_coarse_location_granted">"Η άδεια χονδρικής τοποθεσίας χορηγήθηκε"</string>
     <string name="permission_coarse_location_denied">"Η άδεια χονδρικής τοποθεσίας απορρίφθηκε"</string>
     <string name="sorry">"Συγνώμη"</string>
