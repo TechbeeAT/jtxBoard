@@ -363,6 +363,7 @@ fun DetailScreenContent(
                                     onMoveToNewCollection(icalObject.value, newCollection)
                                 }
                             },
+                            enabled = icalObject.value.recurid.isNullOrEmpty(),
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(4.dp)
