@@ -33,7 +33,7 @@ SELECTs (global selects without parameter)
      * @return a list of [Category.text] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT DISTINCT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY ORDER BY $COLUMN_CATEGORY_ID DESC")
+    @Query("SELECT DISTINCT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) ORDER BY $COLUMN_CATEGORY_ID DESC")
     fun getAllCategoriesAsText(): LiveData<List<String>>
 
     /**
@@ -41,7 +41,7 @@ SELECTs (global selects without parameter)
      * @return a list of [Category.text] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT DISTINCT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE ORDER BY $COLUMN_RESOURCE_ID DESC")
+    @Query("SELECT DISTINCT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) ORDER BY $COLUMN_RESOURCE_ID DESC")
     fun getAllResourcesAsText(): LiveData<List<String>>
 
 
