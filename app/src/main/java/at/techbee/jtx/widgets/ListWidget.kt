@@ -49,20 +49,18 @@ class ListWidget : GlanceAppWidget() {
         val backgorundColor = GlanceTheme.colors.primaryContainer.getColor(context).copy(alpha = listWidgetConfig?.widgetAlpha ?: 1F)
 
         GlanceTheme {
-
-
-                ListWidgetContent(
-                    listWidgetConfig ?: return@GlanceTheme,
-                    list = list,
-                    subtasks = subtasks,
-                    subnotes = subnotes,
-                    listExceedLimits = listExceedLimits,
-                    modifier = GlanceModifier
-                        .appWidgetBackground()
-                        .fillMaxSize()
-                        .padding(horizontal = 4.dp)
-                        .background(backgorundColor)
-                )
-            }
+            ListWidgetContent(
+                listWidgetConfig ?: return@GlanceTheme,
+                list = list,
+                subtasks = subtasks,
+                subnotes = subnotes,
+                listExceedLimits = listExceedLimits,
+                modifier = GlanceModifier
+                    .appWidgetBackground()
+                    .fillMaxSize()
+                    .padding(horizontal = 4.dp)
+                    .background(backgorundColor)
+            )
         }
     }
+}
