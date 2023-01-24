@@ -537,11 +537,10 @@ fun ListScreenTabContainer(
                                     },
                                     onDismiss = {
                                         showQuickAdd.value = false  // origin was button
-                                        globalStateHolder.icalFromIntentString.value =
-                                            null  // origin was state from import
-                                        globalStateHolder.icalFromIntentAttachment.value =
-                                            null  // origin was state from import
-                                    }
+                                        globalStateHolder.icalFromIntentString.value = null  // origin was state from import
+                                        globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+                                    },
+                                    keepDialogOpen = { showQuickAdd.value = true } // necessary when origin was intent and save&new is clicked!
                                 )
                             }
 
