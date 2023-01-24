@@ -243,6 +243,8 @@ For more information about the Sync please see:"</string>
     <string name="list_welcome_entry_todo_description">"Additionally to journals and notes, tasks can have a planned start, a due and a completed date. They can be checked when they are done or a progress can be set. Edit this entry to check out all options :-)"</string>
     <string name="list_welcome_category">"#FirstSteps"</string>
     <string name="save_and_edit">"Save &amp; edit"</string>
+    <string name="save_and_new">"Save &amp; new"</string>
+    <string name="save_and_close">"Save &amp; close"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Use speech-to-text"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Speech-to-text engine is listening."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Speech-to-text engine stopped listening."</string>

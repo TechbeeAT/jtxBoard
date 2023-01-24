@@ -107,7 +107,6 @@ class ListWidget : GlanceAppWidget() {
             }
         }
 
-
         val subtasks = prefs[ListWidgetReceiver.subtasks]?.map { Json.decodeFromString<ICal4ListWidget>(it) } ?: emptyList()
         val subnotes = prefs[ListWidgetReceiver.subnotes]?.map { Json.decodeFromString<ICal4ListWidget>(it) } ?: emptyList()
         val listExceedLimits = prefs[ListWidgetReceiver.listExceedsLimits] ?: false
@@ -115,11 +114,7 @@ class ListWidget : GlanceAppWidget() {
         val subtasksGrouped = subtasks.groupBy { it.vtodoUidOfParent }
         val subnotesGrouped = subnotes.groupBy { it.vjournalUidOfParent }
 
-
-        val mainIntent = Intent(context, MainActivity2::class.java)
-            .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val imageSize = 36.dp
-
         val backgorundColor = GlanceTheme.colors.primaryContainer.getColor(context).copy(alpha = listWidgetConfig?.widgetAlpha ?: 1F)
         val textColor = GlanceTheme.colors.onPrimaryContainer
         val entryColor = GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig?.widgetAlphaEntries ?: 1F)
@@ -145,6 +140,16 @@ class ListWidget : GlanceAppWidget() {
                     }
                 }
 
+                val openModuleIntent = Intent(context, MainActivity2::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    action = when (listWidgetConfig?.module) {
+                        Module.JOURNAL -> MainActivity2.INTENT_ACTION_OPEN_JOURNALS
+                        Module.NOTE -> MainActivity2.INTENT_ACTION_OPEN_NOTES
+                        Module.TODO -> MainActivity2.INTENT_ACTION_OPEN_TODOS
+                        else -> MainActivity2.INTENT_ACTION_OPEN_NOTES
+                    }
+                }
+
                 Row(
                     modifier = GlanceModifier
                         .fillMaxWidth(),
@@ -156,7 +161,7 @@ class ListWidget : GlanceAppWidget() {
                         provider = ImageProvider(R.drawable.ic_widget_jtx),
                         contentDescription = context.getString(R.string.app_name),
                         modifier = GlanceModifier
-                            .clickable(actionStartActivity(mainIntent))
+                            .clickable(actionStartActivity(openModuleIntent))
                             .padding(8.dp)
                             .size(imageSize)
                     )
@@ -174,7 +179,7 @@ class ListWidget : GlanceAppWidget() {
                             fontWeight = FontWeight.Bold
                         ),
                         modifier = GlanceModifier
-                            .clickable(actionStartActivity(mainIntent))
+                            .clickable(actionStartActivity(openModuleIntent))
                             .defaultWeight()
                     )
 

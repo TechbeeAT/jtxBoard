@@ -13,6 +13,7 @@ Global Strings -->
     <string name="discard">"変更を破棄"</string>
     <string name="gotit">"わかりました"</string>
     <string name="cont">"続ける"</string>
+    <string name="website">"ウェブサイト"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"ノートを追加"</string>
     <string name="toolbar_text_add_task">"タスクを追加"</string>
@@ -141,6 +142,7 @@ Global Strings -->
     <!-- Fuzzy -->
     <!-- Fuzzy -->
     <!-- Buy Pro fragment -->
+    <string name="clear_selection">"選択を解除"</string>
     <!-- alarms -->
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->

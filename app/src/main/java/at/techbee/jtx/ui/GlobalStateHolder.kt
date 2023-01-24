@@ -18,7 +18,7 @@ class GlobalStateHolder(context: Context) {
 
     var icalFromIntentString: MutableState<String?> = mutableStateOf(null)
     var icalFromIntentAttachment: MutableState<Attachment?> = mutableStateOf(null)
-    var icalFromIntentModule: MutableState<Module?> = mutableStateOf(Module.JOURNAL)
+    var icalFromIntentModule: MutableState<Module?> = mutableStateOf(null)
 
     init {
         try {

@@ -91,7 +91,15 @@ fun ListScreenTabContainer(
     }.toList()
     val pagerState = rememberPagerState(
         initialPage =
-            if(enabledTabs.any { tab -> tab.module == settingsStateHolder.lastUsedModule.value }) {
+            if(globalStateHolder.icalFromIntentModule.value != null
+                && enabledTabs.any { tab -> tab.module == globalStateHolder.icalFromIntentModule.value }) {
+                when (globalStateHolder.icalFromIntentModule.value!!) {
+                    Module.JOURNAL -> enabledTabs.indexOf(ListTabDestination.Journals)
+                    Module.NOTE -> enabledTabs.indexOf(ListTabDestination.Notes)
+                    Module.TODO -> enabledTabs.indexOf(ListTabDestination.Tasks)
+                }
+            }
+            else if(enabledTabs.any { tab -> tab.module == settingsStateHolder.lastUsedModule.value }) {
                 when (settingsStateHolder.lastUsedModule.value) {
                     Module.JOURNAL -> enabledTabs.indexOf(ListTabDestination.Journals)
                     Module.NOTE -> enabledTabs.indexOf(ListTabDestination.Notes)
@@ -503,7 +511,7 @@ fun ListScreenTabContainer(
                                     presetModule = if (showQuickAdd.value)
                                         getActiveViewModel().module    // coming from button
                                     else
-                                        globalStateHolder.icalFromIntentModule.value,   // coming from intent
+                                        globalStateHolder.icalFromIntentModule.value ?: getActiveViewModel().module,   // coming from intent
                                     enabledModules = enabledTabs.map { it.module },
                                     presetText = globalStateHolder.icalFromIntentString.value
                                         ?: "",    // only relevant when coming from intent
@@ -518,6 +526,7 @@ fun ListScreenTabContainer(
 
                                         globalStateHolder.icalFromIntentString.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+                                        globalStateHolder.icalFromIntentModule.value = null
 
                                         addNewEntry(module, text, collectionId, attachment, editAfterSaving)
                                         scope.launch {
