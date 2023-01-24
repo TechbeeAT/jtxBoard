@@ -109,7 +109,7 @@ fun ListQuickAddElement(
         )
     }
     var currentText by remember { mutableStateOf(TextFieldValue(text = presetText, selection = TextRange(presetText.length))) }
-    val currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
+    var currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
     var noTextError by rememberSaveable { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
@@ -309,37 +309,54 @@ fun ListQuickAddElement(
                     )
                 }
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                Column(
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-
-                    TextButton(
-                        onClick = {
-                            onDismiss()
-                        },
-                        modifier = Modifier.weight(0.3f)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                     ) {
-                        Text(stringResource(id = R.string.close), textAlign = TextAlign.Center)
+
+                        TextButton(
+                            onClick = { saveEntry(goToEdit = true) },
+                            enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false
+                        ) {
+                            Text(stringResource(id = R.string.save_and_edit), textAlign = TextAlign.Center)
+                        }
+
+                        TextButton(
+                            onClick = {
+                                saveEntry(goToEdit = false)
+                                currentText = TextFieldValue("")
+                                currentAttachment = null
+                            },
+                            enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false
+                        ) {
+                            Text(stringResource(id = R.string.save_and_new), textAlign = TextAlign.Center)
+                        }
                     }
 
-                    TextButton(
-                        onClick = { saveEntry(goToEdit = true) },
-                        enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false,
-                        modifier = Modifier.weight(0.4f)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                     ) {
-                        Text(stringResource(id = R.string.save_and_edit), textAlign = TextAlign.Center)
-                    }
+                        TextButton(
+                            onClick = {
+                                saveEntry(goToEdit = false)
+                                onDismiss()
+                            },
+                            enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false
+                        ) {
+                            Text(stringResource(id = R.string.save_and_close), textAlign = TextAlign.Center)
+                        }
 
-                    TextButton(
-                        onClick = {
-                            saveEntry(goToEdit = false)
-                            onDismiss()
-                                  },
-                        enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false,
-                        modifier = Modifier.weight(0.3f)
-                    ) {
-                        Text(stringResource(id = R.string.save), textAlign = TextAlign.Center)
+                        TextButton(
+                            onClick = {
+                                onDismiss()
+                            }
+                        ) {
+                            Text(stringResource(id = R.string.close), textAlign = TextAlign.Center)
+                        }
                     }
                 }
             }
