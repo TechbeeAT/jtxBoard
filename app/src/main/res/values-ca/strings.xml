@@ -228,6 +228,8 @@ Per a més informació sobre la sincronització, per favor mira:"</string>
     <string name="list_welcome_entry_todo_description">"A més de notes i diaris, també hi ha notes, que tenen una data d'inici, de venciment i de compleció establerta. Es pot comprovar quan es finalitzen, o indicar el progrés. Edita aquesta entrada per a veure totes les opcions :-)"</string>
     <string name="list_welcome_category">"#PrimeresPasses"</string>
     <string name="save_and_edit">"Desa i edita"</string>
+    <string name="save_and_new">"Desa i nou"</string>
+    <string name="save_and_close">"Desa i tanca"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Fes servir parla-a-text"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"El motor de parla a text està escoltant."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"El motor de parla a text ha parat d'escoltar."</string>
@@ -415,6 +417,7 @@ Gràcies!"</string>
     <string name="timezone">"Fus horari"</string>
     <string name="not_set2">"No establert"</string>
     <string name="invert_selection">"Inverteix la selecció"</string>
+    <string name="clear_selection">"Neteja la selecció"</string>
     <string name="preferences">"Preferències"</string>
     <string name="revert">"Reverteix"</string>
     <string name="audio_play">"Reprodueix"</string>
