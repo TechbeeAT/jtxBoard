@@ -305,9 +305,11 @@ fun DetailBottomAppBar(
                     IconButton(onClick = { markdownState.value = MarkdownState.ITALIC  }) {
                         Icon(Icons.Outlined.FormatItalic, stringResource(R.string.markdown_italic))
                     }
+                    /*
                     IconButton(onClick = { markdownState.value = MarkdownState.UNDERLINED  }) {
                         Icon(Icons.Outlined.FormatUnderlined, stringResource(R.string.markdown_underlined))
                     }
+                     */
                     IconButton(onClick = { markdownState.value = MarkdownState.STRIKETHROUGH  }) {
                         Icon(Icons.Outlined.FormatStrikethrough, stringResource(R.string.markdown_strikethrough))
                     }
