@@ -228,6 +228,8 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="list_welcome_entry_todo_description">"Aufgaben können ein geplantes Startdatum, ein Fälligkeits- und Enddatum haben. Sie können abgeschlossen werden und ein Fortschritt kann erfasst werden. Bearbeiten Sie diesen Eintrag um alle Optionen anzusehen :-)"</string>
     <string name="list_welcome_category">"#ErsteSchritte"</string>
     <string name="save_and_edit">"Speichern &amp; bearbeiten"</string>
+    <string name="save_and_new">"Speichern &amp; neu"</string>
+    <string name="save_and_close">"Speichern &amp; schließen"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Spracherkennung nutzen"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Spracherkennung gestartet."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Spracherkennung gestoppt."</string>
