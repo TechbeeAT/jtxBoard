@@ -93,6 +93,7 @@ class MainActivity2 : AppCompatActivity() {
         const val INTENT_ACTION_OPEN_TODOS = "openTodo"
         const val INTENT_ACTION_OPEN_ICALOBJECT = "openICalObject"
         const val INTENT_EXTRA_ITEM2SHOW = "item2show"
+        const val INTENT_EXTRA_COLLECTION2PRESELECT = "collection2preselect"
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -150,21 +151,24 @@ class MainActivity2 : AppCompatActivity() {
 
         //handle intents, but only if it wasn't already handled
         if (intent.hashCode() != lastProcessedIntentHash) {
-            //intent?.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-
-            // handle the intents for the shortcuts
             when (intent?.action) {
                 INTENT_ACTION_ADD_JOURNAL -> {
                     globalStateHolder.icalFromIntentModule.value = Module.JOURNAL
                     globalStateHolder.icalFromIntentString.value = ""
+                    globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                 }
                 INTENT_ACTION_ADD_NOTE -> {
                     globalStateHolder.icalFromIntentModule.value = Module.NOTE
                     globalStateHolder.icalFromIntentString.value = ""
+                    globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                 }
                 INTENT_ACTION_ADD_TODO -> {
                     globalStateHolder.icalFromIntentModule.value = Module.TODO
                     globalStateHolder.icalFromIntentString.value = ""
+                    globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                 }
                 INTENT_ACTION_OPEN_JOURNALS -> {
                     globalStateHolder.icalFromIntentModule.value = Module.JOURNAL

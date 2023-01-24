@@ -517,7 +517,9 @@ fun ListScreenTabContainer(
                                         ?: "",    // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allWriteableCollections = allUsableCollections,
-                                    presetCollectionId = listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
+                                    presetCollectionId = globalStateHolder.icalFromIntentCollection.value?.let {fromIntent ->
+                                        allUsableCollections.find { fromIntent == it.displayName }?.collectionId
+                                    } ?: listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
                                     onSaveEntry = { module, text, attachment, collectionId,  editAfterSaving ->
 
                                         listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, collectionId)
@@ -527,6 +529,7 @@ fun ListScreenTabContainer(
                                         globalStateHolder.icalFromIntentString.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentModule.value = null
+                                        globalStateHolder.icalFromIntentCollection.value = null
 
                                         addNewEntry(module, text, collectionId, attachment, editAfterSaving)
                                         scope.launch {
@@ -539,6 +542,8 @@ fun ListScreenTabContainer(
                                         showQuickAdd.value = false  // origin was button
                                         globalStateHolder.icalFromIntentString.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+                                        globalStateHolder.icalFromIntentModule.value = null
+                                        globalStateHolder.icalFromIntentCollection.value = null
                                     },
                                     keepDialogOpen = { showQuickAdd.value = true } // necessary when origin was intent and save&new is clicked!
                                 )
