@@ -196,6 +196,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
             currentItem.status = newStatus.status
+            //TODO: keep in sync if necessary!!!
             database.update(currentItem)
             SyncUtil.notifyContentObservers(getApplication())
             if(scrollOnce)

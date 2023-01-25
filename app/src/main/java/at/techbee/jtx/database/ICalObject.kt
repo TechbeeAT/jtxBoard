@@ -701,14 +701,12 @@ data class ICalObject(
             }
 
         suspend fun unlinkFromSeries(item: ICalObject, database: ICalDatabaseDao): ICalObject {
-            item.recurid?.let { recurId ->
-                database.getRecurSeriesElement(recurId)?.let { series ->
-                    val newExceptionList = addLongToCSVString(database.getRecurExceptions(series.id), item.dtstart)
-                    database.setRecurExceptions(
-                        series.id,
-                        newExceptionList
-                    )
-                }
+            database.getRecurSeriesElement(item.uid)?.let { series ->
+                val newExceptionList = addLongToCSVString(database.getRecurExceptions(series.id), item.dtstart)
+                database.setRecurExceptions(
+                    series.id,
+                    newExceptionList
+                )
             }
             item.uid = generateNewUID()
             item.recurid = null
@@ -1138,8 +1136,13 @@ data class ICalObject(
 
 
     fun recreateRecurring(context: Context) {
-
         val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+
+        if(recurid?.isNotEmpty() == true) {
+            database.getRecurSeriesElement(uid)?.recreateRecurring(context)
+            return
+        }
+
         database.deleteUnchangedRecurringInstances(uid)
         if(dtstart == null || rrule.isNullOrEmpty())
             return
