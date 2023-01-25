@@ -135,6 +135,8 @@ Global Strings -->
     <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ の起動に失敗。手動で DAVx⁵ アプリを起動してください。"</string>
     <!-- Donate fragment -->
     <!-- sync content provider -->
+    <string name="save_and_new">"保存 &amp; 新規作成"</string>
+    <string name="save_and_close">"保存して閉じる"</string>
     <!-- Permissions -->
     <!-- alarms -->
     <!-- fragment_collections -->
