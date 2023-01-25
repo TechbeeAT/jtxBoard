@@ -73,7 +73,8 @@ fun ListQuickAddElement(
     allWriteableCollections: List<ICalCollection>,
     presetCollectionId: Long,
     onSaveEntry: (module: Module, newEntryText: String, attachment: Attachment?, collectionId: Long, editAfterSaving: Boolean) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    keepDialogOpen: () -> Unit
 ) {
 
     if (allWriteableCollections.isEmpty())   // don't compose if there are no collections
@@ -330,6 +331,7 @@ fun ListQuickAddElement(
                                 saveEntry(goToEdit = false)
                                 currentText = TextFieldValue("")
                                 currentAttachment = null
+                                keepDialogOpen()
                             },
                             enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false
                         ) {
@@ -413,6 +415,7 @@ fun ListQuickAddElement_Preview() {
             allWriteableCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _, _ -> },
+            keepDialogOpen = { },
             presetText = "This is my preset text",
             presetAttachment = Attachment(filename = "My File.PDF"),
             presetCollectionId = 0L,
@@ -446,6 +449,7 @@ fun ListQuickAddElement_Preview_empty() {
             allWriteableCollections = listOf(collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _, _ -> },
+            keepDialogOpen = { },
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
@@ -479,6 +483,7 @@ fun ListQuickAddElement_Preview_only_one_enabled() {
             allWriteableCollections = listOf(collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _, _ -> },
+            keepDialogOpen = { },
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,

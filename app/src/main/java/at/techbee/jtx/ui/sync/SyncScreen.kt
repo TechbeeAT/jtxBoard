@@ -13,10 +13,9 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.*
@@ -101,7 +100,6 @@ fun SyncScreenContent(
 ) {
 
     val context = LocalContext.current
-    val scrollState = rememberScrollState()
     val remoteCollections by remoteCollectionsLive.observeAsState(emptyList())
 
     Box {
@@ -113,7 +111,7 @@ fun SyncScreenContent(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .scrollable(scrollState, orientation = Orientation.Vertical)
+                .verticalScroll(rememberScrollState())
                 .padding(8.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -162,7 +160,8 @@ fun SyncScreenContent(
                             Text(
                                 text = stringResource(id = R.string.link_jtx_sync),
                                 style = Typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center
                             )
                         },
                         modifier = Modifier.padding(top = 8.dp),
@@ -187,7 +186,8 @@ fun SyncScreenContent(
                             Text(
                                 text = stringResource(id = R.string.link_jtx_sync),
                                 style = Typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center
                             )
                         },
                         modifier = Modifier.padding(top = 8.dp),
@@ -234,7 +234,8 @@ fun SyncScreenContent(
                         Text(
                             text = stringResource(id = R.string.link_jtx_sync),
                             style = Typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
                         )
                     },
                     modifier = Modifier.padding(top = 8.dp),

@@ -13,6 +13,7 @@ Global Strings -->
     <string name="discard">"Zahodit"</string>
     <string name="gotit">"Rozumím"</string>
     <string name="cont">"Pokračovat"</string>
+    <string name="website">"Webová stránka"</string>
     <string name="toolbar_text_add_journal">"Přidat Deník"</string>
     <string name="toolbar_text_add_note">"Přidat Poznámku"</string>
     <string name="toolbar_text_add_task">"Přidat Úkol"</string>
@@ -227,6 +228,8 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="list_welcome_entry_todo_description">"Úkoly mohou mít navíc oproti deníkům a poznámkám také plánované datum zahájení, termínu a dokončení. Lze je zaškrtávat, kdy jsou hotové, nebo lze nastavit jejich průběh. Upravte tento záznam a vyzkoušejte všechny možnosti :-)"</string>
     <string name="list_welcome_category">"#PrvniKroky"</string>
     <string name="save_and_edit">"Uložit a upravit"</string>
+    <string name="save_and_new">"Uložit a nový"</string>
+    <string name="save_and_close">"Uložit a zavřít"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Použít převod řeči na text"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Modul převodu řeči na text naslouchá."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Modul převodu řeči na text přestal naslouchat."</string>
@@ -413,6 +416,7 @@ Děkujeme vám!"</string>
     <string name="timezone">"Časové pásmo"</string>
     <string name="not_set2">"Nenastaveno"</string>
     <string name="invert_selection">"Invertovat výběr"</string>
+    <string name="clear_selection">"Vyčistit výběr"</string>
     <string name="preferences">"Předvolby"</string>
     <string name="revert">"Vrátit zpět"</string>
     <string name="audio_play">"Přehrát"</string>
