@@ -8,10 +8,12 @@
 Global Strings -->
     <string name="save">"Αποθήκευση"</string>
     <string name="cancel">"Ακύρωση"</string>
+    <string name="ok">"ΟΚ"</string>
     <string name="delete">"Διαγραφή"</string>
     <string name="discard">"Απόρριψη"</string>
     <string name="gotit">"Το κατάλαβα"</string>
     <string name="cont">"Συνέχεια"</string>
+    <string name="website">"Ιστοσελίδα"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
     <string name="toolbar_text_add_note">"Προσθήκη σημείωσης"</string>
     <string name="toolbar_text_add_task">"Προσθήκη εργασίας"</string>
@@ -35,6 +37,7 @@ Global Strings -->
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Άνοιγμα πλοηγού"</string>
     <string name="navigation_drawer_close">"Κλείσιμο πλοηγού"</string>
+    <string name="navigation_drawer_board">"Πίνακας"</string>
     <string name="navigation_drawer_sync">"Συγχρονισμός με DAVx⁵"</string>
     <string name="navigation_drawer_about">"Σχετικά / Άδεια"</string>
     <string name="navigation_drawer_subtitle">"Ημερολόγια, σημειώσεις &amp; εργασίες"</string>
@@ -63,6 +66,7 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Προσθήκη νέου"</string>
     <string name="list_progress">"Πρόοδος"</string>
     <string name="list_expand">"Επέκταση"</string>
+    <string name="list_dialog_delete_selected_title">Διαγραφή των επιλεγμένων εγγραφών;</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Περίληψη/Περιγραφή"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Η πρώτη γραμμή ερμηνεύεται ως περίληψη, η υπόλοιπη ως περιγραφή. Τα hashtags ερμηνεύονται ως κατηγορίες (πχ. #category)."</string>
     <string name="list_item_upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>
@@ -214,6 +218,8 @@ Global Strings -->
     <string name="list_welcome_entry_todo_description">"Εκτός από τα ημερολόγια και τις σημειώσεις, οι εργασίες μπορεί να έχουν προγραμματισμένη έναρξη, προθεσμία και ημερομηνία ολοκλήρωσης. Μπορούν να ελεγχθούν όταν ολοκληρωθούν ή να οριστεί μια πρόοδος. Επεξεργαστείτε αυτήν την καταχώρηση για να δείτε όλες τις επιλογές :-)"</string>
     <string name="list_welcome_category">"#πρωταβηματα"</string>
     <string name="save_and_edit">"Αποθήκευση και επεξεργασία"</string>
+    <string name="save_and_new">"Αποθήκευση &amp; δημιουργία νέου"</string>
+    <string name="save_and_close">"Αποθήκευση &amp; κλείσιμο"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Χρήση ομιλίας σε κείμενο"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Η ομιλία σε κείμενο έχει ξεκινήσει."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Η ομιλία σε κείμενο έχει σταματήσει."</string>
