@@ -149,10 +149,13 @@ fun ListWidgetContent(
             )
 
             Text(
-                text = when (listWidgetConfig.module) {
-                    Module.JOURNAL -> context.getString(R.string.list_tabitem_journals)
-                    Module.NOTE -> context.getString(R.string.list_tabitem_notes)
-                    Module.TODO -> context.getString(R.string.list_tabitem_todos)
+                text =
+                listWidgetConfig.widgetHeader.ifEmpty {
+                    when (listWidgetConfig.module) {
+                        Module.JOURNAL -> context.getString(R.string.list_tabitem_journals)
+                        Module.NOTE -> context.getString(R.string.list_tabitem_notes)
+                        Module.TODO -> context.getString(R.string.list_tabitem_todos)
+                    }
                 },
                 style = TextStyle(
                     color = GlanceTheme.colors.onPrimaryContainer,

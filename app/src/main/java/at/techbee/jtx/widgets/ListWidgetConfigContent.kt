@@ -207,6 +207,7 @@ fun ListWidgetConfigContent(
                                     showDescription = listSettings.showDescription.value
                                     showSubtasks = listSettings.showSubtasks.value
                                     showSubnotes = listSettings.showSubnotes.value
+                                    widgetHeader = listSettings.widgetHeader.value
 
                                     isExcludeDone = listSettings.isExcludeDone.value
                                     isFilterOverdue = listSettings.isFilterOverdue.value
@@ -265,9 +266,9 @@ data class ListWidgetConfig(
     var searchCategories: List<String> = emptyList(),
     var searchResources: List<String> = emptyList(),
     var searchStatus: List<Status> = emptyList(),
-    var searchStatusTodo: List<StatusTodo> = emptyList(),
+    var searchStatusTodo: List<StatusTodo> = emptyList(),   // TODO: remove
     var searchStatusJournal: List<StatusJournal> = emptyList(),   // TODO: remove
-    var searchClassification: List<Classification> = emptyList(),   // TODO: remove
+    var searchClassification: List<Classification> = emptyList(),
     var searchCollection: List<String> = emptyList(),
     var searchAccount: List<String> = emptyList(),
     var orderBy: OrderBy = OrderBy.CREATED,
@@ -302,5 +303,6 @@ data class ListWidgetConfig(
     var widgetAlphaEntries: Float = 1F,
     var showDescription: Boolean = true,
     var showSubtasks: Boolean = true,
-    var showSubnotes: Boolean = true
+    var showSubnotes: Boolean = true,
+    var widgetHeader: String = ""
 )
