@@ -248,9 +248,8 @@ class SyncContentProvider : ContentProvider() {
         if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
             createEmptyFileForAttachment(id)
 
-        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(
-                COLUMN_RDATE
-            ) == true || values?.containsKey(COLUMN_EXDATE) == true)
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
+            && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true)
         )
             database.getRecurringToPopulate(id)?.recreateRecurring(context!!)
 
