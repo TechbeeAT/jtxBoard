@@ -63,6 +63,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     val settingsStateHolder = SettingsStateHolder(_application)
 
     val mediaPlayer = MediaPlayer()
+    val isProcessing = mutableStateOf(false)
 
     companion object {
         const val PREFS_DETAIL_JOURNALS = "prefsDetailJournals"
@@ -97,6 +98,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun load(icalObjectId: Long) {
+        isProcessing.value = true
         viewModelScope.launch {
             icalEntity = database.get(icalObjectId)
 
@@ -115,6 +117,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 database.getSeriesICalObjectIdByUID(it?.property?.uid)
             }
             isChild = database.isChild(icalObjectId)
+
+            isProcessing.value = false
         }
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -167,6 +171,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun unlinkFromSeries() {
+        isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO) {
             icalEntity.value?.property?.let { mainICalObject ->
                 val children = database.getRelatedChildren(mainICalObject.id)
@@ -176,10 +181,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     createCopy(childEntity, child.getModuleFromString(), updatedEntry.uid)
                 }
             }
+            isProcessing.value = false
         }
     }
 
     fun moveToNewCollection(icalObject: ICalObject, newCollectionId: Long) {
+
+        isProcessing.value = true
 
         viewModelScope.launch(Dispatchers.IO) {
             while(changeState.value != DetailChangeState.CHANGESAVED)
@@ -200,6 +208,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 sqlConstraintException.value = true
             } finally {
                 changeState.value = DetailChangeState.CHANGESAVED
+                isProcessing.value = false
             }
         }
     }
@@ -213,6 +222,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
              attachments: List<Attachment>,
              alarms: List<Alarm>
     ) {
+        isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO) {
             changeState.value = DetailChangeState.CHANGESAVING
 
@@ -293,6 +303,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 sqlConstraintException.value = true
             } finally {
                 changeState.value = DetailChangeState.CHANGESAVED
+                isProcessing.value = false
             }
         }
     }
@@ -353,6 +364,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * Deletes the current entry with its children
      */
     fun delete() {
+        isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if(icalEntity.value?.property?.recurid != null) {
@@ -368,6 +380,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", "Corrupted ID: ${icalEntity.value?.property?.id}")
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
+            } finally {
+                isProcessing.value = false
             }
         }
     }
@@ -377,6 +391,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * @param [icalObjectId] of the subtask/subnote to be deleted
      */
     fun deleteById(icalObjectId: Long) {
+        isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 ICalObject.deleteItemWithChildren(icalObjectId, database)
@@ -385,6 +400,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
+            } finally {
+                isProcessing.value = false
             }
         }
     }
@@ -395,6 +412,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun createCopy(icalEntityToCopy: ICalEntity, newModule: Module, newParentUID: String? = null) {
         changeState.value = DetailChangeState.CHANGESAVING
+        isProcessing.value = true
 
         viewModelScope.launch(Dispatchers.IO) {
             val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
@@ -468,6 +486,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 sqlConstraintException.value = true
             } finally {
                 changeState.value = DetailChangeState.CHANGESAVED
+                isProcessing.value = false
             }
         }
     }
@@ -476,7 +495,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * Creates a share intent to share the current entry as .ics file
      */
     fun shareAsICS(context: Context) {
-
+        isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO)  {
             val iCalEntity = icalEntity.value ?: return@launch
             val icsContentUri = createContentUri(iCalEntity) ?: return@launch
@@ -489,6 +508,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             } catch (e: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to open file.")
                 toastMessage.value = "No app found to open this file."
+            } finally {
+                isProcessing.value = false
             }
         }
     }
@@ -500,6 +521,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun shareAsText(context: Context) {
 
+        isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO)  {
             val iCalEntity = icalEntity.value ?: return@launch
 
@@ -553,6 +575,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             } catch (e: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to send this entry.")
                 toastMessage.value = _application.getString(R.string.error_no_app_found_to_open_entry)
+            } finally {
+                isProcessing.value = false
             }
         }
     }

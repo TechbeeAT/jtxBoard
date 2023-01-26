@@ -413,6 +413,7 @@ fun DetailsScreen(
                 isProActionAvailable = isProActionAvailable,
                 changeState = detailViewModel.changeState,
                 detailsBottomSheetState = detailsBottomSheetState,
+                isProcessing = detailViewModel.isProcessing.value,
                 onDeleteClicked = { showDeleteDialog = true },
                 onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) },
                 onRevertClicked = { showRevertDialog = true }
