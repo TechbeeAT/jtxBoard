@@ -493,6 +493,7 @@ Global Strings -->
     <string name="settings_disable_alarms_for_readonly">"Απενεργοποίηση ειδοποιήσεων για συλλογές μόνο για ανάγνωση"</string>
     <string name="sync_button_go_to_collections">"Πήγαινε στις συλλογέ"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε αυτήν τη δυνατότητα."</string>
+    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="error_no_app_found_to_open_entry">"Δε βρέθηκε εφαρμογή για αποστολή αυτής της καταχώρισης."</string>
     <string name="close">"Κλειστό"</string>
     <string name="menu_view_share_mail">"Διαμοιρασμός ως E-mail"</string>
@@ -537,6 +538,9 @@ Global Strings -->
     <string name="menu_view_autosave">"Αυτόματη αποθήκευση"</string>
     <string name="next">"Επόμενο"</string>
     <string name="previous">"Προηγούμενο"</string>
+    <string name="select_all">Επιλογή Όλων</string>
+    <string name="visible">Ορατό</string>
+    <string name="invisible">Αόρατο/η</string>
     <string name="widget_list_description">"Λίστα widget"</string>
     <string name="widget_list_configuration">"Διαμόρφωση widget"</string>
     <string name="widget_list_configuration_beta_info">"* Λάβετε υπόψη ότι το jtx Board χρησιμοποιεί έναν νέο, πειραματικό τρόπο χειρισμού γραφικών στοιχείων που σε σπάνιες περιπτώσεις μπορεί να προκαλέσουν απροσδόκητη συμπεριφορά."</string>
@@ -569,6 +573,7 @@ Global Strings -->
     <string name="markdown_bold">"Έντονα"</string>
     <string name="markdown_italic">"Πλάγια"</string>
     <string name="markdown_underlined">"Υπογραμισμένα"</string>
+    <string name="markdown_strikethrough">"Διακριτή διαγραφή"</string>
     <string name="markdown_heading1">"Επικεφαλίδα 1"</string>
     <string name="markdown_heading2">"Επικεφαλίδα 2"</string>
     <string name="markdown_heading3">"Επικεφαλίδα 3"</string>
