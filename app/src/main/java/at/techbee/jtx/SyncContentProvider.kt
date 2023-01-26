@@ -121,7 +121,7 @@ class SyncContentProvider : ContentProvider() {
 
         // The tables must be joined with the collections table in order to make sure that only accounts are affected that were passed in the URI!
         when (sUriMatcher.match(uri)) {
-            CODE_ICALOBJECTS_DIR -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) "
+            CODE_ICALOBJECTS_DIR -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) AND $COLUMN_RECURID IS NULL "    // recur instances must never be deleted by SyncContentProvider in bulk
             CODE_ATTENDEES_DIR -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) "
             CODE_CATEGORIES_DIR -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) "
             CODE_COMMENTS_DIR -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) "
