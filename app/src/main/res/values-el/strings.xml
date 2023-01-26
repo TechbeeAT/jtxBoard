@@ -67,6 +67,7 @@ Global Strings -->
     <string name="list_progress">"Πρόοδος"</string>
     <string name="list_expand">"Επέκταση"</string>
     <string name="list_dialog_delete_selected_title">Διαγραφή των επιλεγμένων εγγραφών;</string>
+    <string name="list_dialog_delete_selected_message">Αυτή η ενέργεια διαγράφει όλες τις ορατές καταχωρήσεις. (%1$d). Είστε σίγουροι ότι θέλετε να συνεχίσετε; Αυτή η λειτουργία δεν μπορεί να ανακληθεί!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Περίληψη/Περιγραφή"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Η πρώτη γραμμή ερμηνεύεται ως περίληψη, η υπόλοιπη ως περιγραφή. Τα hashtags ερμηνεύονται ως κατηγορίες (πχ. #category)."</string>
     <string name="list_item_upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>
@@ -100,9 +101,11 @@ Global Strings -->
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#ηκατηγοριαμου"</string>
     <string name="edit_add_category_helper">"Προσθήκη κατηγορίας"</string>
+    <string name="edit_attendees_hint">"johanna@example.com"</string>
     <string name="edit_attendees_helper">"Προσθέστε συμμετέχοντες (e-mail)."</string>
     <string name="edit_resources_hint">"Εξοπλισμός"</string>
     <string name="edit_resources_helper">"Προσθήκη εξοπλισμού"</string>
+    <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Στοιχεία επικοινωνίας του υπεύθυνου ή του κατόχου αυτής της καταχώρισης"</string>
     <string name="edit_comment_hint">"Το σχόλιό σου…"</string>
     <string name="edit_comment_helper">"Προσθήκη σχολίων"</string>
@@ -128,6 +131,10 @@ Global Strings -->
     <string name="edit_recur_toast_requires_start_date">"Η επανάληψη απαιτεί να οριστεί μια ημερομηνία έναρξης!"</string>
     <string name="edit_datepicker_dialog_select_date">"Επιλογή ημερομηνίας"</string>
     <string name="edit_datepicker_dialog_select_time">"Επιλογή ώρας"</string>
+    <string name="edit_datepicker_dialog_add_time">"Προσθήκη ώρας"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Επεξεργασία ώρας"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Προσθήκη ζώνης ώρας"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Προσθήκη ζώνης ώρας"</string>
     <string name="edit_task_started_add">"Επιλογή ημερομηνίας/ώρας έναρξης"</string>
     <string name="edit_task_due_add">"Επιλογή ημερομηνίας/ώρας λήξης"</string>
     <string name="edit_task_completed_add">"Επιλογή ημερομηνίας/ώρας ολοκλήρωσης"</string>
@@ -175,6 +182,8 @@ Global Strings -->
     <string name="settings_list">"Ρυθμίσεις για τη λίστα στοιχείων"</string>
     <string name="settings_show_subtasks_in_list">"Εμφάνιση υποεργασιών στη λίστα"</string>
     <string name="settings_show_attachments_in_list">"Εμφάνιση συνημμένων στη λίστα"</string>
+    <string name="settings_show_progress_for_subtasks">Εμφάνιση προόδου για δευτερεύουσες εργασίες</string>
+    <string name="settings_show_progress_for_maintasks">Εμφάνιση προόδου για κύριες εργασίες</string>
     <string name="settings_group_settings_for_subentries">"Ρυθμίσεις για υποεργασίες, υποσημειώσεις και υποημερολόγια"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Εμφάνιση υποεργασιών των ημερολογίων και των σημειώσεων στη λίστα εργασιών"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Εμφάνιση υποσημειώσεων των ημερολογίων και των εργασιών στη λίστα σημειώσεων"</string>
@@ -210,6 +219,7 @@ Global Strings -->
     <string name="about_translations_basic_info">"Η jtx Board είναι μια εφαρμογή ανοιχτού κώδικα που εκτιμά τη συμμετοχή και τη συνεισφορά της κοινότητας ανοιχτού κώδικα. Σε αυτή τη σελίδα θα θέλαμε να αποδώσουμε τις προσπάθειες των μελών της κοινότητας για μεταφράσεις."</string>
     <string name="about_translations_contribution_info">"Εάν θέλετε να επεξεργαστείτε, να προσθέσετε μεταφράσεις ή να προσθέσετε νέες γλώσσες σε αυτήν την εφαρμογή, μη διστάσετε να κάνετε εγγραφή για το έργο της jtx Board στη μεταφραστική πλατφόρμα POEditor:"</string>
     <string name="about_translations_contribution_button">"Εγγραφείτε στο POEditor.com"</string>
+    <string name="about_translations_poeditor">"Μεταφραστές στο POeditor.com (legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Συγχαρητήρια, αυτή είναι η πρώτη σας ημερολογιακή εγγραφή :-)"</string>
     <string name="list_welcome_entry_journal_description">"Τα ημερολόγια μπορούν να χρησιμοποιηθούν για να κρατήσετε τις σημειώσεις σας για μια συγκεκριμένη ημερομηνία. Χρησιμοποιήστε αυτήν τη λειτουργία πχ για πρωτόκολλα, πρακτικά συνάντησης, καταχωρήσεις ημερολογίου και ούτω καθεξής. Εάν επεξεργαστείτε αυτήν την καταχώριση, θα δείτε τις επιλογές για να προσθέσετε κατηγορίες, συμμετέχοντες, συνημμένα κλπ. Μη διστάσετε να διαγράψετε αυτήν την καταχώριση όποτε θέλετε!"</string>
     <string name="list_welcome_entry_note_summary">"Συγχαρητήρια, αυτή είναι η πρώτη σας σημείωση :-)"</string>
@@ -300,6 +310,7 @@ Global Strings -->
     <string name="priority">"Προτεραιότητα"</string>
     <string name="readyonly">"Μόνο για ανάγνωση"</string>
     <string name="upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>
+    <string name="url">"Διεύθυνση URL"</string>
     <string name="location">"Τοποθεσία"</string>
     <string name="attendees">"Συμμετέχοντες"</string>
     <string name="resources">"Απαραίτητος εξοπλισμός"</string>
@@ -315,6 +326,9 @@ Global Strings -->
     <string name="summary">"Τίτλος"</string>
     <string name="description">"Περιγραφή"</string>
     <string name="search">"Αναζήτηση"</string>
+    <string name="search_journals">Αναζήτηση ημερολογίων</string>
+    <string name="search_notes">Αναζήτηση σημειώσεων</string>
+    <string name="search_todos">Αναζήτηση εργασιών</string>
     <string name="filter">"Φίλτρα"</string>
     <string name="sync_now">"Συγχρονισμός τώρα"</string>
     <string name="due">"Λήξη"</string>
@@ -344,6 +358,10 @@ Global Strings -->
     <string name="filter_desc">"Φθίνουσα"</string>
     <string name="filter_created">"Δημιουργία"</string>
     <string name="filter_last_modified">"Τελευταία επεξεργασία"</string>
+    <string name="filter_no_category">Χωρίς κατηγορίες</string>
+    <string name="filter_no_resource">Χωρίς πηγές</string>
+    <string name="filter_subtasks_order_by">Ταξινόμηση υποεργασιών κατά</string>
+    <string name="filter_subnotes_order_by">Ταξινόμηση συνδεδεμένων σημειώσεων κατά</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Κάντε κλικ στη συλλογή στην οποία πρέπει να προστεθούν οι καταχωρήσεις/καταχωρήσεις!"</string>
     <string name="collections_snackbar_x_items_added">"Προστέθηκε %1$d, παράβλεψη %2$d. (Αποκλειστικές περιπτώσεις επαναλαμβανόμενων εγγραφών.)"</string>
     <string name="menu_collection_popup_import_from_ics">"Προσθήκη από .ics"</string>
@@ -380,8 +398,13 @@ Global Strings -->
     <string name="buypro_snackbar_remote_entries_blocked">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε τις δυνατότητες επεξεργασίας απομακρυσμένων συλλογών."</string>
     <string name="buypro_initial_dialog_message">"Χαίρεται! Το jtx Board έρχεται με μια τυπική και μια έκδοση Pro. Ρίξτε μια ματιά στην ενότητα \"Buy Pro\" για να μάθετε περισσότερα για το jtx Board Pro!
  Ευχαριστώ!"</string>
+    <string name="buypro_purchase_init_error_message">"Ελέγξτε τη σύνδεσή σας στο internet ή προσπαθήστε πάλι αργότερα!"</string>
     <string name="menu_list_viewmode_list">"Προβολή λίστας"</string>
     <string name="menu_list_viewmode_grid">"Προβολή Grid"</string>
+    <string name="settings_modules">"Ενεργά modules"</string>
+    <string name="settings_modules_enable_journals">"Ημερολόγια"</string>
+    <string name="settings_modules_enable_notes">"Σημειώσεις"</string>
+    <string name="settings_modules_enable_tasks">"Εργασίες"</string>
     <string name="settings_default_expand_subtasks">"Ανάπτυξη των δευτερευουσών εργασιών στη λίστα από προεπιλογή"</string>
     <string name="settings_default_expand_subnotes">"Ανάπτυξη των δευτερευουσών σημειώσεων στη λίστα από προεπιλογή"</string>
     <string name="settings_default_expand_attachments">"Ανάπτυξη των επισυναπτωμένων στην λίστα από προεπιλογή"</string>
@@ -394,10 +417,12 @@ Global Strings -->
     <string name="timezone">"Ζώνη ώρας"</string>
     <string name="not_set2">"Δεν ορίστηκε"</string>
     <string name="invert_selection">"Αντιστροφή επιλογής"</string>
+    <string name="clear_selection">"Απαλοιφή επιλογής"</string>
     <string name="preferences">"Προτημήσεις"</string>
     <string name="revert">"Επαναστροφή"</string>
     <string name="audio_play">"Έναρξη"</string>
     <string name="audio_record">"Εγγραφή"</string>
+    <string name="audio_stop">"Διακοπή"</string>
     <string name="audio_pause">"Παύση"</string>
     <string name="audio_error_toast">"Συγνώμη, η έναρξη είναι αδύνατη."</string>
     <string name="sync_in_progress">"Συγχρονισμός σε εξέλιξη"</string>
@@ -406,7 +431,11 @@ Global Strings -->
     <string name="invalid_timezone_message">"Παρακαλώ επιλέξτε μια σωστή ζώνη ώρας!"</string>
     <string name="invalid_url_message">"Παρακαλώ επιλέξτε έναν σωστό σύνδεσμο URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Έναρξη αναγνώρισης φωνής"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Αναπαραγωγή …"</string>
+    <string name="list_update_entries_dialog_title">"Ενημέρωση καταχωρήσεων"</string>
+    <string name="details_app_bar_behaviour">"Συμπεριφορά γραμμής εφαρμογής"</string>
     <string name="details_show_all_options">"Εμφάνιση όλων των επιλογών"</string>
+    <string name="details_show_hide_elements">Εμφάνιση/απόκρυψη στοιχείων</string>
     <string name="details_attendees_processing_info">"Προσοχή: Οι διακομιστές ενδέχεται να επεξεργάζονται αυτόματα τους συμμετέχοντες π.χ. με την αποστολή μηνυμάτων iMIP."</string>
     <string name="details_toast_entry_deleted">"Η εγγραφή απορρίφθηκε/διεγράφη"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Εντοπίστηκε μη υποστηριζόμενος κανόνας επανάληψης!"</string>
@@ -437,6 +466,7 @@ Global Strings -->
     <string name="dialog_revert_changes_title">"Επαναφορά αλλαγών;"</string>
     <string name="dialog_revert_changes_message">"Είστε βέβαιοι ότι θέλετε να απορρίψετε τις αλλαγές σας και να επαναφέρετε τα περιεχόμενα στην κατάσταση πριν ξεκινήσετε την επεξεργασία;"</string>
     <string name="dialog_revert_changes_message2">"Προσοχή: Οι δευτερεύουσες εργασίες και οι δευτερεύουσες σημειώσεις είναι ξεχωριστές εγγραφές και δεν μπορούν να επιστραφούν."</string>
+    <string name="dialog_collection_new_entries_title">"Συλλογή για νέες καταχωρήσεις"</string>
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
     <string name="settings_details">"Ρυθμίσεις για τις λεπτομέρειες του στοιχείου"</string>
