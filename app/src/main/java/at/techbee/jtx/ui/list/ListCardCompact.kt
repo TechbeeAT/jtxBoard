@@ -71,6 +71,7 @@ fun ListCardCompact(
                     || iCalObject.priority in 1..9
                     || iCalObject.status in listOf(Status.CANCELLED.status, Status.DRAFT.status, Status.CANCELLED.status)
                     || iCalObject.classification in listOf(Classification.CONFIDENTIAL.classification, Classification.PRIVATE.classification)
+        )
     }
     val color =
         iCalObject.colorItem?.let { Color(it) } ?: iCalObject.colorCollection?.let { Color(it) }
