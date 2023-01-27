@@ -558,7 +558,7 @@ fun DetailScreenContent(
                     allowStatusChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
                     onStatusChanged = { newStatus ->
                         icalObject.value.status = newStatus
-                        if(keepStatusProgressCompletedInSync) {
+                        if(keepStatusProgressCompletedInSync && icalObject.value.getModuleFromString() == Module.TODO) {
                             when(newStatus) {
                                 Status.NO_STATUS.status -> icalObject.value.setUpdatedProgress(null, true)
                                 Status.NEEDS_ACTION.status -> icalObject.value.setUpdatedProgress(null, true)
