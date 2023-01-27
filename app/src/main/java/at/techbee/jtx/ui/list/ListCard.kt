@@ -268,7 +268,7 @@ fun ListCard(
                 }
 
 
-                if (iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0) {
+                if (iCalObject.numAttachments > 0 || subtasks.isNotEmpty() || subnotes.isNotEmpty()) {
                     Row(
                         modifier = Modifier.padding(start = 8.dp, end = 8.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -302,7 +302,7 @@ fun ListCard(
                                 //border = null,
                                 modifier = Modifier.padding(end = 4.dp)
                             )
-                        if (iCalObject.numSubtasks > 0)
+                        if (subtasks.isNotEmpty())
                             ElevatedFilterChip(
                                 label = {
                                     Row(
@@ -315,7 +315,7 @@ fun ListCard(
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Text(
-                                            iCalObject.numSubtasks.toString(),
+                                            subtasks.size.toString(),
                                             modifier = Modifier.padding(start = 4.dp)
                                         )
                                     }
@@ -333,7 +333,7 @@ fun ListCard(
                                 //border = null,
                                 modifier = Modifier.padding(end = 4.dp)
                             )
-                        if (iCalObject.numSubnotes > 0)
+                        if (subnotes.isNotEmpty())
                             ElevatedFilterChip(
                                 label = {
                                     Row(
@@ -346,7 +346,7 @@ fun ListCard(
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Text(
-                                            iCalObject.numSubnotes.toString(),
+                                            subnotes.size.toString(),
                                             modifier = Modifier.padding(start = 4.dp)
                                         )
                                     }

@@ -1233,6 +1233,11 @@ data class ICalObject(
                 it.icalObjectId = instanceId
                 database.insertResourceSync(it)
             }
+            instance.relatedto?.forEach {
+                it.relatedtoId = 0L
+                it.icalObjectId = instanceId
+                database.insertRelatedtoSync(it)
+            }
             instance.alarms?.forEach {
                 if(it.triggerRelativeDuration != null) {    // only relative alarms are considered
                     it.alarmId = 0L
