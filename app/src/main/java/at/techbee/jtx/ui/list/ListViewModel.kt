@@ -178,6 +178,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
             currentItem.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
             database.update(currentItem)
+            currentItem.makeSeriesDirty(database)
 
             if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
                 ICalObject.findTopParent(currentItem.id, database)?.let {
@@ -196,8 +197,17 @@ open class ListViewModel(application: Application, val module: Module) : Android
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
             currentItem.status = newStatus.status
-            //TODO: keep in sync if necessary!!!
+            if(settingsStateHolder.settingKeepStatusProgressCompletedInSync.value) {
+                when(newStatus) {
+                    Status.NEEDS_ACTION -> currentItem.setUpdatedProgress(0, true)
+                    Status.IN_PROCESS -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
+                    Status.COMPLETED -> currentItem.setUpdatedProgress(100, true)
+                    else -> { }
+                }
+            }
+            currentItem.makeDirty()
             database.update(currentItem)
+            currentItem.makeSeriesDirty(database)
             SyncUtil.notifyContentObservers(getApplication())
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
@@ -299,6 +309,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         selectedEntries.forEach { selected ->
             database.getICalObjectByIdSync(selected)?.let {
                 database.update(it.apply { makeDirty() })
+                it.makeSeriesDirty(database)
             }
         }
     }
@@ -319,6 +330,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     }
                     it.makeDirty()
                     database.update(it)
+                    it.makeSeriesDirty(database)
                 }
             }
         }
@@ -335,6 +347,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     it.classification = newClassification.classification
                     it.makeDirty()
                     database.update(it)
+                    it.makeSeriesDirty(database)
                 }
             }
         }
@@ -351,6 +364,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     it.priority = newPriority
                     it.makeDirty()
                     database.update(it)
+                    it.makeSeriesDirty(database)
                 }
             }
         }

@@ -135,6 +135,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             try {
                 item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                 database.update(item)
+                item.makeSeriesDirty(database)
                 if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
                     ICalObject.findTopParent(id, database)?.let {
                         ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
@@ -157,6 +158,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             val icalObject = database.getICalObjectById(icalObjectId) ?: return@launch
             icalObject.summary = newSummary
             icalObject.makeDirty()
+            icalObject.makeSeriesDirty(database)
             try {
                 database.update(icalObject)
                 SyncUtil.notifyContentObservers(getApplication())
@@ -180,6 +182,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     val childEntity = database.getSync(child.id) ?: return@forEach
                     createCopy(childEntity, child.getModuleFromString(), updatedEntry.uid)
                 }
+                mainICalObject.makeSeriesDirty(database)
             }
             isProcessing.value = false
         }
@@ -282,18 +285,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                // removed check as it was causing problems when loading the entry from the widget, somehow it is not reliable enough...
-                // if (icalEntity.value?.property?.equals(icalObject) == false) {
                 icalObject.makeDirty()
                 database.update(icalObject)
-
-                //TODO: Unlink if date changed?
-                //if (icalEntity.value?.property?.recurid != null) {
-                //    ICalObject.unlinkFromSeries(icalEntity.value?.property!!, database)
-                //    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-                //}
+                icalObject.makeSeriesDirty(database)
                 icalObject.recreateRecurring(getApplication())
-                //}
 
                 Alarm.scheduleNextNotifications(getApplication())
                 SyncUtil.notifyContentObservers(getApplication())

@@ -968,6 +968,20 @@ data class ICalObject(
     }
 
     /**
+     * finds the series definition and makes it dirty
+     * necessary when a series instance changes
+     */
+    suspend fun makeSeriesDirty(database: ICalDatabaseDao) {
+        if(recurid?.isNotEmpty() == true) {
+            database.getRecurSeriesElement(uid)?.let {
+                it.makeDirty()
+                database.update(it)
+            }
+        }
+    }
+
+
+    /**
      * @return a Recur Object based on the given rrule or null
      */
     fun getRecur(): Recur? {
