@@ -66,7 +66,7 @@ fun ListScreenKanban(
 
     val context = LocalContext.current
     val scrollId by scrollOnceId.observeAsState(null)
-    val statusColumns = Status.valuesFor(module)
+    val statusColumns = Status.valuesFor(module).filter { it != Status.CANCELLED && it != Status.NO_STATUS }
     val subtasks by subtasksLive.observeAsState(emptyMap())
 
 
@@ -176,7 +176,7 @@ fun ListScreenKanban(
                                         } else {   // VJOURNAL
                                             when {
                                                 (iCalObject.status == Status.DRAFT.status && offsetX > 0f) -> onStatusChanged(iCalObject.id, Status.FINAL, true)
-                                                (iCalObject.status == Status.FINAL.status && offsetX < 0f) -> onStatusChanged(iCalObject.id, Status.DRAFT, true)
+                                                ((iCalObject.status == Status.FINAL.status || iCalObject.status == Status.NO_STATUS.status) && offsetX < 0f) -> onStatusChanged(iCalObject.id, Status.DRAFT, true)
                                             }
                                         }
                                         // make a short vibration

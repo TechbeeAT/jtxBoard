@@ -88,7 +88,6 @@ fun DetailsCardStatusClassificationPriority(
                                         icalObject.status = status.status
                                         statusMenuExpanded = false
                                         onStatusChanged(status.status)
-                                        //icalObject.status = status
                                     }
                                 )
                             }

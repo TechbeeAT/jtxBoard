@@ -56,18 +56,21 @@ fun ListCardCompact(
 
     val statusBarVisible by remember {
         mutableStateOf(
-            iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0 || iCalObject.numComments > 0 || iCalObject.numResources > 0 || iCalObject.numAlarms > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0
-                    || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.url?.isNotEmpty() == true || iCalObject.location?.isNotEmpty() == true
-                    || iCalObject.contact?.isNotEmpty() == true || iCalObject.rrule != null || iCalObject.recurid != null
-                    || iCalObject.priority in 1..9 || iCalObject.status in listOf(
-                Status.CANCELLED.status,
-                Status.DRAFT.status,
-                Status.CANCELLED.status
-            )
-                    || iCalObject.classification in listOf(
-                Classification.CONFIDENTIAL.classification,
-                Classification.PRIVATE.classification
-            )
+            iCalObject.numAttendees > 0
+                    || iCalObject.numAttachments > 0
+                    || iCalObject.numComments > 0
+                    || iCalObject.numResources > 0
+                    || iCalObject.numAlarms > 0 || iCalObject.numSubtasks > 0
+                    || iCalObject.numSubnotes > 0
+                    || iCalObject.isReadOnly
+                    || iCalObject.uploadPending
+                    || iCalObject.url?.isNotEmpty() == true
+                    || iCalObject.location?.isNotEmpty() == true
+                    || iCalObject.contact?.isNotEmpty() == true
+                    || iCalObject.rrule != null || iCalObject.recurid != null
+                    || iCalObject.priority in 1..9
+                    || iCalObject.status in listOf(Status.CANCELLED.status, Status.DRAFT.status, Status.CANCELLED.status)
+                    || iCalObject.classification in listOf(Classification.CONFIDENTIAL.classification, Classification.PRIVATE.classification)
         )
     }
     val color =
