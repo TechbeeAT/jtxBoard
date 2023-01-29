@@ -13,6 +13,7 @@ Global Strings -->
     <string name="discard">"Annulla"</string>
     <string name="gotit">"Va bene"</string>
     <string name="cont">"Continua"</string>
+    <string name="website">"Sito web"</string>
     <string name="toolbar_text_add_journal">"Inserisci Diario"</string>
     <string name="toolbar_text_add_note">"Inserisci Nota"</string>
     <string name="toolbar_text_add_task">"Inserisci Attività"</string>
