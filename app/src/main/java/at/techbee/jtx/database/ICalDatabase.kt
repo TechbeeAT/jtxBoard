@@ -43,7 +43,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 19,
+    version = 20,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -61,7 +61,8 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 15, to = 16),  // view updates
         AutoMigration (from = 16, to = 17),  // view updates
         AutoMigration (from = 17, to = 18),  // room update
-        AutoMigration (from = 18, to = 19, spec = ICalDatabase.AutoMigration18to19::class),  // removed recur columns
+        // no Automigration from 18 to 19
+        AutoMigration (from = 19, to = 20, spec = ICalDatabase.AutoMigration19to20::class),  // removed recur columns
     ]
 )
 //@TypeConverters(Converters::class)
@@ -80,7 +81,7 @@ abstract class ICalDatabase : RoomDatabase() {
         DeleteColumn(tableName = TABLE_NAME_ICALOBJECT, columnName = "recur_original_icalobjectid"),
         DeleteColumn(tableName = TABLE_NAME_ICALOBJECT, columnName = "recur_islinkedinstance")
     )
-    class AutoMigration18to19: AutoMigrationSpec
+    class AutoMigration19to20: AutoMigrationSpec
 
 
     /**
@@ -111,6 +112,13 @@ abstract class ICalDatabase : RoomDatabase() {
                 database.execSQL("CREATE VIEW `ical4viewNote` AS SELECT icalobject._id, icalobject.module, icalobject.component, icalobject.summary, icalobject.description, icalobject.created, icalobject.lastmodified, relatedto.icalObjectId, attachment.binary, attachment.fmttype, attachment.uri, icalobject.sortIndex FROM icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId LEFT JOIN attachment ON icalobject._id = attachment.icalObjectId WHERE icalobject.deleted = 0 AND icalobject.module = 'NOTE'")
             }
         }
+
+        private val MIGRATION_18_19 = object : Migration(18, 19) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("update icalobject set uid = (SELECT sub.uid from icalobject sub where sub._id = icalobject.recur_original_icalobjectid) where recur_islinkedinstance = 1")
+            }
+        }
+
 
         @Volatile
         private var INSTANCE: ICalDatabase? = null
@@ -148,7 +156,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19)
 
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about
