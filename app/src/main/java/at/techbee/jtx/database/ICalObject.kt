@@ -1158,6 +1158,14 @@ data class ICalObject(
         }
 
         database.deleteUnchangedRecurringInstances(uid)
+        // delete also exceptions (as recurring instances might still exist):
+        val exceptions = getLongListfromCSVString(this.exdate)
+        exceptions.forEach { exceptionDate ->
+            database.getRecurInstance(uid, exceptionDate)?.let {
+                database.delete(it)
+            }
+        }
+        
         if(dtstart == null || rrule.isNullOrEmpty())
             return
 
