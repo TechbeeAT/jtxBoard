@@ -1165,7 +1165,7 @@ data class ICalObject(
                 database.delete(it)
             }
         }
-        
+
         if(dtstart == null || rrule.isNullOrEmpty())
             return
 
