@@ -47,6 +47,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var relatedSubnotes: LiveData<List<ICal4List>>
     lateinit var relatedSubtasks: LiveData<List<ICal4List>>
     lateinit var seriesElementId: LiveData<Long?>
+    lateinit var seriesInstances: LiveData<List<ICalObject>>
     lateinit var isChild: LiveData<Boolean>
     private var originalEntry: ICalEntity? = null
 
@@ -115,6 +116,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             }
             seriesElementId = Transformations.switchMap(icalEntity) {
                 database.getSeriesICalObjectIdByUID(it?.property?.uid)
+            }
+            seriesInstances = Transformations.switchMap(icalEntity) {
+                database.getSeriesInstancesICalObjectsByUID(it?.property?.uid)
             }
             isChild = database.isChild(icalObjectId)
 

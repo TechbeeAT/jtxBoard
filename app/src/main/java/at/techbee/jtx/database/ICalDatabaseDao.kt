@@ -207,6 +207,15 @@ SELECTs (global selects without parameter)
     @Query("SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NULL")
     fun getSeriesICalObjectIdByUID(uid: String?): LiveData<Long?>
 
+    /**
+     * Resolve the UID with the corresonding ICalObjectId as LiveData
+     * Attention: This only returns the series elemen that has no recurid!
+     * @param uid of the [ICalObject] instances in the DB
+     * @return the [ICalObject.id] as LiveData List
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NOT NULL")
+    fun getSeriesInstancesICalObjectsByUID(uid: String?): LiveData<List<ICalObject>>
+
 
     /**
      * Retrieve an [ICalCollection] by Id synchronously (non-suspend)

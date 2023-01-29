@@ -51,6 +51,7 @@ fun DetailsCardRecur(
     onRecurUpdated: (Recur?) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     goToSeriesElement: (editMode: Boolean) -> Unit,
+    goToRecurInstance: (uid: String, date: Long) -> Unit,
     unlinkFromSeries: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -548,12 +549,25 @@ fun DetailsCardRecur(
 
             if(isEditMode)
                 icalObject.rrule = buildRRule()?.toString()
-            icalObject.getInstancesFromRrule().forEach { instanceDate ->
-                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = DateTimeUtils.convertLongToFullDateTimeString(instanceDate, icalObject.dtstartTimezone),
-                        modifier = Modifier.padding(4.dp)
-                    )
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                icalObject.getInstancesFromRrule().forEach { instanceDate ->
+                    ElevatedCard(
+                        onClick = {
+                            if(!isEditMode)
+                                goToRecurInstance(icalObject.uid, instanceDate)
+                                  },
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                    ) {
+                        Text(
+                            text = DateTimeUtils.convertLongToFullDateTimeString(instanceDate, icalObject.dtstartTimezone),
+                            modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
+                        )
+                    }
                 }
             }
 
@@ -567,12 +581,20 @@ fun DetailsCardRecur(
                         .fillMaxWidth()
                         .padding(top = 8.dp, bottom = 4.dp)
                 )
-            exceptions.forEach { exception ->
-                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = DateTimeUtils.convertLongToFullDateTimeString(exception, icalObject.dtstartTimezone),
-                        modifier = Modifier.padding(4.dp)
-                    )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                exceptions.forEach { exception ->
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                    ) {
+                        Text(
+                            text = DateTimeUtils.convertLongToFullDateTimeString(exception, icalObject.dtstartTimezone),
+                            modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
+                        )
+                    }
                 }
             }
 
@@ -586,12 +608,20 @@ fun DetailsCardRecur(
                         .fillMaxWidth()
                         .padding(top = 8.dp, bottom = 4.dp)
                 )
-            additions.forEach { addition ->
-                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = DateTimeUtils.convertLongToFullDateTimeString(addition, icalObject.dtstartTimezone),
-                        modifier = Modifier.padding(4.dp)
-                    )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                additions.forEach { addition ->
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                    ) {
+                        Text(
+                            text = DateTimeUtils.convertLongToFullDateTimeString(addition, icalObject.dtstartTimezone),
+                            modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
+                        )
+                    }
                 }
             }
         }
@@ -626,6 +656,7 @@ fun DetailsCardRecur_Preview() {
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             goToSeriesElement = { },
+            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -656,6 +687,7 @@ fun DetailsCardRecur_Preview_edit() {
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             goToSeriesElement = { },
+            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -680,6 +712,7 @@ fun DetailsCardRecur_Preview_unchanged_recur() {
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             goToSeriesElement = { },
+            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -704,6 +737,7 @@ fun DetailsCardRecur_Preview_changed_recur() {
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             goToSeriesElement = { },
+            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -726,6 +760,7 @@ fun DetailsCardRecur_Preview_off() {
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             goToSeriesElement = { },
+            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -748,6 +783,7 @@ fun DetailsCardRecur_Preview_edit_off() {
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             goToSeriesElement = { },
+            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -770,6 +806,7 @@ fun DetailsCardRecur_Preview_edit_no_dtstart() {
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             goToSeriesElement = { },
+            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -792,6 +829,7 @@ fun DetailsCardRecur_Preview_view_no_dtstart() {
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             goToSeriesElement = { },
+            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }

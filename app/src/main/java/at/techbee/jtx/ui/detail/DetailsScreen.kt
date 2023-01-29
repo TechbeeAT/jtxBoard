@@ -80,6 +80,7 @@ fun DetailsScreen(
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
     val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
     val seriesElementId = detailViewModel.seriesElementId.observeAsState(null)
+    val seriesInstances = detailViewModel.seriesInstances.observeAsState(emptyList())
     val isChild = detailViewModel.isChild.observeAsState(false)
     val allCategories = detailViewModel.allCategories.observeAsState(emptyList())
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
@@ -383,6 +384,11 @@ fun DetailsScreen(
                                     },
                 goBack = { navigateUp = true },
                 unlinkFromSeries = { detailViewModel.unlinkFromSeries() },
+                goToRecurInstance = { uid, date ->
+                    seriesInstances.value.find { instance -> instance.uid == uid && instance.dtstart == date  }?.let { foundInstance ->
+                        navController.navigate(DetailDestination.Detail.getRoute(foundInstance.id, seriesInstances.value.map { it.id }, false))
+                    }
+                },
                 modifier = Modifier.padding(paddingValues)
             )
 
