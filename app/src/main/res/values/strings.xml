@@ -451,6 +451,7 @@ Thank you!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
     <string name="list_quickadd_dialog_sr_listening">"Listening …"</string>
     <string name="list_update_entries_dialog_title">"Update entries"</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"Attention: Recurring instances must be unlinked from its series before being moved to another collection and will be ignored in this process."</string>
     <string name="details_app_bar_behaviour">"App bar behaviour"</string>
     <string name="details_show_all_options">"Show all options"</string>
     <string name="details_show_hide_elements">Show/hide elements</string>
