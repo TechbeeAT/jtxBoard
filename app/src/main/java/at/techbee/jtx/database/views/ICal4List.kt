@@ -16,6 +16,7 @@ import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
@@ -68,7 +69,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "collection.$COLUMN_COLLECTION_ACCOUNT_NAME, " +
             "collection.$COLUMN_COLLECTION_DISPLAYNAME, " +
             "main_icalobject.$COLUMN_DELETED, " +
-            "CASE WHEN main_icalobject.$COLUMN_DIRTY = 1 AND collection.$COLUMN_COLLECTION_ACCOUNT_TYPE != 'LOCAL' THEN 1 else 0 END as uploadPending, " +
+            "CASE WHEN collection.$COLUMN_COLLECTION_ACCOUNT_TYPE = '$LOCAL_ACCOUNT_TYPE' THEN 0 WHEN main_icalobject.$COLUMN_RECURID IS NOT NULL THEN (SELECT series.$COLUMN_DIRTY FROM $TABLE_NAME_ICALOBJECT series WHERE series.$COLUMN_RECURID IS NULL AND series.$COLUMN_UID = main_icalobject.$COLUMN_UID) ELSE main_icalobject.$COLUMN_DIRTY END as uploadPending, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'JOURNAL' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfJournal, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'NOTE' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfNote, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'TODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfTodo, " +

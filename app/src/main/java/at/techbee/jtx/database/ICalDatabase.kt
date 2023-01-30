@@ -43,7 +43,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 20,
+    version = 21,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -61,8 +61,9 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 15, to = 16),  // view updates
         AutoMigration (from = 16, to = 17),  // view updates
         AutoMigration (from = 17, to = 18),  // room update
-        // no Automigration from 18 to 19
+        // no AutoMigration from 18 to 19
         AutoMigration (from = 19, to = 20, spec = ICalDatabase.AutoMigration19to20::class),  // removed recur columns
+        AutoMigration (from = 20, to = 21),  // view update
     ]
 )
 //@TypeConverters(Converters::class)
