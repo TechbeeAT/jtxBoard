@@ -116,9 +116,9 @@ abstract class ICalDatabase : RoomDatabase() {
         private val MIGRATION_18_19 = object : Migration(18, 19) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("update icalobject set uid = (SELECT sub.uid from icalobject sub where sub._id = icalobject.recur_original_icalobjectid) where recur_islinkedinstance = 1")
+                database.execSQL("update icalobject set recurid = null where recur_islinkedinstance = 0 and recur_original_icalobjectid is not null")
             }
         }
-
 
         @Volatile
         private var INSTANCE: ICalDatabase? = null
