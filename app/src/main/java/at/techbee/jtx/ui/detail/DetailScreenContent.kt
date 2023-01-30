@@ -85,6 +85,8 @@ fun DetailScreenContent(
     allResources: List<String>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
+    seriesInstances: List<ICalObject>,
+    seriesElement: ICalObject?,
     sliderIncrement: Int,
     showProgressForMainTasks: Boolean,
     showProgressForSubTasks: Boolean,
@@ -100,8 +102,6 @@ fun DetailScreenContent(
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
-    goToSeriesElement: (editMode: Boolean) -> Unit,
-    goToRecurInstance: (uid: String, date: Long) -> Unit,
     goBack: () -> Unit,
     unlinkFromSeries: () -> Unit
 
@@ -409,8 +409,7 @@ fun DetailScreenContent(
                     }
                     icalObject.value = icalObject.value
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                unlinkFromSeries = unlinkFromSeries
+                }
             )
 
             AnimatedVisibility(!isEditMode.value) {
@@ -749,6 +748,8 @@ fun DetailScreenContent(
             ) {   // only Todos have recur!
                 DetailsCardRecur(
                     icalObject = icalObject.value,
+                    seriesInstances = seriesInstances,
+                    seriesElement = seriesElement,
                     isEditMode = isEditMode.value,
                     hasChildren = subtasks.value.isNotEmpty() || subnotes.value.isNotEmpty(),
                     onRecurUpdated = { updatedRRule ->
@@ -757,8 +758,6 @@ fun DetailScreenContent(
                         changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
                     goToDetail = goToDetail,
-                    goToSeriesElement = goToSeriesElement,
-                    goToRecurInstance = goToRecurInstance,
                     unlinkFromSeries = unlinkFromSeries
                 )
             }
@@ -855,6 +854,8 @@ fun DetailScreenContent_JOURNAL() {
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
+            seriesInstances = emptyList(),
+            seriesElement = null,
             isChild = false,
             player = null,
             sliderIncrement = 10,
@@ -876,8 +877,6 @@ fun DetailScreenContent_JOURNAL() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            goToSeriesElement = {  },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -902,6 +901,8 @@ fun DetailScreenContent_TODO_editInitially() {
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
+            seriesInstances = emptyList(),
+            seriesElement = null,
             isChild = false,
             player = null,
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
@@ -923,8 +924,6 @@ fun DetailScreenContent_TODO_editInitially() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            goToSeriesElement = { },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -951,6 +950,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
+            seriesInstances = emptyList(),
+            seriesElement = null,
             isChild = true,
             player = null,
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
@@ -972,8 +973,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            goToSeriesElement = {  },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -992,6 +991,8 @@ fun DetailScreenContent_failedLoading() {
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
+            seriesInstances = emptyList(),
+            seriesElement = null,
             isChild = true,
             player = null,
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
@@ -1013,8 +1014,6 @@ fun DetailScreenContent_failedLoading() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            goToSeriesElement = { },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }

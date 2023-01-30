@@ -43,12 +43,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     private val _application = application
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-    lateinit var icalEntity: LiveData<ICalEntity?>
-    lateinit var relatedSubnotes: LiveData<List<ICal4List>>
-    lateinit var relatedSubtasks: LiveData<List<ICal4List>>
-    lateinit var seriesElementId: LiveData<Long?>
-    lateinit var seriesInstances: LiveData<List<ICalObject>>
-    lateinit var isChild: LiveData<Boolean>
+    var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
+    var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
+    var relatedSubtasks: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
+    var seriesElement: LiveData<ICalObject?> = MutableLiveData(null)
+    var seriesInstances: LiveData<List<ICalObject>> = MutableLiveData(emptyList())
+    var isChild: LiveData<Boolean> = MutableLiveData(false)
     private var originalEntry: ICalEntity? = null
 
     lateinit var allCategories: LiveData<List<String>>
@@ -73,28 +73,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     init {
-
         viewModelScope.launch {
-
-            // insert a new value to initialize the item or load the existing one from the DB
-            icalEntity = MutableLiveData<ICalEntity?>().apply {
-                    postValue(ICalEntity(ICalObject(), null, null, null, null, null))
-                }
-
             allCategories = database.getAllCategoriesAsText()
             allResources = database.getAllResourcesAsText()
             allWriteableCollections = database.getAllWriteableCollections()
-
-            relatedSubnotes = MutableLiveData(emptyList())
-            relatedSubtasks = MutableLiveData(emptyList())
-            seriesElementId = MutableLiveData(null)
-            isChild = MutableLiveData(false)
-
-            /*
-            recurInstances = Transformations.switchMap(icalEntity) {
-                it?.property?.id?.let { originalId -> database.getRecurInstances(originalId) }
-            }
-             */
         }
     }
 
@@ -108,13 +90,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     database.getIcal4List(ICal4List.getQueryForAllSubnotesForParentUID(parentUid, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
-
             relatedSubtasks = Transformations.switchMap(icalEntity) {
                 it?.property?.uid?.let { parentUid ->
                     database.getIcal4List(ICal4List.getQueryForAllSubtasksForParentUID(parentUid, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
-            seriesElementId = Transformations.switchMap(icalEntity) {
+            seriesElement = Transformations.switchMap(icalEntity) {
                 database.getSeriesICalObjectIdByUID(it?.property?.uid)
             }
             seriesInstances = Transformations.switchMap(icalEntity) {

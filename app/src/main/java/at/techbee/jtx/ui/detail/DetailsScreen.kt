@@ -79,7 +79,7 @@ fun DetailsScreen(
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
     val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
-    val seriesElementId = detailViewModel.seriesElementId.observeAsState(null)
+    val seriesElement = detailViewModel.seriesElement.observeAsState(null)
     val seriesInstances = detailViewModel.seriesInstances.observeAsState(emptyList())
     val isChild = detailViewModel.isChild.observeAsState(false)
     val allCategories = detailViewModel.allCategories.observeAsState(emptyList())
@@ -339,6 +339,8 @@ fun DetailsScreen(
                 allResources = allResources.value,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
+                seriesInstances = seriesInstances.value,
+                seriesElement = seriesElement.value,
                 sliderIncrement = detailViewModel.settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
                 showProgressForMainTasks = detailViewModel.settingsStateHolder.settingShowProgressForMainTasks.value,
                 showProgressForSubTasks = detailViewModel.settingsStateHolder.settingShowProgressForSubTasks.value,
@@ -379,16 +381,8 @@ fun DetailsScreen(
                 },
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
-                goToSeriesElement = { editMode ->
-                    seriesElementId.value?.let { navController.navigate(DetailDestination.Detail.getRoute(it, emptyList(), editMode)) }
-                                    },
                 goBack = { navigateUp = true },
                 unlinkFromSeries = { detailViewModel.unlinkFromSeries() },
-                goToRecurInstance = { uid, date ->
-                    seriesInstances.value.find { instance -> instance.uid == uid && instance.dtstart == date  }?.let { foundInstance ->
-                        navController.navigate(DetailDestination.Detail.getRoute(foundInstance.id, seriesInstances.value.map { it.id }, false))
-                    }
-                },
                 modifier = Modifier.padding(paddingValues)
             )
 

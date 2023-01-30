@@ -27,7 +27,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.contract.JtxContract.JtxICalObject.TZ_ALLDAY
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
-import at.techbee.jtx.ui.reusable.dialogs.UnlinkFromParentDialog
 import at.techbee.jtx.util.DateTimeUtils
 import java.time.ZoneId
 
@@ -46,24 +45,13 @@ fun HorizontalDateCard(
     pickerMinDate: Long? = null,
     pickerMaxDate: Long? = null,
     enabled: Boolean = true,
-    needsUnlinkBeforeEditing: Boolean = false,
-    onDateTimeChanged: (Long?, String?) -> Unit = { _, _ -> },
-    unlinkFromSeries: () -> Unit = { }
+    onDateTimeChanged: (Long?, String?) -> Unit = { _, _ -> }
 ) {
 
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
-    var showUnlinkFromRecurringDialog by rememberSaveable { mutableStateOf(false) }
-
 
     Card(
-        onClick = {
-            if(isEditMode) {
-                if(needsUnlinkBeforeEditing)
-                    showUnlinkFromRecurringDialog = true
-                else
-                    showDatePickerDialog = true
-            }
-        },
+        onClick = { if(isEditMode) { showDatePickerDialog = true  } },
         shape = if(isEditMode) CardDefaults.outlinedShape else CardDefaults.elevatedShape,
         colors = if(isEditMode) CardDefaults.outlinedCardColors() else CardDefaults.elevatedCardColors(),
         elevation = if(isEditMode) CardDefaults.outlinedCardElevation() else CardDefaults.elevatedCardElevation(),
@@ -122,16 +110,6 @@ fun HorizontalDateCard(
                 onDateTimeChanged(time, tz)
             },
             onDismiss = { showDatePickerDialog = false }
-        )
-    }
-
-    if (showUnlinkFromRecurringDialog) {
-        UnlinkFromParentDialog(
-            onConfirm = {
-                unlinkFromSeries()
-                showUnlinkFromRecurringDialog = false
-            },
-            onDismiss = { showUnlinkFromRecurringDialog = false }
         )
     }
 }

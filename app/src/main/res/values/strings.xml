@@ -83,6 +83,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
     <string name="list_item_upload_pending">"Upload pending"</string>
     <string name="list_item_recurring">"Recurring entry"</string>
+    <string name="list_item_edited_recurring">"Edited recurring entry"</string>
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Go to original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instance of recurring"</string>
@@ -491,8 +492,6 @@ Thank you!"</string>
     <string name="dialog_revert_changes_message">"Are you sure you want to discard your changes and revert contents to the state before you started editing?"</string>
     <string name="dialog_revert_changes_message2">"Attention: Subtasks and subnotes are separate entries and cannot be reverted."</string>
     <string name="dialog_collection_new_entries_title">"Collection for new entries"</string>
-    <string name="dialog_unlink_from_series_title">"Unlink from series?"</string>
-    <string name="dialog_unlink_from_series_message">"In order to change the date of this recurring entry, it must be unlinked from the series."</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>

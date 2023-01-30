@@ -204,8 +204,8 @@ SELECTs (global selects without parameter)
      * @param uid of the [ICalObject] in the DB
      * @return the [ICalObject.id] as LiveData
      */
-    @Query("SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NULL")
-    fun getSeriesICalObjectIdByUID(uid: String?): LiveData<Long?>
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NULL")
+    fun getSeriesICalObjectIdByUID(uid: String?): LiveData<ICalObject?>
 
     /**
      * Resolve the UID with the corresonding ICalObjectId as LiveData
@@ -213,7 +213,7 @@ SELECTs (global selects without parameter)
      * @param uid of the [ICalObject] instances in the DB
      * @return the [ICalObject.id] as LiveData List
      */
-    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NOT NULL")
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NOT NULL ORDER BY $COLUMN_RECURID")
     fun getSeriesInstancesICalObjectsByUID(uid: String?): LiveData<List<ICalObject>>
 
 
@@ -666,6 +666,6 @@ DELETEs by Object
     fun deleteRecurringInstances(uid: String?)
 
     @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_DTSTART = :dtstart AND $COLUMN_RECURID IS NOT NULL")
-    fun getRecurInstance(uid: String?, dtstart: Long): ICalObject?
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID = :recurid")
+    fun getRecurInstance(uid: String?, recurid: String): ICalObject?
 }

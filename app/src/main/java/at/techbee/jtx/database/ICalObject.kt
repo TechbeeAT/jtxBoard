@@ -857,6 +857,14 @@ data class ICalObject(
                 parent?.let { database.update(it) }
             }
         }
+
+        private fun getAsRecurId(datetime: Long, timezone: String?) = when {
+            timezone == TZ_ALLDAY -> DtStart(Date(datetime)).value
+            timezone.isNullOrEmpty() -> DtStart(DateTime(datetime)).value
+            else -> DtStart(DateTime(datetime)).apply {
+                timeZone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(timezone)
+            }.value
+        }
     }
 
 
@@ -1168,7 +1176,7 @@ data class ICalObject(
         // delete also exceptions (as recurring instances might still exist):
         val exceptions = getLongListfromCSVString(this.exdate)
         exceptions.forEach { exceptionDate ->
-            database.getRecurInstance(uid, exceptionDate)?.let {
+            database.getRecurInstance(uid, getAsRecurId(exceptionDate, dtstartTimezone))?.let {
                 database.delete(it)
             }
         }
@@ -1185,26 +1193,14 @@ data class ICalObject(
         getInstancesFromRrule().forEach { recurrenceDate ->
             val instance = original.copy()
 
-            instance.property.recurid = when {
-                instance.property.dtstartTimezone == TZ_ALLDAY -> DtStart(Date(instance.property.dtstart!!)).value
-                instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
-                else -> {
-                    val timezone =
-                        TimeZoneRegistryFactory.getInstance().createRegistry()
-                            .getTimeZone(instance.property.dtstartTimezone)
-                    val withTimezone =
-                        DtStart(DateTime(instance.property.dtstart!!))
-                    withTimezone.timeZone = timezone
-                    withTimezone.value
-                }
-            }
+            instance.property.dtstart = recurrenceDate
+            val recurid = getAsRecurId(recurrenceDate, instance.property.dtstartTimezone)
+            instance.property.recurid = recurid
 
-            if(database.getRecurInstance(uid = uid, dtstart = recurrenceDate) != null)
+            if(database.getRecurInstance(uid = uid, recurid = recurid) != null)
                 return@forEach   // skip the entry if there is an existing linked entry that was changed (and therefore not deleted before)
 
-
             instance.property.id = 0L
-            //instance.property.recurOriginalIcalObjectId = id
             //instance.property.uid = generateNewUID()
             instance.property.dtstamp = System.currentTimeMillis()
             instance.property.created = System.currentTimeMillis()
@@ -1218,7 +1214,6 @@ data class ICalObject(
             instance.property.scheduleTag = null
             instance.property.dirty = false
 
-            instance.property.dtstart = recurrenceDate
 
             if(instance.property.component == Component.VTODO.name && original.property.due != null)
                 instance.property.due = recurrenceDate + timeToDue
@@ -1283,6 +1278,7 @@ data class ICalObject(
             Alarm.scheduleNextNotifications(context)
         }
     }
+
 
     /**
      * Takes a string, extracts the first line to the summary, the remaining lines to the description

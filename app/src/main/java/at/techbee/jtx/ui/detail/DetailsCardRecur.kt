@@ -19,9 +19,12 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -46,12 +49,12 @@ import java.util.*
 @Composable
 fun DetailsCardRecur(
     icalObject: ICalObject,
+    seriesInstances: List<ICalObject>,
+    seriesElement: ICalObject?,
     isEditMode: Boolean,
     hasChildren: Boolean,
     onRecurUpdated: (Recur?) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
-    goToSeriesElement: (editMode: Boolean) -> Unit,
-    goToRecurInstance: (uid: String, date: Long) -> Unit,
     unlinkFromSeries: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -521,7 +524,7 @@ fun DetailsCardRecur(
                 if(icalObject.recurid != null) {
                     Button(
                         onClick = {
-                            goToSeriesElement(isEditMode)
+                            seriesElement?.id?.let { goToDetail(it, isEditMode, emptyList()) }
                         }
                     ) {
                         Text(stringResource(id = R.string.details_go_to_series))
@@ -555,78 +558,115 @@ fun DetailsCardRecur(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                icalObject.getInstancesFromRrule().forEach { instanceDate ->
-                    ElevatedCard(
-                        onClick = {
-                            if(!isEditMode)
-                                goToRecurInstance(icalObject.uid, instanceDate)
-                                  },
-                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
-                    ) {
-                        Text(
-                            text = DateTimeUtils.convertLongToFullDateTimeString(instanceDate, icalObject.dtstartTimezone),
-                            modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
-                        )
+                /*
+                if(isEditMode) {
+                    icalObject.getInstancesFromRrule().forEach { instanceDate ->
+                        ElevatedCard(
+                            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                        ) {
+                            Text(
+                                text = DateTimeUtils.convertLongToFullDateTimeString(instanceDate, icalObject.dtstartTimezone),
+                                modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
+                            )
+                        }
+                    }
+                } */
+                if(!isEditMode) {
+                    seriesInstances.forEach { instance ->
+                        ElevatedCard(
+                            onClick = {
+                                goToDetail(instance.id, false, seriesInstances.map { it.id })
+                            },
+                            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp, horizontal = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = DateTimeUtils.convertLongToFullDateTimeString(instance.dtstart, instance.dtstartTimezone),
+                                    modifier = Modifier.weight(1f)
+                                )
+                                if (instance.sequence == 0L) {
+                                    Icon(
+                                        Icons.Outlined.EventRepeat,
+                                        stringResource(R.string.list_item_recurring),
+                                        modifier = Modifier
+                                            .size(14.dp)
+                                    )
+                                } else {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_recur_exception),
+                                        stringResource(R.string.list_item_edited_recurring),
+                                        modifier = Modifier
+                                            .size(14.dp)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
-            }
 
-            val exceptions = DateTimeUtils.getLongListfromCSVString(icalObject.exdate)
-            if(exceptions.isNotEmpty())
-                Text(
-                    text = stringResource(id = R.string.recurrence_exceptions),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp, bottom = 4.dp)
-                )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                exceptions.forEach { exception ->
-                    ElevatedCard(
-                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
-                    ) {
-                        Text(
-                            text = DateTimeUtils.convertLongToFullDateTimeString(exception, icalObject.dtstartTimezone),
-                            modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
-                        )
+
+                val exceptions = DateTimeUtils.getLongListfromCSVString(icalObject.exdate)
+                if(exceptions.isNotEmpty())
+                    Text(
+                        text = stringResource(id = R.string.recurrence_exceptions),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 4.dp)
+                    )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    exceptions.forEach { exception ->
+                        ElevatedCard(
+                            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                        ) {
+                            Text(
+                                text = DateTimeUtils.convertLongToFullDateTimeString(exception, icalObject.dtstartTimezone),
+                                modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp),
+                                style = TextStyle(textDecoration = TextDecoration.LineThrough)
+                            )
+                        }
                     }
                 }
-            }
 
-            val additions = DateTimeUtils.getLongListfromCSVString(icalObject.rdate)
-            if(additions.isNotEmpty())
-                Text(
-                    text = stringResource(id = R.string.recurrence_additions),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp, bottom = 4.dp)
-                )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                additions.forEach { addition ->
-                    ElevatedCard(
-                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
-                    ) {
-                        Text(
-                            text = DateTimeUtils.convertLongToFullDateTimeString(addition, icalObject.dtstartTimezone),
-                            modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
-                        )
+                val additions = DateTimeUtils.getLongListfromCSVString(icalObject.rdate)
+                if(additions.isNotEmpty())
+                    Text(
+                        text = stringResource(id = R.string.recurrence_additions),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 4.dp)
+                    )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    additions.forEach { addition ->
+                        ElevatedCard(
+                            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                        ) {
+                            Text(
+                                text = DateTimeUtils.convertLongToFullDateTimeString(addition, icalObject.dtstartTimezone),
+                                modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 
 @Preview(showBackground = true)
@@ -651,12 +691,19 @@ fun DetailsCardRecur_Preview() {
                 exdate = "1661890454701,1661990454701"
                 rdate = "1661890454701,1661990454701"
             },
+            seriesInstances = listOf(
+                ICalObject.createTodo().apply {
+                    dtstart = System.currentTimeMillis()
+                    dtstartTimezone = null
+                    due = System.currentTimeMillis()
+                    dueTimezone = null
+                    rrule = "123"
+                }
+            ),            seriesElement = null,
             isEditMode = false,
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            goToSeriesElement = { },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -682,12 +729,19 @@ fun DetailsCardRecur_Preview_edit() {
                 dueTimezone = null
                 rrule = recur.toString()
             },
+            seriesInstances = listOf(
+                ICalObject.createTodo().apply {
+                    dtstart = System.currentTimeMillis()
+                    dtstartTimezone = null
+                    due = System.currentTimeMillis()
+                    dueTimezone = null
+                    rrule = "123"
+                }
+            ),            seriesElement = null,
             isEditMode = true,
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            goToSeriesElement = { },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -707,12 +761,19 @@ fun DetailsCardRecur_Preview_unchanged_recur() {
                 recurid = "uid"
                 sequence = 0L
             },
+            seriesInstances = listOf(
+                ICalObject.createTodo().apply {
+                    dtstart = System.currentTimeMillis()
+                    dtstartTimezone = null
+                    due = System.currentTimeMillis()
+                    dueTimezone = null
+                    rrule = "123"
+                }
+            ),            seriesElement = null,
             isEditMode = false,
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            goToSeriesElement = { },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -732,12 +793,19 @@ fun DetailsCardRecur_Preview_changed_recur() {
                 recurid = "uid"
                 sequence = 1L
             },
+            seriesInstances = listOf(
+                ICalObject.createTodo().apply {
+                    dtstart = System.currentTimeMillis()
+                    dtstartTimezone = null
+                    due = System.currentTimeMillis()
+                    dueTimezone = null
+                    rrule = "123"
+                }
+            ),            seriesElement = null,
             isEditMode = false,
             hasChildren = true,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            goToSeriesElement = { },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -755,12 +823,19 @@ fun DetailsCardRecur_Preview_off() {
                 due = System.currentTimeMillis()
                 dueTimezone = null
             },
+            seriesInstances = listOf(
+                ICalObject.createTodo().apply {
+                    dtstart = System.currentTimeMillis()
+                    dtstartTimezone = null
+                    due = System.currentTimeMillis()
+                    dueTimezone = null
+                    rrule = "123"
+                }
+            ),            seriesElement = null,
             isEditMode = false,
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            goToSeriesElement = { },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -778,12 +853,20 @@ fun DetailsCardRecur_Preview_edit_off() {
                 due = System.currentTimeMillis()
                 dueTimezone = null
             },
+            seriesInstances = listOf(
+                ICalObject.createTodo().apply {
+                    dtstart = System.currentTimeMillis()
+                    dtstartTimezone = null
+                    due = System.currentTimeMillis()
+                    dueTimezone = null
+                    rrule = "123"
+                }
+            ),
+            seriesElement = null,
             isEditMode = true,
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            goToSeriesElement = { },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -801,12 +884,12 @@ fun DetailsCardRecur_Preview_edit_no_dtstart() {
                 due = null
                 dueTimezone = null
             },
+            seriesInstances = emptyList(),
+            seriesElement = null,
             isEditMode = true,
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            goToSeriesElement = { },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
@@ -824,12 +907,12 @@ fun DetailsCardRecur_Preview_view_no_dtstart() {
                 due = null
                 dueTimezone = null
             },
+            seriesInstances = emptyList(),
+            seriesElement = null,
             isEditMode = false,
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            goToSeriesElement = { },
-            goToRecurInstance = { _, _ -> },
             unlinkFromSeries = { }
         )
     }
