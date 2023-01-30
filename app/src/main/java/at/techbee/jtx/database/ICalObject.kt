@@ -607,7 +607,7 @@ data class ICalObject(
          *
          * @return The new id of the item in the new collection
          */
-        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long {
+        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long? {
 
             val newParentId = moveItemToNewCollection(id, parentId, newCollectionId, database, context)
 
@@ -630,10 +630,15 @@ data class ICalObject(
          * @return the new id of the item that was inserted (that becomes the newParentId)
          *
          */
-        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long {
+        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long? {
 
                 val item = database.getSync(id)
+                val oldUID = item?.property?.uid
+                val newUID = generateNewUID()
                 if (item != null) {
+
+                    if(item.property.recurid != null)  // recur instances are ignored, changed recur instances are updated below
+                        return null
 
                     item.property.id = 0L
                     item.property.collectionId = newCollectionId
@@ -642,7 +647,7 @@ data class ICalObject(
                     item.property.lastModified = System.currentTimeMillis()
                     item.property.created = System.currentTimeMillis()
                     item.property.dtstamp = System.currentTimeMillis()
-                    item.property.uid = generateNewUID()
+                    item.property.uid = newUID
                     item.property.flags = null
                     item.property.scheduleTag = null
                     item.property.eTag = null
@@ -694,10 +699,12 @@ data class ICalObject(
                         relParent2Child.text = parent?.property?.uid
                         database.insertRelatedto(relParent2Child)
                     }
+
+                    database.updateRecurringInstanceUIDs(oldUID, newUID, newCollectionId)
                     Alarm.scheduleNextNotifications(context)
                     return newId
                 }
-                return 0L
+                return null
             }
 
         suspend fun unlinkFromSeries(item: ICalObject, database: ICalDatabaseDao): ICalObject {

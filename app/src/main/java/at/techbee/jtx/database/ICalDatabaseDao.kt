@@ -622,6 +622,17 @@ DELETEs by Object
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_EXDATE = :exceptions, $COLUMN_DIRTY = 1, $COLUMN_LAST_MODIFIED = :lastUpdated, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1 WHERE $COLUMN_ID = :originalId")
     fun setRecurExceptions(originalId: Long, exceptions: String?, lastUpdated: Long = System.currentTimeMillis())
 
+    /**
+     * Recurring instances are synchronized through the series definition. This method updates the UID
+     * of series elements to be assigned to the right series definition again after being moved
+     * to a new collection.
+     * @param oldUID of the entries (that should be updated)
+     * @param newUID that should be set
+     * @param newCollectionId that should be set
+     */
+    @Transaction
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_UID = :newUID, $COLUMN_ICALOBJECT_COLLECTIONID = :newCollectionId WHERE $COLUMN_UID = :oldUID AND $COLUMN_RECURID IS NOT NULL")
+    fun updateRecurringInstanceUIDs(oldUID: String?, newUID: String, newCollectionId: Long)
 
     @Transaction
     @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RRULE IS NULL AND $COLUMN_RECURID IS NOT NULL AND $COLUMN_UID NOT IN (SELECT $COLUMN_UID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RRULE IS NOT NULL)")
