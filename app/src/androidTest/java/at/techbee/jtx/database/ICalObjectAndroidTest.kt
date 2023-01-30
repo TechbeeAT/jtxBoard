@@ -377,6 +377,7 @@ class ICalObjectAndroidTest {
                 assertEquals(3, database.getAllRelatedto().getOrAwaitValue().size)
 
                 val newParentId = ICalObject.updateCollectionWithChildren(idParent, null, 2L, database, context)
+                    ?: throw AssertionError("newParentId not returned")
                 Thread.sleep(500)
 
                 val newParent = database.getICalObjectById(newParentId)
