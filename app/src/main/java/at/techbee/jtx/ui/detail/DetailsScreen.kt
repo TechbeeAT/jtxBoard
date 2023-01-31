@@ -111,6 +111,7 @@ fun DetailsScreen(
                     && icalEntity.value?.property?.sequence == 0L
                     && icalEntity.value?.property?.summary == null
                     && icalEntity.value?.property?.description == null
+                    && icalEntity.value?.attachments?.isEmpty() == true
                 ) {
                     showDeleteDialog = true
                 } else {
@@ -119,8 +120,12 @@ fun DetailsScreen(
                 }
             }
             DetailViewModel.DetailChangeState.CHANGEUNSAVED -> { showUnsavedChangesDialog = true }
+            DetailViewModel.DetailChangeState.LOADING -> { /* do nothing */ }
             DetailViewModel.DetailChangeState.SAVINGREQUESTED -> { /* do nothing, wait until saved */ }
             DetailViewModel.DetailChangeState.CHANGESAVING -> { /* do nothing, wait until saved */ }
+            DetailViewModel.DetailChangeState.DELETING -> { /* do nothing, wait until deleted */ }
+            DetailViewModel.DetailChangeState.DELETED -> { navController.navigateUp() }
+            DetailViewModel.DetailChangeState.SQLERROR -> { navController.navigateUp() }
             DetailViewModel.DetailChangeState.CHANGESAVED -> {
                 showUnsavedChangesDialog = false
                 if(isEditMode.value)
@@ -133,16 +138,14 @@ fun DetailsScreen(
         }
     }
 
-    if (detailViewModel.entryDeleted.value) {
-        Toast.makeText(
-            context,
-            context.getString(R.string.details_toast_entry_deleted),
-            Toast.LENGTH_SHORT
-        ).show()
+    if (detailViewModel.changeState.value == DetailViewModel.DetailChangeState.DELETED) {
         Attachment.scheduleCleanupJob(context)
         onRequestReview()
-        detailViewModel.entryDeleted.value = false
         navigateUp = true
+    }
+
+    if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.SQLERROR) {
+        ErrorOnUpdateDialog(onConfirm = { navigateUp = true })
     }
 
     detailViewModel.toastMessage.value?.let {
@@ -187,11 +190,6 @@ fun DetailsScreen(
             }
         )
     }
-
-    if (detailViewModel.sqlConstraintException.value) {
-        ErrorOnUpdateDialog(onConfirm = { navigateUp = true })
-    }
-
 
     Scaffold(
         topBar = {
@@ -413,7 +411,11 @@ fun DetailsScreen(
                 isProActionAvailable = isProActionAvailable,
                 changeState = detailViewModel.changeState,
                 detailsBottomSheetState = detailsBottomSheetState,
-                isProcessing = detailViewModel.isProcessing.value,
+                isProcessing = detailViewModel.isProcessing.value
+                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.LOADING
+                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED
+                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING
+                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.DELETING,
                 onDeleteClicked = { showDeleteDialog = true },
                 onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) },
                 onRevertClicked = { showRevertDialog = true }
