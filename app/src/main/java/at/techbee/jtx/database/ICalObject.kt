@@ -858,7 +858,8 @@ data class ICalObject(
             }
         }
 
-        private fun getAsRecurId(datetime: Long, timezone: String?) = when {
+        @VisibleForTesting
+        fun getAsRecurId(datetime: Long, timezone: String?) = when {
             timezone == TZ_ALLDAY -> DtStart(Date(datetime)).value
             timezone.isNullOrEmpty() -> DtStart(DateTime(datetime)).value
             else -> DtStart(DateTime(datetime)).apply {
