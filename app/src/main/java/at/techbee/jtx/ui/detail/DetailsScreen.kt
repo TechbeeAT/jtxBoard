@@ -382,7 +382,7 @@ fun DetailsScreen(
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },
-                unlinkFromSeries = { detailViewModel.unlinkFromSeries() },
+                unlinkFromSeries = { instances, series, deleteAfterUnlink -> detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink) },
                 modifier = Modifier.padding(paddingValues)
             )
 

@@ -31,6 +31,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
+import at.techbee.jtx.ui.reusable.dialogs.DetachFromSeriesDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsupportedRRuleDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.DateTimeUtils
@@ -55,7 +56,7 @@ fun DetailsCardRecur(
     hasChildren: Boolean,
     onRecurUpdated: (Recur?) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
-    unlinkFromSeries: () -> Unit,
+    unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -86,6 +87,9 @@ fun DetailsCardRecur(
     var endAfterExpaneded by rememberSaveable { mutableStateOf(false) }
     var endsExpanded by rememberSaveable { mutableStateOf(false) }
     var showDatepicker by rememberSaveable { mutableStateOf(false) }
+    var showDetachSingleFromSeriesDialog by rememberSaveable { mutableStateOf(false) }
+    var showDetachAllFromSeriesDialog by rememberSaveable { mutableStateOf(false) }
+
 
 
 
@@ -131,6 +135,22 @@ fun DetailsCardRecur(
                 onRecurUpdated(buildRRule())
             },
             onDismiss = { showDatepicker = false }
+        )
+    }
+
+    if (showDetachSingleFromSeriesDialog) {
+        DetachFromSeriesDialog(
+            detachAll = false,
+            onConfirm = { unlinkFromSeries(listOf(icalObject), null, false) },
+            onDismiss = { showDetachSingleFromSeriesDialog = false }
+        )
+    }
+
+    if (showDetachAllFromSeriesDialog) {
+        DetachFromSeriesDialog(
+            detachAll = true,
+            onConfirm = { unlinkFromSeries(seriesInstances, seriesElement, true) },
+            onDismiss = { showDetachAllFromSeriesDialog = false }
         )
     }
 
@@ -516,29 +536,11 @@ fun DetailsCardRecur(
                 }
             }
 
-            Column(
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                if(icalObject.recurid != null) {
-                    Button(
-                        onClick = {
-                            seriesElement?.id?.let { goToDetail(it, isEditMode, emptyList()) }
-                        }
-                    ) {
-                        Text(stringResource(id = R.string.details_go_to_series))
-                    }
-                    Button(
-                        onClick = { unlinkFromSeries() }
-                    ) {
-                        Text(stringResource(id = R.string.details_unlink_from_series))
-                    }
-                    Text(
-                        text = stringResource(id = if(icalObject.sequence == 0L) R.string.details_unchanged_part_of_series else R.string.details_changed_part_of_series),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
+            if(icalObject.recurid != null) {
+                Text(
+                    text = stringResource(id = if (icalObject.sequence == 0L) R.string.details_unchanged_part_of_series else R.string.details_changed_part_of_series),
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
 
             AnimatedVisibility(hasChildren) {
@@ -548,6 +550,39 @@ fun DetailsCardRecur(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.error
                 )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                if(!isEditMode && !icalObject.recurid.isNullOrEmpty()) {
+                    Button(
+                        onClick = {
+                            seriesElement?.id?.let { goToDetail(it, false, emptyList()) }
+                        }
+                    ) {
+                        Text(stringResource(id = R.string.details_go_to_series))
+                    }
+
+                    Button(
+                        onClick = { showDetachSingleFromSeriesDialog = true }
+                    ) {
+                        Text(stringResource(id = R.string.details_detach_from_series))
+                    }
+                }
+
+                if(!isEditMode && !icalObject.rrule.isNullOrEmpty()) {
+                    Button(
+                        onClick = { showDetachAllFromSeriesDialog = true }
+                    ) {
+                        Text(stringResource(id = R.string.details_detach_all_instances))
+                    }
+                }
             }
 
             if(isEditMode)
@@ -577,10 +612,14 @@ fun DetailsCardRecur(
                             onClick = {
                                 goToDetail(instance.id, false, seriesInstances.map { it.id })
                             },
-                            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = 48.dp)
                         ) {
                             Row(
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp, horizontal = 8.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp, horizontal = 8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
@@ -625,7 +664,9 @@ fun DetailsCardRecur(
                 ) {
                     exceptions.forEach { exception ->
                         ElevatedCard(
-                            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = 48.dp)
                         ) {
                             Text(
                                 text = DateTimeUtils.convertLongToFullDateTimeString(exception, icalObject.dtstartTimezone),
@@ -653,7 +694,9 @@ fun DetailsCardRecur(
                 ) {
                     additions.forEach { addition ->
                         ElevatedCard(
-                            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = 48.dp)
                         ) {
                             Text(
                                 text = DateTimeUtils.convertLongToFullDateTimeString(addition, icalObject.dtstartTimezone),
@@ -704,7 +747,7 @@ fun DetailsCardRecur_Preview() {
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -742,7 +785,7 @@ fun DetailsCardRecur_Preview_edit() {
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -774,7 +817,7 @@ fun DetailsCardRecur_Preview_unchanged_recur() {
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -806,7 +849,7 @@ fun DetailsCardRecur_Preview_changed_recur() {
             hasChildren = true,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -836,7 +879,7 @@ fun DetailsCardRecur_Preview_off() {
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -867,7 +910,7 @@ fun DetailsCardRecur_Preview_edit_off() {
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -890,7 +933,7 @@ fun DetailsCardRecur_Preview_edit_no_dtstart() {
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -913,7 +956,7 @@ fun DetailsCardRecur_Preview_view_no_dtstart() {
             hasChildren = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }

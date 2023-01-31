@@ -466,7 +466,8 @@ Thank you!"</string>
     <string name="details_changed_part_of_series">"This entry is part of a series but was changed. This entry will not be affected by changes of the series."</string>
     <string name="details_series_attention_subentries">"Attention: Series-elements mirror the subtasks and linked notes from the series. If you would like to change subtasks and linked notes only for a series-element, please unlink it from the series first."</string>
     <string name="details_go_to_series">"Go to series"</string>
-    <string name="details_unlink_from_series">"Unlink from series"</string>
+    <string name="details_detach_from_series">"Detach from series"</string>
+    <string name="details_detach_all_instances">"Detach all instances"</string>
     <string name="edit_comment">"Edit comment"</string>
     <string name="edit_subnote_add_helper">"Add a subnote"</string>
     <string name="edit_subtask">"Edit subtask"</string>
@@ -492,6 +493,12 @@ Thank you!"</string>
     <string name="dialog_revert_changes_message">"Are you sure you want to discard your changes and revert contents to the state before you started editing?"</string>
     <string name="dialog_revert_changes_message2">"Attention: Subtasks and subnotes are separate entries and cannot be reverted."</string>
     <string name="dialog_collection_new_entries_title">"Collection for new entries"</string>
+    <string name="dialog_detach_from_series_title">"Detach from series?"</string>
+    <string name="dialog_detach_from_series_text_all">"Detaching all elements will delete the series and turn the instances into independent entries that can have their own subtasks or linked notes. But there will be no more link to the original series or other instances. Would you like to continue?"</string>
+    <string name="dialog_detach_from_series_text_single">"Detaching this element from the series will allow you to have independent subtasks or linked notes, but there will be no more link to the original series. Would you like to continue?"</string>
+    <string name="dialog_detach_from_series_text_attention">"Attention: This operation cannot be undone!"</string>
+    <string name="dialog_detach_from_series_button">"Detach from series"</string>
+
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>

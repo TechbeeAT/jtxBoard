@@ -103,7 +103,7 @@ fun DetailScreenContent(
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     goBack: () -> Unit,
-    unlinkFromSeries: () -> Unit
+    unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit
 
     ) {
 
@@ -877,7 +877,7 @@ fun DetailScreenContent_JOURNAL() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -924,7 +924,7 @@ fun DetailScreenContent_TODO_editInitially() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -973,7 +973,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -1014,7 +1014,7 @@ fun DetailScreenContent_failedLoading() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }

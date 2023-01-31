@@ -157,18 +157,27 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun unlinkFromSeries() {
+    fun unlinkFromSeries(instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) {
         isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            icalEntity.value?.property?.let { mainICalObject ->
-                val children = database.getRelatedChildren(mainICalObject.id)
-                val updatedEntry = ICalObject.unlinkFromSeries(mainICalObject, database)
-                children.forEach { child ->
-                    val childEntity = database.getSync(child.id) ?: return@forEach
+
+            instances.forEach { instance ->
+                val children = database.getRelatedChildren(instance.id)
+                val updatedEntry = ICalObject.unlinkFromSeries(instance, database)
+                children.forEach forEachChild@ { child ->
+                    val childEntity = database.getSync(child.id) ?: return@forEachChild
                     createCopy(childEntity, child.getModuleFromString(), updatedEntry.uid)
                 }
-                mainICalObject.makeSeriesDirty(database)
+                instance.makeSeriesDirty(database)
             }
+
+            if(deleteAfterUnlink) {
+                series?.id?.let {
+                    deleteById(it)
+                    entryDeleted.value = true
+                }
+            }
+            SyncUtil.notifyContentObservers(getApplication())
             isProcessing.value = false
         }
     }
