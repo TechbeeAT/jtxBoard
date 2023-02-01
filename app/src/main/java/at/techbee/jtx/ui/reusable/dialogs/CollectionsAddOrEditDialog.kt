@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalObject
+import com.godaddy.android.colorpicker.HsvColor
 import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 
@@ -118,7 +119,7 @@ fun CollectionsAddOrEditDialog(
                 }
 
                 HarmonyColorPicker(
-                    color = if(collectionColor == null || collectionColor == Color.Transparent) Color.White else collectionColor!!,
+                    color = if(collectionColor == null || collectionColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(collectionColor!!),
                     harmonyMode = ColorHarmonyMode.NONE,
                     modifier = Modifier.size(300.dp),
                     onColorChanged = { hsvColor ->
