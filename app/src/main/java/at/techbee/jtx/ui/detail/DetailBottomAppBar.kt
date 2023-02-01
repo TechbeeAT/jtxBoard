@@ -55,6 +55,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun DetailBottomAppBar(
     icalObject: ICalObject?,
+    seriesElement: ICalObject?,
     collection: ICalCollection?,
     isEditMode: MutableState<Boolean>,
     markdownState: MutableState<MarkdownState>,
@@ -206,7 +207,7 @@ fun DetailBottomAppBar(
 
             AnimatedVisibility(
                 collection.accountType != LOCAL_ACCOUNT_TYPE
-                    && (isSyncInProgress || icalObject.dirty)
+                    && (isSyncInProgress || seriesElement?.dirty ?: icalObject.dirty)
                     && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
             ) {
                 IconButton(
@@ -214,7 +215,7 @@ fun DetailBottomAppBar(
                         if (!isSyncInProgress)
                             collection.getAccount().let { SyncUtil.syncAccount(it) }
                     },
-                    enabled = icalObject.dirty && !isSyncInProgress
+                    enabled = seriesElement?.dirty ?: icalObject.dirty && !isSyncInProgress
                 ) {
                     Crossfade(isSyncInProgress) { synchronizing ->
                         if (synchronizing) {
@@ -385,6 +386,7 @@ fun DetailBottomAppBar_Preview_View() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
@@ -413,6 +415,7 @@ fun DetailBottomAppBar_Preview_edit() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
             isProActionAvailable = true,
@@ -440,6 +443,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
             isProActionAvailable = true,
@@ -467,6 +471,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = false },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
@@ -494,6 +499,7 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = false },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
@@ -524,6 +530,7 @@ fun DetailBottomAppBar_Preview_View_local() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },

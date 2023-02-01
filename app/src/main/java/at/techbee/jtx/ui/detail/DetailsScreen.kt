@@ -405,6 +405,7 @@ fun DetailsScreen(
         bottomBar = {
             DetailBottomAppBar(
                 icalObject = icalEntity.value?.property,
+                seriesElement = seriesElement.value,
                 collection = icalEntity.value?.ICalCollection,
                 isEditMode = isEditMode,
                 markdownState = markdownState,
