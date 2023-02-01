@@ -9,6 +9,7 @@
 package at.techbee.jtx
 
 import android.accounts.Account
+import android.app.Application
 import android.content.*
 import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
@@ -21,6 +22,7 @@ import androidx.core.content.FileProvider
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.widgets.ListWidgetReceiver
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.io.File
@@ -93,6 +95,17 @@ class SyncContentProvider : ContentProvider() {
         addURI(SYNC_PROVIDER_AUTHORITY, "attachment/#", CODE_ATTACHMENT_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "alarm/#", CODE_ALARM_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "unknown/#", CODE_UNKNOWN_ITEM)
+    }
+
+    override fun onCreate(): Boolean {
+
+        if (context?.applicationContext == null)
+            return false
+
+        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao
+        TimeZoneRegistryFactory.getInstance().createRegistry()
+
+        return true
     }
 
 
@@ -279,17 +292,6 @@ class SyncContentProvider : ContentProvider() {
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
         return ContentUris.withAppendedId(uri, id)
-    }
-
-    override fun onCreate(): Boolean {
-
-        if (context?.applicationContext == null)
-            return false
-
-        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao
-        TimeZoneRegistryFactory.getInstance().createRegistry()
-
-        return true
     }
 
     override fun query(
@@ -603,10 +605,14 @@ class SyncContentProvider : ContentProvider() {
     private fun isSyncAdapter(uri: Uri): Boolean {
 
         val isSyncAdapter = uri.getBooleanQueryParameter(CALLER_IS_SYNCADAPTER, false)
-        if (isSyncAdapter)
-            return true
-        else
+        if (isSyncAdapter) {
+            if(callingPackage == SyncUtil.DAVX5_PACKAGE_NAME && !SyncUtil.isDAVx5CompatibleWithJTX(context?.applicationContext!! as Application))
+                throw java.lang.IllegalArgumentException(context!!.getString(R.string.dialog_davx5_outdated_message))
+             else
+                return true
+        } else {
             throw java.lang.IllegalArgumentException("Currently only Syncadapters are supported. Uri: ($uri)")
+        }
     }
 
     /**

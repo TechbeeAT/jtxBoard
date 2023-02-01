@@ -443,6 +443,7 @@ fun ListScreenTabContainer(
                         listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
+                    isDAVx5compatible = globalStateHolder.isDAVx5compatible.value,
                     multiselectEnabled = listViewModel.multiselectEnabled,
                     selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,

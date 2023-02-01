@@ -89,10 +89,10 @@ class SyncUtil {
             try {
                 val davx5Info = application.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
                 return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    davx5Info.longVersionCode >= 402000000L
+                    davx5Info.longVersionCode >= 403010000L
                 } else {
                     @Suppress("DEPRECATION")
-                    davx5Info.versionCode >= 402000000
+                    davx5Info.versionCode >= 403010000
                 }
             } catch (e: PackageManager.NameNotFoundException) {
                 return false
