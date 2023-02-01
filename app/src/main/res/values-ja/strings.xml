@@ -97,8 +97,21 @@ Global Strings -->
     <string name="view_started">"開始"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#mycategory"</string>
+    <string name="edit_add_category_helper">"カテゴリを追加"</string>
+    <string name="edit_attendees_hint">"johanna@ example.com"</string>
+    <string name="edit_attendees_helper">"出席者 (メールアドレス) を追加します。注意: iMIP メッセージを送信するなど、サーバーが自動的に出席者を処理する場合があります。"</string>
+    <string name="edit_resources_hint">"プロジェクター"</string>
+    <string name="edit_resources_helper">"資料を追加"</string>
+    <string name="edit_contact_helper">"このエントリーの責任者または所有者の連絡先情報"</string>
+    <string name="edit_comment_hint">"あなたのコメント …"</string>
+    <string name="edit_comment_helper">"コメントを追加"</string>
+    <string name="edit_attachment_button_text">"添付ファイルを追加"</string>
     <string name="edit_take_picture_button_text">"写真を撮る"</string>
     <string name="edit_add_link_button_text">"ファイルを添付"</string>
+    <string name="edit_url_helper">"このエントリーに関連する URL"</string>
+    <string name="edit_location_helper">"このエントリーの位置情報を追加"</string>
+    <string name="edit_attachment_add_dialog_hint">"あなたの添付ファイル URL (https://…)"</string>
+    <string name="edit_comment_add_dialog_hint">"あなたのコメント"</string>
     <string name="edit_subtasks_add_helper">"サブタスクを追加"</string>
     <string name="edit_attachment_delete_attachment">"添付ファイルを削除"</string>
     <string name="edit_attachment_add_link_dialog">"添付ファイルへのリンクを追加"</string>
