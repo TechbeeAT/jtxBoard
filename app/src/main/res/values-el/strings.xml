@@ -491,6 +491,9 @@ Global Strings -->
     <string name="settings_progress_step_50">"Αύξηση κατά 50 (2 βήματα)"</string>
     <string name="settings_progress_step">"Ορίστε το βήμα για το ρυθμιστικό προόδου"</string>
     <string name="settings_disable_alarms_for_readonly">"Απενεργοποίηση ειδοποιήσεων για συλλογές μόνο για ανάγνωση"</string>
+    <string name="settings_link_progress_to_subtasks">"Εμφάνιση προόδου για δευτερεύουσες εργασίες"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Διατήρηση κατάστασης, προόδου &amp; ολοκλήρωση συγχρονισμού"</string>
+    <string name="settings_attention_experimental_feature">"Προσοχή: Αυτό είναι ένα πειραματικό χαρακτηριστικό"</string>
     <string name="sync_button_go_to_collections">"Πήγαινε στις συλλογέ"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε αυτήν τη δυνατότητα."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -538,7 +541,9 @@ Global Strings -->
     <string name="menu_view_autosave">"Αυτόματη αποθήκευση"</string>
     <string name="next">"Επόμενο"</string>
     <string name="previous">"Προηγούμενο"</string>
+    <string name="x_selected">%1$d of %2$d επιλέχθηκαν</string>
     <string name="select_all">Επιλογή Όλων</string>
+    <string name="select_none">Καμία επιλογή</string>
     <string name="visible">Ορατό</string>
     <string name="invisible">Αόρατο/η</string>
     <string name="widget_list_description">"Λίστα widget"</string>
@@ -550,6 +555,7 @@ Global Strings -->
     <string name="widget_list_view_settings">"Προβολή ρυθμίσεων"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Προσοχή: Προς το παρόν μόνο ένα επίπεδο ιεραρχίας υποστηρίζεται στο γραφικό στοιχείο. Για να δείτε τις καταχωρήσεις των χαμηλότερων επιπέδων, χρησιμοποιήστε την επίπεδη προβολή."</string>
     <string name="widget_list_maximum_entries_reached">"Συμπληρώθηκε ο μέγιστος αριθμός καταχωρίσεων στο γραφικό στοιχείο (%1$d)."</string>
+    <string name="widget_list_compat_updating_widget_notification">"Ενημέρωση widget"</string>
     <string name="opacity">"Αδιαφάνεια"</string>
     <string name="general">"Γενικά"</string>
     <string name="list_collapse">"Αποτυχία"</string>
@@ -561,6 +567,7 @@ Global Strings -->
     <string name="widget_list_configuration_entries_background">"Φόντο καταχωρήσεων"</string>
     <string name="widget_list_show_description">"Δείξε περιγραφή"</string>
     <string name="settings_select_theme_true_dark">"Σκοτεινό (AMOLED)"</string>
+    <string name="settings_select_theme_contrast">"Αντίθεση (e-Ink)"</string>
     <string name="settings_journals">"Ρυθμίσεις Journals"</string>
     <string name="settings_default_journals_date">"Ορίστε μια προεπιλεγμένη ημερομηνία/ώρα για τα περιοδικά"</string>
     <string name="settings_default_journals_date_current_day">"Τρέχουσα ημέρα"</string>
