@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
+import com.godaddy.android.colorpicker.HsvColor
 import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 
@@ -79,7 +80,7 @@ fun ColorPickerDialog(
                     }
 
                     HarmonyColorPicker(
-                        color = if(selectedColor == null || selectedColor == Color.Transparent) Color.White else selectedColor!!,
+                        color = if(selectedColor == null || selectedColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(selectedColor!!),
                         harmonyMode = ColorHarmonyMode.NONE,
                         modifier = Modifier.size(300.dp),
                         onColorChanged = { hsvColor -> selectedColor = hsvColor.toColor()
