@@ -99,7 +99,7 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
             )
 
             Text(
-                text = stringResource(id = R.string.donate_header_text),
+                text = stringResource(id = R.string.donate_header_developer_note),
                 textAlign = TextAlign.Center,
                 fontStyle = FontStyle.Italic
             )
