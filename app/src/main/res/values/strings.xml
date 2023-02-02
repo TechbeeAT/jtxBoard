@@ -221,7 +221,7 @@ For more information about the Sync please see:"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Failed opening DAVx⁵, please open the app manually."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Triggering sync in DAVx⁵ failed, please check in DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)"</string>
+    <string name="donate_header_developer_note">"Hey, I'm Patrick, the developer of jtx Board. I am putting a lot of time and effort into this app that I am offering to you for free. If you like my app, please send some love and make a small donation!"</string>
     <string name="donate_thank_you">"Thank you!"</string>
     <string name="donate_donate_with">"Donate with"</string>
     <string name="donate_other_donation_methods">"If you would like to consider any other donation method, please check our website:"</string>
