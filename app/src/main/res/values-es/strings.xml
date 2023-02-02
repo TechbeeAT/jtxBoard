@@ -204,7 +204,6 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Error al iniciar DAVx⁵. Por favor, inicie la app manualmente."</string>
     <string name="sync_toast_intent_start_davx5_sync">"No se pudo activar la sincronización en DAVx⁵. Por favor, compruebe DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"El desarrollo de una aplicación es un tema complejo y el desarrollo, mantenimiento y soporte es un trabajo duro. Si le gusta esta aplicación y desea garantizar un desarrollo continuo, considere una donación :-)"</string>
     <string name="donate_thank_you">"¡Gracias!"</string>
     <string name="donate_donate_with">"Donar con"</string>
     <string name="donate_other_donation_methods">"Si desea considerar otro método de donación, por favor, consulte nuestra página web:"</string>
