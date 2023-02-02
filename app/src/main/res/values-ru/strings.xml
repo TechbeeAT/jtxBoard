@@ -181,7 +181,6 @@ Global Strings -->
     <string name="sync_toast_intent_open_davx5_failed">"Не удалось открыть DAVx⁵. Откройте приложение вручную."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Не удалось запустить синхронизацию в DAVx⁵. Проверьте в DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"Разработка приложения — сложная тема, а разработка, обслуживание и поддержка — тяжелая работа. Поэтому, если вам нравится это приложение и если вы хотите обеспечить его непрерывное развитие, рассмотрите возможность сделать пожертвование :-)"</string>
     <string name="donate_thank_you">"Спасибо !"</string>
     <string name="donate_donate_with">"Пожертвовать через"</string>
     <string name="donate_other_donation_methods">"Если вы хотите рассмотреть любой другой способ пожертвования, пожалуйста, посетите наш веб-сайт:"</string>
