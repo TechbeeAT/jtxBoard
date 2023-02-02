@@ -206,7 +206,7 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ konnte nicht geöffnet werden, bitte öffnen Sie die App manuell."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Der Sync konnte nicht in DAVx⁵ getriggert werden, bitte kontrollieren Sie direkt in DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"Die Entwicklung einer App ist eine komplexe Angelegenheit und die Entwicklung, Wartung und Betreuung ist harte Arbeit. Wenn Sie diese App mögen und Sie einen Beitrag zur kontinuierlichen Weiterentwicklung leisten wollen, ziehen Sie bitte eine Spende in Erwägung :-)"</string>
+    <string name="donate_header_developer_note">"Hallo, ich bin Patrick, Entwickler von jtx Board. Die Entwicklung meiner App nimmt viel Zeit in Anspruch und trotzdem stelle ich sie kostenlos zur Verfügung. Wenn euch meine App gefällt, zeigt euch bitte ein wenig Erkenntlich und unterstützt mich mit einer kleinen Spende!"</string>
     <string name="donate_thank_you">"Dankeschön!"</string>
     <string name="donate_donate_with">"Spenden über"</string>
     <string name="donate_other_donation_methods">"Weitere Optionen zum Spenden finden Sie auf unserer Website:"</string>
