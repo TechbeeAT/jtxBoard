@@ -206,6 +206,7 @@ Global Strings -->
     <string name="sync_toast_intent_open_davx5_failed">"Αποτυχία ανοίγματος του DAVx⁵, παρακαλώ ανοίξτε χειροκίνητα την εφαρμογή."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Η ενεργοποίηση του συγχρονισμού με το DAVx⁵ απαίτυχε, παρακαλώ ελέγξτε το DAVx⁵."</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"Γεια σου, είμαι ο Πάτρικ, ο προγραμματιστής του jtx Board. Αφιερώνω πολύ χρόνο και προσπάθεια σε αυτή την εφαρμογή που σου προσφέρω δωρεάν. Εάν σ' αρέσει η εφαρμογή μου, παρακαλώ στείλε λίγη αγάπη και κανε και μία μικρή δωρεά!"</string>
     <string name="donate_thank_you">"Ευχαριστούμε!"</string>
     <string name="donate_donate_with">"Δωρίστε μέσω"</string>
     <string name="donate_other_donation_methods">"Εάν θέλετε να εξετάσετε οποιαδήποτε άλλη μέθοδο δωρεάς, ελέγξτε τον ιστότοπό μας:"</string>
