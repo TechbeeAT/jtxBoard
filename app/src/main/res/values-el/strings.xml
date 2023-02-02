@@ -8,12 +8,12 @@
 Global Strings -->
     <string name="save">"Αποθήκευση"</string>
     <string name="cancel">"Ακύρωση"</string>
-    <string name="ok">"ΟΚ"</string>
+    <string name="ok">"OK"</string>
     <string name="delete">"Διαγραφή"</string>
     <string name="discard">"Απόρριψη"</string>
     <string name="gotit">"Το κατάλαβα"</string>
     <string name="cont">"Συνέχεια"</string>
-    <string name="website">"Ιστοσελίδα"</string>
+    <string name="website">"Website"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
     <string name="toolbar_text_add_note">"Προσθήκη σημείωσης"</string>
     <string name="toolbar_text_add_task">"Προσθήκη εργασίας"</string>
@@ -37,7 +37,7 @@ Global Strings -->
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Άνοιγμα πλοηγού"</string>
     <string name="navigation_drawer_close">"Κλείσιμο πλοηγού"</string>
-    <string name="navigation_drawer_board">"Πίνακας"</string>
+    <string name="navigation_drawer_board">"Board"</string>
     <string name="navigation_drawer_sync">"Συγχρονισμός με DAVx⁵"</string>
     <string name="navigation_drawer_about">"Σχετικά / Άδεια"</string>
     <string name="navigation_drawer_subtitle">"Ημερολόγια, σημειώσεις &amp; εργασίες"</string>
