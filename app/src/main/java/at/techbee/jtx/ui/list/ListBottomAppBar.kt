@@ -46,11 +46,14 @@ fun ListBottomAppBar(
     selectedEntries: SnapshotStateList<Long>,
     allowNewEntries: Boolean,
     isDAVx5compatible: Boolean,
+    isBiometricsEnabled: Boolean,
+    isBiometricsUnlocked: Boolean,
     onAddNewEntry: () -> Unit,
     onFilterIconClicked: () -> Unit,
     onGoToDateSelected: (Long) -> Unit,
     onDeleteSelectedClicked: () -> Unit,
-    onUpdateSelectedClicked: () -> Unit
+    onUpdateSelectedClicked: () -> Unit,
+    onToggleBiometricAuthentication: () -> Unit
 ) {
 
     var showGoToDatePicker by remember { mutableStateOf(false) }
@@ -154,6 +157,25 @@ fun ListBottomAppBar(
                                 Icons.Outlined.DateRange,
                                 contentDescription = stringResource(id = R.string.menu_list_gotodate)
                             )
+                        }
+                    }
+
+                    AnimatedVisibility(isBiometricsEnabled) {
+                        IconButton(onClick = { onToggleBiometricAuthentication() }) {
+                            Crossfade(isBiometricsUnlocked) {
+                                if(it) {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_shield_lock_open),
+                                        contentDescription = stringResource(id = R.string.list_biometric_protected_entries_unlocked),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                } else {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_shield_lock),
+                                        contentDescription = stringResource(id = R.string.list_biometric_protected_entries_locked),
+                                    )
+                                }
+                            }
                         }
                     }
 
@@ -274,6 +296,8 @@ fun ListBottomAppBar_Preview_Journal() {
             listSettings = listSettings,
             allowNewEntries = true,
             isDAVx5compatible = false,
+            isBiometricsEnabled = false,
+            isBiometricsUnlocked = false,
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -281,7 +305,8 @@ fun ListBottomAppBar_Preview_Journal() {
             onFilterIconClicked = { },
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
-            onUpdateSelectedClicked = { }
+            onUpdateSelectedClicked = { },
+            onToggleBiometricAuthentication = { }
         )
     }
 }
@@ -301,6 +326,8 @@ fun ListBottomAppBar_Preview_Note() {
             listSettings = listSettings,
             allowNewEntries = false,
             isDAVx5compatible = true,
+            isBiometricsEnabled = false,
+            isBiometricsUnlocked = false,
             multiselectEnabled = remember { mutableStateOf(true) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -308,7 +335,8 @@ fun ListBottomAppBar_Preview_Note() {
             onFilterIconClicked = { },
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
-            onUpdateSelectedClicked = { }
+            onUpdateSelectedClicked = { },
+            onToggleBiometricAuthentication = { }
         )
     }
 }
@@ -328,6 +356,8 @@ fun ListBottomAppBar_Preview_Todo() {
             listSettings = listSettings,
             allowNewEntries = true,
             isDAVx5compatible = true,
+            isBiometricsEnabled = true,
+            isBiometricsUnlocked = false,
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -335,7 +365,8 @@ fun ListBottomAppBar_Preview_Todo() {
             onFilterIconClicked = { },
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
-            onUpdateSelectedClicked = { }
+            onUpdateSelectedClicked = { },
+            onToggleBiometricAuthentication = { }
         )
     }
 }
@@ -356,6 +387,8 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             listSettings = listSettings,
             allowNewEntries = true,
             isDAVx5compatible = true,
+            isBiometricsEnabled = true,
+            isBiometricsUnlocked = true,
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -363,7 +396,8 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             onFilterIconClicked = { },
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
-            onUpdateSelectedClicked = { }
+            onUpdateSelectedClicked = { },
+            onToggleBiometricAuthentication = { }
         )
     }
 }

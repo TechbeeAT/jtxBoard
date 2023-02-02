@@ -54,10 +54,10 @@ enum class DropdownSettingOption(
     AUTO_ALARM_ON_DUE("on_due", R.string.alarms_ondue),
     AUTO_ALARM_ALWAYS_ON_DUE("always_on_due", R.string.alarms_always_ondue),
 
-    PROTECT_BIOMETRIC_OFF("off", R.string.off),
-    PROTECT_BIOMETRIC_CONFIDENTIAL("confidential", R.string.settings_protect_biometric_confidential),
-    PROTECT_BIOMETRIC_PRIVATE_CONFIDENTIAL("private_confidential", R.string.settings_protect_biometric_private_confidential),
-    PROTECT_BIOMETRIC_ALL("all", R.string.settings_protect_biometric_all);
+    PROTECT_BIOMETRIC_OFF("protect_biometric_off", R.string.off),
+    PROTECT_BIOMETRIC_CONFIDENTIAL("protect_biometric_confidential", R.string.settings_protect_biometric_confidential),
+    PROTECT_BIOMETRIC_PRIVATE_CONFIDENTIAL("protect_biometric_private_confidential", R.string.settings_protect_biometric_private_confidential),
+    PROTECT_BIOMETRIC_ALL("protect_biometric_all", R.string.settings_protect_biometric_all);
 
     fun getProgressStepKeyAsInt(): Int {
         return try {

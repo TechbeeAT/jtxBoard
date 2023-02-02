@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.list
 
 import android.app.Application
 import android.widget.Toast
+import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -447,6 +448,8 @@ fun ListScreenTabContainer(
                     multiselectEnabled = listViewModel.multiselectEnabled,
                     selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,
+                    isBiometricsEnabled = settingsStateHolder.settingProtectBiometric.value != DropdownSettingOption.PROTECT_BIOMETRIC_OFF,
+                    isBiometricsUnlocked = globalStateHolder.isAuthenticated.value,
                     onFilterIconClicked = {
                         scope.launch {
                             if (filterBottomSheetState.isVisible)
@@ -457,7 +460,19 @@ fun ListScreenTabContainer(
                     },
                     onGoToDateSelected = { id -> getActiveViewModel().scrollOnceId.postValue(id) },
                     onDeleteSelectedClicked = { showDeleteSelectedDialog = true },
-                    onUpdateSelectedClicked = { showUpdateEntriesDialog = true }
+                    onUpdateSelectedClicked = { showUpdateEntriesDialog = true },
+                    onToggleBiometricAuthentication = {
+                        if(globalStateHolder.isAuthenticated.value) {
+                            globalStateHolder.isAuthenticated.value = false
+                        } else {
+                            val promptInfo: BiometricPrompt.PromptInfo = BiometricPrompt.PromptInfo.Builder()
+                                .setTitle(context.getString(R.string.settings_protect_biometric))
+                                .setSubtitle(context.getString(R.string.settings_protect_biometric_info_on_unlock))
+                                .setNegativeButtonText(context.getString(R.string.cancel))
+                                .build()
+                            globalStateHolder.biometricPrompt?.authenticate(promptInfo)
+                        }
+                    }
                 )
             } else if(timeout) {
                 BottomAppBar {

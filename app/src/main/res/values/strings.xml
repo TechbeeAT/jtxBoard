@@ -403,6 +403,7 @@ For more information about the Sync please see:"</string>
     <string name="settings_protect_biometric_confidential">"Confidential"</string>
     <string name="settings_protect_biometric_all">"All"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Please authenticate to change this setting!"</string>
+    <string name="settings_protect_biometric_info_on_unlock">"Please authenticate to show protected entries!"</string>
     <string name="donate_dialog_title">"Do you like jtx Board?"</string>
     <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
 Thank you!"</string>
@@ -556,6 +557,8 @@ Thank you!"</string>
     <string name="list_start_date_tomorrow">"Start tomorrow"</string>
     <string name="list_start_date_future">"Start in future"</string>
     <string name="list_hide_completed_tasks">"Hide completed tasks"</string>
+    <string name="list_biometric_protected_entries_locked">Biometric protected entries locked</string>
+    <string name="list_biometric_protected_entries_unlocked">Biometric protected entries unlocked</string>
     <string name="settings_auto_alarm">"Automatic alarm"</string>
     <string name="alarms_always_ondue">"Always on due"</string>
     <string name="settings_show_one_recur_entry_in_future">"Show only one recurring entry in future"</string>
