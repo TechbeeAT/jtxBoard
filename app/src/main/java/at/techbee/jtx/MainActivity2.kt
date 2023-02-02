@@ -10,8 +10,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.Window
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalTextStyle
@@ -27,6 +29,7 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -116,6 +119,33 @@ class MainActivity2 : AppCompatActivity() {
         TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
         createNotificationChannel()   // Register Notification Channel for Reminders
         BillingManager.getInstance().initialise(this)
+
+        /* START Initialise biometric prompt */
+        globalStateHolder.biometricPrompt = BiometricPrompt(this, ContextCompat.getMainExecutor(this),
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    globalStateHolder.isAuthenticated.value = false
+                    Toast.makeText(applicationContext,
+                        "Authentication error: $errString", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    globalStateHolder.isAuthenticated.value = true
+                    Toast.makeText(applicationContext,
+                        "Authentication succeeded!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    globalStateHolder.isAuthenticated.value = false
+                    Toast.makeText(applicationContext, "Authentication failed",
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+        /* END Initialise biometric prompt */
 
         setContent {
             val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
@@ -369,7 +399,8 @@ fun MainNavHost(
         composable(NavigationDrawerDestination.SETTINGS.name) {
             SettingsScreen(
                 navController = navController,
-                settingsStateHolder = settingsStateHolder
+                settingsStateHolder = settingsStateHolder,
+                globalStateHolder = globalStateHolder
             )
         }
     }

@@ -399,6 +399,10 @@ For more information about the Sync please see:"</string>
     <string name="settings_select_theme_dark">"Dark"</string>
     <string name="settings_select_theme_light">"Light"</string>
     <string name="settings_select_theme_system">"System default"</string>
+    <string name="settings_protect_biometric_private_confidential">"Private &amp; confidential"</string>
+    <string name="settings_protect_biometric_confidential">"Confidential"</string>
+    <string name="settings_protect_biometric_all">"All"</string>
+    <string name="settings_protect_biometric_info_on_settings_unlock">"Please authenticate to change this setting!"</string>
     <string name="donate_dialog_title">"Do you like jtx Board?"</string>
     <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
 Thank you!"</string>
@@ -556,6 +560,8 @@ Thank you!"</string>
     <string name="alarms_always_ondue">"Always on due"</string>
     <string name="settings_show_one_recur_entry_in_future">"Show only one recurring entry in future"</string>
     <string name="settings_auto_alarm_sub">"Turn on to automatically create alarms. Choose \"Always on due\" to not create an alarm but to get notified in any case when a task is due."</string>
+    <string name="settings_protect_biometric">"Protect entries with biometrics"</string>
+    <string name="settings_protect_biometric_sub">"This function hides the selected entries until they are unlockd with biometrics, but does not encrypt/decrypt data in the background."</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"No status"</string>
     <string name="classification_no_classification">"No classification (public)"</string>
