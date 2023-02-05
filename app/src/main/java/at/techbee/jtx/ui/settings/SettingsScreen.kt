@@ -62,6 +62,13 @@ fun SettingsScreen(
         languageOptions.add(Locale.forLanguageTag(language))
     }
 
+    var pendingSettingProtectiometric: DropdownSettingOption? by remember { mutableStateOf(null) }
+    if(globalStateHolder.isAuthenticated.value && pendingSettingProtectiometric != null) {
+        settingsStateHolder.settingProtectBiometric.value = pendingSettingProtectiometric!!
+        SETTING_PROTECT_BIOMETRIC.save(pendingSettingProtectiometric!!, context = context)
+        pendingSettingProtectiometric = null
+    }
+
     Scaffold(
         topBar = {
             JtxTopAppBar(
@@ -200,6 +207,7 @@ fun SettingsScreen(
                                             .setNegativeButtonText(context.getString(R.string.cancel))
                                             .build()
                                         globalStateHolder.biometricPrompt?.authenticate(promptInfo)
+                                        pendingSettingProtectiometric = selection
                                     } else {
                                         settingsStateHolder.settingProtectBiometric.value = selection
                                         SETTING_PROTECT_BIOMETRIC.save(selection, context = context)

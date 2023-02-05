@@ -254,7 +254,8 @@ data class ICal4List(
             isFilterNoResourceSet: Boolean = false,
             searchText: String? = null,
             flatView: Boolean = false,
-            searchSettingShowOneRecurEntryInFuture: Boolean = false
+            searchSettingShowOneRecurEntryInFuture: Boolean = false,
+            hideBiometricProtected: List<Classification>
         ): SimpleSQLiteQuery {
 
             val args = arrayListOf<String>()
@@ -373,6 +374,16 @@ data class ICal4List(
                 if(searchClassification.contains(Classification.NO_CLASSIFICATION))
                     queryString += "OR $COLUMN_CLASSIFICATION IS NULL"
                 queryString += ") "
+            }
+
+            //Hide biometric protected
+            hideBiometricProtected.forEach {
+                if(it == Classification.NO_CLASSIFICATION) {
+                    queryString += "AND $COLUMN_CLASSIFICATION IS NOT NULL "
+                } else {
+                    queryString += "AND $COLUMN_CLASSIFICATION IS NOT ? "
+                    args.add(it.classification?:"")
+                }
             }
 
             //COLLECTION

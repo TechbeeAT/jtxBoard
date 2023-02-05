@@ -9,10 +9,13 @@
 package at.techbee.jtx.ui.list
 
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.*
+import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.widgets.ListWidgetConfig
 
 
@@ -63,7 +66,6 @@ class ListSettings {
     var showSubtasks: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubnotes: MutableState<Boolean> = mutableStateOf(true)  // widget only
 
-
     companion object {
         private const val PREFS_COLLECTION = "prefsCollection"
         private const val PREFS_ACCOUNT = "prefsAccount"
@@ -108,8 +110,13 @@ class ListSettings {
         //private const val PREFS_WIDGET_ALPHA = "prefsWidgetAlpha"
         //private const val PREFS_WIDGET_ALPHA_ENTRIES = "prefsWidgetAlhpaEntries"
 
-
-
+        fun getProtectedClassificationsFromSettings(context: Context) =
+            when(SettingsStateHolder(context).settingProtectBiometric.value) {
+                DropdownSettingOption.PROTECT_BIOMETRIC_ALL -> Classification.values().toList()
+                DropdownSettingOption.PROTECT_BIOMETRIC_CONFIDENTIAL -> listOf(Classification.CONFIDENTIAL)
+                DropdownSettingOption.PROTECT_BIOMETRIC_PRIVATE_CONFIDENTIAL -> listOf(Classification.PRIVATE, Classification.CONFIDENTIAL)
+                else -> emptyList()
+        }
 
         fun fromPrefs(prefs: SharedPreferences) = ListSettings().apply {
 

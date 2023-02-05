@@ -27,6 +27,7 @@ import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import kotlinx.serialization.decodeFromString
@@ -145,7 +146,8 @@ class ListWidgetUpdateWorker(
                             isFilterNoCategorySet = listWidgetConfig?.isFilterNoCategorySet ?: false,
                             isFilterNoResourceSet = listWidgetConfig?.isFilterNoResourceSet ?: false,
                             flatView = listWidgetConfig?.flatView?: false,  // always true in Widget, we handle the flat view in the code
-                            searchSettingShowOneRecurEntryInFuture = listWidgetConfig?.showOneRecurEntryInFuture ?: false
+                            searchSettingShowOneRecurEntryInFuture = listWidgetConfig?.showOneRecurEntryInFuture ?: false,
+                            hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context)  // protected entries are always hidden
                         )
                     )
 

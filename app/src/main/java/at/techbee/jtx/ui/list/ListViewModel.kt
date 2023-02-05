@@ -93,10 +93,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val selectedEntries = mutableStateListOf<Long>()
     val multiselectEnabled = mutableStateOf(false)
 
-
     init {
-        updateSearch()
-
         // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
         val firstInstall = application.packageManager
             ?.getPackageInfoCompat(application.packageName, 0)
@@ -124,7 +121,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      * new query in the listQuery variable. This can trigger an
      * observer in the fragment.
      */
-    fun updateSearch(saveListSettings: Boolean = false) {
+    fun updateSearch(saveListSettings: Boolean = false, isAuthenticated: Boolean) {
         val query = ICal4List.constructQuery(
             module = module,
             searchCategories = listSettings.searchCategories.value,
@@ -151,7 +148,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value,
             searchText = listSettings.searchText.value,
             flatView = listSettings.flatView.value,
-            searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
+            searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value,
+            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
         )
         listQuery.postValue(query)
 
@@ -159,16 +157,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
         allSubnotesQuery.postValue(ICal4List.getQueryForAllSubEntries(Component.VJOURNAL, listSettings.subnotesOrderBy.value, listSettings.subnotesSortOrder.value))
         if(saveListSettings)
             listSettings.saveToPrefs(prefs)
-    }
-
-
-    /**
-     * Clears all search criteria (except for module) and updates the search
-     */
-    fun clearFilter() {
-        listSettings.reset()
-        listSettings.saveToPrefs(prefs)
-        updateSearch()
     }
 
 

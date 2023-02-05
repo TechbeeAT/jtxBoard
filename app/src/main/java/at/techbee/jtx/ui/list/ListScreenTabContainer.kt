@@ -215,8 +215,14 @@ fun ListScreenTabContainer(
         showSearch = false
         keyboardController?.hide()
         listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
-        listViewModel.updateSearch(saveListSettings = false)
+        listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
         lastUsedPage.value = pagerState.currentPage
+    }
+
+    var lastIsAuthenticated by remember { mutableStateOf(false) }
+    if(lastIsAuthenticated != globalStateHolder.isAuthenticated.value) {
+        lastIsAuthenticated = globalStateHolder.isAuthenticated.value
+        getActiveViewModel().updateSearch(false, globalStateHolder.isAuthenticated.value)
     }
 
     fun addNewEntry(
@@ -275,7 +281,7 @@ fun ListScreenTabContainer(
                 module = listViewModel.module,
                 searchText = listViewModel.listSettings.searchText,
                 newEntryText = listViewModel.listSettings.newEntryText,
-                onSearchTextUpdated = { listViewModel.updateSearch(saveListSettings = false) },
+                onSearchTextUpdated = { listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value) },
                 onCreateNewEntry = { newEntryText ->
                     addNewEntry(
                         module = listViewModel.module,
@@ -384,7 +390,7 @@ fun ListScreenTabContainer(
                                         Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
                                     } else {
                                         getActiveViewModel().listSettings.viewMode.value = viewMode
-                                        getActiveViewModel().updateSearch(saveListSettings = true)
+                                        getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                                     }
                                 }
                             )
@@ -396,7 +402,7 @@ fun ListScreenTabContainer(
                             isSelected = getActiveViewModel().listSettings.flatView.value,
                             onCheckedChange = {
                                 getActiveViewModel().listSettings.flatView.value = it
-                                getActiveViewModel().updateSearch(saveListSettings = true)
+                                getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                             }
                         )
                         Divider()
@@ -406,7 +412,7 @@ fun ListScreenTabContainer(
                             isSelected = getActiveViewModel().listSettings.showOneRecurEntryInFuture.value,
                             onCheckedChange = {
                                 getActiveViewModel().listSettings.showOneRecurEntryInFuture.value = it
-                                getActiveViewModel().updateSearch(saveListSettings = true)
+                                getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                             }
                         )
                     }
@@ -472,6 +478,7 @@ fun ListScreenTabContainer(
                                 .build()
                             globalStateHolder.biometricPrompt?.authenticate(promptInfo)
                         }
+                        listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
                     }
                 )
             } else if(timeout) {
@@ -580,6 +587,7 @@ fun ListScreenTabContainer(
                                         },
                                         navController = navController,
                                         filterBottomSheetState = filterBottomSheetState,
+                                        isAuthenticated = globalStateHolder.isAuthenticated.value
                                     )
                                 }
 

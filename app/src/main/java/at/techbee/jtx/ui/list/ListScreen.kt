@@ -36,6 +36,7 @@ fun ListScreen(
     listViewModel: ListViewModel,
     navController: NavController,
     filterBottomSheetState: ModalBottomSheetState,
+    isAuthenticated: Boolean
 ) {
     val context = LocalContext.current
     val settingsStateHolder = SettingsStateHolder(context)
@@ -209,7 +210,7 @@ fun ListScreen(
                 allCollectionsLive = listViewModel.allCollections,
                 allCategoriesLive = listViewModel.allCategories,
                 allResourcesLive = listViewModel.allResources,
-                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) }
+                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true, isAuthenticated = isAuthenticated) }
             )
         },
         sheetBackgroundColor = MaterialTheme.colorScheme.surface,
