@@ -344,7 +344,6 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="priority_9_lowest">"9 - Nejnižší"</string>
     <string name="list_due_future">"Termín v budoucnosti"</string>
     <string name="view_share_part_of_series">"Tento záznam je součástí série."</string>
-    <string name="view_share_exception_of_series">"Tento záznam je výjimkou ze série."</string>
     <string name="view_share_repeats">"Tento záznam se opakuje každý(ch)"</string>
     <string name="collections_dialog_move_title">"Přesunout všechny záznamy z \"%1$s\" do"</string>
     <string name="collection_dialog_move_info">"Upozornění: Lze vybrat pouze zapisovatelné sbírky a sbírky s podporou stejných komponent (Deníky, Poznámky, Úkoly)."</string>
