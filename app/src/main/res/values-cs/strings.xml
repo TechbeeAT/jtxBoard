@@ -206,7 +206,7 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Nepodařilo se otevřít DAVx⁵, otevřete aplikaci ručně."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Spuštění synchronizace v DAVx⁵ se nezdařilo, zkontrolujte to v DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud se vám tato aplikace líbí a pokud chcete zajistit její neustálý vývoj, zvažte prosím příspěvek :-)"</string>
+    <string name="donate_header_developer_note">"Ahoj, jsem Patrick, vývojář jtx Board. Této aplikaci, kterou vám nabízím zdarma, věnuji spoustu času a úsilí. Pokud se vám moje aplikace líbí, pošlete mi prosím lásku a věnujte malý příspěvek!"</string>
     <string name="donate_thank_you">"Děkujeme!"</string>
     <string name="donate_donate_with">"Darovat přes"</string>
     <string name="donate_other_donation_methods">"Pokud byste chtěli zvážit jiný způsob darování, podívejte se na naše webové stránky:"</string>

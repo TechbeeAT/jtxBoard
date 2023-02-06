@@ -8,12 +8,12 @@
 Global Strings -->
     <string name="save">"Αποθήκευση"</string>
     <string name="cancel">"Ακύρωση"</string>
-    <string name="ok">"ΟΚ"</string>
+    <string name="ok">"OK"</string>
     <string name="delete">"Διαγραφή"</string>
     <string name="discard">"Απόρριψη"</string>
     <string name="gotit">"Το κατάλαβα"</string>
     <string name="cont">"Συνέχεια"</string>
-    <string name="website">"Ιστοσελίδα"</string>
+    <string name="website">"Website"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
     <string name="toolbar_text_add_note">"Προσθήκη σημείωσης"</string>
     <string name="toolbar_text_add_task">"Προσθήκη εργασίας"</string>
@@ -37,7 +37,7 @@ Global Strings -->
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Άνοιγμα πλοηγού"</string>
     <string name="navigation_drawer_close">"Κλείσιμο πλοηγού"</string>
-    <string name="navigation_drawer_board">"Πίνακας"</string>
+    <string name="navigation_drawer_board">"Board"</string>
     <string name="navigation_drawer_sync">"Συγχρονισμός με DAVx⁵"</string>
     <string name="navigation_drawer_about">"Σχετικά / Άδεια"</string>
     <string name="navigation_drawer_subtitle">"Ημερολόγια, σημειώσεις &amp; εργασίες"</string>
@@ -206,7 +206,7 @@ Global Strings -->
     <string name="sync_toast_intent_open_davx5_failed">"Αποτυχία ανοίγματος του DAVx⁵, παρακαλώ ανοίξτε χειροκίνητα την εφαρμογή."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Η ενεργοποίηση του συγχρονισμού με το DAVx⁵ απαίτυχε, παρακαλώ ελέγξτε το DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"Η δημιουργία μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μια σκληρή δουλειά. Εάν σας αρέσει αυτή η εφαρμογή και εάν θέλετε να εξασφαλίσετε τη συνεχή ανάπτυξη της, σκεφτείτε για μια δωρεά :-)"</string>
+    <string name="donate_header_developer_note">"Γεια σου, είμαι ο Πάτρικ, ο προγραμματιστής του jtx Board. Αφιερώνω πολύ χρόνο και προσπάθεια σε αυτή την εφαρμογή που σου προσφέρω δωρεάν. Εάν σ' αρέσει η εφαρμογή μου, παρακαλώ στείλε λίγη αγάπη και κανε και μία μικρή δωρεά!"</string>
     <string name="donate_thank_you">"Ευχαριστούμε!"</string>
     <string name="donate_donate_with">"Δωρίστε μέσω"</string>
     <string name="donate_other_donation_methods">"Εάν θέλετε να εξετάσετε οποιαδήποτε άλλη μέθοδο δωρεάς, ελέγξτε τον ιστότοπό μας:"</string>

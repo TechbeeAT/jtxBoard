@@ -147,6 +147,7 @@ Global Strings -->
     <string name="sync_button_add_account_in_davx5">"DAVx⁵ にアカウントを追加"</string>
     <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ の起動に失敗。手動で DAVx⁵ アプリを起動してください。"</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"JTXボードの開発者のパトリックです。このアプリは無料であなたに提供していますが、開発に多くの時間と労力を要します。もし私のアプリが気に入ったら、多少の親愛の情を込めて、少額でもいいですので寄付をしてください。"</string>
     <!-- sync content provider -->
     <string name="save_and_new">"保存 &amp; 新規作成"</string>
     <string name="save_and_close">"保存して閉じる"</string>
