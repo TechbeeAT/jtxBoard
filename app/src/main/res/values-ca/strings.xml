@@ -344,7 +344,6 @@ Per a més informació sobre la sincronització, per favor mira:"</string>
     <string name="priority_9_lowest">"9- La més baixa"</string>
     <string name="list_due_future">"Venciment en el futur"</string>
     <string name="view_share_part_of_series">"Aquesta entrada forma part d'una sèrie."</string>
-    <string name="view_share_exception_of_series">"Aquesta entrada és una excepció a una sèrie."</string>
     <string name="view_share_repeats">"Aquesta entrada es repeteix cada"</string>
     <string name="collections_dialog_move_title">"Moure totes les entrades des de \"%1$s\" a"</string>
     <string name="collection_dialog_move_info">"Tingues en compte: Sols les col·leccions amb accés d'escriptura, i les que tinguen suport per als mateixos components (Diaris, Notes i Tasques) poden ser seleccionades."</string>
