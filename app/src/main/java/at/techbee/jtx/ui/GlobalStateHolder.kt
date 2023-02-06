@@ -27,6 +27,7 @@ class GlobalStateHolder(context: Context) {
     var isDAVx5compatible = mutableStateOf(true)
 
     var isAuthenticated = mutableStateOf(false)
+    var authenticationTimeout: Long? = null
     private val biometricManager = BiometricManager.from(context)
     val biometricStatus = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
     var biometricPrompt: BiometricPrompt? = null

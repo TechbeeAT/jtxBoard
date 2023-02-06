@@ -69,6 +69,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.time.ZonedDateTime
+import kotlin.time.Duration.Companion.minutes
 
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
@@ -261,11 +262,19 @@ class MainActivity2 : AppCompatActivity() {
             BillingManager.getInstance().initialise(this)  // only Huawei needs to call the update functions again
 
         globalStateHolder.isDAVx5compatible.value = SyncUtil.isDAVx5CompatibleWithJTX(application)
+
+        // reset authentication state if timeout was set and expired or remove timeout if onResume was done within timeout
+        if(globalStateHolder.isAuthenticated.value && globalStateHolder.authenticationTimeout != null) {
+            if((globalStateHolder.authenticationTimeout!!) < System.currentTimeMillis())
+                globalStateHolder.isAuthenticated.value = false
+            globalStateHolder.authenticationTimeout = null
+        }
     }
 
     override fun onPause() {
         super.onPause()
         ListWidgetReceiver.setOneTimeWork(this)
+        globalStateHolder.authenticationTimeout = System.currentTimeMillis() + (10).minutes.inWholeMilliseconds
     }
 
     private fun createNotificationChannel() {
