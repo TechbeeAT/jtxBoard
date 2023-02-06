@@ -79,6 +79,7 @@ class ListViewModelTest {
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createJournal())
         database.insertICalObject(ICalObject.createJournal())
+        listViewModel.updateSearch(isAuthenticated = false)
         assertEquals(2, listViewModel.iCal4List.value?.size)
     }
 
@@ -89,6 +90,7 @@ class ListViewModelTest {
         listViewModel = listViewModelNotes
         listViewModel.iCal4List.observeForever {  }
         database.insertICalObject(ICalObject.createNote("Note1"))
+        listViewModel.updateSearch(isAuthenticated = false)
         assertEquals(1, listViewModel.iCal4List.value?.size)
     }
 
@@ -101,6 +103,7 @@ class ListViewModelTest {
         database.insertICalObject(ICalObject.createTask("Task1"))
         database.insertICalObject(ICalObject.createTask("Task2"))
         database.insertICalObject(ICalObject.createTask("Task3"))
+        listViewModel.updateSearch(isAuthenticated = false)
         assertEquals(3, listViewModel.iCal4List.value?.size)
     }
 
