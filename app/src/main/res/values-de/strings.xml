@@ -344,7 +344,6 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="priority_9_lowest">"9 - Niedrigste"</string>
     <string name="list_due_future">"Fällig in der Zukunft"</string>
     <string name="view_share_part_of_series">"Dieser Eintrag ist Teil einer Serie."</string>
-    <string name="view_share_exception_of_series">"Dieser Eintrag ist eine Ausnahme einer Serie."</string>
     <string name="view_share_repeats">"Dieser Eintrag wiederholt sich"</string>
     <string name="collections_dialog_move_title">"Einträge von \"%1$s\" verschieben nach"</string>
     <string name="collection_dialog_move_info">"Achtung: Es können nur Collections ausgewählt werden, die gleiche Komponenten unterstützen (Journale, Notizen, Aufgaben)."</string>
