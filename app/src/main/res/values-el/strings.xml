@@ -344,7 +344,6 @@ Global Strings -->
     <string name="priority_9_lowest">"9 - Χαμηλότερη"</string>
     <string name="list_due_future">"Μέχρι μελλοντικά"</string>
     <string name="view_share_part_of_series">"Αυτή η εγγραφή είναι μέρος μιας ακολουθίας."</string>
-    <string name="view_share_exception_of_series">"Αυτή η εγγραφή δεν αποτελεί μέρος κάποιας ακολουθίας."</string>
     <string name="view_share_repeats">"Η εγγραφή επαναλαμβάνεται κάθε"</string>
     <string name="collections_dialog_move_title">"Μεταφέρετε όλες τις εγγραφές από \"%1$s\" προς"</string>
     <string name="collection_dialog_move_info">"Σημείωση: Μπορούν να επιλεγούν μόνο εγγράψιμες συλλογές και συλλογές με υποστήριξη για τα ίδια στοιχεία (ημερολόγια, σημειώσεις, εργασίες)."</string>
