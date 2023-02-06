@@ -309,7 +309,6 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="priority_9_lowest">"9 - Le plus bas"</string>
     <string name="list_due_future">"Exigible dans le futur"</string>
     <string name="view_share_part_of_series">"Cet article fait partie d'une série."</string>
-    <string name="view_share_exception_of_series">"Cette entrée est une exception dans une série."</string>
     <string name="view_share_repeats">"Cette entrée se répète chaque"</string>
     <string name="collections_dialog_move_title">"Déplacer toutes les entrées de \"%1$s\" à"</string>
     <string name="collection_dialog_move_info">"Attention : seules les collections inscriptibles et les collections supportant les mêmes composants (Journaux, Notes, Tâches) peuvent être sélectionnées."</string>
