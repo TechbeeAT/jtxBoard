@@ -172,17 +172,16 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
 
-    fun updateProgress(itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
+    fun updateProgress(itemId: Long, newPercent: Int, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
-            ICalObject.makeRecurringException(currentItem, database)
-            val item = database.getSync(itemId)?.property  ?: return@launch
-            item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-            database.update(item)
+            currentItem.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+            database.update(currentItem)
+            currentItem.makeSeriesDirty(database)
 
             if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
-                ICalObject.findTopParent(item.id, database)?.let {
+                ICalObject.findTopParent(currentItem.id, database)?.let {
                     ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                 }
             }
@@ -191,25 +190,28 @@ open class ListViewModel(application: Application, val module: Module) : Android
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
         }
-        if(isLinkedRecurringInstance)
-            toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
     }
 
-    fun updateStatusJournal(itemId: Long, newStatus: Status, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
+    fun updateStatus(itemId: Long, newStatus: Status, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
-            ICalObject.makeRecurringException(currentItem, database)
-            val item = database.getSync(itemId)?.property ?: return@launch
-            item.status = newStatus.status
-            database.update(item)
+            currentItem.status = newStatus.status
+            if(settingsStateHolder.settingKeepStatusProgressCompletedInSync.value) {
+                when(newStatus) {
+                    Status.NEEDS_ACTION -> currentItem.setUpdatedProgress(0, true)
+                    Status.IN_PROCESS -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
+                    Status.COMPLETED -> currentItem.setUpdatedProgress(100, true)
+                    else -> { }
+                }
+            }
+            currentItem.makeDirty()
+            database.update(currentItem)
+            currentItem.makeSeriesDirty(database)
             SyncUtil.notifyContentObservers(getApplication())
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
         }
-        if(isLinkedRecurringInstance)
-            toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-
     }
 
     /*
@@ -226,8 +228,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
             selectedICal4List.forEach { entry ->
                 if(entry.isReadOnly)
                     return@forEach
-                if(entry.isLinkedRecurringInstance)
-                    database.getICalObjectByIdSync(entry.id)?.let { ICalObject.makeRecurringException(it, database) }
+                if(entry.recurid != null)
+                    database.getICalObjectByIdSync(entry.id)?.let { ICalObject.unlinkFromSeries(it, database) }
                 ICalObject.deleteItemWithChildren(entry.id, database)
                 selectedEntries.clear()
             }
@@ -261,7 +263,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
             selectedEntries.forEach { iCalObjectId ->
                 try {
-                    val newId = ICalObject.updateCollectionWithChildren(iCalObjectId, null, newCollection.collectionId, database, getApplication())
+                    val newId = ICalObject.updateCollectionWithChildren(iCalObjectId, null, newCollection.collectionId, database, getApplication()) ?: return@forEach
                     newEntries.add(newId)
                     // once the newId is there, the local entries can be deleted (or marked as deleted)
                     ICalObject.deleteItemWithChildren(iCalObjectId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
@@ -307,6 +309,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         selectedEntries.forEach { selected ->
             database.getICalObjectByIdSync(selected)?.let {
                 database.update(it.apply { makeDirty() })
+                it.makeSeriesDirty(database)
             }
         }
     }
@@ -327,6 +330,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     }
                     it.makeDirty()
                     database.update(it)
+                    it.makeSeriesDirty(database)
                 }
             }
         }
@@ -343,6 +347,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     it.classification = newClassification.classification
                     it.makeDirty()
                     database.update(it)
+                    it.makeSeriesDirty(database)
                 }
             }
         }
@@ -359,6 +364,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     it.priority = newPriority
                     it.makeDirty()
                     database.update(it)
+                    it.makeSeriesDirty(database)
                 }
             }
         }

@@ -43,7 +43,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 18,
+    version = 21,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -61,6 +61,9 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 15, to = 16),  // view updates
         AutoMigration (from = 16, to = 17),  // view updates
         AutoMigration (from = 17, to = 18),  // room update
+        // no AutoMigration from 18 to 19
+        AutoMigration (from = 19, to = 20, spec = ICalDatabase.AutoMigration19to20::class),  // removed recur columns
+        AutoMigration (from = 20, to = 21),  // view update
     ]
 )
 //@TypeConverters(Converters::class)
@@ -74,6 +77,13 @@ abstract class ICalDatabase : RoomDatabase() {
 
     @DeleteColumn(tableName = TABLE_NAME_ALARM, columnName = "trigger")
     class AutoMigration2to3: AutoMigrationSpec
+
+    @DeleteColumn.Entries(
+        DeleteColumn(tableName = TABLE_NAME_ICALOBJECT, columnName = "recur_original_icalobjectid"),
+        DeleteColumn(tableName = TABLE_NAME_ICALOBJECT, columnName = "recur_islinkedinstance")
+    )
+    class AutoMigration19to20: AutoMigrationSpec
+
 
     /**
      * Define a companion object, this allows us to add functions on the SleepDatabase class.
@@ -101,6 +111,13 @@ abstract class ICalDatabase : RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("DROP VIEW IF EXISTS `ical4viewNote`")
                 database.execSQL("CREATE VIEW `ical4viewNote` AS SELECT icalobject._id, icalobject.module, icalobject.component, icalobject.summary, icalobject.description, icalobject.created, icalobject.lastmodified, relatedto.icalObjectId, attachment.binary, attachment.fmttype, attachment.uri, icalobject.sortIndex FROM icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId LEFT JOIN attachment ON icalobject._id = attachment.icalObjectId WHERE icalobject.deleted = 0 AND icalobject.module = 'NOTE'")
+            }
+        }
+
+        private val MIGRATION_18_19 = object : Migration(18, 19) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("update icalobject set uid = (SELECT sub.uid from icalobject sub where sub._id = icalobject.recur_original_icalobjectid) where recur_islinkedinstance = 1")
+                database.execSQL("update icalobject set recurid = null where recur_islinkedinstance = 0 and recur_original_icalobjectid is not null")
             }
         }
 
@@ -140,7 +157,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19)
 
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about

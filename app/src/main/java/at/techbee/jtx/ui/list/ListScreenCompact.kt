@@ -50,7 +50,7 @@ fun ListScreenCompact(
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
     settingLinkProgressToSubtasks: Boolean,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
@@ -203,7 +203,7 @@ fun ListScreenCompact_TODO() {
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )
@@ -257,7 +257,7 @@ fun ListScreenCompact_JOURNAL() {
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )

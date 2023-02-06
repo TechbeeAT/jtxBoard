@@ -41,7 +41,7 @@ fun ListCardKanban(
 
     val statusBarVisible by remember {
         mutableStateOf(
-            iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0 || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.isRecurringInstance || iCalObject.isRecurringOriginal || iCalObject.isLinkedRecurringInstance
+            iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0 || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.rrule != null || iCalObject.recurid != null
         )
     }
 
@@ -165,9 +165,8 @@ fun ListCardKanban(
                         numSubnotes = iCalObject.numSubnotes,
                         isReadOnly = iCalObject.isReadOnly,
                         uploadPending = iCalObject.uploadPending,
-                        isRecurringOriginal = iCalObject.isRecurringOriginal,
-                        isRecurringInstance = iCalObject.isRecurringInstance,
-                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                        isRecurring = iCalObject.rrule != null || iCalObject.recurid != null,
+                        isRecurringModified = iCalObject.recurid != null && iCalObject.sequence > 0,
                         modifier = Modifier.fillMaxWidth().padding(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 4.dp).weight(0.2f)
                     )
                 }

@@ -58,8 +58,8 @@ fun ListScreenKanban(
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
-    onStatusChanged: (itemid: Long, status: Status, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int, scrollOnce: Boolean) -> Unit,
+    onStatusChanged: (itemid: Long, status: Status, scrollOnce: Boolean) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
@@ -155,32 +155,28 @@ fun ListScreenKanban(
                                                 (iCalObject.percent ?: 0) == 0 && offsetX > 0f -> onProgressChanged(
                                                     iCalObject.id,
                                                     1,
-                                                    iCalObject.isLinkedRecurringInstance,
                                                     true
                                                 )   // positive change, from Needs Action to In Process
                                                 (iCalObject.percent ?: 0) in 1..99 && offsetX > 0f -> onProgressChanged(
                                                     iCalObject.id,
                                                     100,
-                                                    iCalObject.isLinkedRecurringInstance,
                                                     true
                                                 )   // positive change, from In Process to Completed
                                                 (iCalObject.percent ?: 0) == 100 && offsetX < 0f -> onProgressChanged(
                                                     iCalObject.id,
                                                     99,
-                                                    iCalObject.isLinkedRecurringInstance,
                                                     true
                                                 )   // negative change, from Completed to In Process
                                                 (iCalObject.percent ?: 0) in 1..99 && offsetX < 0f -> onProgressChanged(
                                                     iCalObject.id,
                                                     0,
-                                                    iCalObject.isLinkedRecurringInstance,
                                                     true
                                                 )   // negative change, from In Process to Needs Action
                                             }
                                         } else {   // VJOURNAL
                                             when {
-                                                (iCalObject.status == Status.DRAFT.status && offsetX > 0f) -> onStatusChanged(iCalObject.id, Status.FINAL, iCalObject.isLinkedRecurringInstance, true)
-                                                ((iCalObject.status == Status.FINAL.status || iCalObject.status == Status.NO_STATUS.status) && offsetX < 0f) -> onStatusChanged(iCalObject.id, Status.DRAFT, iCalObject.isLinkedRecurringInstance, true)
+                                                (iCalObject.status == Status.DRAFT.status && offsetX > 0f) -> onStatusChanged(iCalObject.id, Status.FINAL, true)
+                                                ((iCalObject.status == Status.FINAL.status || iCalObject.status == Status.NO_STATUS.status) && offsetX < 0f) -> onStatusChanged(iCalObject.id, Status.DRAFT, true)
                                             }
                                         }
                                         // make a short vibration
@@ -246,8 +242,8 @@ fun ListScreenKanban_TODO() {
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
-            onProgressChanged = { _, _, _, _ -> },
-            onStatusChanged = {_, _, _, _ -> },
+            onProgressChanged = { _, _, _ -> },
+            onStatusChanged = {_, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )
@@ -294,8 +290,8 @@ fun ListScreenKanban_JOURNAL() {
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
-            onProgressChanged = { _, _, _, _ -> },
-            onStatusChanged = {_, _, _, _ -> },
+            onProgressChanged = { _, _, _ -> },
+            onStatusChanged = {_, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )

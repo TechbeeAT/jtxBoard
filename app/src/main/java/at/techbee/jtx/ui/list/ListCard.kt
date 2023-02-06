@@ -69,7 +69,7 @@ fun ListCard(
     progressUpdateDisabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
@@ -159,9 +159,8 @@ fun ListCard(
                     ListStatusBar(
                         isReadOnly = iCalObject.isReadOnly,
                         uploadPending = iCalObject.uploadPending,
-                        isRecurringOriginal = iCalObject.isRecurringOriginal,
-                        isRecurringInstance = iCalObject.isRecurringInstance,
-                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                        isRecurring = iCalObject.rrule != null || iCalObject.recurid != null,
+                        isRecurringModified = iCalObject.recurid != null && iCalObject.sequence > 0,
                         modifier = Modifier.padding(end = 8.dp)
                     )
                 }
@@ -220,8 +219,7 @@ fun ListCard(
                                     onCheckedChange = {
                                         onProgressChanged(
                                             iCalObject.id,
-                                            if (it) 100 else 0,
-                                            iCalObject.isLinkedRecurringInstance
+                                            if (it) 100 else 0
                                         )
                                     })
                         }
@@ -406,7 +404,6 @@ fun ListCard(
                         iCalObjectId = iCalObject.id,
                         progress = iCalObject.percent,
                         isReadOnly = iCalObject.isReadOnly || progressUpdateDisabled,
-                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
                         sliderIncrement = progressIncrement,
                         onProgressChanged = onProgressChanged,
                         modifier = Modifier.fillMaxWidth()
@@ -475,9 +472,6 @@ fun ICalObjectListCardPreview_JOURNAL() {
 
         val icalobject = ICal4List.getSample().apply {
             uploadPending = false
-            isRecurringInstance = false
-            isLinkedRecurringInstance = false
-            isRecurringOriginal = false
         }
         ListCard(
             icalobject,
@@ -496,7 +490,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
             progressUpdateDisabled = false,
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
@@ -532,7 +526,7 @@ fun ICalObjectListCardPreview_NOTE() {
             progressUpdateDisabled = false,
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
@@ -574,7 +568,7 @@ fun ICalObjectListCardPreview_TODO() {
             settingShowProgressMaintasks = true,
             progressIncrement = 1,
             progressUpdateDisabled = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
@@ -593,8 +587,6 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             uploadPending = false
-            isRecurringInstance = false
-            isRecurringOriginal = false
             isReadOnly = true
             dtstart = null
             due = null
@@ -617,7 +609,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             progressIncrement = 1,
             progressUpdateDisabled = false,
             settingShowProgressMaintasks = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
@@ -638,9 +630,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             uploadPending = false
-            isRecurringInstance = true
-            isLinkedRecurringInstance = false
-            isRecurringOriginal = false
+            rrule = ""
             isReadOnly = true
         }
         ListCard(
@@ -661,7 +651,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
             progressUpdateDisabled = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
@@ -683,9 +673,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             status = Status.FINAL.status
             classification = Classification.PUBLIC.name
             uploadPending = false
-            isRecurringInstance = true
-            isLinkedRecurringInstance = false
-            isRecurringOriginal = false
+            recurid = ""
             isReadOnly = true
             numAttachments = 0
             numAttendees = 0
@@ -706,7 +694,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
             progressUpdateDisabled = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )

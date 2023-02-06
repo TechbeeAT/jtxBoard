@@ -83,6 +83,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
     <string name="list_item_upload_pending">"Upload pending"</string>
     <string name="list_item_recurring">"Recurring entry"</string>
+    <string name="list_item_edited_recurring">"Edited recurring entry"</string>
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Go to original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instance of recurring"</string>
@@ -362,7 +363,6 @@ For more information about the Sync please see:"</string>
     <string name="priority_9_lowest">"9 - Lowest"</string>
     <string name="list_due_future">"Due in future"</string>
     <string name="view_share_part_of_series">"This entry is part of a series."</string>
-    <string name="view_share_exception_of_series">"This entry is an exception of a series."</string>
     <string name="view_share_repeats">"This entry repeats every"</string>
     <string name="collections_dialog_move_title">"Move all entries from \"%1$s\" to"</string>
     <string name="collection_dialog_move_info">"Please note: Only writeable collections and collections with support for the same components (Journals, Notes, Tasks) can be selected."</string>
@@ -452,6 +452,7 @@ Thank you!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
     <string name="list_quickadd_dialog_sr_listening">"Listening …"</string>
     <string name="list_update_entries_dialog_title">"Update entries"</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"Attention: Recurring instances must be unlinked from its series before being moved to another collection and will be ignored in this process."</string>
     <string name="details_app_bar_behaviour">"App bar behaviour"</string>
     <string name="details_show_all_options">"Show all options"</string>
     <string name="details_show_hide_elements">Show/hide elements</string>
@@ -461,6 +462,12 @@ Thank you!"</string>
     <string name="details_recur_unknown_rrule_dialog_message">"An unknown or unsupported recurrence rule was detected. If you continue, the existing recurrence rule will be deleted/overwritten."</string>
     <string name="details_entry_could_not_be_loaded">"This entry was either deleted in the background or could not be loaded."</string>
     <string name="details_attachment_beta_info">"* Synchronizing attachments is an experimental feature. We strongly encourage to use only small attachments (up to 100 KB) as larger ones could lead to long synchronization times and unexpected behaviour."</string>
+    <string name="details_unchanged_part_of_series">"This entry is part of a series. This entry will copy any changes made for the series."</string>
+    <string name="details_changed_part_of_series">"This entry is part of a series but was changed. This entry will not be affected by changes of the series."</string>
+    <string name="details_series_attention_subentries">"Attention: Series-elements mirror the subtasks and linked notes from the series. If you would like to change subtasks and linked notes only for a series-element, please unlink it from the series first."</string>
+    <string name="details_go_to_series">"Go to series"</string>
+    <string name="details_detach_from_series">"Detach from series"</string>
+    <string name="details_detach_all_instances">"Detach all instances"</string>
     <string name="edit_comment">"Edit comment"</string>
     <string name="edit_subnote_add_helper">"Add a subnote"</string>
     <string name="edit_subtask">"Edit subtask"</string>
@@ -486,6 +493,13 @@ Thank you!"</string>
     <string name="dialog_revert_changes_message">"Are you sure you want to discard your changes and revert contents to the state before you started editing?"</string>
     <string name="dialog_revert_changes_message2">"Attention: Subtasks and subnotes are separate entries and cannot be reverted."</string>
     <string name="dialog_collection_new_entries_title">"Collection for new entries"</string>
+    <string name="dialog_detach_from_series_title">"Detach from series?"</string>
+    <string name="dialog_detach_from_series_text_all">"Detaching all elements will delete the series and turn the instances into independent entries that can have their own subtasks or linked notes. But there will be no more link to the original series or other instances. Would you like to continue?"</string>
+    <string name="dialog_detach_from_series_text_single">"Detaching this element from the series will allow you to have independent subtasks or linked notes, but there will be no more link to the original series. Would you like to continue?"</string>
+    <string name="dialog_detach_from_series_text_attention">"Attention: This operation cannot be undone!"</string>
+    <string name="dialog_detach_from_series_button">"Detach from series"</string>
+    <string name="dialog_davx5_outdated_title">"DAVx⁵ outdated"</string>
+    <string name="dialog_davx5_outdated_message">"Your current version of DAVx⁵ is not compatible with this version of jtx Board. Please update DAVx⁵ to 4.3.1 (403010000+) or later! The synchronization is currently suspended."</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>

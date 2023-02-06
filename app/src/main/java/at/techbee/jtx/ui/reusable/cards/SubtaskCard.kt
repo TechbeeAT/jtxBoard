@@ -33,7 +33,7 @@ fun SubtaskCard(
     showProgress: Boolean = true,
     isEditMode: Boolean = false,
     sliderIncrement: Int,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onDeleteClicked: (itemId: Long) -> Unit
 ) {
 
@@ -62,7 +62,6 @@ fun SubtaskCard(
                 iCalObjectId = subtask.id,
                 progress = subtask.percent,
                 isReadOnly = subtask.isReadOnly,
-                isLinkedRecurringInstance = subtask.isLinkedRecurringInstance,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgress,
                 onProgressChanged = onProgressChanged,
@@ -98,7 +97,7 @@ fun SubtaskCardPreview() {
                 this.numSubtasks = 0
             },
             selected = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
             sliderIncrement = 10,
             modifier = Modifier.fillMaxWidth()
@@ -122,7 +121,7 @@ fun SubtaskCardPreview_selected() {
                 this.numSubtasks = 0
             },
             selected = true,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
             sliderIncrement = 10,
             modifier = Modifier.fillMaxWidth()
@@ -143,7 +142,7 @@ fun SubtaskCardPreview_readonly() {
                 this.numSubtasks = 7
             },
             selected = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
             sliderIncrement = 20,
             modifier = Modifier.fillMaxWidth()
@@ -164,7 +163,7 @@ fun SubtaskCardPreview_without_progress() {
             selected = false,
             showProgress = false,
             sliderIncrement = 50,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
             modifier = Modifier.fillMaxWidth()
         )
@@ -187,7 +186,7 @@ fun SubtaskCardPreview_edit() {
                 this.numSubtasks = 0
             },
             selected = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
             isEditMode = true,
             sliderIncrement = 10,

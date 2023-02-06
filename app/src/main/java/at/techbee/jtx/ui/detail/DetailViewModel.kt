@@ -43,26 +43,26 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     private val _application = application
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-    lateinit var icalEntity: LiveData<ICalEntity?>
-    lateinit var relatedSubnotes: LiveData<List<ICal4List>>
-    lateinit var relatedSubtasks: LiveData<List<ICal4List>>
-    //lateinit var recurInstances: LiveData<List<ICalObject?>>
-    lateinit var isChild: LiveData<Boolean>
+    var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
+    var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
+    var relatedSubtasks: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
+    var seriesElement: LiveData<ICalObject?> = MutableLiveData(null)
+    var seriesInstances: LiveData<List<ICalObject>> = MutableLiveData(emptyList())
+    var isChild: LiveData<Boolean> = MutableLiveData(false)
     private var originalEntry: ICalEntity? = null
 
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allResources: LiveData<List<String>>
     lateinit var allWriteableCollections: LiveData<List<ICalCollection>>
 
-    var entryDeleted = mutableStateOf(false)
-    var sqlConstraintException = mutableStateOf(false)
     var navigateToId = mutableStateOf<Long?>(null)
-    var changeState = mutableStateOf(DetailChangeState.UNCHANGED)
+    var changeState = mutableStateOf(DetailChangeState.LOADING)
     var toastMessage = mutableStateOf<String?>(null)
     val detailSettings: DetailSettings = DetailSettings()
     val settingsStateHolder = SettingsStateHolder(_application)
 
     val mediaPlayer = MediaPlayer()
+    val isProcessing = mutableStateOf(false)
 
     companion object {
         const val PREFS_DETAIL_JOURNALS = "prefsDetailJournals"
@@ -71,31 +71,15 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     init {
-
         viewModelScope.launch {
-
-            // insert a new value to initialize the item or load the existing one from the DB
-            icalEntity = MutableLiveData<ICalEntity?>().apply {
-                    postValue(ICalEntity(ICalObject(), null, null, null, null, null))
-                }
-
             allCategories = database.getAllCategoriesAsText()
             allResources = database.getAllResourcesAsText()
             allWriteableCollections = database.getAllWriteableCollections()
-
-            relatedSubnotes = MutableLiveData(emptyList())
-            relatedSubtasks = MutableLiveData(emptyList())
-            isChild = MutableLiveData(false)
-
-            /*
-            recurInstances = Transformations.switchMap(icalEntity) {
-                it?.property?.id?.let { originalId -> database.getRecurInstances(originalId) }
-            }
-             */
         }
     }
 
     fun load(icalObjectId: Long) {
+        changeState.value = DetailChangeState.LOADING
         viewModelScope.launch {
             icalEntity = database.get(icalObjectId)
 
@@ -104,13 +88,20 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     database.getIcal4List(ICal4List.getQueryForAllSubnotesForParentUID(parentUid, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
-
             relatedSubtasks = Transformations.switchMap(icalEntity) {
                 it?.property?.uid?.let { parentUid ->
                     database.getIcal4List(ICal4List.getQueryForAllSubtasksForParentUID(parentUid, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
+            seriesElement = Transformations.switchMap(icalEntity) {
+                database.getSeriesICalObjectIdByUID(it?.property?.uid)
+            }
+            seriesInstances = Transformations.switchMap(icalEntity) {
+                database.getSeriesInstancesICalObjectsByUID(it?.property?.uid)
+            }
             isChild = database.isChild(icalObjectId)
+
+            changeState.value = DetailChangeState.UNCHANGED
         }
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -125,24 +116,20 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             changeState.value = DetailChangeState.CHANGESAVING
             val item = database.getICalObjectById(id) ?: return@launch
             try {
-                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-                }
                 item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                 database.update(item)
+                item.makeSeriesDirty(database)
                 if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
                     ICalObject.findTopParent(id, database)?.let {
                         ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                     }
                 }
                 SyncUtil.notifyContentObservers(getApplication())
+                changeState.value = DetailChangeState.CHANGESAVED
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $id")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                sqlConstraintException.value = true
-            } finally {
-                changeState.value = DetailChangeState.CHANGESAVED
+                changeState.value = DetailChangeState.SQLERROR
             }
         }
     }
@@ -153,16 +140,43 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             val icalObject = database.getICalObjectById(icalObjectId) ?: return@launch
             icalObject.summary = newSummary
             icalObject.makeDirty()
+            icalObject.makeSeriesDirty(database)
             try {
                 database.update(icalObject)
+                changeState.value = DetailChangeState.CHANGESAVED
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                sqlConstraintException.value = true
-            } finally {
+                changeState.value = DetailChangeState.SQLERROR
+            }
+        }
+    }
+
+    fun unlinkFromSeries(instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) {
+        changeState.value = DetailChangeState.CHANGESAVING
+        viewModelScope.launch(Dispatchers.IO) {
+
+            instances.forEach { instance ->
+                val children = database.getRelatedChildren(instance.id)
+                val updatedEntry = ICalObject.unlinkFromSeries(instance, database)
+                children.forEach forEachChild@ { child ->
+                    val childEntity = database.getSync(child.id) ?: return@forEachChild
+                    createCopy(childEntity, child.getModuleFromString(), updatedEntry.uid)
+                }
+                instance.makeSeriesDirty(database)
+            }
+
+            if(deleteAfterUnlink) {
+                series?.id?.let {
+                    deleteById(it)
+                    changeState.value = DetailChangeState.DELETED
+                }
+            } else {
                 changeState.value = DetailChangeState.CHANGESAVED
             }
+            SyncUtil.notifyContentObservers(getApplication())
+
         }
     }
 
@@ -181,12 +195,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     icalObject.recreateRecurring(getApplication())
                 changeState.value = DetailChangeState.CHANGESAVED
                 navigateToId.value = newId
+                changeState.value = DetailChangeState.CHANGESAVED
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                sqlConstraintException.value = true
-            } finally {
-                changeState.value = DetailChangeState.CHANGESAVED
+                changeState.value = DetailChangeState.SQLERROR
             }
         }
     }
@@ -259,26 +272,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                // removed check as it was causing problems when loading the entry from the widget, somehow it is not reliable enough...
-                // if (icalEntity.value?.property?.equals(icalObject) == false) {
                 icalObject.makeDirty()
                 database.update(icalObject)
-
-                if (icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-                }
+                icalObject.makeSeriesDirty(database)
                 icalObject.recreateRecurring(getApplication())
-                //}
-
                 Alarm.scheduleNextNotifications(getApplication())
                 SyncUtil.notifyContentObservers(getApplication())
+                changeState.value = DetailChangeState.CHANGESAVED
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                sqlConstraintException.value = true
-            } finally {
-                changeState.value = DetailChangeState.CHANGESAVED
+                changeState.value = DetailChangeState.SQLERROR
             }
         }
     }
@@ -324,16 +328,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         text = icalEntity.value?.property?.uid!!
                     )
                 )
-                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-                }
+                changeState.value = DetailChangeState.CHANGESAVED
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", e.stackTraceToString())
-                sqlConstraintException.value = true
-            } finally {
-                changeState.value = DetailChangeState.CHANGESAVED
+                changeState.value = DetailChangeState.SQLERROR
             }
         }
     }
@@ -343,21 +342,23 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * Deletes the current entry with its children
      */
     fun delete() {
+        changeState.value = DetailChangeState.DELETING
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
+                if(icalEntity.value?.property?.recurid != null) {
+                    ICalObject.unlinkFromSeries(icalEntity.value?.property!!, database)
+                    //toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                 }
                 icalEntity.value?.property?.id?.let { id ->
                     ICalObject.deleteItemWithChildren(id, database)
                     SyncUtil.notifyContentObservers(getApplication())
-                    entryDeleted.value = true
+                    changeState.value = DetailChangeState.DELETED
+                    toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
                 }
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: ${icalEntity.value?.property?.id}")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                sqlConstraintException.value = true
+                changeState.value = DetailChangeState.SQLERROR
             }
         }
     }
@@ -367,14 +368,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * @param [icalObjectId] of the subtask/subnote to be deleted
      */
     fun deleteById(icalObjectId: Long) {
+        changeState.value = DetailChangeState.CHANGESAVING
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 ICalObject.deleteItemWithChildren(icalObjectId, database)
+                changeState.value = DetailChangeState.CHANGESAVED
+                toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                sqlConstraintException.value = true
+                changeState.value = DetailChangeState.SQLERROR
             }
         }
     }
@@ -384,10 +388,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun createCopy(icalEntityToCopy: ICalEntity, newModule: Module, newParentUID: String? = null) {
-        val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
+        changeState.value = DetailChangeState.CHANGESAVING
 
         viewModelScope.launch(Dispatchers.IO) {
-            changeState.value = DetailChangeState.CHANGESAVING
+            val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
             try {
                 val newId = database.insertICalObject(newEntity.property)
                 newEntity.alarms?.forEach { alarm ->
@@ -453,11 +457,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                     navigateToId.value = newId
 
+                changeState.value = DetailChangeState.CHANGESAVED
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", e.stackTraceToString())
-                sqlConstraintException.value = true
-            } finally {
-                changeState.value = DetailChangeState.CHANGESAVED
+                changeState.value = DetailChangeState.SQLERROR
             }
         }
     }
@@ -466,7 +469,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * Creates a share intent to share the current entry as .ics file
      */
     fun shareAsICS(context: Context) {
-
+        isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO)  {
             val iCalEntity = icalEntity.value ?: return@launch
             val icsContentUri = createContentUri(iCalEntity) ?: return@launch
@@ -479,6 +482,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             } catch (e: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to open file.")
                 toastMessage.value = "No app found to open this file."
+            } finally {
+                isProcessing.value = false
             }
         }
     }
@@ -490,6 +495,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun shareAsText(context: Context) {
 
+        isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO)  {
             val iCalEntity = icalEntity.value ?: return@launch
 
@@ -543,6 +549,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             } catch (e: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to send this entry.")
                 toastMessage.value = _application.getString(R.string.error_no_app_found_to_open_entry)
+            } finally {
+                isProcessing.value = false
             }
         }
     }
@@ -605,5 +613,5 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         children.forEach { addChildrenOf(it.id, list) }
     }
     
-    enum class DetailChangeState { UNCHANGED, CHANGEUNSAVED, SAVINGREQUESTED, CHANGESAVING, CHANGESAVED }
+    enum class DetailChangeState { LOADING, UNCHANGED, CHANGEUNSAVED, SAVINGREQUESTED, CHANGESAVING, CHANGESAVED, DELETING, DELETED, SQLERROR }
 }

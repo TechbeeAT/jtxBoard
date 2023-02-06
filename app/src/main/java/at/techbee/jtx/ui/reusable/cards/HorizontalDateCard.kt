@@ -51,10 +51,7 @@ fun HorizontalDateCard(
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
 
     Card(
-        onClick = {
-            if(isEditMode)
-                showDatePickerDialog = true
-                  },
+        onClick = { if(isEditMode) { showDatePickerDialog = true  } },
         shape = if(isEditMode) CardDefaults.outlinedShape else CardDefaults.elevatedShape,
         colors = if(isEditMode) CardDefaults.outlinedCardColors() else CardDefaults.elevatedCardColors(),
         elevation = if(isEditMode) CardDefaults.outlinedCardElevation() else CardDefaults.elevatedCardElevation(),

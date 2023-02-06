@@ -53,7 +53,7 @@ fun DetailsCardSubtasks(
     sliderIncrement: Int,
     showSlider: Boolean,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubtaskDeleted: (subtaskId: Long) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
@@ -170,7 +170,7 @@ fun DetailsCardSubtasks_Preview() {
             sliderIncrement = 25,
             showSlider = true,
             onSubtaskAdded = { },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
             goToDetail = { _, _, _ -> }
@@ -195,7 +195,7 @@ fun DetailsCardSubtasks_Preview_edit() {
             sliderIncrement = 25,
             showSlider = true,
             onSubtaskAdded = { },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
             goToDetail = { _, _, _ -> }
@@ -220,7 +220,7 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
             sliderIncrement = 25,
             showSlider = false,
             onSubtaskAdded = { },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
             goToDetail = { _, _, _ -> }

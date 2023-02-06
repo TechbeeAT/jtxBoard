@@ -66,7 +66,7 @@ fun ListScreenList(
     settingLinkProgressToSubtasks: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
@@ -238,7 +238,7 @@ fun ListScreenList_TODO() {
             settingShowProgressSubtasks = remember { mutableStateOf(true) },
             settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             settingLinkProgressToSubtasks = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             listSettings = listSettings,
@@ -304,7 +304,7 @@ fun ListScreenList_JOURNAL() {
             settingShowProgressSubtasks = remember { mutableStateOf(false) },
             settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             settingLinkProgressToSubtasks = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             listSettings = listSettings,

@@ -21,6 +21,8 @@ class GlobalStateHolder(context: Context) {
     var icalFromIntentModule: MutableState<Module?> = mutableStateOf(null)
     var icalFromIntentCollection: MutableState<String?> = mutableStateOf(null)
 
+    var isDAVx5compatible = mutableStateOf(true)
+
     init {
         try {
             ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {

@@ -14,7 +14,9 @@ import android.app.Application
 import android.content.Context
 import android.net.Uri
 import android.widget.Toast
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -74,7 +76,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch(Dispatchers.IO) {
             val objectsToMove = database.getICalObjectIdsWithinCollection(oldCollectionId)
             objectsToMove.forEach {
-                val newId = ICalObject.updateCollectionWithChildren(it, null, newCollectionId, database, getApplication())
+                val newId = ICalObject.updateCollectionWithChildren(it, null, newCollectionId, database, getApplication()) ?: return@forEach
                 database.getICalObjectByIdSync(newId)?.recreateRecurring(app)
             }
             objectsToMove.forEach {
@@ -167,8 +169,10 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
      * This function removes an account with all its collections from jtx Board.
      */
     fun removeAccount(account: Account) {
+        isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             database.deleteAccount(account.name, account.type)
+            isProcessing.postValue(false)
         }
     }
 }
