@@ -335,7 +335,6 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="priority_9_lowest">"9 - Più basso"</string>
     <string name="list_due_future">"In scadenza in futuro"</string>
     <string name="view_share_part_of_series">"Questa voce fa parte di una serie."</string>
-    <string name="view_share_exception_of_series">"Questa voce è un'eccezione di una serie."</string>
     <string name="view_share_repeats">"Questa voce si ripete ogni"</string>
     <string name="collections_dialog_move_title">"Sposta tutte le voci da \"%1$s\" a"</string>
     <string name="collection_dialog_move_info">"Nota: solo le collezioni scrivibili e le collezioni con supporto per gli stessi componenti (Diari, Note, Compiti) possono essere selezionate."</string>
