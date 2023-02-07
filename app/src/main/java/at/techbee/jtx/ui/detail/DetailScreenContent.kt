@@ -699,8 +699,13 @@ fun DetailScreenContent(
                     initialGeoLong = icalObject.value.geoLong,
                     isEditMode = isEditMode.value,
                     onLocationUpdated = { newLocation, newGeoLat, newGeoLong ->
-                        icalObject.value.geoLat = newGeoLat
-                        icalObject.value.geoLong = newGeoLong
+                        if(newGeoLat != null && newGeoLong != null) {
+                            icalObject.value.geoLat = newGeoLat
+                            icalObject.value.geoLong = newGeoLong
+                        } else {
+                            icalObject.value.geoLat = null
+                            icalObject.value.geoLong = null
+                        }
                         icalObject.value.location = newLocation.ifEmpty { null }
                         icalObject.value = icalObject.value
                         changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED

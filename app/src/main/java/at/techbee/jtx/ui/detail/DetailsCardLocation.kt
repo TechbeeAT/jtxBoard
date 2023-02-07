@@ -63,6 +63,8 @@ fun DetailsCardLocation(
     var location by remember { mutableStateOf(initialLocation ?: "")}
     var geoLat by remember { mutableStateOf(initialGeoLat)}
     var geoLong by remember { mutableStateOf(initialGeoLong)}
+    var geoLatText by remember { mutableStateOf(initialGeoLat?.toString()?:"")}
+    var geoLongText by remember { mutableStateOf(initialGeoLong?.toString()?:"")}
 
     val coarseLocationPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.ACCESS_COARSE_LOCATION) else null
 
@@ -82,6 +84,8 @@ fun DetailsCardLocation(
                     location = newLocation ?: ""
                     geoLat = newLat
                     geoLong = newLong
+                    geoLatText = String.format("%.5f", geoLat)
+                    geoLongText = String.format("%.5f", geoLong)
                     onLocationUpdated(location, geoLat, geoLong)
                 },
                 onDismiss = {
@@ -146,6 +150,64 @@ fun DetailsCardLocation(
                 }
             }
 
+            AnimatedVisibility(isEditMode) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = geoLatText,
+                        singleLine = true,
+                        label = { Text(stringResource(R.string.latitude)) },
+                        onValueChange = { newLat ->
+                            geoLatText = newLat
+                            geoLat = newLat.toDoubleOrNull()
+                            onLocationUpdated(location, geoLat, geoLong)
+                        },
+                        trailingIcon = {
+                            AnimatedVisibility(geoLat != null) {
+                                IconButton(onClick = {
+                                    geoLat = null
+                                    geoLatText = ""
+                                }) {
+                                    Icon(Icons.Outlined.Close, stringResource(id = R.string.delete))
+                                }
+                            }
+                        },
+                        isError = (geoLatText.isNotEmpty() && geoLatText.toDoubleOrNull() == null)
+                                || (geoLatText.isEmpty() && geoLongText.isNotEmpty())
+                                || (geoLatText.isNotEmpty() && geoLongText.isEmpty()),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+                        modifier = Modifier.weight(1f)
+                    )
+                    OutlinedTextField(
+                        value = geoLongText,
+                        singleLine = true,
+                        label = { Text(stringResource(R.string.longitude)) },
+                        onValueChange = { newLong ->
+                            geoLongText = newLong
+                            geoLong = newLong.toDoubleOrNull()
+                            onLocationUpdated(location, geoLat, geoLong)
+                        },
+                        trailingIcon = {
+                            AnimatedVisibility(geoLong != null) {
+                                IconButton(onClick = {
+                                    geoLong = null
+                                    geoLongText = ""
+                                }) {
+                                    Icon(Icons.Outlined.Close, stringResource(id = R.string.delete))
+                                }
+                            }
+                        },
+                        isError = (geoLongText.isNotEmpty() && geoLongText.toDoubleOrNull() == null)
+                                || (geoLatText.isEmpty() && geoLongText.isNotEmpty())
+                                || (geoLatText.isNotEmpty() && geoLongText.isEmpty()),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
             AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode && !LocalInspectionMode.current) {
                 MapComposable(
                     initialLocation = location,
@@ -161,7 +223,7 @@ fun DetailsCardLocation(
                 )
             }
 
-            AnimatedVisibility(geoLat != null && geoLong != null) {
+            AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -169,33 +231,22 @@ fun DetailsCardLocation(
                 ) {
                     Text(ICalObject.getLatLongString(geoLat, geoLong) ?: "")
 
-                    AnimatedVisibility(!isEditMode) {
-                        IconButton(onClick = {
-                            val geoUri = if (location.isNotEmpty())
-                                Uri.parse("geo:0,0?q=$geoLat,$geoLong(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
-                            else
-                                Uri.parse("geo:$geoLat,$geoLong")
+                    IconButton(onClick = {
+                        val geoUri = if (location.isNotEmpty())
+                            Uri.parse("geo:0,0?q=$geoLat,$geoLong(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
+                        else
+                            Uri.parse("geo:$geoLat,$geoLong")
 
-                            val geoIntent = Intent(Intent.ACTION_VIEW).apply {
-                                data = geoUri
-                            }
-                            if (geoIntent.resolveActivity(context.packageManager) != null) {
-                                context.startActivity(geoIntent)
-                            } else {
-                                context.startActivity(Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, BuildConfig.FLAVOR)))
-                            }
-                        }) {
-                            Icon(Icons.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
+                        val geoIntent = Intent(Intent.ACTION_VIEW).apply {
+                            data = geoUri
                         }
-                    }
-                    AnimatedVisibility(isEditMode) {
-                        IconButton(onClick = {
-                            geoLat = null
-                            geoLong = null
-                            onLocationUpdated(location, null, null)
-                        }) {
-                            Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
+                        if (geoIntent.resolveActivity(context.packageManager) != null) {
+                            context.startActivity(geoIntent)
+                        } else {
+                            context.startActivity(Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, BuildConfig.FLAVOR)))
                         }
+                    }) {
+                        Icon(Icons.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
                     }
                 }
             }
