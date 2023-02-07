@@ -32,7 +32,6 @@ class GlobalStateHolder(context: Context) {
     val biometricStatus = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
     var biometricPrompt: BiometricPrompt? = null
 
-
     init {
         try {
             ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {

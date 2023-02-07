@@ -72,6 +72,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"Die erste Zeile wird als Zusammenfassung interpretiert, der Rest als Beschreibung. Hashtags werden als Kategorien interpretiert (z.B. #Kategorie)."</string>
     <string name="list_item_upload_pending">"Hochladen ausständig"</string>
     <string name="list_item_recurring">"Wiederkehrender Eintrag"</string>
+    <string name="list_item_edited_recurring">"Bearbeiteter wiederkehrender Eintrag"</string>
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Zum Original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instanz von wiederkehrendem Eintrag"</string>
@@ -344,7 +345,6 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="priority_9_lowest">"9 - Niedrigste"</string>
     <string name="list_due_future">"Fällig in der Zukunft"</string>
     <string name="view_share_part_of_series">"Dieser Eintrag ist Teil einer Serie."</string>
-    <string name="view_share_exception_of_series">"Dieser Eintrag ist eine Ausnahme einer Serie."</string>
     <string name="view_share_repeats">"Dieser Eintrag wiederholt sich"</string>
     <string name="collections_dialog_move_title">"Einträge von \"%1$s\" verschieben nach"</string>
     <string name="collection_dialog_move_info">"Achtung: Es können nur Collections ausgewählt werden, die gleiche Komponenten unterstützen (Journale, Notizen, Aufgaben)."</string>
@@ -433,6 +433,7 @@ Danke!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spracherkennung starten"</string>
     <string name="list_quickadd_dialog_sr_listening">"Höre …"</string>
     <string name="list_update_entries_dialog_title">"Einträge aktualisieren"</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"Achtung: Wiederkehrende Instanzen müssen von ihrer Serie getrennt werden, bevor sie in eine andere Collection verschoben werden und werden in diesem Prozess ignoriert."</string>
     <string name="details_app_bar_behaviour">"App Bar Verhalten"</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
     <string name="details_show_hide_elements">Elemente ein-/ausblenden</string>
@@ -442,6 +443,12 @@ Danke!"</string>
     <string name="details_recur_unknown_rrule_dialog_message">"Eine unbekannte oder nicht unterstützte Wiederholungs-Regel wurde erkannt. Wenn Sie fortfahren, wird die bestehende Regel gelöscht/überschrieben."</string>
     <string name="details_entry_could_not_be_loaded">"Dieser Eintrag wurde im Hintergrund gelöscht oder konnte nicht geladen werden."</string>
     <string name="details_attachment_beta_info">"* Die Anhang-Synchronisierung ist eine experimentelle Funktionalität. Wir empfehlen ausdrücklich nur kleine Anhänge (bis zu 100 KB) zu nutzen, da größere Anhänge zu langen Synchronisierungen und unerwartetem Verhalten führen können."</string>
+    <string name="details_unchanged_part_of_series">"Dieser Eintrag ist Teil einer Serie. Dieser Eintrag wird alle Änderungen an der Serie übernehmen."</string>
+    <string name="details_changed_part_of_series">"Dieser Eintrag ist Teil einer Serie, wurde aber geändert. Änderungen an der Serie werden auf diesen Eintrag nicht mehr übernommen."</string>
+    <string name="details_series_attention_subentries">"Achtung: Serien-Elemente spiegeln die Teilaufgaben und verknüpfte Notizen aus der Serie wider. Wenn Sie Unteraufgaben und verknüpfte Notizen nur für ein Serien-Element ändern möchten, entfernen Sie bitte zuerst die Verlinkung von der Serie."</string>
+    <string name="details_go_to_series">"Gehe zur Serie"</string>
+    <string name="details_detach_from_series">"Von der Serie trennen"</string>
+    <string name="details_detach_all_instances">"Alle Instanzen trennen"</string>
     <string name="edit_comment">"Kommentar bearbeiten"</string>
     <string name="edit_subnote_add_helper">"Unternotiz hinzufügen"</string>
     <string name="edit_subtask">"Unteraufgabe bearbeiten"</string>
@@ -467,6 +474,13 @@ Danke!"</string>
     <string name="dialog_revert_changes_message">"Sind Sie sicher, dass Sie die Änderungen verwerfen und die Inhalte zurücksetzen wollen?"</string>
     <string name="dialog_revert_changes_message2">"Achtung: Unteraufgaben und Unternotizen sind unabhängige Einträge und können nicht zurückgesetzt werden."</string>
     <string name="dialog_collection_new_entries_title">"Collection für neue Einträge"</string>
+    <string name="dialog_detach_from_series_title">"Von der Serie trennen?"</string>
+    <string name="dialog_detach_from_series_text_all">"Das Entfernen aller Elemente löscht die Serie und verwandelt die Instanzen in unabhängige Einträge, die eigene Unteraufgaben oder verknüpfte Notizen haben können. Es wird keinen Link mehr zu den Originalserien oder anderen Instanzen geben. Möchten Sie fortfahren?"</string>
+    <string name="dialog_detach_from_series_text_single">"Wenn Sie dieses Element von der Serie trennen, können Sie unabhängige Unteraufgaben oder verknüpfte Notizen haben, aber es wird keinen Link mehr auf die ursprüngliche Serie geben. Möchten Sie fortfahren?"</string>
+    <string name="dialog_detach_from_series_text_attention">"Achtung: Dieser Vorgang kann nicht rückgängig gemacht werden!"</string>
+    <string name="dialog_detach_from_series_button">"Von der Serie trennen"</string>
+    <string name="dialog_davx5_outdated_title">"DAVx⁵ veraltet"</string>
+    <string name="dialog_davx5_outdated_message">"Ihre aktuelle Version von DAVx5 ist mit dieser Version von jtx Board nicht kompatibel. Bitte aktualisieren Sie DAVx5 auf 4.3.1 (403010000+) oder neuer! Die Synchronisierung ist derzeit ausgesetzt."</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
     <string name="settings_details">"Einstellungen für die Detailansicht"</string>

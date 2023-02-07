@@ -159,7 +159,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             listSettings.saveToPrefs(prefs)
     }
 
-
+    
     fun updateProgress(itemId: Long, newPercent: Int, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
