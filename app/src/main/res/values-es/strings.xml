@@ -330,7 +330,6 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="priority_9_lowest">"9 - Extremadamente baja"</string>
     <string name="list_due_future">"Con vencimiento en el futuro"</string>
     <string name="view_share_part_of_series">"Esta entrada es parte de una serie."</string>
-    <string name="view_share_exception_of_series">"Esta entrada es una excepción de una serie."</string>
     <string name="view_share_repeats">"Esta entrada se repite cada"</string>
     <string name="collections_dialog_move_title">"Mover todas las entradas de \"%1$s\" a"</string>
     <string name="collection_dialog_move_info">"Nota: Sólo se pueden seleccionar las colecciones con posibilidad de escritura y las colecciones con soporte para los mismos componentes (diarios, notas, tareas)."</string>
