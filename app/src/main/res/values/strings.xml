@@ -538,6 +538,7 @@ Thank you!"</string>
     <string name="settings_link_progress_to_subtasks">"Link progress to subtasks"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Keep status, progress &amp; completed in sync"</string>
     <string name="settings_attention_experimental_feature">"Attention: This is an experimental feature"</string>
+    <string name="settings_create_with_current_location">"Create new entries with current location"</string>
     <string name="sync_button_go_to_collections">"Go to Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Please purchase the Pro package to enable this feature."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -619,6 +620,7 @@ Thank you!"</string>
     <string name="settings_select_theme_true_dark">"True Dark (AMOLED)"</string>
     <string name="settings_select_theme_contrast">"Contrast (e-Ink)"</string>
     <string name="settings_journals">"Journals Settings"</string>
+    <string name="settings_notes">"Notes Settings"</string>
     <string name="settings_default_journals_date">"Set a default date/time for journals"</string>
     <string name="settings_default_journals_date_current_day">"Current day"</string>
     <string name="settings_default_journals_date_current_hour">"Current hour"</string>

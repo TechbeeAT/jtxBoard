@@ -55,6 +55,7 @@ fun DetailsCardLocation(
     initialGeoLat: Double?,
     initialGeoLong: Double?,
     isEditMode: Boolean,
+    setCurrentLocation: Boolean,
     onLocationUpdated: (String, Double?, Double?) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -69,14 +70,20 @@ fun DetailsCardLocation(
     var geoLatText by remember { mutableStateOf(initialGeoLat?.toString() ?: "") }
     var geoLongText by remember { mutableStateOf(initialGeoLong?.toString() ?: "") }
 
-    var locationUpdateState by remember { mutableStateOf(LocationUpdateState.IDLE) }
-
     val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
     ) else null
+    var locationUpdateState by remember { mutableStateOf(
+        if(setCurrentLocation && locationPermissionState?.permissions?.any { it.status.isGranted } == true)
+                LocationUpdateState.LOCATION_REQUESTED
+        else if(setCurrentLocation)
+                LocationUpdateState.PERMISSION_NEEDED
+        else
+            LocationUpdateState.IDLE
+    )}
 
     if (showLocationPickerDialog) {
         if (locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted }) {   // second part = permission is NOT permanently denied!
@@ -119,6 +126,7 @@ fun DetailsCardLocation(
                     geoLong = lastKnownLocation.longitude
                     geoLatText = lastKnownLocation.latitude.toString()
                     geoLongText = lastKnownLocation.longitude.toString()
+                    onLocationUpdated(location, geoLat, geoLong)
                     locationUpdateState = LocationUpdateState.IDLE
                 }
             }
@@ -250,7 +258,7 @@ fun DetailsCardLocation(
                             LocationUpdateState.PERMISSION_NEEDED
                         }
                     }) {
-                        Icon(Icons.Outlined.LocationSearching, stringResource(R.string.current_location))
+                        Icon(Icons.Outlined.MyLocation, stringResource(R.string.current_location))
                     }
                 }
             }
@@ -312,6 +320,7 @@ fun DetailsCardLocation_Preview() {
             initialGeoLat = null,
             initialGeoLong = null,
             isEditMode = false,
+            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> }
         )
     }
@@ -326,6 +335,7 @@ fun DetailsCardLocation_Preview_withGEo() {
             initialGeoLat = 23.447378,
             initialGeoLong = 73.272838,
             isEditMode = false,
+            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> }
         )
     }
@@ -341,6 +351,7 @@ fun DetailsCardLocation_Preview_edit() {
             initialGeoLat = null,
             initialGeoLong = null,
             isEditMode = true,
+            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> }
         )
     }

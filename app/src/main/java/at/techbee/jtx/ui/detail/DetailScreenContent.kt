@@ -92,6 +92,7 @@ fun DetailScreenContent(
     showProgressForSubTasks: Boolean,
     keepStatusProgressCompletedInSync: Boolean,
     linkProgressToSubtasks: Boolean,
+    setCurrentLocation: Boolean,
     markdownState: MutableState<MarkdownState>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
@@ -698,6 +699,7 @@ fun DetailScreenContent(
                     initialGeoLat = icalObject.value.geoLat,
                     initialGeoLong = icalObject.value.geoLong,
                     isEditMode = isEditMode.value,
+                    setCurrentLocation = setCurrentLocation,
                     onLocationUpdated = { newLocation, newGeoLat, newGeoLong ->
                         if(newGeoLat != null && newGeoLong != null) {
                             icalObject.value.geoLat = newGeoLat
@@ -868,6 +870,7 @@ fun DetailScreenContent_JOURNAL() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
+            setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
@@ -920,6 +923,7 @@ fun DetailScreenContent_TODO_editInitially() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
+            setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _ -> },
@@ -969,6 +973,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             showProgressForSubTasks = false,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
+            setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _ -> },
@@ -1010,6 +1015,7 @@ fun DetailScreenContent_failedLoading() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
+            setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _ -> },

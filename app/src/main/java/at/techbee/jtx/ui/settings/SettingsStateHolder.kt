@@ -55,6 +55,9 @@ class SettingsStateHolder(val context: Context) {
     var settingProtectBiometric = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_PROTECT_BIOMETRIC.key, DropdownSetting.SETTING_PROTECT_BIOMETRIC.default.key) } ?: DropdownSetting.SETTING_PROTECT_BIOMETRIC.default )
 
+    var settingSetDefaultCurrentLocationJournals = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.default))
+    var settingSetDefaultCurrentLocationNotes = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.default))
+    var settingSetDefaultCurrentLocationTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.default))
 
     //invisible settings
     var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))

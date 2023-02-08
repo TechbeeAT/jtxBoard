@@ -344,6 +344,19 @@ fun DetailsScreen(
                 showProgressForSubTasks = detailViewModel.settingsStateHolder.settingShowProgressForSubTasks.value,
                 keepStatusProgressCompletedInSync = detailViewModel.settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 linkProgressToSubtasks = detailViewModel.settingsStateHolder.settingLinkProgressToSubtasks.value,
+                setCurrentLocation = if(isEditMode.value
+                        && detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED
+                        && icalEntity.value?.property?.sequence == 0L
+                        && icalEntity.value?.property?.summary == null
+                        && icalEntity.value?.property?.description == null
+                        && icalEntity.value?.attachments?.isEmpty() == true) {
+                            when(icalEntity.value?.property?.getModuleFromString()) {
+                                Module.JOURNAL -> detailViewModel.settingsStateHolder.settingSetDefaultCurrentLocationJournals.value
+                                Module.NOTE -> detailViewModel.settingsStateHolder.settingSetDefaultCurrentLocationNotes.value
+                                Module.TODO -> detailViewModel.settingsStateHolder.settingSetDefaultCurrentLocationTasks.value
+                                else -> false
+                            }
+                    } else false,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                     detailViewModel.save(

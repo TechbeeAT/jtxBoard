@@ -294,6 +294,27 @@ fun SettingsScreen(
                                 SETTING_DEFAULT_JOURNALS_DATE.save(selection, context = context)
                             }
                         )
+                        SwitchSetting(
+                            setting = SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION,
+                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationJournals.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingSetDefaultCurrentLocationJournals.value = it
+                                SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
+                            })
+                    }
+
+                    ExpandableSettingsSection(
+                        headerText = R.string.settings_notes,
+                        expandedDefault = false,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        SwitchSetting(
+                            setting = SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION,
+                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationNotes.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingSetDefaultCurrentLocationNotes.value = it
+                                SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
+                            })
                     }
 
                     ExpandableSettingsSection(
@@ -373,6 +394,13 @@ fun SettingsScreen(
                                 SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.save(it, context)
                             }
                         )
+                        SwitchSetting(
+                            setting = SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION,
+                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationTasks.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = it
+                                SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
+                            })
                     }
                 }
             },
