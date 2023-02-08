@@ -27,6 +27,7 @@ Global Strings -->
     <string name="website">"Website"</string>
     <string name="latitude">"Latitude"</string>
     <string name="longitude">"Longitude"</string>
+    <string name="current_location">"Current location"</string>
     <string name="toolbar_text_add_journal">"Add Journal"</string>
     <string name="toolbar_text_add_note">"Add Note"</string>
     <string name="toolbar_text_add_task">"Add Task"</string>

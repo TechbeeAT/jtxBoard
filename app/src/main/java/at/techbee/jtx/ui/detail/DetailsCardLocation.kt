@@ -250,7 +250,7 @@ fun DetailsCardLocation(
                                 LocationUpdateState.PERMISSION_NEEDED
                             }
                         }) {
-                            Icon(Icons.Outlined.LocationSearching, "Current location")
+                            Icon(Icons.Outlined.LocationSearching, stringResource(R.string.current_location))
                         }
                     }
             }
