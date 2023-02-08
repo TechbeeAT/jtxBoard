@@ -40,6 +40,7 @@ import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.property.DtStart
+import java.net.URLDecoder
 import java.text.ParseException
 import java.time.*
 import java.time.format.TextStyle
@@ -318,7 +319,7 @@ const val COLUMN_RSTATUS = "rstatus"
 
 
 /**
- * Purpose:  This property specifies a color used for displaying the calendar, event, todo, or journal data.
+ * Purpose:  This property specifies a color used for displaying the calendar, event, t0do, or journal data.
  * See [https://tools.ietf.org/html/rfc7986#section-5.9]
  * Type: [String]
  */
@@ -859,7 +860,7 @@ data class ICalObject(
         }
 
         @VisibleForTesting
-        fun getAsRecurId(datetime: Long, timezone: String?) = when {
+        fun getAsRecurId(datetime: Long, timezone: String?): String = when {
             timezone == TZ_ALLDAY -> DtStart(Date(datetime)).value
             timezone.isNullOrEmpty() -> DtStart(DateTime(datetime)).value
             else -> DtStart(DateTime(datetime)).apply {
@@ -1309,6 +1310,32 @@ data class ICalObject(
         while (matcher.find()) {
             this.url = matcher.group()
             return
+        }
+    }
+
+    fun parseLatLng(text: String?) {
+        if (text.isNullOrEmpty())
+            return
+
+        val formats = listOf(
+            Regex("\\d*[.]\\d*[,]\\d*[.]\\d*"),   // Google Maps & Apple Maps
+            Regex("\\d*[.]\\d*[~]\\d*[.]\\d*"),   // Bing Maps (Microsoft)
+            Regex("\\d*[.]\\d*[/]\\d*[.]\\d*"),   // Open Street Maps
+        )
+
+        formats.forEach { format ->
+            format.find(URLDecoder.decode(text, "UTF-8"))?.value?.let {
+                val latLng = it.split(",", "~", "/")
+                if (latLng.size != 2)
+                    return@let
+                val lat = latLng[0].toDoubleOrNull()
+                val lng = latLng[1].toDoubleOrNull()
+                if (lat != null && lng != null) {
+                    this.geoLat = lat
+                    this.geoLong = lng
+                    return
+                }
+            }
         }
     }
 
