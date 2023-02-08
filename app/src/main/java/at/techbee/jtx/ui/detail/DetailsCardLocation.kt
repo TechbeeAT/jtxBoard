@@ -63,23 +63,23 @@ fun DetailsCardLocation(
     val headline = stringResource(id = R.string.location)
     var showLocationPickerDialog by rememberSaveable { mutableStateOf(false) }
 
-    var location by remember { mutableStateOf(initialLocation ?: "")}
-    var geoLat by remember { mutableStateOf(initialGeoLat)}
-    var geoLong by remember { mutableStateOf(initialGeoLong)}
-    var geoLatText by remember { mutableStateOf(initialGeoLat?.toString()?:"")}
-    var geoLongText by remember { mutableStateOf(initialGeoLong?.toString()?:"")}
+    var location by remember { mutableStateOf(initialLocation ?: "") }
+    var geoLat by remember { mutableStateOf(initialGeoLat) }
+    var geoLong by remember { mutableStateOf(initialGeoLong) }
+    var geoLatText by remember { mutableStateOf(initialGeoLat?.toString() ?: "") }
+    var geoLongText by remember { mutableStateOf(initialGeoLong?.toString() ?: "") }
 
     var locationUpdateState by remember { mutableStateOf(LocationUpdateState.IDLE) }
 
-    val locationPermissionState = if(!LocalInspectionMode.current) rememberMultiplePermissionsState(
+    val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
     ) else null
 
-    if(showLocationPickerDialog) {
-        if(locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted }) {   // second part = permission is NOT permanently denied!
+    if (showLocationPickerDialog) {
+        if (locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted }) {   // second part = permission is NOT permanently denied!
             RequestPermissionDialog(
                 text = stringResource(id = R.string.edit_fragment_app_coarse_location_permission_message),
                 onConfirm = { locationPermissionState.launchMultiplePermissionRequest() }
@@ -89,7 +89,7 @@ fun DetailsCardLocation(
                 initialLocation = location,
                 initialGeoLat = geoLat,
                 initialGeoLong = geoLong,
-                enableCurrentLocation = locationPermissionState?.permissions?.any { it.status.isGranted }  == true,
+                enableCurrentLocation = locationPermissionState?.permissions?.any { it.status.isGranted } == true,
                 onConfirm = { newLocation, newLat, newLong ->
                     location = newLocation ?: ""
                     geoLat = newLat
@@ -106,8 +106,8 @@ fun DetailsCardLocation(
     }
 
     LaunchedEffect(locationUpdateState, locationPermissionState?.permissions?.any { it.status.isGranted }) {
-        when(locationUpdateState) {
-            LocationUpdateState.IDLE -> { }
+        when (locationUpdateState) {
+            LocationUpdateState.IDLE -> {}
             LocationUpdateState.LOCATION_REQUESTED -> {
                 // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
                 val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -139,7 +139,7 @@ fun DetailsCardLocation(
         ) {
 
             Crossfade(isEditMode) {
-                if(!it) {
+                if (!it) {
                     Column {
                         HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
                         Text(
@@ -177,7 +177,7 @@ fun DetailsCardLocation(
                             modifier = Modifier.weight(1f)
                         )
 
-                        if(BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_AMAZON) {
+                        if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_AMAZON) {
                             IconButton(onClick = { showLocationPickerDialog = true }) {
                                 Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
                             }
@@ -243,16 +243,16 @@ fun DetailsCardLocation(
                         modifier = Modifier.weight(1f)
                     )
 
-                        IconButton(onClick = {
-                            locationUpdateState = if (locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
-                                LocationUpdateState.LOCATION_REQUESTED
-                            } else {
-                                LocationUpdateState.PERMISSION_NEEDED
-                            }
-                        }) {
-                            Icon(Icons.Outlined.LocationSearching, stringResource(R.string.current_location))
+                    IconButton(onClick = {
+                        locationUpdateState = if (locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
+                            LocationUpdateState.LOCATION_REQUESTED
+                        } else {
+                            LocationUpdateState.PERMISSION_NEEDED
                         }
+                    }) {
+                        Icon(Icons.Outlined.LocationSearching, stringResource(R.string.current_location))
                     }
+                }
             }
 
             AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode && !LocalInspectionMode.current) {
