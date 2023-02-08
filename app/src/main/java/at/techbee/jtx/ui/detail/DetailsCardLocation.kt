@@ -9,7 +9,12 @@
 package at.techbee.jtx.ui.detail
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.location.Criteria
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -38,13 +43,11 @@ import at.techbee.jtx.flavored.MapComposable
 import at.techbee.jtx.ui.reusable.dialogs.LocationPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
+import com.google.accompanist.permissions.*
 import java.net.URLEncoder
 
 
+@SuppressLint("MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun DetailsCardLocation(
@@ -66,20 +69,27 @@ fun DetailsCardLocation(
     var geoLatText by remember { mutableStateOf(initialGeoLat?.toString()?:"")}
     var geoLongText by remember { mutableStateOf(initialGeoLong?.toString()?:"")}
 
-    val coarseLocationPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.ACCESS_COARSE_LOCATION) else null
+    var locationUpdateState by remember { mutableStateOf(LocationUpdateState.IDLE) }
+
+    val locationPermissionState = if(!LocalInspectionMode.current) rememberMultiplePermissionsState(
+        permissions = listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    ) else null
 
     if(showLocationPickerDialog) {
-        if(coarseLocationPermissionState?.status?.shouldShowRationale == false && !coarseLocationPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
+        if(locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted }) {   // second part = permission is NOT permanently denied!
             RequestPermissionDialog(
                 text = stringResource(id = R.string.edit_fragment_app_coarse_location_permission_message),
-                onConfirm = { coarseLocationPermissionState.launchPermissionRequest() }
+                onConfirm = { locationPermissionState.launchMultiplePermissionRequest() }
             )
         } else {
             LocationPickerDialog(
                 initialLocation = location,
                 initialGeoLat = geoLat,
                 initialGeoLong = geoLong,
-                enableCurrentLocation = coarseLocationPermissionState?.status?.isGranted == true,
+                enableCurrentLocation = locationPermissionState?.permissions?.any { it.status.isGranted }  == true,
                 onConfirm = { newLocation, newLat, newLong ->
                     location = newLocation ?: ""
                     geoLat = newLat
@@ -95,12 +105,38 @@ fun DetailsCardLocation(
         }
     }
 
+    LaunchedEffect(locationUpdateState, locationPermissionState?.permissions?.any { it.status.isGranted }) {
+        when(locationUpdateState) {
+            LocationUpdateState.IDLE -> { }
+            LocationUpdateState.LOCATION_REQUESTED -> {
+                // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
+                val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                val bestProvider = locationManager.getBestProvider(Criteria(), false) ?: return@LaunchedEffect
+                val locListener = LocationListener() { }
+                locationManager.requestLocationUpdates(bestProvider, 0, 0f, locListener)
+                locationManager.getLastKnownLocation(bestProvider)?.let { lastKnownLocation ->
+                    geoLat = lastKnownLocation.latitude
+                    geoLong = lastKnownLocation.longitude
+                    geoLatText = lastKnownLocation.latitude.toString()
+                    geoLongText = lastKnownLocation.longitude.toString()
+                    locationUpdateState = LocationUpdateState.IDLE
+                }
+            }
+            LocationUpdateState.PERMISSION_NEEDED -> {
+                locationPermissionState?.launchMultiplePermissionRequest()
+                locationUpdateState = LocationUpdateState.LOCATION_REQUESTED
+            }
+
+        }
+    }
+
 
     ElevatedCard(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),) {
+                .padding(8.dp),
+        ) {
 
             Crossfade(isEditMode) {
                 if(!it) {
@@ -153,7 +189,8 @@ fun DetailsCardLocation(
             AnimatedVisibility(isEditMode) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     OutlinedTextField(
                         value = geoLatText,
@@ -205,7 +242,17 @@ fun DetailsCardLocation(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
                         modifier = Modifier.weight(1f)
                     )
-                }
+
+                        IconButton(onClick = {
+                            locationUpdateState = if (locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
+                                LocationUpdateState.LOCATION_REQUESTED
+                            } else {
+                                LocationUpdateState.PERMISSION_NEEDED
+                            }
+                        }) {
+                            Icon(Icons.Outlined.LocationSearching, "Current location")
+                        }
+                    }
             }
 
             AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode && !LocalInspectionMode.current) {
@@ -253,6 +300,8 @@ fun DetailsCardLocation(
         }
     }
 }
+
+enum class LocationUpdateState { IDLE, LOCATION_REQUESTED, PERMISSION_NEEDED }
 
 @Preview(showBackground = true)
 @Composable
