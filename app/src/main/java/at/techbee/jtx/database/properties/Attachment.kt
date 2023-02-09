@@ -206,7 +206,7 @@ data class Attachment (
         fun getSample() = Attachment(
             attachmentId = 1L,
             icalObjectId = 1L,
-            uri = null,
+            uri = "content://mysample.pdf",
             null,
             "application/pdf",
             null,

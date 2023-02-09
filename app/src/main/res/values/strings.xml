@@ -319,6 +319,8 @@ For more information about the Sync please see:"</string>
     <string name="edit_validation_errors_start_due_timezone_check">"Please choose a timezone for both, start and due, or deactivate timezones."</string>
     <string name="collections_toast_export_ics_success">"Exporting collection finished successfully."</string>
     <string name="collections_toast_export_ics_error">"An error occurred while exporting the selected collection."</string>
+    <string name="attachment_export_saved_successfully">"Saved successfully"</string>
+    <string name="attachment_export_error_error_occurred">"An error occurred while saving the selected file!"</string>
     <string name="menu_collections_add_remote">"Add remote Collection (DAVx⁵)"</string>
     <string name="menu_collection_popup_show_in_davx5">"Show in DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"Export as .ics"</string>
