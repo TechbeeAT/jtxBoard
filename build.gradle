@@ -25,7 +25,7 @@ buildscript {
         version_gradle = '7.4.1'
         version_kotlin = "1.7.20"
         version_room = '2.5.0'
-        version_work = "2.7.1"
+        version_work = "2.8.0"
         version_billing = "5.1.0"
         version_review = "2.0.1"
         version_compose = "1.3.3"
