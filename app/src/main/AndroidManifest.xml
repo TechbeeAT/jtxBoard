@@ -126,6 +126,7 @@
                 <data android:mimeType="text/markdown" />
                 <data android:mimeType="image/*" />
                 <data android:mimeType="application/pdf" />
+                <data android:mimeType="*/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

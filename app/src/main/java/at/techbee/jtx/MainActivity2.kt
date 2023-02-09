@@ -222,16 +222,6 @@ class MainActivity2 : AppCompatActivity() {
                     when {
                         intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value =
                             intent.getStringExtra(Intent.EXTRA_TEXT)
-                        intent.type?.startsWith("image/") == true || intent.type == "application/pdf" -> {
-                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
-                                ?.let { uri ->
-                                    Attachment.getNewAttachmentFromUri(uri, this)
-                                        ?.let { newAttachment ->
-                                            globalStateHolder.icalFromIntentAttachment.value =
-                                                newAttachment
-                                        }
-                                }
-                        }
                         intent.type == "text/markdown" -> {
                             intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
                                 ?.let { uri ->
@@ -239,6 +229,17 @@ class MainActivity2 : AppCompatActivity() {
                                         globalStateHolder.icalFromIntentString.value =
                                             stream.readBytes().decodeToString()
                                     }
+                                }
+                        }
+                        //intent.type?.startsWith("image/") == true || intent.type == "application/pdf" -> {
+                        else -> {
+                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
+                                ?.let { uri ->
+                                    Attachment.getNewAttachmentFromUri(uri, this)
+                                        ?.let { newAttachment ->
+                                            globalStateHolder.icalFromIntentAttachment.value =
+                                                newAttachment
+                                        }
                                 }
                         }
                     }
