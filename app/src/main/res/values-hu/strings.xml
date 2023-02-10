@@ -4,12 +4,40 @@
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="save">"Mentés"</string>
+    <string name="cancel">"Mégsem"</string>
+    <string name="ok">"OK"</string>
+    <string name="delete">"Törlés"</string>
+    <string name="discard">"Elvetés"</string>
+    <string name="gotit">"Rendben"</string>
+    <string name="cont">"Tovább"</string>
+    <string name="website">"Weboldal"</string>
+    <string name="toolbar_text_add_task">"Teendő hozzáadása"</string>
+    <string name="default_local_collection_name">"Helyi"</string>
+    <string name="default_local_account_name">"Helyi"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Piszkozat"</string>
+    <string name="journal_status_final">"Végső"</string>
+    <string name="journal_status_cancelled">"Megszakitva"</string>
+    <string name="todo_status_needsaction">"Intézkedés szükséges"</string>
+    <string name="todo_status_completed">"Befejezett"</string>
+    <string name="todo_status_inprocess">"Folyamatban"</string>
+    <string name="todo_status_cancelled">"Megszakitva"</string>
+    <string name="classification_public">"Nyilvános"</string>
+    <string name="classification_private">"Privát"</string>
+    <string name="classification_confidential">"Bizalmas"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_settings">"Beállítások"</string>
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
+    <string name="edit_datepicker_dialog_select_time">"Időpont kiválasztása"</string>
+    <string name="edit_datepicker_dialog_add_time">"Idő hozzáadása"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Idő módosítása"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Időzóna hozzáadása"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Időzóna módosítása"</string>
     <!-- fragment_about -->
+    <string name="about_tabitem_translations">"Fordítások"</string>
     <!-- menus -->
     <!-- Notification channel for Reminders -->
     <!-- Shortcuts -->
@@ -19,10 +47,24 @@ Global Strings -->
     <!-- sync content provider -->
     <!-- Permissions -->
     <!-- alarms -->
+    <string name="alarms_minutes">"Perc(ek)"</string>
+    <string name="alarms_days">"Nap(ok)"</string>
     <!-- fragment_collections -->
     <!-- Fuzzy -->
     <!-- Fuzzy -->
     <!-- Fuzzy -->
+    <string name="color">"Szín"</string>
+    <string name="priority_0_no_priority">"Nincs Prioritás"</string>
+    <string name="priority_1_highest">"1 - Legmagasabb"</string>
+    <string name="priority_2_higher">"2 - Magasabb"</string>
+    <string name="priority_3_high">"3 - Magas"</string>
+    <string name="priority_4_medium_high">"4 - Közepesen magas"</string>
+    <string name="priority_5_medium">"5 - Közepes"</string>
+    <string name="priority_6_medium_low">"6 - Közepesen alacsony"</string>
+    <string name="edit_recur_day">"nap(ok)"</string>
+    <string name="edit_recur_week">"hét(ek)"</string>
+    <string name="edit_recur_month">"hónap(ok)"</string>
+    <string name="edit_recur_year">"év(ek)"</string>
     <!-- Buy Pro fragment -->
     <!-- alarms -->
     <!-- fragment_ical_list -->
