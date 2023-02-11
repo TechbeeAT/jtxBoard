@@ -24,25 +24,10 @@ Global Strings -->
     <string name="discard">"Discard"</string>
     <string name="gotit">"Got it"</string>
     <string name="cont">"Continue"</string>
-    <string name="toolbar_text_jtx_board" translatable="false">"jtx Board"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Journals Overview"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Notes Overview"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Tasks Overview"</string>
-    <string name="toolbar_text_view_journal_details">"Journal Details"</string>
-    <string name="toolbar_text_view_note_details">"Note Details"</string>
-    <string name="toolbar_text_view_task_details">"Task Details"</string>
+    <string name="website">"Website"</string>
     <string name="toolbar_text_add_journal">"Add Journal"</string>
     <string name="toolbar_text_add_note">"Add Note"</string>
     <string name="toolbar_text_add_task">"Add Task"</string>
-    <string name="toolbar_text_edit_journal">"Edit Journal"</string>
-    <string name="toolbar_text_edit_note">"Edit Note"</string>
-    <string name="toolbar_text_edit_task">"Edit Task"</string>
-    <string name="toolbar_text_filter">"Filter"</string>
-    <string name="toolbar_text_settings">"Settings"</string>
-    <string name="toolbar_text_about">"About"</string>
-    <string name="toolbar_text_sync">"Sync"</string>
-    <string name="toolbar_text_donate">"Donate"</string>
-    <string name="toolbar_text_adinfo">"Ad Info"</string>
     <string name="default_local_collection_name">"Local"</string>
     <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -92,17 +77,13 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Add new item"</string>
     <string name="list_progress">"Progress"</string>
     <string name="list_expand">"Expand"</string>
-    <string name="list_dialog_contribution_title">"Note on advertisements"</string>
-    <string name="list_dialog_contribution_more_information">"Find out more"</string>
-    <string name="list_num_attendees_contentdesc">"Number of attendees"</string>
-    <string name="list_num_attachments_contentdesc">"Number of attachments"</string>
-    <string name="list_num_comments_contentdesc">"Number of comments"</string>
     <string name="list_dialog_delete_selected_title">Delete selected entries?</string>
     <string name="list_dialog_delete_selected_message">This action deletes all selected entries (%1$d). Are you sure that you want to proceed? This operation cannot be undone!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Summary/Description"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
     <string name="list_item_upload_pending">"Upload pending"</string>
     <string name="list_item_recurring">"Recurring entry"</string>
+    <string name="list_item_edited_recurring">"Edited recurring entry"</string>
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Go to original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instance of recurring"</string>
@@ -241,7 +222,7 @@ For more information about the Sync please see:"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Failed opening DAVx⁵, please open the app manually."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Triggering sync in DAVx⁵ failed, please check in DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)"</string>
+    <string name="donate_header_developer_note">"Hey, I'm Patrick, the developer of jtx Board. I am putting a lot of time and effort into this app that I am offering to you for free. If you like my app, please send some love and make a small donation!"</string>
     <string name="donate_thank_you">"Thank you!"</string>
     <string name="donate_donate_with">"Donate with"</string>
     <string name="donate_other_donation_methods">"If you would like to consider any other donation method, please check our website:"</string>
@@ -263,6 +244,8 @@ For more information about the Sync please see:"</string>
     <string name="list_welcome_entry_todo_description">"Additionally to journals and notes, tasks can have a planned start, a due and a completed date. They can be checked when they are done or a progress can be set. Edit this entry to check out all options :-)"</string>
     <string name="list_welcome_category">"#FirstSteps"</string>
     <string name="save_and_edit">"Save &amp; edit"</string>
+    <string name="save_and_new">"Save &amp; new"</string>
+    <string name="save_and_close">"Save &amp; close"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Use speech-to-text"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Speech-to-text engine is listening."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Speech-to-text engine stopped listening."</string>
@@ -380,7 +363,6 @@ For more information about the Sync please see:"</string>
     <string name="priority_9_lowest">"9 - Lowest"</string>
     <string name="list_due_future">"Due in future"</string>
     <string name="view_share_part_of_series">"This entry is part of a series."</string>
-    <string name="view_share_exception_of_series">"This entry is an exception of a series."</string>
     <string name="view_share_repeats">"This entry repeats every"</string>
     <string name="collections_dialog_move_title">"Move all entries from \"%1$s\" to"</string>
     <string name="collection_dialog_move_info">"Please note: Only writeable collections and collections with support for the same components (Journals, Notes, Tasks) can be selected."</string>
@@ -443,7 +425,6 @@ Thank you!"</string>
     <string name="settings_default_expand_subtasks">"Expand subtasks in list by default"</string>
     <string name="settings_default_expand_subnotes">"Expand subnotes in list by default"</string>
     <string name="settings_default_expand_attachments">"Expand attachments in list by default"</string>
-    <string name="title_activity_list_screen">"ListScreen"</string>
     <string name="link_paypal" translatable="false">"https://www.paypal.com/donate?hosted_button_id=8BVX7PUVVTCWY"</string>
     <string name="link_jtx_donate" translatable="false">"https://jtx.techbee.at/contribute"</string>
     <string name="permission_coarse_location_granted">"Coarse location permission granted"</string>
@@ -455,6 +436,7 @@ Thank you!"</string>
     <string name="timezone">"Timezone"</string>
     <string name="not_set2">"Not set"</string>
     <string name="invert_selection">"Invert selection"</string>
+    <string name="clear_selection">"Clear selection"</string>
     <string name="preferences">"Preferences"</string>
     <string name="revert">"Revert"</string>
     <string name="audio_play">"Play"</string>
@@ -470,6 +452,7 @@ Thank you!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
     <string name="list_quickadd_dialog_sr_listening">"Listening …"</string>
     <string name="list_update_entries_dialog_title">"Update entries"</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"Attention: Recurring instances must be unlinked from its series before being moved to another collection and will be ignored in this process."</string>
     <string name="details_app_bar_behaviour">"App bar behaviour"</string>
     <string name="details_show_all_options">"Show all options"</string>
     <string name="details_show_hide_elements">Show/hide elements</string>
@@ -479,6 +462,12 @@ Thank you!"</string>
     <string name="details_recur_unknown_rrule_dialog_message">"An unknown or unsupported recurrence rule was detected. If you continue, the existing recurrence rule will be deleted/overwritten."</string>
     <string name="details_entry_could_not_be_loaded">"This entry was either deleted in the background or could not be loaded."</string>
     <string name="details_attachment_beta_info">"* Synchronizing attachments is an experimental feature. We strongly encourage to use only small attachments (up to 100 KB) as larger ones could lead to long synchronization times and unexpected behaviour."</string>
+    <string name="details_unchanged_part_of_series">"This entry is part of a series. This entry will copy any changes made for the series."</string>
+    <string name="details_changed_part_of_series">"This entry is part of a series but was changed. This entry will not be affected by changes of the series."</string>
+    <string name="details_series_attention_subentries">"Attention: Series-elements mirror the subtasks and linked notes from the series. If you would like to change subtasks and linked notes only for a series-element, please unlink it from the series first."</string>
+    <string name="details_go_to_series">"Go to series"</string>
+    <string name="details_detach_from_series">"Detach from series"</string>
+    <string name="details_detach_all_instances">"Detach all instances"</string>
     <string name="edit_comment">"Edit comment"</string>
     <string name="edit_subnote_add_helper">"Add a subnote"</string>
     <string name="edit_subtask">"Edit subtask"</string>
@@ -504,6 +493,13 @@ Thank you!"</string>
     <string name="dialog_revert_changes_message">"Are you sure you want to discard your changes and revert contents to the state before you started editing?"</string>
     <string name="dialog_revert_changes_message2">"Attention: Subtasks and subnotes are separate entries and cannot be reverted."</string>
     <string name="dialog_collection_new_entries_title">"Collection for new entries"</string>
+    <string name="dialog_detach_from_series_title">"Detach from series?"</string>
+    <string name="dialog_detach_from_series_text_all">"Detaching all elements will delete the series and turn the instances into independent entries that can have their own subtasks or linked notes. But there will be no more link to the original series or other instances. Would you like to continue?"</string>
+    <string name="dialog_detach_from_series_text_single">"Detaching this element from the series will allow you to have independent subtasks or linked notes, but there will be no more link to the original series. Would you like to continue?"</string>
+    <string name="dialog_detach_from_series_text_attention">"Attention: This operation cannot be undone!"</string>
+    <string name="dialog_detach_from_series_button">"Detach from series"</string>
+    <string name="dialog_davx5_outdated_title">"DAVx⁵ outdated"</string>
+    <string name="dialog_davx5_outdated_message">"Your current version of DAVx⁵ is not compatible with this version of jtx Board. Please update DAVx⁵ to 4.3.1 (403010000+) or later! The synchronization is currently suspended."</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>
@@ -531,6 +527,9 @@ Thank you!"</string>
     <string name="settings_progress_step_50">"Increment by 50 (2 steps)"</string>
     <string name="settings_progress_step">"Set the step for the progress slider"</string>
     <string name="settings_disable_alarms_for_readonly">"Disable alarms for readonly collections"</string>
+    <string name="settings_link_progress_to_subtasks">"Link progress to subtasks"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Keep status, progress &amp; completed in sync"</string>
+    <string name="settings_attention_experimental_feature">"Attention: This is an experimental feature"</string>
     <string name="sync_button_go_to_collections">"Go to Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Please purchase the Pro package to enable this feature."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>

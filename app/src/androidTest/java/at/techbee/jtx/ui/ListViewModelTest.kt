@@ -263,32 +263,12 @@ class ListViewModelTest {
         val id = database.insertICalObject(ICalObject.createTask("Test").apply { percent = 0 })
 
         withContext(Dispatchers.IO) {
-            listViewModel.updateProgress(id, 50, false)
+            listViewModel.updateProgress(id, 50)
             Thread.sleep(100)
             val icalobject = database.getICalObjectById(id)
             assertEquals(50, icalobject?.percent)
         }
     }
-
-    @Test
-    fun updateProgress_withUnlink() = runTest {
-        listViewModel = listViewModelTodos
-        val item = ICalObject.createTask("Test").apply { percent = 22 }
-        item.isRecurLinkedInstance = true
-
-        val id = database.insertICalObject(item)
-
-        withContext(Dispatchers.IO) {
-            listViewModel.updateProgress(id, 50, false)
-            Thread.sleep(100)
-            val icalobject = database.getICalObjectById(id)
-
-            assertEquals(50, icalobject?.percent)
-            assertEquals(false, icalobject?.isRecurLinkedInstance)
-        }
-
-    }
-
 
 
     @Test

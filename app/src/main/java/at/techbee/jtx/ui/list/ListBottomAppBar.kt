@@ -31,6 +31,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.dialogs.DAVx5IncompatibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.util.DateTimeUtils
 import java.util.*
@@ -44,6 +45,7 @@ fun ListBottomAppBar(
     multiselectEnabled: MutableState<Boolean>,
     selectedEntries: SnapshotStateList<Long>,
     allowNewEntries: Boolean,
+    isDAVx5compatible: Boolean,
     onAddNewEntry: () -> Unit,
     onFilterIconClicked: () -> Unit,
     onGoToDateSelected: (Long) -> Unit,
@@ -52,6 +54,7 @@ fun ListBottomAppBar(
 ) {
 
     var showGoToDatePicker by remember { mutableStateOf(false) }
+    var showDAVx5IncompatibleDialog by remember { mutableStateOf(false) }
     val iCal4List by iCal4ListLive.observeAsState(emptyList())
 
     val isFilterActive = listSettings.searchCategories.value.isNotEmpty()
@@ -102,6 +105,10 @@ fun ListBottomAppBar(
         )
     }
 
+    if(showDAVx5IncompatibleDialog) {
+        DAVx5IncompatibleDialog(onDismiss = { showDAVx5IncompatibleDialog = false } )
+    }
+
     BottomAppBar(
         actions = {
 
@@ -146,6 +153,16 @@ fun ListBottomAppBar(
                             Icon(
                                 Icons.Outlined.DateRange,
                                 contentDescription = stringResource(id = R.string.menu_list_gotodate)
+                            )
+                        }
+                    }
+
+                    AnimatedVisibility(!isDAVx5compatible) {
+                        IconButton(onClick = { showDAVx5IncompatibleDialog = true }) {
+                            Icon(
+                                Icons.Outlined.SyncProblem,
+                                contentDescription = stringResource(id = R.string.dialog_davx5_outdated_title),
+                                tint = MaterialTheme.colorScheme.error
                             )
                         }
                     }
@@ -256,6 +273,7 @@ fun ListBottomAppBar_Preview_Journal() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
+            isDAVx5compatible = false,
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -282,6 +300,7 @@ fun ListBottomAppBar_Preview_Note() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = false,
+            isDAVx5compatible = true,
             multiselectEnabled = remember { mutableStateOf(true) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -308,6 +327,7 @@ fun ListBottomAppBar_Preview_Todo() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
+            isDAVx5compatible = true,
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -335,6 +355,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
+            isDAVx5compatible = true,
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },

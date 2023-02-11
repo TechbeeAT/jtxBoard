@@ -15,6 +15,7 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
 import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.compose.ui.graphics.Color
 import androidx.core.util.PatternsCompat
@@ -315,19 +316,6 @@ value type for this property is TEXT.
  */
 const val COLUMN_RSTATUS = "rstatus"
 
-/**
- * Stores the reference to the original event from which the recurring event was derived.
- * This value is NULL for the orignal event.
- * Type: [Long]
- */
-const val COLUMN_RECUR_ORIGINALICALOBJECTID = "recur_original_icalobjectid"
-
-/**
- * Marks recurring instances that have not been changed. Those must be excluded from the sync as they are still instances of the original item.
- * Type: [Boolean]
- */
-const val COLUMN_RECUR_ISLINKEDINSTANCE = "recur_islinkedinstance"
-
 
 /**
  * Purpose:  This property specifies a color used for displaying the calendar, event, todo, or journal data.
@@ -467,8 +455,6 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_EXDATE) var exdate: String? = null,   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
     @ColumnInfo(name = COLUMN_RDATE)  var rdate: String? = null,     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
     @ColumnInfo(name = COLUMN_RECURID) var recurid: String? = null,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
-    @ColumnInfo(name = COLUMN_RECUR_ORIGINALICALOBJECTID) var recurOriginalIcalObjectId: Long? = null,
-    @ColumnInfo(name = COLUMN_RECUR_ISLINKEDINSTANCE) var isRecurLinkedInstance: Boolean = false,
 
     @ColumnInfo(name = COLUMN_RSTATUS) var rstatus: String? = null,
 
@@ -594,15 +580,15 @@ data class ICalObject(
                 return // do nothing, the item was never saved in DB
 
             val children = database.getRelatedChildren(id)
-            children.forEach { childId ->
-                    deleteItemWithChildren(childId, database)    // call the function again to recursively delete all children, then delete the item
+            children.forEach { child ->
+                    deleteItemWithChildren(child.id, database)    // call the function again to recursively delete all children, then delete the item
             }
 
-            database.deleteRecurringInstances(id)      // recurring instances are always physically deleted
+            database.getICalObjectByIdSync(id)?.let { database.deleteRecurringInstances(it.uid) }  // recurring instances are always physically deleted
             val item = database.getSync(id)?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
             when {
-                item.property.isRecurLinkedInstance -> {
-                    makeRecurringException(item.property, database)   // if the current item
+                item.property.recurid != null -> {
+                    unlinkFromSeries(item.property, database)   // if the current item
                     database.deleteICalObjectsbyId(id)
                 }
                 item.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE -> database.deleteICalObjectsbyId(item.property.id) // Elements in local collection are physically deleted
@@ -621,14 +607,14 @@ data class ICalObject(
          *
          * @return The new id of the item in the new collection
          */
-        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long {
+        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long? {
 
             val newParentId = moveItemToNewCollection(id, parentId, newCollectionId, database, context)
 
             // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
             val children = database.getRelatedChildren(id)
-            children.forEach { childId ->
-                updateCollectionWithChildren(childId, newParentId, newCollectionId, database, context)
+            children.forEach { child ->
+                updateCollectionWithChildren(child.id, newParentId, newCollectionId, database, context)
             }
             return newParentId
         }
@@ -644,10 +630,15 @@ data class ICalObject(
          * @return the new id of the item that was inserted (that becomes the newParentId)
          *
          */
-        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long {
+        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long? {
 
                 val item = database.getSync(id)
+                val oldUID = item?.property?.uid
+                val newUID = generateNewUID()
                 if (item != null) {
+
+                    if(item.property.recurid != null)  // recur instances are ignored, changed recur instances are updated below
+                        return null
 
                     item.property.id = 0L
                     item.property.collectionId = newCollectionId
@@ -656,7 +647,7 @@ data class ICalObject(
                     item.property.lastModified = System.currentTimeMillis()
                     item.property.created = System.currentTimeMillis()
                     item.property.dtstamp = System.currentTimeMillis()
-                    item.property.uid = generateNewUID()
+                    item.property.uid = newUID
                     item.property.flags = null
                     item.property.scheduleTag = null
                     item.property.eTag = null
@@ -708,25 +699,27 @@ data class ICalObject(
                         relParent2Child.text = parent?.property?.uid
                         database.insertRelatedto(relParent2Child)
                     }
+
+                    database.updateRecurringInstanceUIDs(oldUID, newUID, newCollectionId)
                     Alarm.scheduleNextNotifications(context)
                     return newId
                 }
-                return 0L
+                return null
             }
 
-        fun makeRecurringException(item: ICalObject, database: ICalDatabaseDao) {
-            if(item.isRecurLinkedInstance) {
-
-                item.recurOriginalIcalObjectId?.let { originalId ->
-                    val newExceptionList = addLongToCSVString(database.getRecurExceptions(originalId), item.dtstart)
-                    database.setRecurExceptions(
-                        originalId,
-                        newExceptionList,
-                        System.currentTimeMillis()
-                    )
-                    database.setAsRecurException(item.id, System.currentTimeMillis())
-                }
+        suspend fun unlinkFromSeries(item: ICalObject, database: ICalDatabaseDao): ICalObject {
+            database.getRecurSeriesElement(item.uid)?.let { series ->
+                val newExceptionList = addLongToCSVString(database.getRecurExceptions(series.id), item.dtstart)
+                database.setRecurExceptions(
+                    series.id,
+                    newExceptionList
+                )
             }
+            item.uid = generateNewUID()
+            item.recurid = null
+            item.makeDirty()
+            database.update(item)
+            return item
         }
 
         /**
@@ -839,6 +832,40 @@ data class ICalObject(
                 else -> context.getString(R.string.list_due_inXdays, daysLeft+1)
             }
         }
+
+        suspend fun findTopParent(iCalObjectId: Long, database: ICalDatabaseDao): ICalObject? {
+
+            val allRelatedTo = database.getAllRelatedtoSync()
+            var topParent = database.getICalObjectById(iCalObjectId)
+            while(allRelatedTo.any { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}) {
+                val parentUID = allRelatedTo.find { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}?.text
+                parentUID?.let { uid -> database.getICalObjectFor(uid)?.let { topParent = it } }
+            }
+            return topParent
+        }
+
+        suspend fun updateProgressOfParents(parentId: Long, database: ICalDatabaseDao, keepInSync: Boolean) {
+
+            val children = database.getRelatedChildren(parentId).filter { it.module == Module.TODO.name }
+            if(children.isNotEmpty()) {
+                children.forEach { child ->
+                    updateProgressOfParents(child.id, database, keepInSync)
+                }
+                val newProgress = children.map { it.percent ?:0 }.average().toInt()
+                val parent = database.getICalObjectByIdSync(parentId)
+                parent?.setUpdatedProgress(newProgress, keepInSync)
+                parent?.let { database.update(it) }
+            }
+        }
+
+        @VisibleForTesting
+        fun getAsRecurId(datetime: Long, timezone: String?) = when {
+            timezone == TZ_ALLDAY -> DtStart(Date(datetime)).value
+            timezone.isNullOrEmpty() -> DtStart(DateTime(datetime)).value
+            else -> DtStart(DateTime(datetime)).apply {
+                timeZone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(timezone)
+            }.value
+        }
     }
 
 
@@ -917,31 +944,35 @@ data class ICalObject(
     }
 
 
-    fun setUpdatedProgress(newPercent: Int?) {
+    fun setUpdatedProgress(newPercent: Int?, keepInSync: Boolean) {
 
         percent = if(newPercent == 0) null else newPercent
-        if(status?.isNotEmpty() == true)                   // we only update the status if it was set to a value, if it's null, we skip this part
+
+        if(keepInSync) {
             status = when (newPercent) {
                 100 -> Status.COMPLETED.status
                 in 1..99 -> Status.IN_PROCESS.status
                 else -> Status.NEEDS_ACTION.status
             }
 
-        if (completed == null && percent == 100) {
-            completedTimezone = dueTimezone?:dtstartTimezone
-            completed = if(completedTimezone == TZ_ALLDAY)
-                DateTimeUtils.getTodayAsLong()
-            else
-                System.currentTimeMillis()
-        } else if (completed != null && percent != 100) {
-            completed = null
-            completedTimezone = null
+            if (completed == null && percent == 100) {
+                completedTimezone = dueTimezone ?: dtstartTimezone
+                completed = if (completedTimezone == TZ_ALLDAY)
+                    DateTimeUtils.getTodayAsLong()
+                else
+                    System.currentTimeMillis()
+            } else if (completed != null && percent != 100) {
+                completed = null
+                completedTimezone = null
+            }
         }
 
         makeDirty()
 
         return
     }
+
+
 
     /**
      * Sets the dirty flag, updates sequence and lastModified value, makes recurring entry an exception
@@ -950,8 +981,21 @@ data class ICalObject(
         lastModified = System.currentTimeMillis()
         sequence += 1
         dirty = true
-        isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
     }
+
+    /**
+     * finds the series definition and makes it dirty
+     * necessary when a series instance changes
+     */
+    suspend fun makeSeriesDirty(database: ICalDatabaseDao) {
+        if(recurid?.isNotEmpty() == true) {
+            database.getRecurSeriesElement(uid)?.let {
+                it.makeDirty()
+                database.update(it)
+            }
+        }
+    }
+
 
     /**
      * @return a Recur Object based on the given rrule or null
@@ -1122,9 +1166,22 @@ data class ICalObject(
 
 
     fun recreateRecurring(context: Context) {
-
         val database = ICalDatabase.getInstance(context).iCalDatabaseDao
-        database.deleteRecurringInstances(id)
+
+        if(recurid?.isNotEmpty() == true) {
+            database.getRecurSeriesElement(uid)?.recreateRecurring(context)
+            return
+        }
+
+        database.deleteUnchangedRecurringInstances(uid)
+        // delete also exceptions (as recurring instances might still exist):
+        val exceptions = getLongListfromCSVString(this.exdate)
+        exceptions.forEach { exceptionDate ->
+            database.getRecurInstance(uid, getAsRecurId(exceptionDate, dtstartTimezone))?.let {
+                database.delete(it)
+            }
+        }
+
         if(dtstart == null || rrule.isNullOrEmpty())
             return
 
@@ -1136,9 +1193,16 @@ data class ICalObject(
 
         getInstancesFromRrule().forEach { recurrenceDate ->
             val instance = original.copy()
+
+            instance.property.dtstart = recurrenceDate
+            val recurid = getAsRecurId(recurrenceDate, instance.property.dtstartTimezone)
+            instance.property.recurid = recurid
+
+            if(database.getRecurInstance(uid = uid, recurid = recurid) != null)
+                return@forEach   // skip the entry if there is an existing linked entry that was changed (and therefore not deleted before)
+
             instance.property.id = 0L
-            instance.property.recurOriginalIcalObjectId = id
-            instance.property.uid = generateNewUID()
+            //instance.property.uid = generateNewUID()
             instance.property.dtstamp = System.currentTimeMillis()
             instance.property.created = System.currentTimeMillis()
             instance.property.lastModified = System.currentTimeMillis()
@@ -1150,23 +1214,7 @@ data class ICalObject(
             instance.property.eTag = null
             instance.property.scheduleTag = null
             instance.property.dirty = false
-            instance.property.isRecurLinkedInstance = true
 
-            instance.property.recurid = when {
-                    instance.property.dtstartTimezone == TZ_ALLDAY -> DtStart(Date(instance.property.dtstart!!)).value
-                    instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
-                    else -> {
-                        val timezone =
-                            TimeZoneRegistryFactory.getInstance().createRegistry()
-                                .getTimeZone(instance.property.dtstartTimezone)
-                        val withTimezone =
-                            DtStart(DateTime(instance.property.dtstart!!))
-                        withTimezone.timeZone = timezone
-                        withTimezone.value
-                }
-            }
-
-            instance.property.dtstart = recurrenceDate
 
             if(instance.property.component == Component.VTODO.name && original.property.due != null)
                 instance.property.due = recurrenceDate + timeToDue
@@ -1203,6 +1251,11 @@ data class ICalObject(
                 it.icalObjectId = instanceId
                 database.insertResourceSync(it)
             }
+            instance.relatedto?.forEach {
+                it.relatedtoId = 0L
+                it.icalObjectId = instanceId
+                database.insertRelatedtoSync(it)
+            }
             instance.alarms?.forEach {
                 if(it.triggerRelativeDuration != null) {    // only relative alarms are considered
                     it.alarmId = 0L
@@ -1226,6 +1279,7 @@ data class ICalObject(
             Alarm.scheduleNextNotifications(context)
         }
     }
+
 
     /**
      * Takes a string, extracts the first line to the summary, the remaining lines to the description
@@ -1264,9 +1318,7 @@ data class ICalObject(
 
         var recurInfo = ""
 
-        if(recurOriginalIcalObjectId != null && !this.isRecurLinkedInstance)
-            recurInfo += context.getString(R.string.view_share_exception_of_series) + System.lineSeparator()
-        else if (recurOriginalIcalObjectId != null && this.isRecurLinkedInstance)
+       if (this.recurid != null)
             recurInfo += context.getString(R.string.view_share_part_of_series) + System.lineSeparator()
 
         val recur: Recur
@@ -1393,7 +1445,7 @@ data class ICalObject(
  */
 @Parcelize
 @Deprecated("Use Status instead")
-enum class StatusJournal(val stringResource: Int) : Parcelable {
+enum class StatusJournal(@StringRes val stringResource: Int) : Parcelable {
 
     DRAFT(R.string.journal_status_draft),
     FINAL(R.string.journal_status_final),
@@ -1406,7 +1458,7 @@ enum class StatusJournal(val stringResource: Int) : Parcelable {
  */
 @Deprecated("Use Status instead")
 @Parcelize
-enum class StatusTodo(val stringResource: Int) : Parcelable {
+enum class StatusTodo(@StringRes val stringResource: Int) : Parcelable {
     `NEEDS-ACTION`(R.string.todo_status_needsaction),
     COMPLETED(R.string.todo_status_completed),
     `IN-PROCESS`(R.string.todo_status_inprocess),
@@ -1420,7 +1472,7 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
  * @param [stringResource] is a reference to the String Resource within jtx Board
  */
 @Parcelize
-enum class Status(val status: String?, val stringResource: Int) : Parcelable {
+enum class Status(val status: String?, @StringRes val stringResource: Int) : Parcelable {
 
     NO_STATUS(null, R.string.status_no_status),
 
@@ -1465,7 +1517,7 @@ enum class Status(val status: String?, val stringResource: Int) : Parcelable {
  * @param [stringResource] is a reference to the String Resource within JTX
  */
 @Parcelize
-enum class Classification(val classification: String?, val stringResource: Int) : Parcelable {
+enum class Classification(val classification: String?, @StringRes val stringResource: Int) : Parcelable {
 
     NO_CLASSIFICATION(null, R.string.classification_no_classification),
     PUBLIC("PUBLIC", R.string.classification_public),

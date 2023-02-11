@@ -13,24 +13,9 @@ Global Strings -->
     <string name="discard">"Descartar"</string>
     <string name="gotit">"Entendido"</string>
     <string name="cont">"Continuar"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Vista general | Diarios"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Vista general | Notas"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Vista general | Tareas"</string>
-    <string name="toolbar_text_view_journal_details">"Detalle de Diarios"</string>
-    <string name="toolbar_text_view_note_details">"Detalle de Notas"</string>
-    <string name="toolbar_text_view_task_details">"Detalle de Tareas"</string>
     <string name="toolbar_text_add_journal">"Añadir Diario"</string>
     <string name="toolbar_text_add_note">"Añadir Nota"</string>
     <string name="toolbar_text_add_task">"Añadir Tarea"</string>
-    <string name="toolbar_text_edit_journal">"Editar Diario"</string>
-    <string name="toolbar_text_edit_note">"Editar Nota"</string>
-    <string name="toolbar_text_edit_task">"Editar Tarea"</string>
-    <string name="toolbar_text_filter">"Filtro"</string>
-    <string name="toolbar_text_settings">"Ajustes"</string>
-    <string name="toolbar_text_about">"Acerca de"</string>
-    <string name="toolbar_text_sync">"Sincronización"</string>
-    <string name="toolbar_text_donate">"Donar"</string>
-    <string name="toolbar_text_adinfo">"Información sobre publicidad"</string>
     <string name="default_local_collection_name">"Local"</string>
     <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -80,11 +65,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Añadir nuevo elemento"</string>
     <string name="list_progress">"Progreso"</string>
     <string name="list_expand">"Expandir"</string>
-    <string name="list_dialog_contribution_title">"Nota sobre los anuncios"</string>
-    <string name="list_dialog_contribution_more_information">"Saber más"</string>
-    <string name="list_num_attendees_contentdesc">"Número de asistentes"</string>
-    <string name="list_num_attachments_contentdesc">"Número de adjuntos"</string>
-    <string name="list_num_comments_contentdesc">"Número de comentarios"</string>
     <string name="list_dialog_delete_selected_title">¿Eliminar entradas seleccionadas?</string>
     <string name="list_dialog_delete_selected_message">Esta acción eliminará todas las entradas seleccionadas (%1$d). ¿Está seguro? ¡Esta operación no se puede deshacer!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Resumen / Descripción"</string>
@@ -224,7 +204,6 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Error al iniciar DAVx⁵. Por favor, inicie la app manualmente."</string>
     <string name="sync_toast_intent_start_davx5_sync">"No se pudo activar la sincronización en DAVx⁵. Por favor, compruebe DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"El desarrollo de una aplicación es un tema complejo y el desarrollo, mantenimiento y soporte es un trabajo duro. Si le gusta esta aplicación y desea garantizar un desarrollo continuo, considere una donación :-)"</string>
     <string name="donate_thank_you">"¡Gracias!"</string>
     <string name="donate_donate_with">"Donar con"</string>
     <string name="donate_other_donation_methods">"Si desea considerar otro método de donación, por favor, consulte nuestra página web:"</string>
@@ -351,7 +330,6 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="priority_9_lowest">"9 - Extremadamente baja"</string>
     <string name="list_due_future">"Con vencimiento en el futuro"</string>
     <string name="view_share_part_of_series">"Esta entrada es parte de una serie."</string>
-    <string name="view_share_exception_of_series">"Esta entrada es una excepción de una serie."</string>
     <string name="view_share_repeats">"Esta entrada se repite cada"</string>
     <string name="collections_dialog_move_title">"Mover todas las entradas de \"%1$s\" a"</string>
     <string name="collection_dialog_move_info">"Nota: Sólo se pueden seleccionar las colecciones con posibilidad de escritura y las colecciones con soporte para los mismos componentes (diarios, notas, tareas)."</string>
@@ -406,7 +384,6 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="settings_default_expand_subtasks">"Expandir por defecto subtareas en lista"</string>
     <string name="settings_default_expand_subnotes">"Expandir por defecto notas en lista"</string>
     <string name="settings_default_expand_attachments">"Expandir por defecto adjuntos en lista"</string>
-    <string name="title_activity_list_screen">"Vista de lista"</string>
     <string name="permission_coarse_location_granted">"Acceso a ubicación permitido"</string>
     <string name="permission_coarse_location_denied">"Acceso a ubicación denegado"</string>
     <string name="sorry">"Disculpe"</string>

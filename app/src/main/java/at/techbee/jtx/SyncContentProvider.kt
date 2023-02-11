@@ -9,23 +9,24 @@
 package at.techbee.jtx
 
 import android.accounts.Account
+import android.app.Application
 import android.content.*
 import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import android.util.Log
+import android.webkit.MimeTypeMap
+import androidx.annotation.VisibleForTesting
 import androidx.core.content.FileProvider
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
-import java.io.File
-import java.io.IOException
-import android.webkit.MimeTypeMap
-import androidx.annotation.VisibleForTesting
+import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.widgets.ListWidgetReceiver
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
-import java.lang.NumberFormatException
+import java.io.File
+import java.io.IOException
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -96,6 +97,17 @@ class SyncContentProvider : ContentProvider() {
         addURI(SYNC_PROVIDER_AUTHORITY, "unknown/#", CODE_UNKNOWN_ITEM)
     }
 
+    override fun onCreate(): Boolean {
+
+        if (context?.applicationContext == null)
+            return false
+
+        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao
+        TimeZoneRegistryFactory.getInstance().createRegistry()
+
+        return true
+    }
+
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
 
@@ -115,14 +127,14 @@ class SyncContentProvider : ContentProvider() {
                 "FROM $TABLE_NAME_ICALOBJECT " +
                 "INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID " +
                 "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? " +
-                "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? " +
-                "AND $TABLE_NAME_ICALOBJECT.$COLUMN_RECUR_ISLINKEDINSTANCE = 0"
+                "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
+                //"AND $TABLE_NAME_ICALOBJECT.$COLUMN_RECUR_ISLINKEDINSTANCE = 0"
 
         var queryString = "DELETE FROM "
 
         // The tables must be joined with the collections table in order to make sure that only accounts are affected that were passed in the URI!
         when (sUriMatcher.match(uri)) {
-            CODE_ICALOBJECTS_DIR -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) "
+            CODE_ICALOBJECTS_DIR -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) AND $COLUMN_RECURID IS NULL "    // recur instances must never be deleted by SyncContentProvider in bulk
             CODE_ATTENDEES_DIR -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) "
             CODE_CATEGORIES_DIR -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) "
             CODE_COMMENTS_DIR -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) "
@@ -249,9 +261,8 @@ class SyncContentProvider : ContentProvider() {
         if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
             createEmptyFileForAttachment(id)
 
-        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(
-                COLUMN_RDATE
-            ) == true || values?.containsKey(COLUMN_EXDATE) == true)
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
+            && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true)
         )
             database.getRecurringToPopulate(id)?.recreateRecurring(context!!)
 
@@ -283,17 +294,6 @@ class SyncContentProvider : ContentProvider() {
         return ContentUris.withAppendedId(uri, id)
     }
 
-    override fun onCreate(): Boolean {
-
-        if (context?.applicationContext == null)
-            return false
-
-        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao
-        TimeZoneRegistryFactory.getInstance().createRegistry()
-
-        return true
-    }
-
     override fun query(
         uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String?
@@ -310,13 +310,13 @@ class SyncContentProvider : ContentProvider() {
                 uri.pathSegments[1].toLong().toString()
             )      // add first argument (must be Long! String is expected, toLong would make other values null
 
-        var subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
+        val subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
                 "FROM $TABLE_NAME_ICALOBJECT " +
                 "INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID " +
                 "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? " +
                 "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
-        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)                 // only if we try to access single entries directly we allow access to recurring instances, for access on DIR of ICalObjects we filter recurring instances
-            subquery += "AND $TABLE_NAME_ICALOBJECT.$COLUMN_RECUR_ISLINKEDINSTANCE = 0"
+        //if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)                 // only if we try to access single entries directly we allow access to recurring instances, for access on DIR of ICalObjects we filter recurring instances
+        //    subquery += "AND $TABLE_NAME_ICALOBJECT.$COLUMN_RECUR_ISLINKEDINSTANCE = 0"
 
         var queryString = "SELECT "
         queryString += if (projection.isNullOrEmpty())
@@ -460,8 +460,8 @@ class SyncContentProvider : ContentProvider() {
                 "FROM $TABLE_NAME_ICALOBJECT " +
                 "INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID " +
                 "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? " +
-                "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? " +
-                "AND $TABLE_NAME_ICALOBJECT.$COLUMN_RECUR_ISLINKEDINSTANCE = 0"
+                "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
+                //"AND $TABLE_NAME_ICALOBJECT.$COLUMN_RECUR_ISLINKEDINSTANCE = 0"
 
 
         when (sUriMatcher.match(uri)) {
@@ -605,10 +605,14 @@ class SyncContentProvider : ContentProvider() {
     private fun isSyncAdapter(uri: Uri): Boolean {
 
         val isSyncAdapter = uri.getBooleanQueryParameter(CALLER_IS_SYNCADAPTER, false)
-        if (isSyncAdapter)
-            return true
-        else
+        if (isSyncAdapter) {
+            if(callingPackage == SyncUtil.DAVX5_PACKAGE_NAME && !SyncUtil.isDAVx5CompatibleWithJTX(context?.applicationContext!! as Application))
+                throw java.lang.IllegalArgumentException(context!!.getString(R.string.dialog_davx5_outdated_message))
+             else
+                return true
+        } else {
             throw java.lang.IllegalArgumentException("Currently only Syncadapters are supported. Uri: ($uri)")
+        }
     }
 
     /**

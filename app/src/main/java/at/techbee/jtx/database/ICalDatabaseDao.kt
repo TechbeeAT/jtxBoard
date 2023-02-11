@@ -33,7 +33,7 @@ SELECTs (global selects without parameter)
      * @return a list of [Category.text] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT DISTINCT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY ORDER BY $COLUMN_CATEGORY_ID DESC")
+    @Query("SELECT DISTINCT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) ORDER BY $COLUMN_CATEGORY_ID DESC")
     fun getAllCategoriesAsText(): LiveData<List<String>>
 
     /**
@@ -41,7 +41,7 @@ SELECTs (global selects without parameter)
      * @return a list of [Category.text] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT DISTINCT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE ORDER BY $COLUMN_RESOURCE_ID DESC")
+    @Query("SELECT DISTINCT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) ORDER BY $COLUMN_RESOURCE_ID DESC")
     fun getAllResourcesAsText(): LiveData<List<String>>
 
 
@@ -128,8 +128,27 @@ SELECTs (global selects without parameter)
      * @return a list of [Relatedto] as List<Relatedto>
      */
     @Transaction
-    @Query("SELECT * FROM relatedto")
+    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO")
     fun getAllRelatedto(): LiveData<List<Relatedto>>
+
+    /**
+     * Retrieve an list of all Relatedto ([Relatedto]) as a List
+     *
+     * @return a list of [Relatedto] as List<Relatedto>
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO")
+    fun getAllRelatedtoSync(): List<Relatedto>
+
+    /**
+     * Retrieve the UID of a specific ICalObjectID
+     * @param uid ot find
+     * @return ICalObject of the UID
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid")
+    fun getICalObjectFor(uid: String): ICalObject?
+
 
 
     /**
@@ -179,6 +198,23 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
     fun getICalObjectByIdSync(id: Long): ICalObject?
 
+    /**
+     * Resolve the UID with the corresonding ICalObjectId as LiveData
+     * Attention: This only returns the series elemen that has no recurid!
+     * @param uid of the [ICalObject] in the DB
+     * @return the [ICalObject.id] as LiveData
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NULL")
+    fun getSeriesICalObjectIdByUID(uid: String?): LiveData<ICalObject?>
+
+    /**
+     * Resolve the UID with the corresonding ICalObjectId as LiveData
+     * Attention: This only returns the series elemen that has no recurid!
+     * @param uid of the [ICalObject] instances in the DB
+     * @return the [ICalObject.id] as LiveData List
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NOT NULL ORDER BY $COLUMN_RECURID")
+    fun getSeriesInstancesICalObjectsByUID(uid: String?): LiveData<List<ICalObject>>
 
 
     /**
@@ -487,10 +523,6 @@ DELETEs by Object
     suspend fun updateCollection(collection: ICalCollection)
 
     @Transaction
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_PERCENT = :progress, $COLUMN_STATUS = :status, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
-    suspend fun updateProgress(id: Long, progress: Int, status: String, lastModified: Long)
-
-    @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = 1, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:id)")
     suspend fun updateToDeleted(id: Long, lastModified: Long)
 
@@ -558,8 +590,13 @@ DELETEs by Object
 
     /** This query returns all ids of child elements of the given [parentKey]  */
     @Transaction
-    @Query("SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID IN (SELECT rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO rel INNER JOIN $TABLE_NAME_ICALOBJECT ical ON rel.$COLUMN_RELATEDTO_TEXT = ical.$COLUMN_UID AND ical.$COLUMN_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')" )
-    suspend fun getRelatedChildren(parentKey: Long): List<Long>
+    @Query("SELECT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID IN (SELECT rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO rel INNER JOIN $TABLE_NAME_ICALOBJECT ical ON rel.$COLUMN_RELATEDTO_TEXT = ical.$COLUMN_UID AND ical.$COLUMN_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')" )
+    suspend fun getRelatedChildren(parentKey: Long): List<ICalObject>
+
+    /** This query returns the average progress of the given ICalObjectIds  */
+    @Transaction
+    @Query("SELECT AVG(IFNULL($COLUMN_PERCENT, 0)) FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN (:iCalObjectIds)" )
+    suspend fun getAverageProgressOf(iCalObjectIds: List<Long>): Int?
 
     @Transaction
     @Query("SELECT * from $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectid AND $COLUMN_RELATEDTO_TEXT = :linkedUID AND $COLUMN_RELATEDTO_RELTYPE = :reltype")
@@ -568,8 +605,14 @@ DELETEs by Object
 
     // This query returns all IcalObjects that have a specific ICalObjectId in the field for the OriginalIcalObjectId (ie. all generated items for a recurring entry)
     @Transaction
-    @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :originalId AND $COLUMN_RECUR_ISLINKEDINSTANCE = 1")
-    fun getRecurInstances(originalId: Long): List<ICalObject?>
+    @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NULL")
+    fun getRecurSeriesElement(uid: String): ICalObject?
+
+
+    // This query returns all IcalObjects that have a specific ICalObjectId in the field for the OriginalIcalObjectId (ie. all generated items for a recurring entry)
+    @Transaction
+    @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NOT NULL")
+    fun getRecurInstances(uid: String): List<ICalObject?>
 
     @Transaction
     @Query("SELECT $COLUMN_EXDATE from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :originalId")
@@ -577,15 +620,22 @@ DELETEs by Object
 
     @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_EXDATE = :exceptions, $COLUMN_DIRTY = 1, $COLUMN_LAST_MODIFIED = :lastUpdated, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1 WHERE $COLUMN_ID = :originalId")
-    fun setRecurExceptions(originalId: Long, exceptions: String?, lastUpdated: Long)
+    fun setRecurExceptions(originalId: Long, exceptions: String?, lastUpdated: Long = System.currentTimeMillis())
+
+    /**
+     * Recurring instances are synchronized through the series definition. This method updates the UID
+     * of series elements to be assigned to the right series definition again after being moved
+     * to a new collection.
+     * @param oldUID of the entries (that should be updated)
+     * @param newUID that should be set
+     * @param newCollectionId that should be set
+     */
+    @Transaction
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_UID = :newUID, $COLUMN_ICALOBJECT_COLLECTIONID = :newCollectionId WHERE $COLUMN_UID = :oldUID AND $COLUMN_RECURID IS NOT NULL")
+    fun updateRecurringInstanceUIDs(oldUID: String?, newUID: String, newCollectionId: Long)
 
     @Transaction
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_RECUR_ISLINKEDINSTANCE = 0, $COLUMN_DIRTY = 1, $COLUMN_LAST_MODIFIED = :lastUpdated, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1 WHERE $COLUMN_ID = :exceptionItemId")
-    fun setAsRecurException(exceptionItemId: Long, lastUpdated: Long)
-
-
-    @Transaction
-    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RRULE IS NULL AND $COLUMN_RECUR_ISLINKEDINSTANCE = 1 AND $COLUMN_RECUR_ORIGINALICALOBJECTID NOT IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT)")
+    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RRULE IS NULL AND $COLUMN_RECURID IS NOT NULL AND $COLUMN_UID NOT IN (SELECT $COLUMN_UID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RRULE IS NOT NULL)")
     fun removeOrphans()
 
     @Transaction
@@ -607,6 +657,15 @@ DELETEs by Object
 
 
     @Transaction
-    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :id AND $COLUMN_RECUR_ISLINKEDINSTANCE = 1")
-    fun deleteRecurringInstances(id: Long)
+    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECURID IS NOT NULL AND $COLUMN_UID = :uid AND $COLUMN_SEQUENCE = 0")
+    fun deleteUnchangedRecurringInstances(uid: String?)
+
+
+    @Transaction
+    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECURID IS NOT NULL AND $COLUMN_UID = :uid")
+    fun deleteRecurringInstances(uid: String?)
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID = :recurid")
+    fun getRecurInstance(uid: String?, recurid: String): ICalObject?
 }

@@ -12,23 +12,9 @@ Global Strings -->
     <string name="discard">"Odrzuć"</string>
     <string name="gotit">"Rozumiem"</string>
     <string name="cont">"Kontynuuj"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Przegląd Dzienników"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Przegląd Notatek"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Przegląd Zadań"</string>
-    <string name="toolbar_text_view_journal_details">"Szczegóły Dziennika"</string>
-    <string name="toolbar_text_view_note_details">"Szczegóły Notatki"</string>
-    <string name="toolbar_text_view_task_details">"Szczegóły Zadania"</string>
     <string name="toolbar_text_add_journal">"Dodaj Dziennik"</string>
     <string name="toolbar_text_add_note">"Dodaj Notatkę"</string>
     <string name="toolbar_text_add_task">"Dodaj Zadanie"</string>
-    <string name="toolbar_text_edit_journal">"Edytuj Dziennik"</string>
-    <string name="toolbar_text_edit_note">"Edytuj Notatkę"</string>
-    <string name="toolbar_text_edit_task">"Edytuj Zadanie"</string>
-    <string name="toolbar_text_filter">"Filtr"</string>
-    <string name="toolbar_text_settings">"Ustawienia"</string>
-    <string name="toolbar_text_about">"O aplikacji"</string>
-    <string name="toolbar_text_sync">"Synchronizuj"</string>
-    <string name="toolbar_text_donate">"Dotacja"</string>
     <string name="default_local_collection_name">"Lokalne"</string>
     <string name="default_local_account_name">"Lokalne"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -56,9 +42,6 @@ Global Strings -->
     <string name="list_tabitem_journals">"Dzienniki"</string>
     <string name="list_tabitem_notes">"Notatki"</string>
     <string name="list_tabitem_todos">"Zadania"</string>
-    <string name="list_num_attendees_contentdesc">"Liczba uczestników"</string>
-    <string name="list_num_attachments_contentdesc">"Liczba załączników"</string>
-    <string name="list_num_comments_contentdesc">"Liczba komentarzy"</string>
     <!-- fragment_ical_view -->
     <string name="view_add_note">"Dodaj notatkę"</string>
     <string name="view_add_audio_note">"Dodaj audio"</string>

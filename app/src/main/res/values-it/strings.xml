@@ -13,24 +13,10 @@ Global Strings -->
     <string name="discard">"Annulla"</string>
     <string name="gotit">"Va bene"</string>
     <string name="cont">"Continua"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Riepilogo Diari"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Riepilogo Note"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Riepilogo Attività"</string>
-    <string name="toolbar_text_view_journal_details">"Dettaglio Diario"</string>
-    <string name="toolbar_text_view_note_details">"Dettaglio Note"</string>
-    <string name="toolbar_text_view_task_details">"Dettaglio Attività"</string>
+    <string name="website">"Sito web"</string>
     <string name="toolbar_text_add_journal">"Inserisci Diario"</string>
     <string name="toolbar_text_add_note">"Inserisci Nota"</string>
     <string name="toolbar_text_add_task">"Inserisci Attività"</string>
-    <string name="toolbar_text_edit_journal">"Modifica Diario"</string>
-    <string name="toolbar_text_edit_note">"Modifica Nota"</string>
-    <string name="toolbar_text_edit_task">"Modifica Attività"</string>
-    <string name="toolbar_text_filter">"Filtro"</string>
-    <string name="toolbar_text_settings">"Impostazioni"</string>
-    <string name="toolbar_text_about">"Sopra"</string>
-    <string name="toolbar_text_sync">"Sincronizza"</string>
-    <string name="toolbar_text_donate">"Donazione"</string>
-    <string name="toolbar_text_adinfo">"Informazioni sull'annuncio pubblicitario"</string>
     <string name="default_local_collection_name">"Locale"</string>
     <string name="default_local_account_name">"Locale"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -80,11 +66,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Aggiungi nuovo elemento"</string>
     <string name="list_progress">"Progresso"</string>
     <string name="list_expand">"Espandi"</string>
-    <string name="list_dialog_contribution_title">"Nota sugli annunci"</string>
-    <string name="list_dialog_contribution_more_information">"Scopri di più"</string>
-    <string name="list_num_attendees_contentdesc">"Numero di partecipanti"</string>
-    <string name="list_num_attachments_contentdesc">"Numero di allegati"</string>
-    <string name="list_num_comments_contentdesc">"Numero di commenti"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Riassunto/Descrizione"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La prima riga è interpretata come riassunto, il resto come descrizione. Gli hashtag sono interpretati come categorie (es. #categoria)."</string>
     <string name="list_item_upload_pending">"Caricamento in sospeso"</string>
@@ -219,7 +200,6 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Impossibile aprire DAVx⁵, aprire l'app manualmente."</string>
     <string name="sync_toast_intent_start_davx5_sync">"L'attivazione della sincronizzazione in DAVx⁵ non è riuscita, controllare in DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"Lo sviluppo di un'app è un processo complesso e lo sviluppo, la manutenzione e il supporto sono un duro lavoro. Quindi, se ti piace questa app e se desideri garantire uno sviluppo continuo, considera una donazione :-)"</string>
     <string name="donate_thank_you">"Grazie!"</string>
     <string name="donate_donate_with">"Dona con"</string>
     <string name="donate_other_donation_methods">"Se desideri considerare qualsiasi altro metodo di donazione, controlla il nostro sito Web:"</string>
@@ -355,7 +335,6 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="priority_9_lowest">"9 - Più basso"</string>
     <string name="list_due_future">"In scadenza in futuro"</string>
     <string name="view_share_part_of_series">"Questa voce fa parte di una serie."</string>
-    <string name="view_share_exception_of_series">"Questa voce è un'eccezione di una serie."</string>
     <string name="view_share_repeats">"Questa voce si ripete ogni"</string>
     <string name="collections_dialog_move_title">"Sposta tutte le voci da \"%1$s\" a"</string>
     <string name="collection_dialog_move_info">"Nota: solo le collezioni scrivibili e le collezioni con supporto per gli stessi componenti (Diari, Note, Compiti) possono essere selezionate."</string>
@@ -409,7 +388,6 @@ Grazie!"</string>
     <string name="settings_default_expand_subtasks">"Espansione predefinita delle sottoattività nell'elenco"</string>
     <string name="settings_default_expand_subnotes">"Espansione predefinita delle note secondarie nell'elenco"</string>
     <string name="settings_default_expand_attachments">"Espansione predefinita degli allegati nell'elenco"</string>
-    <string name="title_activity_list_screen">"Schermata Elenco"</string>
     <string name="permission_coarse_location_granted">"Autorizzazione di localizzazione grossolana concessa"</string>
     <string name="permission_coarse_location_denied">"Autorizzazione alla localizzazione grossolana negata"</string>
     <string name="sorry">"Spiacente"</string>

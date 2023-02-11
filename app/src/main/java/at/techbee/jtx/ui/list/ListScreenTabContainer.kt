@@ -91,7 +91,15 @@ fun ListScreenTabContainer(
     }.toList()
     val pagerState = rememberPagerState(
         initialPage =
-            if(enabledTabs.any { tab -> tab.module == settingsStateHolder.lastUsedModule.value }) {
+            if(globalStateHolder.icalFromIntentModule.value != null
+                && enabledTabs.any { tab -> tab.module == globalStateHolder.icalFromIntentModule.value }) {
+                when (globalStateHolder.icalFromIntentModule.value!!) {
+                    Module.JOURNAL -> enabledTabs.indexOf(ListTabDestination.Journals)
+                    Module.NOTE -> enabledTabs.indexOf(ListTabDestination.Notes)
+                    Module.TODO -> enabledTabs.indexOf(ListTabDestination.Tasks)
+                }
+            }
+            else if(enabledTabs.any { tab -> tab.module == settingsStateHolder.lastUsedModule.value }) {
                 when (settingsStateHolder.lastUsedModule.value) {
                     Module.JOURNAL -> enabledTabs.indexOf(ListTabDestination.Journals)
                     Module.NOTE -> enabledTabs.indexOf(ListTabDestination.Notes)
@@ -435,6 +443,7 @@ fun ListScreenTabContainer(
                         listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
+                    isDAVx5compatible = globalStateHolder.isDAVx5compatible.value,
                     multiselectEnabled = listViewModel.multiselectEnabled,
                     selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,
@@ -503,13 +512,15 @@ fun ListScreenTabContainer(
                                     presetModule = if (showQuickAdd.value)
                                         getActiveViewModel().module    // coming from button
                                     else
-                                        globalStateHolder.icalFromIntentModule.value,   // coming from intent
+                                        globalStateHolder.icalFromIntentModule.value ?: getActiveViewModel().module,   // coming from intent
                                     enabledModules = enabledTabs.map { it.module },
                                     presetText = globalStateHolder.icalFromIntentString.value
                                         ?: "",    // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allWriteableCollections = allUsableCollections,
-                                    presetCollectionId = listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
+                                    presetCollectionId = globalStateHolder.icalFromIntentCollection.value?.let {fromIntent ->
+                                        allUsableCollections.find { fromIntent == it.displayName }?.collectionId
+                                    } ?: listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
                                     onSaveEntry = { module, text, attachment, collectionId,  editAfterSaving ->
 
                                         listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, collectionId)
@@ -518,6 +529,8 @@ fun ListScreenTabContainer(
 
                                         globalStateHolder.icalFromIntentString.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+                                        globalStateHolder.icalFromIntentModule.value = null
+                                        globalStateHolder.icalFromIntentCollection.value = null
 
                                         addNewEntry(module, text, collectionId, attachment, editAfterSaving)
                                         scope.launch {
@@ -528,11 +541,12 @@ fun ListScreenTabContainer(
                                     },
                                     onDismiss = {
                                         showQuickAdd.value = false  // origin was button
-                                        globalStateHolder.icalFromIntentString.value =
-                                            null  // origin was state from import
-                                        globalStateHolder.icalFromIntentAttachment.value =
-                                            null  // origin was state from import
-                                    }
+                                        globalStateHolder.icalFromIntentString.value = null  // origin was state from import
+                                        globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+                                        globalStateHolder.icalFromIntentModule.value = null
+                                        globalStateHolder.icalFromIntentCollection.value = null
+                                    },
+                                    keepDialogOpen = { showQuickAdd.value = true } // necessary when origin was intent and save&new is clicked!
                                 )
                             }
 

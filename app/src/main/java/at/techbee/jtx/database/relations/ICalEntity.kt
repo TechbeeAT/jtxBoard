@@ -109,8 +109,6 @@ data class ICalEntity(
             property.lastModified = System.currentTimeMillis()
             property.dtend = null
             property.dtendTimezone = null
-            property.recurOriginalIcalObjectId = null
-            property.isRecurLinkedInstance = false
             property.exdate = null
             property.rdate = null
             property.uid = ICalObject.generateNewUID()
@@ -171,10 +169,10 @@ data class ICalEntity(
 
         var shareText = ""
         property.dtstart?.let {
-            if(property.component == Component.VJOURNAL.name)
-                shareText += DateTimeUtils.convertLongToFullDateTimeString(it, property.dtstartTimezone) + System.lineSeparator() + System.lineSeparator()
+            shareText += if(property.component == Component.VJOURNAL.name)
+                DateTimeUtils.convertLongToFullDateTimeString(it, property.dtstartTimezone) + System.lineSeparator() + System.lineSeparator()
             else
-                shareText += context.getString(R.string.view_started) + ": " + DateTimeUtils.convertLongToFullDateTimeString(it, property.dtstartTimezone) + System.lineSeparator() + System.lineSeparator()
+                context.getString(R.string.view_started) + ": " + DateTimeUtils.convertLongToFullDateTimeString(it, property.dtstartTimezone) + System.lineSeparator() + System.lineSeparator()
         }
         property.due?.let { shareText += context.getString(R.string.view_due) + ": " + DateTimeUtils.convertLongToFullDateTimeString(it, property.dueTimezone) + System.lineSeparator() }
         property.completed?.let { shareText += context.getString(R.string.view_completed) + ": " + DateTimeUtils.convertLongToFullDateTimeString(it, property.completedTimezone) + System.lineSeparator() }

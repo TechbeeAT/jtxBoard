@@ -20,6 +20,7 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import org.junit.Assert.*
@@ -77,14 +78,15 @@ class ICalObjectAndroidTest {
         }
 
         val id = database.insertICalObject(item)
-        val savedItem = database.getSync(id)
-        savedItem?.property?.recreateRecurring(context)
+        val savedItem = database.getICalObjectByIdSync(id)
+        savedItem?.recreateRecurring(context)
+        val savedItemUID = savedItem?.uid ?: throw AssertionError("UID was null")
 
-        val recurList = database.getRecurInstances(id)
+        val recurList = database.getRecurInstances(uid = savedItemUID)
         assertEquals(6, recurList.size)
 
-        database.deleteRecurringInstances(id)
-        val recurListEmpty = database.getRecurInstances(id)
+        database.deleteUnchangedRecurringInstances(savedItemUID)
+        val recurListEmpty = database.getRecurInstances(savedItemUID)
         assertEquals(0, recurListEmpty.size)
     }
 
@@ -101,18 +103,48 @@ class ICalObjectAndroidTest {
         }
 
         val id = database.insertICalObject(item)
-        val savedItem = database.getSync(id)
-        savedItem?.property?.recreateRecurring(context)
+        val savedItem = database.getICalObjectByIdSync(id)
+        savedItem?.recreateRecurring(context)
+        val savedItemUID = savedItem?.uid ?: throw AssertionError("UID was null")
 
-        val recurList = database.getRecurInstances(id)
+        val recurList = database.getRecurInstances(savedItemUID)
         assertEquals(7, recurList.size)
 
         assertEquals(1663804800000L, recurList[0]?.due)
         //assertEquals(1664236800000L, recurList[1]?.due)  // TODO
 
-        database.deleteRecurringInstances(id)
-        val recurListEmpty = database.getRecurInstances(id)
+        database.deleteUnchangedRecurringInstances(savedItemUID)
+        val recurListEmpty = database.getRecurInstances(savedItemUID)
         assertEquals(0, recurListEmpty.size)
+    }
+
+
+    @Test
+    fun unlink_from_series() = runTest {
+
+        val item = ICalObject.createTodo().apply {
+            // from  fun getInstancesFromRrule_Journal_WEEKLY_withExceptions()
+            this.dtstart = 1663718400000L
+            this.due = 1663804800000L
+            this.rrule = "FREQ=DAILY;COUNT=5"
+            this.uid = "series"
+        }
+
+        val id = database.insertICalObject(item)
+        val savedItem = database.getICalObjectByIdSync(id)
+        savedItem?.recreateRecurring(context)
+        val savedItemUID = savedItem?.uid ?: throw AssertionError("UID was null")
+
+        val recurList = database.getRecurInstances(savedItemUID)
+        assertEquals(5, recurList.size)
+
+        assertEquals(1663718400000L, recurList[0]?.dtstart)
+        val firstInstance = database.getRecurInstance("series", ICalObject.getAsRecurId(recurList[0]?.dtstart!!, recurList[0]?.dtstartTimezone)) ?: throw AssertionError("firstInstance not found")
+        ICalObject.unlinkFromSeries(firstInstance, database)
+
+        val firstInstanceAfter = database.getICalObjectByIdSync(firstInstance.id) ?: throw AssertionError("firstInstance not found")
+        assertNotEquals("series", firstInstanceAfter.uid)
+        assertNull(firstInstanceAfter.recurid)
     }
 
 
@@ -283,7 +315,7 @@ class ICalObjectAndroidTest {
         withContext(Dispatchers.IO) {
             val idParent = database.insertICalObject(ICalObject.createJournal().apply {
                 this.collectionId = 1L
-                this.isRecurLinkedInstance = true
+                this.recurid = "recurid"
             })
             // a recurring instance cannot have children
             //make sure everything was correctly inserted
@@ -300,7 +332,7 @@ class ICalObjectAndroidTest {
         withContext(Dispatchers.IO) {
             val idParent = database.insertICalObject(ICalObject.createJournal().apply {
                 this.collectionId = 2L
-                this.isRecurLinkedInstance = true
+                this.recurid = "recurid"
             })
             // a recurring instance cannot have children
             //make sure everything was correctly inserted
@@ -345,6 +377,7 @@ class ICalObjectAndroidTest {
                 assertEquals(3, database.getAllRelatedto().getOrAwaitValue().size)
 
                 val newParentId = ICalObject.updateCollectionWithChildren(idParent, null, 2L, database, context)
+                    ?: throw AssertionError("newParentId not returned")
                 Thread.sleep(500)
 
                 val newParent = database.getICalObjectById(newParentId)
@@ -353,13 +386,13 @@ class ICalObjectAndroidTest {
 
                 val children = database.getRelatedChildren(newParent?.id ?: 0L)
                 assertEquals(3, children.size)
-                assertEquals(2L, database.getICalObjectById(children[0])?.collectionId)
-                assertEquals(2L, database.getICalObjectById(children[1])?.collectionId)
+                assertEquals(2L, database.getICalObjectById(children[0].id)?.collectionId)
+                assertEquals(2L, database.getICalObjectById(children[1].id)?.collectionId)
             }
         }
     }
 
-
+    /*
     @Test
     fun makeRecurringException_Test() = runTest {
         withContext(Dispatchers.IO) {
@@ -377,8 +410,8 @@ class ICalObjectAndroidTest {
             //make sure instances are there as expected
             assertEquals(5, instances.size)
 
-            ICalObject.makeRecurringException(instances[0]!!, database)
-            ICalObject.makeRecurringException(instances[1]!!, database)
+            ICalObject.unlinkFromSeries(instances[0]!!, database)
+            ICalObject.unlinkFromSeries(instances[1]!!, database)
 
             val parentAfterUpdate = database.getICalObjectById(idParent)
             val instance0 = database.getICalObjectById(instances[0]!!.id)
@@ -397,7 +430,6 @@ class ICalObjectAndroidTest {
             assertEquals(true, instance4!!.isRecurLinkedInstance)
         }
     }
-
 
     @Test
     fun makeRecurringException_Test2() = runTest {
@@ -419,7 +451,7 @@ class ICalObjectAndroidTest {
             assertEquals(0, instances.size)
 
             //nothing should happen here
-            ICalObject.makeRecurringException(parent, database)
+            ICalObject.unlinkFromSeries(parent, database)
 
             val parentAfterUpdate = database.getICalObjectById(idParent)
 
@@ -427,27 +459,16 @@ class ICalObjectAndroidTest {
             assertFalse(parentAfterUpdate.isRecurLinkedInstance)
         }
     }
+     */
+
 
     @Test
     fun getRecurInfo_linkedToSeries() {
         val item = ICalObject.createJournal("Test")
-        item.isRecurLinkedInstance = true
-        item.recurOriginalIcalObjectId = 1L
+        item.recurid = "recurid"
         assertTrue(
             item.getRecurInfo(context)
                 ?.contains(context.getString(R.string.view_share_part_of_series)) == true
-        )
-    }
-
-
-    @Test
-    fun getRecurInfo_exceptionToSeries() {
-        val item = ICalObject.createJournal("Test")
-        item.isRecurLinkedInstance = false
-        item.recurOriginalIcalObjectId = 1L
-        assertTrue(
-            item.getRecurInfo(context)
-                ?.contains(context.getString(R.string.view_share_exception_of_series)) == true
         )
     }
 
@@ -460,5 +481,72 @@ class ICalObjectAndroidTest {
                 R.string.edit_recur_x_times
             )
         assertTrue(item.getRecurInfo(context)?.contains(expectedString) == true)
+    }
+
+    @Test
+    fun updateProgressOfParents_keepInSync() = runBlocking {
+        val parentId = database.insertICalObject(ICalObject.createTodo().apply { uid = "parent" })
+        val child1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1" })
+        val child2Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child2" })
+
+        database.getICalObjectByIdSync(child1Id)?.let {
+            it.setUpdatedProgress(25, true)
+            database.update(it)
+        }
+        database.getICalObjectByIdSync(child2Id)?.let {
+            it.setUpdatedProgress(75, true)
+            database.update(it)
+        }
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child2Id, reltype =  Reltype.PARENT.name, text = "parent"))
+
+        ICalObject.updateProgressOfParents(parentId, database, true)
+        val parent = database.getICalObjectByIdSync(parentId)
+        assertEquals(50, parent?.percent)
+        assertEquals(Status.IN_PROCESS.status, parent?.status)
+    }
+
+
+    @Test
+    fun updateProgressOfParents_NOT_keepInSync() = runBlocking {
+        val parentId = database.insertICalObject(ICalObject.createTodo().apply { uid = "parent" })
+        val child1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1" })
+        val child2Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child2" })
+
+        database.getICalObjectByIdSync(child1Id)?.let {
+            it.setUpdatedProgress(25, true)
+            database.update(it)
+        }
+        database.getICalObjectByIdSync(child2Id)?.let {
+            it.setUpdatedProgress(75, true)
+            database.update(it)
+        }
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child2Id, reltype =  Reltype.PARENT.name, text = "parent"))
+
+        ICalObject.updateProgressOfParents(parentId, database, false)
+        val parent = database.getICalObjectByIdSync(parentId)
+        assertEquals(50, parent?.percent)
+        assertEquals(Status.NO_STATUS.status, parent?.status)
+    }
+
+
+    @Test
+    fun findTopParent_Test() = runBlocking {
+        val parentId = database.insertICalObject(ICalObject.createTodo().apply { uid = "parent" })
+        val child1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1" })
+        val child1of1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1of1Id" })
+        val child2of1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child2of1Id" })
+        val child1of2of1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1of2of1Id" })
+        val child2Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child2" })
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child2Id, reltype =  Reltype.PARENT.name, text = "parent"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1of1Id, reltype =  Reltype.PARENT.name, text = "child1"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child2of1Id, reltype =  Reltype.PARENT.name, text = "child1"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1of2of1Id, reltype =  Reltype.PARENT.name, text = "child2of1Id"))
+
+        val actualParent = database.getICalObjectById(parentId) ?: throw AssertionError("entry not found")
+        val retrievedParent = ICalObject.findTopParent(parentId, database) ?: throw AssertionError("retrieved entry null")
+        assertEquals(actualParent, retrievedParent)
     }
 }

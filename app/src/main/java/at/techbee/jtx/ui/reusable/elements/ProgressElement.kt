@@ -32,16 +32,23 @@ fun ProgressElement(
     iCalObjectId: Long,
     progress: Int?,
     isReadOnly: Boolean,
-    isLinkedRecurringInstance: Boolean,
     sliderIncrement: Int,
     modifier: Modifier = Modifier,
     showSlider: Boolean = true,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit
 ) {
 
     var sliderPosition by remember { mutableStateOf(
         progress?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
     ) }
+
+    //If the progress gets updated in the meantime in the DB, we should get aware and udpate the UI
+    var sliding by remember { mutableStateOf(false) }
+    var lastKnownProgress by remember { mutableStateOf(progress) }
+    if(!sliding && sliderPosition != (progress?.toFloat()?:0f) && progress != lastKnownProgress) {
+        sliderPosition = progress?.toFloat() ?: 0f
+        lastKnownProgress = progress
+    }
 
     /**
      * When the Element gets reused/recycled e.g. when activating the option hide completed in the
@@ -77,13 +84,16 @@ fun ProgressElement(
                 value = sliderPosition,
                 valueRange = 0F..100F,
                 steps = (100 / sliderIncrement) - 1,
-                onValueChange = { sliderPosition = it },
+                onValueChange = {
+                    sliderPosition = it
+                    sliding = true
+                                },
                 onValueChangeFinished = {
                     sliderPosition = sliderPosition / sliderIncrement * sliderIncrement
+                    sliding = false
                     onProgressChanged(
                         iCalObjectId,
                         (sliderPosition / sliderIncrement * sliderIncrement).toInt(),
-                        isLinkedRecurringInstance
                     )
                 },
                 modifier = Modifier.weight(1f),
@@ -103,7 +113,7 @@ fun ProgressElement(
             checked = sliderPosition == 100f,
             onCheckedChange = {
                 sliderPosition = if (it) 100f else 0f     // update comes from state change!
-                onProgressChanged(iCalObjectId, if (it) 100 else 0, isLinkedRecurringInstance)
+                onProgressChanged(iCalObjectId, if (it) 100 else 0)
             },
             enabled = !isReadOnly
         )
@@ -119,9 +129,8 @@ fun ProgressElementPreview() {
             iCalObjectId = 1L,
             progress = 57,
             isReadOnly = false,
-            isLinkedRecurringInstance = false,
             sliderIncrement = 50,
-            onProgressChanged = { _, _, _ -> })
+            onProgressChanged = { _, _ -> })
     }
 }
 
@@ -134,9 +143,8 @@ fun ProgressElementPreview_readonly() {
             iCalObjectId = 1L,
             progress = 57,
             isReadOnly = true,
-            isLinkedRecurringInstance = false,
             sliderIncrement = 5,
-            onProgressChanged = { _, _, _ -> })
+            onProgressChanged = { _, _ -> })
     }
 }
 
@@ -149,8 +157,7 @@ fun ProgressElementPreview_increment25_with_label() {
             iCalObjectId = 1L,
             progress = 100,
             isReadOnly = false,
-            isLinkedRecurringInstance = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             sliderIncrement = 20
         )
 
@@ -166,8 +173,7 @@ fun ProgressElementPreview_without_label() {
             iCalObjectId = 1L,
             progress = 8,
             isReadOnly = false,
-            isLinkedRecurringInstance = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             sliderIncrement = 1,
         )
 
@@ -183,8 +189,7 @@ fun ProgressElementPreview_without_label_and_slider() {
             iCalObjectId = 1L,
             progress = 100,
             isReadOnly = false,
-            isLinkedRecurringInstance = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             sliderIncrement = 1,
             showSlider = false
         )

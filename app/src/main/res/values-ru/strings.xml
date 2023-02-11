@@ -13,24 +13,9 @@ Global Strings -->
     <string name="discard">"Отказаться"</string>
     <string name="gotit">"Понятно"</string>
     <string name="cont">"Продолжить"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Обзор дневников"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Обзор заметок"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Обзор задач"</string>
-    <string name="toolbar_text_view_journal_details">"Подробности дневника"</string>
-    <string name="toolbar_text_view_note_details">"Подробности заметки"</string>
-    <string name="toolbar_text_view_task_details">"Подробности задачи"</string>
     <string name="toolbar_text_add_journal">"Добавить дневник"</string>
     <string name="toolbar_text_add_note">"Добавить заметку"</string>
     <string name="toolbar_text_add_task">"Добавить задачу"</string>
-    <string name="toolbar_text_edit_journal">"Редактировать дневник"</string>
-    <string name="toolbar_text_edit_note">"Редактировать заметку"</string>
-    <string name="toolbar_text_edit_task">"Редактировать задачу"</string>
-    <string name="toolbar_text_filter">"Фильтр"</string>
-    <string name="toolbar_text_settings">"Настройки"</string>
-    <string name="toolbar_text_about">"О приложении"</string>
-    <string name="toolbar_text_sync">"Синхронизация"</string>
-    <string name="toolbar_text_donate">"Пожертвовать"</string>
-    <string name="toolbar_text_adinfo">"О рекламе"</string>
     <string name="default_local_collection_name">"Локально"</string>
     <string name="default_local_account_name">"Локально"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -78,11 +63,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Добавить новый пункт"</string>
     <string name="list_progress">"Прогресс"</string>
     <string name="list_expand">"Развернуть"</string>
-    <string name="list_dialog_contribution_title">"О рекламе"</string>
-    <string name="list_dialog_contribution_more_information">"Узнать больше"</string>
-    <string name="list_num_attendees_contentdesc">"Количество участников"</string>
-    <string name="list_num_attachments_contentdesc">"Количество вложений"</string>
-    <string name="list_num_comments_contentdesc">"Количество комментариев"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Сводка/Описание"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Первая строка интерпретируется как сводка, остальные — как описание. Хэштеги интерпретируются как категории (например, #категория)."</string>
     <string name="list_item_upload_pending">"Ожидающие загрузки"</string>
@@ -201,7 +181,6 @@ Global Strings -->
     <string name="sync_toast_intent_open_davx5_failed">"Не удалось открыть DAVx⁵. Откройте приложение вручную."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Не удалось запустить синхронизацию в DAVx⁵. Проверьте в DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"Разработка приложения — сложная тема, а разработка, обслуживание и поддержка — тяжелая работа. Поэтому, если вам нравится это приложение и если вы хотите обеспечить его непрерывное развитие, рассмотрите возможность сделать пожертвование :-)"</string>
     <string name="donate_thank_you">"Спасибо !"</string>
     <string name="donate_donate_with">"Пожертвовать через"</string>
     <string name="donate_other_donation_methods">"Если вы хотите рассмотреть любой другой способ пожертвования, пожалуйста, посетите наш веб-сайт:"</string>

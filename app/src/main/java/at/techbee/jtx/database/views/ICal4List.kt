@@ -16,6 +16,7 @@ import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
@@ -60,17 +61,15 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_LAST_MODIFIED, " +
             "main_icalobject.$COLUMN_SEQUENCE, " +
             "main_icalobject.$COLUMN_UID, " +
+            "main_icalobject.$COLUMN_RRULE, " +
+            "main_icalobject.$COLUMN_RECURID, " +
             "collection.$COLUMN_COLLECTION_COLOR as colorCollection, " +
             "main_icalobject.$COLUMN_COLOR as colorItem, " +
             "main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID, " +
             "collection.$COLUMN_COLLECTION_ACCOUNT_NAME, " +
             "collection.$COLUMN_COLLECTION_DISPLAYNAME, " +
             "main_icalobject.$COLUMN_DELETED, " +
-            "CASE WHEN main_icalobject.$COLUMN_DIRTY = 1 AND collection.$COLUMN_COLLECTION_ACCOUNT_TYPE != 'LOCAL' THEN 1 else 0 END as uploadPending, " +
-            "main_icalobject.$COLUMN_RECUR_ORIGINALICALOBJECTID, " +
-            "CASE WHEN main_icalobject.$COLUMN_RRULE IS NULL THEN 0 ELSE 1 END as isRecurringOriginal, " +
-            "CASE WHEN main_icalobject.$COLUMN_RECURID IS NULL THEN 0 ELSE 1 END as isRecurringInstance, " +
-            "main_icalobject.$COLUMN_RECUR_ISLINKEDINSTANCE, " +
+            "CASE WHEN collection.$COLUMN_COLLECTION_ACCOUNT_TYPE = '$LOCAL_ACCOUNT_TYPE' THEN 0 WHEN main_icalobject.$COLUMN_RECURID IS NOT NULL THEN (SELECT series.$COLUMN_DIRTY FROM $TABLE_NAME_ICALOBJECT series WHERE series.$COLUMN_RECURID IS NULL AND series.$COLUMN_UID = main_icalobject.$COLUMN_UID) ELSE main_icalobject.$COLUMN_DIRTY END as uploadPending, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'JOURNAL' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfJournal, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'NOTE' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfNote, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'TODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfTodo, " +
@@ -132,6 +131,8 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long,
     @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long,
     @ColumnInfo(name = COLUMN_UID) var uid: String?,
+    @ColumnInfo(name = COLUMN_RRULE) var rrule: String?,
+    @ColumnInfo(name = COLUMN_RECURID) var recurid: String?,
 
     @ColumnInfo var colorCollection: Int?,
     @ColumnInfo var colorItem: Int?,
@@ -143,11 +144,6 @@ data class ICal4List(
 
     @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean,
     @ColumnInfo var uploadPending: Boolean,
-
-    @ColumnInfo(name = COLUMN_RECUR_ORIGINALICALOBJECTID) var recurOriginalIcalObjectId: Long?,
-    @ColumnInfo var isRecurringOriginal: Boolean,
-    @ColumnInfo var isRecurringInstance: Boolean,
-    @ColumnInfo(name = COLUMN_RECUR_ISLINKEDINSTANCE) var isLinkedRecurringInstance: Boolean,
 
     @ColumnInfo var isChildOfJournal: Boolean,
     @ColumnInfo var isChildOfNote: Boolean,
@@ -205,6 +201,8 @@ data class ICal4List(
                 System.currentTimeMillis(),
                 0,
                 null,
+                null,
+                null,
                 Color.Magenta.toArgb(),
                 Color.Cyan.toArgb(),
                 1L,
@@ -212,10 +210,6 @@ data class ICal4List(
                 "myCollection",
                 deleted = false,
                 uploadPending = true,
-                recurOriginalIcalObjectId = null,
-                isRecurringOriginal = true,
-                isRecurringInstance = true,
-                isLinkedRecurringInstance = true,
                 isChildOfJournal = false,
                 isChildOfNote = false,
                 isChildOfTodo = false,
@@ -409,9 +403,9 @@ data class ICal4List(
                 queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
 
             if (searchSettingShowOneRecurEntryInFuture) {
-                queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ISLINKEDINSTANCE = 0 " +
+                queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_RECURID IS NULL " +
                         "OR $VIEW_NAME_ICAL4LIST.$COLUMN_DTSTART <= " +
-                        "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_RECUR_ORIGINALICALOBJECTID = $VIEW_NAME_ICAL4LIST.$COLUMN_RECUR_ORIGINALICALOBJECTID AND recurList.$COLUMN_RECUR_ISLINKEDINSTANCE = 1 AND recurList.$COLUMN_DTSTART >= ${DateTimeUtils.getTodayAsLong()} )) "
+                        "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_UID = $VIEW_NAME_ICAL4LIST.$COLUMN_UID AND recurList.$COLUMN_RECURID IS NOT NULL AND recurList.$COLUMN_DTSTART >= ${DateTimeUtils.getTodayAsLong()} )) "
             }
 
             queryString += "ORDER BY "

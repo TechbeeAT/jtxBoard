@@ -36,13 +36,14 @@ import at.techbee.jtx.util.DateTimeUtils
 fun ListCardGrid(
     iCalObject: ICal4List,
     selected: Boolean,
+    progressUpdateDisabled: Boolean,
     modifier: Modifier = Modifier,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit
 ) {
 
     val statusBarVisible by remember {
         mutableStateOf(
-            iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0 || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.isRecurringInstance || iCalObject.isRecurringOriginal || iCalObject.isLinkedRecurringInstance
+            iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0 || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.recurid != null || iCalObject.rrule != null
         )
     }
 
@@ -147,12 +148,11 @@ fun ListCardGrid(
                         if (iCalObject.module == Module.TODO.name)
                             Checkbox(
                                 checked = iCalObject.percent == 100,
-                                enabled = !iCalObject.isReadOnly,
+                                enabled = !iCalObject.isReadOnly && !progressUpdateDisabled,
                                 onCheckedChange = {
                                     onProgressChanged(
                                         iCalObject.id,
-                                        if (it) 100 else 0,
-                                        iCalObject.isLinkedRecurringInstance
+                                        if (it) 100 else 0
                                     )
                                 }
                             )
@@ -175,9 +175,8 @@ fun ListCardGrid(
                         numSubnotes = iCalObject.numSubnotes,
                         isReadOnly = iCalObject.isReadOnly,
                         uploadPending = iCalObject.uploadPending,
-                        isRecurringOriginal = iCalObject.isRecurringOriginal,
-                        isRecurringInstance = iCalObject.isRecurringInstance,
-                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                        isRecurring = iCalObject.recurid != null || iCalObject.rrule != null,
+                        isRecurringModified = iCalObject.recurid != null && iCalObject.sequence > 0,
                         modifier = Modifier.fillMaxWidth().padding(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 4.dp)
                     )
                 }
@@ -197,7 +196,8 @@ fun ListCardGrid_JOURNAL() {
         ListCardGrid(
             icalobject,
             selected = false,
-            onProgressChanged = { _, _, _ -> }, modifier = Modifier
+            progressUpdateDisabled = false,
+            onProgressChanged = { _, _ -> }, modifier = Modifier
                 .width(150.dp)
         )
     }
@@ -218,7 +218,8 @@ fun ListCardGrid_NOTE() {
         ListCardGrid(
             icalobject,
             selected = true,
-            onProgressChanged = { _, _, _ -> },
+            progressUpdateDisabled = false,
+            onProgressChanged = { _, _ -> },
             modifier = Modifier.width(150.dp)
         )
     }
@@ -248,7 +249,8 @@ fun ListCardGrid_TODO() {
         ListCardGrid(
             icalobject,
             selected = false,
-            onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
+            progressUpdateDisabled = false,
+            onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }
 }
@@ -278,7 +280,8 @@ fun ListCardGrid_TODO_short() {
         ListCardGrid(
             icalobject,
             selected = false,
-            onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
+            progressUpdateDisabled = false,
+            onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }
 }

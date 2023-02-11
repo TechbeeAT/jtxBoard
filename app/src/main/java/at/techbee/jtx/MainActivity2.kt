@@ -59,6 +59,7 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidgetReceiver
 import kotlinx.serialization.decodeFromString
@@ -88,8 +89,12 @@ class MainActivity2 : AppCompatActivity() {
         const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
         const val INTENT_ACTION_ADD_NOTE = "addNote"
         const val INTENT_ACTION_ADD_TODO = "addTodo"
+        const val INTENT_ACTION_OPEN_JOURNALS = "openJournal"
+        const val INTENT_ACTION_OPEN_NOTES = "openNote"
+        const val INTENT_ACTION_OPEN_TODOS = "openTodo"
         const val INTENT_ACTION_OPEN_ICALOBJECT = "openICalObject"
         const val INTENT_EXTRA_ITEM2SHOW = "item2show"
+        const val INTENT_EXTRA_COLLECTION2PRESELECT = "collection2preselect"
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -147,21 +152,33 @@ class MainActivity2 : AppCompatActivity() {
 
         //handle intents, but only if it wasn't already handled
         if (intent.hashCode() != lastProcessedIntentHash) {
-            //intent?.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-
-            // handle the intents for the shortcuts
             when (intent?.action) {
                 INTENT_ACTION_ADD_JOURNAL -> {
                     globalStateHolder.icalFromIntentModule.value = Module.JOURNAL
                     globalStateHolder.icalFromIntentString.value = ""
+                    globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                 }
                 INTENT_ACTION_ADD_NOTE -> {
                     globalStateHolder.icalFromIntentModule.value = Module.NOTE
                     globalStateHolder.icalFromIntentString.value = ""
+                    globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                 }
                 INTENT_ACTION_ADD_TODO -> {
                     globalStateHolder.icalFromIntentModule.value = Module.TODO
                     globalStateHolder.icalFromIntentString.value = ""
+                    globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                }
+                INTENT_ACTION_OPEN_JOURNALS -> {
+                    globalStateHolder.icalFromIntentModule.value = Module.JOURNAL
+                }
+                INTENT_ACTION_OPEN_NOTES -> {
+                    globalStateHolder.icalFromIntentModule.value = Module.NOTE
+                }
+                INTENT_ACTION_OPEN_TODOS -> {
+                    globalStateHolder.icalFromIntentModule.value = Module.TODO
                 }
                 INTENT_ACTION_OPEN_ICALOBJECT -> {
                     val id = intent.getLongExtra(INTENT_EXTRA_ITEM2SHOW, 0L)
@@ -212,6 +229,8 @@ class MainActivity2 : AppCompatActivity() {
 
         if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI)
             BillingManager.getInstance().initialise(this)  // only Huawei needs to call the update functions again
+
+        globalStateHolder.isDAVx5compatible.value = SyncUtil.isDAVx5CompatibleWithJTX(application)
     }
 
     override fun onPause() {
@@ -331,6 +350,7 @@ fun MainNavHost(
                 translatorsPoeditor = viewModel.translatorsPoeditor,
                 translatorsCrowdin = viewModel.translatorsCrowdin,
                 releaseinfo = viewModel.releaseinfos,
+                libraries = viewModel.libraries,
                 navController = navController
             )
         }

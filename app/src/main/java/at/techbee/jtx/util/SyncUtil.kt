@@ -83,16 +83,16 @@ class SyncUtil {
 
 
         /**
-         * @return true if DAVx5 was found and the versioon is compatible/includes jtx Board syncthrough the packageManager, else false
+         * @return true if DAVx5 was found and the version is compatible/includes jtx Board sync through the packageManager, else false
          */
         fun isDAVx5CompatibleWithJTX(application: Application): Boolean {
             try {
                 val davx5Info = application.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
                 return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    davx5Info.longVersionCode >= 402000000L
+                    davx5Info.longVersionCode >= 403010000L
                 } else {
                     @Suppress("DEPRECATION")
-                    davx5Info.versionCode >= 402000000
+                    davx5Info.versionCode >= 403010000
                 }
             } catch (e: PackageManager.NameNotFoundException) {
                 return false
@@ -150,6 +150,9 @@ class SyncUtil {
                 } catch (e: ActivityNotFoundException) {
                     Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
                     Log.w(TAG, "DAVx5 should be there but opening the Activity failed. \n${e.stackTraceToString()}")
+                } catch (e: SecurityException) {
+                    Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
+                    Log.w(TAG, "DAVx5 is old, AccountActivity is not exposed yet. \n${e.stackTraceToString()}")
                 }
             } else {
                 openDAVx5AccountsActivity(context)

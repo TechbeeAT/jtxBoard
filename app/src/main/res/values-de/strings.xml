@@ -13,24 +13,10 @@ Global Strings -->
     <string name="discard">"Verwerfen"</string>
     <string name="gotit">"Alles klar"</string>
     <string name="cont">"Weiter"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Journale Überblick"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Notizen Überblick"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Aufgaben Überblick"</string>
-    <string name="toolbar_text_view_journal_details">"Journal Details"</string>
-    <string name="toolbar_text_view_note_details">"Notiz Details"</string>
-    <string name="toolbar_text_view_task_details">"Aufgabe Details"</string>
+    <string name="website">"Webseite"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
     <string name="toolbar_text_add_note">"Notiz hinzufügen"</string>
     <string name="toolbar_text_add_task">"Aufgabe hinzufügen"</string>
-    <string name="toolbar_text_edit_journal">"Journal bearbeiten"</string>
-    <string name="toolbar_text_edit_note">"Notiz bearbeiten"</string>
-    <string name="toolbar_text_edit_task">"Aufgabe bearbeiten"</string>
-    <string name="toolbar_text_filter">"Filter"</string>
-    <string name="toolbar_text_settings">"Einstellungen"</string>
-    <string name="toolbar_text_about">"Über"</string>
-    <string name="toolbar_text_sync">"Synchronisierung"</string>
-    <string name="toolbar_text_donate">"Spenden"</string>
-    <string name="toolbar_text_adinfo">"Werbeinformation"</string>
     <string name="default_local_collection_name">"Lokal"</string>
     <string name="default_local_account_name">"Lokal"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -80,17 +66,13 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Neuen Eintrag hinzufügen"</string>
     <string name="list_progress">"Fortschritt"</string>
     <string name="list_expand">"Erweitern"</string>
-    <string name="list_dialog_contribution_title">"Information zur Werbung"</string>
-    <string name="list_dialog_contribution_more_information">"Mehr erfahren"</string>
-    <string name="list_num_attendees_contentdesc">"Anzahl der Teilnehmer"</string>
-    <string name="list_num_attachments_contentdesc">"Anzahl der Anhänge"</string>
-    <string name="list_num_comments_contentdesc">"Anzahl der Kommentare"</string>
     <string name="list_dialog_delete_selected_title">Markierte Einträge löschen?</string>
     <string name="list_dialog_delete_selected_message">Diese Aktion löscht alle markierten Einträge (%1$d). Sind Sie sicher, dass Sie fortfahren wollen? Diese Aktion kann nicht rückgängig gemacht werden!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Zusammenfassung/Beschreibung"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Die erste Zeile wird als Zusammenfassung interpretiert, der Rest als Beschreibung. Hashtags werden als Kategorien interpretiert (z.B. #Kategorie)."</string>
     <string name="list_item_upload_pending">"Hochladen ausständig"</string>
     <string name="list_item_recurring">"Wiederkehrender Eintrag"</string>
+    <string name="list_item_edited_recurring">"Bearbeiteter wiederkehrender Eintrag"</string>
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Zum Original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instanz von wiederkehrendem Eintrag"</string>
@@ -225,7 +207,7 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ konnte nicht geöffnet werden, bitte öffnen Sie die App manuell."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Der Sync konnte nicht in DAVx⁵ getriggert werden, bitte kontrollieren Sie direkt in DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"Die Entwicklung einer App ist eine komplexe Angelegenheit und die Entwicklung, Wartung und Betreuung ist harte Arbeit. Wenn Sie diese App mögen und Sie einen Beitrag zur kontinuierlichen Weiterentwicklung leisten wollen, ziehen Sie bitte eine Spende in Erwägung :-)"</string>
+    <string name="donate_header_developer_note">"Hallo, ich bin Patrick, Entwickler von jtx Board. Die Entwicklung meiner App nimmt viel Zeit in Anspruch und trotzdem stelle ich sie kostenlos zur Verfügung. Wenn euch meine App gefällt, zeigt euch bitte ein wenig Erkenntlich und unterstützt mich mit einer kleinen Spende!"</string>
     <string name="donate_thank_you">"Dankeschön!"</string>
     <string name="donate_donate_with">"Spenden über"</string>
     <string name="donate_other_donation_methods">"Weitere Optionen zum Spenden finden Sie auf unserer Website:"</string>
@@ -247,6 +229,8 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="list_welcome_entry_todo_description">"Aufgaben können ein geplantes Startdatum, ein Fälligkeits- und Enddatum haben. Sie können abgeschlossen werden und ein Fortschritt kann erfasst werden. Bearbeiten Sie diesen Eintrag um alle Optionen anzusehen :-)"</string>
     <string name="list_welcome_category">"#ErsteSchritte"</string>
     <string name="save_and_edit">"Speichern &amp; bearbeiten"</string>
+    <string name="save_and_new">"Speichern &amp; neu"</string>
+    <string name="save_and_close">"Speichern &amp; schließen"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Spracherkennung nutzen"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Spracherkennung gestartet."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Spracherkennung gestoppt."</string>
@@ -361,7 +345,6 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="priority_9_lowest">"9 - Niedrigste"</string>
     <string name="list_due_future">"Fällig in der Zukunft"</string>
     <string name="view_share_part_of_series">"Dieser Eintrag ist Teil einer Serie."</string>
-    <string name="view_share_exception_of_series">"Dieser Eintrag ist eine Ausnahme einer Serie."</string>
     <string name="view_share_repeats">"Dieser Eintrag wiederholt sich"</string>
     <string name="collections_dialog_move_title">"Einträge von \"%1$s\" verschieben nach"</string>
     <string name="collection_dialog_move_info">"Achtung: Es können nur Collections ausgewählt werden, die gleiche Komponenten unterstützen (Journale, Notizen, Aufgaben)."</string>
@@ -425,7 +408,6 @@ Danke!"</string>
     <string name="settings_default_expand_subtasks">"Unteraufgaben standardmäßig erweitern"</string>
     <string name="settings_default_expand_subnotes">"Unternotizen standardmäßig erweitern"</string>
     <string name="settings_default_expand_attachments">"Anhänge standardmäßig erweitern"</string>
-    <string name="title_activity_list_screen">"Listenansicht"</string>
     <string name="permission_coarse_location_granted">"Standort-Berechtigung erteilt"</string>
     <string name="permission_coarse_location_denied">"Standort-Berechtigung verweigert"</string>
     <string name="sorry">"Sorry"</string>
@@ -435,6 +417,7 @@ Danke!"</string>
     <string name="timezone">"Zeitzone"</string>
     <string name="not_set2">"Nicht gesetzt"</string>
     <string name="invert_selection">"Auswahl umkehren"</string>
+    <string name="clear_selection">"Auswahl aufheben"</string>
     <string name="preferences">"Einstellungen"</string>
     <string name="revert">"Zurücksetzen"</string>
     <string name="audio_play">"Abspielen"</string>
@@ -450,6 +433,7 @@ Danke!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spracherkennung starten"</string>
     <string name="list_quickadd_dialog_sr_listening">"Höre …"</string>
     <string name="list_update_entries_dialog_title">"Einträge aktualisieren"</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"Achtung: Wiederkehrende Instanzen müssen von ihrer Serie getrennt werden, bevor sie in eine andere Collection verschoben werden und werden in diesem Prozess ignoriert."</string>
     <string name="details_app_bar_behaviour">"App Bar Verhalten"</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
     <string name="details_show_hide_elements">Elemente ein-/ausblenden</string>
@@ -459,6 +443,12 @@ Danke!"</string>
     <string name="details_recur_unknown_rrule_dialog_message">"Eine unbekannte oder nicht unterstützte Wiederholungs-Regel wurde erkannt. Wenn Sie fortfahren, wird die bestehende Regel gelöscht/überschrieben."</string>
     <string name="details_entry_could_not_be_loaded">"Dieser Eintrag wurde im Hintergrund gelöscht oder konnte nicht geladen werden."</string>
     <string name="details_attachment_beta_info">"* Die Anhang-Synchronisierung ist eine experimentelle Funktionalität. Wir empfehlen ausdrücklich nur kleine Anhänge (bis zu 100 KB) zu nutzen, da größere Anhänge zu langen Synchronisierungen und unerwartetem Verhalten führen können."</string>
+    <string name="details_unchanged_part_of_series">"Dieser Eintrag ist Teil einer Serie. Dieser Eintrag wird alle Änderungen an der Serie übernehmen."</string>
+    <string name="details_changed_part_of_series">"Dieser Eintrag ist Teil einer Serie, wurde aber geändert. Änderungen an der Serie werden auf diesen Eintrag nicht mehr übernommen."</string>
+    <string name="details_series_attention_subentries">"Achtung: Serien-Elemente spiegeln die Teilaufgaben und verknüpfte Notizen aus der Serie wider. Wenn Sie Unteraufgaben und verknüpfte Notizen nur für ein Serien-Element ändern möchten, entfernen Sie bitte zuerst die Verlinkung von der Serie."</string>
+    <string name="details_go_to_series">"Gehe zur Serie"</string>
+    <string name="details_detach_from_series">"Von der Serie trennen"</string>
+    <string name="details_detach_all_instances">"Alle Instanzen trennen"</string>
     <string name="edit_comment">"Kommentar bearbeiten"</string>
     <string name="edit_subnote_add_helper">"Unternotiz hinzufügen"</string>
     <string name="edit_subtask">"Unteraufgabe bearbeiten"</string>
@@ -484,6 +474,13 @@ Danke!"</string>
     <string name="dialog_revert_changes_message">"Sind Sie sicher, dass Sie die Änderungen verwerfen und die Inhalte zurücksetzen wollen?"</string>
     <string name="dialog_revert_changes_message2">"Achtung: Unteraufgaben und Unternotizen sind unabhängige Einträge und können nicht zurückgesetzt werden."</string>
     <string name="dialog_collection_new_entries_title">"Collection für neue Einträge"</string>
+    <string name="dialog_detach_from_series_title">"Von der Serie trennen?"</string>
+    <string name="dialog_detach_from_series_text_all">"Das Entfernen aller Elemente löscht die Serie und verwandelt die Instanzen in unabhängige Einträge, die eigene Unteraufgaben oder verknüpfte Notizen haben können. Es wird keinen Link mehr zu den Originalserien oder anderen Instanzen geben. Möchten Sie fortfahren?"</string>
+    <string name="dialog_detach_from_series_text_single">"Wenn Sie dieses Element von der Serie trennen, können Sie unabhängige Unteraufgaben oder verknüpfte Notizen haben, aber es wird keinen Link mehr auf die ursprüngliche Serie geben. Möchten Sie fortfahren?"</string>
+    <string name="dialog_detach_from_series_text_attention">"Achtung: Dieser Vorgang kann nicht rückgängig gemacht werden!"</string>
+    <string name="dialog_detach_from_series_button">"Von der Serie trennen"</string>
+    <string name="dialog_davx5_outdated_title">"DAVx⁵ veraltet"</string>
+    <string name="dialog_davx5_outdated_message">"Ihre aktuelle Version von DAVx5 ist mit dieser Version von jtx Board nicht kompatibel. Bitte aktualisieren Sie DAVx5 auf 4.3.1 (403010000+) oder neuer! Die Synchronisierung ist derzeit ausgesetzt."</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
     <string name="settings_details">"Einstellungen für die Detailansicht"</string>
@@ -508,6 +505,9 @@ Danke!"</string>
     <string name="settings_progress_step_50">"Inkrement 50 (2 Stufen)"</string>
     <string name="settings_progress_step">"Schritte für den Fortschritt-Slider"</string>
     <string name="settings_disable_alarms_for_readonly">"Alarme für schreibgeschützte Collections deaktivieren"</string>
+    <string name="settings_link_progress_to_subtasks">"Fortschritt mit Unteraufgaben verknüpfen"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Status, Fortschritt und Fertiggestellt synchron halten"</string>
+    <string name="settings_attention_experimental_feature">"Achtung: Dies ist eine experimentelle Funktion"</string>
     <string name="sync_button_go_to_collections">"Zu den Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Bitte kaufen Sie jtx Board Pro, um diese Funktion zu nutzen."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>

@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
@@ -41,7 +43,7 @@ import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 
 
-enum class UpdateEntriesDialogMode(val stringResource: Int) {
+enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     CATEGORIES(R.string.categories),
     RESOURCES(R.string.resources),
     STATUS(R.string.status),
@@ -126,6 +128,8 @@ fun UpdateEntriesDialog(
                         )
                     }
                 }
+
+                Divider(modifier = Modifier.padding(8.dp))
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.CATEGORIES) {
                     FlowRow(
@@ -273,6 +277,17 @@ fun UpdateEntriesDialog(
                         }
                     }
                 }
+
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.COLLECTION) {
+                    Text(
+                        text = stringResource(id = R.string.list_update_entries_dialog_attention_collection_update),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontStyle = FontStyle.Italic,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+
             }
         },
         confirmButton = {

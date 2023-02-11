@@ -12,13 +12,16 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -80,28 +83,45 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp)
+        ) {
 
-        Image(
-            painter = painterResource(id = R.drawable.bg_donate),
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(240.dp)
-                .padding(top = 32.dp, bottom = 32.dp)
-        )
-        Text(
-            text = stringResource(id = R.string.donate_header_text),
-            modifier = Modifier.padding(top = 16.dp),
-            style = Typography.bodyLarge,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = stringResource(id = R.string.donate_thank_you),
-            modifier = Modifier.padding(top = 16.dp),
-            style = Typography.displaySmall,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold
-        )
+            Image(
+                painterResource(R.drawable.donate_avatar),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
+            )
+
+            Text(
+                text = stringResource(id = R.string.donate_header_developer_note),
+                textAlign = TextAlign.Center,
+                fontStyle = FontStyle.Italic
+            )
+        }
+
+        TextButton(onClick = {
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://ko-fi.com/jtxBoard")
+                )
+            )
+        }) {
+            Image(
+                painter = painterResource(id = R.drawable.kofi),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(200.dp, 100.dp)
+            )
+        }
+
+
         Text(
             text = stringResource(id = R.string.donate_donate_with),
             modifier = Modifier.padding(top = 16.dp),
@@ -109,28 +129,26 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
             textAlign = TextAlign.Center
         )
 
-        Image(
-            painter = painterResource(id = R.drawable.paypal),
-            contentDescription = null,
-            modifier = Modifier
-                .size(200.dp, 100.dp)
-                .combinedClickable(
-                    enabled = true,
-                    onClickLabel = "PayPal",
-                    onClick = {
-                        context.startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(context.getString(R.string.link_paypal))
-                            )
-                        )
-                    }
+        TextButton(onClick = {
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(context.getString(R.string.link_paypal))
                 )
-        )
+            )
+        }) {
+            Image(
+                painter = painterResource(id = R.drawable.paypal),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(200.dp, 100.dp)
+            )
+        }
+
 
         Text(
             text = stringResource(id = R.string.donate_other_donation_methods),
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
             style = Typography.bodyLarge,
             textAlign = TextAlign.Center
         )
@@ -153,6 +171,14 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
                     )
                 )
             }
+        )
+
+        Text(
+            text = stringResource(id = R.string.donate_thank_you),
+            modifier = Modifier.padding(top = 16.dp),
+            style = Typography.displaySmall,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold
         )
     }
 }

@@ -18,7 +18,10 @@ class GlobalStateHolder(context: Context) {
 
     var icalFromIntentString: MutableState<String?> = mutableStateOf(null)
     var icalFromIntentAttachment: MutableState<Attachment?> = mutableStateOf(null)
-    var icalFromIntentModule: MutableState<Module?> = mutableStateOf(Module.JOURNAL)
+    var icalFromIntentModule: MutableState<Module?> = mutableStateOf(null)
+    var icalFromIntentCollection: MutableState<String?> = mutableStateOf(null)
+
+    var isDAVx5compatible = mutableStateOf(true)
 
     init {
         try {

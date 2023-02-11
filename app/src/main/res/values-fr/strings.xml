@@ -12,23 +12,9 @@ Global Strings -->
     <string name="discard">"Rejeter"</string>
     <string name="gotit">"D'accord"</string>
     <string name="cont">"Continuer"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Aperçu des journaux"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Aperçu des notes"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Aperçu des tâches"</string>
-    <string name="toolbar_text_view_journal_details">"Détails du journal"</string>
-    <string name="toolbar_text_view_note_details">"Détails de la note"</string>
-    <string name="toolbar_text_view_task_details">"Détails de la tâche"</string>
     <string name="toolbar_text_add_journal">"Ajouter un journal"</string>
     <string name="toolbar_text_add_note">"Ajouter une note"</string>
     <string name="toolbar_text_add_task">"Ajouter une tâche"</string>
-    <string name="toolbar_text_edit_journal">"Modifier le journal"</string>
-    <string name="toolbar_text_edit_note">"Modifier la note"</string>
-    <string name="toolbar_text_edit_task">"Modifier la tâche"</string>
-    <string name="toolbar_text_filter">"Filtre"</string>
-    <string name="toolbar_text_settings">"Paramètres"</string>
-    <string name="toolbar_text_about">"À propos de"</string>
-    <string name="toolbar_text_donate">"Faire un don"</string>
-    <string name="toolbar_text_adinfo">"Information sur la publicité"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Brouillon"</string>
     <string name="journal_status_final">"Définitif"</string>
@@ -73,11 +59,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Ajouter un nouvel élément"</string>
     <string name="list_progress">"Progression"</string>
     <string name="list_expand">"Développer"</string>
-    <string name="list_dialog_contribution_title">"Note sur les publicités"</string>
-    <string name="list_dialog_contribution_more_information">"Savoir plus"</string>
-    <string name="list_num_attendees_contentdesc">"Nombre de participants"</string>
-    <string name="list_num_attachments_contentdesc">"Nombre de pièces jointes"</string>
-    <string name="list_num_comments_contentdesc">"Nombre de commentaires"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Résumé/Description"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La première ligne est interprétée comme un résumé, le reste comme une description. Les hashtags sont interprétés comme des catégories (par exemple #catégorie)."</string>
     <string name="list_item_upload_pending">"Chargement en cours"</string>
@@ -209,7 +190,6 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Impossible d'ouvrir DAVx⁵, veuillez ouvrir l'application manuellement."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Le déclenchement de la synchronisation dans DAVx⁵ a échoué, veuillez vérifier dans DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"Le développement d'une application est un sujet complexe et le développement, la maintenance et le support sont des tâches difficiles. Donc si vous aimez cette application et si vous voulez assurer son développement continu, pensez à faire un don :-)"</string>
     <string name="donate_thank_you">"Merci !"</string>
     <string name="donate_donate_with">"Faites un don avec"</string>
     <string name="donate_other_donation_methods">"Si vous souhaitez utiliser une autre méthode de don, veuillez consulter notre site web :"</string>
@@ -329,7 +309,6 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="priority_9_lowest">"9 - Le plus bas"</string>
     <string name="list_due_future">"Exigible dans le futur"</string>
     <string name="view_share_part_of_series">"Cet article fait partie d'une série."</string>
-    <string name="view_share_exception_of_series">"Cette entrée est une exception dans une série."</string>
     <string name="view_share_repeats">"Cette entrée se répète chaque"</string>
     <string name="collections_dialog_move_title">"Déplacer toutes les entrées de \"%1$s\" à"</string>
     <string name="collection_dialog_move_info">"Attention : seules les collections inscriptibles et les collections supportant les mêmes composants (Journaux, Notes, Tâches) peuvent être sélectionnées."</string>

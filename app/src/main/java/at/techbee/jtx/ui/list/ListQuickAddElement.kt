@@ -73,7 +73,8 @@ fun ListQuickAddElement(
     allWriteableCollections: List<ICalCollection>,
     presetCollectionId: Long,
     onSaveEntry: (module: Module, newEntryText: String, attachment: Attachment?, collectionId: Long, editAfterSaving: Boolean) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    keepDialogOpen: () -> Unit
 ) {
 
     if (allWriteableCollections.isEmpty())   // don't compose if there are no collections
@@ -109,7 +110,7 @@ fun ListQuickAddElement(
         )
     }
     var currentText by remember { mutableStateOf(TextFieldValue(text = presetText, selection = TextRange(presetText.length))) }
-    val currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
+    var currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
     var noTextError by rememberSaveable { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
@@ -309,37 +310,55 @@ fun ListQuickAddElement(
                     )
                 }
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                Column(
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-
-                    TextButton(
-                        onClick = {
-                            onDismiss()
-                        },
-                        modifier = Modifier.weight(0.3f)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                     ) {
-                        Text(stringResource(id = R.string.close), textAlign = TextAlign.Center)
+
+                        TextButton(
+                            onClick = { saveEntry(goToEdit = true) },
+                            enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false
+                        ) {
+                            Text(stringResource(id = R.string.save_and_edit), textAlign = TextAlign.Center)
+                        }
+
+                        TextButton(
+                            onClick = {
+                                saveEntry(goToEdit = false)
+                                currentText = TextFieldValue("")
+                                currentAttachment = null
+                                keepDialogOpen()
+                            },
+                            enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false
+                        ) {
+                            Text(stringResource(id = R.string.save_and_new), textAlign = TextAlign.Center)
+                        }
                     }
 
-                    TextButton(
-                        onClick = { saveEntry(goToEdit = true) },
-                        enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false,
-                        modifier = Modifier.weight(0.4f)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                     ) {
-                        Text(stringResource(id = R.string.save_and_edit), textAlign = TextAlign.Center)
-                    }
+                        TextButton(
+                            onClick = {
+                                saveEntry(goToEdit = false)
+                                onDismiss()
+                            },
+                            enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false
+                        ) {
+                            Text(stringResource(id = R.string.save_and_close), textAlign = TextAlign.Center)
+                        }
 
-                    TextButton(
-                        onClick = {
-                            saveEntry(goToEdit = false)
-                            onDismiss()
-                                  },
-                        enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false,
-                        modifier = Modifier.weight(0.3f)
-                    ) {
-                        Text(stringResource(id = R.string.save), textAlign = TextAlign.Center)
+                        TextButton(
+                            onClick = {
+                                onDismiss()
+                            }
+                        ) {
+                            Text(stringResource(id = R.string.close), textAlign = TextAlign.Center)
+                        }
                     }
                 }
             }
@@ -396,6 +415,7 @@ fun ListQuickAddElement_Preview() {
             allWriteableCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _, _ -> },
+            keepDialogOpen = { },
             presetText = "This is my preset text",
             presetAttachment = Attachment(filename = "My File.PDF"),
             presetCollectionId = 0L,
@@ -429,6 +449,7 @@ fun ListQuickAddElement_Preview_empty() {
             allWriteableCollections = listOf(collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _, _ -> },
+            keepDialogOpen = { },
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
@@ -462,6 +483,7 @@ fun ListQuickAddElement_Preview_only_one_enabled() {
             allWriteableCollections = listOf(collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _, _ -> },
+            keepDialogOpen = { },
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,

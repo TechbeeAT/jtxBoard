@@ -53,8 +53,8 @@ fun ListEntry(
 
     val intent = Intent(context, MainActivity2::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        this.action = MainActivity2.INTENT_ACTION_OPEN_ICALOBJECT
-        this.putExtra(MainActivity2.INTENT_EXTRA_ITEM2SHOW, obj.id)
+        action = MainActivity2.INTENT_ACTION_OPEN_ICALOBJECT
+        putExtra(MainActivity2.INTENT_EXTRA_ITEM2SHOW, obj.id)
     }
 
     val imageSize = 18.dp

@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
@@ -53,17 +54,21 @@ import kotlin.math.roundToInt
 fun ListScreenKanban(
     module: Module,
     list: State<List<ICal4List>>,
+    subtasksLive: LiveData<Map<String?, List<ICal4List>>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
-    onStatusChanged: (itemid: Long, status: Status, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
+    settingLinkProgressToSubtasks: Boolean,
+    onProgressChanged: (itemId: Long, newPercent: Int, scrollOnce: Boolean) -> Unit,
+    onStatusChanged: (itemid: Long, status: Status, scrollOnce: Boolean) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
 
     val context = LocalContext.current
     val scrollId by scrollOnceId.observeAsState(null)
-    val statusColumns = Status.valuesFor(module)
+    val statusColumns = Status.valuesFor(module).filter { it != Status.CANCELLED && it != Status.NO_STATUS }
+    val subtasks by subtasksLive.observeAsState(emptyMap())
+
 
     Row(modifier = Modifier.fillMaxWidth()) {
 
@@ -114,6 +119,7 @@ fun ListScreenKanban(
                 )
                 { iCalObject ->
 
+                    val currentSubtasks = subtasks[iCalObject.uid]
                     var offsetX by remember { mutableStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
                     val maxOffset = 50f
 
@@ -137,6 +143,8 @@ fun ListScreenKanban(
                                 state = rememberDraggableState { delta ->
                                     if (iCalObject.isReadOnly)   // no drag state for read only objects!
                                         return@rememberDraggableState
+                                    if (settingLinkProgressToSubtasks && currentSubtasks?.isNotEmpty() == true)
+                                        return@rememberDraggableState  // no drag is status depends on subtasks
                                     if (abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
                                         offsetX += delta
                                 },
@@ -147,32 +155,28 @@ fun ListScreenKanban(
                                                 (iCalObject.percent ?: 0) == 0 && offsetX > 0f -> onProgressChanged(
                                                     iCalObject.id,
                                                     1,
-                                                    iCalObject.isLinkedRecurringInstance,
                                                     true
                                                 )   // positive change, from Needs Action to In Process
                                                 (iCalObject.percent ?: 0) in 1..99 && offsetX > 0f -> onProgressChanged(
                                                     iCalObject.id,
                                                     100,
-                                                    iCalObject.isLinkedRecurringInstance,
                                                     true
                                                 )   // positive change, from In Process to Completed
                                                 (iCalObject.percent ?: 0) == 100 && offsetX < 0f -> onProgressChanged(
                                                     iCalObject.id,
                                                     99,
-                                                    iCalObject.isLinkedRecurringInstance,
                                                     true
                                                 )   // negative change, from Completed to In Process
                                                 (iCalObject.percent ?: 0) in 1..99 && offsetX < 0f -> onProgressChanged(
                                                     iCalObject.id,
                                                     0,
-                                                    iCalObject.isLinkedRecurringInstance,
                                                     true
                                                 )   // negative change, from In Process to Needs Action
                                             }
                                         } else {   // VJOURNAL
                                             when {
-                                                (iCalObject.status == Status.DRAFT.status && offsetX > 0f) -> onStatusChanged(iCalObject.id, Status.FINAL, iCalObject.isLinkedRecurringInstance, true)
-                                                (iCalObject.status == Status.FINAL.status && offsetX < 0f) -> onStatusChanged(iCalObject.id, Status.DRAFT, iCalObject.isLinkedRecurringInstance, true)
+                                                (iCalObject.status == Status.DRAFT.status && offsetX > 0f) -> onStatusChanged(iCalObject.id, Status.FINAL, true)
+                                                ((iCalObject.status == Status.FINAL.status || iCalObject.status == Status.NO_STATUS.status) && offsetX < 0f) -> onStatusChanged(iCalObject.id, Status.DRAFT, true)
                                             }
                                         }
                                         // make a short vibration
@@ -234,10 +238,12 @@ fun ListScreenKanban_TODO() {
         ListScreenKanban(
             module = Module.TODO,
             list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
+            subtasksLive = MutableLiveData(emptyMap()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
-            onProgressChanged = { _, _, _, _ -> },
-            onStatusChanged = {_, _, _, _ -> },
+            settingLinkProgressToSubtasks = false,
+            onProgressChanged = { _, _, _ -> },
+            onStatusChanged = {_, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )
@@ -280,10 +286,12 @@ fun ListScreenKanban_JOURNAL() {
         ListScreenKanban(
             module = Module.JOURNAL,
             list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
+            subtasksLive = MutableLiveData(emptyMap()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
-            onProgressChanged = { _, _, _, _ -> },
-            onStatusChanged = {_, _, _, _ -> },
+            settingLinkProgressToSubtasks = false,
+            onProgressChanged = { _, _, _ -> },
+            onStatusChanged = {_, _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )

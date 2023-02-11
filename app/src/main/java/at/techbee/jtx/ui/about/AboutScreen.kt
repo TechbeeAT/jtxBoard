@@ -22,6 +22,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.about.*
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
+import com.mikepenz.aboutlibraries.Libs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,6 +30,7 @@ fun AboutScreen(
     translatorsPoeditor: MutableState<List<String>>,
     translatorsCrowdin: MutableState<List<String>>,
     releaseinfo: MutableLiveData<MutableSet<Release>>,
+    libraries: Libs,
     navController: NavHostController
 ) {
 
@@ -75,7 +77,7 @@ fun AboutScreen(
                                 AboutTabDestination.Releasenotes.tabIndex -> AboutReleaseinfo(
                                     releaseinfo
                                 )
-                                AboutTabDestination.Libraries.tabIndex -> AboutLibraries()
+                                AboutTabDestination.Libraries.tabIndex -> AboutLibraries(libraries)
                                 AboutTabDestination.Translations.tabIndex -> AboutTranslations(
                                     translatorsPoeditor, translatorsCrowdin
                                 )
@@ -99,7 +101,7 @@ fun AboutScreenPreview() {
         AboutScreen(
             translatorsPoeditor = remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) },
             translatorsCrowdin = remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) },
-            MutableLiveData(
+            releaseinfo = MutableLiveData(
                 mutableSetOf(
                     Release(
                         "v1.2.0",
@@ -121,6 +123,7 @@ fun AboutScreenPreview() {
                     )
                 )
             ),
+            libraries = Libs(emptyList(), emptySet()),
             rememberNavController()
         )
     }

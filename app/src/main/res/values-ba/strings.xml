@@ -12,24 +12,9 @@ Global Strings -->
     <string name="discard">"Ташларға"</string>
     <string name="gotit">"Аңлашылды"</string>
     <string name="cont">"Дауам итергә"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Көндәлектәрҙе Күҙәтеү"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Яҙмаларҙы Күҙәтеү"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Мәсьәләләрҙе Күҙәтеү"</string>
-    <string name="toolbar_text_view_journal_details">"Көндәлектектең Ентеклелектәре"</string>
-    <string name="toolbar_text_view_note_details">"Яҙманың Ентеклелектәре"</string>
-    <string name="toolbar_text_view_task_details">"Мәсьәләнең Ентеклелектәре"</string>
     <string name="toolbar_text_add_journal">"Көндәлекте Ҡушырға"</string>
     <string name="toolbar_text_add_note">"Яҙманы Ҡушырға"</string>
     <string name="toolbar_text_add_task">"Мәсьәләне Ҡушырға"</string>
-    <string name="toolbar_text_edit_journal">"Көндәлекте Үҙгәртергә"</string>
-    <string name="toolbar_text_edit_note">"Яҙманы Үҙгәртергә"</string>
-    <string name="toolbar_text_edit_task">"Мәсьәләне Үҙгәртергә"</string>
-    <string name="toolbar_text_filter">"Фильтр"</string>
-    <string name="toolbar_text_settings">"Көйләүҙәр"</string>
-    <string name="toolbar_text_about">"Тураһында"</string>
-    <string name="toolbar_text_sync">"Синхронизация"</string>
-    <string name="toolbar_text_donate">"Ҡорбан итергә"</string>
-    <string name="toolbar_text_adinfo">"Реклама Тураһында"</string>
     <string name="default_local_collection_name">"Урындағы"</string>
     <string name="default_local_account_name">"Урындағы"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -78,11 +63,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Яңы пунктты ҡушырға"</string>
     <string name="list_progress">"Прогресс"</string>
     <string name="list_expand">"Киңәйтергә"</string>
-    <string name="list_dialog_contribution_title">"Реклама тураһында"</string>
-    <string name="list_dialog_contribution_more_information">"Күберәк белергә"</string>
-    <string name="list_num_attendees_contentdesc">"Ҡатнашыусылар һаны"</string>
-    <string name="list_num_attachments_contentdesc">"Беркетеүҙәр һаны"</string>
-    <string name="list_num_comments_contentdesc">"Комментарийҙар һаны"</string>
     <string name="list_dialog_delete_selected_title">Һайланған яҙмаларҙы юйырға?</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Резюме/Тасуирлама"</string>
     <string name="list_item_upload_pending">"Көтөлгән йөкләү"</string>

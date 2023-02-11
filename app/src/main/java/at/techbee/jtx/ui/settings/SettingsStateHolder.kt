@@ -14,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.detail.DetailTopAppBarMode
-import at.techbee.jtx.util.getPackageInfoCompat
 
 class SettingsStateHolder(val context: Context) {
 
@@ -51,6 +50,8 @@ class SettingsStateHolder(val context: Context) {
     var settingDisableAlarmsReadonly = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.key, SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.default))
     var settingAutoAlarm = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key) } ?: DropdownSetting.SETTING_AUTO_ALARM.default )
+    var settingLinkProgressToSubtasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS.key, SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS.default))
+    var settingKeepStatusProgressCompletedInSync = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.key, SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.default))
 
 
     //invisible settings
@@ -76,6 +77,7 @@ class SettingsStateHolder(val context: Context) {
             field = newValue
         }
 
+    /*
     var showJtx20releaseinfo = mutableStateOf(prefs.getBoolean("jtx_2.0_beta_info_shown", context.packageManager.getPackageInfoCompat(context.packageName, 0).firstInstallTime < 1665260058251))
         set(newValue) {
             prefs.edit().putBoolean("jtx_2.0_beta_info_shown", newValue.value).apply()
@@ -87,6 +89,7 @@ class SettingsStateHolder(val context: Context) {
             prefs.edit().putBoolean("showV20009releaseInfo", newValue.value).apply()
             field = newValue
         }
+     */
 }
 
 

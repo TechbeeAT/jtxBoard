@@ -47,7 +47,6 @@ import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
-import at.techbee.jtx.ui.settings.SettingsStateHolder
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -61,7 +60,6 @@ fun DetailsScreen(
     onLastUsedCollectionChanged: (Module, Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
-    //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     fun Context.getActivity(): AppCompatActivity? = when (this) {
         is AppCompatActivity -> this
@@ -69,7 +67,6 @@ fun DetailsScreen(
         else -> null
     }
 
-    val settingsStateHolder = SettingsStateHolder(context)
     val detailsBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
@@ -82,6 +79,8 @@ fun DetailsScreen(
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
     val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
+    val seriesElement = detailViewModel.seriesElement.observeAsState(null)
+    val seriesInstances = detailViewModel.seriesInstances.observeAsState(emptyList())
     val isChild = detailViewModel.isChild.observeAsState(false)
     val allCategories = detailViewModel.allCategories.observeAsState(emptyList())
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
@@ -112,6 +111,7 @@ fun DetailsScreen(
                     && icalEntity.value?.property?.sequence == 0L
                     && icalEntity.value?.property?.summary == null
                     && icalEntity.value?.property?.description == null
+                    && icalEntity.value?.attachments?.isEmpty() == true
                 ) {
                     showDeleteDialog = true
                 } else {
@@ -120,8 +120,12 @@ fun DetailsScreen(
                 }
             }
             DetailViewModel.DetailChangeState.CHANGEUNSAVED -> { showUnsavedChangesDialog = true }
+            DetailViewModel.DetailChangeState.LOADING -> { /* do nothing */ }
             DetailViewModel.DetailChangeState.SAVINGREQUESTED -> { /* do nothing, wait until saved */ }
             DetailViewModel.DetailChangeState.CHANGESAVING -> { /* do nothing, wait until saved */ }
+            DetailViewModel.DetailChangeState.DELETING -> { /* do nothing, wait until deleted */ }
+            DetailViewModel.DetailChangeState.DELETED -> { navController.navigateUp() }
+            DetailViewModel.DetailChangeState.SQLERROR -> { navController.navigateUp() }
             DetailViewModel.DetailChangeState.CHANGESAVED -> {
                 showUnsavedChangesDialog = false
                 if(isEditMode.value)
@@ -134,16 +138,14 @@ fun DetailsScreen(
         }
     }
 
-    if (detailViewModel.entryDeleted.value) {
-        Toast.makeText(
-            context,
-            context.getString(R.string.details_toast_entry_deleted),
-            Toast.LENGTH_SHORT
-        ).show()
+    if (detailViewModel.changeState.value == DetailViewModel.DetailChangeState.DELETED) {
         Attachment.scheduleCleanupJob(context)
         onRequestReview()
-        detailViewModel.entryDeleted.value = false
         navigateUp = true
+    }
+
+    if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.SQLERROR) {
+        ErrorOnUpdateDialog(onConfirm = { navigateUp = true })
     }
 
     detailViewModel.toastMessage.value?.let {
@@ -189,11 +191,6 @@ fun DetailsScreen(
         )
     }
 
-    if (detailViewModel.sqlConstraintException.value) {
-        ErrorOnUpdateDialog(onConfirm = { navigateUp = true })
-    }
-
-
     Scaffold(
         topBar = {
             DetailsTopAppBar(
@@ -201,7 +198,7 @@ fun DetailsScreen(
                 goBack = {
                     navigateUp = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
-                detailTopAppBarMode = settingsStateHolder.detailTopAppBarMode.value,
+                detailTopAppBarMode = detailViewModel.settingsStateHolder.detailTopAppBarMode.value,
                 onAddSubnote = { subnoteText -> detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null) },
                 onAddSubtask = { subtaskText -> detailViewModel.addSubEntry(ICalObject.createTask(subtaskText), null) },
                 actions = {
@@ -214,18 +211,18 @@ fun DetailsScreen(
                             text = {
                                 Text(
                                     text = stringResource(id = R.string.edit_subtasks_add_helper),
-                                    color = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                    color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
                                 )
                             },
                             onClick = {
-                                settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBTASK
+                                detailViewModel.settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBTASK
                                 menuExpanded.value = false
                             },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Outlined.AddTask,
                                     contentDescription = null,
-                                    tint = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                    tint = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         )
@@ -233,18 +230,18 @@ fun DetailsScreen(
                             text = {
                                 Text(
                                     text = stringResource(id = R.string.edit_subnote_add_helper),
-                                    color = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                    color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
                                 )
                             },
                             onClick = {
-                                settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBNOTE
+                                detailViewModel.settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBNOTE
                                 menuExpanded.value = false
                             },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Outlined.NoteAdd,
                                     contentDescription = null,
-                                    tint = if (settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                    tint = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         )
@@ -340,14 +337,15 @@ fun DetailsScreen(
                 allResources = allResources.value,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
-                sliderIncrement = settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
-                showProgressForMainTasks = settingsStateHolder.settingShowProgressForMainTasks.value,
-                showProgressForSubTasks = settingsStateHolder.settingShowProgressForSubTasks.value,
+                seriesInstances = seriesInstances.value,
+                seriesElement = seriesElement.value,
+                sliderIncrement = detailViewModel.settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
+                showProgressForMainTasks = detailViewModel.settingsStateHolder.settingShowProgressForMainTasks.value,
+                showProgressForSubTasks = detailViewModel.settingsStateHolder.settingShowProgressForSubTasks.value,
+                keepStatusProgressCompletedInSync = detailViewModel.settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
+                linkProgressToSubtasks = detailViewModel.settingsStateHolder.settingLinkProgressToSubtasks.value,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
-                    if (changedICalObject.isRecurLinkedInstance)
-                        changedICalObject.isRecurLinkedInstance = false
-
                     detailViewModel.save(
                         changedICalObject,
                         changedCategories,
@@ -359,7 +357,7 @@ fun DetailsScreen(
                     )
                     onLastUsedCollectionChanged(icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
                 },
-                onProgressChanged = { itemId, newPercent, _ ->
+                onProgressChanged = { itemId, newPercent ->
                     detailViewModel.updateProgress(itemId, newPercent)
                 },
                 onMoveToNewCollection = { icalObject, newCollection ->
@@ -382,6 +380,7 @@ fun DetailsScreen(
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },
+                unlinkFromSeries = { instances, series, deleteAfterUnlink -> detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink) },
                 modifier = Modifier.padding(paddingValues)
             )
 
@@ -406,12 +405,18 @@ fun DetailsScreen(
         bottomBar = {
             DetailBottomAppBar(
                 icalObject = icalEntity.value?.property,
+                seriesElement = seriesElement.value,
                 collection = icalEntity.value?.ICalCollection,
                 isEditMode = isEditMode,
                 markdownState = markdownState,
                 isProActionAvailable = isProActionAvailable,
                 changeState = detailViewModel.changeState,
                 detailsBottomSheetState = detailsBottomSheetState,
+                isProcessing = detailViewModel.isProcessing.value
+                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.LOADING
+                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED
+                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING
+                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.DELETING,
                 onDeleteClicked = { showDeleteDialog = true },
                 onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) },
                 onRevertClicked = { showRevertDialog = true }

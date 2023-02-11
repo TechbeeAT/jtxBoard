@@ -38,9 +38,8 @@ fun ListStatusBar(
     numAlarms: Int? = null,
     isReadOnly: Boolean? = null,
     uploadPending: Boolean? = null,
-    isRecurringOriginal: Boolean? = null,
-    isRecurringInstance: Boolean? = null,
-    isLinkedRecurringInstance: Boolean? = null,
+    isRecurring: Boolean? = null,
+    isRecurringModified: Boolean? = null,
     hasURL: Boolean? = null,
     hasLocation: Boolean? = null,
     hasContact: Boolean? = null,
@@ -175,14 +174,14 @@ fun ListStatusBar(
                 modifier = Modifier.size(14.dp)
             )
 
-        if (isRecurringOriginal == true || (isRecurringInstance == true && isLinkedRecurringInstance == true))
+        if (isRecurring == true && isRecurringModified == false)
             Icon(
                 Icons.Outlined.EventRepeat,
                 stringResource(R.string.list_item_recurring),
                 modifier = Modifier
                     .size(14.dp)
             )
-        if (isRecurringInstance == true && isLinkedRecurringInstance == false)
+        if (isRecurring == true && isRecurringModified == true)
             Icon(
                 painter = painterResource(R.drawable.ic_recur_exception),
                 stringResource(R.string.list_item_recurring),
@@ -208,9 +207,8 @@ fun ListStatusBar_Preview1() {
             hasLocation = true,
             hasURL = true,
             hasContact = true,
-            isRecurringOriginal = false,
-            isRecurringInstance = false,
-            isLinkedRecurringInstance = false,
+            isRecurring = true,
+            isRecurringModified = false,
             status = Status.FINAL.status,
             classification = Classification.PUBLIC.classification,
             priority = null
@@ -234,9 +232,7 @@ fun ListStatusBar_Preview2() {
             hasLocation = true,
             hasContact = true,
             hasURL = true,
-            isRecurringOriginal = true,
-            isRecurringInstance = false,
-            isLinkedRecurringInstance = false,
+            isRecurring = false,
             status = Status.DRAFT.status,
             classification = Classification.CONFIDENTIAL.classification,
             priority = null
@@ -262,9 +258,8 @@ fun ListStatusBar_Preview3() {
             hasLocation = false,
             hasURL = false,
             hasContact = false,
-            isRecurringOriginal = false,
-            isRecurringInstance = true,
-            isLinkedRecurringInstance = false,
+            isRecurring = true,
+            isRecurringModified = true,
             status = Status.DRAFT.status,
             classification = Classification.CONFIDENTIAL.classification,
             priority = 2

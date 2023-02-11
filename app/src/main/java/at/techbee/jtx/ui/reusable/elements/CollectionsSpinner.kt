@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +24,7 @@ fun CollectionsSpinner(
     includeReadOnly: Boolean,
     includeVJOURNAL: Boolean? = null,
     includeVTODO: Boolean? = null,
+    enabled: Boolean = true,
     onSelectionChanged: (collection: ICalCollection) -> Unit
 ) {
 
@@ -31,7 +33,10 @@ fun CollectionsSpinner(
 
     OutlinedCard(
         modifier = modifier,
-        onClick =  { expanded = !expanded }
+        onClick =  {
+            if(enabled)
+                expanded = !expanded
+        }
     ) {
 
         Box(
@@ -41,13 +46,14 @@ fun CollectionsSpinner(
 
             Row(
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top,
+            verticalAlignment = Alignment.CenterVertically,
             ) {
 
                 Text(
-                    text = selected.displayName + selected.accountName?.let { " (" + it + ")" },
+                    text = selected.displayName + selected.accountName?.let { " ($it)" },
                     modifier = Modifier.weight(1f)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .alpha(if(!enabled) 0.5f else 1f)
                 )
                 Icon(Icons.Outlined.ArrowDropDown, null, modifier = Modifier.padding(8.dp))
 
@@ -131,3 +137,28 @@ fun CollectionsSpinner_Preview() {
     }
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun CollectionsSpinner_Preview_notenabled() {
+    MaterialTheme {
+        val collection1 = ICalCollection(
+            collectionId = 1L,
+            color = Color.Cyan.toArgb(),
+            displayName = "Collection Display Name",
+            description = "Here comes the desc",
+            accountName = "My account",
+            accountType = "LOCAL"
+        )
+        CollectionsSpinner(
+            listOf(collection1),
+            preselected = collection1,
+            includeReadOnly = true,
+            includeVJOURNAL = true,
+            includeVTODO = true,
+            onSelectionChanged = { },
+            enabled = false,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}

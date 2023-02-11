@@ -46,27 +46,31 @@ import at.techbee.jtx.util.DateTimeUtils
 fun ListCardCompact(
     iCalObject: ICal4List,
     subtasks: List<ICal4List>,
+    progressUpdateDisabled: Boolean,
     selected: List<Long>,
     modifier: Modifier = Modifier,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
 
     val statusBarVisible by remember {
         mutableStateOf(
-            iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0 || iCalObject.numComments > 0 || iCalObject.numResources > 0 || iCalObject.numAlarms > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0
-                    || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.url?.isNotEmpty() == true || iCalObject.location?.isNotEmpty() == true
-                    || iCalObject.contact?.isNotEmpty() == true || iCalObject.isRecurringInstance || iCalObject.isRecurringOriginal || iCalObject.isLinkedRecurringInstance
-                    || iCalObject.priority in 1..9 || iCalObject.status in listOf(
-                Status.CANCELLED.status,
-                Status.DRAFT.status,
-                Status.CANCELLED.status
-            )
-                    || iCalObject.classification in listOf(
-                Classification.CONFIDENTIAL.classification,
-                Classification.PRIVATE.classification
-            )
+            iCalObject.numAttendees > 0
+                    || iCalObject.numAttachments > 0
+                    || iCalObject.numComments > 0
+                    || iCalObject.numResources > 0
+                    || iCalObject.numAlarms > 0 || iCalObject.numSubtasks > 0
+                    || iCalObject.numSubnotes > 0
+                    || iCalObject.isReadOnly
+                    || iCalObject.uploadPending
+                    || iCalObject.url?.isNotEmpty() == true
+                    || iCalObject.location?.isNotEmpty() == true
+                    || iCalObject.contact?.isNotEmpty() == true
+                    || iCalObject.rrule != null || iCalObject.recurid != null
+                    || iCalObject.priority in 1..9
+                    || iCalObject.status in listOf(Status.CANCELLED.status, Status.DRAFT.status, Status.CANCELLED.status)
+                    || iCalObject.classification in listOf(Classification.CONFIDENTIAL.classification, Classification.PRIVATE.classification)
         )
     }
     val color =
@@ -199,12 +203,11 @@ fun ListCardCompact(
                 if (iCalObject.module == Module.TODO.name)
                     Checkbox(
                         checked = iCalObject.percent == 100,
-                        enabled = !iCalObject.isReadOnly,
+                        enabled = !iCalObject.isReadOnly && !progressUpdateDisabled,
                         onCheckedChange = {
                             onProgressChanged(
                                 iCalObject.id,
-                                if (it) 100 else 0,
-                                iCalObject.isLinkedRecurringInstance
+                                if (it) 100 else 0
                             )
                         }
                     )
@@ -224,9 +227,8 @@ fun ListCardCompact(
                     hasURL = iCalObject.url?.isNotBlank() == true,
                     hasLocation = iCalObject.location?.isNotBlank() == true,
                     hasContact = iCalObject.contact?.isNotBlank() == true,
-                    isRecurringOriginal = iCalObject.isRecurringOriginal,
-                    isRecurringInstance = iCalObject.isRecurringInstance,
-                    isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                    isRecurring = iCalObject.rrule != null || iCalObject.recurid != null,
+                    isRecurringModified = iCalObject.recurid != null && iCalObject.sequence > 0,
                     status = iCalObject.status,
                     classification = iCalObject.classification,
                     priority = iCalObject.priority,
@@ -278,8 +280,9 @@ fun ListCardCompact_JOURNAL() {
         ListCardCompact(
             icalobject,
             emptyList(),
+            progressUpdateDisabled = true,
             selected = emptyList(),
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )
@@ -300,8 +303,9 @@ fun ListCardCompact_JOURNAL2() {
         ListCardCompact(
             icalobject,
             emptyList(),
+            progressUpdateDisabled = true,
             selected = emptyList(),
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )
@@ -323,8 +327,9 @@ fun ListCardCompact_NOTE() {
         ListCardCompact(
             icalobject,
             emptyList(),
+            progressUpdateDisabled = true,
             selected = emptyList(),
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )
@@ -350,8 +355,9 @@ fun ListCardCompact_TODO() {
         ListCardCompact(
             icalobject,
             subtasks = listOf(icalobject, icalobject),
+            progressUpdateDisabled = true,
             selected = emptyList(),
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )
@@ -384,18 +390,15 @@ fun ListCardCompact_TODO_only_summary() {
             numComments = 0
             uploadPending = false
             isReadOnly = false
-            recurOriginalIcalObjectId = null
-            isRecurringInstance = false
-            isLinkedRecurringInstance = false
-            isRecurringOriginal = false
             summary = "Lorem ipsum"
             description = null
         }
         ListCardCompact(
             icalobject,
             subtasks = listOf(icalobject, icalobject),
+            progressUpdateDisabled = true,
             selected = emptyList(),
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )

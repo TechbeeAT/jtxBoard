@@ -66,9 +66,10 @@ fun ListCard(
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
     progressIncrement: Int,
+    progressUpdateDisabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
@@ -158,9 +159,8 @@ fun ListCard(
                     ListStatusBar(
                         isReadOnly = iCalObject.isReadOnly,
                         uploadPending = iCalObject.uploadPending,
-                        isRecurringOriginal = iCalObject.isRecurringOriginal,
-                        isRecurringInstance = iCalObject.isRecurringInstance,
-                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                        isRecurring = iCalObject.rrule != null || iCalObject.recurid != null,
+                        isRecurringModified = iCalObject.recurid != null && iCalObject.sequence > 0,
                         modifier = Modifier.padding(end = 8.dp)
                     )
                 }
@@ -219,8 +219,7 @@ fun ListCard(
                                     onCheckedChange = {
                                         onProgressChanged(
                                             iCalObject.id,
-                                            if (it) 100 else 0,
-                                            iCalObject.isLinkedRecurringInstance
+                                            if (it) 100 else 0
                                         )
                                     })
                         }
@@ -267,7 +266,7 @@ fun ListCard(
                 }
 
 
-                if (iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0) {
+                if (iCalObject.numAttachments > 0 || subtasks.isNotEmpty() || subnotes.isNotEmpty()) {
                     Row(
                         modifier = Modifier.padding(start = 8.dp, end = 8.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -301,7 +300,7 @@ fun ListCard(
                                 //border = null,
                                 modifier = Modifier.padding(end = 4.dp)
                             )
-                        if (iCalObject.numSubtasks > 0)
+                        if (subtasks.isNotEmpty())
                             ElevatedFilterChip(
                                 label = {
                                     Row(
@@ -314,7 +313,7 @@ fun ListCard(
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Text(
-                                            iCalObject.numSubtasks.toString(),
+                                            subtasks.size.toString(),
                                             modifier = Modifier.padding(start = 4.dp)
                                         )
                                     }
@@ -332,7 +331,7 @@ fun ListCard(
                                 //border = null,
                                 modifier = Modifier.padding(end = 4.dp)
                             )
-                        if (iCalObject.numSubnotes > 0)
+                        if (subnotes.isNotEmpty())
                             ElevatedFilterChip(
                                 label = {
                                     Row(
@@ -345,7 +344,7 @@ fun ListCard(
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Text(
-                                            iCalObject.numSubnotes.toString(),
+                                            subnotes.size.toString(),
                                             modifier = Modifier.padding(start = 4.dp)
                                         )
                                     }
@@ -404,8 +403,7 @@ fun ListCard(
                         label = null,
                         iCalObjectId = iCalObject.id,
                         progress = iCalObject.percent,
-                        isReadOnly = iCalObject.isReadOnly,
-                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                        isReadOnly = iCalObject.isReadOnly || progressUpdateDisabled,
                         sliderIncrement = progressIncrement,
                         onProgressChanged = onProgressChanged,
                         modifier = Modifier.fillMaxWidth()
@@ -474,9 +472,6 @@ fun ICalObjectListCardPreview_JOURNAL() {
 
         val icalobject = ICal4List.getSample().apply {
             uploadPending = false
-            isRecurringInstance = false
-            isLinkedRecurringInstance = false
-            isRecurringOriginal = false
         }
         ListCard(
             icalobject,
@@ -492,9 +487,10 @@ fun ICalObjectListCardPreview_JOURNAL() {
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
+            progressUpdateDisabled = false,
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
@@ -527,9 +523,10 @@ fun ICalObjectListCardPreview_NOTE() {
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
+            progressUpdateDisabled = false,
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
@@ -570,7 +567,8 @@ fun ICalObjectListCardPreview_TODO() {
             onLongClick = { _, _ -> },
             settingShowProgressMaintasks = true,
             progressIncrement = 1,
-            onProgressChanged = { _, _, _ -> },
+            progressUpdateDisabled = false,
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
@@ -589,8 +587,6 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             uploadPending = false
-            isRecurringInstance = false
-            isRecurringOriginal = false
             isReadOnly = true
             dtstart = null
             due = null
@@ -611,8 +607,9 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             onLongClick = { _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
+            progressUpdateDisabled = false,
             settingShowProgressMaintasks = false,
-            onProgressChanged = { _, _, _ -> },
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
@@ -633,9 +630,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.name
             uploadPending = false
-            isRecurringInstance = true
-            isLinkedRecurringInstance = false
-            isRecurringOriginal = false
+            rrule = ""
             isReadOnly = true
         }
         ListCard(
@@ -655,7 +650,8 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
-            onProgressChanged = { _, _, _ -> },
+            progressUpdateDisabled = false,
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
@@ -677,9 +673,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             status = Status.FINAL.status
             classification = Classification.PUBLIC.name
             uploadPending = false
-            isRecurringInstance = true
-            isLinkedRecurringInstance = false
-            isRecurringOriginal = false
+            recurid = ""
             isReadOnly = true
             numAttachments = 0
             numAttendees = 0
@@ -699,7 +693,8 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             attachments = listOf(),
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
-            onProgressChanged = { _, _, _ -> },
+            progressUpdateDisabled = false,
+            onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
         )

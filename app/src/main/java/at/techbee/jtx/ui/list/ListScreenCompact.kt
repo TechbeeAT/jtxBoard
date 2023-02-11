@@ -49,7 +49,8 @@ fun ListScreenCompact(
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    settingLinkProgressToSubtasks: Boolean,
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
@@ -125,6 +126,7 @@ fun ListScreenCompact(
                     ListCardCompact(
                         iCalObject,
                         subtasks = currentSubtasks ?: emptyList(),
+                        progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks?.isNotEmpty() == true,
                         selected = selectedEntries,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -200,7 +202,8 @@ fun ListScreenCompact_TODO() {
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
-            onProgressChanged = { _, _, _ -> },
+            settingLinkProgressToSubtasks = false,
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )
@@ -253,7 +256,8 @@ fun ListScreenCompact_JOURNAL() {
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
-            onProgressChanged = { _, _, _ -> },
+            settingLinkProgressToSubtasks = false,
+            onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
         )

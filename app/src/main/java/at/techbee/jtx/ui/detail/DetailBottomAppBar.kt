@@ -55,12 +55,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun DetailBottomAppBar(
     icalObject: ICalObject?,
+    seriesElement: ICalObject?,
     collection: ICalCollection?,
     isEditMode: MutableState<Boolean>,
     markdownState: MutableState<MarkdownState>,
     isProActionAvailable: Boolean,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     detailsBottomSheetState: ModalBottomSheetState,
+    isProcessing: Boolean,
     onDeleteClicked: () -> Unit,
     onCopyRequested: (Module) -> Unit,
     onRevertClicked: () -> Unit,
@@ -205,7 +207,7 @@ fun DetailBottomAppBar(
 
             AnimatedVisibility(
                 collection.accountType != LOCAL_ACCOUNT_TYPE
-                    && (isSyncInProgress || icalObject.dirty)
+                    && (isSyncInProgress || seriesElement?.dirty ?: icalObject.dirty)
                     && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
             ) {
                 IconButton(
@@ -213,7 +215,7 @@ fun DetailBottomAppBar(
                         if (!isSyncInProgress)
                             collection.getAccount().let { SyncUtil.syncAccount(it) }
                     },
-                    enabled = icalObject.dirty && !isSyncInProgress
+                    enabled = seriesElement?.dirty ?: icalObject.dirty && !isSyncInProgress
                 ) {
                     Crossfade(isSyncInProgress) { synchronizing ->
                         if (synchronizing) {
@@ -305,9 +307,11 @@ fun DetailBottomAppBar(
                     IconButton(onClick = { markdownState.value = MarkdownState.ITALIC  }) {
                         Icon(Icons.Outlined.FormatItalic, stringResource(R.string.markdown_italic))
                     }
+                    /*
                     IconButton(onClick = { markdownState.value = MarkdownState.UNDERLINED  }) {
                         Icon(Icons.Outlined.FormatUnderlined, stringResource(R.string.markdown_underlined))
                     }
+                     */
                     IconButton(onClick = { markdownState.value = MarkdownState.STRIKETHROUGH  }) {
                         Icon(Icons.Outlined.FormatStrikethrough, stringResource(R.string.markdown_strikethrough))
                     }
@@ -329,6 +333,12 @@ fun DetailBottomAppBar(
                     IconButton(onClick = { markdownState.value = MarkdownState.CODE  }) {
                         Icon(Icons.Outlined.Code, stringResource(R.string.markdown_code))
                     }
+                }
+            }
+
+            AnimatedVisibility(!isEditMode.value && isProcessing) {
+                IconButton(onClick = { /* no action, icon button just to keep the same style */  }) {
+                    CircularProgressIndicator(modifier = Modifier.alpha(0.3f).size(24.dp))
                 }
             }
         },
@@ -376,12 +386,14 @@ fun DetailBottomAppBar_Preview_View() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -403,12 +415,14 @@ fun DetailBottomAppBar_Preview_edit() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -429,12 +443,14 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.OBSERVING) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -455,12 +471,14 @@ fun DetailBottomAppBar_Preview_View_readonly() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = false },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -481,12 +499,14 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = false },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = false,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -510,12 +530,14 @@ fun DetailBottomAppBar_Preview_View_local() {
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
+            seriesElement = null,
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            isProcessing = true,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }

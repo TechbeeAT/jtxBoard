@@ -105,11 +105,10 @@ fun ListScreen(
             navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, true))
     }
 
-    fun processOnProgressChanged(itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
+    fun processOnProgressChanged(itemId: Long, newPercent: Int, scrollOnce: Boolean = false) {
         listViewModel.updateProgress(
             itemId,
             newPercent,
-            isLinkedRecurringInstance,
             scrollOnce
         )
     }
@@ -131,10 +130,11 @@ fun ListScreen(
                     settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks,
                     settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
                     settingProgressIncrement = settingsStateHolder.settingStepForProgress,
+                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
-                        processOnProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
+                    onProgressChanged = { itemId, newPercent ->
+                        processOnProgressChanged(itemId, newPercent)
                     },
                     onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean ->
                         listViewModel.updateExpanded(
@@ -149,12 +149,14 @@ fun ListScreen(
             ViewMode.GRID -> {
                 ListScreenGrid(
                     list = list,
+                    subtasksLive = listViewModel.allSubtasksMap,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
+                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
-                        processOnProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
+                    onProgressChanged = { itemId, newPercent ->
+                        processOnProgressChanged(itemId, newPercent)
                     }
                 )
             }
@@ -165,10 +167,11 @@ fun ListScreen(
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
+                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
-                        processOnProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
+                    onProgressChanged = { itemId, newPercent ->
+                        processOnProgressChanged(itemId, newPercent)
                     }
                 )
             }
@@ -176,18 +179,19 @@ fun ListScreen(
                 ListScreenKanban(
                     module = listViewModel.module,
                     list = list,
+                    subtasksLive = listViewModel.allSubtasksMap,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
+                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance, scrollOnce ->
-                        processOnProgressChanged(itemId, newPercent, isLinkedRecurringInstance, scrollOnce)
+                    onProgressChanged = { itemId, newPercent, scrollOnce ->
+                        processOnProgressChanged(itemId, newPercent, scrollOnce)
                     },
-                    onStatusChanged = { itemId, newStatus, isLinkedRecurringInstance, scrollOnce ->
-                        listViewModel.updateStatusJournal(
+                    onStatusChanged = { itemId, newStatus, scrollOnce ->
+                        listViewModel.updateStatus(
                             itemId,
                             newStatus,
-                            isLinkedRecurringInstance,
                             scrollOnce
                         )
                     }

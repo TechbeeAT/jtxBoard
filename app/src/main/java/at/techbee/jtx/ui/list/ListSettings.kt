@@ -55,6 +55,7 @@ class ListSettings {
     var topAppBarCollectionId: MutableState<Long> = mutableStateOf(0L)   // list view only
     var topAppBarMode: MutableState<ListTopAppBarMode> = mutableStateOf(ListTopAppBarMode.SEARCH)   // list view only
 
+    var widgetHeader: MutableState<String> = mutableStateOf("") //widgetOnly
     var checkboxPositionEnd: MutableState<Boolean> = mutableStateOf(false)  // widget only
     var widgetAlpha: MutableState<Float> = mutableStateOf(1F)  // widget only
     var widgetAlphaEntries: MutableState<Float> = mutableStateOf(1F)  // widget only
@@ -229,6 +230,7 @@ class ListSettings {
             showSubnotes.value = listWidgetConfig.showSubnotes
             widgetAlpha.value = listWidgetConfig.widgetAlpha
             widgetAlphaEntries.value = listWidgetConfig.widgetAlphaEntries
+            widgetHeader.value = listWidgetConfig.widgetHeader
         }
     }
 

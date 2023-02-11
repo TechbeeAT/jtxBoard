@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.detail
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateMapOf
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
@@ -20,7 +21,7 @@ enum class DetailSettingsOptionGroup { GENERAL, ELEMENT }
 
 enum class DetailSettingsOption(
     val key: String,
-    val stringResource: Int,
+    @StringRes val stringResource: Int,
     val group: DetailSettingsOptionGroup,
     val default: Boolean,
     val possibleFor: List<Module>

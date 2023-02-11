@@ -13,24 +13,10 @@ Global Strings -->
     <string name="discard">"Zahodit"</string>
     <string name="gotit">"Rozumím"</string>
     <string name="cont">"Pokračovat"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Přehled Deníků"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Přehled Poznámek"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Přehled Úkolů"</string>
-    <string name="toolbar_text_view_journal_details">"Podrobnosti o Deníku"</string>
-    <string name="toolbar_text_view_note_details">"Podrobnosti o Poznámce"</string>
-    <string name="toolbar_text_view_task_details">"Podrobnosti o Úkolu"</string>
+    <string name="website">"Webová stránka"</string>
     <string name="toolbar_text_add_journal">"Přidat Deník"</string>
     <string name="toolbar_text_add_note">"Přidat Poznámku"</string>
     <string name="toolbar_text_add_task">"Přidat Úkol"</string>
-    <string name="toolbar_text_edit_journal">"Upravit Deník"</string>
-    <string name="toolbar_text_edit_note">"Upravit Poznámku"</string>
-    <string name="toolbar_text_edit_task">"Upravit Úkol"</string>
-    <string name="toolbar_text_filter">"Filtrovat"</string>
-    <string name="toolbar_text_settings">"Nastavení"</string>
-    <string name="toolbar_text_about">"O aplikaci"</string>
-    <string name="toolbar_text_sync">"Synchronizovat"</string>
-    <string name="toolbar_text_donate">"Darovat"</string>
-    <string name="toolbar_text_adinfo">"Přidat informaci"</string>
     <string name="default_local_collection_name">"Místní"</string>
     <string name="default_local_account_name">"Místní"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -80,11 +66,6 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Přidat novou položku"</string>
     <string name="list_progress">"Průběh"</string>
     <string name="list_expand">"Rozbalit"</string>
-    <string name="list_dialog_contribution_title">"Poznámka k reklamám"</string>
-    <string name="list_dialog_contribution_more_information">"Zjistit více"</string>
-    <string name="list_num_attendees_contentdesc">"Počet účastníků"</string>
-    <string name="list_num_attachments_contentdesc">"Počet příloh"</string>
-    <string name="list_num_comments_contentdesc">"Počet komentářů"</string>
     <string name="list_dialog_delete_selected_title">Odstranit vybrané záznamy?</string>
     <string name="list_dialog_delete_selected_message">Tato akce odstraní všechny vybrané záznamy (%1$d). Opravdu chcete pokračovat? Tuto operaci nelze vrátit zpět!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Souhrn/Popis"</string>
@@ -225,7 +206,7 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Nepodařilo se otevřít DAVx⁵, otevřete aplikaci ručně."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Spuštění synchronizace v DAVx⁵ se nezdařilo, zkontrolujte to v DAVx⁵."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_text">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud se vám tato aplikace líbí a pokud chcete zajistit její neustálý vývoj, zvažte prosím příspěvek :-)"</string>
+    <string name="donate_header_developer_note">"Ahoj, jsem Patrick, vývojář jtx Board. Této aplikaci, kterou vám nabízím zdarma, věnuji spoustu času a úsilí. Pokud se vám moje aplikace líbí, pošlete mi prosím lásku a věnujte malý příspěvek!"</string>
     <string name="donate_thank_you">"Děkujeme!"</string>
     <string name="donate_donate_with">"Darovat přes"</string>
     <string name="donate_other_donation_methods">"Pokud byste chtěli zvážit jiný způsob darování, podívejte se na naše webové stránky:"</string>
@@ -247,6 +228,8 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="list_welcome_entry_todo_description">"Úkoly mohou mít navíc oproti deníkům a poznámkám také plánované datum zahájení, termínu a dokončení. Lze je zaškrtávat, kdy jsou hotové, nebo lze nastavit jejich průběh. Upravte tento záznam a vyzkoušejte všechny možnosti :-)"</string>
     <string name="list_welcome_category">"#PrvniKroky"</string>
     <string name="save_and_edit">"Uložit a upravit"</string>
+    <string name="save_and_new">"Uložit a nový"</string>
+    <string name="save_and_close">"Uložit a zavřít"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Použít převod řeči na text"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Modul převodu řeči na text naslouchá."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Modul převodu řeči na text přestal naslouchat."</string>
@@ -361,7 +344,6 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="priority_9_lowest">"9 - Nejnižší"</string>
     <string name="list_due_future">"Termín v budoucnosti"</string>
     <string name="view_share_part_of_series">"Tento záznam je součástí série."</string>
-    <string name="view_share_exception_of_series">"Tento záznam je výjimkou ze série."</string>
     <string name="view_share_repeats">"Tento záznam se opakuje každý(ch)"</string>
     <string name="collections_dialog_move_title">"Přesunout všechny záznamy z \"%1$s\" do"</string>
     <string name="collection_dialog_move_info">"Upozornění: Lze vybrat pouze zapisovatelné sbírky a sbírky s podporou stejných komponent (Deníky, Poznámky, Úkoly)."</string>
@@ -424,7 +406,6 @@ Děkujeme vám!"</string>
     <string name="settings_default_expand_subtasks">"Rozbalovat dílčí úkoly v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_subnotes">"Rozbalovat dílčí poznámky v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_attachments">"Rozbalovat přílohy v seznamu ve výchozím nastavení"</string>
-    <string name="title_activity_list_screen">"ObrazovkaSeznamu"</string>
     <string name="permission_coarse_location_granted">"Oprávnění k přibližné poloze uděleno"</string>
     <string name="permission_coarse_location_denied">"Oprávnění k přibližné poloze zamítnuto"</string>
     <string name="sorry">"Omlouváme se"</string>
@@ -434,6 +415,7 @@ Děkujeme vám!"</string>
     <string name="timezone">"Časové pásmo"</string>
     <string name="not_set2">"Nenastaveno"</string>
     <string name="invert_selection">"Invertovat výběr"</string>
+    <string name="clear_selection">"Vyčistit výběr"</string>
     <string name="preferences">"Předvolby"</string>
     <string name="revert">"Vrátit zpět"</string>
     <string name="audio_play">"Přehrát"</string>
@@ -507,6 +489,9 @@ Děkujeme vám!"</string>
     <string name="settings_progress_step_50">"Přírůstek o 50 (2 kroky)"</string>
     <string name="settings_progress_step">"Nastavit krok pro posuvník průběhu"</string>
     <string name="settings_disable_alarms_for_readonly">"Zakázat budíky pro sbírky pouze pro čtení"</string>
+    <string name="settings_link_progress_to_subtasks">"Propojit průběh do dílčích úkolů"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Ponechat stav, průběh a dokončení při synchronizaci"</string>
+    <string name="settings_attention_experimental_feature">"Pozor: Toto je experimentální funkce"</string>
     <string name="sync_button_go_to_collections">"Přejít na Sbírky"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Pro povolení této funkce si zakupte prosím balíček Pro."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
