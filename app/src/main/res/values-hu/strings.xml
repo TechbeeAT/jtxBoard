@@ -28,25 +28,48 @@ Global Strings -->
     <string name="classification_confidential">"Bizalmas"</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_settings">"Beállítások"</string>
+    <string name="navigation_drawer_support">"Ügyfélszolgálat"</string>
+    <string name="navigation_drawer_donate">"Adományozás"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"Késésben"</string>
+    <string name="list_due_today">"Mai határidő"</string>
+    <string name="list_due_tomorrow">"Holnapi határidő"</string>
+    <string name="list_due_inXdays">"Határidő %d napon belül"</string>
+    <string name="list_due_inXhours">"%d órán belül esedékes"</string>
+    <string name="list_fab_add_contentdesc">"Új elem hozzáadása"</string>
     <!-- fragment_ical_view -->
+    <string name="view_fab_edit_entry_contentDesc">"Bejegyzés szerkesztése"</string>
+    <string name="view_due">"Határidő"</string>
+    <string name="view_completed">"Befejezett"</string>
+    <string name="view_started">"Elkezd(ett)"</string>
     <!-- fragment_ical_edit -->
+    <string name="edit_add_category_helper">"Kategória hozzáadása"</string>
     <string name="edit_datepicker_dialog_select_time">"Időpont kiválasztása"</string>
     <string name="edit_datepicker_dialog_add_time">"Idő hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_time">"Idő módosítása"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Időzóna hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Időzóna módosítása"</string>
+    <string name="edit_task_due_add">"Határidő kiválasztása"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Fordítások"</string>
     <!-- menus -->
+    <string name="menu_list_gotodate">"Dátumhoz ugrás"</string>
+    <string name="menu_list_syncnow">"Szinkronizálás indítása"</string>
     <!-- Notification channel for Reminders -->
     <!-- Shortcuts -->
     <!-- Settings fragment -->
+    <string name="settings_app">"Alkalmazás beállításai"</string>
     <!-- Sync fragment -->
+    <string name="sync_congratulations">"Gratulálunk! :)"</string>
     <!-- Donate fragment -->
     <!-- sync content provider -->
     <!-- Permissions -->
+    <string name="edit">"Szerkesztés"</string>
+    <string name="reset">"Alaphelyzetbe állítás"</string>
+    <string name="apply">"Alkalmaz"</string>
     <!-- alarms -->
+    <string name="alarms_before_due">"határidő előtt"</string>
+    <string name="alarms_after_due">"határidő után"</string>
     <string name="alarms_minutes">"Perc(ek)"</string>
     <string name="alarms_days">"Nap(ok)"</string>
     <!-- fragment_collections -->
@@ -65,8 +88,53 @@ Global Strings -->
     <string name="edit_recur_week">"hét(ek)"</string>
     <string name="edit_recur_month">"hónap(ok)"</string>
     <string name="edit_recur_year">"év(ek)"</string>
+    <string name="menu_collection_popup_export_as_ics">"Mentés .ics formátumban"</string>
+    <string name="description">"Leírás"</string>
+    <string name="search">"Keresés"</string>
+    <string name="due">"Határidő"</string>
+    <string name="completed">"Befejezett"</string>
+    <string name="adinfo_adfree_success_thankyou">"Köszönjük!"</string>
+    <string name="filter_desc">"Csökkenő"</string>
+    <string name="filter_created">"Létrehozva"</string>
+    <string name="filter_last_modified">"Utoljára módosítva"</string>
+    <string name="notification_add_1h">"+ 1 óra"</string>
+    <string name="settings_select_theme_dark">"Sötét"</string>
+    <string name="settings_select_theme_light">"Világos"</string>
+    <string name="settings_select_theme_system">"Rendszer alapértelmezett"</string>
     <!-- Buy Pro fragment -->
+    <string name="back">"Vissza"</string>
+    <string name="details">"Részletek"</string>
+    <string name="date">"Dátum"</string>
+    <string name="timezone">"Időzóna"</string>
+    <string name="not_set2">"Nincs beállítva"</string>
+    <string name="preferences">"Tulajdonságok"</string>
     <!-- alarms -->
+    <string name="alarms_due">"határidő"</string>
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="list_due_without">"Határidő nélkül"</string>
+    <string name="menu_view_autosave">"Automatikus mentés"</string>
+    <string name="next">"Következő"</string>
+    <string name="previous">"Előző"</string>
+    <string name="select_all">Összes kijelölése</string>
+    <string name="select_none">Kijelölés törlése</string>
+    <string name="visible">Látható</string>
+    <string name="invisible">Rejtett</string>
+    <string name="widget_list_view_settings">"Beállítások megtekintése"</string>
+    <string name="opacity">"Átlátszóság"</string>
+    <string name="general">"Általános"</string>
+    <string name="widget_list_show_description">"Leírás megjelenítése"</string>
+    <string name="settings_default_journals_date_current_day">"Aktuális nap"</string>
+    <string name="settings_default_journals_date_current_hour">"Jelenlegi óra"</string>
+    <string name="settings_default_journals_date_current_15min">"15 percen belül"</string>
+    <string name="settings_default_journals_date_current_5min">"5 percen belül"</string>
+    <string name="settings_default_journals_date_current_min">"Jelenlegi perc"</string>
+    <string name="markdown_bold">"Félkövér"</string>
+    <string name="markdown_italic">"Dőlt"</string>
+    <string name="markdown_underlined">"Aláhúzott"</string>
+    <string name="markdown_strikethrough">"Áthúzott"</string>
+    <string name="markdown_heading1">"Címsor 1"</string>
+    <string name="markdown_heading2">"Címsor 2"</string>
+    <string name="markdown_heading3">"Címsor 3"</string>
+    <string name="markdown_horizontal_ruler">"Vízszintes vonalzó"</string>
 </resources>
