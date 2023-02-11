@@ -12,7 +12,7 @@ Global Strings -->
     <string name="gotit">"Rendben"</string>
     <string name="cont">"Tovább"</string>
     <string name="website">"Honlap"</string>
-    <string name="toolbar_text_add_task">"Teendő hozzáadása"</string>
+    <string name="toolbar_text_add_task">"Feladat hozzáadása"</string>
     <string name="default_local_collection_name">"Helyi"</string>
     <string name="default_local_account_name">"Helyi"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -27,21 +27,35 @@ Global Strings -->
     <string name="classification_private">"Privát"</string>
     <string name="classification_confidential">"Bizalmas"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Navigációs sáv megnyitása"</string>
+    <string name="navigation_drawer_close">"Navigációs sáv bezárása"</string>
+    <string name="navigation_drawer_sync">"Szinkronizálás DAVx⁵-en keresztül"</string>
+    <string name="navigation_drawer_about">"Névjegy / Licencek"</string>
     <string name="navigation_drawer_settings">"Beállítások"</string>
+    <string name="navigation_drawer_news_updates">"Hírek &amp; frissítések"</string>
     <string name="navigation_drawer_external_links">"Külső hivatkozások"</string>
     <string name="navigation_drawer_website">"Honlap"</string>
     <string name="navigation_drawer_support">"Ügyfélszolgálat"</string>
     <string name="navigation_drawer_donate">"Adományozás"</string>
+    <string name="navigation_drawer_privacy_policy">"Adatvédelmi nyilatkozat"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Késésben"</string>
     <string name="list_due_today">"Mai határidő"</string>
     <string name="list_due_tomorrow">"Holnapi határidő"</string>
     <string name="list_due_inXdays">"Határidő %d napon belül"</string>
     <string name="list_due_inXhours">"%d órán belül esedékes"</string>
+    <string name="list_start_today">"Tervezett kezdés ma"</string>
     <string name="list_start_tomorrow">"Holnap kezdődik"</string>
+    <string name="list_start_inXhours">"Tervezett kezdés %d órán belül"</string>
+    <string name="list_start_inXdays">"Tervezett kezdés %d napon belül"</string>
+    <string name="list_tabitem_todos">"Feladatok"</string>
     <string name="list_fab_add_contentdesc">"Új elem hozzáadása"</string>
+    <string name="list_expand">"Kibontás"</string>
+    <string name="list_dialog_delete_selected_title">Törli a kijelölt bejegyzéseket?</string>
     <!-- fragment_ical_view -->
     <string name="view_fab_edit_entry_contentDesc">"Bejegyzés szerkesztése"</string>
+    <string name="view_subtasks_header">"Alfeladatok"</string>
+    <string name="view_progress_label">"Előrehaladás"</string>
     <string name="view_dialog_sure_to_delete_message">"Biztosan törölni szeretné a következőt: \"%1$s\"?"</string>
     <string name="view_toast_deleted_successfully">"\"%1$s\" sikeresen törölve"</string>
     <string name="view_created_text">"Létrehozva: %1$s"</string>
@@ -52,23 +66,41 @@ Global Strings -->
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_helper">"Kategória hozzáadása"</string>
     <string name="edit_attendees_hint">"bela@akarmi.hu"</string>
+    <string name="edit_attachment_button_text">"Melléklet hozzáadása"</string>
+    <string name="edit_add_link_button_text">"Csatolmány hivatkozás hozzáadása"</string>
+    <string name="edit_location_helper">"Helyszín hozzáadása a bejegyzéshez"</string>
+    <string name="edit_subtasks_add_hint">"Alfeladataim"</string>
+    <string name="edit_subtasks_add_helper">"Alfeladat hozzáadása"</string>
+    <string name="edit_attachment_delete_attachment">"Melléklet törlése"</string>
+    <string name="edit_attachment_add_link_dialog">"Csatolmány hivatkozás hozzáadása"</string>
+    <string name="edit_recur_all_occurrences">"Összes előfordulás"</string>
     <string name="edit_recur_repeat_every_x">"Ismétlődik minden"</string>
+    <string name="edit_recur_x_day_of_the_month">"hónap napja"</string>
     <string name="edit_datepicker_dialog_select_date">"Dátum kiválasztása"</string>
     <string name="edit_datepicker_dialog_select_time">"Időpont kiválasztása"</string>
     <string name="edit_datepicker_dialog_add_time">"Idő hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_time">"Idő módosítása"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Időzóna hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Időzóna módosítása"</string>
+    <string name="edit_task_started_add">"Kezdési időpont kiválasztása"</string>
     <string name="edit_task_due_add">"Határidő kiválasztása"</string>
+    <string name="edit_task_completed_add">"Befejezési időpont kiválasztása"</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"A határidő nem lehet korábbi a kezdési dátumnál."</string>
     <string name="edit_fragment_app_permission">"Alkalmazásengedély"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Fordítások"</string>
+    <string name="about_tabitem_thanks">"Külön köszönet"</string>
+    <string name="about_thanks_ffg">"Külön köszönet FFG-nek a projekt létrehozásához nyújtott szellemi és anyagi támogatásért."</string>
     <!-- menus -->
     <string name="menu_list_gotodate">"Dátumhoz ugrás"</string>
     <string name="menu_list_syncnow">"Szinkronizálás indítása"</string>
     <!-- Notification channel for Reminders -->
+    <string name="notification_channel_reminder_name">"Feladat határidő emlékeztető"</string>
     <!-- Shortcuts -->
     <!-- Settings fragment -->
+    <string name="settings_show_subtasks_in_list">"Alfeladatok megjelenítése a feladatok listáján"</string>
+    <string name="settings_show_progress_for_subtasks">Alfeladatok állapotának megjelenítése</string>
+    <string name="settings_show_progress_for_maintasks">Feladatok állapotának megjelenítése</string>
     <string name="settings_app">"Alkalmazás beállításai"</string>
     <!-- Sync fragment -->
     <string name="sync_congratulations">"Gratulálunk! :)"</string>
@@ -87,6 +119,7 @@ Global Strings -->
     <!-- Fuzzy -->
     <!-- Fuzzy -->
     <!-- Fuzzy -->
+    <string name="collections_tasks_num">"Feladatok: %1$s"</string>
     <string name="color">"Szín"</string>
     <string name="priority_0_no_priority">"Nincs Prioritás"</string>
     <string name="priority_1_highest">"1 - Legmagasabb"</string>
@@ -100,28 +133,37 @@ Global Strings -->
     <string name="edit_recur_month">"hónap(ok)"</string>
     <string name="edit_recur_year">"év(ek)"</string>
     <string name="menu_collection_popup_export_as_ics">"Mentés .ics formátumban"</string>
+    <string name="task">"Feladat"</string>
     <string name="description">"Leírás"</string>
     <string name="search">"Keresés"</string>
+    <string name="search_todos">Feladat keresése</string>
     <string name="due">"Határidő"</string>
     <string name="completed">"Befejezett"</string>
+    <string name="subtasks">"Alfeladatok"</string>
     <string name="adinfo_adfree_success_thankyou">"Köszönjük!"</string>
     <string name="filter_desc">"Csökkenő"</string>
     <string name="filter_created">"Létrehozva"</string>
     <string name="filter_last_modified">"Utoljára módosítva"</string>
+    <string name="filter_subtasks_order_by">Alfeladatok rendezése</string>
     <string name="notification_add_1h">"+ 1 óra"</string>
     <string name="settings_select_theme_dark">"Sötét"</string>
     <string name="settings_select_theme_light">"Világos"</string>
     <string name="settings_select_theme_system">"Rendszer alapértelmezett"</string>
     <!-- Buy Pro fragment -->
+    <string name="settings_modules_enable_tasks">"Feladatok"</string>
     <string name="back">"Vissza"</string>
     <string name="details">"Részletek"</string>
     <string name="date">"Dátum"</string>
     <string name="timezone">"Időzóna"</string>
     <string name="not_set2">"Nincs beállítva"</string>
     <string name="preferences">"Tulajdonságok"</string>
+    <string name="edit_subtask">"Alfeladat módosítása"</string>
     <!-- alarms -->
     <string name="alarms_due">"határidő"</string>
+    <string name="settings_tasks">"Feladat beállítások"</string>
+    <string name="settings_default_due_date">"Feladatok alapértelemezett határidejének beállítása"</string>
     <!-- fragment_ical_list -->
+    <string name="list_hide_completed_tasks">"Befejezett feladatok elrejtése"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="list_due_without">"Határidő nélkül"</string>
     <string name="menu_view_autosave">"Automatikus mentés"</string>
@@ -140,6 +182,7 @@ Global Strings -->
     <string name="settings_default_journals_date_current_15min">"15 percen belül"</string>
     <string name="settings_default_journals_date_current_5min">"5 percen belül"</string>
     <string name="settings_default_journals_date_current_min">"Jelenlegi perc"</string>
+    <string name="widget_list_show_subtasks">"Alfeladatok megjelenítése"</string>
     <string name="markdown_bold">"Félkövér"</string>
     <string name="markdown_italic">"Dőlt"</string>
     <string name="markdown_underlined">"Aláhúzott"</string>
