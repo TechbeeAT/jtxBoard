@@ -11,7 +11,7 @@ Global Strings -->
     <string name="discard">"Elvetés"</string>
     <string name="gotit">"Rendben"</string>
     <string name="cont">"Tovább"</string>
-    <string name="website">"Weboldal"</string>
+    <string name="website">"Honlap"</string>
     <string name="toolbar_text_add_task">"Teendő hozzáadása"</string>
     <string name="default_local_collection_name">"Helyi"</string>
     <string name="default_local_account_name">"Helyi"</string>
@@ -28,6 +28,8 @@ Global Strings -->
     <string name="classification_confidential">"Bizalmas"</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_settings">"Beállítások"</string>
+    <string name="navigation_drawer_external_links">"Külső hivatkozások"</string>
+    <string name="navigation_drawer_website">"Honlap"</string>
     <string name="navigation_drawer_support">"Ügyfélszolgálat"</string>
     <string name="navigation_drawer_donate">"Adományozás"</string>
     <!-- fragment_ical_list -->
@@ -36,20 +38,29 @@ Global Strings -->
     <string name="list_due_tomorrow">"Holnapi határidő"</string>
     <string name="list_due_inXdays">"Határidő %d napon belül"</string>
     <string name="list_due_inXhours">"%d órán belül esedékes"</string>
+    <string name="list_start_tomorrow">"Holnap kezdődik"</string>
     <string name="list_fab_add_contentdesc">"Új elem hozzáadása"</string>
     <!-- fragment_ical_view -->
     <string name="view_fab_edit_entry_contentDesc">"Bejegyzés szerkesztése"</string>
+    <string name="view_dialog_sure_to_delete_message">"Biztosan törölni szeretné a következőt: \"%1$s\"?"</string>
+    <string name="view_toast_deleted_successfully">"\"%1$s\" sikeresen törölve"</string>
+    <string name="view_created_text">"Létrehozva: %1$s"</string>
+    <string name="view_last_modified_text">"Utoljára módosítva: %1$s"</string>
     <string name="view_due">"Határidő"</string>
     <string name="view_completed">"Befejezett"</string>
     <string name="view_started">"Elkezd(ett)"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_helper">"Kategória hozzáadása"</string>
+    <string name="edit_attendees_hint">"bela@akarmi.hu"</string>
+    <string name="edit_recur_repeat_every_x">"Ismétlődik minden"</string>
+    <string name="edit_datepicker_dialog_select_date">"Dátum kiválasztása"</string>
     <string name="edit_datepicker_dialog_select_time">"Időpont kiválasztása"</string>
     <string name="edit_datepicker_dialog_add_time">"Idő hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_time">"Idő módosítása"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Időzóna hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Időzóna módosítása"</string>
     <string name="edit_task_due_add">"Határidő kiválasztása"</string>
+    <string name="edit_fragment_app_permission">"Alkalmazásengedély"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Fordítások"</string>
     <!-- menus -->
