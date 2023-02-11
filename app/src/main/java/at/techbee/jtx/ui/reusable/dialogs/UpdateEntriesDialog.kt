@@ -10,15 +10,13 @@ package at.techbee.jtx.ui.reusable.dialogs
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.LabelOff
-import androidx.compose.material.icons.outlined.NewLabel
-import androidx.compose.material.icons.outlined.WorkOff
-import androidx.compose.material.icons.outlined.WorkOutline
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -39,6 +37,9 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.properties.Reltype
+import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.ListCardGrid
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -49,7 +50,8 @@ enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     STATUS(R.string.status),
     CLASSIFICATION(R.string.classification),
     PRIORITY(R.string.priority),
-    COLLECTION(R.string.collection)
+    COLLECTION(R.string.collection),
+    LINK(R.string.link_entries)
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -59,6 +61,8 @@ fun UpdateEntriesDialog(
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
     allCollectionsLive: LiveData<List<ICalCollection>>,
+    selectFromAllListLive: LiveData<List<ICal4List>>,
+    onSelectFromAllListSearchTextUpdated: (String) -> Unit,
     //currentCategories: List<String>,
     //currentResources: List<String>
     //current: ICalCollection,
@@ -75,6 +79,7 @@ fun UpdateEntriesDialog(
     val allCategories by allCategoriesLive.observeAsState(emptyList())
     val allResources by allResourcesLive.observeAsState(emptyList())
     val allCollections by allCollectionsLive.observeAsState(emptyList())
+    val selectFromAllList by selectFromAllListLive.observeAsState(emptyList())
 
     val addedCategories = remember { mutableStateListOf<String>() }
     val removedCategories = remember { mutableStateListOf<String>() }
@@ -84,6 +89,9 @@ fun UpdateEntriesDialog(
     var newClassification by remember { mutableStateOf(Classification.NO_CLASSIFICATION) }
     var newPriority by remember { mutableStateOf<Int?>(null) }
     var newCollection by remember { mutableStateOf<ICalCollection?>(null) }
+    var newLinkReltype by remember { mutableStateOf<Reltype?>(Reltype.PARENT) }
+    var selectFromAllListSearchText by remember { mutableStateOf("") }
+    val selectFromAllListSelectedEntries = remember { mutableStateListOf<ICal4List>() }
 
     var updateEntriesDialogMode by remember { mutableStateOf(UpdateEntriesDialogMode.CATEGORIES) }
 
@@ -288,6 +296,81 @@ fun UpdateEntriesDialog(
                     )
                 }
 
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK) {
+                    FlowRow(
+                        mainAxisSpacing = 8.dp,
+                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    {
+                        Reltype.values().forEach { reltype ->
+                            InputChip(
+                                onClick = { newLinkReltype = reltype },
+                                label = { Text(reltype.name) },
+                                selected = newLinkReltype == reltype,
+                            )
+                        }
+                    }
+                }
+
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK) {
+                    Column {
+                        selectFromAllListSelectedEntries.forEach { entry ->
+                            ListCardGrid(
+                                iCalObject = entry,
+                                selected = true,
+                                progressUpdateDisabled = true,
+                                onProgressChanged = { _, _ -> },
+                                modifier = Modifier.clickable {
+                                    selectFromAllListSelectedEntries.remove(entry)
+                                }
+                            )
+                        }
+                    }
+                }
+
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK) {
+                    OutlinedTextField(
+                        value = selectFromAllListSearchText,
+                        onValueChange = {
+                            selectFromAllListSearchText = it
+                            onSelectFromAllListSearchTextUpdated(it)
+                        },
+                        label = { Text(stringResource(R.string.search)) },
+                        trailingIcon = {
+                            AnimatedVisibility(selectFromAllListSearchText.isNotEmpty()) {
+                                IconButton(
+                                    onClick = {
+                                        selectFromAllListSearchText = ""
+                                        onSelectFromAllListSearchTextUpdated("")
+                                    }
+                                ) {
+                                    Icon(Icons.Outlined.Close, stringResource(R.string.delete))
+                                }
+                            }
+                        }
+                    )
+                }
+
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK) {
+                    Column {
+                        selectFromAllList.forEach { entry ->
+                            ListCardGrid(
+                                iCalObject = entry,
+                                selected = selectFromAllListSelectedEntries.contains(entry),
+                                progressUpdateDisabled = true,
+                                onProgressChanged = {_, _ -> },
+                                modifier = Modifier.clickable {
+                                    if(selectFromAllListSelectedEntries.contains(entry))
+                                        selectFromAllListSelectedEntries.remove(entry)
+                                    else
+                                        selectFromAllListSelectedEntries.add(entry)
+                                }
+                            )
+                        }
+                    }
+                }
+
             }
         },
         confirmButton = {
@@ -300,6 +383,7 @@ fun UpdateEntriesDialog(
                         UpdateEntriesDialogMode.CLASSIFICATION -> onClassificationChanged(newClassification)
                         UpdateEntriesDialogMode.PRIORITY -> onPriorityChanged(if(newPriority == 0) null else newPriority)
                         UpdateEntriesDialogMode.COLLECTION -> newCollection?.let { onCollectionChanged(it) }
+                        UpdateEntriesDialogMode.LINK -> TODO() //onMakeChildOf()
                     }
                     onDismiss()
                 }
@@ -329,6 +413,8 @@ fun UpdateEntriesDialog_Preview() {
             allCategoriesLive = MutableLiveData(listOf("cat1", "Hello")),
             allResourcesLive = MutableLiveData(listOf("1234", "aaa")),
             allCollectionsLive = MutableLiveData(listOf(ICalCollection())),
+            selectFromAllListLive = MutableLiveData(listOf()),
+            onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },
             onResourcesChanged = { _, _ -> },
             onStatusChanged = {},

@@ -106,7 +106,7 @@ class ListWidgetUpdateWorker(
                     .iCalDatabaseDao
                     .getIcal4ListSync(
                         ICal4List.constructQuery(
-                            module = listWidgetConfig?.module ?: Module.TODO,
+                            modules = listOf(listWidgetConfig?.module ?: Module.TODO),
                             searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
                             searchResources = listWidgetConfig?.searchResources ?: emptyList(),
                             searchStatus = mutableListOf<Status>().apply {

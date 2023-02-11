@@ -229,7 +229,7 @@ data class ICal4List(
             )
 
         fun constructQuery(
-            module: Module,
+            modules: List<Module>,
             searchCategories: List<String> = emptyList(),
             searchResources: List<String> = emptyList(),
             searchStatus: List<Status> = emptyList(),
@@ -270,8 +270,8 @@ data class ICal4List(
                 queryString += "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
 
             // First query parameter Module must always be present!
-            queryString += "WHERE $COLUMN_MODULE = ? "
-            args.add(module.name)
+            queryString += "WHERE $COLUMN_MODULE IN (${modules.joinToString(separator = ",") { "?" }}) "
+            args.addAll(modules.map { it.name })
 
             //TEXT
             searchText?.let { text ->

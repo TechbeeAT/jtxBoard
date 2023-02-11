@@ -74,6 +74,11 @@ open class ListViewModel(application: Application, val module: Module) : Android
         return@map list.groupBy { it.vjournalUidOfParent }
     }
 
+    private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var selectFromAllList: LiveData<List<ICal4List>> = Transformations.switchMap(selectFromAllListQuery) {
+        database.getIcal4List(it)
+    }
+
     private val allAttachmentsList: LiveData<List<Attachment>> = database.getAllAttachments()
     val allAttachmentsMap = Transformations.map(allAttachmentsList) { list ->
         return@map list.groupBy { it.icalObjectId }
@@ -123,7 +128,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun updateSearch(saveListSettings: Boolean = false, isAuthenticated: Boolean) {
         val query = ICal4List.constructQuery(
-            module = module,
+            modules = listOf(module),
             searchCategories = listSettings.searchCategories.value,
             searchResources = listSettings.searchResources.value,
             searchStatus = listSettings.searchStatus.value,
@@ -157,6 +162,14 @@ open class ListViewModel(application: Application, val module: Module) : Android
         allSubnotesQuery.postValue(ICal4List.getQueryForAllSubEntries(Component.VJOURNAL, listSettings.subnotesOrderBy.value, listSettings.subnotesSortOrder.value))
         if(saveListSettings)
             listSettings.saveToPrefs(prefs)
+    }
+
+    fun updateSelectFromAllListQuery(searchText: String, isAuthenticated: Boolean) {
+        selectFromAllListQuery.postValue(ICal4List.constructQuery(
+            modules = listOf(Module.JOURNAL, Module.NOTE, Module.TODO),
+            searchText = searchText,
+            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
+        ))
     }
 
     
