@@ -26,6 +26,7 @@ Global Strings -->
     <string name="classification_public">"Nyilvános"</string>
     <string name="classification_private">"Privát"</string>
     <string name="classification_confidential">"Bizalmas"</string>
+    <string name="attendee_role_chair">"Vezető"</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Navigációs sáv megnyitása"</string>
     <string name="navigation_drawer_close">"Navigációs sáv bezárása"</string>
@@ -53,6 +54,10 @@ Global Strings -->
     <string name="list_expand">"Kibontás"</string>
     <string name="list_dialog_delete_selected_title">Törli a kijelölt bejegyzéseket?</string>
     <!-- fragment_ical_view -->
+    <string name="view_fragment_audio_permission">"Engedélyek"</string>
+    <string name="view_fragment_audio_dialog_add_audio_note">"Hangmelléklet hozzáadása"</string>
+    <string name="view_comment_playbutton_content_desc">"Hangmelléklet lejátszása"</string>
+    <string name="view_add_audio_note">"Hang hozzáadása"</string>
     <string name="view_fab_edit_entry_contentDesc">"Bejegyzés szerkesztése"</string>
     <string name="view_subtasks_header">"Alfeladatok"</string>
     <string name="view_progress_label">"Előrehaladás"</string>
@@ -67,8 +72,10 @@ Global Strings -->
     <string name="edit_add_category_helper">"Kategória hozzáadása"</string>
     <string name="edit_attendees_hint">"bela@akarmi.hu"</string>
     <string name="edit_attachment_button_text">"Melléklet hozzáadása"</string>
+    <string name="edit_take_picture_button_text">"Fotó készítése"</string>
     <string name="edit_add_link_button_text">"Csatolmány hivatkozás hozzáadása"</string>
     <string name="edit_location_helper">"Helyszín hozzáadása a bejegyzéshez"</string>
+    <string name="edit_comment_add_dialog_hint">"Hozzászólásod"</string>
     <string name="edit_subtasks_add_hint">"Alfeladataim"</string>
     <string name="edit_subtasks_add_helper">"Alfeladat hozzáadása"</string>
     <string name="edit_attachment_delete_attachment">"Melléklet törlése"</string>
@@ -93,10 +100,20 @@ Global Strings -->
     <string name="about_thanks_ffg">"Külön köszönet FFG-nek a projekt létrehozásához nyújtott szellemi és anyagi támogatásért."</string>
     <!-- menus -->
     <string name="menu_list_gotodate">"Dátumhoz ugrás"</string>
+    <string name="menu_list_quick_journal">"Gyors napló"</string>
+    <string name="menu_list_quick_note">"Gyorsjegyzet"</string>
+    <string name="menu_list_quick_todo">"Gyors teendő"</string>
     <string name="menu_list_syncnow">"Szinkronizálás indítása"</string>
+    <string name="menu_view_copy_as_journal">"Másolás naplóként"</string>
+    <string name="menu_view_copy_as_todo">"Másolás teendőként"</string>
+    <string name="menu_view_copy_as_note">"Másolás jegyzetként"</string>
+    <string name="menu_view_copy_item">"Másolat létrehozása"</string>
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">"Feladat határidő emlékeztető"</string>
     <!-- Shortcuts -->
+    <string name="shortcut_addJournal_longLabel">"Új Napló"</string>
+    <string name="shortcut_addNote_longLabel">"Új jegyzet"</string>
+    <string name="shortcut_addTodo_longLabel">"Teendő hozzáadása"</string>
     <!-- Settings fragment -->
     <string name="settings_show_subtasks_in_list">"Alfeladatok megjelenítése a feladatok listáján"</string>
     <string name="settings_show_progress_for_subtasks">Alfeladatok állapotának megjelenítése</string>
@@ -105,6 +122,7 @@ Global Strings -->
     <!-- Sync fragment -->
     <string name="sync_congratulations">"Gratulálunk! :)"</string>
     <!-- Donate fragment -->
+    <string name="donate_thank_you">"Köszönjük!"</string>
     <!-- sync content provider -->
     <!-- Permissions -->
     <string name="edit">"Szerkesztés"</string>
