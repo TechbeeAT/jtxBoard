@@ -69,6 +69,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"最初の行はサマリとして解釈され、残りは説明として解釈されます。ハッシュタグはカテゴリとして解釈されます (例: #category)。"</string>
     <string name="list_item_upload_pending">"アップロード処理待ち"</string>
     <string name="list_item_recurring">"定期的なイベント"</string>
+    <string name="list_item_edited_recurring">"編集された定期的なエントリ"</string>
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"オリジナルへ移動"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"反復インスタンス"</string>
@@ -159,6 +160,9 @@ Global Strings -->
     <!-- Fuzzy -->
     <!-- Buy Pro fragment -->
     <string name="clear_selection">"選択を解除"</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"注意: 定期的なインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
+    <string name="details_unchanged_part_of_series">"このエントリはシリーズの一部です。このエントリは、シリーズに対して行われた変更をすべてコピーします。"</string>
+    <string name="details_changed_part_of_series">"このエントリはシリーズの一部ですが、変更されました。このエントリはシリーズの変更による影響を受けません。"</string>
     <!-- alarms -->
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
