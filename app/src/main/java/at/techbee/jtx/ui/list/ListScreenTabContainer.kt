@@ -189,6 +189,7 @@ fun ListScreenTabContainer(
             onClassificationChanged = { newClassification -> getActiveViewModel().updateClassificationOfSelected(newClassification) },
             onPriorityChanged = { newPriority -> getActiveViewModel().updatePriorityOfSelected(newPriority) },
             onCollectionChanged = { newCollection -> getActiveViewModel().moveSelectedToNewCollection(newCollection) },
+            onParentAdded = { addedParent -> getActiveViewModel().addNewParentToSelected(addedParent) },
             onDismiss = { showUpdateEntriesDialog = false }
         )
     }

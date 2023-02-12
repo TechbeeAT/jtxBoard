@@ -51,7 +51,7 @@ enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     CLASSIFICATION(R.string.classification),
     PRIORITY(R.string.priority),
     COLLECTION(R.string.collection),
-    LINK(R.string.link_entries)
+    LINK_TO_PARENT(R.string.link_to_parent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -73,6 +73,7 @@ fun UpdateEntriesDialog(
     onClassificationChanged: (Classification) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     onCollectionChanged: (ICalCollection) -> Unit,
+    onParentAdded: (parent: ICal4List) -> Unit,
     onDismiss: () -> Unit
 ) {
 
@@ -85,13 +86,13 @@ fun UpdateEntriesDialog(
     val removedCategories = remember { mutableStateListOf<String>() }
     val addedResources = remember { mutableStateListOf<String>() }
     val removedResources = remember { mutableStateListOf<String>() }
-    var newStatus by remember { mutableStateOf(Status.NO_STATUS) }
-    var newClassification by remember { mutableStateOf(Classification.NO_CLASSIFICATION) }
+    var newStatus by remember { mutableStateOf<Status?>(null) }
+    var newClassification by remember { mutableStateOf<Classification?>(null) }
     var newPriority by remember { mutableStateOf<Int?>(null) }
     var newCollection by remember { mutableStateOf<ICalCollection?>(null) }
     var newLinkReltype by remember { mutableStateOf<Reltype?>(Reltype.PARENT) }
     var selectFromAllListSearchText by remember { mutableStateOf("") }
-    val selectFromAllListSelectedEntries = remember { mutableStateListOf<ICal4List>() }
+    var selectFromAllListSelectedEntry by remember { mutableStateOf<ICal4List?>(null) }
 
     var updateEntriesDialogMode by remember { mutableStateOf(UpdateEntriesDialogMode.CATEGORIES) }
 
@@ -296,40 +297,14 @@ fun UpdateEntriesDialog(
                     )
                 }
 
-                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK) {
-                    FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
-                        modifier = Modifier.fillMaxWidth()
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK_TO_PARENT) {
+                    Text(
+                        text = stringResource(R.string.list_update_entries_dialog_new_parent_info),
+                        style = MaterialTheme.typography.labelMedium
                     )
-                    {
-                        Reltype.values().forEach { reltype ->
-                            InputChip(
-                                onClick = { newLinkReltype = reltype },
-                                label = { Text(reltype.name) },
-                                selected = newLinkReltype == reltype,
-                            )
-                        }
-                    }
                 }
 
-                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK) {
-                    Column {
-                        selectFromAllListSelectedEntries.forEach { entry ->
-                            ListCardGrid(
-                                iCalObject = entry,
-                                selected = true,
-                                progressUpdateDisabled = true,
-                                onProgressChanged = { _, _ -> },
-                                modifier = Modifier.clickable {
-                                    selectFromAllListSelectedEntries.remove(entry)
-                                }
-                            )
-                        }
-                    }
-                }
-
-                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK) {
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK_TO_PARENT) {
                     OutlinedTextField(
                         value = selectFromAllListSearchText,
                         onValueChange = {
@@ -352,19 +327,19 @@ fun UpdateEntriesDialog(
                     )
                 }
 
-                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK) {
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK_TO_PARENT) {
                     Column {
                         selectFromAllList.forEach { entry ->
                             ListCardGrid(
                                 iCalObject = entry,
-                                selected = selectFromAllListSelectedEntries.contains(entry),
+                                selected = entry == selectFromAllListSelectedEntry,
                                 progressUpdateDisabled = true,
                                 onProgressChanged = {_, _ -> },
                                 modifier = Modifier.clickable {
-                                    if(selectFromAllListSelectedEntries.contains(entry))
-                                        selectFromAllListSelectedEntries.remove(entry)
+                                    if(entry == selectFromAllListSelectedEntry)
+                                        selectFromAllListSelectedEntry = null
                                     else
-                                        selectFromAllListSelectedEntries.add(entry)
+                                        selectFromAllListSelectedEntry = entry
                                 }
                             )
                         }
@@ -379,13 +354,22 @@ fun UpdateEntriesDialog(
                     when (updateEntriesDialogMode) {
                         UpdateEntriesDialogMode.CATEGORIES -> onCategoriesChanged(addedCategories, removedCategories)
                         UpdateEntriesDialogMode.RESOURCES -> onResourcesChanged(addedResources, removedResources)
-                        UpdateEntriesDialogMode.STATUS -> onStatusChanged(newStatus)
-                        UpdateEntriesDialogMode.CLASSIFICATION -> onClassificationChanged(newClassification)
+                        UpdateEntriesDialogMode.STATUS -> newStatus?.let { onStatusChanged(it) }
+                        UpdateEntriesDialogMode.CLASSIFICATION -> newClassification?.let { onClassificationChanged(it) }
                         UpdateEntriesDialogMode.PRIORITY -> onPriorityChanged(if(newPriority == 0) null else newPriority)
                         UpdateEntriesDialogMode.COLLECTION -> newCollection?.let { onCollectionChanged(it) }
-                        UpdateEntriesDialogMode.LINK -> TODO() //onMakeChildOf()
+                        UpdateEntriesDialogMode.LINK_TO_PARENT -> selectFromAllListSelectedEntry?.let { onParentAdded(it) }
                     }
                     onDismiss()
+                },
+                enabled = when(updateEntriesDialogMode) {
+                    UpdateEntriesDialogMode.CATEGORIES -> addedCategories.isNotEmpty() || removedCategories.isNotEmpty()
+                    UpdateEntriesDialogMode.RESOURCES -> addedResources.isNotEmpty() || removedResources.isNotEmpty()
+                    UpdateEntriesDialogMode.STATUS -> newStatus != null
+                    UpdateEntriesDialogMode.CLASSIFICATION -> newClassification != null
+                    UpdateEntriesDialogMode.PRIORITY -> true
+                    UpdateEntriesDialogMode.COLLECTION -> newCollection != null
+                    UpdateEntriesDialogMode.LINK_TO_PARENT -> selectFromAllListSelectedEntry != null
                 }
             ) {
                 Text(stringResource(id = R.string.save))
@@ -421,6 +405,7 @@ fun UpdateEntriesDialog_Preview() {
             onClassificationChanged = {},
             onPriorityChanged = {},
             onCollectionChanged = {},
+            onParentAdded = {},
             onDismiss = { }
         )
     }

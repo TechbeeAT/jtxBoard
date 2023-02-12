@@ -23,10 +23,7 @@ import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
-import at.techbee.jtx.database.properties.Alarm
-import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.properties.Resource
+import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -298,6 +295,27 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     if(database.getResourceForICalObjectByName(selected, resource) == null)
                         database.insertResource(Resource(icalObjectId = selected, text = resource))
                 }
+            }
+            makeSelectedDirty()
+        }
+    }
+
+    /**
+     * Adds a new relatedTo to the selected entries
+     * @param removedResources that should be deleted
+     */
+    fun addNewParentToSelected(addedParent: ICal4List) {
+        viewModelScope.launch(Dispatchers.IO) {
+            selectedEntries.forEach { selected ->
+                val existing = database.findRelatedTo(selected, addedParent.uid!!, Reltype.PARENT.name)
+                if(existing == null)
+                    database.insertRelatedto(
+                        Relatedto(
+                            icalObjectId = selected,
+                            text = addedParent.uid,
+                            reltype = Reltype.PARENT.name
+                        )
+                    )
             }
             makeSelectedDirty()
         }
