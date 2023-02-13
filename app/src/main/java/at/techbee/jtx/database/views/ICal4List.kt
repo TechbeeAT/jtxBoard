@@ -73,8 +73,6 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'JOURNAL' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfJournal, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'NOTE' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfNote, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'TODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfTodo, " +
-            "(SELECT sub_rel.$COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = sub_ical.$COLUMN_ID AND sub_ical.$COLUMN_COMPONENT = 'VTODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND sub_ical.$COLUMN_DELETED = 0) as vtodoUidOfParent, " +
-            "(SELECT sub_rel.$COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = sub_ical.$COLUMN_ID AND sub_ical.$COLUMN_COMPONENT = 'VJOURNAL' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND sub_ical.$COLUMN_DELETED = 0) as vjournalUidOfParent, " +
             "(SELECT group_concat($TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT, \', \') FROM $TABLE_NAME_CATEGORY WHERE main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID GROUP BY $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = 'VTODO' AND sub_relatedto.$COLUMN_RELATEDTO_TEXT = main_icalobject.$COLUMN_UID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_icalobject.$COLUMN_DELETED = 0 AND sub_icalobject.$COLUMN_RRULE IS NULL) as numSubtasks, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = 'VJOURNAL' AND sub_relatedto.$COLUMN_RELATEDTO_TEXT = main_icalobject.$COLUMN_UID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_icalobject.$COLUMN_DELETED = 0 AND sub_icalobject.$COLUMN_RRULE IS NULL) as numSubnotes, " +
@@ -149,9 +147,6 @@ data class ICal4List(
     @ColumnInfo var isChildOfNote: Boolean,
     @ColumnInfo var isChildOfTodo: Boolean,
 
-    @ColumnInfo var vtodoUidOfParent: String?,
-    @ColumnInfo var vjournalUidOfParent: String?,
-
     @ColumnInfo var categories: String?,
     @ColumnInfo var numSubtasks: Int,
     @ColumnInfo var numSubnotes: Int,
@@ -213,8 +208,6 @@ data class ICal4List(
                 isChildOfJournal = false,
                 isChildOfNote = false,
                 isChildOfTodo = false,
-                vtodoUidOfParent = null,
-                vjournalUidOfParent = null,
                 categories = "Category1, Whatever",
                 numSubtasks = 3,
                 numSubnotes = 2,
@@ -452,22 +445,14 @@ data class ICal4List(
             SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (${parents.joinToString(separator = ",", transform = { "'$it'" })}) ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
 
         /**
-         * Returns all subtasks of a given entry by its UID
-         * @param parentUid: UID of parent for which the sub-entries should be returned
-         * @param orderBy
-         * @param sortOrder
-         */
-        fun getQueryForAllSubtasksForParentUID(parentUid: String, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
-            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vtodoUidOfParent = '$parentUid' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
-
-        /**
          * Returns all subnotes/subjournals of a given entry by its UID
          * @param parentUid: UID of parent for which the sub-entries should be returned
+         * @param module: The module to choose if subtasks (Module.TOD0) or subnotes (Module.NOTE) should be returned
          * @param orderBy
          * @param sortOrder
          */
-        fun getQueryForAllSubnotesForParentUID(parentUid: String, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
-            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vjournalUidOfParent = '$parentUid' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+        fun getQueryForAllSubentriesForParentUID(parentUid: String, module: Module, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON ${TABLE_NAME_RELATEDTO}.${COLUMN_RELATEDTO_ICALOBJECT_ID} = ${VIEW_NAME_ICAL4LIST}.${COLUMN_ID} WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT = '$parentUid' AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $COLUMN_MODULE = '${module.name}' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
 
     }
 

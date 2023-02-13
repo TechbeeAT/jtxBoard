@@ -14,6 +14,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.*
 
@@ -553,12 +554,12 @@ DELETEs by Object
     fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4List>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
-    fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
+    @RawQuery(observedEntities = [ICal4ListRel::class])
+    fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
-    fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4List>
+    @RawQuery(observedEntities = [ICal4ListRel::class])
+    fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4ListRel>
 
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")

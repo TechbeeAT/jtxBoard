@@ -24,6 +24,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -56,19 +57,13 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     private var allSubtasksQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    private var allSubtasks: LiveData<List<ICal4List>> = Transformations.switchMap(allSubtasksQuery) {
+    var allSubtasks: LiveData<List<ICal4ListRel>> = Transformations.switchMap(allSubtasksQuery) {
         database.getSubEntries(it)
-    }
-    val allSubtasksMap = Transformations.map(allSubtasks) { list ->
-        return@map list.groupBy { it.vtodoUidOfParent }
     }
 
     private var allSubnotesQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    private var allSubnotes: LiveData<List<ICal4List>> = Transformations.switchMap(allSubnotesQuery) {
+    var allSubnotes: LiveData<List<ICal4ListRel>> = Transformations.switchMap(allSubnotesQuery) {
         database.getSubEntries(it)
-    }
-    val allSubnotesMap = Transformations.map(allSubnotes) { list ->
-        return@map list.groupBy { it.vjournalUidOfParent }
     }
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
@@ -302,7 +297,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
     /**
      * Adds a new relatedTo to the selected entries
-     * @param removedResources that should be deleted
+     * @param addedParent that should be added as a relation
      */
     fun addNewParentToSelected(addedParent: ICal4List) {
         viewModelScope.launch(Dispatchers.IO) {

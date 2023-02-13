@@ -1,11 +1,6 @@
 package at.techbee.jtx.widgets
 
 
-import androidx.room.ColumnInfo
-import at.techbee.jtx.database.COLUMN_CLASSIFICATION
-import at.techbee.jtx.database.COLUMN_PERCENT
-import at.techbee.jtx.database.COLUMN_PRIORITY
-import at.techbee.jtx.database.COLUMN_STATUS
 import at.techbee.jtx.database.views.ICal4List
 
 
@@ -33,14 +28,14 @@ data class ICal4ListWidget(
     var isChildOfNote: Boolean,
     var isChildOfTodo: Boolean,
 
-    var vtodoUidOfParent: String?,
-    var vjournalUidOfParent: String?,
+    var parentUID: String?,
     var isReadOnly: Boolean,
 ) {
 
     companion object {
+        fun fromICal4List(iCal4List: ICal4List) = fromICal4List(iCal4List, null)
 
-        fun fromICal4List(iCal4List: ICal4List): ICal4ListWidget {
+        fun fromICal4List(iCal4List: ICal4List, parentUID: String?): ICal4ListWidget {
             return ICal4ListWidget(
                 id = iCal4List.id,
                 module = iCal4List.module,
@@ -58,8 +53,7 @@ data class ICal4ListWidget(
                 isChildOfJournal = iCal4List.isChildOfJournal,
                 isChildOfNote = iCal4List.isChildOfNote,
                 isChildOfTodo = iCal4List.isChildOfTodo,
-                vtodoUidOfParent = iCal4List.vtodoUidOfParent,
-                vjournalUidOfParent = iCal4List.vjournalUidOfParent,
+                parentUID = parentUID,
                 isReadOnly = iCal4List.isReadOnly
             )
         }

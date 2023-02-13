@@ -158,10 +158,26 @@ class ListWidgetUpdateWorker(
                 val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subtasksQuery)
                 val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subnotesQuery)
 
+                val subtasksList = mutableListOf<ICal4ListWidget>().apply {
+                    subtasks.forEach { subtask ->
+                        subtask.relatedto.forEach { relatedto ->
+                            relatedto.text?.let {this.add(ICal4ListWidget.fromICal4List(subtask.iCal4List, it)) }
+                        }
+                    }
+                }
+
+                val subnotesList = mutableListOf<ICal4ListWidget>().apply {
+                    subnotes.forEach { subnote ->
+                        subnote.relatedto.forEach { relatedto ->
+                            relatedto.text?.let {this.add(ICal4ListWidget.fromICal4List(subnote.iCal4List, it)) }
+                        }
+                    }
+                }
+
                 pref.toMutablePreferences().apply {
                     this[ListWidgetReceiver.list] = entries.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()
-                    this[ListWidgetReceiver.subtasks] = subtasks.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()
-                    this[ListWidgetReceiver.subnotes] = subnotes.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()
+                    this[ListWidgetReceiver.subtasks] = subtasksList.map { entry -> Json.encodeToString(entry) }.toSet()
+                    this[ListWidgetReceiver.subnotes] = subnotesList.map { entry -> Json.encodeToString(entry) }.toSet()
                     this[ListWidgetReceiver.listExceedsLimits] = allEntries.size > ListWidget.MAX_ENTRIES
                     //Log.d("ListWidgetUpdateWorker", this[ListWidgetReceiver.list].toString())
                 }
