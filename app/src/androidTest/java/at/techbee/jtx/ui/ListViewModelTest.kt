@@ -16,7 +16,6 @@ import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.getOrAwaitValue
 import at.techbee.jtx.ui.list.ListViewModel
 import at.techbee.jtx.ui.list.ListViewModelJournals
 import at.techbee.jtx.ui.list.ListViewModelNotes
@@ -118,7 +117,7 @@ class ListViewModelTest {
         database.insertICalObject(ICalObject.createTask("Task3_abc"))
         listViewModel.listSettings.searchText.value = "%abc%"
         listViewModel.updateSearch(isAuthenticated = false)
-        assertEquals(2, listViewModel.iCal4List.getOrAwaitValue().size)
+        assertEquals(2, listViewModel.iCal4List.value?.size)
     }
 
     @Test

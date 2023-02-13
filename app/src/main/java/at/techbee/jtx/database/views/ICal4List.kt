@@ -275,13 +275,8 @@ data class ICal4List(
                     args.add("%$text%")
                     args.add("%$text%")
 
-                    // Search in Subtasks
-                    queryString += "OR $VIEW_NAME_ICAL4LIST.$COLUMN_UID IN (SELECT DISTINCT $VIEW_NAME_ICAL4LIST.vtodoUidOfParent from $VIEW_NAME_ICAL4LIST WHERE (isChildOfJournal = 1 OR isChildOfNote = 1 OR isChildOfTodo = 1) AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) ) "
-                    args.add("%$text%")
-                    args.add("%$text%")
-
-                    // Search in Subtasks
-                    queryString += "OR $VIEW_NAME_ICAL4LIST.$COLUMN_UID IN (SELECT DISTINCT $VIEW_NAME_ICAL4LIST.vjournalUidOfParent from $VIEW_NAME_ICAL4LIST WHERE (isChildOfJournal = 1 OR isChildOfNote = 1 OR isChildOfTodo = 1) AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) ) "
+                    // Search in Subtasks and Subnotes
+                    queryString += "OR $VIEW_NAME_ICAL4LIST.$COLUMN_UID IN (SELECT $COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO INNER JOIN $VIEW_NAME_ICAL4LIST ON $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID WHERE (isChildOfJournal = 1 OR isChildOfNote = 1 OR isChildOfTodo = 1) AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) ) "
                     args.add("%$text%")
                     args.add("%$text%")
 
