@@ -112,10 +112,10 @@ Global Strings -->
     <string name="edit_comment_helper">"コメントを追加"</string>
     <string name="edit_attachment_button_text">"添付ファイルを追加"</string>
     <string name="edit_take_picture_button_text">"写真を撮る"</string>
-    <string name="edit_add_link_button_text">"ファイルを添付"</string>
-    <string name="edit_url_helper">"このエントリーに関連する URL"</string>
-    <string name="edit_location_helper">"このエントリーの位置情報を追加"</string>
-    <string name="edit_attachment_add_dialog_hint">"あなたの添付ファイル URL (https://…)"</string>
+    <string name="edit_add_link_button_text">"リンクを追加"</string>
+    <string name="edit_url_helper">"この項目に関連する URL"</string>
+    <string name="edit_location_helper">"場所を追加"</string>
+    <string name="edit_attachment_add_dialog_hint">"あなたのリンク URL (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"あなたのコメント"</string>
     <string name="edit_subtasks_add_helper">"サブタスクを追加"</string>
     <string name="edit_attachment_delete_attachment">"添付ファイルを削除"</string>
