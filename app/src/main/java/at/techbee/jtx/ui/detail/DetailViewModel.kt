@@ -83,14 +83,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             icalEntity = database.get(icalObjectId)
 
-            relatedSubnotes = Transformations.switchMap(icalEntity) {
-                it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Module.TODO, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
-                }
-            }
             relatedSubtasks = Transformations.switchMap(icalEntity) {
                 it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Module.NOTE, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
+                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Module.TODO, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
+                }
+            }
+            relatedSubnotes = Transformations.switchMap(icalEntity) {
+                it?.property?.uid?.let { parentUid ->
+                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Module.NOTE, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
             seriesElement = Transformations.switchMap(icalEntity) {
