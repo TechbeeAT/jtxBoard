@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board ジャーナル、メモ、ToDo リストを同期"</string>
+    <string name="app_permission_label">"jtx Board ジャーナル、メモ、タスクを同期"</string>
     <string name="app_permission_desc">"jtx Board のコンテンツを DAVx⁵ のような外部のアプリケーションで同期"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
@@ -16,7 +16,7 @@ Global Strings -->
     <string name="website">"ウェブサイト"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
-    <string name="toolbar_text_add_task">"ToDo を追加"</string>
+    <string name="toolbar_text_add_task">"タスクを追加"</string>
     <string name="default_local_collection_name">"ローカル"</string>
     <string name="default_local_account_name">"ローカル"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -40,7 +40,7 @@ Global Strings -->
     <string name="navigation_drawer_board">"ボード"</string>
     <string name="navigation_drawer_sync">"DAVx⁵ で同期"</string>
     <string name="navigation_drawer_about">"アプリについて / ライセンス"</string>
-    <string name="navigation_drawer_subtitle">"ジャーナル、メモ、ToDo リスト"</string>
+    <string name="navigation_drawer_subtitle">"ジャーナル、メモ、タスク"</string>
     <string name="navigation_drawer_beta_feedback">"ベータ版へのフィードバック"</string>
     <string name="navigation_drawer_settings">"設定"</string>
     <string name="navigation_drawer_news_updates">"ニュース &amp; アップデート"</string>
@@ -62,14 +62,14 @@ Global Strings -->
     <string name="list_start_inXdays">"%d 日後に着手予定"</string>
     <string name="list_tabitem_journals">"ジャーナル"</string>
     <string name="list_tabitem_notes">"メモ"</string>
-    <string name="list_tabitem_todos">"ToDo"</string>
+    <string name="list_tabitem_todos">"タスク"</string>
     <string name="list_fab_add_contentdesc">"新しいアイテムを追加"</string>
     <string name="list_progress">"進捗状況"</string>
     <string name="list_expand">"展開"</string>
     <string name="list_dialog_delete_selected_title">選択した項目を削除しますか？</string>
     <string name="list_dialog_delete_selected_message">このアクションは選択したすべての項目 (%1$d 件) を削除します。本当に続行しますか？ この操作は元に戻せません！</string>
     <string name="list_quickadd_dialog_summary_description_hint">"概要/詳細"</string>
-    <string name="list_quickadd_dialog_summary_description_helper">"最初の行は概要、残りは詳細として解釈されます。ハッシュタグはカテゴリーとして解釈されます (例: #category)。"</string>
+    <string name="list_quickadd_dialog_summary_description_helper">"最初の行は概要、残りは詳細として解釈されます。ハッシュタグはカテゴリーとして解釈されます (例: #カテゴリー)。"</string>
     <string name="list_item_upload_pending">"アップロード処理中"</string>
     <string name="list_item_recurring">"繰り返しのある項目"</string>
     <string name="list_item_edited_recurring">"編集された繰り返しのある項目"</string>
@@ -100,10 +100,10 @@ Global Strings -->
     <string name="view_completed">"完了日時"</string>
     <string name="view_started">"着手日時"</string>
     <!-- fragment_ical_edit -->
-    <string name="edit_add_category_hint">"#mycategory"</string>
+    <string name="edit_add_category_hint">"#マイカテゴリー"</string>
     <string name="edit_add_category_helper">"カテゴリーを追加"</string>
     <string name="edit_attendees_hint">"johanna@example.com"</string>
-    <string name="edit_attendees_helper">"出席者 (メールアドレス) を追加します。注意: iMIP メッセージを送信するなど、サーバーが自動的に出席者を処理する場合があります。"</string>
+    <string name="edit_attendees_helper">"参加者 (メールアドレス) を追加します。注意: iMIP メッセージを送信するなど、サーバーが自動的に参加者を処理する場合があります。"</string>
     <string name="edit_resources_hint">"プロジェクター"</string>
     <string name="edit_resources_helper">"必要なものを追加"</string>
     <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
@@ -145,7 +145,7 @@ Global Strings -->
     <string name="edit_dialog_sure_to_discard_message">"本当にこの項目を破棄しますか？ 破棄を選択すると保存されません。"</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"着手より前の日時を締め切りに設定することはできません。"</string>
     <string name="edit_fragment_app_permission">"アプリの権限"</string>
-    <string name="edit_fragment_app_permission_message">"jtx Board はあなたの連絡先に基づいて出席者の候補を提示できます。この機能を有効にするには、連絡先の読み取りの権限が必要です。"</string>
+    <string name="edit_fragment_app_permission_message">"jtx Board はあなたの連絡先に基づいて参加者の候補を提示できます。この機能を有効にするには、連絡先の読み取りの権限が必要です。"</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">"対応していない繰り返しルールを検出しました！"</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"未知または対応していない繰り返しルールが検出されました。この項目を保存すると、既存の繰り返しルールが削除/上書きされます。"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"対応していない値 (Duration) を検出しました！"</string>
@@ -219,18 +219,54 @@ Global Strings -->
     <string name="about_translations_contribution_button">"Crowdin.com で参加"</string>
     <string name="about_translations_poeditor">"POeditor.com (レガシー) の翻訳者"</string>
     <string name="list_welcome_entry_journal_summary">"おめでとうございます。最初のジャーナルです :-)"</string>
-    <string name="list_welcome_entry_journal_description">"ジャーナルでは、特定の日付に対応したメモを保存できます。この機能の使い方は、議事録、ミーティングの時間、日記など自由です。この項目を編集すると、カテゴリーや出席者、添付ファイルなどを追加するオプションを確認できます。この項目が不要なら削除してください！"</string>
+    <string name="list_welcome_entry_journal_description">"ジャーナルでは、特定の日付に対応したメモを保存できます。この機能の使い方は、議事録、ミーティングの時間、日記など自由です。この項目を編集すると、カテゴリーや参加者、添付ファイルなどを追加するオプションを確認できます。この項目が不要なら削除してください！"</string>
     <string name="list_welcome_entry_note_summary">"おめでとうございます。最初のメモです :-)"</string>
-    <string name="list_welcome_entry_note_description">"メモは特定の日付に対応しません。ジャーナルと同じように、作成時や編集時に添付ファイルや出席者を追加できます。また、ジャーナル、メモ、タスクのすべてでサブタスクを設定できます！"</string>
+    <string name="list_welcome_entry_note_description">"メモは特定の日付に対応しません。ジャーナルと同じように、作成時や編集時に添付ファイルや参加者を追加できます。また、ジャーナル、メモ、タスクのすべてでサブタスクを設定できます！"</string>
     <string name="list_welcome_entry_todo_summary">"おめでとうございます。最初のタスクです :-)"</string>
-    <string name="save_and_new">"保存 &amp; 新規作成"</string>
+    <string name="list_welcome_entry_todo_description">"さらに、ジャーナル、メモとタスクは着手や締切、完了日時を設定できます。これらは、完了したときや目標が設定されたときに確認できます。試しにこの項目を編集して、さまざまなオプションを確認してみてください :-)"</string>
+    <string name="list_welcome_category">"#ファーストステップ"</string>
+    <string name="save_and_edit">"保存して編集"</string>
+    <string name="save_and_new">"保存して新規作成"</string>
     <string name="save_and_close">"保存して閉じる"</string>
+    <string name="list_quickadd_dialog_sr_endicon_contentdesc">"音声文字変換を使用"</string>
+    <string name="list_quickadd_dialog_sr_start_listening">"音声文字変換エンジンが聞き取っています。"</string>
+    <string name="list_quickadd_dialog_sr_stop_listening">"音声文字変換エンジンが聞き取りを停止しました。"</string>
+    <string name="list_quickadd_dialog_sr_error">"申し訳ありません。音声文字変換エンジンでエラーが発生しました。(%1$s)"</string>
     <!-- Permissions -->
+    <string name="permission_read_contacts_granted">"連絡先の読み取り権限が付与されました"</string>
+    <string name="permission_read_contacts_denied">"連絡先の読み取り権限が拒否されました"</string>
+    <string name="permission_record_audio_granted">"音声録音の権限が付与されました"</string>
+    <string name="permission_record_audio_denied">"音声録音の権限が拒否されました"</string>
+    <string name="intent_dialog_title">"ジャーナル、メモ、タスクにコンテンツを追加しますか？"</string>
+    <string name="add">"追加"</string>
+    <string name="edit">"編集"</string>
+    <string name="reset">"リセット"</string>
+    <string name="apply">"適用"</string>
+    <string name="not_available_abbreviation">"利用不可"</string>
+    <string name="collection">"コレクション"</string>
+    <string name="toolbar_text_collections">"コレクション"</string>
+    <string name="navigation_drawer_collections">"コレクション"</string>
+    <string name="edit_dialog_set_attendee_role">"参加者の役割を設定"</string>
     <!-- alarms -->
+    <string name="alarms_onstart">"着手日時"</string>
+    <string name="alarms_ondue">"締切日時"</string>
+    <string name="alarms_custom">"カスタム"</string>
+    <string name="alarms_before_start">"着手日時より前"</string>
+    <string name="alarms_after_start">"着手日時より後"</string>
+    <string name="alarms_before_due">"締切日時より前"</string>
+    <string name="alarms_after_due">"締切日時より後"</string>
+    <string name="alarms_minutes">"分"</string>
+    <string name="alarms_hours">"時間"</string>
+    <string name="alarms_days">"日"</string>
     <!-- fragment_collections -->
+    <string name="collections_local_collections">"ローカルのコレクション"</string>
+    <string name="collections_remote_collections">"リモートのコレクション"</string>
     <!-- Fuzzy -->
+    <string name="collections_journals_num">"ジャーナル: %1$s"</string>
     <!-- Fuzzy -->
+    <string name="collections_notes_num">"メモ: %1$s"</string>
     <!-- Fuzzy -->
+    <string name="collections_tasks_num">"タスク: %1$s"</string>
     <!-- Buy Pro fragment -->
     <string name="clear_selection">"選択を解除"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意: 定期的なインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
