@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board 日誌、メモ、ToDo リストを同期"</string>
+    <string name="app_permission_label">"jtx Board ジャーナル、メモ、ToDo リストを同期"</string>
     <string name="app_permission_desc">"jtx Board のコンテンツを DAVx⁵ のような外部のアプリケーションで同期"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
@@ -14,7 +14,7 @@ Global Strings -->
     <string name="gotit">"わかりました"</string>
     <string name="cont">"続行"</string>
     <string name="website">"ウェブサイト"</string>
-    <string name="toolbar_text_add_journal">"日誌を追加"</string>
+    <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
     <string name="toolbar_text_add_task">"ToDo を追加"</string>
     <string name="default_local_collection_name">"ローカル"</string>
@@ -40,7 +40,7 @@ Global Strings -->
     <string name="navigation_drawer_board">"ボード"</string>
     <string name="navigation_drawer_sync">"DAVx⁵ で同期"</string>
     <string name="navigation_drawer_about">"アプリについて / ライセンス"</string>
-    <string name="navigation_drawer_subtitle">"日誌、メモ、ToDo リスト"</string>
+    <string name="navigation_drawer_subtitle">"ジャーナル、メモ、ToDo リスト"</string>
     <string name="navigation_drawer_beta_feedback">"ベータ版へのフィードバック"</string>
     <string name="navigation_drawer_settings">"設定"</string>
     <string name="navigation_drawer_news_updates">"ニュース &amp; アップデート"</string>
@@ -60,7 +60,7 @@ Global Strings -->
     <string name="list_start_tomorrow">"明日から着手予定"</string>
     <string name="list_start_inXhours">"%d 時間後に着手予定"</string>
     <string name="list_start_inXdays">"%d 日後に着手予定"</string>
-    <string name="list_tabitem_journals">"日誌"</string>
+    <string name="list_tabitem_journals">"ジャーナル"</string>
     <string name="list_tabitem_notes">"メモ"</string>
     <string name="list_tabitem_todos">"ToDo"</string>
     <string name="list_fab_add_contentdesc">"新しいアイテムを追加"</string>
@@ -87,7 +87,7 @@ Global Strings -->
     <string name="view_add_audio_note">"音声を追加"</string>
     <string name="view_fab_edit_entry_contentDesc">"項目を編集"</string>
     <string name="view_subtasks_header">"サブタスク"</string>
-    <string name="view_progress_label">"進行状況"</string>
+    <string name="view_progress_label">"進捗状況"</string>
     <string name="view_dialog_sure_to_delete_title">"「%1$s」を削除しますか？"</string>
     <string name="view_dialog_sure_to_delete_message">"本当に「%1$s」を削除しますか？"</string>
     <string name="view_toast_deleted_successfully">"「%1$s」は正常に削除されました"</string>
@@ -157,22 +157,44 @@ Global Strings -->
     <string name="about_app_version">"バージョン: %1$s (%2$d)"</string>
     <string name="about_app_codename">"コードネーム: %1$s"</string>
     <string name="about_app_build_date">"コンパイル: %s"</string>
+    <string name="about_app_terms">"利用規約 &amp; 利用条件"</string>
+    <string name="about_thanks_ffg">"このプロジェクトを実現するにあたっての FFG からの信頼と財政支援に特別な感謝を申し上げます。"</string>
     <!-- menus -->
+    <string name="menu_list_gotodate">"日付に移動"</string>
+    <string name="menu_list_quick_journal">"クイックジャーナル"</string>
+    <string name="menu_list_quick_note">"クイックメモ"</string>
     <string name="menu_list_quick_todo">"クイック ToDo"</string>
+    <string name="menu_list_delete_visible">"表示されているものを削除"</string>
     <string name="menu_list_syncnow">"今すぐ同期"</string>
     <string name="menu_view_share_ics">".ics ファイルとして共有"</string>
-    <string name="menu_view_copy_item">"複製を作成"</string>
+    <string name="menu_view_copy_as_journal">"ジャーナルとしてコピー"</string>
+    <string name="menu_view_copy_as_todo">"ToDo としてコピー"</string>
+    <string name="menu_view_copy_as_note">"メモとしてコピー"</string>
+    <string name="menu_view_copy_item">"複製"</string>
     <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"ToDo の期限リマインダ"</string>
+    <string name="notification_channel_reminder_name">"ToDo の締め切りリマインダー"</string>
+    <string name="notification_channel_reminder_description">"ToDo の締め切りの通知"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"ジャーナルを追加"</string>
     <string name="shortcut_addNote_longLabel">"メモを追加"</string>
     <string name="shortcut_addTodo_longLabel">"ToDo を追加"</string>
     <!-- Settings fragment -->
-    <string name="settings_enforce_dark_theme">"ダークテーマを強制"</string>
+    <string name="settings_enforce_dark_theme">"ダークテーマを適用"</string>
+    <string name="settings_list">"アイテム一覧の設定"</string>
+    <string name="settings_show_subtasks_in_list">"一覧にサブタスクを表示"</string>
+    <string name="settings_show_attachments_in_list">"一覧に添付ファイルを表示"</string>
+    <string name="settings_show_progress_for_subtasks">サブタスクの進捗状況を表示</string>
+    <string name="settings_show_progress_for_maintasks">メインタスクの進捗状況を表示</string>
+    <string name="settings_group_settings_for_subentries">"サブタスク、サブメモ、サブジャーナルの設定"</string>
+    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"ジャーナルとメモのサブタスクをタスク一覧に表示"</string>
+    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"ジャーナルとタスクのサブメモをメモ一覧に表示"</string>
+    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"メモとタスクのサブジャーナルをジャーナル一覧に表示"</string>
     <string name="settings_app">"アプリの設定"</string>
+    <string name="settings_select_mimetype_for_audio">"音声メモの MIME タイプを選択"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"DAVx⁵ と同期 (beta)*"</string>
+    <string name="sync_with_davx5_heading">"DAVx⁵ で同期 (ベータ)*"</string>
+    <string name="sync_basic_info">"jtx Board 自体にサーバー同期機能はありませんが、DAVx⁵ 経由での同期に対応しています。これにより、CalDAV と互換性のあるサーバーにデータを保存、バックアップ、同期できます。*この機能はベータ版としています。テスト済みですが、まだ問題が発生する可能性があります。何か問題に遭遇したらフィードバックにご協力ください！"</string>
+    <string name="sync_congratulations">"おめでとうございます！ :-)"</string>
     <string name="sync_button_add_account_in_davx5">"DAVx⁵ にアカウントを追加"</string>
     <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ の起動に失敗。手動で DAVx⁵ アプリを起動してください。"</string>
     <!-- Donate fragment -->
