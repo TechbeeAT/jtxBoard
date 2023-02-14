@@ -37,7 +37,6 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
-import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
@@ -90,7 +89,6 @@ fun UpdateEntriesDialog(
     var newClassification by remember { mutableStateOf<Classification?>(null) }
     var newPriority by remember { mutableStateOf<Int?>(null) }
     var newCollection by remember { mutableStateOf<ICalCollection?>(null) }
-    var newLinkReltype by remember { mutableStateOf<Reltype?>(Reltype.PARENT) }
     var selectFromAllListSearchText by remember { mutableStateOf("") }
     var selectFromAllListSelectedEntry by remember { mutableStateOf<ICal4List?>(null) }
 
@@ -336,10 +334,10 @@ fun UpdateEntriesDialog(
                                 progressUpdateDisabled = true,
                                 onProgressChanged = {_, _ -> },
                                 modifier = Modifier.clickable {
-                                    if(entry == selectFromAllListSelectedEntry)
-                                        selectFromAllListSelectedEntry = null
+                                    selectFromAllListSelectedEntry = if(entry == selectFromAllListSelectedEntry)
+                                        null
                                     else
-                                        selectFromAllListSelectedEntry = entry
+                                        entry
                                 }
                             )
                         }
