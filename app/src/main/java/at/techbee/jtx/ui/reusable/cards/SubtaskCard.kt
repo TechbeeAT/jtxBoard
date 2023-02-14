@@ -12,8 +12,10 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.LinkOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,6 +24,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.dialogs.UnlinkEntryDialog
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 
 @SuppressLint("UnrememberedMutableState")
@@ -34,8 +37,17 @@ fun SubtaskCard(
     isEditMode: Boolean = false,
     sliderIncrement: Int,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onDeleteClicked: (itemId: Long) -> Unit
+    onDeleteClicked: (itemId: Long) -> Unit,
+    onUnlinkClicked: (itemId: Long) -> Unit
 ) {
+
+    var showUnlinkFromParentDialog by rememberSaveable { mutableStateOf(false) }
+    if(showUnlinkFromParentDialog) {
+        UnlinkEntryDialog(
+            onConfirm = { onUnlinkClicked(subtask.id) },
+            onDismiss = { showUnlinkFromParentDialog = false }
+        )
+    }
 
 
     Card(
@@ -72,6 +84,9 @@ fun SubtaskCard(
                 IconButton(onClick = { onDeleteClicked(subtask.id) }) {
                     Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
                 }
+                IconButton(onClick = { showUnlinkFromParentDialog = true }) {
+                    Icon(Icons.Outlined.LinkOff, stringResource(R.string.dialog_unlink_from_parent_title))
+                }
             }
         }
 
@@ -99,6 +114,7 @@ fun SubtaskCardPreview() {
             selected = false,
             onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
+            onUnlinkClicked = { },
             sliderIncrement = 10,
             modifier = Modifier.fillMaxWidth()
         )
@@ -123,6 +139,7 @@ fun SubtaskCardPreview_selected() {
             selected = true,
             onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
+            onUnlinkClicked = { },
             sliderIncrement = 10,
             modifier = Modifier.fillMaxWidth()
         )
@@ -144,6 +161,7 @@ fun SubtaskCardPreview_readonly() {
             selected = false,
             onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
+            onUnlinkClicked = { },
             sliderIncrement = 20,
             modifier = Modifier.fillMaxWidth()
         )
@@ -165,6 +183,7 @@ fun SubtaskCardPreview_without_progress() {
             sliderIncrement = 50,
             onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
+            onUnlinkClicked = { },
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -188,6 +207,7 @@ fun SubtaskCardPreview_edit() {
             selected = false,
             onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
+            onUnlinkClicked = { },
             isEditMode = true,
             sliderIncrement = 10,
             modifier = Modifier.fillMaxWidth()

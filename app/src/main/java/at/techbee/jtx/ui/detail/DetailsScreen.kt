@@ -390,6 +390,7 @@ fun DetailsScreen(
                         newText
                     )
                 },
+                onUnlinkSubEntry = { icalObjectId -> detailViewModel.unlinkFromParent(icalObjectId) },
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },

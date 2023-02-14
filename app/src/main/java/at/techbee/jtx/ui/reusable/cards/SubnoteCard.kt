@@ -12,8 +12,13 @@ import android.media.MediaPlayer
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.LinkOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,6 +29,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.dialogs.UnlinkEntryDialog
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 
 
@@ -34,10 +40,17 @@ fun SubnoteCard(
     player: MediaPlayer?,
     isEditMode: Boolean,
     modifier: Modifier = Modifier,
-    onDeleteClicked: (itemId: Long) -> Unit
+    onDeleteClicked: (itemId: Long) -> Unit,
+    onUnlinkClicked: (itemId: Long) -> Unit
 ) {
 
-
+    var showUnlinkFromParentDialog by rememberSaveable { mutableStateOf(false) }
+    if(showUnlinkFromParentDialog) {
+        UnlinkEntryDialog(
+            onConfirm = { onUnlinkClicked(subnote.id) },
+            onDismiss = { showUnlinkFromParentDialog = false }
+        )
+    }
 
     Card(
         modifier = modifier,
@@ -79,6 +92,9 @@ fun SubnoteCard(
                 IconButton(onClick = { onDeleteClicked(subnote.id) }) {
                     Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
                 }
+                IconButton(onClick = { showUnlinkFromParentDialog = true }) {
+                    Icon(Icons.Outlined.LinkOff, stringResource(R.string.dialog_unlink_from_parent_title))
+                }
             }
         }
     }
@@ -103,7 +119,8 @@ fun SubnoteCardPreview() {
             selected = false,
             player = null,
             isEditMode = false,
-            onDeleteClicked = { }
+            onDeleteClicked = { },
+            onUnlinkClicked = { }
         )
     }
 }
@@ -125,7 +142,8 @@ fun SubnoteCardPreview_selected() {
             selected = true,
             player = null,
             isEditMode = false,
-            onDeleteClicked = { }
+            onDeleteClicked = { },
+            onUnlinkClicked = { }
         )
     }
 }
@@ -147,7 +165,8 @@ fun SubnoteCardPreview_audio() {
             selected = false,
             player = null,
             isEditMode = false,
-            onDeleteClicked = { }
+            onDeleteClicked = { },
+            onUnlinkClicked = { }
         )
     }
 }
@@ -166,7 +185,8 @@ fun SubnoteCardPreview_audio_with_text() {
             selected = false,
             player = null,
             isEditMode = false,
-            onDeleteClicked = { }
+            onDeleteClicked = { },
+            onUnlinkClicked = { }
         )
     }
 }
@@ -187,7 +207,8 @@ fun SubnoteCardPreview_edit() {
             selected = false,
             player = null,
             isEditMode = true,
-            onDeleteClicked = { }
+            onDeleteClicked = { },
+            onUnlinkClicked = { }
         )
     }
 }

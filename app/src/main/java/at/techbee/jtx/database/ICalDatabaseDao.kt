@@ -429,6 +429,12 @@ DELETEs by Object
     fun deleteRelatedto(rel: Relatedto)
 
     /**
+     * Deletes the relatedto for the given [iCalObjectId] and [parentUID] (for Reltype = PARENT)
+     */
+    @Query("DELETE FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_RELATEDTO_TEXT = :parentUID AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT'")
+    fun deleteRelatedto(iCalObjectId: Long, parentUID: String)
+
+    /**
      * Delete an attendee by the object.
      *
      * @param attendee The object of the attendee that should be deleted.

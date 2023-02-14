@@ -56,6 +56,7 @@ fun DetailsCardSubtasks(
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubtaskDeleted: (subtaskId: Long) -> Unit,
+    onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -99,6 +100,7 @@ fun DetailsCardSubtasks(
                             sliderIncrement = sliderIncrement,
                             onProgressChanged = onProgressChanged,
                             onDeleteClicked = { icalObjectId ->  onSubtaskDeleted(icalObjectId) },
+                            onUnlinkClicked = onUnlinkSubEntry,
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
@@ -173,6 +175,7 @@ fun DetailsCardSubtasks_Preview() {
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
+            onUnlinkSubEntry = { },
             goToDetail = { _, _, _ -> }
         )
     }
@@ -198,6 +201,7 @@ fun DetailsCardSubtasks_Preview_edit() {
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
+            onUnlinkSubEntry = { },
             goToDetail = { _, _, _ -> }
         )
     }
@@ -223,6 +227,7 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
+            onUnlinkSubEntry = { },
             goToDetail = { _, _, _ -> }
         )
     }

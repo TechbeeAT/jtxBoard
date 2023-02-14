@@ -53,6 +53,7 @@ fun DetailsCardSubnotes(
     onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
+    onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
     player: MediaPlayer?,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     modifier: Modifier = Modifier
@@ -105,6 +106,7 @@ fun DetailsCardSubnotes(
                             selected = false,
                             isEditMode = isEditMode.value,
                             onDeleteClicked = { icalObjectId ->  onSubnoteDeleted(icalObjectId) },
+                            onUnlinkClicked = onUnlinkSubEntry,
                             player = player,
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
@@ -188,6 +190,7 @@ fun DetailsCardSubnotes_Preview() {
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
+            onUnlinkSubEntry = { },
             player = null,
             goToDetail = { _, _, _ -> }
         )
@@ -211,6 +214,7 @@ fun DetailsCardSubnotes_Preview_edit() {
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
+            onUnlinkSubEntry = { },
             player = null,
             goToDetail = { _, _, _ -> }
         )

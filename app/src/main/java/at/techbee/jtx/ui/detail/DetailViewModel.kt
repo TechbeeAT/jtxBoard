@@ -383,6 +383,18 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun unlinkFromParent(icalObjectId: Long) {
+        changeState.value = DetailChangeState.CHANGESAVING
+        viewModelScope.launch(Dispatchers.IO) {
+            database.deleteRelatedto(icalObjectId, icalEntity.value?.property?.uid?:"")
+            database.getICalObjectByIdSync(icalObjectId)?.let {
+                it.makeDirty()
+                database.update(it)
+            }
+            changeState.value = DetailChangeState.CHANGESAVED
+        }
+    }
+
     fun createCopy(newModule: Module) {
         icalEntity.value?.let { createCopy(it, newModule) }
     }

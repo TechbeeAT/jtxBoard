@@ -102,6 +102,7 @@ fun DetailScreenContent(
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
+    onUnlinkSubEntry: (icalObjectId: Long) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     goBack: () -> Unit,
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit
@@ -624,6 +625,7 @@ fun DetailScreenContent(
                         )
                     },
                     onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
+                    onUnlinkSubEntry = onUnlinkSubEntry,
                     goToDetail = goToDetail
                 )
             }
@@ -645,6 +647,7 @@ fun DetailScreenContent(
                         )
                     },
                     onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
+                    onUnlinkSubEntry = onUnlinkSubEntry,
                     player = player,
                     goToDetail = goToDetail
                 )
@@ -889,7 +892,8 @@ fun DetailScreenContent_JOURNAL() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { _, _, _ -> }
+            unlinkFromSeries = { _, _, _ -> },
+            onUnlinkSubEntry = { }
         )
     }
 }
@@ -937,7 +941,8 @@ fun DetailScreenContent_TODO_editInitially() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { _, _, _ -> }
+            unlinkFromSeries = { _, _, _ -> },
+            onUnlinkSubEntry = { }
         )
     }
 }
@@ -987,7 +992,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { _, _, _ -> }
+            unlinkFromSeries = { _, _, _ -> },
+            onUnlinkSubEntry = { }
         )
     }
 }
@@ -1029,7 +1035,8 @@ fun DetailScreenContent_failedLoading() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { _, _, _ -> }
+            unlinkFromSeries = { _, _, _ -> },
+            onUnlinkSubEntry = { }
         )
     }
 }
