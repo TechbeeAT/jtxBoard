@@ -195,11 +195,34 @@ Global Strings -->
     <string name="sync_with_davx5_heading">"DAVx⁵ で同期 (ベータ)*"</string>
     <string name="sync_basic_info">"jtx Board 自体にサーバー同期機能はありませんが、DAVx⁵ 経由での同期に対応しています。これにより、CalDAV と互換性のあるサーバーにデータを保存、バックアップ、同期できます。*この機能はベータ版としています。テスト済みですが、まだ問題が発生する可能性があります。何か問題に遭遇したらフィードバックにご協力ください！"</string>
     <string name="sync_congratulations">"おめでとうございます！ :-)"</string>
-    <string name="sync_button_add_account_in_davx5">"DAVx⁵ にアカウントを追加"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ の起動に失敗。手動で DAVx⁵ アプリを起動してください。"</string>
+    <string name="sync_davx5_installed_but_no_collections_found">"お使いの携帯電話で DAVx⁵ を検出しました。まだアカウントを設定していない場合は、私たちのウェブサイトの指示に従ってください。"</string>
+    <string name="sync_davx5_installed_with_collections_found">"お使いの携帯電話で DAVx⁵ を検出しました。問題や疑問がありましたら、まず私たちのウェブサイトをご確認ください:"</string>
+    <string name="sync_davx5_installed_with_collections_synched_collections">"現在、これらのアカウント (カレンダー) が同期されています:"</string>
+    <string name="sync_check_out_davx5">"DAVx⁵ を確認してください！"</string>
+    <string name="sync_davx5_not_found">"お使いの携帯電話で DAVx⁵ を検出できませんでした。同期についての詳細はこちらをご覧ください:"</string>
+    <string name="sync_davx5_get_davx5_on">"または、こちらから DAVx⁵ を入手"</string>
+    <string name="sync_furhter_info_davx5">"DAVx⁵ についての詳細はこちらをご覧ください"</string>
+    <string name="sync_button_add_account_in_davx5">"DAVx⁵ でアカウントを追加"</string>
+    <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ を開けませんでした。手動で DAVx⁵ アプリを開いてください。"</string>
+    <string name="sync_toast_intent_start_davx5_sync">"DAVx⁵ で同期をトリガーできませんでした。DAVx⁵ アプリから確認してください。"</string>
     <!-- Donate fragment -->
-    <string name="donate_header_developer_note">"JTXボードの開発者のパトリックです。このアプリは無料であなたに提供していますが、開発に多くの時間と労力を要します。もし私のアプリが気に入ったら、多少の親愛の情を込めて、少額でもいいですので寄付をしてください。"</string>
+    <string name="donate_header_developer_note">"こんにちは。jtx Board 開発者のパトリックです。このアプリは皆さんに無料で提供していますが、開発には多くの時間と労力を要します。もし私のアプリを気に入っていただけましたら、愛を込めて少額の寄付をお願いします。"</string>
+    <string name="donate_thank_you">"ありがとうございます！"</string>
+    <string name="donate_donate_with">"寄付はこちら"</string>
+    <string name="donate_other_donation_methods">"その他の寄付方法は、私たちのウェブサイトからご確認ください:"</string>
+    <string name="attachment_error_no_app_found_to_open_file_or_uri">"この ファイル/URL を開けるアプリが見つかりませんでした。"</string>
+    <string name="toast_item_is_now_recu_exception">"繰り返しのあるアイテムが例外になりました。"</string>
     <!-- sync content provider -->
+    <string name="synccontentprovider_sync_problem">"申し訳ありません。jtx の同期に問題があります。DAVx⁵ を閉じて、もう一度同期を開始してみてください。"</string>
+    <string name="about_translations_basic_info">"jtx Board は、オープンソースコミュニティへの参加と貢献を評価するオープンソースアプリです。このページではコミュニティメンバーの翻訳への取り組みを紹介します。"</string>
+    <string name="about_translations_contribution_info">"翻訳を編集/追加したい、またはこのアプリに新しい言語を追加したい場合は、翻訳プラットフォーム Crowdin で jtx Board プロジェクトに参加してください:"</string>
+    <string name="about_translations_contribution_button">"Crowdin.com で参加"</string>
+    <string name="about_translations_poeditor">"POeditor.com (レガシー) の翻訳者"</string>
+    <string name="list_welcome_entry_journal_summary">"おめでとうございます。最初のジャーナルです :-)"</string>
+    <string name="list_welcome_entry_journal_description">"ジャーナルでは、特定の日付に対応したメモを保存できます。この機能の使い方は、議事録、ミーティングの時間、日記など自由です。この項目を編集すると、カテゴリーや出席者、添付ファイルなどを追加するオプションを確認できます。この項目が不要なら削除してください！"</string>
+    <string name="list_welcome_entry_note_summary">"おめでとうございます。最初のメモです :-)"</string>
+    <string name="list_welcome_entry_note_description">"メモは特定の日付に対応しません。ジャーナルと同じように、作成時や編集時に添付ファイルや出席者を追加できます。また、ジャーナル、メモ、タスクのすべてでサブタスクを設定できます！"</string>
+    <string name="list_welcome_entry_todo_summary">"おめでとうございます。最初のタスクです :-)"</string>
     <string name="save_and_new">"保存 &amp; 新規作成"</string>
     <string name="save_and_close">"保存して閉じる"</string>
     <!-- Permissions -->
