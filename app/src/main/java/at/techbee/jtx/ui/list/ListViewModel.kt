@@ -302,8 +302,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
     fun addNewParentToSelected(addedParent: ICal4List) {
         viewModelScope.launch(Dispatchers.IO) {
             selectedEntries.forEach { selected ->
-                val existing = database.findRelatedTo(selected, addedParent.uid!!, Reltype.PARENT.name)
-                if(existing == null)
+                val existing = addedParent.uid?.let { database.findRelatedTo(selected, it, Reltype.PARENT.name) != null } ?: return@forEach
+                if(!existing)
                     database.insertRelatedto(
                         Relatedto(
                             icalObjectId = selected,

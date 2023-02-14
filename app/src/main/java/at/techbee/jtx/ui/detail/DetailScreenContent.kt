@@ -49,6 +49,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -83,6 +85,7 @@ fun DetailScreenContent(
     allWriteableCollections: List<ICalCollection>,
     allCategories: List<String>,
     allResources: List<String>,
+    selectFromAllListLive: LiveData<List<ICal4List>>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
     seriesInstances: List<ICalObject>,
@@ -103,6 +106,8 @@ fun DetailScreenContent(
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
     onUnlinkSubEntry: (icalObjectId: Long) -> Unit,
+    onLinkSubEntries: (List<ICal4List>) -> Unit,
+    onAllEntriesSearchTextUpdated: (String) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     goBack: () -> Unit,
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit
@@ -612,6 +617,7 @@ fun DetailScreenContent(
                 DetailsCardSubtasks(
                     subtasks = subtasks.value,
                     isEditMode = isEditMode,
+                    selectFromAllListLive = selectFromAllListLive,
                     sliderIncrement = sliderIncrement,
                     showSlider = showProgressForSubTasks,
                     onProgressChanged = { itemId, newPercent ->
@@ -626,6 +632,8 @@ fun DetailScreenContent(
                     },
                     onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
                     onUnlinkSubEntry = onUnlinkSubEntry,
+                    onLinkSubEntries = onLinkSubEntries,
+                    onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
                     goToDetail = goToDetail
                 )
             }
@@ -634,6 +642,7 @@ fun DetailScreenContent(
                 DetailsCardSubnotes(
                     subnotes = subnotes.value,
                     isEditMode = isEditMode,
+                    selectFromAllListLive = selectFromAllListLive,
                     onSubnoteAdded = { subnote, attachment ->
                         onSubEntryAdded(
                             subnote,
@@ -648,6 +657,8 @@ fun DetailScreenContent(
                     },
                     onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
                     onUnlinkSubEntry = onUnlinkSubEntry,
+                    onLinkSubEntries = onLinkSubEntries,
+                    onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
                     player = player,
                     goToDetail = goToDetail
                 )
@@ -882,6 +893,7 @@ fun DetailScreenContent_JOURNAL() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
+            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             saveICalObject = { _, _, _, _, _, _, _ -> },
@@ -893,7 +905,9 @@ fun DetailScreenContent_JOURNAL() {
             goToDetail = { _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { }
+            onUnlinkSubEntry = { },
+            onLinkSubEntries = { },
+            onAllEntriesSearchTextUpdated = { }
         )
     }
 }
@@ -924,6 +938,7 @@ fun DetailScreenContent_TODO_editInitially() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
+            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -942,7 +957,9 @@ fun DetailScreenContent_TODO_editInitially() {
             goToDetail = { _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { }
+            onUnlinkSubEntry = { },
+            onLinkSubEntries = { },
+            onAllEntriesSearchTextUpdated = { }
         )
     }
 }
@@ -975,6 +992,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
+            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -993,7 +1011,9 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             goToDetail = { _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { }
+            onUnlinkSubEntry = { },
+            onLinkSubEntries = { },
+            onAllEntriesSearchTextUpdated = { }
         )
     }
 }
@@ -1018,6 +1038,7 @@ fun DetailScreenContent_failedLoading() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
+            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -1036,8 +1057,10 @@ fun DetailScreenContent_failedLoading() {
             goToDetail = { _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { }
-        )
+            onUnlinkSubEntry = { },
+            onLinkSubEntries = { },
+            onAllEntriesSearchTextUpdated = { }
+            )
     }
 }
 

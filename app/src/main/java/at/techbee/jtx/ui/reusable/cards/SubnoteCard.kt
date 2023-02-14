@@ -12,7 +12,6 @@ import android.media.MediaPlayer
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.LinkOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -89,11 +89,13 @@ fun SubnoteCard(
                 }
             }
             if (isEditMode) {
+                Divider(modifier = Modifier.height(28.dp).width(1.dp))
+
                 IconButton(onClick = { onDeleteClicked(subnote.id) }) {
                     Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
                 }
                 IconButton(onClick = { showUnlinkFromParentDialog = true }) {
-                    Icon(Icons.Outlined.LinkOff, stringResource(R.string.dialog_unlink_from_parent_title))
+                    Icon(painterResource(id = R.drawable.ic_link_variant_remove), stringResource(R.string.dialog_unlink_from_parent_title))
                 }
             }
         }

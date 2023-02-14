@@ -25,12 +25,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
@@ -40,6 +43,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioNoteDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
+import at.techbee.jtx.ui.reusable.dialogs.LinkExistingSubentryDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
@@ -50,10 +54,13 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
+    selectFromAllListLive: LiveData<List<ICal4List>>,
     onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
+    onLinkSubEntries: (List<ICal4List>) -> Unit,
+    onAllEntriesSearchTextUpdated: (String) -> Unit,
     player: MediaPlayer?,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     modifier: Modifier = Modifier
@@ -70,6 +77,16 @@ fun DetailsCardSubnotes(
             onDismiss = { showAddAudioNoteDialog = false }
         )
     }
+    var showLinkExistingSubentryDialog by rememberSaveable { mutableStateOf(false) }
+    if(showLinkExistingSubentryDialog) {
+        LinkExistingSubentryDialog(
+            allEntriesLive = selectFromAllListLive,
+            onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
+            onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
+            onDismiss = { showLinkExistingSubentryDialog = false }
+        )
+    }
+
 
 
     ElevatedCard(modifier = modifier) {
@@ -81,7 +98,19 @@ fun DetailsCardSubnotes(
             verticalArrangement = Arrangement.Center
         ) {
 
-            HeadlineWithIcon(icon = Icons.Outlined.Note, iconDesc = headline, text = headline)
+            Row(
+                modifier = Modifier.fillMaxWidth(), 
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HeadlineWithIcon(icon = Icons.Outlined.Note, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
+                
+                AnimatedVisibility(isEditMode.value) {
+                        IconButton(onClick = { showLinkExistingSubentryDialog = true }) {
+                            Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_subentry_dialog_title))
+                        }
+                }
+                
+            }
 
             AnimatedVisibility(subnotes.isNotEmpty()) {
                 Column(
@@ -112,12 +141,12 @@ fun DetailsCardSubnotes(
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
                                     onClick = {
-                                        if(!isEditMode.value)
+                                        if (!isEditMode.value)
                                             goToDetail(subnote.id, false, subnotes.map { it.id })
                                         else showEditSubnoteDialog = true
-                                              },
+                                    },
                                     onLongClick = {
-                                        if (!isEditMode.value &&!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                        if (!isEditMode.value && !subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                             goToDetail(subnote.id, true, subnotes.map { it.id })
                                     }
                                 )
@@ -187,12 +216,15 @@ fun DetailsCardSubnotes_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
+            selectFromAllListLive = MutableLiveData(emptyList()),
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
+            onLinkSubEntries = { },
             player = null,
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            onAllEntriesSearchTextUpdated = { }
         )
     }
 }
@@ -211,12 +243,15 @@ fun DetailsCardSubnotes_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
+            selectFromAllListLive = MutableLiveData(emptyList()),
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
+            onLinkSubEntries = { },
             player = null,
-            goToDetail = { _, _, _ -> }
+            goToDetail = { _, _, _ -> },
+            onAllEntriesSearchTextUpdated = { }
         )
     }
 }

@@ -38,7 +38,8 @@ import at.techbee.jtx.ui.list.ListCardGrid
 @Composable
 fun LinkExistingSubentryDialog(
     allEntriesLive: LiveData<List<ICal4List>>,
-    onSubentriesAdded: (newSubentries: List<ICal4List>) -> Unit,
+    onAllEntriesSearchTextUpdated: (String) -> Unit,
+    onNewSubentriesConfirmed: (newSubentries: List<ICal4List>) -> Unit,
     onDismiss: () -> Unit
 ) {
     val allEntries by allEntriesLive.observeAsState(emptyList())
@@ -58,55 +59,55 @@ fun LinkExistingSubentryDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                    Text(
-                        text = stringResource(R.string.details_link_existing_subentry_dialog_info),
-                        style = MaterialTheme.typography.labelMedium
-                    )
+                Text(
+                    text = stringResource(R.string.details_link_existing_subentry_dialog_info),
+                    style = MaterialTheme.typography.labelMedium
+                )
 
-                    OutlinedTextField(
-                        value = allEntriesSearchText,
-                        onValueChange = {
-                            allEntriesSearchText = it
-                            //onSubtaskAdded(it)
-                            TODO()
-                        },
-                        label = { Text(stringResource(R.string.search)) },
-                        trailingIcon = {
-                            AnimatedVisibility(allEntriesSearchText.isNotEmpty()) {
-                                IconButton(
-                                    onClick = {
-                                        allEntriesSearchText = ""
-                                    }
-                                ) {
-                                    Icon(Icons.Outlined.Close, stringResource(R.string.delete))
+                OutlinedTextField(
+                    value = allEntriesSearchText,
+                    onValueChange = {
+                        allEntriesSearchText = it
+                        onAllEntriesSearchTextUpdated(it)
+                    },
+                    label = { Text(stringResource(R.string.search)) },
+                    trailingIcon = {
+                        AnimatedVisibility(allEntriesSearchText.isNotEmpty()) {
+                            IconButton(
+                                onClick = {
+                                    allEntriesSearchText = ""
+                                    onAllEntriesSearchTextUpdated("")
                                 }
+                            ) {
+                                Icon(Icons.Outlined.Close, stringResource(R.string.delete))
                             }
                         }
-                    )
-
-                    Column {
-                        allEntries.forEach { entry ->
-                            ListCardGrid(
-                                iCalObject = entry,
-                                selected = selectedEntries.contains(entry),
-                                progressUpdateDisabled = true,
-                                onProgressChanged = {_, _ -> },
-                                modifier = Modifier.clickable {
-                                    if(selectedEntries.contains(entry))
-                                        selectedEntries.remove(entry)
-                                    else
-                                        selectedEntries.add(entry)
-                                }
-                            )
-                        }
                     }
+                )
+
+                Column {
+                    allEntries.forEach { entry ->
+                        ListCardGrid(
+                            iCalObject = entry,
+                            selected = selectedEntries.contains(entry),
+                            progressUpdateDisabled = true,
+                            onProgressChanged = {_, _ -> },
+                            modifier = Modifier.clickable {
+                                if(selectedEntries.contains(entry))
+                                    selectedEntries.remove(entry)
+                                else
+                                    selectedEntries.add(entry)
+                            }
+                        )
+                    }
+                }
 
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSubentriesAdded(selectedEntries)
+                    onNewSubentriesConfirmed(selectedEntries)
                     onDismiss()
                 },
                 enabled = selectedEntries.isNotEmpty()
@@ -133,7 +134,8 @@ fun LinkExistingSubentryDialog_Preview() {
 
         LinkExistingSubentryDialog(
             allEntriesLive = MutableLiveData(listOf()),
-            onSubentriesAdded = {},
+            onAllEntriesSearchTextUpdated = { },
+            onNewSubentriesConfirmed = { },
             onDismiss = { }
         )
     }
