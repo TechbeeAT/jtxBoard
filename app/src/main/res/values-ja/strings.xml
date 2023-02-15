@@ -267,6 +267,21 @@ Global Strings -->
     <string name="collections_notes_num">"メモ: %1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_tasks_num">"タスク: %1$s"</string>
+    <string name="collections_local_nolocalcollections">"ローカルのコレクションが見つかりません"</string>
+    <string name="collections_local_noremotecollections">"リモートのコレクションが見つかりません"</string>
+    <string name="collections_info">"コレクションは、ファイルのあるフォルダーのような項目の集積です。メニューから新しいローカルのコレクションを作成したり、新しいリモートのコレクションを設定して DAVx⁵ で同期したりできます。"</string>
+    <string name="collections_collection_menu">"コレクション メニュー"</string>
+    <string name="collections_dialog_add_local_collection_title">"ローカルのコレクションを追加"</string>
+    <string name="collections_dialog_edit_local_collection_title">"ローカルのコレクションを編集"</string>
+    <string name="collections_dialog_delete_local_title">"「%1$s」を削除しますか？"</string>
+    <string name="collections_dialog_delete_local_message">"コレクションを削除すると、このコレクション内のすべてのジャーナル、メモ、タスクも削除されます。この操作は元に戻せません。本当に続行しますか？"</string>
+    <string name="menu_collections_add_local">"ローカルのコレクションを追加"</string>
+    <string name="navigation_drawer_website_news">"ヘルプ &amp; リリースノート"</string>
+    <string name="list_quickadd_toast_no_summary_description">"概要/詳細のない項目は作成できません。"</string>
+    <string name="view_dialog_addnote_toast_no_summary_description">"テキストのないメモは作成できません。"</string>
+    <string name="color">"色"</string>
+    <string name="edit_attendees_error">"有効なメールアドレスを入力してください"</string>
+    <string name="priority_0_no_priority">"優先度なし"</string>
     <!-- Buy Pro fragment -->
     <string name="clear_selection">"選択を解除"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意: 定期的なインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
