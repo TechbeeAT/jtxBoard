@@ -21,8 +21,8 @@ Global Strings -->
     <string name="default_local_account_name">"ローカル"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"下書き"</string>
-    <string name="journal_status_final">"校了"</string>
-    <string name="journal_status_cancelled">"却下"</string>
+    <string name="journal_status_final">"完成版"</string>
+    <string name="journal_status_cancelled">"中止"</string>
     <string name="todo_status_needsaction">"アクションが必要"</string>
     <string name="todo_status_completed">"完了"</string>
     <string name="todo_status_inprocess">"実行中"</string>
@@ -166,7 +166,7 @@ Global Strings -->
     <string name="menu_list_quick_todo">"クイック ToDo"</string>
     <string name="menu_list_delete_visible">"表示されているものを削除"</string>
     <string name="menu_list_syncnow">"今すぐ同期"</string>
-    <string name="menu_view_share_ics">".ics ファイルとして共有"</string>
+    <string name="menu_view_share_ics">".ics として共有"</string>
     <string name="menu_view_copy_as_journal">"ジャーナルとしてコピー"</string>
     <string name="menu_view_copy_as_todo">"ToDo としてコピー"</string>
     <string name="menu_view_copy_as_note">"メモとしてコピー"</string>
@@ -282,6 +282,27 @@ Global Strings -->
     <string name="color">"色"</string>
     <string name="edit_attendees_error">"有効なメールアドレスを入力してください"</string>
     <string name="priority_0_no_priority">"優先度なし"</string>
+    <string name="priority_1_highest">"1 - 最高"</string>
+    <string name="priority_2_higher">"2 - 特に高"</string>
+    <string name="priority_3_high">"3 - 高"</string>
+    <string name="priority_4_medium_high">"4 - やや高"</string>
+    <string name="priority_5_medium">"5 - 中"</string>
+    <string name="priority_6_medium_low">"6 - やや低"</string>
+    <string name="edit_recur_day">"日ごと"</string>
+    <string name="edit_recur_week">"週ごと"</string>
+    <string name="edit_recur_month">"か月ごと"</string>
+    <string name="edit_recur_year">"年ごと"</string>
+    <string name="edit_validation_errors_start_due_timezone_check">"着手日時と締切日時の両方のタイムゾーンを選択するか、タイムゾーンを無効化してください。"</string>
+    <string name="collections_toast_export_ics_success">"コレクションのエクスポートを正常に完了しました。"</string>
+    <string name="collections_toast_export_ics_error">"選択したコレクションのエクスポート中にエラーが発生しました。"</string>
+    <string name="menu_collections_add_remote">"リモートのコレクションを追加 (DAVx⁵)"</string>
+    <string name="menu_collection_popup_show_in_davx5">"DAVx⁵ 内で表示"</string>
+    <string name="menu_collection_popup_export_as_ics">".ics としてエクスポート"</string>
+    <string name="journal">"ジャーナル"</string>
+    <string name="note">"メモ"</string>
+    <string name="task">"タスク"</string>
+    <string name="account">"アカウント"</string>
+    <string name="status">"ステータス"</string>
     <!-- Buy Pro fragment -->
     <string name="clear_selection">"選択を解除"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意: 定期的なインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
