@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.reusable.dialogs
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -45,6 +46,8 @@ fun LinkExistingSubentryDialog(
     val allEntries by allEntriesLive.observeAsState(emptyList())
     var allEntriesSearchText by remember { mutableStateOf("") }
     val selectedEntries = remember { mutableStateListOf<ICal4List>() }
+    var maxEntriesShown by remember { mutableStateOf(10) }
+
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -85,20 +88,34 @@ fun LinkExistingSubentryDialog(
                     }
                 )
 
-                Column {
-                    allEntries.forEach { entry ->
-                        ListCardGrid(
-                            iCalObject = entry,
-                            selected = selectedEntries.contains(entry),
-                            progressUpdateDisabled = true,
-                            onProgressChanged = {_, _ -> },
-                            modifier = Modifier.clickable {
-                                if(selectedEntries.contains(entry))
-                                    selectedEntries.remove(entry)
-                                else
-                                    selectedEntries.add(entry)
-                            }
-                        )
+                AnimatedVisibility(allEntries.isNotEmpty()) {
+                    Column(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        allEntries.forEachIndexed { index, entry ->
+                            if(index > maxEntriesShown)
+                                return@forEachIndexed
+
+                            ListCardGrid(
+                                iCalObject = entry,
+                                selected = selectedEntries.contains(entry),
+                                progressUpdateDisabled = true,
+                                onProgressChanged = { _, _ -> },
+                                modifier = Modifier.clickable {
+                                    if (selectedEntries.contains(entry))
+                                        selectedEntries.remove(entry)
+                                    else
+                                        selectedEntries.add(entry)
+                                }
+                            )
+                        }
+                    }
+                }
+
+                AnimatedVisibility(allEntries.isNotEmpty() && maxEntriesShown < allEntries.size) {
+                    TextButton(onClick = { maxEntriesShown += 10 }) {
+                        Text(stringResource(R.string.more))
                     }
                 }
 
@@ -133,7 +150,7 @@ fun LinkExistingSubentryDialog_Preview() {
     MaterialTheme {
 
         LinkExistingSubentryDialog(
-            allEntriesLive = MutableLiveData(listOf()),
+            allEntriesLive = MutableLiveData(listOf(ICal4List.getSample(), ICal4List.getSample(), ICal4List.getSample())),
             onAllEntriesSearchTextUpdated = { },
             onNewSubentriesConfirmed = { },
             onDismiss = { }

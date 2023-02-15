@@ -442,12 +442,12 @@ data class ICal4List(
         /**
          * Returns all subnotes/subjournals of a given entry by its UID
          * @param parentUid: UID of parent for which the sub-entries should be returned
-         * @param module: The module to choose if subtasks (Module.TOD0) or subnotes (Module.NOTE) should be returned
+         * @param component: The component to choose if subtasks (Component.VTODO) or subnotes/journals (Component.VJOURNAL) should be returned
          * @param orderBy
          * @param sortOrder
          */
-        fun getQueryForAllSubentriesForParentUID(parentUid: String, module: Module, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
-            SimpleSQLiteQuery("SELECT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON ${TABLE_NAME_RELATEDTO}.${COLUMN_RELATEDTO_ICALOBJECT_ID} = ${VIEW_NAME_ICAL4LIST}.${COLUMN_ID} WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT = '$parentUid' AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $COLUMN_MODULE = '${module.name}' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+        fun getQueryForAllSubentriesForParentUID(parentUid: String, component: Component, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON ${TABLE_NAME_RELATEDTO}.${COLUMN_RELATEDTO_ICALOBJECT_ID} = ${VIEW_NAME_ICAL4LIST}.${COLUMN_ID} WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT = '$parentUid' AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $COLUMN_COMPONENT = '${component.name}' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
 
     }
 

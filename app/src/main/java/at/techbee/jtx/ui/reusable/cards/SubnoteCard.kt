@@ -31,6 +31,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.dialogs.UnlinkEntryDialog
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
+import at.techbee.jtx.util.DateTimeUtils
 
 
 @Composable
@@ -62,27 +63,35 @@ fun SubnoteCard(
     ) {
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
                 subnote.getAudioAttachmentAsUri()?.let {
                     AudioPlaybackElement(
                         uri = it,
                         player = player,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(4.dp)
+                            .padding(end = 4.dp)
+                    )
+                }
+
+                if(subnote.dtstart != null) {
+                    Text(
+                        text = DateTimeUtils.convertLongToShortDateTimeString(subnote.dtstart, subnote.dtstartTimezone),
+                        style = MaterialTheme.typography.labelSmall
                     )
                 }
 
                 if (subnote.summary?.isNotBlank() == true || subnote.description?.isNotBlank() == true) {
                     Text(
                         text = subnote.summary?.trim() ?: subnote.description?.trim() ?: "",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -209,6 +218,29 @@ fun SubnoteCardPreview_edit() {
             selected = false,
             player = null,
             isEditMode = true,
+            onDeleteClicked = { },
+            onUnlinkClicked = { }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun SubnoteCardPreview_journal() {
+    MaterialTheme {
+        SubnoteCard(
+            subnote = ICal4List.getSample().apply {
+                this.summary = null
+                this.description =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                this.component = Component.VJOURNAL.name
+                this.module = Module.JOURNAL.name
+                this.isReadOnly = false
+            },
+            selected = false,
+            player = null,
+            isEditMode = false,
             onDeleteClicked = { },
             onUnlinkClicked = { }
         )

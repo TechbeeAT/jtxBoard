@@ -92,12 +92,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             relatedSubtasks = Transformations.switchMap(icalEntity) {
                 it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Module.TODO, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
+                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Component.VTODO, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
             relatedSubnotes = Transformations.switchMap(icalEntity) {
                 it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Module.NOTE, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
+                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Component.VJOURNAL, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
             seriesElement = Transformations.switchMap(icalEntity) {

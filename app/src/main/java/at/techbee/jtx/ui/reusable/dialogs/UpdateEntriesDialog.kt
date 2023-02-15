@@ -93,6 +93,7 @@ fun UpdateEntriesDialog(
     var selectFromAllListSelectedEntry by remember { mutableStateOf<ICal4List?>(null) }
 
     var updateEntriesDialogMode by remember { mutableStateOf(UpdateEntriesDialogMode.CATEGORIES) }
+    var selectFromAllListMaxEntriesShown by remember { mutableStateOf(10) }
 
 
     AlertDialog(
@@ -325,9 +326,14 @@ fun UpdateEntriesDialog(
                     )
                 }
 
-                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK_TO_PARENT) {
-                    Column {
-                        selectFromAllList.forEach { entry ->
+                AnimatedVisibility(selectFromAllList.isNotEmpty() && updateEntriesDialogMode == UpdateEntriesDialogMode.LINK_TO_PARENT) {
+                    Column(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        selectFromAllList.forEachIndexed { index, entry ->
+                            if(index > selectFromAllListMaxEntriesShown)
+                                return@forEachIndexed
                             ListCardGrid(
                                 iCalObject = entry,
                                 selected = entry == selectFromAllListSelectedEntry,
@@ -344,6 +350,11 @@ fun UpdateEntriesDialog(
                     }
                 }
 
+                AnimatedVisibility(selectFromAllList.isNotEmpty() && selectFromAllListMaxEntriesShown < selectFromAllList.size) {
+                    TextButton(onClick = { selectFromAllListMaxEntriesShown += 10 }) {
+                        Text(stringResource(R.string.more))
+                    }
+                }
             }
         },
         confirmButton = {
