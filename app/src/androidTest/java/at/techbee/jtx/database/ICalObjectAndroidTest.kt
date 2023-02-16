@@ -269,6 +269,37 @@ class ICalObjectAndroidTest {
         }
     }
 
+
+    @Test
+    fun deleteItemWithChildren_LocalCollection_multiple_parents() = runTest {
+        val parent1 = ICalObject.createJournal().apply { this.collectionId = 1L; this.uid = "parent1" }
+        val parent2 = ICalObject.createJournal().apply { this.collectionId = 1L; this.uid = "parent2" }
+        withContext(Dispatchers.IO) {
+            val idParent1 = database.insertICalObject(parent1)
+            database.insertICalObject(parent2)
+            val idChild = database.insertICalObject(
+                ICalObject.createJournal().apply { this.collectionId = 1L })
+
+            database.insertRelatedto(Relatedto().apply {
+                icalObjectId = idChild
+                text = parent1.uid
+                reltype = Reltype.PARENT.name
+            })
+            database.insertRelatedto(Relatedto().apply {
+                icalObjectId = idChild
+                text = parent2.uid
+                reltype = Reltype.PARENT.name
+            })
+            assertEquals(2, database.getAllRelatedto().getOrAwaitValue().size)
+
+            ICalObject.deleteItemWithChildren(idParent1, database)
+
+            assertEquals(1, database.getAllRelatedto().getOrAwaitValue().size)
+            assertNull(database.getSync(idParent1))
+            assertNotNull(database.getSync(idChild))
+        }
+    }
+
     @Test
     fun deleteItemWithChildren_RemoteCollection() = runTest {
         val parent = ICalObject.createJournal().apply { this.collectionId = 2L }
