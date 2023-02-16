@@ -70,7 +70,7 @@ Global Strings -->
     <string name="list_dialog_delete_selected_message">このアクションは選択したすべての項目 (%1$d 件) を削除します。本当に続行しますか？ この操作は元に戻せません！</string>
     <string name="list_quickadd_dialog_summary_description_hint">"概要/詳細"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"最初の行は概要、残りは詳細として解釈されます。ハッシュタグはカテゴリーとして解釈されます (例: #カテゴリー)。"</string>
-    <string name="list_item_upload_pending">"アップロード処理中"</string>
+    <string name="list_item_upload_pending">"アップロードの待機中"</string>
     <string name="list_item_recurring">"繰り返しのある項目"</string>
     <string name="list_item_edited_recurring">"編集された繰り返しのある項目"</string>
     <!-- fragment_ical_view -->
@@ -303,6 +303,15 @@ Global Strings -->
     <string name="task">"タスク"</string>
     <string name="account">"アカウント"</string>
     <string name="status">"ステータス"</string>
+    <string name="classification">"公開設定"</string>
+    <string name="category">"カテゴリー"</string>
+    <string name="priority">"優先度"</string>
+    <string name="readyonly">"読み取り専用"</string>
+    <string name="upload_pending">"アップロードの待機中"</string>
+    <string name="url">"URL"</string>
+    <string name="location">"場所"</string>
+    <string name="attendees">"参加者"</string>
+    <string name="resources">"必要なもの"</string>
     <!-- Buy Pro fragment -->
     <string name="clear_selection">"選択を解除"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意: 定期的なインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
