@@ -48,6 +48,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
     var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var relatedSubtasks: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
+    var relatedParents: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var seriesElement: LiveData<ICalObject?> = MutableLiveData(null)
     var seriesInstances: LiveData<List<ICalObject>> = MutableLiveData(emptyList())
     var isChild: LiveData<Boolean> = MutableLiveData(false)
@@ -90,6 +91,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             icalEntity = database.get(icalObjectId)
 
+            relatedParents = Transformations.switchMap(icalEntity) {
+                it?.relatedto?.map { relatedto ->  relatedto.text }?.let { uids ->
+                    database.getICal4ListByUIDs(uids)
+                }
+            }
             relatedSubtasks = Transformations.switchMap(icalEntity) {
                 it?.property?.uid?.let { parentUid ->
                     database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Component.VTODO, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))

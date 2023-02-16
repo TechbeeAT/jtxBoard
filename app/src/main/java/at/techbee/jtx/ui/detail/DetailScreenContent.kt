@@ -81,6 +81,7 @@ fun DetailScreenContent(
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     subtasks: State<List<ICal4List>>,
     subnotes: State<List<ICal4List>>,
+    parents: State<List<ICal4List>>,
     isChild: Boolean,
     allWriteableCollections: List<ICalCollection>,
     allCategories: List<String>,
@@ -613,6 +614,19 @@ fun DetailScreenContent(
                 )
             }
 
+            AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
+                DetailsCardParents(
+                    parents = parents.value,
+                    isEditMode = isEditMode,
+                    sliderIncrement = sliderIncrement,
+                    showSlider = showProgressForSubTasks,
+                    onProgressChanged = { itemId, newPercent ->
+                        onProgressChanged(itemId, newPercent)
+                    },
+                    goToDetail = goToDetail
+                )
+            }
+
             AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS]?: true || showAllOptions))) {
                 DetailsCardSubtasks(
                     subtasks = subtasks.value,
@@ -877,6 +891,7 @@ fun DetailScreenContent_JOURNAL() {
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(false) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
+            parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             seriesInstances = emptyList(),
@@ -929,6 +944,7 @@ fun DetailScreenContent_TODO_editInitially() {
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
+            parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             seriesInstances = emptyList(),
@@ -983,6 +999,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
+            parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             seriesInstances = emptyList(),
@@ -1029,6 +1046,7 @@ fun DetailScreenContent_failedLoading() {
             iCalEntity = remember { mutableStateOf(null) },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
+            parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             seriesInstances = emptyList(),

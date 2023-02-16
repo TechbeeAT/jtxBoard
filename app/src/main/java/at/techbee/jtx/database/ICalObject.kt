@@ -838,9 +838,21 @@ data class ICalObject(
 
             val allRelatedTo = database.getAllRelatedtoSync()
             var topParent = database.getICalObjectById(iCalObjectId)
+
             while(allRelatedTo.any { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}) {
+                if(allRelatedTo.filter { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name }.size > 1) {
+                    Log.w("findTopParent", "Entry has multiple parents, cannot return single parent.")
+                    return null
+                }
+
                 val parentUID = allRelatedTo.find { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}?.text
                 parentUID?.let { uid -> database.getICalObjectFor(uid)?.let { topParent = it } }
+
+                //make sure no endless loop occurs in the error case that an entry links to itself
+                if(allRelatedTo.any { it.icalObjectId == topParent?.id && it.text == topParent?.uid }) {
+                    Log.w("findTopParent", "Entry links to itself, cannot return parent.")
+                    return null
+                }
             }
             return topParent
         }

@@ -133,6 +133,15 @@ SELECTs (global selects without parameter)
     fun getAllRelatedto(): LiveData<List<Relatedto>>
 
     /**
+     * Retrieve an list of all [ICal4List] their UIDs
+     * @param uids of the entries
+     * @return list of [ICal4List]
+     */
+    @Transaction
+    @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_UID IN (:uids)")
+    fun getICal4ListByUIDs(uids: List<String?>): LiveData<List<ICal4List>>
+
+    /**
      * Retrieve an list of all Relatedto ([Relatedto]) as a List
      *
      * @return a list of [Relatedto] as List<Relatedto>

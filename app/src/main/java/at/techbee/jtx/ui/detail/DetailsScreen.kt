@@ -79,6 +79,7 @@ fun DetailsScreen(
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
+    val parents = detailViewModel.relatedParents.observeAsState(emptyList())
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
     val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
     val seriesElement = detailViewModel.seriesElement.observeAsState(null)
@@ -331,6 +332,7 @@ fun DetailsScreen(
                 iCalEntity = icalEntity,
                 isEditMode = isEditMode,
                 changeState = detailViewModel.changeState,
+                parents = parents,
                 subtasks = subtasks,
                 subnotes = subnotes,
                 isChild = isChild.value,

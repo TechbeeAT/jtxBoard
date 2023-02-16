@@ -549,4 +549,21 @@ class ICalObjectAndroidTest {
         val retrievedParent = ICalObject.findTopParent(parentId, database) ?: throw AssertionError("retrieved entry null")
         assertEquals(actualParent, retrievedParent)
     }
+
+    @Test
+    fun findTopParent_Test_entry_links_itself() = runBlocking {
+        val parentId = database.insertICalObject(ICalObject.createTodo().apply { uid = "parent" })
+        database.insertRelatedtoSync(Relatedto(icalObjectId = parentId, reltype =  Reltype.PARENT.name, text = "parent"))
+        assertNull(ICalObject.findTopParent(parentId, database))
+    }
+
+    @Test
+    fun findTopParent_Test_multiple_parents() = runBlocking {
+        database.insertICalObject(ICalObject.createTodo().apply { uid = "parent" })
+        database.insertICalObject(ICalObject.createTodo().apply { uid = "parent2" })
+        val child1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1" })
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent2"))
+        assertNull(ICalObject.findTopParent(child1Id, database))
+    }
 }
