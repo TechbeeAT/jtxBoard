@@ -312,6 +312,13 @@ Global Strings -->
     <string name="location">"場所"</string>
     <string name="attendees">"参加者"</string>
     <string name="resources">"必要なもの"</string>
+    <string name="organizer">"主催者"</string>
+    <string name="contact">"連絡先"</string>
+    <string name="comments">"コメント"</string>
+    <string name="attachments">"添付ファイル"</string>
+    <string name="alarms">"アラーム"</string>
+    <string name="recurrence">"繰り返し"</string>
+    <string name="recurrence_exceptions">"例外"</string>
     <!-- Buy Pro fragment -->
     <string name="clear_selection">"選択を解除"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意: 定期的なインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
