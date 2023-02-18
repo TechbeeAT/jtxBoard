@@ -319,6 +319,18 @@ Global Strings -->
     <string name="alarms">"アラーム"</string>
     <string name="recurrence">"繰り返し"</string>
     <string name="recurrence_exceptions">"例外"</string>
+    <string name="summary">"概要"</string>
+    <string name="description">"詳細"</string>
+    <string name="search">"検索"</string>
+    <string name="search_journals">ジャーナルを検索</string>
+    <string name="search_notes">メモを検索</string>
+    <string name="search_todos">タスクを検索</string>
+    <string name="filter">"フィルター"</string>
+    <string name="sync_now">"今すぐ同期"</string>
+    <string name="due">"締切日時"</string>
+    <string name="completed">"完了日時"</string>
+    <string name="started">"着手日時"</string>
+    <string name="add_time_switch">"時刻を追加"</string>
     <!-- Buy Pro fragment -->
     <string name="clear_selection">"選択を解除"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意: 定期的なインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
