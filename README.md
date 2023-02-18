@@ -49,7 +49,9 @@ For communication with the team and other people, please use the forums to get i
 
 jtx Board provides different flavors: 
 - **gplay** is the flavor for the Google Play store that comes in a standard and pro version. The pro version is paid and enables editing options for remote entries.
-- **generic** is the flavor other app stores like Amazon. This flavor contains only open source libraries and is meant to be paid before downloading. 
+- **huawei** is the flavor used for is the flavor for the Huawei app gallery that comes in a standard and pro version. 
+- **amazon** is the flavor used for is the flavor for the amazon app store that comes in a standard and pro version. 
+- **generic** deprecated - was the flavor other app stores like Amazon. This flavor contains only open source libraries and is meant to be paid before downloading. 
 - **ose** is the open source edition. **If you would like to create build the app from source, this is the recommended flavor.** This flavor contains only open source libraries. Instead of an in app-purchase this flavor has an additional page for donations visible. As Google Maps is not open source, the ose flavor does not include Map functionalities.
 
 
@@ -59,10 +61,11 @@ jtx Board uses/requests the following permissions:
 - RECORD_AUDIO can be used to access the microphone for adding audio notes and to use the speech-to-text engine
 - READ_CONTACTS can be used to get suggestions when selecting attendees or a contact for an entry
 - READ_SYNC_STATS is used to show a progress bar when a synchronization through DAVx5 is currently in progress
-- INTERNET is used to retrieve the list of contributors for translations from POEditor.com
+- INTERNET is used to retrieve the list of contributors for translations from POEditor.com/Crowdin.com and release notes from GitHub.com
 - VIBRATE gives you haptic feedback when moving an entry on the Kanban-Board
 - POST_NOTIFICATIONS let's you receive the notifications when an alarm is due
-- ACCESS_COARSE_LOCATION can move the map to your current location (gplay flavor only)
+- ACCESS_COARSE_LOCATION & ACCESS_FINE_LOCATION can move the map to your current location (gplay flavor only), can set the current location (latitude, longitude) for an entry
+- SCHEDULE_EXACT_ALARM used to show a notification when an alarm is due
 
 
 ### Troubleshooting
