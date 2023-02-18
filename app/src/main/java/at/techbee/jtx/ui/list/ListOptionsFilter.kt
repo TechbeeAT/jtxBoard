@@ -74,6 +74,9 @@ fun ListOptionsFilter(
                     listSettings.isFilterStartTomorrow.value = false
                     listSettings.isFilterStartFuture.value = false
                     listSettings.isFilterNoDatesSet.value = false
+                    listSettings.isFilterNoStartDateSet.value = false
+                    listSettings.isFilterNoDueDateSet.value = false
+                    listSettings.isFilterNoCompletedDateSet.value = false
                 }
                 onListSettingsChanged()
             },
@@ -89,6 +92,9 @@ fun ListOptionsFilter(
                     listSettings.isFilterStartTomorrow.value = !listSettings.isFilterStartTomorrow.value
                     listSettings.isFilterStartFuture.value = !listSettings.isFilterStartFuture.value
                     listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
+                    listSettings.isFilterNoStartDateSet.value = !listSettings.isFilterNoStartDateSet.value
+                    listSettings.isFilterNoDueDateSet.value = !listSettings.isFilterNoDueDateSet.value
+                    listSettings.isFilterNoCompletedDateSet.value = !listSettings.isFilterNoCompletedDateSet.value
                 }
                 onListSettingsChanged()
             })
@@ -188,6 +194,36 @@ fun ListOptionsFilter(
                             onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = R.string.list_due_future)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    FilterChip(
+                        selected = listSettings.isFilterNoStartDateSet.value,
+                        onClick = {
+                            listSettings.isFilterNoStartDateSet.value =
+                                !listSettings.isFilterNoStartDateSet.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.list_without_start_date)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    FilterChip(
+                        selected = listSettings.isFilterNoDueDateSet.value,
+                        onClick = {
+                            listSettings.isFilterNoDueDateSet.value =
+                                !listSettings.isFilterNoDueDateSet.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.list_without_due_date)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    FilterChip(
+                        selected = listSettings.isFilterNoCompletedDateSet.value,
+                        onClick = {
+                            listSettings.isFilterNoCompletedDateSet.value =
+                                !listSettings.isFilterNoCompletedDateSet.value
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = R.string.list_without_completed_date)) },
                         modifier = Modifier.padding(end = 4.dp)
                     )
                     FilterChip(

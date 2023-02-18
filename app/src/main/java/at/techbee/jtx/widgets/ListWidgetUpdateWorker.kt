@@ -45,8 +45,8 @@ class ListWidgetUpdateWorker(
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
 
+        //https://stackoverflow.com/questions/69627330/expedited-workrequests-require-a-listenableworker-to-provide-an-implementation-f
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            //https://stackoverflow.com/questions/69627330/expedited-workrequests-require-a-listenableworker-to-provide-an-implementation-f
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             val widgetUpdateChannelId = "WIDGET_UPDATE_CHANNEL"
@@ -143,6 +143,9 @@ class ListWidgetUpdateWorker(
                             isFilterStartTomorrow = listWidgetConfig?.isFilterStartTomorrow ?: false,
                             isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
                             isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false,
+                            isFilterNoStartDateSet = listWidgetConfig?.isFilterNoStartDateSet ?: false,
+                            isFilterNoDueDateSet = listWidgetConfig?.isFilterNoDueDateSet ?: false,
+                            isFilterNoCompletedDateSet = listWidgetConfig?.isFilterNoCompletedDateSet ?: false,
                             isFilterNoCategorySet = listWidgetConfig?.isFilterNoCategorySet ?: false,
                             isFilterNoResourceSet = listWidgetConfig?.isFilterNoResourceSet ?: false,
                             flatView = listWidgetConfig?.flatView?: false,  // always true in Widget, we handle the flat view in the code

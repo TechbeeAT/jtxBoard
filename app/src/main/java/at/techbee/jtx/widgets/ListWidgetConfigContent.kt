@@ -219,6 +219,9 @@ fun ListWidgetConfigContent(
                                     isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value
                                     isFilterStartFuture = listSettings.isFilterStartFuture.value
                                     isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value
+                                    isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value
+                                    isFilterNoDueDateSet = listSettings.isFilterNoDueDateSet.value
+                                    isFilterNoCompletedDateSet = listSettings.isFilterNoCompletedDateSet.value
                                     isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value
                                     isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value
                                 }
@@ -290,6 +293,9 @@ data class ListWidgetConfig(
     var isFilterStartTomorrow: Boolean = false,
     var isFilterStartFuture: Boolean = false,
     var isFilterNoDatesSet: Boolean = false,
+    var isFilterNoStartDateSet: Boolean = false,
+    var isFilterNoDueDateSet: Boolean = false,
+    var isFilterNoCompletedDateSet: Boolean = false,
     @Deprecated("Removed, only for legacy widget configs") var isFilterNoStatusSet: Boolean = false,
     @Deprecated("Removed, only for legacy widget configs") var isFilterNoClassificationSet: Boolean = false,
     var isFilterNoCategorySet: Boolean = false,

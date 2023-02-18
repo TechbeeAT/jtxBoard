@@ -379,6 +379,9 @@ For more information about the Sync please see:"</string>
     <string name="adinfo_adfree_purchase_date">"Purchased on %1$s"</string>
     <string name="adinfo_adfree_order_id">"Order ID: %1$s"</string>
     <string name="list_no_dates_set">"No dates set"</string>
+    <string name="list_without_start_date">"Without start date"</string>
+    <string name="list_without_due_date">"Without due date"</string>
+    <string name="list_without_completed_date">"Without completed date"</string>
     <string name="filter_order_by">"Order by"</string>
     <string name="filter_asc">"Ascending"</string>
     <string name="filter_desc">"Descending"</string>

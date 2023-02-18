@@ -243,6 +243,9 @@ data class ICal4List(
             isFilterStartTomorrow: Boolean = false,
             isFilterStartFuture: Boolean = false,
             isFilterNoDatesSet: Boolean = false,
+            isFilterNoStartDateSet: Boolean = false,
+            isFilterNoDueDateSet: Boolean = false,
+            isFilterNoCompletedDateSet: Boolean = false,
             isFilterNoCategorySet: Boolean = false,
             isFilterNoResourceSet: Boolean = false,
             searchText: String? = null,
@@ -350,6 +353,13 @@ data class ICal4List(
                 dateQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
             if (isFilterNoDatesSet)
                 dateQuery.add("$COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL ")
+            if (isFilterNoStartDateSet)
+                dateQuery.add("$COLUMN_DTSTART IS NULL ")
+            if (isFilterNoDueDateSet)
+                dateQuery.add("$COLUMN_DUE IS NULL ")
+            if (isFilterNoCompletedDateSet)
+                dateQuery.add("$COLUMN_COMPLETED IS NULL ")
+
             if (dateQuery.isNotEmpty())
                 queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
 
