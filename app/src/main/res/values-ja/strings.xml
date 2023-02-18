@@ -149,7 +149,7 @@ Global Strings -->
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">"対応していない繰り返しルールを検出しました！"</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">"未知または対応していない繰り返しルールが検出されました。この項目を保存すると、既存の繰り返しルールが削除/上書きされます。"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"対応していない値 (Duration) を検出しました！"</string>
-    <string name="edit_fragment_recur_unsupported_duration_dialog_message">"バックグラウンドでこの項目に期間 (Duration) が検出されました。現在、jtx Board は期間の処理に対応していません。代わりに着手日、締切日、完了日を使用してください。この項目を保存すると、既存の期間は削除されます。"</string>
+    <string name="edit_fragment_recur_unsupported_duration_dialog_message">"バックグラウンドでこの項目に期間 (Duration) が検出されました。現在、jtx Board は期間の処理に対応していません。代わりに着手日時、締切日時、完了日時を使用してください。この項目を保存すると、既存の期間は削除されます。"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"翻訳"</string>
     <string name="about_tabitem_libraries">"ライブラリー"</string>
@@ -331,12 +331,43 @@ Global Strings -->
     <string name="completed">"完了日時"</string>
     <string name="started">"着手日時"</string>
     <string name="add_time_switch">"時刻を追加"</string>
+    <string name="add_timezone_switch">"タイムゾーンを追加"</string>
+    <string name="progress">"進捗状況"</string>
+    <string name="categories">"カテゴリー"</string>
+    <string name="subtasks">"サブタスク"</string>
+    <string name="priority_7_low">"7 - 低"</string>
+    <string name="priority_8_lower">"8 - 特に低"</string>
+    <string name="priority_9_lowest">"9 - 最低"</string>
+    <string name="list_due_future">"締切前"</string>
+    <string name="view_share_part_of_series">"この項目は繰り返しの一部です。"</string>
+    <string name="view_share_repeats">"この項目は次の期間ごとに繰り返されます:"</string>
+    <string name="collections_dialog_move_title">"「%1$s」のすべての項目の移動先:"</string>
+    <string name="collection_dialog_move_info">"注意: 書き込み可能で、対応するコンポーネント (ジャーナル、メモ、タスク) に対応するコレクションのみを選択できます。"</string>
+    <string name="menu_collections_popup_move_entries">"項目を移動"</string>
+    <string name="adinfo_adfree_success_thankyou">"ありがとうございます！"</string>
+    <string name="adinfo_adfree_purchase_date">"購入日: %1$s"</string>
+    <string name="adinfo_adfree_order_id">"Order ID: %1$s"</string>
+    <string name="list_no_dates_set">"日付が設定されていません"</string>
+    <string name="filter_order_by">"…で並べ替え"</string>
+    <string name="filter_asc">"昇順"</string>
+    <string name="filter_desc">"降順"</string>
+    <string name="filter_created">"作成日時"</string>
+    <string name="filter_last_modified">"最終更新日時"</string>
+    <string name="filter_no_category">なし</string>
+    <string name="filter_no_resource">なし</string>
+    <string name="filter_subtasks_order_by">サブタスクの並べ替え</string>
+    <string name="filter_subnotes_order_by">リンクされたメモの並べ替え</string>
+    <string name="collections_snackbar_select_collection_for_ics_import">"エントリーを追加するコレクションをクリックしてください！"</string>
+    <string name="collections_snackbar_x_items_added">"追加: %1$d 件、 スキップ: %2$d 件 (繰り返しのある項目を含む)"</string>
+    <string name="menu_collection_popup_import_from_ics">".ics からインポート"</string>
+    <string name="notification_done">"完了"</string>
     <!-- Buy Pro fragment -->
     <string name="clear_selection">"選択を解除"</string>
-    <string name="list_update_entries_dialog_attention_collection_update">"注意: 定期的なインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"注意: 繰り返しのあるインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
     <string name="details_unchanged_part_of_series">"このエントリはシリーズの一部です。このエントリは、シリーズに対して行われた変更をすべてコピーします。"</string>
     <string name="details_changed_part_of_series">"このエントリはシリーズの一部ですが、変更されました。このエントリはシリーズの変更による影響を受けません。"</string>
     <!-- alarms -->
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="filter_group_by">"…でグループ化"</string>
 </resources>
