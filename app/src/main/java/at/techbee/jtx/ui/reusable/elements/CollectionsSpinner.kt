@@ -33,65 +33,68 @@ fun CollectionsSpinner(
 
     OutlinedCard(
         modifier = modifier,
-        onClick =  {
-            if(enabled)
+        onClick = {
+            if (enabled)
                 expanded = !expanded
         }
     ) {
 
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            ColoredEdge(colorItem = null, colorCollection = selected.color)
-
-            Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            ) {
+        ) {
 
-                Text(
-                    text = selected.displayName + selected.accountName?.let { " ($it)" },
-                    modifier = Modifier.weight(1f)
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .alpha(if(!enabled) 0.5f else 1f)
-                )
-                Icon(Icons.Outlined.ArrowDropDown, null, modifier = Modifier.padding(8.dp))
-
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
+            selected.color?.let {
+                Badge(
+                    containerColor = Color(it)
                 ) {
-                    collections.forEach { collection ->
+                    Text(selected.displayName?.firstOrNull()?.toString() ?: " ")
+                }
+            }
+            Text(
+                text = selected.displayName + selected.accountName?.let { " ($it)" },
+                modifier = Modifier
+                    .weight(1f)
+                    .alpha(if (!enabled) 0.5f else 1f)
+            )
+            Icon(Icons.Outlined.ArrowDropDown, null)
 
-                        if (collection.readonly && !includeReadOnly)
-                            return@forEach
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                collections.forEach { collection ->
 
-                        if (selected.collectionId == collection.collectionId)
-                            return@forEach
+                    if (collection.readonly && !includeReadOnly)
+                        return@forEach
 
-                        includeVJOURNAL?.let { if(!it || (it && !collection.supportsVJOURNAL)) return@forEach }
-                        includeVTODO?.let { if(!it || (it && !collection.supportsVTODO)) return@forEach }
+                    if (selected.collectionId == collection.collectionId)
+                        return@forEach
 
-                        DropdownMenuItem(
-                            onClick = {
-                                selected = collection
-                                expanded = false
-                                onSelectionChanged(selected)
-                            },
-                            text = {
-                                Text(
-                                    text = (collection.displayName ?: collection.accountName)
-                                        ?: " ",
-                                    modifier = Modifier
-                                        .wrapContentWidth()
-                                        .align(Alignment.Start)
-                                )
-                            }
-                        )
-                    }
+                    includeVJOURNAL?.let { if (!it || (it && !collection.supportsVJOURNAL)) return@forEach }
+                    includeVTODO?.let { if (!it || (it && !collection.supportsVTODO)) return@forEach }
+
+                    DropdownMenuItem(
+                        onClick = {
+                            selected = collection
+                            expanded = false
+                            onSelectionChanged(selected)
+                        },
+                        text = {
+                            Text(
+                                text = (collection.displayName ?: collection.accountName)
+                                    ?: " ",
+                                modifier = Modifier
+                                    .wrapContentWidth()
+                                    .align(Alignment.Start)
+                            )
+                        }
+                    )
                 }
             }
         }
+
     }
 }
 
@@ -145,6 +148,33 @@ fun CollectionsSpinner_Preview_notenabled() {
         val collection1 = ICalCollection(
             collectionId = 1L,
             color = Color.Cyan.toArgb(),
+            displayName = "Collection Display Name",
+            description = "Here comes the desc",
+            accountName = "My account",
+            accountType = "LOCAL"
+        )
+        CollectionsSpinner(
+            listOf(collection1),
+            preselected = collection1,
+            includeReadOnly = true,
+            includeVJOURNAL = true,
+            includeVTODO = true,
+            onSelectionChanged = { },
+            enabled = false,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun CollectionsSpinner_Preview_no_color() {
+    MaterialTheme {
+        val collection1 = ICalCollection(
+            collectionId = 1L,
+            color = null,
             displayName = "Collection Display Name",
             description = "Here comes the desc",
             accountName = "My account",

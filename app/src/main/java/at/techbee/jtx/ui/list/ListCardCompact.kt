@@ -41,7 +41,7 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import at.techbee.jtx.util.DateTimeUtils
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ListCardCompact(
     iCalObject: ICal4List,
@@ -73,9 +73,6 @@ fun ListCardCompact(
                     || iCalObject.classification in listOf(Classification.CONFIDENTIAL.classification, Classification.PRIVATE.classification)
         )
     }
-    val color =
-        iCalObject.colorItem?.let { Color(it) } ?: iCalObject.colorCollection?.let { Color(it) }
-        ?: Color.Transparent
 
     Row(
         modifier = modifier
@@ -88,7 +85,7 @@ fun ListCardCompact(
                 .width(10.dp)
                 .alpha(0.5f)
                 .fillMaxHeight()
-                .background(color, RoundedCornerShape(8.dp))
+                .background(iCalObject.colorItem?.let { Color(it) } ?: Color.Transparent, RoundedCornerShape(8.dp))
         )
 
         Column(
@@ -113,6 +110,15 @@ fun ListCardCompact(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
+                            iCalObject.colorCollection?.let {
+                                Badge(
+                                    containerColor = Color(it),
+                                    modifier = Modifier.padding(end = 4.dp)
+                                ) {
+                                    Text(iCalObject.collectionDisplayName?.firstOrNull()?.toString() ?: " ")
+                                }
+                            }
+
                             if (iCalObject.categories?.isNotBlank() == true) {
                                 Text(
                                     iCalObject.categories ?: "",

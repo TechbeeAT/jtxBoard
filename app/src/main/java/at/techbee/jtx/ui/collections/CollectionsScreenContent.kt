@@ -40,7 +40,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.TEST_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
-import at.techbee.jtx.ui.reusable.cards.CollectionCard
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
