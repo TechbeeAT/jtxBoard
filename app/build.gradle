@@ -23,8 +23,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 203000003
-        versionName "2.03.00-rc03"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 203000002
+        versionName "2.03.00-rc02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Peace begins with a smile\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -311,7 +311,7 @@ dependencies {
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
-    implementation "androidx.navigation:navigation-compose:2.6.0-alpha05"
+    implementation "androidx.navigation:navigation-compose:2.6.0-alpha04"
     implementation "com.arnyminerz.markdowntext:markdowntext:1.3.1"
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
