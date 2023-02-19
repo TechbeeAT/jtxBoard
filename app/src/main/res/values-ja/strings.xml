@@ -390,6 +390,12 @@ Global Strings -->
     <string name="buypro_success_header">"jtx Board Pro をご購入いただきありがとうございます！"</string>
     <string name="buypro_success_description">"リモートのコレクションの編集機能、クイックエントリー、長押しによるクイック編集、ダイナミックカラー (Android 12 から利用可能) が有効になりました。"</string>
     <string name="buypro_success_thankyou">"ありがとうございます！"</string>
+    <string name="buypro_snackbar_remote_entries_blocked">"リモートのコレクションの編集機能を有効にするには、プロ版を購入してください。"</string>
+    <string name="buypro_initial_dialog_message">"こんにちは！ jtx Board には標準版とプロ版があります。「プロ版を購入」から jtx Board Pro の詳細をご覧ください！ ありがとう！"</string>
+    <string name="buypro_purchase_init_error_message">"インターネット接続を確認するか、時間を空けてもう一度お試しください！"</string>
+    <string name="menu_list_viewmode_list">"リスト表示"</string>
+    <string name="menu_list_viewmode_grid">"グリッド表示"</string>
+    <string name="settings_modules">"有効なモジュール"</string>
     <string name="settings_modules_enable_journals">"ジャーナル"</string>
     <string name="settings_modules_enable_notes">"メモ"</string>
     <string name="settings_modules_enable_tasks">"タスク"</string>
