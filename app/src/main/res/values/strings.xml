@@ -393,7 +393,9 @@ For more information about the Sync please see:"</string>
     <string name="filter_subnotes_order_by">Order linked notes by</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Please click on the collection to which the entry/entries should be added!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d added, %2$d skipped. (Exclusive instances of recurring entries.)"</string>
+    <string name="collections_toast_x_items_added">"%1$d entries added!"</string>
     <string name="menu_collection_popup_import_from_ics">"Import from .ics"</string>
+    <string name="menu_collection_popup_import_from_textfile">"Import from textfile"</string>
     <string name="notification_done">"Done"</string>
     <string name="notification_add_1h">"+ 1 hour"</string>
     <string name="notification_add_1d">"+ 1 day"</string>
@@ -513,6 +515,7 @@ Thank you!"</string>
     <string name="dialog_revert_changes_title">"Revert changes?"</string>
     <string name="dialog_revert_changes_message">"Are you sure you want to discard your changes and revert contents to the state before you started editing?"</string>
     <string name="dialog_revert_changes_message2">"Attention: Subtasks and subnotes are separate entries and cannot be reverted."</string>
+    <string name="dialog_select_module_txt_dialog_title">"Import %1$d file(s) as"</string>
     <string name="dialog_collection_new_entries_title">"Collection for new entries"</string>
     <string name="dialog_detach_from_series_title">"Detach from series?"</string>
     <string name="dialog_detach_from_series_text_all">"Detaching all elements will delete the series and turn the instances into independent entries that can have their own subtasks or linked notes. But there will be no more link to the original series or other instances. Would you like to continue?"</string>

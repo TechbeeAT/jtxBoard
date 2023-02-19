@@ -53,6 +53,7 @@ fun CollectionsScreenContent(
     onCollectionDeleted: (ICalCollection) -> Unit,
     onEntriesMoved: (old: ICalCollection, new: ICalCollection) -> Unit,
     onImportFromICS: (CollectionsView) -> Unit,
+    onImportFromTxt: (CollectionsView) -> Unit,
     onExportAsICS: (CollectionsView) -> Unit,
     onCollectionClicked: (CollectionsView) -> Unit,
     onDeleteAccount: (Account) -> Unit
@@ -116,6 +117,7 @@ fun CollectionsScreenContent(
                         onCollectionDeleted = onCollectionDeleted,
                         onEntriesMoved = onEntriesMoved,
                         onImportFromICS = onImportFromICS,
+                        onImportFromTxt = onImportFromTxt,
                         onExportAsICS = onExportAsICS,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -173,6 +175,7 @@ fun CollectionsScreenContent_Preview() {
             onCollectionDeleted = { },
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
+            onImportFromTxt = { },
             onExportAsICS = { },
             onCollectionClicked = { },
             onDeleteAccount = { }
