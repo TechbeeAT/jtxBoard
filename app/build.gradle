@@ -153,7 +153,7 @@ import groovy.xml.MarkupBuilder
  */
 def getLocales() {
     // Initialize the list English, since it's available by default
-    def list = ["en", "de", "cs", "el", "es", "fr", "it", "ru", "zh", "ca"]
+    def list = ["en", "de", "cs", "el", "es", "fr", "it", "ru", "zh", "ca", "ja"]
 
     /*
     // deactivated script for now in order to have better control over available locales in the app
