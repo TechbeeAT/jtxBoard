@@ -225,7 +225,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
 
     // Android Annotations
-    implementation "androidx.annotation:annotation:1.5.0"
+    implementation "androidx.annotation:annotation:1.6.0"
 
     // Room dependencies
     implementation "androidx.room:room-runtime:$version_room"
