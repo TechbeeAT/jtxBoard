@@ -42,7 +42,7 @@ object JtxContract {
     const val AUTHORITY = "at.techbee.jtx.provider"
 
     /** The version of this SyncContentProviderContract */
-    const val VERSION = 2
+    const val VERSION = 3
 
     /** Constructs an Uri for the Jtx Sync Adapter with the given Account
      * @param [account] The account that should be appended to the Base Uri
@@ -1119,10 +1119,16 @@ object JtxContract {
         const val DESCRIPTION = "description"
 
         /**
-         * Purpose:  This column/property defines the owner of the collection.
+         * Purpose:  This column/property defines the URL of the owner of the collection.
          * Type: [String]
          */
         const val OWNER = "owner"
+
+        /**
+         * Purpose:  This column/property defines the display name of the owner of the collection.
+         * Type: [String]
+         */
+        const val OWNER_DISPLAYNAME = "ownerdisplayname"
 
         /**
          * Purpose:  This column/property defines the color of the collection items.
