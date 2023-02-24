@@ -48,10 +48,15 @@ const val COLUMN_COLLECTION_DISPLAYNAME = "displayname"
  */
 const val COLUMN_COLLECTION_DESCRIPTION = "description"
 /**
- * Purpose:  This column/property defines the owner of the collection.
+ * Purpose:  This column/property defines the URL of the owner of the collection.
  * Type: [String]
  */
 const val COLUMN_COLLECTION_OWNER = "owner"
+/**
+ * Purpose:  This column/property defines the diplayname of the owner of the collection.
+ * Type: [String]
+ */
+const val COLUMN_COLLECTION_OWNER_DISPLAYNAME = "ownerdisplayname"
 /**
  * Purpose:  This column/property defines the color of the collection items.
  * This color can also be overwritten by the color in an ICalObject.
@@ -106,6 +111,7 @@ data class ICalCollection(
         @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME)       var displayName: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_DESCRIPTION)       var description: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_OWNER)             var owner: String? = null,
+        @ColumnInfo(name = COLUMN_COLLECTION_OWNER_DISPLAYNAME) var ownerDisplayName: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_COLOR)
         @ColorInt
         var color: Int? = null,
@@ -176,6 +182,7 @@ data class ICalCollection(
                 values.getAsString(COLUMN_COLLECTION_DISPLAYNAME)?.let { displayName -> this.displayName = displayName }
                 values.getAsString(COLUMN_COLLECTION_DESCRIPTION)?.let { description -> this.description = description }
                 values.getAsString(COLUMN_COLLECTION_OWNER)?.let { owner -> this.owner = owner }
+                values.getAsString(COLUMN_COLLECTION_OWNER_DISPLAYNAME)?.let { ownerDisplayName -> this.ownerDisplayName = ownerDisplayName }
                 values.getAsInteger(COLUMN_COLLECTION_COLOR)?.let { color -> this.color = color }
                 values.getAsString(COLUMN_COLLECTION_SUPPORTSVEVENT)?.let { supportsVEVENT -> this.supportsVEVENT = supportsVEVENT == "1" || supportsVEVENT == "true"}
                 values.getAsString(COLUMN_COLLECTION_SUPPORTSVTODO)?.let { supportsVTODO -> this.supportsVTODO = supportsVTODO == "1"  || supportsVTODO == "true"}
