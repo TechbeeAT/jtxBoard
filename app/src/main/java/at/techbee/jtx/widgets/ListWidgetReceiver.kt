@@ -18,6 +18,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.work.*
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
 private const val TAG = "ListWidgetRec"
@@ -53,6 +54,19 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
                     work
                 )
             Log.d(TAG, "Work enqueued")
+        }
+
+        /**
+         * Sets a periodic worker to update the widget every 10 minutes
+         * This is a workaround to make sure the widget gets updated regularly
+         * in order to catch color changes (e.g. day/night change)
+         */
+        fun setPeriodicWork(context: Context) {
+            val work: PeriodicWorkRequest = PeriodicWorkRequestBuilder<ListWidgetUpdateWorker>((10).minutes.toJavaDuration()).build()
+            WorkManager
+                .getInstance(context)
+                .enqueueUniquePeriodicWork("listWidgetPeriodicWorker", ExistingPeriodicWorkPolicy.KEEP, work)
+            Log.d(TAG, "Periodic work enqueued")
         }
     }
 }
