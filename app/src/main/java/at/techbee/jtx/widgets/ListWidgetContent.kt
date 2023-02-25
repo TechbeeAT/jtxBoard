@@ -24,6 +24,7 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.layout.*
 import androidx.glance.text.*
+import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
@@ -125,7 +126,10 @@ fun ListWidgetContent(
 
     val imageSize = 36.dp
     val textColor = GlanceTheme.colors.onPrimaryContainer
-    val entryColor = GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig.widgetAlphaEntries)
+    val entryColor = if(listWidgetConfig.widgetAlphaEntries == 1F)
+        GlanceTheme.colors.surface
+    else
+        ColorProvider(GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig.widgetAlphaEntries))
     val entryTextColor = GlanceTheme.colors.onSurface
     val entryOverdueTextColor = GlanceTheme.colors.error
 
