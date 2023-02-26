@@ -13,9 +13,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +28,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.ListStatusBar
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
+import com.google.accompanist.flowlayout.FlowRow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,12 +39,6 @@ fun ListCardKanban(
     modifier: Modifier = Modifier
 ) {
 
-    val statusBarVisible by remember {
-        mutableStateOf(
-            iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0 || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.rrule != null || iCalObject.recurid != null
-        )
-    }
-
     Card(
         colors = CardDefaults.elevatedCardColors(
             containerColor = if (selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
@@ -55,136 +47,184 @@ fun ListCardKanban(
         border = iCalObject.colorItem?.let { BorderStroke(1.dp, Color(it)) },
         modifier = modifier
     ) {
-        Column(verticalArrangement = Arrangement.SpaceBetween) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
+            modifier = Modifier.padding(8.dp)
+        ) {
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+            FlowRow(
+                mainAxisSpacing = 4.dp,
+                crossAxisSpacing = 2.dp
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(top = 4.dp, start = 8.dp, end = 8.dp)
-                        .fillMaxWidth(),
-                ) {
-                    iCalObject.colorCollection?.let {
-                        Badge(
-                            containerColor = Color(it),
-                            modifier = Modifier.padding(end = 4.dp)
-                        ) {
-                            Text(iCalObject.collectionDisplayName?.firstOrNull()?.toString() ?: " ")
-                        }
-                    }
+                Badge(
+                    containerColor = iCalObject.colorCollection?.let { Color(it) } ?: MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = iCalObject.colorCollection?.let { contentColorFor(backgroundColor = Color(it)) } ?: MaterialTheme.colorScheme.onPrimaryContainer
 
-                    if (iCalObject.categories?.isNotEmpty() == true
-                        || (iCalObject.module == Module.TODO.name && iCalObject.due != null)
-                        || (iCalObject.module == Module.JOURNAL.name && iCalObject.dtstart != null)
+                ) {
+                    Text(iCalObject.collectionDisplayName?.firstOrNull()?.toString() ?: " ")
+                }
+
+                iCalObject.categories?.let {
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            iCalObject.categories?.let {
-                                Text(
-                                    it,
-                                    style = Typography.labelMedium,
-                                    fontStyle = FontStyle.Italic,
-                                    modifier = Modifier
-                                        .padding(end = 16.dp)
-                                        .weight(1f),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                            if (iCalObject.module == Module.JOURNAL.name && iCalObject.dtstart != null) {
-                                Text(
-                                    DateTimeUtils.convertLongToShortDateTimeString(
-                                        iCalObject.dtstart,
-                                        iCalObject.dtstartTimezone
-                                    ),
-                                    style = Typography.labelMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    fontStyle = FontStyle.Italic,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                            if (iCalObject.module == Module.TODO.name && iCalObject.due != null) {
-                                Text(
-                                    ICalObject.getDueTextInfo(due = iCalObject.due, dueTimezone = iCalObject.dueTimezone, percent = iCalObject.percent, context = LocalContext.current),
-                                    style = Typography.labelMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    fontStyle = FontStyle.Italic,
-                                    color = if (ICalObject.isOverdue(
-                                            iCalObject.percent,
-                                            iCalObject.due,
-                                            iCalObject.dueTimezone
-                                        ) == true
-                                    ) MaterialTheme.colorScheme.error else LocalContentColor.current,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        }
+                        Text(
+                            it,
+                            style = Typography.labelMedium,
+                            fontStyle = FontStyle.Italic,
+                            modifier = Modifier.padding(horizontal = 2.dp),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+                if (iCalObject.module == Module.JOURNAL.name && iCalObject.dtstart != null) {
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ) {
+                        Text(
+                            DateTimeUtils.convertLongToShortDateTimeString(
+                                iCalObject.dtstart,
+                                iCalObject.dtstartTimezone
+                            ),
+                            style = Typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            fontStyle = FontStyle.Italic,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(horizontal = 2.dp)
+                        )
+                    }
+                }
+                if (iCalObject.module == Module.TODO.name && iCalObject.due != null) {
+                    Badge(
+                        containerColor = if (ICalObject.isOverdue(
+                                iCalObject.percent,
+                                iCalObject.due,
+                                iCalObject.dueTimezone
+                            ) == true
+                        ) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = if (ICalObject.isOverdue(
+                                iCalObject.percent,
+                                iCalObject.due,
+                                iCalObject.dueTimezone
+                            ) == true
+                        ) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onPrimaryContainer
+                    ) {
+                        Text(
+                            ICalObject.getDueTextInfo(due = iCalObject.due, dueTimezone = iCalObject.dueTimezone, percent = iCalObject.percent, context = LocalContext.current),
+                            style = Typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            fontStyle = FontStyle.Italic,
+                            color = if (ICalObject.isOverdue(
+                                    iCalObject.percent,
+                                    iCalObject.due,
+                                    iCalObject.dueTimezone
+                                ) == true
+                            ) MaterialTheme.colorScheme.error else LocalContentColor.current,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(horizontal = 2.dp)
+                        )
+                    }
+                }
+
+
+                AnimatedVisibility(iCalObject.status in listOf(Status.CANCELLED.status, Status.DRAFT.status, Status.CANCELLED.status)) {
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ) {
+                        ListStatusBar(status = iCalObject.status)
+                    }
+                }
+
+                AnimatedVisibility(iCalObject.classification in listOf(Classification.CONFIDENTIAL.classification, Classification.PRIVATE.classification)) {
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ) {
+                        ListStatusBar(classification = iCalObject.classification)
+                    }
+                }
+
+                AnimatedVisibility(iCalObject.priority in 1..9) {
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ) {
+                        ListStatusBar(priority = iCalObject.priority)
+                    }
+                }
+
+                AnimatedVisibility(
+                    iCalObject.numAttendees > 0
+                            || iCalObject.numAttachments > 0
+                            || iCalObject.numComments > 0
+                            || iCalObject.numResources > 0
+                            || iCalObject.numAlarms > 0 || iCalObject.numSubtasks > 0
+                            || iCalObject.numSubnotes > 0
+                            || iCalObject.url?.isNotEmpty() == true
+                            || iCalObject.location?.isNotEmpty() == true
+                            || iCalObject.contact?.isNotEmpty() == true
+                ) {
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ) {
+                        ListStatusBar(
+                            numAttendees = iCalObject.numAttendees,
+                            numAttachments = iCalObject.numAttachments,
+                            numComments = iCalObject.numComments,
+                            numResources = iCalObject.numResources,
+                            numAlarms = iCalObject.numAlarms,
+                            numSubtasks = iCalObject.numSubtasks,
+                            numSubnotes = iCalObject.numSubnotes,
+                            hasURL = iCalObject.url?.isNotBlank() == true,
+                            hasLocation = iCalObject.location?.isNotBlank() == true,
+                            hasContact = iCalObject.contact?.isNotBlank() == true
+                        )
+                    }
+                }
+
+
+                AnimatedVisibility(
+                    iCalObject.isReadOnly
+                            || iCalObject.uploadPending
+                            || iCalObject.rrule != null
+                            || iCalObject.recurid != null
+                ) {
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ) {
+                        ListStatusBar(
+                            isReadOnly = iCalObject.isReadOnly,
+                            uploadPending = iCalObject.uploadPending,
+                            isRecurring = iCalObject.rrule != null || iCalObject.recurid != null,
+                            isRecurringModified = iCalObject.recurid != null && iCalObject.sequence > 0,
+                        )
                     }
                 }
             }
 
-            Row(
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp)
-                    .weight(1f)
-            ) {
-
-                Column(
-                    horizontalAlignment = Alignment.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp)
-                        .weight(1f)
-
-                ) {
-
-
-                    if (iCalObject.summary?.isNotBlank() == true)
-                        Text(
-                            text = iCalObject.summary?.trim() ?: "",
-                            textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
-                            maxLines = 4,
-                            overflow = TextOverflow.Ellipsis,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .padding(top = 4.dp)
-                                .weight(1f)
-                        )
-
-                    if (iCalObject.description?.isNotBlank() == true)
-                        Text(
-                            text = iCalObject.description?.trim() ?: "",
-                            maxLines = 4,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                }
-            }
-
-            AnimatedVisibility(visible = statusBarVisible) {
-                ListStatusBar(
-                    numAttachments = iCalObject.numAttachments,
-                    numSubtasks = iCalObject.numSubtasks,
-                    numSubnotes = iCalObject.numSubnotes,
-                    isReadOnly = iCalObject.isReadOnly,
-                    uploadPending = iCalObject.uploadPending,
-                    isRecurring = iCalObject.rrule != null || iCalObject.recurid != null,
-                    isRecurringModified = iCalObject.recurid != null && iCalObject.sequence > 0,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 4.dp)
-                        .weight(0.2f)
+            if (iCalObject.summary?.isNotBlank() == true)
+                Text(
+                    text = iCalObject.summary?.trim() ?: "",
+                    textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.Bold
                 )
-            }
+
+            if (iCalObject.description?.isNotBlank() == true)
+                Text(
+                    text = iCalObject.description?.trim() ?: "",
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis
+                )
         }
     }
 }
@@ -218,6 +258,7 @@ fun ListCardKanban_NOTE() {
             dtstart = null
             dtstartTimezone = null
             status = Status.CANCELLED.status
+            categories = "Pokemon"
         }
         ListCardKanban(
             icalobject,

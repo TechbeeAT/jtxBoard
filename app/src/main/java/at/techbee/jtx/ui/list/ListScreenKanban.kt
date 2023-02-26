@@ -140,6 +140,7 @@ fun ListScreenKanban(
                                 }
                             )
                             .height(150.dp)
+                            .fillMaxWidth()
                             .offset { IntOffset(offsetX.roundToInt(), 0) }
                             .draggable(
                                 orientation = Orientation.Horizontal,
