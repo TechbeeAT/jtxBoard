@@ -261,6 +261,11 @@ dependencies {
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
     gplayImplementation "com.google.android.gms:play-services-location:21.0.1"
 
+    //OSM
+    oseImplementation "org.osmdroid:osmdroid-android:$version_osmdroid"
+    genericImplementation "org.osmdroid:osmdroid-android:$version_osmdroid"
+    huaweiImplementation "org.osmdroid:osmdroid-android:$version_osmdroid"
+
     // Workmanager support
     implementation "androidx.work:work-runtime-ktx:$version_work"
     androidTestImplementation "androidx.work:work-testing:$version_work"
