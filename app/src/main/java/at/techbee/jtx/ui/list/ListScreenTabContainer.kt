@@ -375,7 +375,7 @@ fun ListScreenTabContainer(
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.Sync, null) },
                                 onClick = {
-                                    SyncUtil.syncAllAccounts(context)
+                                    getActiveViewModel().syncAccounts()
                                     topBarMenuExpanded = false
                                 }
                             )
