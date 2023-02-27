@@ -10,7 +10,6 @@ package at.techbee.jtx.widgets.elements
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.*
@@ -37,7 +36,7 @@ import at.techbee.jtx.widgets.ListWidgetCheckedActionCallback
 @Composable
 fun ListEntry(
     obj: ICal4ListWidget,
-    entryColor: Color,
+    entryColor: ColorProvider,
     textColor: ColorProvider,
     textColorOverdue: ColorProvider,
     checkboxEnd: Boolean,
