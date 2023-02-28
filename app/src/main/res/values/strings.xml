@@ -267,6 +267,7 @@ For more information about the Sync please see:"</string>
     <string name="apply">"Apply"</string>
     <string name="not_available_abbreviation">"n/a"</string>
     <string name="collection">"Collection"</string>
+    <string name="collection_owner_displayname">"Owner: %1$s"</string>
     <string name="link_to_parent">"Link to parent"</string>
     <string name="toolbar_text_collections">"Collections"</string>
     <string name="navigation_drawer_collections">"Collections"</string>

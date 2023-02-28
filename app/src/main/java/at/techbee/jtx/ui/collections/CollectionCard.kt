@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -96,7 +97,7 @@ fun CollectionCard(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.Top,
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -119,6 +120,25 @@ fun CollectionCard(
                             collection.description ?: "",
                             style = Typography.bodySmall,
                         )
+                    }
+
+
+                    if(collection.ownerDisplayName != null) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Outlined.AccountCircle,
+                                null,
+                                Modifier.size(12.dp)
+                            )
+                            Text(
+                                text = stringResource(R.string.collection_owner_displayname, collection.ownerDisplayName!!),
+                                style = Typography.labelSmall,
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
                     }
 
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -287,6 +307,7 @@ fun CollectionCardPreview2() {
             this.supportsVJOURNAL = false
             this.supportsVTODO = false
             this.readonly = true
+            this.ownerDisplayName = "Owner John Doe"
         }
 
         CollectionCard(
