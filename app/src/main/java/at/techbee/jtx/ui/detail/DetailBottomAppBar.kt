@@ -43,7 +43,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.ICalCollection.Factory.DAVX5_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
@@ -381,7 +380,7 @@ fun DetailBottomAppBar_Preview_View() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = DAVX5_ACCOUNT_TYPE
+            this.accountType = "bitfire.at.davdroid"
         }
 
         DetailBottomAppBar(
@@ -410,7 +409,7 @@ fun DetailBottomAppBar_Preview_edit() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = DAVX5_ACCOUNT_TYPE
+            this.accountType = "bitfire.at.davdroid"
         }
 
         DetailBottomAppBar(
@@ -438,7 +437,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = DAVX5_ACCOUNT_TYPE
+            this.accountType = "bitfire.at.davdroid"
         }
 
         DetailBottomAppBar(
@@ -466,7 +465,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
 
         val collection = ICalCollection().apply {
             this.readonly = true
-            this.accountType = DAVX5_ACCOUNT_TYPE
+            this.accountType = "bitfire.at.davdroid"
         }
 
         DetailBottomAppBar(
@@ -494,7 +493,7 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = DAVX5_ACCOUNT_TYPE
+            this.accountType = "bitfire.at.davdroid"
         }
 
         DetailBottomAppBar(
