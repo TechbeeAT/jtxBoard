@@ -439,7 +439,11 @@ fun DetailScreenContent(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(8.dp),
-                                        style = TextStyle(textDirection = TextDirection.Content)
+                                        style = TextStyle(textDirection = TextDirection.Content),
+                                        onClick = {
+                                            if(iCalEntity.value?.ICalCollection?.readonly == false)
+                                                isEditMode.value = true
+                                        }
                                     )
                             else
                                 Text(

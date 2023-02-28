@@ -25,6 +25,7 @@ const val VIEW_NAME_COLLECTIONS_VIEW = "collectionsView"
                 "$COLUMN_COLLECTION_DISPLAYNAME, " +
                 "$COLUMN_COLLECTION_DESCRIPTION, " +
                 "$COLUMN_COLLECTION_OWNER, " +
+                "$COLUMN_COLLECTION_OWNER_DISPLAYNAME, " +
                 "$COLUMN_COLLECTION_COLOR, " +
                 "$COLUMN_COLLECTION_SUPPORTSVEVENT, " +
                 "$COLUMN_COLLECTION_SUPPORTSVTODO, " +
@@ -45,6 +46,7 @@ data class CollectionsView (
     @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME)       var displayName: String? = null,
     @ColumnInfo(name = COLUMN_COLLECTION_DESCRIPTION)       var description: String? = null,
     @ColumnInfo(name = COLUMN_COLLECTION_OWNER)             var owner: String? = null,
+    @ColumnInfo(name = COLUMN_COLLECTION_OWNER_DISPLAYNAME) var ownerDisplayName: String? = null,
     @ColumnInfo(name = COLUMN_COLLECTION_COLOR)             var color: Int? = null,
     @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVEVENT)    var supportsVEVENT: Boolean = false,
     @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVTODO)     var supportsVTODO: Boolean = false,
@@ -71,6 +73,7 @@ data class CollectionsView (
         icc.color = this.color
         icc.description = this.description
         icc.owner = this.owner
+        icc.ownerDisplayName = this.ownerDisplayName
         icc.readonly = this.readonly
         icc.supportsVEVENT = this.supportsVEVENT
         icc.supportsVJOURNAL = this.supportsVJOURNAL

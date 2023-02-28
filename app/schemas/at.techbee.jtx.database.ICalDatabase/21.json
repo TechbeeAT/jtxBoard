@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 21,
-    "identityHash": "0dcd084b2fc28b2ed698ba1aa66f679f",
+    "identityHash": "b1b37e76558a565b214cf3497e3afc9b",
     "entities": [
       {
         "tableName": "attendee",
@@ -316,7 +316,7 @@
       },
       {
         "tableName": "collection",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `url` TEXT NOT NULL, `displayname` TEXT, `description` TEXT, `owner` TEXT, `color` INTEGER, `supportsVEVENT` INTEGER NOT NULL, `supportsVTODO` INTEGER NOT NULL, `supportsVJOURNAL` INTEGER NOT NULL, `accountname` TEXT, `accounttype` TEXT, `syncversion` TEXT, `readonly` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `url` TEXT NOT NULL, `displayname` TEXT, `description` TEXT, `owner` TEXT, `ownerdisplayname` TEXT, `color` INTEGER, `supportsVEVENT` INTEGER NOT NULL, `supportsVTODO` INTEGER NOT NULL, `supportsVJOURNAL` INTEGER NOT NULL, `accountname` TEXT, `accounttype` TEXT, `syncversion` TEXT, `readonly` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "collectionId",
@@ -345,6 +345,12 @@
           {
             "fieldPath": "owner",
             "columnName": "owner",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ownerDisplayName",
+            "columnName": "ownerdisplayname",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1332,12 +1338,12 @@
       },
       {
         "viewName": "collectionsView",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT _id, url, displayname, description, owner, color, supportsVEVENT, supportsVTODO, supportsVJOURNAL, accountname, accounttype, syncversion, readonly, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'JOURNAL' AND deleted = 0) as numJournals, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'NOTE' AND deleted = 0) as numNotes, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'TODO' AND deleted = 0) as numTodos FROM collection"
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT _id, url, displayname, description, owner, ownerdisplayname, color, supportsVEVENT, supportsVTODO, supportsVJOURNAL, accountname, accounttype, syncversion, readonly, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'JOURNAL' AND deleted = 0) as numJournals, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'NOTE' AND deleted = 0) as numNotes, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'TODO' AND deleted = 0) as numTodos FROM collection"
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0dcd084b2fc28b2ed698ba1aa66f679f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b1b37e76558a565b214cf3497e3afc9b')"
     ]
   }
 }
