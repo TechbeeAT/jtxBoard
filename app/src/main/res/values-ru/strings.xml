@@ -13,6 +13,7 @@ Global Strings -->
     <string name="discard">"Отказаться"</string>
     <string name="gotit">"Понятно"</string>
     <string name="cont">"Продолжить"</string>
+    <string name="website">"Сайт"</string>
     <string name="toolbar_text_add_journal">"Добавить дневник"</string>
     <string name="toolbar_text_add_note">"Добавить заметку"</string>
     <string name="toolbar_text_add_task">"Добавить задачу"</string>
