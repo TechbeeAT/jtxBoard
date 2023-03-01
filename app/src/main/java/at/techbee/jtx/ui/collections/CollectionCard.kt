@@ -157,19 +157,28 @@ fun CollectionCard(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         ) {
-                            Text(stringResource(id = R.string.collections_journals_num, numJournals))
+                            Text(
+                                text = stringResource(id = R.string.collections_journals_num, numJournals),
+                                modifier = Modifier.padding(horizontal = 2.dp)
+                            )
                         }
                         Badge(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         ) {
-                            Text(stringResource(id = R.string.collections_notes_num, numNotes))
+                            Text(
+                                text = stringResource(id = R.string.collections_notes_num, numNotes),
+                                modifier = Modifier.padding(horizontal = 2.dp)
+                            )
                         }
                         Badge(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         ) {
-                            Text(stringResource(id = R.string.collections_tasks_num, numTodos))
+                            Text(
+                                text = stringResource(id = R.string.collections_tasks_num, numTodos),
+                                modifier = Modifier.padding(horizontal = 2.dp)
+                            )
                         }
                     }
                 }
