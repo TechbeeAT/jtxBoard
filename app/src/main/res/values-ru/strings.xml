@@ -341,7 +341,7 @@ Global Strings -->
     <string name="subtasks">"Подзадачи"</string>
     <string name="priority_7_low">"7 - Пониженный"</string>
     <string name="priority_8_lower">"8 - Низкий"</string>
-    <string name="priority_9_lowest">"9 - Наименьший"</string>
+    <string name="priority_9_lowest">"9 - Минимальный"</string>
     <string name="adinfo_adfree_success_thankyou">"Спасибо !"</string>
     <string name="adinfo_adfree_purchase_date">"Приобретено на %1$s"</string>
     <string name="adinfo_adfree_order_id">"ID заказа: %1$s"</string>
