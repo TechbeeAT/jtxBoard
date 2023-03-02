@@ -138,7 +138,6 @@ fun ListCard(
                         iCalObject.dtstart?.let {
                             Text(
                                 ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it, dtstartTimezone = iCalObject.dtstartTimezone, context = LocalContext.current),
-                                style = Typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
                                 fontStyle = FontStyle.Italic,
                                 modifier = Modifier.padding(horizontal = 2.dp),
@@ -163,7 +162,6 @@ fun ListCard(
                         ) {
                             Text(
                                 ICalObject.getDueTextInfo(due = it, dueTimezone = iCalObject.dueTimezone, percent = iCalObject.percent, context = LocalContext.current),
-                                style = Typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
                                 fontStyle = FontStyle.Italic,
                                 modifier = Modifier.padding(horizontal = 2.dp),

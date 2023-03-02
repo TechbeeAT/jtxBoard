@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.ListStatusBar
-import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -73,7 +72,6 @@ fun ListCardGrid(
                     ) {
                         Text(
                             it,
-                            style = Typography.labelMedium,
                             fontStyle = FontStyle.Italic,
                             modifier = Modifier.padding(horizontal = 2.dp),
                             maxLines = 1,
@@ -91,7 +89,6 @@ fun ListCardGrid(
                                 iCalObject.dtstart,
                                 iCalObject.dtstartTimezone
                             ),
-                            style = Typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             fontStyle = FontStyle.Italic,
                             maxLines = 1,
@@ -117,7 +114,6 @@ fun ListCardGrid(
                     ) {
                         Text(
                             ICalObject.getDueTextInfo(due = iCalObject.due, dueTimezone = iCalObject.dueTimezone, percent = iCalObject.percent, context = LocalContext.current),
-                            style = Typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             fontStyle = FontStyle.Italic,
                             color = if (ICalObject.isOverdue(
