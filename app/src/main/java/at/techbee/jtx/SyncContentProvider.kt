@@ -9,7 +9,6 @@
 package at.techbee.jtx
 
 import android.accounts.Account
-import android.app.Application
 import android.content.*
 import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
@@ -606,7 +605,7 @@ class SyncContentProvider : ContentProvider() {
 
         val isSyncAdapter = uri.getBooleanQueryParameter(CALLER_IS_SYNCADAPTER, false)
         if (isSyncAdapter) {
-            if(callingPackage == SyncUtil.DAVX5_PACKAGE_NAME && !SyncUtil.isDAVx5CompatibleWithJTX(context?.applicationContext!! as Application))
+            if(callingPackage == SyncUtil.DAVX5_PACKAGE_NAME && !SyncUtil.isDAVx5Compatible(context!!))
                 throw java.lang.IllegalArgumentException(context!!.getString(R.string.dialog_davx5_outdated_message))
              else
                 return true

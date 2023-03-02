@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.list
 
 
-import android.app.Application
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
@@ -359,7 +358,7 @@ fun ListScreenTabContainer(
                         Divider()
 
 
-                        if(SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)) {
+                        if(SyncUtil.isDAVx5Compatible(context)) {
                             DropdownMenuItem(
                                 text = {
                                     Text(
@@ -443,7 +442,7 @@ fun ListScreenTabContainer(
                         listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
-                    isDAVx5compatible = globalStateHolder.isDAVx5compatible.value,
+                    isDAVx5compatible = SyncUtil.isDAVx5Available(context) && SyncUtil.isDAVx5Compatible(context),
                     multiselectEnabled = listViewModel.multiselectEnabled,
                     selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,
