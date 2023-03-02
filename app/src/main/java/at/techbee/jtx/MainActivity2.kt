@@ -62,7 +62,6 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
-import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidgetReceiver
 import kotlinx.serialization.decodeFromString
@@ -262,8 +261,6 @@ class MainActivity2 : AppCompatActivity() {
 
         if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI)
             BillingManager.getInstance().initialise(this)  // only Huawei needs to call the update functions again
-
-        globalStateHolder.isDAVx5compatible.value = SyncUtil.isDAVx5CompatibleWithJTX(application)
 
         // reset authentication state if timeout was set and expired or remove timeout if onResume was done within timeout
         if(globalStateHolder.isAuthenticated.value && globalStateHolder.authenticationTimeout != null) {
