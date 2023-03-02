@@ -9,8 +9,6 @@
 package at.techbee.jtx.util
 
 import android.accounts.Account
-import android.accounts.AccountManager
-import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
@@ -25,7 +23,6 @@ import android.widget.Toast
 import at.techbee.jtx.R
 import at.techbee.jtx.SYNC_PROVIDER_AUTHORITY
 import at.techbee.jtx.contract.JtxContract
-import at.techbee.jtx.database.ICalCollection
 
 const val TAG = "SyncUtil"
 
@@ -37,57 +34,45 @@ class SyncUtil {
 
 
         /**
-         * @return true if a sync is running for the JTX Sync Provider Authority (no matter which account)
+         * @param [accounts] for which the sync should be checked
+         * @return true if a sync is running for the jtx Sync Provider Authority for any of the given accounts
          */
-        fun isJtxSyncRunning(context: Context?): Boolean {
-            context?.let { currentContext ->
-                val accounts = AccountManager.get(currentContext).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
-                return accounts.any { ContentResolver.isSyncActive(it, SYNC_PROVIDER_AUTHORITY) }   // else false
-            }
-            return false
-        }
-
-        /**
-         * @param [account] for which the sync should be checked
-         * @return true if a sync is running for the JTX Sync Provider Authority and the given account
-         */
-        fun isJtxSyncRunningForAccount(account: Account): Boolean {
-            return ContentResolver.isSyncActive(account, SYNC_PROVIDER_AUTHORITY)
-        }
-
-        /**
-         * Immediately starts Sync for all Accounts for the JTX Sync Provider Authority
-         */
-        fun syncAllAccounts(context: Context?) {
-
-            if(context == null)
-                return
-
-            val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
-            accounts.forEach { account ->
-                syncAccount(account)
-            }
+        fun isJtxSyncRunningFor(accounts: Set<Account>): Boolean {
+            return accounts.any { ContentResolver.isSyncActive(it, SYNC_PROVIDER_AUTHORITY) }
         }
 
         /**
          * Immediately starts Sync for the given account
-         * @param [account] that should be synced
+         * @param [accounts] that should be synced
          */
-        fun syncAccount(account: Account) {
+        fun syncAccounts(accounts: Set<Account>) {
+            accounts.forEach { account ->
+                val extras = Bundle(2)
+                extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)        // manual sync
+                extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
+                ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
+            }
+        }
 
-            val extras = Bundle(2)
-            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)        // manual sync
-            extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
-            ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
+        /**
+         * @return true if DAVx5 was found
+         */
+        fun isDAVx5Available(context: Context): Boolean {
+            try {
+                context.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
+            } catch (e: PackageManager.NameNotFoundException) {
+                return false
+            }
+            return true
         }
 
 
         /**
          * @return true if DAVx5 was found and the version is compatible/includes jtx Board sync through the packageManager, else false
          */
-        fun isDAVx5CompatibleWithJTX(application: Application): Boolean {
+        fun isDAVx5Compatible(context: Context): Boolean {
             try {
-                val davx5Info = application.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
+                val davx5Info = context.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
                 return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     davx5Info.longVersionCode >= 403010000L
                 } else {

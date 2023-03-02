@@ -114,12 +114,19 @@ SELECTs (global selects without parameter)
 
     /**
      * Retrieve an list of all remote collections ([ICalCollection])
-     *
-     * @return a list of [ICalCollection] as LiveData<List<ICalCollection>>
+     * @return a list of [ICalCollection] as LiveData
      */
     @Transaction
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
-    fun getAllRemoteCollections(): LiveData<List<ICalCollection>>
+    fun getAllRemoteCollectionsLive(): LiveData<List<ICalCollection>>
+
+    /**
+     * Retrieve an list of all remote collections ([ICalCollection])
+     * @return a list of [ICalCollection]
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
+    fun getAllRemoteCollections(): List<ICalCollection>
 
 
 
@@ -352,7 +359,6 @@ DELETEs by Object
      */
     @Query("DELETE FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_NAME = :accountName AND $COLUMN_COLLECTION_ACCOUNT_TYPE = :accountType")
     fun deleteAccount(accountName: String, accountType: String)
-
 
 
     /**

@@ -1,12 +1,15 @@
 package at.techbee.jtx.ui
 
+import android.accounts.Account
 import android.content.ContentResolver
 import android.content.Context
 import android.util.Log
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.util.SyncUtil
@@ -24,18 +27,18 @@ class GlobalStateHolder(context: Context) {
     var icalFromIntentModule: MutableState<Module?> = mutableStateOf(null)
     var icalFromIntentCollection: MutableState<String?> = mutableStateOf(null)
 
-    var isDAVx5compatible = mutableStateOf(true)
-
     var isAuthenticated = mutableStateOf(false)
     var authenticationTimeout: Long? = null
     private val biometricManager = BiometricManager.from(context)
     val biometricStatus = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
     var biometricPrompt: BiometricPrompt? = null
 
+    var remoteCollections: State<List<ICalCollection>> = mutableStateOf(emptyList())
+
     init {
         try {
             ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-                isSyncInProgress.value = SyncUtil.isJtxSyncRunning(context)
+                isSyncInProgress.value = SyncUtil.isJtxSyncRunningFor(remoteCollections.value.map { Account(it.accountName, it.accountType) }.toSet())
             }
         } catch(e: NullPointerException) {      // especially necessary as ContentResolver is not available in preview (would cause exception)
             Log.d(TAG, e.stackTraceToString())
