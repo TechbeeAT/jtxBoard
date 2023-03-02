@@ -30,12 +30,14 @@ Global Strings -->
     <string name="classification_public">"Публичный"</string>
     <string name="classification_private">"Приватный"</string>
     <string name="classification_confidential">"Конфиденциальный"</string>
+    <string name="attendee_role_chair">"Организатор"</string>
     <string name="attendee_role_required_participant">"Требуемый участник"</string>
     <string name="attendee_role_optional_participant">"Необязательный участник"</string>
     <string name="attendee_role_non_participant">"Не учавствующий / сведения"</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Открыть панель навигации"</string>
     <string name="navigation_drawer_close">"Закрыть панель навигации"</string>
+    <string name="navigation_drawer_board">"Панель"</string>
     <string name="navigation_drawer_sync">"Синхронизация с DAVx⁵"</string>
     <string name="navigation_drawer_about">"О приложении / Лицензия"</string>
     <string name="navigation_drawer_subtitle">"дневники, заметки и задачи"</string>
@@ -64,11 +66,16 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"Добавить новый пункт"</string>
     <string name="list_progress">"Прогресс"</string>
     <string name="list_expand">"Развернуть"</string>
+    <string name="list_dialog_delete_selected_title">Удалить выбранные записи?</string>
+    <string name="list_dialog_delete_selected_message">Данное действие удалит все выбранные записи (%1$d). Вы уверены, что хотите продолжить? Эту операцию невозможно отменить!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Сводка/Описание"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Первая строка интерпретируется как сводка, остальные — как описание. Хэштеги интерпретируются как категории (например, #категория)."</string>
     <string name="list_item_upload_pending">"Ожидающие загрузки"</string>
+    <string name="list_item_recurring">"Повторяющаяся запись"</string>
+    <string name="list_item_edited_recurring">"Повторяющаяся запись изменена"</string>
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Перейти к оригиналу"</string>
+    <string name="view_recurrence_note_to_original_dialog_header">"Повторение"</string>
     <string name="view_recurrence_note_to_original">"Эта запись — часть серии. Редактирование этой записи отсоединит ее от серии, она будет продолжаться как отдельное событие, и изменения в исходном событии больше не повлияют на эту запись."</string>
     <string name="view_fragment_audio_permission">"Разрешение приложения"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board требуется разрешение для записи звука или использования функций преобразования речи в текст. Предоставьте разрешение на использование этой функции."</string>
@@ -82,19 +89,24 @@ Global Strings -->
     <string name="view_subtasks_header">"Подзадачи"</string>
     <string name="view_progress_label">"Прогресс"</string>
     <string name="view_dialog_sure_to_delete_title">"Удалить \"%1$s\"?"</string>
+    <string name="view_dialog_sure_to_delete_message">"Вы уверены, что хотите удалить \"%1$s\"?"</string>
     <string name="view_toast_deleted_successfully">"\"%1$s\" успешно удалено"</string>
     <string name="view_dialog_add_note">"Добавить заметку"</string>
     <string name="view_dialog_add_note_dialog_hint">"Добавьте сюда свою заметку"</string>
     <string name="view_toast_entry_does_not_exist_anymore">"Запрошенная запись больше не существует."</string>
     <string name="view_created_text">"Создано: %1$s"</string>
     <string name="view_last_modified_text">"Последнее изменение: %1$s"</string>
+    <string name="view_due">"До"</string>
     <string name="view_completed">"Завершено"</string>
     <string name="view_started">"Начало(сь)"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#моякатегория"</string>
     <string name="edit_add_category_helper">"Добавить категорию"</string>
+    <string name="edit_attendees_hint">"johanna@example.com"</string>
     <string name="edit_attendees_helper">"Добавить участника (адрес электронной почты)"</string>
+    <string name="edit_resources_hint">"Проектор"</string>
     <string name="edit_resources_helper">"Добавить ресурс"</string>
+    <string name="edit_contact_hint">"Иван Петров, +79605551234"</string>
     <string name="edit_contact_helper">"Контактная информация ответственного лица или владельца данной записи"</string>
     <string name="edit_comment_hint">"Ваш комментарий…"</string>
     <string name="edit_comment_helper">"Добавить комментарий"</string>
@@ -110,10 +122,20 @@ Global Strings -->
     <string name="edit_subtasks_add_helper">"Добавить подзадачу"</string>
     <string name="edit_attachment_delete_attachment">"Удалить вложение"</string>
     <string name="edit_attachment_add_link_dialog">"Добавить ссылку на вложение"</string>
+    <string name="edit_recur_last_occurrence">"Последнее повторение"</string>
+    <string name="edit_recur_all_occurrences">"Все повторения"</string>
     <string name="edit_recur_repeat_every_x">"Повторять каждые"</string>
+    <string name="edit_recur_on_weekday">"по"</string>
+    <string name="edit_recur_on_the_x_day_of_month">"на"</string>
+    <string name="edit_recur_x_day_of_the_month">"день месяца"</string>
+    <string name="edit_recur_x_times">"раз"</string>
     <string name="edit_recur_toast_requires_start_date">"Повторение требует установки даты начала!"</string>
     <string name="edit_datepicker_dialog_select_date">"Выбрать дату"</string>
     <string name="edit_datepicker_dialog_select_time">"Выбрать время"</string>
+    <string name="edit_datepicker_dialog_add_time">"Время"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Изменить время"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Часовой пояс"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Изменить часовой пояс"</string>
     <string name="edit_task_started_add">"Выбрать дату/время начала"</string>
     <string name="edit_task_due_add">"Выбрать дату/время выполнения"</string>
     <string name="edit_task_completed_add">"Выбрать дату/время завершения"</string>
@@ -161,6 +183,8 @@ Global Strings -->
     <string name="settings_list">"Настройки для списка элементов"</string>
     <string name="settings_show_subtasks_in_list">"Отображать подзадачи в списке"</string>
     <string name="settings_show_attachments_in_list">"Отображать вложения в списке"</string>
+    <string name="settings_show_progress_for_subtasks">Показывать прогресс подзадач</string>
+    <string name="settings_show_progress_for_maintasks">Показывать прогресс задач</string>
     <string name="settings_group_settings_for_subentries">"Настройки для подзадач, подзаметок и поддневников"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Показать подзадачи дневников и заметок в списке задач"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Показать подзаметки дневников и задач в списке заметок"</string>
@@ -182,15 +206,20 @@ Global Strings -->
     <string name="sync_toast_intent_open_davx5_failed">"Не удалось открыть DAVx⁵. Откройте приложение вручную."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Не удалось запустить синхронизацию в DAVx⁵. Проверьте в DAVx⁵."</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"Привет, я Патрик, разработчик jtx Board. Я уделяю много времени и усилий этому приложению и распространяю его бесплатно. Если вам нравится мое приложение, вы можете отправить мне сердечек и небольшое пожертвование!"</string>
     <string name="donate_thank_you">"Спасибо !"</string>
     <string name="donate_donate_with">"Пожертвовать через"</string>
     <string name="donate_other_donation_methods">"Если вы хотите рассмотреть любой другой способ пожертвования, пожалуйста, посетите наш веб-сайт:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Не найдено ни одного приложения для открытия этого файла/URL."</string>
+    <string name="toast_item_is_now_recu_exception">"Повторяющееся событие теперь в исключениях."</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Извините, jtx не может синхронизироваться. Пожалуйста, закройте DAVx⁵ и запустите синхронизацию снова."</string>
     <string name="about_translations_thanks_to">"Спасибо"</string>
     <string name="about_translations_for_contributions_in">"за вклад"</string>
     <string name="about_translations_basic_info">"jtx Board — это приложение с открытым исходным кодом, которое высоко ценит участие и вклад сообщества разработчиков открытого исходного кода. На этой странице мы хотели бы отметить усилия участников сообщества переводчиков."</string>
+    <string name="about_translations_contribution_info">"Если вы хотите отредактировать/добавить перевод или новые языки в это приложение, присоединяйтесь к jtx Board на платформе Crowdin:"</string>
+    <string name="about_translations_contribution_button">"Перейти на Crowdin.com"</string>
+    <string name="about_translations_poeditor">"Переводчики на POeditor.com (прошлая платформа)"</string>
     <string name="list_welcome_entry_journal_summary">"Поздравляем, это ваша первая запись в дневнике :-)"</string>
     <string name="list_welcome_entry_journal_description">"Дневники можно использовать для хранения заметок на конкретную дату. Используйте эту функцию, например, для протоколов, протоколов собраний, записей в дневнике и т. д. Если вы отредактируете эту запись, вы увидите варианты добавления категорий, участников, вложений и т. д. Не стесняйтесь удалять эту запись, когда захотите!"</string>
     <string name="list_welcome_entry_note_summary">"Поздравляем, это ваша первая заметка :-)"</string>
@@ -199,6 +228,8 @@ Global Strings -->
     <string name="list_welcome_entry_todo_description">"Помимо дневников и заметок, задачи могут иметь запланированное начало, срок выполнения и дату завершения. Они могут быть отмечены, когда они сделаны, или прогресс может быть установлен. Отредактируйте эту запись, чтобы проверить все варианты :-)"</string>
     <string name="list_welcome_category">"#первые шаги"</string>
     <string name="save_and_edit">"Сохранить и изменить"</string>
+    <string name="save_and_new">"Сохранить &amp; создать еще"</string>
+    <string name="save_and_close">"Сохранить &amp; закрыть"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Использовать преобразование речи в текст"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Преобразователь речи в текст слушает."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Преобразователь речи в текст перестал слушать."</string>
@@ -219,6 +250,13 @@ Global Strings -->
     <string name="navigation_drawer_collections">"Коллекции"</string>
     <string name="edit_dialog_set_attendee_role">"Установить роль участника"</string>
     <!-- alarms -->
+    <string name="alarms_onstart">"По времени начала"</string>
+    <string name="alarms_ondue">"По времени окончания"</string>
+    <string name="alarms_custom">"Настроить"</string>
+    <string name="alarms_before_start">"до Начала"</string>
+    <string name="alarms_after_start">"после Начала"</string>
+    <string name="alarms_before_due">"до окончания"</string>
+    <string name="alarms_after_due">"после окончания"</string>
     <string name="alarms_minutes">"мин."</string>
     <string name="alarms_hours">"Час(ы)"</string>
     <string name="alarms_days">"День/дни"</string>
@@ -256,8 +294,11 @@ Global Strings -->
     <string name="edit_recur_week">"нед."</string>
     <string name="edit_recur_month">"мес."</string>
     <string name="edit_recur_year">"год/лет"</string>
+    <string name="edit_validation_errors_start_due_timezone_check">"Выберите часовые пояса для даты начала и даты окончания или отключите часовой пояс."</string>
     <string name="collections_toast_export_ics_success">"Экспорт коллекции успешно завершен."</string>
     <string name="collections_toast_export_ics_error">"Произошла ошибка при экспорте выбранной коллекции."</string>
+    <string name="menu_collections_add_remote">"Добавить внешнюю Коллекцию (DAVx⁵)"</string>
+    <string name="menu_collection_popup_show_in_davx5">"Показать в DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"Экспортировать как .ics"</string>
     <string name="journal">"Дневник"</string>
     <string name="note">"Заметка"</string>
@@ -269,6 +310,7 @@ Global Strings -->
     <string name="priority">"Приоритет"</string>
     <string name="readyonly">"Только для чтения"</string>
     <string name="upload_pending">"Ожидающие загрузки"</string>
+    <string name="url">"URL"</string>
     <string name="location">"Местоположение"</string>
     <string name="attendees">"Участники"</string>
     <string name="resources">"Ресурсы"</string>
@@ -284,8 +326,12 @@ Global Strings -->
     <string name="summary">"Сводка"</string>
     <string name="description">"Описание"</string>
     <string name="search">"Поиск"</string>
+    <string name="search_journals">Найти дневники</string>
+    <string name="search_notes">Найти заметки</string>
+    <string name="search_todos">Найти задачи</string>
     <string name="filter">"Фильтр"</string>
     <string name="sync_now">"Синхронизировать сейчас"</string>
+    <string name="due">"До"</string>
     <string name="completed">"Завершено"</string>
     <string name="started">"Начало(сь)"</string>
     <string name="add_time_switch">"Добавить время"</string>
@@ -293,6 +339,9 @@ Global Strings -->
     <string name="progress">"Прогресс"</string>
     <string name="categories">"Категория"</string>
     <string name="subtasks">"Подзадачи"</string>
+    <string name="priority_7_low">"7 - Пониженный"</string>
+    <string name="priority_8_lower">"8 - Низкий"</string>
+    <string name="priority_9_lowest">"9 - Наименьший"</string>
     <string name="adinfo_adfree_success_thankyou">"Спасибо !"</string>
     <string name="adinfo_adfree_purchase_date">"Приобретено на %1$s"</string>
     <string name="adinfo_adfree_order_id">"ID заказа: %1$s"</string>
@@ -304,6 +353,7 @@ Global Strings -->
     <string name="settings_select_theme_light">"Светлая"</string>
     <string name="settings_select_theme_system">"Системная (по умолчанию)"</string>
     <!-- Buy Pro fragment -->
+    <string name="buypro_text">"Разработка приложения – непростая вещь, и его обслуживание и поддержка – тяжелая работа. Если вы хотите получить Pro-функции или желаете поддержать наш проект, пожалуйста, совершите покупку:"</string>
     <string name="menu_list_viewmode_list">"Список"</string>
     <string name="menu_list_viewmode_grid">"Сетка"</string>
     <!-- alarms -->
