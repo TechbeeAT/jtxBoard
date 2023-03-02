@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.sync
 
 import android.accounts.Account
-import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
@@ -55,8 +54,8 @@ fun SyncScreen(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
-    val isDAVx5available = if (LocalInspectionMode.current) true else SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
     val remoteCollections by ICalDatabase.getInstance(context).iCalDatabaseDao.getAllRemoteCollectionsLive().observeAsState(emptyList())
+    val isDAVx5available = if (LocalInspectionMode.current) true else SyncUtil.isDAVx5Available(context)
 
     Scaffold(
         topBar = {

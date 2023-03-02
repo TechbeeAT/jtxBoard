@@ -27,8 +27,6 @@ class GlobalStateHolder(context: Context) {
     var icalFromIntentModule: MutableState<Module?> = mutableStateOf(null)
     var icalFromIntentCollection: MutableState<String?> = mutableStateOf(null)
 
-    var isDAVx5compatible = mutableStateOf(true)
-
     var isAuthenticated = mutableStateOf(false)
     var authenticationTimeout: Long? = null
     private val biometricManager = BiometricManager.from(context)

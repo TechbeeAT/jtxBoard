@@ -9,7 +9,6 @@
 package at.techbee.jtx.util
 
 import android.accounts.Account
-import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
@@ -55,13 +54,25 @@ class SyncUtil {
             }
         }
 
+        /**
+         * @return true if DAVx5 was found
+         */
+        fun isDAVx5Available(context: Context): Boolean {
+            try {
+                context.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
+            } catch (e: PackageManager.NameNotFoundException) {
+                return false
+            }
+            return true
+        }
+
 
         /**
          * @return true if DAVx5 was found and the version is compatible/includes jtx Board sync through the packageManager, else false
          */
-        fun isDAVx5CompatibleWithJTX(application: Application): Boolean {
+        fun isDAVx5Compatible(context: Context): Boolean {
             try {
-                val davx5Info = application.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
+                val davx5Info = context.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
                 return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     davx5Info.longVersionCode >= 403010000L
                 } else {
