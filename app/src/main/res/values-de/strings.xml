@@ -432,6 +432,7 @@ Danke!"</string>
     <string name="invalid_url_message">"Bitte geben Sie eine gültige URL ein!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spracherkennung starten"</string>
     <string name="list_quickadd_dialog_sr_listening">"Höre …"</string>
+    <string name="collections_dialog_buypro_info">"Bitte kaufen Sie jtx Board Pro, um Remote Collections zu bearbeiten."</string>
     <string name="list_update_entries_dialog_title">"Einträge aktualisieren"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Achtung: Wiederkehrende Instanzen müssen von ihrer Serie getrennt werden, bevor sie in eine andere Collection verschoben werden und werden in diesem Prozess ignoriert."</string>
     <string name="details_app_bar_behaviour">"App Bar Verhalten"</string>
