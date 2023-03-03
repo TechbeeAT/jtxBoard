@@ -507,7 +507,21 @@ Global Strings -->
     <string name="settings_keep_status_progress_completed_in_sync">"Синхронизировать статус, прогресс и дату выполнения"</string>
     <string name="settings_attention_experimental_feature">"Внимание: это экспериментальная функция"</string>
     <string name="sync_button_go_to_collections">"Перейти в Коллекции"</string>
+    <string name="buypro_snackbar_please_purchase_pro">"Пожалуйста, купите Pro-версию, чтобы активировать эту функцию."</string>
+    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
+    <string name="error_no_app_found_to_open_entry">"Не найдено приложений для отправки этой записи."</string>
+    <string name="close">"Закрыть"</string>
+    <string name="menu_view_share_mail">"Отправить по E-Mail"</string>
+    <string name="menu_view_copy_to_clipboard">"Скопировать в буфер"</string>
+    <string name="menu_view_copy_to_clipboard_copied">"Скопировано"</string>
+    <string name="settings_select_language">"Выбрать язык"</string>
+    <string name="settings_select_language_system">"Системная (по умолчанию)"</string>
+    <string name="settings_details_enable_markdown">"Включить Markdown форматирование"</string>
+    <string name="filter_special">"Специальные фильтры"</string>
     <!-- fragment_ical_list -->
+    <string name="list_date_start_in_past">"Дата в прошлом"</string>
+    <string name="list_date_today">"Сегодня"</string>
+    <string name="list_date_tomorrow">"Завтра"</string>
     <string name="settings_auto_alarm">"Автоматическое напоминание"</string>
     <string name="alarms_always_ondue">"Всегда по завершению"</string>
     <string name="settings_auto_alarm_sub">"Активируйте, чтобы напоминания создавались автоматически. Выберите \"Всегда по завершению\", чтобы получать уведомления каждый раз, когда наступает дата завершения задачи."</string>
