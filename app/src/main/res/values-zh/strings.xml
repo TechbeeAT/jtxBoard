@@ -13,6 +13,7 @@ Global Strings -->
     <string name="discard">"丢弃"</string>
     <string name="gotit">"明白"</string>
     <string name="cont">"继续"</string>
+    <string name="website">"網站"</string>
     <string name="toolbar_text_add_journal">"添加日志"</string>
     <string name="toolbar_text_add_note">"添加笔记"</string>
     <string name="toolbar_text_add_task">"添加任务"</string>
