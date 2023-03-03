@@ -31,7 +31,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +54,6 @@ import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
@@ -163,11 +161,6 @@ fun DetailScreenContent(
     if(markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
         description = markdownState.value.format(description)
         markdownState.value = MarkdownState.OBSERVING
-    }
-
-    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
-    val allPossibleCollections = allWriteableCollections.filter {
-            it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value            // filter remote collections if pro was not purchased
     }
 
     val icalObject = rememberSaveable {
@@ -346,8 +339,8 @@ fun DetailScreenContent(
                     ) {
 
                         CollectionsSpinner(
-                            collections = allPossibleCollections,
-                            preselected = iCalEntity.value?.ICalCollection ?: allPossibleCollections.first(),
+                            collections = allWriteableCollections,
+                            preselected = iCalEntity.value?.ICalCollection ?: allWriteableCollections.first(),
                             includeReadOnly = false,
                             includeVJOURNAL = if (iCalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
                             includeVTODO = if (iCalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
