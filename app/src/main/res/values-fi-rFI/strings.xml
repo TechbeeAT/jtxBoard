@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board synkronoi päiväkirjat, muistiinpanot ja tehtävät"</string>
+    <string name="app_permission_desc">"synkronoi jtx Boardin tiedot muulla sovelluksella kuten DAVx⁵"</string>
+    <!-- Reusable links in different contexts -->
+    <!-- Possible audio formats for settings
+Global Strings -->
+    <string name="save">"Tallenna"</string>
+    <string name="cancel">"Peru"</string>
+    <string name="delete">"Poista"</string>
+    <string name="discard">"Hylkää"</string>
+    <string name="gotit">"Hyväksy"</string>
+    <string name="cont">"Jatka"</string>
+    <string name="toolbar_text_add_journal">"Lisää päiväkirja"</string>
+    <string name="toolbar_text_add_note">"Lisää muistiinpano"</string>
+    <string name="toolbar_text_add_task">"Lisää tehtävä"</string>
+    <string name="default_local_collection_name">"Paikallinen"</string>
+    <string name="default_local_account_name">"Paikallinen"</string>
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Luonnos"</string>
+    <string name="journal_status_final">"Lopullinen"</string>
+    <string name="journal_status_cancelled">"Peruttu"</string>
+    <string name="todo_status_needsaction">"Vaatii toimenpiteitä"</string>
+    <string name="todo_status_completed">"Valmistunut"</string>
+    <string name="todo_status_inprocess">"Kesken"</string>
+    <string name="todo_status_cancelled">"Peruttu"</string>
+    <string name="classification_public">"Julkinen"</string>
+    <string name="classification_private">"Yksityinen"</string>
+    <string name="classification_confidential">"Luottamuksellinen"</string>
+    <string name="attendee_role_chair">"Järjestäjä"</string>
+    <string name="attendee_role_required_participant">"Vaadittu osallistuja"</string>
+    <string name="attendee_role_optional_participant">"Valinnainen osallistuja"</string>
+    <string name="attendee_role_non_participant">"Ei osallistuva"</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_beta_feedback">"Betan palaute"</string>
+    <string name="navigation_drawer_settings">"Asetukset"</string>
+    <string name="navigation_drawer_news_updates">"Uutta &amp; päivitettyä"</string>
+    <string name="navigation_drawer_external_links">"Ulkoiset linkit"</string>
+    <string name="navigation_drawer_website">"Kotisivu"</string>
+    <string name="navigation_drawer_support">"Tuki"</string>
+    <string name="navigation_drawer_donate">"Lahjoita"</string>
+    <string name="navigation_drawer_privacy_policy">"Yksityisyyspolitiikka"</string>
+    <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"Myöhässä"</string>
+    <string name="list_due_today">"Erääntyy tänään"</string>
+    <string name="list_due_tomorrow">"Erääntyy huomenna"</string>
+    <string name="list_due_inXdays">"Erääntyy %d päivässä"</string>
+    <string name="list_due_inXhours">"Erääntyy %d tunnissa"</string>
+    <string name="list_start_past">"Alkamisaika mennyt"</string>
+    <string name="list_start_today">"Suunniteltu alkamaan tänään"</string>
+    <string name="list_start_tomorrow">"Alkaa huomenna"</string>
+    <string name="list_start_inXhours">"Suunniteltu alkamaan %d tunnissa"</string>
+    <string name="list_start_inXdays">"Suunniteltu alkamaan %d päivässä"</string>
+    <string name="list_tabitem_journals">"Päiväkirjat"</string>
+    <!-- fragment_ical_view -->
+    <string name="view_fragment_audio_permission">"Sovelluksen lupa"</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board tarvitsee luvan äänen nauhoittamiseksi sekä puheentunnistusta varten. Anna lupa ominaisuutta varten."</string>
+    <string name="view_fragment_audio_dialog_add_audio_note">"Lisää äänite"</string>
+    <string name="view_comment_playbutton_content_desc">"Toista äänite"</string>
+    <string name="view_reccurrence_note_is_exception">"Tämä on poikkeus toistuvasta merkinnästä"</string>
+    <string name="view_feedback_linked_notes">"Palaute / Linkitetyt muistiinpanot"</string>
+    <string name="view_add_note">"Lisää muistiinpano"</string>
+    <string name="view_add_audio_note">"Lisää äänite"</string>
+    <string name="view_fab_edit_entry_contentDesc">"Muokkaa"</string>
+    <string name="view_subtasks_header">"Alitehtävä"</string>
+    <string name="view_progress_label">"Edistyminen"</string>
+    <string name="view_dialog_sure_to_delete_title">"Poista \"%1$s\"?"</string>
+    <string name="view_dialog_sure_to_delete_message">"Haluatko varmasti poistaa \"%1$s\"?"</string>
+    <string name="view_toast_deleted_successfully">"\"%1$s\" poistettu"</string>
+    <string name="view_dialog_add_note">"Lisää muistiinpano"</string>
+    <string name="view_dialog_add_note_dialog_hint">"Lisää muistiinpanoja tähän"</string>
+    <string name="view_toast_entry_does_not_exist_anymore">"Pyydettyä merkintää ei löydy"</string>
+    <string name="view_created_text">"Luotu: %1$s"</string>
+    <!-- fragment_ical_edit -->
+    <string name="edit_comment_add_dialog_hint">"Kommenttisi"</string>
+    <string name="edit_attachment_beta_info">"* Huomioithan, että liitteiden käyttö on koekäytössä oleva ominaisuus. Toistaiseksi ainoastaan pienikokoiset liitetiedostot (enintään 100 KB) voidaan viedä .ics tiedostoon ja sykronoida DAVx⁵:llä. Jos kohtaat ongelmia, otathan yhteyttä tukipalstalla tai kotisivun tukipyyntölomakkeella."</string>
+    <string name="edit_subtasks_add_hint">"Alitehtäväsi"</string>
+    <string name="edit_subtasks_add_helper">"Lisää alitehtävä"</string>
+    <string name="edit_attachment_delete_attachment">"Poista liite"</string>
+    <string name="edit_attachment_add_link_dialog">"Lisää liite linkkinä"</string>
+    <string name="edit_recur_last_occurrence">"Viimeinen kerta"</string>
+    <string name="edit_recur_all_occurrences">"Kaikki kerrat"</string>
+    <string name="edit_recur_repeat_every_x">"Toista joka"</string>
+    <string name="edit_recur_on_weekday">"joka"</string>
+    <string name="edit_recur_on_the_x_day_of_month">"kuukauden"</string>
+    <string name="edit_recur_x_day_of_the_month">"päivänä"</string>
+    <string name="edit_recur_x_times">"kertaa"</string>
+    <string name="edit_recur_toast_requires_start_date">"Toisto vaatii aloituspäivän valintaa"</string>
+    <string name="edit_datepicker_dialog_select_date">"Valise päivä"</string>
+    <string name="edit_datepicker_dialog_select_time">"Valise aika"</string>
+    <string name="edit_task_started_add">"Valitse aloituspäivä/-aika"</string>
+    <string name="edit_task_due_add">"Valitse eräpäivä/-aikaa"</string>
+    <string name="edit_task_completed_add">"Valitse valmistumispäivä/-aika"</string>
+    <string name="edit_dialog_sure_to_delete_title">"Poista \"%1$s\"?"</string>
+    <!-- fragment_about -->
+    <!-- menus -->
+    <!-- Notification channel for Reminders -->
+    <!-- Shortcuts -->
+    <!-- Settings fragment -->
+    <!-- Sync fragment -->
+    <!-- Donate fragment -->
+    <!-- sync content provider -->
+    <!-- Permissions -->
+    <!-- alarms -->
+    <!-- fragment_collections -->
+    <!-- Fuzzy -->
+    <!-- Fuzzy -->
+    <!-- Fuzzy -->
+    <!-- Buy Pro fragment -->
+    <!-- alarms -->
+    <!-- fragment_ical_list -->
+    <!-- Strings for values in properties of an ICalObject -->
+</resources>
