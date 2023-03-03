@@ -451,6 +451,7 @@ Thank you!"</string>
     <string name="invalid_url_message">"Please enter a valid URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
     <string name="list_quickadd_dialog_sr_listening">"Listening …"</string>
+    <string name="collections_dialog_buypro_info">"Please buy jtx Board Pro to enable editing capabilities for remote collections."</string>
     <string name="list_update_entries_dialog_title">"Update entries"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Attention: Recurring instances must be unlinked from its series before being moved to another collection and will be ignored in this process."</string>
     <string name="details_app_bar_behaviour">"App bar behaviour"</string>
