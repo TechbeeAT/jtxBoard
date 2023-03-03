@@ -522,6 +522,12 @@ Global Strings -->
     <string name="list_date_start_in_past">"Дата в прошлом"</string>
     <string name="list_date_today">"Сегодня"</string>
     <string name="list_date_tomorrow">"Завтра"</string>
+    <string name="list_date_future">"Дата в будущем"</string>
+    <string name="list_start_date_in_past">"Начало в прошлом"</string>
+    <string name="list_start_date_today">"Начало сегодня"</string>
+    <string name="list_start_date_tomorrow">"Начало завтра"</string>
+    <string name="list_start_date_future">"Начало в будущем"</string>
+    <string name="list_hide_completed_tasks">"Скрыть выполненные задачи"</string>
     <string name="settings_auto_alarm">"Автоматическое напоминание"</string>
     <string name="alarms_always_ondue">"Всегда по завершению"</string>
     <string name="settings_auto_alarm_sub">"Активируйте, чтобы напоминания создавались автоматически. Выберите \"Всегда по завершению\", чтобы получать уведомления каждый раз, когда наступает дата завершения задачи."</string>
