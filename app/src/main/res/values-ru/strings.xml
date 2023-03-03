@@ -573,6 +573,12 @@ Global Strings -->
     <string name="edit_recur_second">"секунд(ы)"</string>
     <string name="edit_recur_minute">"минут(ы)"</string>
     <string name="edit_recur_hour">"часов"</string>
+    <string name="filter_group_sort">"Группировка/Сортировка"</string>
+    <string name="widget_list_configuration_widget_background">"Фон виджета"</string>
+    <string name="widget_list_configuration_entries_background">"Фон записей"</string>
+    <string name="widget_list_show_description">"Показывать описание"</string>
+    <string name="settings_select_theme_true_dark">"True Dark (AMOLED)"</string>
+    <string name="settings_select_theme_contrast">"Контраст (e-Ink)"</string>
     <string name="settings_journals">"Настройки Дневников"</string>
     <string name="settings_default_journals_date">"Установить дату/время по умолчанию для дневников"</string>
     <string name="settings_default_journals_date_current_day">"Текущий день"</string>
@@ -580,4 +586,6 @@ Global Strings -->
     <string name="settings_default_journals_date_current_15min">"Текущие 15 минут"</string>
     <string name="settings_default_journals_date_current_5min">"Текущие 5 минут"</string>
     <string name="settings_default_journals_date_current_min">"Текущая минута"</string>
+    <string name="widget_list_show_subtasks">"Показывать подзадачи"</string>
+    <string name="widget_list_show_subnotes">"Показывать дочерние заметки"</string>
 </resources>
