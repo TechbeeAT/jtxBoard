@@ -433,6 +433,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_sr_listening">"Слушаю…"</string>
     <string name="collections_dialog_buypro_info">"Приобретите Pro-версию, чтобы получить доступ к редактированию внешних коллекций."</string>
     <string name="list_update_entries_dialog_title">"Обновить записи"</string>
+    <string name="details_app_bar_behaviour">"Поведение панели приложения"</string>
     <string name="details_show_all_options">"Показать все опции"</string>
     <string name="details_show_hide_elements">Показать/скрыть элементы</string>
     <string name="details_attendees_processing_info">"Внимание: Серверы могут автоматически обрабатывать участников (например, отправляя iMIP-сообщения)."</string>
@@ -545,6 +546,7 @@ Global Strings -->
     <string name="filter_second_order_by">"Затем сортировать по"</string>
     <string name="filter_group_by">"Группировать по"</string>
     <string name="filter_group_by_info">"Группировка доступна для видов Список и Компактно"</string>
+    <string name="menu_list_flat_view">"Плоский вид"</string>
     <string name="menu_list_flat_view_sub">"Всегда показывать дочерние записи на верхнем уровне в списке"</string>
     <string name="menu_list_limit_recur_entries">"Лимит повторений"</string>
     <string name="menu_list_limit_recur_entries_sub">"Показывать только одно повторение"</string>
@@ -588,4 +590,14 @@ Global Strings -->
     <string name="settings_default_journals_date_current_min">"Текущая минута"</string>
     <string name="widget_list_show_subtasks">"Показывать подзадачи"</string>
     <string name="widget_list_show_subnotes">"Показывать дочерние заметки"</string>
+    <string name="markdown_bold">"Полужирный"</string>
+    <string name="markdown_italic">"Курсив"</string>
+    <string name="markdown_underlined">"Подчёркнутый"</string>
+    <string name="markdown_strikethrough">"Зачёркнутый"</string>
+    <string name="markdown_heading1">"Заголовок 1"</string>
+    <string name="markdown_heading2">"Заголовок 2"</string>
+    <string name="markdown_heading3">"Заголовок 3"</string>
+    <string name="markdown_horizontal_ruler">"Горизонтальная линия"</string>
+    <string name="markdown_unordered_list">"Список"</string>
+    <string name="markdown_code">"Код"</string>
 </resources>
