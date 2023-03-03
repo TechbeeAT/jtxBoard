@@ -23,8 +23,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 203000013
-        versionName "2.03.00-rc13"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 203000014
+        versionName "2.03.00-rc14"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Peace begins with a smile\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -153,7 +153,7 @@ import groovy.xml.MarkupBuilder
  */
 def getLocales() {
     // Initialize the list English, since it's available by default
-    def list = ["en", "de", "cs", "el", "es", "fr", "it", "ru", "zh", "ca", "ja"]
+    def list = ["en", "de", "cs", "el", "es", "fr", "it", "ru", "zh", "ca", "ja", "zh-rTW"]
 
     /*
     // deactivated script for now in order to have better control over available locales in the app

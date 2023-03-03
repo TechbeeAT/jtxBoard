@@ -55,7 +55,10 @@ fun SettingsScreen(
 
     val languageOptions = mutableListOf<Locale?>(null)
     for (language in BuildConfig.TRANSLATION_ARRAY) {
-        languageOptions.add(Locale.forLanguageTag(language))
+        if(language == "zh-rTW")
+            languageOptions.add(Locale.TRADITIONAL_CHINESE)
+        else
+            languageOptions.add(Locale.forLanguageTag(language))
     }
 
     Scaffold(
@@ -107,7 +110,7 @@ fun SettingsScreen(
                         if(!appCompatLocales.isEmpty) {
                             for (i in 0 until appCompatLocales.size()) {
                                 val locale = appCompatLocales[i] ?: continue
-                                if (languageOptions.contains(appCompatLocales[i]!!)) {
+                                if (languageOptions.contains(appCompatLocales[i]!!) || appCompatLocales[i] == Locale.TRADITIONAL_CHINESE) {
                                     defaultLocale = locale
                                     break
                                 }
@@ -138,7 +141,7 @@ fun SettingsScreen(
                                     style = MaterialTheme.typography.titleMedium
                                 )
                                 Text(
-                                    text = selectedLanguage?.displayLanguage ?: stringResource(id = R.string.settings_select_language_system),
+                                    text = selectedLanguage?.displayName ?: stringResource(id = R.string.settings_select_language_system),
                                     style = MaterialTheme.typography.bodySmall
                                 )
                             }
@@ -151,7 +154,7 @@ fun SettingsScreen(
                                 expanded = languagesExpanded,
                                 onDismissRequest = { languagesExpanded = false },
                             ) {
-                                languageOptions.forEach { locale ->
+                                languageOptions.sortedBy { it?.displayName }.forEach { locale ->
                                     DropdownMenuItem(
                                         onClick = {
                                             languagesExpanded = false
@@ -162,7 +165,7 @@ fun SettingsScreen(
                                         },
                                         text = {
                                             Text(
-                                                text = locale?.displayLanguage ?: stringResource(id = R.string.settings_select_language_system),
+                                                text = locale?.displayName ?: stringResource(id = R.string.settings_select_language_system),
                                                 modifier = Modifier
                                                     .align(Alignment.Start)
                                             )
