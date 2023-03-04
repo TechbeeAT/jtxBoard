@@ -266,6 +266,8 @@ For more information about the Sync please see:"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
     <string name="edit_dialog_set_attendee_role">"Set attendee role"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Date/Time"</string>
+    <string name="alarms_duration">"Duration"</string>
     <string name="alarms_onstart">"On start"</string>
     <string name="alarms_ondue">"On due"</string>
     <string name="alarms_custom">"Custom"</string>
