@@ -189,8 +189,7 @@ class MainActivity2 : AppCompatActivity() {
                 // Take data also from other sharing intents
                 Intent.ACTION_SEND -> {
                     when {
-                        intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value =
-                            intent.getStringExtra(Intent.EXTRA_TEXT)
+                        intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value = intent.getStringExtra(Intent.EXTRA_TEXT)
                         intent.type?.startsWith("image/") == true || intent.type == "application/pdf" -> {
                             intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
                                 ?.let { uri ->
@@ -223,6 +222,8 @@ class MainActivity2 : AppCompatActivity() {
                     }
                 }
             }
+            intent.removeExtra(Intent.EXTRA_TEXT)
+            intent.removeExtra(Intent.EXTRA_STREAM)
             setResult(Activity.RESULT_OK)
         }
         lastProcessedIntentHash = intent.hashCode()
