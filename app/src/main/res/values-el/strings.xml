@@ -251,6 +251,8 @@ Global Strings -->
     <string name="navigation_drawer_collections">"Συλλογες"</string>
     <string name="edit_dialog_set_attendee_role">"Καθορισμός ρόλου"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Ημερομηνία/Ώρα"</string>
+    <string name="alarms_duration">"Διάρκεια"</string>
     <string name="alarms_onstart">"Έναρξη"</string>
     <string name="alarms_ondue">"Μέχρι"</string>
     <string name="alarms_custom">"Τυπικό"</string>

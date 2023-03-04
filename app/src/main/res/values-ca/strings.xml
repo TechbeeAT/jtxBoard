@@ -251,6 +251,8 @@ Per a més informació sobre la sincronització, per favor mira:"</string>
     <string name="navigation_drawer_collections">"Col·leccions"</string>
     <string name="edit_dialog_set_attendee_role">"Estableix el sol de l'assistent"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Data/Hora"</string>
+    <string name="alarms_duration">"Duració"</string>
     <string name="alarms_onstart">"Al començament"</string>
     <string name="alarms_ondue">"En véncer"</string>
     <string name="alarms_custom">"Personalitzat"</string>
