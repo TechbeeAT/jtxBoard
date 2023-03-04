@@ -72,6 +72,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"První řádek je interpretován jako souhrn, zbytek jako popis. Hashtagy jsou interpretovány jako kategorie (např. #kategorie)."</string>
     <string name="list_item_upload_pending">"Čekání na nahrání"</string>
     <string name="list_item_recurring">"Opakující se záznam"</string>
+    <string name="list_item_edited_recurring">"Upravený opakující se záznam"</string>
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Přejít na původní"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Výskyt opakování"</string>
@@ -250,6 +251,8 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="navigation_drawer_collections">"Sbírky"</string>
     <string name="edit_dialog_set_attendee_role">"Nastavení role účastníka"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Datum a čas"</string>
+    <string name="alarms_duration">"Trvání"</string>
     <string name="alarms_onstart">"Při zahájení"</string>
     <string name="alarms_ondue">"Při termínu"</string>
     <string name="alarms_custom">"Vlastní"</string>
@@ -430,7 +433,9 @@ Děkujeme vám!"</string>
     <string name="invalid_url_message">"Zadejte platnou URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spustit rozpoznávání řeči"</string>
     <string name="list_quickadd_dialog_sr_listening">"Naslouchání…"</string>
+    <string name="collections_dialog_buypro_info">"Pro povolení možností úprav pro vzdálené kolekce si prosím kupte jtx Board Pro."</string>
     <string name="list_update_entries_dialog_title">"Aktualizovat záznamy"</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"Upozornění: Opakující se instance musí být odpojeny od své série, než budou přesunuty do jiné kolekce a v tomto procesu budou ignorovány."</string>
     <string name="details_app_bar_behaviour">"Chování panelu aplikace"</string>
     <string name="details_show_all_options">"Zobrazit všechny volby"</string>
     <string name="details_show_hide_elements">Zobrazit/skrýt prvky</string>
@@ -440,6 +445,12 @@ Děkujeme vám!"</string>
     <string name="details_recur_unknown_rrule_dialog_message">"Bylo rozpoznáno neznámé nebo nepodporované pravidlo opakování. Pokud budete pokračovat, stávající pravidlo opakování bude odstraněno nebo přepsáno."</string>
     <string name="details_entry_could_not_be_loaded">"Tento záznam byla buď na pozadí odstraněna neb ho nebylo možné načíst."</string>
     <string name="details_attachment_beta_info">"* Synchronizace příloh je experimentální funkce. Důrazně doporučujeme používat pouze malé přílohy (do 100 KB), protože větší přílohy by mohly vést k dlouhým synchronizačním časům a neočekávanému chování."</string>
+    <string name="details_unchanged_part_of_series">"Tento záznam je součástí série. Tento záznam zkopíruje všechny změny provedené pro sérii."</string>
+    <string name="details_changed_part_of_series">"Tento záznam je součástí série, ale byl změněn. Tento záznam nebude ovlivněn změnami série."</string>
+    <string name="details_series_attention_subentries">"Upozornění: Prvky sérií zrcadlí dílčí úkoly a propojené poznámky ze série. Pokud chcete změnit dílčí úkoly a propojené poznámky pouze pro prvek série, odpojte ho nejprve od série."</string>
+    <string name="details_go_to_series">"Přejít na sérii"</string>
+    <string name="details_detach_from_series">"Odpojit od série"</string>
+    <string name="details_detach_all_instances">"Odpojit všechny instance"</string>
     <string name="edit_comment">"Upravit komentář"</string>
     <string name="edit_subnote_add_helper">"Přidat dílčí poznámku"</string>
     <string name="edit_subtask">"Upravit dílčí úkol"</string>
@@ -465,6 +476,13 @@ Děkujeme vám!"</string>
     <string name="dialog_revert_changes_message">"Opravdu chcete zahodit své změny a vrátit obsah do stavu před zahájením úprav?"</string>
     <string name="dialog_revert_changes_message2">"Pozor: Dílčí úkoly a poznámky jsou samostatné záznamy a nelze je vrátit zpět."</string>
     <string name="dialog_collection_new_entries_title">"Sbírka pro nové záznamy"</string>
+    <string name="dialog_detach_from_series_title">"Odpojit od série?"</string>
+    <string name="dialog_detach_from_series_text_all">"Odpojení všech prvků odstraní sérii a změní instance na nezávislé záznamy, které mohou mít své vlastní dílčí úkoly nebo propojené poznámky. Ale nebude již existovat žádný odkaz na původní sérii nebo jiné instance. Chcete pokračovat?"</string>
+    <string name="dialog_detach_from_series_text_single">"Odpojení tohoto prvku od série vám umožní mít nezávislé dílčí úkoly nebo propojené poznámky, ale nebude již existovat žádný další odkaz na původní sérii. Chcete pokračovat?"</string>
+    <string name="dialog_detach_from_series_text_attention">"Upozornění: Tuto operaci nelze vrátit zpět!"</string>
+    <string name="dialog_detach_from_series_button">"Odpojit od série"</string>
+    <string name="dialog_davx5_outdated_title">"DAVx⁵ je zastaralý"</string>
+    <string name="dialog_davx5_outdated_message">"Vaše aktuální verze DAVx⁵ není kompatibilní s touto verzí jtx Board. Aktualizujte prosím DAVx⁵ na 4.3.1 (403010000+) nebo novější! Synchronizace je aktuálně pozastavena."</string>
     <string name="menu_list_viewmode_compact">"Kompaktní zobrazení"</string>
     <string name="menu_list_viewmode_kanban">"Zobrazení Kanban"</string>
     <string name="settings_details">"Nastavení pro podrobnosti položky"</string>

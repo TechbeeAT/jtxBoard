@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board синхронизирует дневники, заметки и задачи"</string>
+    <string name="app_permission_label">"jtx Board синхронизирует журналы, заметки и задачи"</string>
     <string name="app_permission_desc">"синхронизация содержимого jtx Board с другими приложениями, такими как DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
@@ -10,11 +10,11 @@ Global Strings -->
     <string name="cancel">"Отмена"</string>
     <string name="ok">"ОК"</string>
     <string name="delete">"Удалить"</string>
-    <string name="discard">"Удалить"</string>
+    <string name="discard">"Отменить"</string>
     <string name="gotit">"Понятно"</string>
     <string name="cont">"Продолжить"</string>
     <string name="website">"Сайт"</string>
-    <string name="toolbar_text_add_journal">"Добавить дневник"</string>
+    <string name="toolbar_text_add_journal">"Добавить журнал"</string>
     <string name="toolbar_text_add_note">"Добавить заметку"</string>
     <string name="toolbar_text_add_task">"Добавить задачу"</string>
     <string name="default_local_collection_name">"Локально"</string>
@@ -40,7 +40,7 @@ Global Strings -->
     <string name="navigation_drawer_board">"Доска"</string>
     <string name="navigation_drawer_sync">"Синхронизация с DAVx⁵"</string>
     <string name="navigation_drawer_about">"О приложении / Лицензия"</string>
-    <string name="navigation_drawer_subtitle">"дневники, заметки и задачи"</string>
+    <string name="navigation_drawer_subtitle">"журналы, заметки и задачи"</string>
     <string name="navigation_drawer_beta_feedback">"Отзыв о бета-версии"</string>
     <string name="navigation_drawer_settings">"Настройки"</string>
     <string name="navigation_drawer_news_updates">"Новости и обновления"</string>
@@ -53,14 +53,14 @@ Global Strings -->
     <string name="list_due_overdue">"Просрочено"</string>
     <string name="list_due_today">"Завершается сегодня"</string>
     <string name="list_due_tomorrow">"Завершается завтра"</string>
-    <string name="list_due_inXdays">"Завершится через %d дн."</string>
-    <string name="list_due_inXhours">"Завершится через %d ч."</string>
-    <string name="list_start_past">"Начало в прошлом"</string>
-    <string name="list_start_today">"Планируемое начало сегодня"</string>
-    <string name="list_start_tomorrow">"Начало завтра"</string>
-    <string name="list_start_inXhours">"Запланированное начало через %d ч."</string>
-    <string name="list_start_inXdays">"Запланированное начало через %d дн."</string>
-    <string name="list_tabitem_journals">"Дневники"</string>
+    <string name="list_due_inXdays">"Завершается через %d дн."</string>
+    <string name="list_due_inXhours">"Завершается через %d ч."</string>
+    <string name="list_start_past">"Началось"</string>
+    <string name="list_start_today">"Начинается сегодня"</string>
+    <string name="list_start_tomorrow">"Начинается завтра"</string>
+    <string name="list_start_inXhours">"Начинается через %d ч."</string>
+    <string name="list_start_inXdays">"Начинается через %d дн."</string>
+    <string name="list_tabitem_journals">"Журналы"</string>
     <string name="list_tabitem_notes">"Заметки"</string>
     <string name="list_tabitem_todos">"Задачи"</string>
     <string name="list_fab_add_contentdesc">"Добавить новый пункт"</string>
@@ -97,7 +97,7 @@ Global Strings -->
     <string name="view_created_text">"Создано: %1$s"</string>
     <string name="view_last_modified_text">"Изменено: %1$s"</string>
     <string name="view_due">"Дата завершения"</string>
-    <string name="view_completed">"Выполнено"</string>
+    <string name="view_completed">"Дата выполнения"</string>
     <string name="view_started">"Дата начала"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#моякатегория"</string>
@@ -151,7 +151,7 @@ Global Strings -->
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Обнаружено неподдерживаемое значение (продолжительность)!"</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Для этой записи обнаружена продолжительность. В настоящее время jtx Board не поддерживает обработку продолжительности. Вместо этого используйте даты начала, завершения и выполнения. Если вы сохраните эту запись, существующая продолжительность будет удалена."</string>
     <!-- fragment_about -->
-    <string name="about_tabitem_translations">"Переводы"</string>
+    <string name="about_tabitem_translations">"Перевод"</string>
     <string name="about_tabitem_libraries">"Библиотеки"</string>
     <string name="about_tabitem_thanks">"Особая благодарность"</string>
     <string name="about_app_version">"Версия: %1$s (%2$d)"</string>
@@ -161,13 +161,13 @@ Global Strings -->
     <string name="about_thanks_ffg">"Особая благодарность FFG за их доверие и финансовую поддержку для реализации этого проекта."</string>
     <!-- menus -->
     <string name="menu_list_gotodate">"Переход к дате"</string>
-    <string name="menu_list_quick_journal">"Быстрый дневник"</string>
+    <string name="menu_list_quick_journal">"Быстрый журнал"</string>
     <string name="menu_list_quick_note">"Быстрая заметка"</string>
     <string name="menu_list_quick_todo">"Быстрое задание"</string>
     <string name="menu_list_delete_visible">"Удалить видимые"</string>
     <string name="menu_list_syncnow">"Синхронизировать"</string>
     <string name="menu_view_share_ics">"Поделиться .ics"</string>
-    <string name="menu_view_copy_as_journal">"Скопировать как дневник"</string>
+    <string name="menu_view_copy_as_journal">"Скопировать как журнал"</string>
     <string name="menu_view_copy_as_todo">"Скопировать как задание"</string>
     <string name="menu_view_copy_as_note">"Скопировать как заметку"</string>
     <string name="menu_view_copy_item">"Создать копию"</string>
@@ -175,7 +175,7 @@ Global Strings -->
     <string name="notification_channel_reminder_name">"Напоминание о задачах"</string>
     <string name="notification_channel_reminder_description">"Уведомление о невыполненных задачах"</string>
     <!-- Shortcuts -->
-    <string name="shortcut_addJournal_longLabel">"Добавить дневник"</string>
+    <string name="shortcut_addJournal_longLabel">"Добавить журнал"</string>
     <string name="shortcut_addNote_longLabel">"Добавить заметку"</string>
     <string name="shortcut_addTodo_longLabel">"Добавить задание"</string>
     <!-- Settings fragment -->
@@ -185,10 +185,10 @@ Global Strings -->
     <string name="settings_show_attachments_in_list">"Отображать вложения в списке"</string>
     <string name="settings_show_progress_for_subtasks">Показывать прогресс подзадач</string>
     <string name="settings_show_progress_for_maintasks">Показывать прогресс задач</string>
-    <string name="settings_group_settings_for_subentries">"Настройки для подзадач, дочерних заметок и дневников"</string>
-    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Показать подзадачи дневников и заметок в списке задач"</string>
-    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Показать дочерние заметки дневников и задач в списке заметок"</string>
-    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"Показать дочерние дневники заметок и задач в списке дневников"</string>
+    <string name="settings_group_settings_for_subentries">"Настройки для подзадач, дочерних заметок и журналов"</string>
+    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Показать подзадачи журналов и заметок в списке задач"</string>
+    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Показать дочерние заметки журналов и задач в списке заметок"</string>
+    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"Показать дочерние журналы заметок и задач в списке дневников"</string>
     <string name="settings_app">"Настройки приложения"</string>
     <string name="settings_select_mimetype_for_audio">"Выберите Mimetype для аудиозаметок"</string>
     <!-- Sync fragment -->
@@ -217,18 +217,18 @@ Global Strings -->
     <string name="synccontentprovider_sync_problem">"Извините, jtx не может синхронизироваться. Пожалуйста, закройте DAVx⁵ и запустите синхронизацию снова."</string>
     <string name="about_translations_thanks_to">"Спасибо"</string>
     <string name="about_translations_for_contributions_in">"за вклад"</string>
-    <string name="about_translations_basic_info">"jtx Board — это приложение с открытым исходным кодом, которое высоко ценит участие и вклад сообщества разработчиков открытого исходного кода. На этой странице мы хотели бы отметить усилия участников сообщества переводчиков."</string>
+    <string name="about_translations_basic_info">"jtx Board — приложение с открытым исходным кодом, и мы высоко ценим участие и вклад нашего сообщества. На этой странице мы хотели бы отметить усилия всех переводчиков."</string>
     <string name="about_translations_contribution_info">"Если вы хотите отредактировать/добавить перевод или новые языки в это приложение, присоединяйтесь к jtx Board на платформе Crowdin:"</string>
     <string name="about_translations_contribution_button">"Перейти на Crowdin.com"</string>
     <string name="about_translations_poeditor">"Переводчики на POeditor.com (прошлая платформа)"</string>
-    <string name="list_welcome_entry_journal_summary">"Поздравляем, это ваша первая запись в дневнике :-)"</string>
-    <string name="list_welcome_entry_journal_description">"Дневники можно использовать для хранения заметок на конкретную дату. Используйте эту функцию, например, для протоколов, протоколов собраний, записей в дневнике и т. д. Если вы отредактируете эту запись, вы увидите варианты добавления категорий, участников, вложений и т. д. Не стесняйтесь удалять эту запись, когда захотите!"</string>
+    <string name="list_welcome_entry_journal_summary">"Поздравляем, это ваша первая запись в журнале :-)"</string>
+    <string name="list_welcome_entry_journal_description">"Журналы можно использовать для хранения заметок на конкретную дату. Используйте эту функцию, например, для протоколов, протоколов собраний, записей в дневнике и т. д. Если вы отредактируете эту запись, вы увидите варианты добавления категорий, участников, вложений и т. д. Не стесняйтесь удалять эту запись, когда захотите!"</string>
     <string name="list_welcome_entry_note_summary">"Поздравляем, это ваша первая заметка :-)"</string>
-    <string name="list_welcome_entry_note_description">"Заметки являются традиционными заметками и не привязаны к определенной дате. Как и в дневниках, вы можете добавлять вложения, участников и многое другое при редактировании или добавлении записи. Кстати, вы также можете добавлять подзадачи к любой записи, будь то дневник, заметка или задача!"</string>
+    <string name="list_welcome_entry_note_description">"Заметки являются традиционными заметками и не привязаны к определенной дате. Как и в журналах, вы можете добавлять вложения, участников и многое другое при редактировании или добавлении записи. Кстати, вы также можете добавлять подзадачи к любой записи, будь то журнал, заметка или задача!"</string>
     <string name="list_welcome_entry_todo_summary">"Поздравляем, это ваша первая задача :-)"</string>
-    <string name="list_welcome_entry_todo_description">"Помимо дневников и заметок, задачи могут иметь дату начала, дату завершения и дату выполнения. Их можно отметить как выполненные или установить для них прогресс выполнения. Нажмите на кнопку редактирования и попробуйте сами :-)"</string>
+    <string name="list_welcome_entry_todo_description">"Помимо журналов и заметок, задачи могут иметь дату начала, дату завершения и дату выполнения. Их можно отметить как выполненные или установить для них прогресс выполнения. Нажмите на кнопку редактирования и попробуйте сами :-)"</string>
     <string name="list_welcome_category">"#первые шаги"</string>
-    <string name="save_and_edit">"Сохранить и изменить"</string>
+    <string name="save_and_edit">"Сохранить &amp; дополнить"</string>
     <string name="save_and_new">"Сохранить &amp; создать еще"</string>
     <string name="save_and_close">"Сохранить &amp; закрыть"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Использовать преобразование речи в текст"</string>
@@ -240,7 +240,7 @@ Global Strings -->
     <string name="permission_read_contacts_denied">"Разрешение на чтение контактов отклонено"</string>
     <string name="permission_record_audio_granted">"Разрешение на запись звука предоставлено"</string>
     <string name="permission_record_audio_denied">"Разрешение на запись звука отклонено"</string>
-    <string name="intent_dialog_title">"Добавить вложение в дневник, заметку или задачу?"</string>
+    <string name="intent_dialog_title">"Добавить вложение в журнал, заметку или задачу?"</string>
     <string name="add">"Добавить"</string>
     <string name="edit">"Редактировать"</string>
     <string name="reset">"Сбросить"</string>
@@ -256,30 +256,30 @@ Global Strings -->
     <string name="alarms_onstart">"Начало"</string>
     <string name="alarms_ondue">"Завершение"</string>
     <string name="alarms_custom">"Настроить"</string>
-    <string name="alarms_before_start">"до Начала"</string>
-    <string name="alarms_after_start">"после Начала"</string>
+    <string name="alarms_before_start">"до начала"</string>
+    <string name="alarms_after_start">"после начала"</string>
     <string name="alarms_before_due">"до завершения"</string>
     <string name="alarms_after_due">"после завершения"</string>
     <string name="alarms_minutes">"мин."</string>
-    <string name="alarms_hours">"Час(ы)"</string>
-    <string name="alarms_days">"День/дни"</string>
+    <string name="alarms_hours">"час."</string>
+    <string name="alarms_days">"дн."</string>
     <!-- fragment_collections -->
     <string name="collections_local_collections">"Локальные коллекции"</string>
     <string name="collections_remote_collections">"Внешние коллекции"</string>
     <!-- Fuzzy -->
-    <string name="collections_journals_num">"Дневники: %1$s"</string>
+    <string name="collections_journals_num">"Журналы: %1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Заметки: %1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_tasks_num">"Задачи: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Не обнаружены локальные коллекции"</string>
     <string name="collections_local_noremotecollections">"Не обнаружены отдаленно расположенные коллекции"</string>
-    <string name="collections_info">"Коллекции — это скопление записей наподобие папок с файлами. Вы можете создавать локальные коллекции через меню или настроить внешние коллекции для синхронизации через DAVx⁵."</string>
+    <string name="collections_info">"Коллекции — это скопление записей наподобие папок с файлами. Вы можете создавать локальные коллекции или настраивать внешние коллекции для синхронизации через DAVx⁵, используя меню."</string>
     <string name="collections_collection_menu">"Меню"</string>
     <string name="collections_dialog_add_local_collection_title">"Меню коллекции"</string>
     <string name="collections_dialog_edit_local_collection_title">"Редактировать локальную коллекцию"</string>
     <string name="collections_dialog_delete_local_title">"Удалить \"%1$s\"?"</string>
-    <string name="collections_dialog_delete_local_message">"Удаление коллекции также приведет к удалению всех дневников, заметок и задач в этой коллекции. Это не может быть отменено. Вы уверены, что хотите продолжить?"</string>
+    <string name="collections_dialog_delete_local_message">"Удаление коллекции также приведет к удалению всех журналов, заметок и задач в этой коллекции. Это не может быть отменено. Вы уверены, что хотите продолжить?"</string>
     <string name="menu_collections_add_local">"Добавить локальную коллекцию"</string>
     <string name="navigation_drawer_website_news">"Новости и обновления"</string>
     <string name="list_quickadd_toast_no_summary_description">"Запись без названия/описания не может быть создана."</string>
@@ -303,7 +303,7 @@ Global Strings -->
     <string name="menu_collections_add_remote">"Добавить внешнюю Коллекцию (DAVx⁵)"</string>
     <string name="menu_collection_popup_show_in_davx5">"Показать в DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"Экспорт .ics"</string>
-    <string name="journal">"Дневник"</string>
+    <string name="journal">"Журнал"</string>
     <string name="note">"Заметка"</string>
     <string name="task">"Задача"</string>
     <string name="account">"Аккаунт"</string>
@@ -329,14 +329,14 @@ Global Strings -->
     <string name="summary">"Название"</string>
     <string name="description">"Описание"</string>
     <string name="search">"Поиск"</string>
-    <string name="search_journals">Найти дневники</string>
+    <string name="search_journals">Найти журналы</string>
     <string name="search_notes">Найти заметки</string>
     <string name="search_todos">Найти задачи</string>
     <string name="filter">"Фильтр"</string>
-    <string name="sync_now">"Синхронизировать сейчас"</string>
+    <string name="sync_now">"Синхронизировать"</string>
     <string name="due">"Дата завершения"</string>
-    <string name="completed">"Выполнено"</string>
-    <string name="started">"Начало(сь)"</string>
+    <string name="completed">"Дата выполнения"</string>
+    <string name="started">"Дата начала"</string>
     <string name="add_time_switch">"Добавить время"</string>
     <string name="add_timezone_switch">"Добавить часовой пояс"</string>
     <string name="progress">"Прогресс"</string>
@@ -349,7 +349,7 @@ Global Strings -->
     <string name="view_share_part_of_series">"Запись является частью серии."</string>
     <string name="view_share_repeats">"Запись повторяется каждые"</string>
     <string name="collections_dialog_move_title">"Переместить все записи из \"%1$s\" в"</string>
-    <string name="collection_dialog_move_info">"Обратите внимание: могут быть выбраны только доступные для записи коллекции и коллекции с поддержкой тех же компонентов (Дневники, Заметки, Задачи)."</string>
+    <string name="collection_dialog_move_info">"Обратите внимание: могут быть выбраны только доступные для записи коллекции и коллекции с поддержкой тех же компонентов (Журналы, Заметки, Задачи)."</string>
     <string name="menu_collections_popup_move_entries">"Переместить записи"</string>
     <string name="adinfo_adfree_success_thankyou">"Спасибо !"</string>
     <string name="adinfo_adfree_purchase_date">"Приобретено на %1$s"</string>
@@ -403,7 +403,7 @@ Global Strings -->
     <string name="menu_list_viewmode_list">"Список"</string>
     <string name="menu_list_viewmode_grid">"Сетка"</string>
     <string name="settings_modules">"Активные модули"</string>
-    <string name="settings_modules_enable_journals">"Дневники"</string>
+    <string name="settings_modules_enable_journals">"Журналы"</string>
     <string name="settings_modules_enable_notes">"Заметки"</string>
     <string name="settings_modules_enable_tasks">"Задачи"</string>
     <string name="settings_default_expand_subtasks">"Показывать подзадачи в списке по умолчанию"</string>
@@ -436,7 +436,7 @@ Global Strings -->
     <string name="collections_dialog_buypro_info">"Приобретите Pro-версию, чтобы получить доступ к редактированию внешних коллекций."</string>
     <string name="list_update_entries_dialog_title">"Обновить записи"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Внимание: повторяющиеся записи должны быть отсоединены от своей серии перед перемещением в другую коллекцию и будут проигнорированы в этом процессе."</string>
-    <string name="details_app_bar_behaviour">"Управление доской"</string>
+    <string name="details_app_bar_behaviour">"Управление панелью"</string>
     <string name="details_show_all_options">"Показать все опции"</string>
     <string name="details_show_hide_elements">Показать/скрыть элементы</string>
     <string name="details_attendees_processing_info">"Внимание: Серверы могут автоматически обрабатывать участников (например, отправляя iMIP-сообщения)."</string>
@@ -461,8 +461,8 @@ Global Strings -->
     <string name="alarms_alarm">"Напоминание"</string>
     <string name="alarms_before">"до"</string>
     <string name="alarms_after">"после"</string>
-    <string name="alarms_start">"начало"</string>
-    <string name="alarms_due">"дата завершения"</string>
+    <string name="alarms_start">"начала"</string>
+    <string name="alarms_due">"завершения"</string>
     <string name="about_tabitem_releasenotes">"Что нового"</string>
     <string name="collections_account_not_found_info">"Эта учетная запись не найдена в менеджере учетных записей. Пожалуйста, удалите ее, если она устарела."</string>
     <string name="collections_account_delete_dialog_title">"Удалить \"%1$s\"?"</string>
@@ -584,8 +584,8 @@ Global Strings -->
     <string name="widget_list_show_description">"Показывать описание"</string>
     <string name="settings_select_theme_true_dark">"True Dark (AMOLED)"</string>
     <string name="settings_select_theme_contrast">"Контраст (e-Ink)"</string>
-    <string name="settings_journals">"Настройки дневников"</string>
-    <string name="settings_default_journals_date">"Установить дату/время по умолчанию для дневников"</string>
+    <string name="settings_journals">"Настройки журналов"</string>
+    <string name="settings_default_journals_date">"Установить дату/время по умолчанию для журналов"</string>
     <string name="settings_default_journals_date_current_day">"Текущий день"</string>
     <string name="settings_default_journals_date_current_hour">"Текущий час"</string>
     <string name="settings_default_journals_date_current_15min">"Текущие 15 минут"</string>
