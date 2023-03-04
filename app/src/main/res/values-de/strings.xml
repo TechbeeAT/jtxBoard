@@ -251,6 +251,8 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="navigation_drawer_collections">"Collections"</string>
     <string name="edit_dialog_set_attendee_role">"Teilnehmer-Rolle vergeben"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Datum/Uhrzeit"</string>
+    <string name="alarms_duration">"Dauer"</string>
     <string name="alarms_onstart">"Bei Start"</string>
     <string name="alarms_ondue">"Bei Fälligkeit"</string>
     <string name="alarms_custom">"Individuell"</string>
