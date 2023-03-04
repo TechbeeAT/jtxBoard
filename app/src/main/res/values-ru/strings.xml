@@ -9,7 +9,7 @@ Global Strings -->
     <string name="save">"Сохранить"</string>
     <string name="cancel">"Отмена"</string>
     <string name="ok">"ОК"</string>
-    <string name="delete">"Удаление"</string>
+    <string name="delete">"Удалить"</string>
     <string name="discard">"Удалить"</string>
     <string name="gotit">"Понятно"</string>
     <string name="cont">"Продолжить"</string>
@@ -164,7 +164,7 @@ Global Strings -->
     <string name="menu_list_quick_journal">"Быстрый дневник"</string>
     <string name="menu_list_quick_note">"Быстрая заметка"</string>
     <string name="menu_list_quick_todo">"Быстрое задание"</string>
-    <string name="menu_list_delete_visible">"Удаление видимых"</string>
+    <string name="menu_list_delete_visible">"Удалить видимые"</string>
     <string name="menu_list_syncnow">"Синхронизировать"</string>
     <string name="menu_view_share_ics">"Поделиться .ics"</string>
     <string name="menu_view_copy_as_journal">"Скопировать как дневник"</string>
@@ -180,7 +180,7 @@ Global Strings -->
     <string name="shortcut_addTodo_longLabel">"Добавить задание"</string>
     <!-- Settings fragment -->
     <string name="settings_enforce_dark_theme">"Темная тема принудительно"</string>
-    <string name="settings_list">"Настройки для списка элементов"</string>
+    <string name="settings_list">"Настройки списка элементов"</string>
     <string name="settings_show_subtasks_in_list">"Отображать подзадачи в списке"</string>
     <string name="settings_show_attachments_in_list">"Отображать вложения в списке"</string>
     <string name="settings_show_progress_for_subtasks">Показывать прогресс подзадач</string>
@@ -251,8 +251,10 @@ Global Strings -->
     <string name="navigation_drawer_collections">"Коллекции"</string>
     <string name="edit_dialog_set_attendee_role">"Установить роль участника"</string>
     <!-- alarms -->
-    <string name="alarms_onstart">"По времени начала"</string>
-    <string name="alarms_ondue">"По завершению"</string>
+    <string name="alarms_date_time">"Дата/Время"</string>
+    <string name="alarms_duration">"Период"</string>
+    <string name="alarms_onstart">"Начало"</string>
+    <string name="alarms_ondue">"Завершение"</string>
     <string name="alarms_custom">"Настроить"</string>
     <string name="alarms_before_start">"до Начала"</string>
     <string name="alarms_after_start">"после Начала"</string>
@@ -418,7 +420,7 @@ Global Strings -->
     <string name="invert_selection">"Инвертировать выделение"</string>
     <string name="clear_selection">"Очистить выделение"</string>
     <string name="preferences">"Настройки"</string>
-    <string name="revert">"Отмена"</string>
+    <string name="revert">"Сбросить"</string>
     <string name="audio_play">"Воспроизвести"</string>
     <string name="audio_record">"Запись"</string>
     <string name="audio_stop">"Стоп"</string>
@@ -470,8 +472,8 @@ Global Strings -->
     <string name="dialog_unsaved_changes_title">"Сохранить изменения?"</string>
     <string name="dialog_unsaved_changes_text">"Обнаружены несохраненные изменения. Вы хотите сохранить или отменить изменения?"</string>
     <string name="dialog_error_on_update_message">"Произошла ошибка при создании/обновлении этой записи. Запись или коллекция больше не существует."</string>
-    <string name="dialog_revert_changes_title">"Отменить изменения?"</string>
-    <string name="dialog_revert_changes_message">"Вы уверены, что хотите отменить изменения и вернуть содержимое к версии до начала редактирования?"</string>
+    <string name="dialog_revert_changes_title">"Сбросить изменения?"</string>
+    <string name="dialog_revert_changes_message">"Вы уверены, что хотите сбросить изменения и вернуть содержимое к версии до начала редактирования?"</string>
     <string name="dialog_revert_changes_message2">"Внимание: Подзадачи и дочерние заметки являются отдельными записями и не могут быть отменены."</string>
     <string name="dialog_collection_new_entries_title">"Коллекция для новых записей"</string>
     <string name="dialog_detach_from_series_title">"Отвязать от серии?"</string>
