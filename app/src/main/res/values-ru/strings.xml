@@ -142,7 +142,7 @@ Global Strings -->
     <string name="edit_dialog_sure_to_delete_title">"Удалить \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Удалить эту запись?"</string>
     <string name="edit_dialog_sure_to_delete_message">"Вы уверены, что хотите удалить \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_message">"Вы уверены, что хотите удалить эту запись? Эта запись не будет сохранена."</string>
+    <string name="edit_dialog_sure_to_discard_message">"Вы уверены, что хотите удалить эту запись? Запись не будет сохранена."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Дата завершения не может предшествовать дате начала."</string>
     <string name="edit_fragment_app_permission">"Разрешения приложения"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board может предлагать данные об участниках на основе ваших контактов в качестве входных значений для ваших записей. Для включения этой функции необходимо разрешение на чтение ваших контактов."</string>
