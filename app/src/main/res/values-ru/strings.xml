@@ -168,7 +168,7 @@ Global Strings -->
     <string name="menu_list_syncnow">"Синхронизировать"</string>
     <string name="menu_view_share_ics">"Поделиться .ics"</string>
     <string name="menu_view_copy_as_journal">"Скопировать как журнал"</string>
-    <string name="menu_view_copy_as_todo">"Скопировать как задание"</string>
+    <string name="menu_view_copy_as_todo">"Скопировать как задачу"</string>
     <string name="menu_view_copy_as_note">"Скопировать как заметку"</string>
     <string name="menu_view_copy_item">"Создать копию"</string>
     <!-- Notification channel for Reminders -->
