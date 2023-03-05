@@ -10,7 +10,7 @@ Global Strings -->
     <string name="cancel">"Отмена"</string>
     <string name="ok">"ОК"</string>
     <string name="delete">"Удалить"</string>
-    <string name="discard">"Отменить"</string>
+    <string name="discard">"Сбросить"</string>
     <string name="gotit">"Понятно"</string>
     <string name="cont">"Продолжить"</string>
     <string name="website">"Сайт"</string>
@@ -140,9 +140,9 @@ Global Strings -->
     <string name="edit_task_due_add">"Выбрать дату/время завершения"</string>
     <string name="edit_task_completed_add">"Выбрать дату/время выполнения"</string>
     <string name="edit_dialog_sure_to_delete_title">"Удалить \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_title">"Удалить эту запись?"</string>
+    <string name="edit_dialog_sure_to_discard_title">"Сбросить эту запись?"</string>
     <string name="edit_dialog_sure_to_delete_message">"Вы уверены, что хотите удалить \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_message">"Вы уверены, что хотите удалить эту запись? Запись не будет сохранена."</string>
+    <string name="edit_dialog_sure_to_discard_message">"Вы уверены, что хотите сбросить эту запись? Запись не будет сохранена."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Дата завершения не может предшествовать дате начала."</string>
     <string name="edit_fragment_app_permission">"Разрешения приложения"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board может предлагать данные об участниках на основе ваших контактов в качестве входных значений для ваших записей. Для включения этой функции необходимо разрешение на чтение ваших контактов."</string>
@@ -329,9 +329,9 @@ Global Strings -->
     <string name="summary">"Название"</string>
     <string name="description">"Описание"</string>
     <string name="search">"Поиск"</string>
-    <string name="search_journals">Найти журналы</string>
-    <string name="search_notes">Найти заметки</string>
-    <string name="search_todos">Найти задачи</string>
+    <string name="search_journals">Поиск журналов</string>
+    <string name="search_notes">Поиск заметок</string>
+    <string name="search_todos">Поиск задач</string>
     <string name="filter">"Фильтр"</string>
     <string name="sync_now">"Синхронизировать"</string>
     <string name="due">"Дата завершения"</string>
@@ -440,7 +440,7 @@ Global Strings -->
     <string name="details_show_all_options">"Показать все опции"</string>
     <string name="details_show_hide_elements">Показать/скрыть элементы</string>
     <string name="details_attendees_processing_info">"Внимание: Серверы могут автоматически обрабатывать участников (например, отправляя iMIP-сообщения)."</string>
-    <string name="details_toast_entry_deleted">"Запись отменена/удалена"</string>
+    <string name="details_toast_entry_deleted">"Запись сброшена/удалена"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Обнаружена неподдерживаемая настройка повторения!"</string>
     <string name="details_recur_unknown_rrule_dialog_message">"Обнаружена неизвестная или неподдерживаемая настройка повторения. Если вы сохраните эту запись, существующая настройка повторения будет удалена/изменена."</string>
     <string name="details_entry_could_not_be_loaded">"Эта запись была либо удалена в фоновом режиме, либо не может быть загружена."</string>
@@ -470,7 +470,7 @@ Global Strings -->
     <string name="dialog_move_item_to_collection_title">"Переместить эту запись в \"%1$s\"?"</string>
     <string name="dialog_move_item_to_collection_text">"Обратите внимание, что все изменения сохраняются немедленно."</string>
     <string name="dialog_unsaved_changes_title">"Сохранить изменения?"</string>
-    <string name="dialog_unsaved_changes_text">"Обнаружены несохраненные изменения. Вы хотите сохранить или отменить изменения?"</string>
+    <string name="dialog_unsaved_changes_text">"Обнаружены несохраненные изменения. Вы хотите сохранить или сбросить изменения?"</string>
     <string name="dialog_error_on_update_message">"Произошла ошибка при создании/обновлении этой записи. Запись или коллекция больше не существует."</string>
     <string name="dialog_revert_changes_title">"Сбросить изменения?"</string>
     <string name="dialog_revert_changes_message">"Вы уверены, что хотите сбросить изменения и вернуть содержимое к версии до начала редактирования?"</string>
