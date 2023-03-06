@@ -231,6 +231,7 @@ Global Strings -->
     <string name="navigation_drawer_collections">"合集"</string>
     <string name="edit_dialog_set_attendee_role">"设置参与者角色"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"日期/時間"</string>
     <string name="alarms_onstart">"开始"</string>
     <string name="alarms_ondue">"到期"</string>
     <string name="alarms_custom">"自定义"</string>
@@ -369,7 +370,27 @@ Global Strings -->
     <string name="buypro_snackbar_remote_entries_blocked">"想要启用远程合集的编辑功能，请购买Pro软件包。"</string>
     <string name="buypro_initial_dialog_message">"您好！jtx Board分为标准版和Pro版。查看“购买Pro版”章节，可了解有关jtx Board Pro版的更多信息！
 十分感谢！"</string>
+    <string name="menu_list_viewmode_list">"列表檢示"</string>
+    <string name="menu_list_viewmode_grid">"方格檢視"</string>
+    <string name="settings_modules_enable_journals">"日誌"</string>
+    <string name="settings_modules_enable_notes">"筆記"</string>
+    <string name="settings_modules_enable_tasks">"任務"</string>
+    <string name="timezone">"時區"</string>
+    <string name="preferences">"偏好設定"</string>
+    <string name="invalid_url_message">"請輸入有效的 URL"</string>
+    <string name="list_quickadd_dialog_sr_listening">"聽取中 …"</string>
+    <string name="details_show_all_options">"顯示所有選項"</string>
     <!-- alarms -->
+    <string name="alarms_before">"之前"</string>
+    <string name="alarms_after">"之後"</string>
+    <string name="alarms_start">"開始"</string>
+    <string name="alarms_due">"到期"</string>
+    <string name="about_tabitem_releasenotes">"版本資訊"</string>
+    <string name="collections_account_delete_dialog_title">"刪除 \"%1$s\" ?"</string>
+    <string name="dialog_unsaved_changes_title">"儲存變更?"</string>
+    <string name="dialog_revert_changes_title">"還原變更?"</string>
+    <string name="close">"關閉"</string>
+    <string name="menu_view_copy_to_clipboard_copied">"已複製"</string>
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
 </resources>
