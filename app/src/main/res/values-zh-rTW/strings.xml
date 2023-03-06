@@ -65,7 +65,7 @@ Global Strings -->
     <string name="list_tabitem_todos">"任务"</string>
     <string name="list_fab_add_contentdesc">"添加新项目"</string>
     <string name="list_progress">"进展"</string>
-    <string name="list_expand">"扩展"</string>
+    <string name="list_expand">"展開"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"摘要/说明"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"第一行被提取为摘要，其余当做为说明。hashtags被提取为类别（例如#category）。"</string>
     <string name="list_item_upload_pending">"上传挂起"</string>
@@ -309,6 +309,9 @@ Global Strings -->
     <string name="summary">"摘要"</string>
     <string name="description">"详情"</string>
     <string name="search">"搜尋"</string>
+    <string name="search_journals">搜尋日誌</string>
+    <string name="search_notes">搜尋筆記</string>
+    <string name="search_todos">搜尋任務</string>
     <string name="filter">"篩選"</string>
     <string name="sync_now">"立即同步"</string>
     <string name="due">"到期"</string>
