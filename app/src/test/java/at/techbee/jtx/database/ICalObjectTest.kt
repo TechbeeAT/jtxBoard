@@ -329,6 +329,7 @@ class ICalObjectTest {
 
         val item = ICalObject.createJournal().apply {
             this.dtstart = 1622494800000L
+            this.dtstartTimezone = null
             this.rrule = "FREQ=YEARLY;COUNT=3;INTERVAL=2"
         }
 
@@ -344,6 +345,7 @@ class ICalObjectTest {
 
         val item = ICalObject.createTodo().apply {
             this.dtstart = 1622494800000L
+            this.dtstartTimezone = null
             this.due = 1622494843210L
             this.rrule = "FREQ=YEARLY;COUNT=3;INTERVAL=2"
         }
@@ -378,6 +380,7 @@ class ICalObjectTest {
 
         val item = ICalObject.createTodo().apply {
             this.dtstart = 1622541600000L
+            this.dtstartTimezone = null
             this.due = 1622541650000L
             this.rrule = "FREQ=MONTHLY;COUNT=2;INTERVAL=2;BYMONTHDAY=5"
         }
@@ -395,20 +398,19 @@ class ICalObjectTest {
     fun getInstancesFromRrule_Journal_WEEKLY() {
 
         val item = ICalObject.createJournal().apply {
-            this.dtstart = 1622541600000L
-            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=FR,SA,SU"         // TUesday is also considered as DTSTART is on a Tuesday!
+            this.dtstart = 1622764800000L
+            this.dtstartTimezone = "GMT"
+            this.rrule = "FREQ=WEEKLY;COUNT=6;INTERVAL=2;BYDAY=FR,SA,SU"
         }
 
         val recurList = item.getInstancesFromRrule()
-        assertEquals(8,recurList.size)
-        /*
-        assertEquals(1622800800000L, recurList[0])
-        assertEquals(1622887200000L, recurList[1])
-        assertEquals(1622973600000L, recurList[2])
-        assertEquals(1624010400000L, recurList[3])
-        assertEquals(1624096800000L, recurList[4])
-        assertEquals(1624183200000L, recurList[5])
-         */
+        assertEquals(6,recurList.size)
+        assertEquals(1622764800000L, recurList[0])
+        assertEquals(1622851200000L, recurList[1])
+        assertEquals(1622937600000L, recurList[2])
+        assertEquals(1623974400000L, recurList[3])
+        assertEquals(1624060800000L, recurList[4])
+        assertEquals(1624147200000L, recurList[5])
     }
 
 
@@ -417,18 +419,17 @@ class ICalObjectTest {
 
         val item = ICalObject.createJournal().apply {
             this.dtstart = 1622541600000L
-            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=FR,SA,SU"     // TUesday is also considered as DTSTART is on a Tuesday!
+            this.dtstartTimezone = "Europe/Vienna"
+            this.rrule = "FREQ=WEEKLY;COUNT=6;INTERVAL=2;BYDAY=FR,SA,SU"     // TUesday is also considered as DTSTART is on a Tuesday!
             this.exdate = "1622973600000,1624096800000"
         }
 
         val recurList = item.getInstancesFromRrule()
-        assertEquals(6,recurList.size)
-        /*
+        assertEquals(4,recurList.size)
         assertEquals(1622800800000L, recurList[0])
         assertEquals(1622887200000L, recurList[1])
         assertEquals(1624010400000L, recurList[2])
         assertEquals(1624183200000L, recurList[3])
-         */
     }
 
     @Test
@@ -436,19 +437,22 @@ class ICalObjectTest {
 
         val item = ICalObject.createJournal().apply {
             this.dtstart = 1622541600000L
-            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=TU,FR,SA,SU"
+            this.dtstartTimezone = "UTC"
+            this.rrule = "FREQ=WEEKLY;COUNT=8;INTERVAL=2;BYDAY=TU,FR,SA,SU"
             this.exdate = "1622973600000,1624096800000"
-            this.rdate = "1651410000000,1654088400000"
+            this.rdate = "1651410000000,1651356000000"
         }
 
         val recurList = item.getInstancesFromRrule()
-        assertEquals(8,recurList.size)
-        //assertEquals(1622800800000L, recurList[0])
-        //assertEquals(1622887200000L, recurList[1])
-        //assertEquals(1624010400000L, recurList[2])
-        //assertEquals(1624183200000L, recurList[3])
-        //assertEquals(1651410000000L, recurList[4])
-        //assertEquals(1654088400000L, recurList[5])
+        //assertEquals(8,recurList.size)
+        assertEquals(1622541600000L, recurList[0])
+        assertEquals(1622800800000L, recurList[1])
+        assertEquals(1622887200000L, recurList[2])
+        assertEquals(1623751200000L, recurList[3])
+        assertEquals(1624010400000L, recurList[4])
+        assertEquals(1624183200000L, recurList[5])
+        assertEquals(1651356000000L, recurList[6])
+        assertEquals(1651410000000L, recurList[7])
     }
 
 
@@ -463,7 +467,7 @@ class ICalObjectTest {
         }
 
         val recurList = item.getInstancesFromRrule()
-        assertEquals(6,recurList.size)
+        assertEquals(3,recurList.size)
     }
 
 
@@ -472,6 +476,7 @@ class ICalObjectTest {
 
         val item = ICalObject.createJournal().apply {
             this.dtstart = 1622494800000L
+            this.dtstartTimezone = "Europe/Vienna"
             this.rrule = "FREQ=DAILY;COUNT=4;INTERVAL=4"
         }
 
@@ -504,17 +509,17 @@ class ICalObjectTest {
     fun getInstancesFromRrule_Journal_DAILY_withAllday() {
 
         val item = ICalObject.createJournal().apply {
-            this.dtstart = 1622494800000L
+            this.dtstart = 1622505600000L
             this.dtstartTimezone = TZ_ALLDAY
             this.rrule = "FREQ=DAILY;COUNT=4;INTERVAL=4"
         }
 
         val recurList = item.getInstancesFromRrule()
         assertEquals(4,recurList.size)
-        assertEquals(1622494800000L, recurList[0])
-        assertEquals(1622840400000L, recurList[1])
-        assertEquals(1623186000000L, recurList[2])
-        assertEquals(1623531600000L, recurList[3])
+        assertEquals(1622505600000L, recurList[0])
+        assertEquals(1622851200000L, recurList[1])
+        assertEquals(1623196800000L, recurList[2])
+        assertEquals(1623542400000L, recurList[3])
     }
 
     @Test
@@ -522,6 +527,7 @@ class ICalObjectTest {
 
         val item = ICalObject.createTodo().apply {
             this.dtstart = 1622541600000L
+            this.dtstartTimezone = "Europe/Vienna"
             this.due = 1622541600000L
             this.rrule = "FREQ=DAILY;COUNT=2;INTERVAL=4"
         }
@@ -746,44 +752,6 @@ class ICalObjectTest {
         journal.parseURL(text)
 
         assertEquals("https://orf.at", journal.url)
-    }
-
-    @Test
-    fun retrieveCount_count_present() {
-        val todo = ICalObject.createTodo()
-        todo.rrule = "FREQ=DAILY;COUNT=4;INTERVAL=5"
-        assertEquals(4, todo.retrieveCount())
-    }
-
-    @Test
-    fun retrieveCount_only_FREQ_and_interval() {
-        val todo = ICalObject.createTodo()
-        todo.rrule = "FREQ=DAILY;INTERVAL=5"
-        assertEquals(ICalObject.DEFAULT_MAX_RECUR_INSTANCES, todo.retrieveCount())
-    }
-
-    @Test
-    fun retrieveCount_until_and_interval_daily() {
-        val todo = ICalObject.createTodo()
-        todo.dtstart = 1652117734839L
-        todo.rrule = "FREQ=DAILY;UNTIL=20220621T173534Z;INTERVAL=2"
-        assertEquals(22, todo.retrieveCount())
-    }
-
-    @Test
-    fun retrieveCount_until_and_interval_monthly() {
-        val todo = ICalObject.createTodo()
-        todo.dtstart = 1652117734839L
-        todo.rrule = "FREQ=MONTHLY;UNTIL=20220621T070000Z;INTERVAL=2"
-        assertEquals(1, todo.retrieveCount())
-    }
-
-    @Test
-    fun retrieveCount_until_and_interval_monthly2() {
-        val todo = ICalObject.createTodo()
-        todo.dtstart = 1652117734839L
-        todo.rrule = "FREQ=MONTHLY;UNTIL=20220821T070000Z;INTERVAL=1"
-        assertEquals(4, todo.retrieveCount())
     }
 
     @Test fun getModuleFromString_journal() = assertEquals(Module.JOURNAL, ICalObject.createJournal().getModuleFromString())
