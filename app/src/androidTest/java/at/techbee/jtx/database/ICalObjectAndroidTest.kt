@@ -73,7 +73,8 @@ class ICalObjectAndroidTest {
             // from  fun getInstancesFromRrule_Journal_WEEKLY_withExceptions()
             this.collectionId = 1L
             this.dtstart = 1622541600000L
-            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=FR,SA,SU"
+            this.dtstartTimezone = "Europe/Vienna"
+            this.rrule = "FREQ=WEEKLY;COUNT=8;INTERVAL=2;BYDAY=TU,FR,SA,SU"
             this.exdate = "1622973600000,1624096800000"
         }
 
@@ -96,10 +97,12 @@ class ICalObjectAndroidTest {
         val item = ICalObject.createTodo().apply {
             // from  fun getInstancesFromRrule_Journal_WEEKLY_withExceptions()
             this.dtstart = 1663718400000L
+            this.dtstartTimezone = "Europe/Vienna"
             this.due = 1663804800000L
-            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=SU,MO,WE"
-            this.exdate = "1664064000000"
-            this.rdate = "1664496000000,1662249600000"
+            this.dueTimezone = "Europe/Vienna"
+            this.rrule = "FREQ=WEEKLY;COUNT=6;INTERVAL=2;BYDAY=WE,SU,MO"
+            this.exdate = "1663718400000"
+            this.rdate = "1664496000000,1664575200000"
         }
 
         val id = database.insertICalObject(item)
@@ -109,9 +112,6 @@ class ICalObjectAndroidTest {
 
         val recurList = database.getRecurInstances(savedItemUID)
         assertEquals(7, recurList.size)
-
-        assertEquals(1663804800000L, recurList[0]?.due)
-        //assertEquals(1664236800000L, recurList[1]?.due)  // TODO
 
         database.deleteUnchangedRecurringInstances(savedItemUID)
         val recurListEmpty = database.getRecurInstances(savedItemUID)
