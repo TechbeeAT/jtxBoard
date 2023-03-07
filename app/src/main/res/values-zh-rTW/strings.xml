@@ -129,6 +129,10 @@ Global Strings -->
     <string name="edit_recur_toast_requires_start_date">"重复出现需要设置开始日期！"</string>
     <string name="edit_datepicker_dialog_select_date">"选择日期"</string>
     <string name="edit_datepicker_dialog_select_time">"选择时间"</string>
+    <string name="edit_datepicker_dialog_add_time">"添加時間"</string>
+    <string name="edit_datepicker_dialog_edit_time">"修改時間"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"添加時區"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"修改時區"</string>
     <string name="edit_task_started_add">"选择开始日期/时间"</string>
     <string name="edit_task_due_add">"选择截止日期/时间"</string>
     <string name="edit_task_completed_add">"选择完成日期/时间"</string>
@@ -205,6 +209,7 @@ Global Strings -->
     <string name="about_translations_thanks_to">"感謝"</string>
     <string name="about_translations_for_contributions_in">"贡献"</string>
     <string name="about_translations_basic_info">"jtx Board是一款开源应用程序，感谢开源社区的参与和贡献。在此，我们想展示社区成员在翻译方面所做的努力。"</string>
+    <string name="about_translations_contribution_button">"加入 Crowdin.com"</string>
     <string name="list_welcome_entry_journal_summary">"恭喜，这是您的首篇日志:-)"</string>
     <string name="list_welcome_entry_journal_description">"日志可用于在特定日期撰写笔记。草案、会议记录和日记等需要使用此功能。编辑此条目，可添加类别、与会者、附件等等……此为示例条目，您可随时删除！"</string>
     <string name="list_welcome_entry_note_summary">"恭喜，这是您的首篇笔记:-)"</string>
@@ -379,6 +384,9 @@ Global Strings -->
     <string name="settings_modules_enable_journals">"日誌"</string>
     <string name="settings_modules_enable_notes">"筆記"</string>
     <string name="settings_modules_enable_tasks">"任務"</string>
+    <string name="settings_default_expand_subtasks">"預設以列表方式展開子任務"</string>
+    <string name="settings_default_expand_subnotes">"預設以列表方式展開子筆記"</string>
+    <string name="settings_default_expand_attachments">"預設以列表方式展開附件"</string>
     <string name="timezone">"時區"</string>
     <string name="preferences">"偏好設定"</string>
     <string name="audio_play">"播放"</string>
@@ -386,6 +394,7 @@ Global Strings -->
     <string name="audio_stop">"停止"</string>
     <string name="audio_pause">"暫停"</string>
     <string name="audio_error_toast">"抱歉，無法播放"</string>
+    <string name="saving">"儲存中 …"</string>
     <string name="invalid_url_message">"請輸入有效的 URL"</string>
     <string name="list_quickadd_dialog_sr_listening">"聽取中 …"</string>
     <string name="details_show_all_options">"顯示所有選項"</string>
