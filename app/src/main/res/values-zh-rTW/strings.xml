@@ -395,6 +395,7 @@ Global Strings -->
     <string name="audio_pause">"暫停"</string>
     <string name="audio_error_toast">"抱歉，無法播放"</string>
     <string name="saving">"儲存中 …"</string>
+    <string name="saving_pending">"儲存等待中 …"</string>
     <string name="invalid_url_message">"請輸入有效的 URL"</string>
     <string name="list_quickadd_dialog_sr_listening">"聽取中 …"</string>
     <string name="details_show_all_options">"顯示所有選項"</string>
@@ -407,10 +408,19 @@ Global Strings -->
     <string name="collections_account_delete_dialog_title">"刪除 \"%1$s\" ?"</string>
     <string name="dialog_unsaved_changes_title">"儲存變更?"</string>
     <string name="dialog_revert_changes_title">"還原變更?"</string>
+    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="close">"關閉"</string>
     <string name="menu_view_copy_to_clipboard_copied">"已複製"</string>
     <string name="settings_details_enable_markdown">"啟用 Markdown 格式"</string>
     <!-- fragment_ical_list -->
+    <string name="list_date_start_in_past">"過去"</string>
+    <string name="list_date_today">"今天"</string>
+    <string name="list_date_tomorrow">"明天"</string>
+    <string name="list_date_future">"未來"</string>
+    <string name="list_start_date_in_past">"過去開始"</string>
+    <string name="list_start_date_today">"今天開始"</string>
+    <string name="list_start_date_tomorrow">"明天開始"</string>
+    <string name="list_start_date_future">"未來開始"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="menu_view_markdown_formatting">"Markdown 格式"</string>
     <string name="next">"上一個"</string>
