@@ -251,6 +251,8 @@ Per a més informació sobre la sincronització, per favor mira:"</string>
     <string name="navigation_drawer_collections">"Col·leccions"</string>
     <string name="edit_dialog_set_attendee_role">"Estableix el sol de l'assistent"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Data/Hora"</string>
+    <string name="alarms_duration">"Duració"</string>
     <string name="alarms_onstart">"Al començament"</string>
     <string name="alarms_ondue">"En véncer"</string>
     <string name="alarms_custom">"Personalitzat"</string>
@@ -432,6 +434,7 @@ Gràcies!"</string>
     <string name="invalid_url_message">"Si us plau, introdueix un URL vàlida!"</string>
     <string name="list_quickadd_dialog_sr_start">"Inicia el reconeixement de veu"</string>
     <string name="list_quickadd_dialog_sr_listening">"Escoltant …"</string>
+    <string name="collections_dialog_buypro_info">"Per favor, compra jtx Board Pro per a habilitar les funcions d'edició de col·leccions remotes."</string>
     <string name="list_update_entries_dialog_title">"Actualitza entrades"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Atenció: Les instàncies recurrents han de ser desenllaçades de la seua sèrie abans de ser mogudes a una altra col·lecció, i seran ignorades en aquest procés."</string>
     <string name="details_app_bar_behaviour">"Comportament de la barra de l'aplicació"</string>
@@ -555,6 +558,7 @@ Gràcies!"</string>
     <string name="menu_view_autosave">"Desa automàticament"</string>
     <string name="next">"Següent"</string>
     <string name="previous">"Anterior"</string>
+    <string name="preview">"Previsualitza"</string>
     <string name="x_selected">Seleccionades %1$d/%2$d</string>
     <string name="select_all">Seleccionar-ho tot</string>
     <string name="select_none">No en seleccionis cap</string>

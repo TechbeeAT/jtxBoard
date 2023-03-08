@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -498,7 +499,7 @@ fun DetailsCardRecur(
                                         expanded = endAfterExpaneded,
                                         onDismissRequest = { endAfterExpaneded = false }
                                     ) {
-                                        for (number in 1..ICalObject.DEFAULT_MAX_RECUR_INSTANCES) {
+                                        for (number in 1..100) {
                                             DropdownMenuItem(
                                                 onClick = {
                                                     count = number
@@ -593,11 +594,20 @@ fun DetailsCardRecur(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                /*
-                if(isEditMode) {
-                    icalObject.getInstancesFromRrule().forEach { instanceDate ->
+
+                if (isEditMode) {
+                    val instances = icalObject.getInstancesFromRrule()
+                    if (instances.isNotEmpty())
+                        Text(
+                            text = stringResource(R.string.preview),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontStyle = FontStyle.Italic
+                        )
+                    instances.forEach { instanceDate ->
                         ElevatedCard(
-                            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = 48.dp)
                         ) {
                             Text(
                                 text = DateTimeUtils.convertLongToFullDateTimeString(instanceDate, icalObject.dtstartTimezone),
@@ -605,8 +615,7 @@ fun DetailsCardRecur(
                             )
                         }
                     }
-                } */
-                if(!isEditMode) {
+                } else {
                     seriesInstances.forEach { instance ->
                         ElevatedCard(
                             onClick = {
@@ -742,7 +751,8 @@ fun DetailsCardRecur_Preview() {
                     dueTimezone = null
                     rrule = "123"
                 }
-            ),            seriesElement = null,
+            ),
+            seriesElement = null,
             isEditMode = false,
             hasChildren = false,
             onRecurUpdated = { },
@@ -780,7 +790,8 @@ fun DetailsCardRecur_Preview_edit() {
                     dueTimezone = null
                     rrule = "123"
                 }
-            ),            seriesElement = null,
+            ),
+            seriesElement = null,
             isEditMode = true,
             hasChildren = false,
             onRecurUpdated = { },
@@ -812,7 +823,8 @@ fun DetailsCardRecur_Preview_unchanged_recur() {
                     dueTimezone = null
                     rrule = "123"
                 }
-            ),            seriesElement = null,
+            ),
+            seriesElement = null,
             isEditMode = false,
             hasChildren = false,
             onRecurUpdated = { },
@@ -844,7 +856,8 @@ fun DetailsCardRecur_Preview_changed_recur() {
                     dueTimezone = null
                     rrule = "123"
                 }
-            ),            seriesElement = null,
+            ),
+            seriesElement = null,
             isEditMode = false,
             hasChildren = true,
             onRecurUpdated = { },
@@ -874,7 +887,8 @@ fun DetailsCardRecur_Preview_off() {
                     dueTimezone = null
                     rrule = "123"
                 }
-            ),            seriesElement = null,
+            ),
+            seriesElement = null,
             isEditMode = false,
             hasChildren = false,
             onRecurUpdated = { },

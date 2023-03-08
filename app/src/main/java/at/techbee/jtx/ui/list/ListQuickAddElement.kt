@@ -88,7 +88,6 @@ fun ListQuickAddElement(
             allWriteableCollections.find { collection -> collection.collectionId == presetCollectionId }
                 ?: allWriteableCollections.firstOrNull { collection -> !collection.readonly })
     }
-    // TODO: Load last used collection!
 
     var currentModule by rememberSaveable {
         mutableStateOf(

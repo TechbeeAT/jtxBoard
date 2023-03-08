@@ -428,6 +428,7 @@ Global Strings -->
     <string name="invalid_url_message">"有効な URL を入力してください！"</string>
     <string name="list_quickadd_dialog_sr_start">"音声認識を開始"</string>
     <string name="list_quickadd_dialog_sr_listening">"聞き取り中…"</string>
+    <string name="collections_dialog_buypro_info">"リモートコレクションの編集機能を有効にするには jtx Board Pro をご購入ください。"</string>
     <string name="list_update_entries_dialog_title">"エントリーを更新"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意: 繰り返しのあるインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
     <string name="details_app_bar_behaviour">"アプリバーの動作"</string>
