@@ -20,6 +20,8 @@ Global Strings -->
     <!-- sync content provider -->
     <!-- Permissions -->
     <!-- alarms -->
+    <string name="alarms_date_time">"日期/时间"</string>
+    <string name="alarms_duration">"持续时长"</string>
     <!-- fragment_collections -->
     <!-- Fuzzy -->
     <!-- Fuzzy -->
