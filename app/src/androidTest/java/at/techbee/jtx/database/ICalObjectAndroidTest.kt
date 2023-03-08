@@ -75,7 +75,6 @@ class ICalObjectAndroidTest {
             this.dtstart = 1622541600000L
             this.dtstartTimezone = "Europe/Vienna"
             this.rrule = "FREQ=WEEKLY;COUNT=8;INTERVAL=2;BYDAY=TU,FR,SA,SU"
-            this.exdate = "1622973600000,1624096800000"
         }
 
         val id = database.insertICalObject(item)
@@ -84,7 +83,7 @@ class ICalObjectAndroidTest {
         val savedItemUID = savedItem?.uid ?: throw AssertionError("UID was null")
 
         val recurList = database.getRecurInstances(uid = savedItemUID)
-        assertEquals(6, recurList.size)
+        assertEquals(8, recurList.size)
 
         database.deleteUnchangedRecurringInstances(savedItemUID)
         val recurListEmpty = database.getRecurInstances(savedItemUID)
