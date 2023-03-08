@@ -94,7 +94,7 @@ fun DetailBottomAppBar(
             null
         else {
             ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-                isSyncInProgress = SyncUtil.isJtxSyncRunningForAccount(Account(collection.accountName, collection.accountType))
+                isSyncInProgress = SyncUtil.isJtxSyncRunningFor(setOf(Account(collection.accountName, collection.accountType)))
             }
         }
         onDispose {
@@ -212,7 +212,7 @@ fun DetailBottomAppBar(
                 IconButton(
                     onClick = {
                         if (!isSyncInProgress)
-                            collection.getAccount().let { SyncUtil.syncAccount(it) }
+                            collection.getAccount().let { SyncUtil.syncAccounts(setOf(it)) }
                     },
                     enabled = seriesElement?.dirty ?: icalObject.dirty && !isSyncInProgress
                 ) {

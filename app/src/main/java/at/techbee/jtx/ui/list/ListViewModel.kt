@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.list
 
+import android.accounts.Account
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -438,6 +439,16 @@ open class ListViewModel(application: Application, val module: Module) : Android
         }
     }
 
+    /**
+     * Retrieves the remote collections from the database
+     * and triggers sync for their accounts
+     */
+    fun syncAccounts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val collections = database.getAllRemoteCollections()
+            SyncUtil.syncAccounts(collections.map { Account(it.accountName, it.accountType) }.toSet())
+        }
+    }
 
     /**
      * This function adds some welcome entries, this should only be used on the first install.
