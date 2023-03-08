@@ -255,6 +255,8 @@ class MainActivity2 : AppCompatActivity() {
                     }
                 }
             }
+            intent.removeExtra(Intent.EXTRA_TEXT)
+            intent.removeExtra(Intent.EXTRA_STREAM)
             setResult(Activity.RESULT_OK)
         }
         lastProcessedIntentHash = intent.hashCode()
