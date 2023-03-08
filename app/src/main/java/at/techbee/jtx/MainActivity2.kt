@@ -36,6 +36,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_OSE
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.BillingManager
@@ -60,9 +61,7 @@ import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.sync.SyncScreen
-import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
-import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidgetReceiver
 import kotlinx.serialization.decodeFromString
@@ -166,7 +165,7 @@ class MainActivity2 : AppCompatActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .semantics {
-                                   testTagsAsResourceId = true
+                            testTagsAsResourceId = true
                         },
                     color = MaterialTheme.colorScheme.background,
                 ) {
@@ -180,6 +179,7 @@ class MainActivity2 : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        ListWidgetReceiver.setPeriodicWork(this)
 
         //handle intents, but only if it wasn't already handled
         if (intent.hashCode() != lastProcessedIntentHash) {
@@ -255,14 +255,14 @@ class MainActivity2 : AppCompatActivity() {
                     }
                 }
             }
+            intent.removeExtra(Intent.EXTRA_TEXT)
+            intent.removeExtra(Intent.EXTRA_STREAM)
             setResult(Activity.RESULT_OK)
         }
         lastProcessedIntentHash = intent.hashCode()
 
         if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI)
             BillingManager.getInstance().initialise(this)  // only Huawei needs to call the update functions again
-
-        globalStateHolder.isDAVx5compatible.value = SyncUtil.isDAVx5CompatibleWithJTX(application)
 
         // reset authentication state if timeout was set and expired or remove timeout if onResume was done within timeout
         if(globalStateHolder.isAuthenticated.value && globalStateHolder.authenticationTimeout != null) {
@@ -305,6 +305,8 @@ fun MainNavHost(
     val navController = rememberNavController()
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
     var showOSEDonationDialog by remember { mutableStateOf(false) }
+
+    globalStateHolder.remoteCollections = ICalDatabase.getInstance(activity).iCalDatabaseDao.getAllRemoteCollectionsLive().observeAsState(emptyList())
 
     NavHost(
         navController = navController,
@@ -377,9 +379,7 @@ fun MainNavHost(
             )
         }
         composable(NavigationDrawerDestination.SYNC.name) {
-            val viewModel: SyncViewModel = viewModel()
             SyncScreen(
-                remoteCollectionsLive = viewModel.remoteCollections,
                 isSyncInProgress = globalStateHolder.isSyncInProgress,
                 navController = navController
             )

@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.list
 
 
-import android.app.Application
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
@@ -37,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Alarm
@@ -126,10 +124,8 @@ fun ListScreenTabContainer(
     val allUsableCollections by remember(allWriteableCollections) {
         derivedStateOf {
             allWriteableCollections.value.filter { collection ->
-                (collection.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value)        // filter remote collections if pro was not purchased
-                        && (enabledTabs.any { it.module == Module.JOURNAL || it.module == Module.NOTE} && collection.supportsVJOURNAL
-                            || enabledTabs.any { it.module == Module.TODO} && collection.supportsVTODO
-                        )
+                (enabledTabs.any { it.module == Module.JOURNAL || it.module == Module.NOTE} && collection.supportsVJOURNAL)
+                        || (enabledTabs.any { it.module == Module.TODO} && collection.supportsVTODO)
             }
         }
     }
@@ -359,7 +355,7 @@ fun ListScreenTabContainer(
                         Divider()
 
 
-                        if(SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)) {
+                        if(SyncUtil.isDAVx5Compatible(context)) {
                             DropdownMenuItem(
                                 text = {
                                     Text(
@@ -368,7 +364,7 @@ fun ListScreenTabContainer(
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.Sync, null) },
                                 onClick = {
-                                    SyncUtil.syncAllAccounts(context)
+                                    getActiveViewModel().syncAccounts()
                                     topBarMenuExpanded = false
                                 }
                             )
@@ -443,7 +439,7 @@ fun ListScreenTabContainer(
                         listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
-                    isDAVx5compatible = globalStateHolder.isDAVx5compatible.value,
+                    isDAVx5Incompatible = SyncUtil.isDAVx5Available(context) && !SyncUtil.isDAVx5Compatible(context),
                     multiselectEnabled = listViewModel.multiselectEnabled,
                     selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,

@@ -143,8 +143,6 @@ data class ICalCollection(
 
                 const val LOCAL_COLLECTION_URL = "https://localhost/"
                 const val LOCAL_ACCOUNT_TYPE = "LOCAL"
-                const val TEST_ACCOUNT_TYPE = "TEST"
-                const val DAVX5_ACCOUNT_TYPE = "bitfire.at.davdroid"
 
                 /**
                  * Create a new [ICalCollection] from the specified [ContentValues].

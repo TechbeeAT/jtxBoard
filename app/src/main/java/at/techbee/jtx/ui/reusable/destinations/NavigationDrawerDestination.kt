@@ -40,7 +40,7 @@ enum class NavigationDrawerDestination (
     ),
     BUYPRO(
         titleResource = R.string.navigation_drawer_buypro,
-        icon = Icons.Outlined.Folder,
+        icon = Icons.Outlined.Redeem,
         navigationAction = { navHost, _ -> navHost.navigate(BUYPRO.name)}
     ),
     DONATE(
@@ -86,17 +86,6 @@ enum class NavigationDrawerDestination (
             )
         ) }
     ),
-    NEWS(
-        titleResource = R.string.navigation_drawer_website_news,
-        icon = Icons.Outlined.Newspaper,
-        groupResource = R.string.navigation_drawer_external_links,
-        navigationAction = { _, context -> context.startActivity(
-            Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(context.getString(R.string.link_jtx_news))
-            )
-        ) }
-    ),
     SUPPORT(
         titleResource = R.string.navigation_drawer_support,
         icon = Icons.Outlined.Support,
@@ -124,12 +113,12 @@ enum class NavigationDrawerDestination (
 
         fun valuesFor(flavor: String): List<NavigationDrawerDestination> {
             return when(flavor) {
-                MainActivity2.BUILD_FLAVOR_GOOGLEPLAY -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_AMAZON -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_OSE -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, MASTODON, WEBSITE, NEWS, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_HUAWEI -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_GENERIC -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
-                else -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_GOOGLEPLAY -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_AMAZON -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_OSE -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, MASTODON, WEBSITE, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_HUAWEI -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_GENERIC -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
+                else -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
             }
         }
 

@@ -105,21 +105,29 @@ SELECTs (global selects without parameter)
 
 
     /**
-     * Retrieve a list of ICalObjectIds that are parents within a given Collection
+     * Retrieve a list of ICalObjectIds that can be moved to a new collection
+     * This process excludes child-entries that should be handled by the move-method
      */
     @Transaction
-    @Query("SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ICALOBJECT_COLLECTIONID = :collectionId AND $COLUMN_UID IN (SELECT $COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_RELTYPE = 'PARENT')")
-    suspend fun getICalObjectIdsWithinCollection(collectionId: Long): List<Long>
+    @Query("SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ICALOBJECT_COLLECTIONID = :collectionId AND $COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_RELTYPE = 'PARENT')")
+    suspend fun getICalObjectIdsToMove(collectionId: Long): List<Long>
 
 
     /**
      * Retrieve an list of all remote collections ([ICalCollection])
-     *
-     * @return a list of [ICalCollection] as LiveData<List<ICalCollection>>
+     * @return a list of [ICalCollection] as LiveData
      */
     @Transaction
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
-    fun getAllRemoteCollections(): LiveData<List<ICalCollection>>
+    fun getAllRemoteCollectionsLive(): LiveData<List<ICalCollection>>
+
+    /**
+     * Retrieve an list of all remote collections ([ICalCollection])
+     * @return a list of [ICalCollection]
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
+    fun getAllRemoteCollections(): List<ICalCollection>
 
 
 
@@ -352,7 +360,6 @@ DELETEs by Object
      */
     @Query("DELETE FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_NAME = :accountName AND $COLUMN_COLLECTION_ACCOUNT_TYPE = :accountType")
     fun deleteAccount(accountName: String, accountType: String)
-
 
 
     /**

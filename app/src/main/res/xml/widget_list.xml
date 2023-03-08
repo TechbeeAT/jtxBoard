@@ -17,4 +17,5 @@
     android:widgetCategory="home_screen"
     android:configure="at.techbee.jtx.ListWidgetConfigActivity"
     android:widgetFeatures="reconfigurable"
+    android:previewImage="@drawable/widget_preview"
     />

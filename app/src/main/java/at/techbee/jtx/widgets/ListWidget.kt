@@ -18,6 +18,7 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
+import androidx.glance.unit.ColorProvider
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -46,7 +47,10 @@ class ListWidget : GlanceAppWidget() {
         val subnotes = prefs[ListWidgetReceiver.subnotes]?.map { Json.decodeFromString<ICal4ListWidget>(it) } ?: emptyList()
         val listExceedLimits = prefs[ListWidgetReceiver.listExceedsLimits] ?: false
 
-        val backgorundColor = GlanceTheme.colors.primaryContainer.getColor(context).copy(alpha = listWidgetConfig?.widgetAlpha ?: 1F)
+        val backgorundColor = if((listWidgetConfig?.widgetAlpha ?: 1F) == 1F)
+            GlanceTheme.colors.primaryContainer
+        else
+            ColorProvider(GlanceTheme.colors.primaryContainer.getColor(context).copy(alpha = listWidgetConfig?.widgetAlpha ?: 1F))
 
         GlanceTheme {
             ListWidgetContent(
