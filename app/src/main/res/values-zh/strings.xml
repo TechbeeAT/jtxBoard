@@ -368,6 +368,7 @@ Global Strings -->
     <string name="buypro_snackbar_remote_entries_blocked">"想要启用远程合集的编辑功能，请购买Pro软件包。"</string>
     <string name="buypro_initial_dialog_message">"您好！jtx Board分为标准版和Pro版。查看“购买Pro版”章节，可了解有关jtx Board Pro版的更多信息！
 十分感谢！"</string>
+    <string name="collections_dialog_buypro_info">"想要启用远程收藏的编辑功能，请购买Pro软件包。"</string>
     <!-- alarms -->
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
