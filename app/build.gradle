@@ -249,7 +249,7 @@ dependencies {
 
     // Amazon billing & maps support
     amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.3'
-    amazonImplementation "com.google.maps.android:maps-compose:2.11.0"
+    amazonImplementation "com.google.maps.android:maps-compose:2.11.1"
     amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
 
@@ -257,7 +257,7 @@ dependencies {
     huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
 
     // Google Maps
-    gplayImplementation "com.google.maps.android:maps-compose:2.11.0"
+    gplayImplementation "com.google.maps.android:maps-compose:2.11.1"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
     gplayImplementation "com.google.android.gms:play-services-location:21.0.1"
 
