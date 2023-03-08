@@ -74,7 +74,7 @@ class ICalObjectAndroidTest {
             this.collectionId = 1L
             this.dtstart = 1622541600000L
             this.dtstartTimezone = "Europe/Vienna"
-            this.rrule = "FREQ=WEEKLY;COUNT=8;INTERVAL=2;BYDAY=TU,FR,SA,SU"
+            this.rrule = "FREQ=DAILY;COUNT=8;INTERVAL=2;BYDAY=TU,FR,SA,SU"
         }
 
         val id = database.insertICalObject(item)

@@ -1145,7 +1145,18 @@ data class ICalObject(
                 }
             }
 
-            val from = DateTime(props.getProperty<DtStart>(Property.DTSTART).value)
+            val from = DateTime(props.getProperty<DtStart>(Property.DTSTART).date.time.let {
+                when (props.getProperty<RRule>(Property.RRULE).recur.frequency) {
+                    Recur.Frequency.SECONDLY -> it - (1).hours.inWholeMilliseconds
+                    Recur.Frequency.MINUTELY -> it - (1).days.inWholeMilliseconds
+                    Recur.Frequency.HOURLY -> it - (30).days.inWholeMilliseconds
+                    Recur.Frequency.DAILY -> it - (365).days.inWholeMilliseconds
+                    Recur.Frequency.WEEKLY -> it - (365).days.inWholeMilliseconds
+                    Recur.Frequency.MONTHLY -> it - (3650).days.inWholeMilliseconds
+                    Recur.Frequency.YEARLY -> it - (3650).days.inWholeMilliseconds
+                    else -> it - (365).days.inWholeMilliseconds
+                }
+            })
             val to = DateTime(props.getProperty<DtStart>(Property.DTSTART).date.time.let {
                 when (props.getProperty<RRule>(Property.RRULE).recur.frequency) {
                     Recur.Frequency.SECONDLY -> it + (1).hours.inWholeMilliseconds
