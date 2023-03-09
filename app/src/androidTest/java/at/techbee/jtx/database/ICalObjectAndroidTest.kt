@@ -17,7 +17,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
-import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -256,11 +255,11 @@ class ICalObjectAndroidTest {
             })
 
             //make sure everything was correctly inserted
-            assertEquals(3, database.getAllRelatedto().getOrAwaitValue().size)
+            assertEquals(3, database.getAllRelatedtoSync().size)
 
             ICalObject.deleteItemWithChildren(idParent, database)
 
-            assertEquals(0, database.getAllRelatedto().getOrAwaitValue().size)
+            assertEquals(0, database.getAllRelatedtoSync().size)
             assertEquals(null, database.getSync(idParent))
             assertEquals(null, database.getSync(idChild1))
             assertEquals(null, database.getSync(idChild2))
@@ -289,11 +288,11 @@ class ICalObjectAndroidTest {
                 text = parent2.uid
                 reltype = Reltype.PARENT.name
             })
-            assertEquals(2, database.getAllRelatedto().getOrAwaitValue().size)
+            assertEquals(2, database.getAllRelatedtoSync().size)
 
             ICalObject.deleteItemWithChildren(idParent1, database)
 
-            assertEquals(1, database.getAllRelatedto().getOrAwaitValue().size)
+            assertEquals(1, database.getAllRelatedtoSync().size)
             assertNull(database.getSync(idParent1))
             assertNotNull(database.getSync(idChild))
         }
@@ -327,7 +326,7 @@ class ICalObjectAndroidTest {
                 reltype = Reltype.PARENT.name
             })
             //make sure everything was correctly inserted
-            assertEquals(3, database.getAllRelatedto().getOrAwaitValue().size)
+            assertEquals(3, database.getAllRelatedtoSync().size)
 
             ICalObject.deleteItemWithChildren(idParent, database)
 
@@ -404,7 +403,7 @@ class ICalObjectAndroidTest {
                 })
 
                 //make sure everything was correctly inserted
-                assertEquals(3, database.getAllRelatedto().getOrAwaitValue().size)
+                assertEquals(3, database.getAllRelatedtoSync().size)
 
                 val newParentId = ICalObject.updateCollectionWithChildren(idParent, null, 2L, database, context)
                     ?: throw AssertionError("newParentId not returned")

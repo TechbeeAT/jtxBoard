@@ -53,27 +53,21 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var iCal4List: LiveData<List<ICal4List>> = Transformations.switchMap(listQuery) {
+    var iCal4List: LiveData<List<ICal4List>> = listQuery.switchMap {
         database.getIcal4List(it)
     }
 
     private var allSubtasksQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubtasks: LiveData<List<ICal4ListRel>> = Transformations.switchMap(allSubtasksQuery) {
-        database.getSubEntries(it)
-    }
+    var allSubtasks: LiveData<List<ICal4ListRel>> = allSubtasksQuery.switchMap { database.getSubEntries(it) }
 
     private var allSubnotesQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubnotes: LiveData<List<ICal4ListRel>> = Transformations.switchMap(allSubnotesQuery) {
-        database.getSubEntries(it)
-    }
+    var allSubnotes: LiveData<List<ICal4ListRel>> = allSubnotesQuery.switchMap { database.getSubEntries(it) }
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var selectFromAllList: LiveData<List<ICal4List>> = Transformations.switchMap(selectFromAllListQuery) {
-        database.getIcal4List(it)
-    }
+    var selectFromAllList: LiveData<List<ICal4List>> = selectFromAllListQuery.switchMap { database.getIcal4List(it) }
 
     private val allAttachmentsList: LiveData<List<Attachment>> = database.getAllAttachments()
-    val allAttachmentsMap = Transformations.map(allAttachmentsList) { list ->
+    val allAttachmentsMap = allAttachmentsList.map { list ->
         return@map list.groupBy { it.icalObjectId }
     }
 
@@ -168,7 +162,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         ))
     }
 
-    
+
     fun updateProgress(itemId: Long, newPercent: Int, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {

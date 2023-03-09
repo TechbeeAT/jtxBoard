@@ -232,17 +232,7 @@ fun ListScreenTabContainer(
         editAfterSaving: Boolean
     ) {
 
-        val newICalObject = when (module) {
-            Module.JOURNAL -> ICalObject.createJournal().apply { this.setDefaultJournalDateFromSettings(context) }
-            Module.NOTE -> ICalObject.createNote()
-            Module.TODO -> ICalObject.createTodo().apply {
-                this.setDefaultDueDateFromSettings(context)
-                this.setDefaultStartDateFromSettings(context)
-            }
-        }
-        newICalObject.collectionId = collectionId
-        newICalObject.parseSummaryAndDescription(text)
-        newICalObject.parseURL(text)
+        val newICalObject = ICalObject.fromText(module, collectionId, text, context)
         val categories = Category.extractHashtagsFromText(text)
 
         //handle autoAlarm

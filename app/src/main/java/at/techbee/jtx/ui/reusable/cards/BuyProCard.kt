@@ -31,7 +31,7 @@ import at.techbee.jtx.ui.theme.Typography
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuyProCard(
-    priceLive: LiveData<String>,
+    priceLive: LiveData<String?>,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -72,7 +72,7 @@ fun BuyProCard(
                     )
 
                     Text(
-                        price,
+                        price ?: "",
                         style = Typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -104,8 +104,8 @@ fun BuyProCard_Preview() {
 
 @Composable
 fun BuyProCardPurchased(
-    purchaseDateLive: LiveData<String>,
-    orderIdLive: LiveData<String>,
+    purchaseDateLive: LiveData<String?>,
+    orderIdLive: LiveData<String?>,
     modifier: Modifier = Modifier
 ) {
 
@@ -146,12 +146,12 @@ fun BuyProCardPurchased(
                     )
 
                     Text(
-                        stringResource(id = R.string.buypro_order_id, orderId),
+                        stringResource(id = R.string.buypro_order_id, orderId ?: "-"),
                         style = Typography.bodySmall,
                         modifier = Modifier.padding(top = 8.dp)
                     )
                     Text(
-                        stringResource(id = R.string.buypro_purchase_date, purchaseDate),
+                        stringResource(id = R.string.buypro_purchase_date, purchaseDate ?: "-"),
                         style = Typography.bodySmall,
                         modifier = Modifier.padding(top = 8.dp)
                     )

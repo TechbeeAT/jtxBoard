@@ -621,7 +621,7 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
+            AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
             DetailsCardParents(
                 parents = parents.value,
                 isEditMode = isEditMode,

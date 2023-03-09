@@ -59,9 +59,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var allWriteableCollections: LiveData<List<ICalCollection>>
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var selectFromAllList: LiveData<List<ICal4List>> = Transformations.switchMap(selectFromAllListQuery) {
-        database.getIcal4List(it)
-    }
+    var selectFromAllList: LiveData<List<ICal4List>> = selectFromAllListQuery.switchMap {database.getIcal4List(it) }
 
     var navigateToId = mutableStateOf<Long?>(null)
     var changeState = mutableStateOf(DetailChangeState.LOADING)
@@ -91,27 +89,23 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             icalEntity = database.get(icalObjectId)
 
-            relatedParents = Transformations.switchMap(icalEntity) {
+            relatedParents = icalEntity.switchMap {
                 it?.relatedto?.map { relatedto ->  relatedto.text }?.let { uids ->
                     database.getICal4ListByUIDs(uids)
                 }
             }
-            relatedSubtasks = Transformations.switchMap(icalEntity) {
+            relatedSubtasks = icalEntity.switchMap {
                 it?.property?.uid?.let { parentUid ->
                     database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Component.VTODO, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
-            relatedSubnotes = Transformations.switchMap(icalEntity) {
+            relatedSubnotes = icalEntity.switchMap {
                 it?.property?.uid?.let { parentUid ->
                     database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Component.VJOURNAL, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
-            seriesElement = Transformations.switchMap(icalEntity) {
-                database.getSeriesICalObjectIdByUID(it?.property?.uid)
-            }
-            seriesInstances = Transformations.switchMap(icalEntity) {
-                database.getSeriesInstancesICalObjectsByUID(it?.property?.uid)
-            }
+            seriesElement = icalEntity.switchMap { database.getSeriesICalObjectIdByUID(it?.property?.uid) }
+            seriesInstances = icalEntity.switchMap { database.getSeriesInstancesICalObjectsByUID(it?.property?.uid) }
             isChild = database.isChild(icalObjectId)
 
             changeState.value = DetailChangeState.UNCHANGED
