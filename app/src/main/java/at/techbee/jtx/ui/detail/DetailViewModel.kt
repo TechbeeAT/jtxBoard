@@ -19,12 +19,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
+import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -46,6 +48,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
     var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var relatedSubtasks: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
+    var relatedParents: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var seriesElement: LiveData<ICalObject?> = MutableLiveData(null)
     var seriesInstances: LiveData<List<ICalObject>> = MutableLiveData(emptyList())
     var isChild: LiveData<Boolean> = MutableLiveData(false)
@@ -54,6 +57,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allResources: LiveData<List<String>>
     lateinit var allWriteableCollections: LiveData<List<ICalCollection>>
+
+    private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var selectFromAllList: LiveData<List<ICal4List>> = selectFromAllListQuery.switchMap {database.getIcal4List(it) }
 
     var navigateToId = mutableStateOf<Long?>(null)
     var changeState = mutableStateOf(DetailChangeState.LOADING)
@@ -83,22 +89,23 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             icalEntity = database.get(icalObjectId)
 
-            relatedSubnotes = icalEntity.switchMap {
-                it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(ICal4List.getQueryForAllSubnotesForParentUID(parentUid, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
+            relatedParents = icalEntity.switchMap {
+                it?.relatedto?.map { relatedto ->  relatedto.text }?.let { uids ->
+                    database.getICal4ListByUIDs(uids)
                 }
             }
             relatedSubtasks = icalEntity.switchMap {
                 it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(ICal4List.getQueryForAllSubtasksForParentUID(parentUid, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
+                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Component.VTODO, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
-            seriesElement = icalEntity.switchMap {
-                database.getSeriesICalObjectIdByUID(it?.property?.uid)
+            relatedSubnotes = icalEntity.switchMap {
+                it?.property?.uid?.let { parentUid ->
+                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Component.VJOURNAL, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
+                }
             }
-            seriesInstances = icalEntity.switchMap {
-                database.getSeriesInstancesICalObjectsByUID(it?.property?.uid)
-            }
+            seriesElement = icalEntity.switchMap { database.getSeriesICalObjectIdByUID(it?.property?.uid) }
+            seriesInstances = icalEntity.switchMap { database.getSeriesInstancesICalObjectsByUID(it?.property?.uid) }
             isChild = database.isChild(icalObjectId)
 
             changeState.value = DetailChangeState.UNCHANGED
@@ -109,6 +116,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun updateSelectFromAllListQuery(searchText: String, isAuthenticated: Boolean) {
+        selectFromAllListQuery.postValue(ICal4List.constructQuery(
+            modules = listOf(Module.JOURNAL, Module.NOTE, Module.TODO),
+            searchText = searchText,
+            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
+        ))
+    }
 
 
     fun updateProgress(id: Long, newPercent: Int) {
@@ -177,6 +191,38 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             }
             SyncUtil.notifyContentObservers(getApplication())
 
+        }
+    }
+
+    /**
+     * Adds a new relatedTo to the passed entries relating to the current ICalObject as a PARENT
+     * @param newSubEntries that should get a link to the current entry
+     */
+    fun linkNewSubentries(newSubEntries: List<ICal4List>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            newSubEntries.forEach { newSubEntry ->
+                if(icalEntity.value?.property?.uid == null)
+                    return@forEach
+
+                if(newSubEntry.uid == icalEntity.value?.property?.uid)
+                    return@forEach
+
+                val existing = icalEntity.value?.property?.uid?.let { database.findRelatedTo(newSubEntry.id, it, Reltype.PARENT.name) != null } ?: return@forEach
+                if(!existing) {
+                    database.insertRelatedto(
+                        Relatedto(
+                            icalObjectId = newSubEntry.id,
+                            text = icalEntity.value?.property?.uid!!,
+                            reltype = Reltype.PARENT.name
+                        )
+                    )
+                    database.getICalObjectById(newSubEntry.id)?.let {
+                        it.makeDirty()
+                        database.update(it)
+                    }
+                }
+
+            }
         }
     }
 
@@ -380,6 +426,18 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 changeState.value = DetailChangeState.SQLERROR
             }
+        }
+    }
+
+    fun unlinkFromParent(icalObjectId: Long) {
+        changeState.value = DetailChangeState.CHANGESAVING
+        viewModelScope.launch(Dispatchers.IO) {
+            database.deleteRelatedto(icalObjectId, icalEntity.value?.property?.uid?:"")
+            database.getICalObjectByIdSync(icalObjectId)?.let {
+                it.makeDirty()
+                database.update(it)
+            }
+            changeState.value = DetailChangeState.CHANGESAVED
         }
     }
 

@@ -27,6 +27,7 @@ import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import kotlinx.serialization.decodeFromString
@@ -44,8 +45,8 @@ class ListWidgetUpdateWorker(
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
 
+        //https://stackoverflow.com/questions/69627330/expedited-workrequests-require-a-listenableworker-to-provide-an-implementation-f
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            //https://stackoverflow.com/questions/69627330/expedited-workrequests-require-a-listenableworker-to-provide-an-implementation-f
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             val widgetUpdateChannelId = "WIDGET_UPDATE_CHANNEL"
@@ -105,7 +106,7 @@ class ListWidgetUpdateWorker(
                     .iCalDatabaseDao
                     .getIcal4ListSync(
                         ICal4List.constructQuery(
-                            module = listWidgetConfig?.module ?: Module.TODO,
+                            modules = listOf(listWidgetConfig?.module ?: Module.TODO),
                             searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
                             searchResources = listWidgetConfig?.searchResources ?: emptyList(),
                             searchStatus = mutableListOf<Status>().apply {
@@ -142,10 +143,14 @@ class ListWidgetUpdateWorker(
                             isFilterStartTomorrow = listWidgetConfig?.isFilterStartTomorrow ?: false,
                             isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
                             isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false,
+                            isFilterNoStartDateSet = listWidgetConfig?.isFilterNoStartDateSet ?: false,
+                            isFilterNoDueDateSet = listWidgetConfig?.isFilterNoDueDateSet ?: false,
+                            isFilterNoCompletedDateSet = listWidgetConfig?.isFilterNoCompletedDateSet ?: false,
                             isFilterNoCategorySet = listWidgetConfig?.isFilterNoCategorySet ?: false,
                             isFilterNoResourceSet = listWidgetConfig?.isFilterNoResourceSet ?: false,
                             flatView = listWidgetConfig?.flatView?: false,  // always true in Widget, we handle the flat view in the code
-                            searchSettingShowOneRecurEntryInFuture = listWidgetConfig?.showOneRecurEntryInFuture ?: false
+                            searchSettingShowOneRecurEntryInFuture = listWidgetConfig?.showOneRecurEntryInFuture ?: false,
+                            hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context)  // protected entries are always hidden
                         )
                     )
 
@@ -156,10 +161,26 @@ class ListWidgetUpdateWorker(
                 val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subtasksQuery)
                 val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subnotesQuery)
 
+                val subtasksList = mutableListOf<ICal4ListWidget>().apply {
+                    subtasks.forEach { subtask ->
+                        subtask.relatedto.forEach { relatedto ->
+                            relatedto.text?.let {this.add(ICal4ListWidget.fromICal4List(subtask.iCal4List, it)) }
+                        }
+                    }
+                }
+
+                val subnotesList = mutableListOf<ICal4ListWidget>().apply {
+                    subnotes.forEach { subnote ->
+                        subnote.relatedto.forEach { relatedto ->
+                            relatedto.text?.let {this.add(ICal4ListWidget.fromICal4List(subnote.iCal4List, it)) }
+                        }
+                    }
+                }
+
                 pref.toMutablePreferences().apply {
                     this[ListWidgetReceiver.list] = entries.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()
-                    this[ListWidgetReceiver.subtasks] = subtasks.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()
-                    this[ListWidgetReceiver.subnotes] = subnotes.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()
+                    this[ListWidgetReceiver.subtasks] = subtasksList.map { entry -> Json.encodeToString(entry) }.toSet()
+                    this[ListWidgetReceiver.subnotes] = subnotesList.map { entry -> Json.encodeToString(entry) }.toSet()
                     this[ListWidgetReceiver.listExceedsLimits] = allEntries.size > ListWidget.MAX_ENTRIES
                     //Log.d("ListWidgetUpdateWorker", this[ListWidgetReceiver.list].toString())
                 }

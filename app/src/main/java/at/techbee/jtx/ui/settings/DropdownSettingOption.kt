@@ -9,12 +9,12 @@
 package at.techbee.jtx.ui.settings
 
 import android.util.Log
+import androidx.annotation.StringRes
 import at.techbee.jtx.R
-import java.lang.NumberFormatException
 
 enum class DropdownSettingOption(
     val key: String,
-    val text: Int
+    @StringRes val text: Int
 ) {
     THEME_SYSTEM("system", R.string.settings_select_theme_system),
     THEME_LIGHT("light", R.string.settings_select_theme_light),
@@ -52,7 +52,12 @@ enum class DropdownSettingOption(
     AUTO_ALARM_OFF("off", R.string.off),
     AUTO_ALARM_ON_START("on_start", R.string.alarms_onstart),
     AUTO_ALARM_ON_DUE("on_due", R.string.alarms_ondue),
-    AUTO_ALARM_ALWAYS_ON_DUE("always_on_due", R.string.alarms_always_ondue);
+    AUTO_ALARM_ALWAYS_ON_DUE("always_on_due", R.string.alarms_always_ondue),
+
+    PROTECT_BIOMETRIC_OFF("protect_biometric_off", R.string.off),
+    PROTECT_BIOMETRIC_CONFIDENTIAL("protect_biometric_confidential", R.string.settings_protect_biometric_confidential),
+    PROTECT_BIOMETRIC_PRIVATE_CONFIDENTIAL("protect_biometric_private_confidential", R.string.settings_protect_biometric_private_confidential),
+    PROTECT_BIOMETRIC_ALL("protect_biometric_all", R.string.settings_protect_biometric_all);
 
     fun getProgressStepKeyAsInt(): Int {
         return try {

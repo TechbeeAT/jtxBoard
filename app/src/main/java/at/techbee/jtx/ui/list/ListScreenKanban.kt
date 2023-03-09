@@ -43,6 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.properties.Reltype
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlin.math.abs
@@ -54,7 +56,7 @@ import kotlin.math.roundToInt
 fun ListScreenKanban(
     module: Module,
     list: State<List<ICal4List>>,
-    subtasksLive: LiveData<Map<String?, List<ICal4List>>>,
+    subtasksLive: LiveData<List<ICal4ListRel>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
@@ -67,7 +69,7 @@ fun ListScreenKanban(
     val context = LocalContext.current
     val scrollId by scrollOnceId.observeAsState(null)
     val statusColumns = Status.valuesFor(module).filter { it != Status.CANCELLED && it != Status.NO_STATUS }
-    val subtasks by subtasksLive.observeAsState(emptyMap())
+    val subtasks by subtasksLive.observeAsState(emptyList())
 
 
     Row(modifier = Modifier.fillMaxWidth()) {
@@ -119,7 +121,8 @@ fun ListScreenKanban(
                 )
                 { iCalObject ->
 
-                    val currentSubtasks = subtasks[iCalObject.uid]
+                    val currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCalObject.uid } }.map { it.iCal4List }
+
                     var offsetX by remember { mutableStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
                     val maxOffset = 50f
 
@@ -143,7 +146,7 @@ fun ListScreenKanban(
                                 state = rememberDraggableState { delta ->
                                     if (iCalObject.isReadOnly)   // no drag state for read only objects!
                                         return@rememberDraggableState
-                                    if (settingLinkProgressToSubtasks && currentSubtasks?.isNotEmpty() == true)
+                                    if (settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty() == true)
                                         return@rememberDraggableState  // no drag is status depends on subtasks
                                     if (abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
                                         offsetX += delta
@@ -238,7 +241,7 @@ fun ListScreenKanban_TODO() {
         ListScreenKanban(
             module = Module.TODO,
             list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
-            subtasksLive = MutableLiveData(emptyMap()),
+            subtasksLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
@@ -286,7 +289,7 @@ fun ListScreenKanban_JOURNAL() {
         ListScreenKanban(
             module = Module.JOURNAL,
             list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
-            subtasksLive = MutableLiveData(emptyMap()),
+            subtasksLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,

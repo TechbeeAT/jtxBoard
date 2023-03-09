@@ -39,6 +39,8 @@ import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
+import net.fortuna.ical4j.model.property.DtStart
+import java.net.URLDecoder
 import net.fortuna.ical4j.model.Period
 import net.fortuna.ical4j.model.component.VJournal
 import net.fortuna.ical4j.model.component.VToDo
@@ -556,6 +558,26 @@ data class ICalObject(
             return ICalObject().applyContentValues(values)
         }
 
+        fun fromText(module: Module, collectionId: Long, text: String?, context: Context): ICalObject {
+            val iCalObject = when(module) {
+                Module.JOURNAL -> createJournal()
+                Module.NOTE -> createNote()
+                Module.TODO -> createTodo()
+            }
+            if(module == Module.JOURNAL) {
+                iCalObject.setDefaultJournalDateFromSettings(context)
+            }
+            if(module == Module.TODO) {
+                iCalObject.setDefaultDueDateFromSettings(context)
+                iCalObject.setDefaultStartDateFromSettings(context)
+            }
+            iCalObject.parseSummaryAndDescription(text)
+            iCalObject.parseURL(text)
+            iCalObject.parseLatLng(text)
+            iCalObject.collectionId = collectionId
+            return iCalObject
+        }
+
 
         fun getRecurId(dtstart: Long?, dtstartTimezone: String?): String? {
             if (dtstart == null)
@@ -579,18 +601,29 @@ data class ICalObject(
          * this function takes a parent [id], the function recursively calls itself and deletes all items and linked children (for local collections)
          * or updates the linked children and marks them as deleted.
          */
-        suspend fun deleteItemWithChildren(id: Long, database: ICalDatabaseDao) {
+        suspend fun deleteItemWithChildren(id: Long, database: ICalDatabaseDao, parentUID: String? = null) {
 
             if (id == 0L)
                 return // do nothing, the item was never saved in DB
 
+            val item = database.getSync(id)?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
             val children = database.getRelatedChildren(id)
             children.forEach { child ->
-                    deleteItemWithChildren(child.id, database)    // call the function again to recursively delete all children, then delete the item
+                    deleteItemWithChildren(child.id, database, item.property.uid)    // call the function again to recursively delete all children, then delete the item
             }
 
-            database.getICalObjectByIdSync(id)?.let { database.deleteRecurringInstances(it.uid) }  // recurring instances are always physically deleted
-            val item = database.getSync(id)?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
+            database.deleteRecurringInstances(item.property.uid)  // recurring instances are always physically deleted
+
+            // if the entry has multiple parents, we only delete the reference, but not the entry itself
+            if((item.relatedto?.filter { it.reltype == Reltype.PARENT.name }?.size?:0) > 1) {
+                item.relatedto?.find { it.text == parentUID && it.reltype == Reltype.PARENT.name }?.let {
+                    database.deleteRelatedto(it)
+                    item.property.makeDirty()
+                    database.update(item.property)
+                    return
+                }
+            }
+
             when {
                 item.property.recurid != null -> {
                     unlinkFromSeries(item.property, database)   // if the current item
@@ -842,9 +875,21 @@ data class ICalObject(
 
             val allRelatedTo = database.getAllRelatedtoSync()
             var topParent = database.getICalObjectById(iCalObjectId)
+
             while(allRelatedTo.any { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}) {
+                if(allRelatedTo.filter { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name }.size > 1) {
+                    Log.w("findTopParent", "Entry has multiple parents, cannot return single parent.")
+                    return null
+                }
+
                 val parentUID = allRelatedTo.find { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}?.text
                 parentUID?.let { uid -> database.getICalObjectFor(uid)?.let { topParent = it } }
+
+                //make sure no endless loop occurs in the error case that an entry links to itself
+                if(allRelatedTo.any { it.icalObjectId == topParent?.id && it.text == topParent?.uid }) {
+                    Log.w("findTopParent", "Entry links to itself, cannot return parent.")
+                    return null
+                }
             }
             return topParent
         }
@@ -864,7 +909,7 @@ data class ICalObject(
         }
 
         @VisibleForTesting
-        fun getAsRecurId(datetime: Long, timezone: String?) = when {
+        fun getAsRecurId(datetime: Long, timezone: String?): String = when {
             timezone == TZ_ALLDAY -> DtStart(Date(datetime)).value
             timezone.isNullOrEmpty() -> DtStart(DateTime(datetime)).value
             else -> DtStart(DateTime(datetime)).apply {
@@ -1327,6 +1372,32 @@ data class ICalObject(
         while (matcher.find()) {
             this.url = matcher.group()
             return
+        }
+    }
+
+    fun parseLatLng(text: String?) {
+        if (text.isNullOrEmpty())
+            return
+
+        val formats = listOf(
+            Regex("\\d*[.]\\d*[,]\\d*[.]\\d*"),   // Google Maps & Apple Maps
+            Regex("\\d*[.]\\d*[~]\\d*[.]\\d*"),   // Bing Maps (Microsoft)
+            Regex("\\d*[.]\\d*[/]\\d*[.]\\d*"),   // Open Street Maps
+        )
+
+        formats.forEach { format ->
+            format.find(URLDecoder.decode(text, "UTF-8"))?.value?.let {
+                val latLng = it.split(",", "~", "/")
+                if (latLng.size != 2)
+                    return@let
+                val lat = latLng[0].toDoubleOrNull()
+                val lng = latLng[1].toDoubleOrNull()
+                if (lat != null && lng != null) {
+                    this.geoLat = lat
+                    this.geoLong = lng
+                    return
+                }
+            }
         }
     }
 
