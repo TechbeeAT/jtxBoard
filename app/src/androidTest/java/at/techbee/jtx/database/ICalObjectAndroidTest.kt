@@ -288,11 +288,11 @@ class ICalObjectAndroidTest {
                 text = parent2.uid
                 reltype = Reltype.PARENT.name
             })
-            assertEquals(2, database.getAllRelatedto().getOrAwaitValue().size)
+            assertEquals(2, database.getAllRelatedtoSync().size)
 
             ICalObject.deleteItemWithChildren(idParent1, database)
 
-            assertEquals(1, database.getAllRelatedto().getOrAwaitValue().size)
+            assertEquals(1, database.getAllRelatedtoSync().size)
             assertNull(database.getSync(idParent1))
             assertNotNull(database.getSync(idChild))
         }
