@@ -558,6 +558,26 @@ data class ICalObject(
             return ICalObject().applyContentValues(values)
         }
 
+        fun fromText(module: Module, collectionId: Long, text: String?, context: Context): ICalObject {
+            val iCalObject = when(module) {
+                Module.JOURNAL -> createJournal()
+                Module.NOTE -> createNote()
+                Module.TODO -> createTodo()
+            }
+            if(module == Module.JOURNAL) {
+                iCalObject.setDefaultJournalDateFromSettings(context)
+            }
+            if(module == Module.TODO) {
+                iCalObject.setDefaultDueDateFromSettings(context)
+                iCalObject.setDefaultStartDateFromSettings(context)
+            }
+            iCalObject.parseSummaryAndDescription(text)
+            iCalObject.parseURL(text)
+            iCalObject.parseLatLng(text)
+            iCalObject.collectionId = collectionId
+            return iCalObject
+        }
+
 
         fun getRecurId(dtstart: Long?, dtstartTimezone: String?): String? {
             if (dtstart == null)
