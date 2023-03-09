@@ -57,13 +57,13 @@ class BillingManager :
 
 
     override lateinit var isProPurchased: LiveData<Boolean>
-    override val proPrice = Transformations.map(proProductDetails) {
+    override val proPrice = proProductDetails.map {
         it?.oneTimePurchaseOfferDetails?.formattedPrice ?: ""
     }
-    override val proPurchaseDate = Transformations.map(proPurchase) {
+    override val proPurchaseDate = proPurchase.map {
         DateTimeUtils.convertLongToFullDateTimeString(it?.purchaseTime, null)
     }
-    override val proOrderId = Transformations.map(proPurchase) {
+    override val proOrderId = proPurchase.map {
         it?.orderId ?: "-"
     }
 
