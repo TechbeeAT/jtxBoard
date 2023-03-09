@@ -28,14 +28,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsAddOrEditDialog
-import at.techbee.jtx.ui.reusable.dialogs.SelectModuleForTxtImportDialog
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import java.util.*
@@ -95,86 +93,37 @@ fun CollectionsScreen(
     }
 
     /* IMPORT FUNCTIONALITIES */
-    var resultImportICSFilepaths by remember { mutableStateOf<List<Uri>>(emptyList()) }
-    val launcherImportICS = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) {
-        resultImportICSFilepaths = it
+    val resultImportFilepath = remember { mutableStateOf<Uri?>(null) }
+    val launcherImport = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
+        resultImportFilepath.value = it
     }
-    var resultImportTxtFilepaths by remember { mutableStateOf<List<Uri>>(emptyList()) }
-    val launcherImportTxt = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) {
-        resultImportTxtFilepaths = it
-    }
-    var importCollection by remember { mutableStateOf<CollectionsView?>(null) }
-    var importModule by remember { mutableStateOf<Module?>(null) }
-
-
-    LaunchedEffect(resultImportICSFilepaths, importCollection) {
-        // import from file uri
-        if (resultImportICSFilepaths.isNotEmpty() && importCollection != null) {
-            resultImportICSFilepaths.forEach { filepath ->
-                context.contentResolver?.openInputStream(filepath)?.use {
-                    val icsString = it.readBytes().decodeToString()
-                    collectionsViewModel.insertICSFromReader(
-                        importCollection!!.toICalCollection(),
-                        icsString
-                    )
-
-                    it.close()
-                }
-            }
-            importCollection = null
-            resultImportICSFilepaths = emptyList()
-        }
-    }
-
-    var showSelectModuleForTxtImportDialog by remember { mutableStateOf(false) }
-    if(showSelectModuleForTxtImportDialog && importCollection != null && resultImportTxtFilepaths.isNotEmpty()) {
-        SelectModuleForTxtImportDialog(
-            files = resultImportTxtFilepaths,
-            onModuleSelected = { module -> importModule = module },
-            onDismiss = { showSelectModuleForTxtImportDialog = false }
-        )
-    }
-
-    LaunchedEffect(resultImportTxtFilepaths, importCollection, importModule) {
-        // import from file uri
-        if(importModule == null) {
-            showSelectModuleForTxtImportDialog = true
-            return@LaunchedEffect
-        }
-
-        if (resultImportTxtFilepaths.isNotEmpty() && importCollection != null) {
-            resultImportTxtFilepaths.forEach { filepath ->
-                context.contentResolver?.openInputStream(filepath)?.use {
-                    collectionsViewModel.insertTxt(text = it.readBytes().decodeToString(), module = importModule!!, collection = importCollection!!.toICalCollection())
-                    it.close()
-                }
-            }
-            Toast.makeText(
-                context,
-                context.getString(R.string.collections_toast_x_items_added, resultImportTxtFilepaths.size),
-                Toast.LENGTH_LONG
-            ).show()
-            importCollection = null
-            importModule = null
-            resultImportTxtFilepaths = emptyList()
-        }
-    }
-
-    LaunchedEffect(resultImportICSFilepaths, globalStateHolder.icalString2Import.value) {
-        // import from intent
-        if (importCollection != null && globalStateHolder.icalString2Import.value != null) {
+    val importCollection = remember { mutableStateOf<CollectionsView?>(null) }
+    // import from file uri
+    if (resultImportFilepath.value != null && importCollection.value != null) {
+        context.contentResolver?.openInputStream(resultImportFilepath.value!!)?.use {
+            val icsString = it.readBytes().decodeToString()
             collectionsViewModel.insertICSFromReader(
-                importCollection!!.toICalCollection(),
-                globalStateHolder.icalString2Import.value!!
+                importCollection.value!!.toICalCollection(),
+                icsString
             )
-            importCollection = null
-            globalStateHolder.icalString2Import.value = null
+            importCollection.value = null
+            resultImportFilepath.value = null
+            it.close()
         }
+    }
+    // import from intent
+    if (importCollection.value != null && globalStateHolder.icalString2Import.value != null) {
+        collectionsViewModel.insertICSFromReader(
+            importCollection.value!!.toICalCollection(),
+            globalStateHolder.icalString2Import.value!!
+        )
+        importCollection.value = null
+        globalStateHolder.icalString2Import.value = null
     }
 
     val snackbarMessage = stringResource(id = R.string.collections_snackbar_select_collection_for_ics_import)
-    LaunchedEffect(importCollection, globalStateHolder.icalString2Import) {
-        if (importCollection == null && globalStateHolder.icalString2Import.value != null) {
+    LaunchedEffect(key1 = importCollection, key2 = globalStateHolder.icalString2Import) {
+        if (importCollection.value == null && globalStateHolder.icalString2Import.value != null) {
             snackbarHostState.showSnackbar(
                 snackbarMessage,
                 duration = SnackbarDuration.Indefinite
@@ -184,16 +133,14 @@ fun CollectionsScreen(
 
     // show result
     val insertResult by collectionsViewModel.resultInsertedFromICS.observeAsState()
-    LaunchedEffect(insertResult) {
-        insertResult?.let {
-            Toast.makeText(
-                context,
-                context.getString(R.string.collections_snackbar_x_items_added, it.first, it.second),
-                Toast.LENGTH_LONG
-            ).show()
-            snackbarHostState.currentSnackbarData?.dismiss()
-            collectionsViewModel.resultInsertedFromICS.value = null
-        }
+    insertResult?.let {
+        Toast.makeText(
+            context,
+            stringResource(R.string.collections_snackbar_x_items_added, it.first, it.second),
+            Toast.LENGTH_LONG
+        ).show()
+        collectionsViewModel.resultInsertedFromICS.value = null
+        snackbarHostState.currentSnackbarData?.dismiss()
     }
 
 
@@ -273,12 +220,8 @@ fun CollectionsScreen(
                             )
                         },
                         onImportFromICS = { collection ->
-                            importCollection = collection
-                            launcherImportICS.launch(arrayOf("text/calendar"))
-                        },
-                        onImportFromTxt = { collection ->
-                            importCollection = collection
-                            launcherImportTxt.launch(arrayOf("text/plain", "text/markdown"))
+                            importCollection.value = collection
+                            launcherImport.launch(arrayOf("text/calendar"))
                         },
                         onExportAsICS = { collection ->
                             collectionsViewModel.requestICSForExport(
@@ -287,7 +230,7 @@ fun CollectionsScreen(
                         },
                         onCollectionClicked = { collection ->
                             if (globalStateHolder.icalString2Import.value?.isNotEmpty() == true && !collection.readonly)
-                                importCollection = collection
+                                importCollection.value = collection
                         },
                         onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) }
                     )

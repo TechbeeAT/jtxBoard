@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.list
 
-import android.accounts.Account
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -24,8 +23,10 @@ import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
-import at.techbee.jtx.database.properties.*
-import at.techbee.jtx.database.relations.ICal4ListRel
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -58,13 +59,20 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     private var allSubtasksQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubtasks: LiveData<List<ICal4ListRel>> = allSubtasksQuery.switchMap { database.getSubEntries(it) }
+    private var allSubtasks: LiveData<List<ICal4List>> = allSubtasksQuery.switchMap {
+        database.getSubEntries(it)
+    }
+    val allSubtasksMap = allSubtasks.map { list ->
+        return@map list.groupBy { it.vtodoUidOfParent }
+    }
 
     private var allSubnotesQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubnotes: LiveData<List<ICal4ListRel>> = allSubnotesQuery.switchMap { database.getSubEntries(it) }
-
-    private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var selectFromAllList: LiveData<List<ICal4List>> = selectFromAllListQuery.switchMap { database.getIcal4List(it) }
+    private var allSubnotes: LiveData<List<ICal4List>> = allSubnotesQuery.switchMap {
+        database.getSubEntries(it)
+    }
+    val allSubnotesMap = allSubnotes.map { list ->
+        return@map list.groupBy { it.vjournalUidOfParent }
+    }
 
     private val allAttachmentsList: LiveData<List<Attachment>> = database.getAllAttachments()
     val allAttachmentsMap = allAttachmentsList.map { list ->
@@ -85,7 +93,10 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val selectedEntries = mutableStateListOf<Long>()
     val multiselectEnabled = mutableStateOf(false)
 
+
     init {
+        updateSearch()
+
         // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
         val firstInstall = application.packageManager
             ?.getPackageInfoCompat(application.packageName, 0)
@@ -113,9 +124,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
      * new query in the listQuery variable. This can trigger an
      * observer in the fragment.
      */
-    fun updateSearch(saveListSettings: Boolean = false, isAuthenticated: Boolean) {
+    fun updateSearch(saveListSettings: Boolean = false) {
         val query = ICal4List.constructQuery(
-            modules = listOf(module),
+            module = module,
             searchCategories = listSettings.searchCategories.value,
             searchResources = listSettings.searchResources.value,
             searchStatus = listSettings.searchStatus.value,
@@ -136,15 +147,11 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value,
             isFilterStartFuture = listSettings.isFilterStartFuture.value,
             isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
-            isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value,
-            isFilterNoDueDateSet = listSettings.isFilterNoDueDateSet.value,
-            isFilterNoCompletedDateSet = listSettings.isFilterNoCompletedDateSet.value,
             isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value,
             isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value,
             searchText = listSettings.searchText.value,
             flatView = listSettings.flatView.value,
-            searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value,
-            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
+            searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
         )
         listQuery.postValue(query)
 
@@ -154,15 +161,17 @@ open class ListViewModel(application: Application, val module: Module) : Android
             listSettings.saveToPrefs(prefs)
     }
 
-    fun updateSelectFromAllListQuery(searchText: String, isAuthenticated: Boolean) {
-        selectFromAllListQuery.postValue(ICal4List.constructQuery(
-            modules = listOf(Module.JOURNAL, Module.NOTE, Module.TODO),
-            searchText = searchText,
-            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
-        ))
+
+    /**
+     * Clears all search criteria (except for module) and updates the search
+     */
+    fun clearFilter() {
+        listSettings.reset()
+        listSettings.saveToPrefs(prefs)
+        updateSearch()
     }
 
-    
+
     fun updateProgress(itemId: Long, newPercent: Int, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -294,32 +303,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     /**
-     * Adds a new relatedTo to the selected entries
-     * @param addedParent that should be added as a relation
-     */
-    fun addNewParentToSelected(addedParent: ICal4List) {
-        viewModelScope.launch(Dispatchers.IO) {
-            selectedEntries.forEach { selected ->
-
-                val childUID = database.getICalObjectById(selected)?.uid ?: return@forEach
-                if(addedParent.uid == childUID)
-                    return@forEach
-
-                val existing = addedParent.uid?.let { database.findRelatedTo(selected, it, Reltype.PARENT.name) != null } ?: return@forEach
-                if(!existing)
-                    database.insertRelatedto(
-                        Relatedto(
-                            icalObjectId = selected,
-                            text = addedParent.uid,
-                            reltype = Reltype.PARENT.name
-                        )
-                    )
-            }
-            makeSelectedDirty()
-        }
-    }
-
-    /**
      * Updates the currently selected entries to make them dirty
      */
     private suspend fun makeSelectedDirty() {
@@ -433,16 +416,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
         }
     }
 
-    /**
-     * Retrieves the remote collections from the database
-     * and triggers sync for their accounts
-     */
-    fun syncAccounts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val collections = database.getAllRemoteCollections()
-            SyncUtil.syncAccounts(collections.map { Account(it.accountName, it.accountType) }.toSet())
-        }
-    }
 
     /**
      * This function adds some welcome entries, this should only be used on the first install.

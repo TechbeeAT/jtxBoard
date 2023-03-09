@@ -18,8 +18,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
@@ -157,16 +160,6 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             if(collection.accountType != LOCAL_ACCOUNT_TYPE)
                 SyncUtil.notifyContentObservers(getApplication())
             resultInsertedFromICS.postValue(resultPair)
-            isProcessing.postValue(false)
-        }
-    }
-
-    fun insertTxt(text: String, module: Module, collection: ICalCollection) {
-        isProcessing.postValue(true)
-        viewModelScope.launch(Dispatchers.IO) {
-            database.insertICalObject(ICalObject.fromText(module, collection.collectionId, text, getApplication()))
-            if(collection.accountType != LOCAL_ACCOUNT_TYPE)
-                SyncUtil.notifyContentObservers(getApplication())
             isProcessing.postValue(false)
         }
     }

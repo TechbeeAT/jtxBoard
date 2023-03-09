@@ -33,7 +33,6 @@ buildscript {
         version_huawei = "1.8.1.300"
         version_huawei_iap = "6.9.0.300"
         version_accompanist = "0.28.0"
-        version_osmdroid = "6.1.14"
     }
 
     repositories {

@@ -254,6 +254,7 @@ object DateTimeUtils {
      * @return the minutes and seconds as string like '00:00'
      */
     fun getMinutesSecondsFormatted(seconds: Int): String {
+        // TODO: Create a test!
         var secondsMinutesText = ""
         if(seconds/60 < 10)
             secondsMinutesText += "0"

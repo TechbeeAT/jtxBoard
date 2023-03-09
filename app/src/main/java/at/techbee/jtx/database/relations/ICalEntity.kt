@@ -31,31 +31,32 @@ data class ICalEntity(
     @Embedded
     var property: ICalObject = ICalObject(),
 
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_COMMENT_ICALOBJECT_ID, entity = Comment::class)
+
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Comment::class)
     var comments: List<Comment>? = null,
 
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_CATEGORY_ICALOBJECT_ID, entity = Category::class)
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Category::class)
     var categories: List<Category>? = null,
 
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_ATTENDEE_ICALOBJECT_ID, entity = Attendee::class)
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Attendee::class)
     var attendees: List<Attendee>? = null,
 
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_ORGANIZER_ICALOBJECT_ID, entity = Organizer::class)
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Organizer::class)
     var organizer: Organizer? = null,
 
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_RELATEDTO_ICALOBJECT_ID, entity = Relatedto::class)
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Relatedto::class)
     var relatedto: List<Relatedto>? = null,
 
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_RESOURCE_ICALOBJECT_ID, entity = Resource::class)
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Resource::class)
     var resources: List<Resource>? = null,
 
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_ATTACHMENT_ICALOBJECT_ID, entity = Attachment::class)
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Attachment::class)
     var attachments: List<Attachment>? = null,
 
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_ALARM_ICALOBJECT_ID, entity = Alarm::class)
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Alarm::class)
     var alarms: List<Alarm>? = null,
 
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_UNKNOWN_ICALOBJECT_ID, entity = Unknown::class)
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Unknown::class)
     var unknown: List<Unknown>? = null,
 
 

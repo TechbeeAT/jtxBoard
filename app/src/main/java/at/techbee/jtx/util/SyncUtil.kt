@@ -9,6 +9,7 @@
 package at.techbee.jtx.util
 
 import android.accounts.Account
+import android.accounts.AccountManager
 import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
@@ -23,6 +24,7 @@ import android.widget.Toast
 import at.techbee.jtx.R
 import at.techbee.jtx.SYNC_PROVIDER_AUTHORITY
 import at.techbee.jtx.contract.JtxContract
+import at.techbee.jtx.database.ICalCollection
 
 const val TAG = "SyncUtil"
 
@@ -34,24 +36,48 @@ class SyncUtil {
 
 
         /**
-         * @param [accounts] for which the sync should be checked
-         * @return true if a sync is running for the jtx Sync Provider Authority for any of the given accounts
+         * @return true if a sync is running for the JTX Sync Provider Authority (no matter which account)
          */
-        fun isJtxSyncRunningFor(accounts: Set<Account>): Boolean {
-            return accounts.any { ContentResolver.isSyncActive(it, SYNC_PROVIDER_AUTHORITY) }
+        fun isJtxSyncRunning(context: Context?): Boolean {
+            context?.let { currentContext ->
+                val accounts = AccountManager.get(currentContext).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
+                return accounts.any { ContentResolver.isSyncActive(it, SYNC_PROVIDER_AUTHORITY) }   // else false
+            }
+            return false
+        }
+
+        /**
+         * @param [account] for which the sync should be checked
+         * @return true if a sync is running for the JTX Sync Provider Authority and the given account
+         */
+        fun isJtxSyncRunningForAccount(account: Account): Boolean {
+            return ContentResolver.isSyncActive(account, SYNC_PROVIDER_AUTHORITY)
+        }
+
+        /**
+         * Immediately starts Sync for all Accounts for the JTX Sync Provider Authority
+         */
+        fun syncAllAccounts(context: Context?) {
+
+            if(context == null)
+                return
+
+            val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
+            accounts.forEach { account ->
+                syncAccount(account)
+            }
         }
 
         /**
          * Immediately starts Sync for the given account
-         * @param [accounts] that should be synced
+         * @param [account] that should be synced
          */
-        fun syncAccounts(accounts: Set<Account>) {
-            accounts.forEach { account ->
-                val extras = Bundle(2)
-                extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)        // manual sync
-                extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
-                ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
-            }
+        fun syncAccount(account: Account) {
+
+            val extras = Bundle(2)
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)        // manual sync
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
+            ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
         }
 
         /**

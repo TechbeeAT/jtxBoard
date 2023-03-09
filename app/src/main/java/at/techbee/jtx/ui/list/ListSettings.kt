@@ -9,13 +9,10 @@
 package at.techbee.jtx.ui.list
 
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.*
-import at.techbee.jtx.ui.settings.DropdownSettingOption
-import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.widgets.ListWidgetConfig
 
 
@@ -47,9 +44,6 @@ class ListSettings {
     var isFilterStartTomorrow: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
-    var isFilterNoStartDateSet: MutableState<Boolean> = mutableStateOf(false)
-    var isFilterNoDueDateSet: MutableState<Boolean> = mutableStateOf(false)
-    var isFilterNoCompletedDateSet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoCategorySet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoResourceSet: MutableState<Boolean> = mutableStateOf(false)
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
@@ -68,6 +62,7 @@ class ListSettings {
     var showDescription: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubtasks: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubnotes: MutableState<Boolean> = mutableStateOf(true)  // widget only
+
 
     companion object {
         private const val PREFS_COLLECTION = "prefsCollection"
@@ -93,9 +88,6 @@ class ListSettings {
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
         private const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
         private const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
-        private const val PREFS_FILTER_NO_START_DATE_SET = "prefsFilterNoStartDateSet"
-        private const val PREFS_FILTER_NO_DUE_DATE_SET = "prefsFilterNoDueDateSet"
-        private const val PREFS_FILTER_NO_COMPLETED_DATE_SET = "prefsFilterNoCompletedDateSet"
         private const val PREFS_FILTER_START_IN_PAST = "prefsFilterStartOverdue"
         private const val PREFS_FILTER_START_TODAY = "prefsFilterStartToday"
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
@@ -116,13 +108,8 @@ class ListSettings {
         //private const val PREFS_WIDGET_ALPHA = "prefsWidgetAlpha"
         //private const val PREFS_WIDGET_ALPHA_ENTRIES = "prefsWidgetAlhpaEntries"
 
-        fun getProtectedClassificationsFromSettings(context: Context) =
-            when(SettingsStateHolder(context).settingProtectBiometric.value) {
-                DropdownSettingOption.PROTECT_BIOMETRIC_ALL -> Classification.values().toList()
-                DropdownSettingOption.PROTECT_BIOMETRIC_CONFIDENTIAL -> listOf(Classification.CONFIDENTIAL)
-                DropdownSettingOption.PROTECT_BIOMETRIC_PRIVATE_CONFIDENTIAL -> listOf(Classification.PRIVATE, Classification.CONFIDENTIAL)
-                else -> emptyList()
-        }
+
+
 
         fun fromPrefs(prefs: SharedPreferences) = ListSettings().apply {
 
@@ -136,9 +123,6 @@ class ListSettings {
             isFilterStartTomorrow.value = prefs.getBoolean(PREFS_FILTER_START_TOMORROW, false)
             isFilterStartFuture.value = prefs.getBoolean(PREFS_FILTER_START_FUTURE, false)
             isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
-            isFilterNoStartDateSet.value = prefs.getBoolean(PREFS_FILTER_NO_START_DATE_SET, false)
-            isFilterNoDueDateSet.value = prefs.getBoolean(PREFS_FILTER_NO_DUE_DATE_SET, false)
-            isFilterNoCompletedDateSet.value = prefs.getBoolean(PREFS_FILTER_NO_COMPLETED_DATE_SET, false)
             isFilterNoCategorySet.value = prefs.getBoolean(PREFS_FILTER_NO_CATEGORY_SET, false)
             isFilterNoResourceSet.value = prefs.getBoolean(PREFS_FILTER_NO_RESOURCE_SET, false)
 
@@ -200,9 +184,6 @@ class ListSettings {
             isFilterStartTomorrow.value = listWidgetConfig.isFilterStartTomorrow
             isFilterStartFuture.value = listWidgetConfig.isFilterStartFuture
             isFilterNoDatesSet.value = listWidgetConfig.isFilterNoDatesSet
-            isFilterNoStartDateSet.value = listWidgetConfig.isFilterNoStartDateSet
-            isFilterNoDueDateSet.value = listWidgetConfig.isFilterNoDueDateSet
-            isFilterNoCompletedDateSet.value = listWidgetConfig.isFilterNoCompletedDateSet
             isFilterNoCategorySet.value = listWidgetConfig.isFilterNoCategorySet
             isFilterNoResourceSet.value = listWidgetConfig.isFilterNoResourceSet
 
@@ -264,9 +245,6 @@ class ListSettings {
             putBoolean(PREFS_FILTER_START_TOMORROW, isFilterStartTomorrow.value)
             putBoolean(PREFS_FILTER_START_FUTURE, isFilterStartFuture.value)
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
-            putBoolean(PREFS_FILTER_NO_START_DATE_SET, isFilterNoStartDateSet.value)
-            putBoolean(PREFS_FILTER_NO_DUE_DATE_SET, isFilterNoDueDateSet.value)
-            putBoolean(PREFS_FILTER_NO_COMPLETED_DATE_SET, isFilterNoCompletedDateSet.value)
             putBoolean(PREFS_FILTER_NO_CATEGORY_SET, isFilterNoCategorySet.value)
             putBoolean(PREFS_FILTER_NO_RESOURCE_SET, isFilterNoResourceSet.value)
 
@@ -325,9 +303,6 @@ class ListSettings {
         isFilterDueTomorrow.value = false
         isFilterDueFuture.value = false
         isFilterNoDatesSet.value = false
-        isFilterNoStartDateSet.value = false
-        isFilterNoDueDateSet.value = false
-        isFilterNoCompletedDateSet.value = false
         isFilterNoCategorySet.value = false
         isFilterNoResourceSet.value = false
     }

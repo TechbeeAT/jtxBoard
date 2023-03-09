@@ -123,20 +123,7 @@ enum class DropdownSetting(
             DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_DUE
         ),
         default = DropdownSettingOption.AUTO_ALARM_OFF
-    ),
-    SETTING_PROTECT_BIOMETRIC(
-        key = "setting_protect_biometric",
-        icon = Icons.Outlined.Fingerprint,
-        title = R.string.settings_protect_biometric,
-        subtitle = R.string.settings_protect_biometric_sub,
-        options = listOf(
-            DropdownSettingOption.PROTECT_BIOMETRIC_OFF,
-            DropdownSettingOption.PROTECT_BIOMETRIC_PRIVATE_CONFIDENTIAL,
-            DropdownSettingOption.PROTECT_BIOMETRIC_CONFIDENTIAL,
-            DropdownSettingOption.PROTECT_BIOMETRIC_ALL
-        ),
-        default = DropdownSettingOption.PROTECT_BIOMETRIC_OFF
-    ),
+    )
     ;
 
     fun save(newDropdownSettingOption: DropdownSettingOption, context: Context) {

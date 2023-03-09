@@ -48,8 +48,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -79,12 +77,10 @@ fun DetailScreenContent(
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     subtasks: State<List<ICal4List>>,
     subnotes: State<List<ICal4List>>,
-    parents: State<List<ICal4List>>,
     isChild: Boolean,
     allWriteableCollections: List<ICalCollection>,
     allCategories: List<String>,
     allResources: List<String>,
-    selectFromAllListLive: LiveData<List<ICal4List>>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
     seriesInstances: List<ICalObject>,
@@ -94,7 +90,6 @@ fun DetailScreenContent(
     showProgressForSubTasks: Boolean,
     keepStatusProgressCompletedInSync: Boolean,
     linkProgressToSubtasks: Boolean,
-    setCurrentLocation: Boolean,
     markdownState: MutableState<MarkdownState>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
@@ -104,9 +99,6 @@ fun DetailScreenContent(
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
-    onUnlinkSubEntry: (icalObjectId: Long) -> Unit,
-    onLinkSubEntries: (List<ICal4List>) -> Unit,
-    onAllEntriesSearchTextUpdated: (String) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     goBack: () -> Unit,
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit
@@ -607,24 +599,10 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
-                DetailsCardParents(
-                    parents = parents.value,
-                    isEditMode = isEditMode,
-                    sliderIncrement = sliderIncrement,
-                    showSlider = showProgressForSubTasks,
-                    onProgressChanged = { itemId, newPercent ->
-                        onProgressChanged(itemId, newPercent)
-                    },
-                    goToDetail = goToDetail
-                )
-            }
-
             AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS]?: true || showAllOptions))) {
                 DetailsCardSubtasks(
                     subtasks = subtasks.value,
                     isEditMode = isEditMode,
-                    selectFromAllListLive = selectFromAllListLive,
                     sliderIncrement = sliderIncrement,
                     showSlider = showProgressForSubTasks,
                     onProgressChanged = { itemId, newPercent ->
@@ -638,9 +616,6 @@ fun DetailScreenContent(
                         )
                     },
                     onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                    onUnlinkSubEntry = onUnlinkSubEntry,
-                    onLinkSubEntries = onLinkSubEntries,
-                    onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
                     goToDetail = goToDetail
                 )
             }
@@ -649,7 +624,6 @@ fun DetailScreenContent(
                 DetailsCardSubnotes(
                     subnotes = subnotes.value,
                     isEditMode = isEditMode,
-                    selectFromAllListLive = selectFromAllListLive,
                     onSubnoteAdded = { subnote, attachment ->
                         onSubEntryAdded(
                             subnote,
@@ -663,9 +637,6 @@ fun DetailScreenContent(
                         )
                     },
                     onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                    onUnlinkSubEntry = onUnlinkSubEntry,
-                    onLinkSubEntries = onLinkSubEntries,
-                    onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
                     player = player,
                     goToDetail = goToDetail
                 )
@@ -724,15 +695,9 @@ fun DetailScreenContent(
                     initialGeoLat = icalObject.value.geoLat,
                     initialGeoLong = icalObject.value.geoLong,
                     isEditMode = isEditMode.value,
-                    setCurrentLocation = setCurrentLocation,
                     onLocationUpdated = { newLocation, newGeoLat, newGeoLong ->
-                        if(newGeoLat != null && newGeoLong != null) {
-                            icalObject.value.geoLat = newGeoLat
-                            icalObject.value.geoLong = newGeoLong
-                        } else {
-                            icalObject.value.geoLat = null
-                            icalObject.value.geoLong = null
-                        }
+                        icalObject.value.geoLat = newGeoLat
+                        icalObject.value.geoLong = newGeoLong
                         icalObject.value.location = newLocation.ifEmpty { null }
                         icalObject.value = icalObject.value
                         changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
@@ -884,7 +849,6 @@ fun DetailScreenContent_JOURNAL() {
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(false) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
-            parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             seriesInstances = emptyList(),
@@ -896,12 +860,10 @@ fun DetailScreenContent_JOURNAL() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
-            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             saveICalObject = { _, _, _, _, _, _, _ -> },
@@ -912,10 +874,7 @@ fun DetailScreenContent_JOURNAL() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -937,7 +896,6 @@ fun DetailScreenContent_TODO_editInitially() {
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             seriesInstances = emptyList(),
@@ -947,7 +905,6 @@ fun DetailScreenContent_TODO_editInitially() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
-            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -955,7 +912,6 @@ fun DetailScreenContent_TODO_editInitially() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _ -> },
@@ -965,10 +921,7 @@ fun DetailScreenContent_TODO_editInitially() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -992,7 +945,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             seriesInstances = emptyList(),
@@ -1002,7 +954,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
-            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -1010,7 +961,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             showProgressForSubTasks = false,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _ -> },
@@ -1020,10 +970,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { }
+            unlinkFromSeries = { _, _, _ -> }
         )
     }
 }
@@ -1039,7 +986,6 @@ fun DetailScreenContent_failedLoading() {
             iCalEntity = remember { mutableStateOf(null) },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             seriesInstances = emptyList(),
@@ -1049,7 +995,6 @@ fun DetailScreenContent_failedLoading() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
-            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -1057,7 +1002,6 @@ fun DetailScreenContent_failedLoading() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED)},
             saveICalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _ -> },
@@ -1067,11 +1011,8 @@ fun DetailScreenContent_failedLoading() {
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _ -> },
             goBack = { },
-            unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { }
-            )
+            unlinkFromSeries = { _, _, _ -> }
+        )
     }
 }
 

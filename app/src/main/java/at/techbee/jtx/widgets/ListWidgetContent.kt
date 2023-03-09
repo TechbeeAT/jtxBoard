@@ -121,8 +121,8 @@ fun ListWidgetContent(
         }
     }
 
-    val subtasksGrouped = subtasks.groupBy { it.parentUID }
-    val subnotesGrouped = subnotes.groupBy { it.parentUID }
+    val subtasksGrouped = subtasks.groupBy { it.vtodoUidOfParent }
+    val subnotesGrouped = subnotes.groupBy { it.vjournalUidOfParent }
 
     val imageSize = 36.dp
     val textColor = GlanceTheme.colors.onPrimaryContainer
