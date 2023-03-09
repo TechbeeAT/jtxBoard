@@ -151,13 +151,13 @@ fun DetailsCardAlarms(
 
                     TextButton(onClick = { showDateTimePicker = true }) {
                         Icon(Icons.Outlined.AlarmAdd, null, modifier = Modifier.padding(end = 8.dp))
-                        Text("Date/Time")
+                        Text(stringResource(R.string.alarms_date_time))
                     }
 
                     AnimatedVisibility(icalObject.dtstart != null || icalObject.due != null) {
                         TextButton(onClick = { showDurationPicker = true }) {
                             Icon(Icons.Outlined.AlarmAdd, null, modifier = Modifier.padding(end = 8.dp))
-                            Text("Duration")
+                            Text(stringResource(id = R.string.alarms_duration))
                         }
                     }
 

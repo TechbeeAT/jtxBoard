@@ -149,9 +149,7 @@ fun AboutLibrariesLib(
             }
 
             if (library.author.isNotBlank()) {
-                androidx.compose.material.Text(
-                    text = library.author
-                )
+                Text(text = library.author)
             }
 
             AnimatedVisibility(expanded && library.description?.isNotBlank() == true) {
@@ -227,7 +225,7 @@ fun AboutLibrariesLib_Preview() {
                 developers = emptyList(),
                 organization = Organization("Techbee e.U.", "https://techbee.at"),
                 scm = null,
-                licenses = setOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
+                licenses = setOf(License("jtx License", "https://jtx.techbee.at", hash = ""))
                 //...
             )
         )

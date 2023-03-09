@@ -48,9 +48,7 @@ fun CollectionsScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
-    val isDAVx5available =
-        SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
-
+    val isDAVx5available = SyncUtil.isDAVx5Available(context)
     val snackbarHostState = remember { SnackbarHostState() }
 
     /* EXPORT FUNCTIONALITIES */

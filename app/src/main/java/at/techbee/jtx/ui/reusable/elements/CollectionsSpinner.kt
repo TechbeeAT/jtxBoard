@@ -1,18 +1,24 @@
 package at.techbee.jtx.ui.reusable.elements
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.flavored.BillingManager
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,8 +34,10 @@ fun CollectionsSpinner(
     onSelectionChanged: (collection: ICalCollection) -> Unit
 ) {
 
+    val context = LocalContext.current
     var selected by remember { mutableStateOf(preselected) }
     var expanded by remember { mutableStateOf(false) } // initial value
+    val isProPurchased by BillingManager.getInstance().isProPurchased.observeAsState(true)
 
     OutlinedCard(
         modifier = modifier,
@@ -51,9 +59,10 @@ fun CollectionsSpinner(
 
                 Text(
                     text = selected.displayName + selected.accountName?.let { " ($it)" },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .alpha(if(!enabled) 0.5f else 1f)
+                        .alpha(if (!enabled) 0.5f else 1f)
                 )
                 Icon(Icons.Outlined.ArrowDropDown, null, modifier = Modifier.padding(8.dp))
 
@@ -74,9 +83,14 @@ fun CollectionsSpinner(
 
                         DropdownMenuItem(
                             onClick = {
-                                selected = collection
-                                expanded = false
-                                onSelectionChanged(selected)
+                                if(collection.accountType != LOCAL_ACCOUNT_TYPE && !isProPurchased) {
+                                    expanded = false
+                                    Toast.makeText(context, context.getString(R.string.collections_dialog_buypro_info), Toast.LENGTH_LONG).show()
+                                } else {
+                                    selected = collection
+                                    expanded = false
+                                    onSelectionChanged(selected)
+                                }
                             },
                             text = {
                                 Text(
