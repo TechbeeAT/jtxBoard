@@ -41,20 +41,22 @@ fun ExpandableSettingsSection(
         verticalArrangement = Arrangement.Top
     ) {
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically,
+        TextButton(
+            onClick = { expanded = !expanded },
             modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
         ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
-            Text(
-                text = stringResource(id = headerText),
-                style = MaterialTheme.typography.labelMedium,
-            )
-            IconButton(onClick = { expanded = !expanded }) {
+                Text(
+                    text = stringResource(id = headerText),
+                    style = MaterialTheme.typography.labelMedium,
+                )
                 Icon(
-                    imageVector = if(expanded) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
-                    contentDescription = stringResource(id = if(expanded) R.string.list_collapse else R.string.list_expand)
+                    imageVector = if (expanded) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
+                    contentDescription = stringResource(id = if (expanded) R.string.list_collapse else R.string.list_expand)
                 )
             }
         }

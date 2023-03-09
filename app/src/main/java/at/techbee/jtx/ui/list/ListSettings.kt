@@ -47,6 +47,9 @@ class ListSettings {
     var isFilterStartTomorrow: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterNoStartDateSet: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterNoDueDateSet: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterNoCompletedDateSet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoCategorySet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoResourceSet: MutableState<Boolean> = mutableStateOf(false)
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
@@ -90,6 +93,9 @@ class ListSettings {
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
         private const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
         private const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
+        private const val PREFS_FILTER_NO_START_DATE_SET = "prefsFilterNoStartDateSet"
+        private const val PREFS_FILTER_NO_DUE_DATE_SET = "prefsFilterNoDueDateSet"
+        private const val PREFS_FILTER_NO_COMPLETED_DATE_SET = "prefsFilterNoCompletedDateSet"
         private const val PREFS_FILTER_START_IN_PAST = "prefsFilterStartOverdue"
         private const val PREFS_FILTER_START_TODAY = "prefsFilterStartToday"
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
@@ -130,6 +136,9 @@ class ListSettings {
             isFilterStartTomorrow.value = prefs.getBoolean(PREFS_FILTER_START_TOMORROW, false)
             isFilterStartFuture.value = prefs.getBoolean(PREFS_FILTER_START_FUTURE, false)
             isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
+            isFilterNoStartDateSet.value = prefs.getBoolean(PREFS_FILTER_NO_START_DATE_SET, false)
+            isFilterNoDueDateSet.value = prefs.getBoolean(PREFS_FILTER_NO_DUE_DATE_SET, false)
+            isFilterNoCompletedDateSet.value = prefs.getBoolean(PREFS_FILTER_NO_COMPLETED_DATE_SET, false)
             isFilterNoCategorySet.value = prefs.getBoolean(PREFS_FILTER_NO_CATEGORY_SET, false)
             isFilterNoResourceSet.value = prefs.getBoolean(PREFS_FILTER_NO_RESOURCE_SET, false)
 
@@ -191,6 +200,9 @@ class ListSettings {
             isFilterStartTomorrow.value = listWidgetConfig.isFilterStartTomorrow
             isFilterStartFuture.value = listWidgetConfig.isFilterStartFuture
             isFilterNoDatesSet.value = listWidgetConfig.isFilterNoDatesSet
+            isFilterNoStartDateSet.value = listWidgetConfig.isFilterNoStartDateSet
+            isFilterNoDueDateSet.value = listWidgetConfig.isFilterNoDueDateSet
+            isFilterNoCompletedDateSet.value = listWidgetConfig.isFilterNoCompletedDateSet
             isFilterNoCategorySet.value = listWidgetConfig.isFilterNoCategorySet
             isFilterNoResourceSet.value = listWidgetConfig.isFilterNoResourceSet
 
@@ -252,6 +264,9 @@ class ListSettings {
             putBoolean(PREFS_FILTER_START_TOMORROW, isFilterStartTomorrow.value)
             putBoolean(PREFS_FILTER_START_FUTURE, isFilterStartFuture.value)
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
+            putBoolean(PREFS_FILTER_NO_START_DATE_SET, isFilterNoStartDateSet.value)
+            putBoolean(PREFS_FILTER_NO_DUE_DATE_SET, isFilterNoDueDateSet.value)
+            putBoolean(PREFS_FILTER_NO_COMPLETED_DATE_SET, isFilterNoCompletedDateSet.value)
             putBoolean(PREFS_FILTER_NO_CATEGORY_SET, isFilterNoCategorySet.value)
             putBoolean(PREFS_FILTER_NO_RESOURCE_SET, isFilterNoResourceSet.value)
 
@@ -310,6 +325,9 @@ class ListSettings {
         isFilterDueTomorrow.value = false
         isFilterDueFuture.value = false
         isFilterNoDatesSet.value = false
+        isFilterNoStartDateSet.value = false
+        isFilterNoDueDateSet.value = false
+        isFilterNoCompletedDateSet.value = false
         isFilterNoCategorySet.value = false
         isFilterNoResourceSet.value = false
     }

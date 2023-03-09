@@ -267,6 +267,37 @@ class ICalObjectAndroidTest {
         }
     }
 
+
+    @Test
+    fun deleteItemWithChildren_LocalCollection_multiple_parents() = runTest {
+        val parent1 = ICalObject.createJournal().apply { this.collectionId = 1L; this.uid = "parent1" }
+        val parent2 = ICalObject.createJournal().apply { this.collectionId = 1L; this.uid = "parent2" }
+        withContext(Dispatchers.IO) {
+            val idParent1 = database.insertICalObject(parent1)
+            database.insertICalObject(parent2)
+            val idChild = database.insertICalObject(
+                ICalObject.createJournal().apply { this.collectionId = 1L })
+
+            database.insertRelatedto(Relatedto().apply {
+                icalObjectId = idChild
+                text = parent1.uid
+                reltype = Reltype.PARENT.name
+            })
+            database.insertRelatedto(Relatedto().apply {
+                icalObjectId = idChild
+                text = parent2.uid
+                reltype = Reltype.PARENT.name
+            })
+            assertEquals(2, database.getAllRelatedtoSync().size)
+
+            ICalObject.deleteItemWithChildren(idParent1, database)
+
+            assertEquals(1, database.getAllRelatedtoSync().size)
+            assertNull(database.getSync(idParent1))
+            assertNotNull(database.getSync(idChild))
+        }
+    }
+
     @Test
     fun deleteItemWithChildren_RemoteCollection() = runTest {
         val parent = ICalObject.createJournal().apply { this.collectionId = 2L }
@@ -546,5 +577,22 @@ class ICalObjectAndroidTest {
         val actualParent = database.getICalObjectById(parentId) ?: throw AssertionError("entry not found")
         val retrievedParent = ICalObject.findTopParent(parentId, database) ?: throw AssertionError("retrieved entry null")
         assertEquals(actualParent, retrievedParent)
+    }
+
+    @Test
+    fun findTopParent_Test_entry_links_itself() = runBlocking {
+        val parentId = database.insertICalObject(ICalObject.createTodo().apply { uid = "parent" })
+        database.insertRelatedtoSync(Relatedto(icalObjectId = parentId, reltype =  Reltype.PARENT.name, text = "parent"))
+        assertNull(ICalObject.findTopParent(parentId, database))
+    }
+
+    @Test
+    fun findTopParent_Test_multiple_parents() = runBlocking {
+        database.insertICalObject(ICalObject.createTodo().apply { uid = "parent" })
+        database.insertICalObject(ICalObject.createTodo().apply { uid = "parent2" })
+        val child1Id = database.insertICalObject(ICalObject.createTodo().apply { uid = "child1" })
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent"))
+        database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent2"))
+        assertNull(ICalObject.findTopParent(child1Id, database))
     }
 }

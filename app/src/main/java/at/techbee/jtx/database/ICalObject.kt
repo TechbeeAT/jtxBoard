@@ -581,18 +581,29 @@ data class ICalObject(
          * this function takes a parent [id], the function recursively calls itself and deletes all items and linked children (for local collections)
          * or updates the linked children and marks them as deleted.
          */
-        suspend fun deleteItemWithChildren(id: Long, database: ICalDatabaseDao) {
+        suspend fun deleteItemWithChildren(id: Long, database: ICalDatabaseDao, parentUID: String? = null) {
 
             if (id == 0L)
                 return // do nothing, the item was never saved in DB
 
+            val item = database.getSync(id)?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
             val children = database.getRelatedChildren(id)
             children.forEach { child ->
-                    deleteItemWithChildren(child.id, database)    // call the function again to recursively delete all children, then delete the item
+                    deleteItemWithChildren(child.id, database, item.property.uid)    // call the function again to recursively delete all children, then delete the item
             }
 
-            database.getICalObjectByIdSync(id)?.let { database.deleteRecurringInstances(it.uid) }  // recurring instances are always physically deleted
-            val item = database.getSync(id)?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
+            database.deleteRecurringInstances(item.property.uid)  // recurring instances are always physically deleted
+
+            // if the entry has multiple parents, we only delete the reference, but not the entry itself
+            if((item.relatedto?.filter { it.reltype == Reltype.PARENT.name }?.size?:0) > 1) {
+                item.relatedto?.find { it.text == parentUID && it.reltype == Reltype.PARENT.name }?.let {
+                    database.deleteRelatedto(it)
+                    item.property.makeDirty()
+                    database.update(item.property)
+                    return
+                }
+            }
+
             when {
                 item.property.recurid != null -> {
                     unlinkFromSeries(item.property, database)   // if the current item
@@ -844,9 +855,21 @@ data class ICalObject(
 
             val allRelatedTo = database.getAllRelatedtoSync()
             var topParent = database.getICalObjectById(iCalObjectId)
+
             while(allRelatedTo.any { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}) {
+                if(allRelatedTo.filter { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name }.size > 1) {
+                    Log.w("findTopParent", "Entry has multiple parents, cannot return single parent.")
+                    return null
+                }
+
                 val parentUID = allRelatedTo.find { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}?.text
                 parentUID?.let { uid -> database.getICalObjectFor(uid)?.let { topParent = it } }
+
+                //make sure no endless loop occurs in the error case that an entry links to itself
+                if(allRelatedTo.any { it.icalObjectId == topParent?.id && it.text == topParent?.uid }) {
+                    Log.w("findTopParent", "Entry links to itself, cannot return parent.")
+                    return null
+                }
             }
             return topParent
         }

@@ -27,6 +27,7 @@ Global Strings -->
     <string name="website">"Website"</string>
     <string name="latitude">"Latitude"</string>
     <string name="longitude">"Longitude"</string>
+    <string name="unlink">"Unlink"</string>
     <string name="current_location">"Current location"</string>
     <string name="toolbar_text_add_journal">"Add Journal"</string>
     <string name="toolbar_text_add_note">"Add Note"</string>
@@ -97,6 +98,7 @@ Global Strings -->
     <string name="view_comment_playbutton_content_desc">"Play audio comment"</string>
     <string name="view_reccurrence_note_is_exception">"This item is an exception to a recurring entry."</string>
     <string name="view_feedback_linked_notes">"Feedback / Linked Notes"</string>
+    <string name="view_feedback_linked_parents">"Linked parents"</string>
     <string name="view_add_note">"Add note"</string>
     <string name="view_add_audio_note">"Add audio"</string>
     <string name="view_fab_edit_entry_contentDesc">"Edit entry"</string>
@@ -265,6 +267,7 @@ For more information about the Sync please see:"</string>
     <string name="apply">"Apply"</string>
     <string name="not_available_abbreviation">"n/a"</string>
     <string name="collection">"Collection"</string>
+    <string name="link_to_parent">"Link to parent"</string>
     <string name="toolbar_text_collections">"Collections"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
     <string name="edit_dialog_set_attendee_role">"Set attendee role"</string>
@@ -378,6 +381,9 @@ For more information about the Sync please see:"</string>
     <string name="adinfo_adfree_purchase_date">"Purchased on %1$s"</string>
     <string name="adinfo_adfree_order_id">"Order ID: %1$s"</string>
     <string name="list_no_dates_set">"No dates set"</string>
+    <string name="list_without_start_date">"Without start date"</string>
+    <string name="list_without_due_date">"Without due date"</string>
+    <string name="list_without_completed_date">"Without completed date"</string>
     <string name="filter_order_by">"Order by"</string>
     <string name="filter_asc">"Ascending"</string>
     <string name="filter_desc">"Descending"</string>
@@ -466,6 +472,9 @@ Thank you!"</string>
     <string name="collections_dialog_buypro_info">"Please buy jtx Board Pro to enable editing capabilities for remote collections."</string>
     <string name="list_update_entries_dialog_title">"Update entries"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Attention: Recurring instances must be unlinked from its series before being moved to another collection and will be ignored in this process."</string>
+    <string name="list_update_entries_dialog_new_parent_info">"Choose the parent to which the selected entries should be linked as subtasks/linked notes."</string>
+    <string name="details_link_existing_subentry_dialog_title">"Link sub-entries"</string>
+    <string name="details_link_existing_subentry_dialog_info">"Choose the sub-entries that should be linked."</string>
     <string name="details_app_bar_behaviour">"App bar behaviour"</string>
     <string name="details_show_all_options">"Show all options"</string>
     <string name="details_show_hide_elements">Show/hide elements</string>
@@ -481,6 +490,8 @@ Thank you!"</string>
     <string name="details_go_to_series">"Go to series"</string>
     <string name="details_detach_from_series">"Detach from series"</string>
     <string name="details_detach_all_instances">"Detach all instances"</string>
+    <string name="dialog_unlink_from_parent_title">"Unlink from parent"</string>
+    <string name="dialog_unlink_from_parent_message">"Remove the relation as a sub-entry? The entry will remain as a standalone entry."</string>
     <string name="edit_comment">"Edit comment"</string>
     <string name="edit_subnote_add_helper">"Add a subnote"</string>
     <string name="edit_subtask">"Edit subtask"</string>

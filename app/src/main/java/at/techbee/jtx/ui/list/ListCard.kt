@@ -420,6 +420,7 @@ fun ListCard(
                                 showProgress = settingShowProgressSubtasks,
                                 onProgressChanged = onProgressChanged,
                                 onDeleteClicked = { },   // no edit possible here
+                                onUnlinkClicked = { },
                                 sliderIncrement = progressIncrement,
                                 modifier = Modifier
                                     .padding(start = 8.dp, end = 8.dp)
@@ -456,6 +457,7 @@ fun ListCard(
                                     ),
                                 isEditMode = false, //no editing here
                                 onDeleteClicked = { }, //no editing here
+                                onUnlinkClicked = { }, //no editing here
                             )
                         }
                     }
