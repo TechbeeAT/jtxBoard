@@ -39,9 +39,9 @@ import at.techbee.jtx.ui.theme.Typography
 @Composable
 fun BuyProScreen(
     isPurchased: State<Boolean?>,
-    priceLive: LiveData<String>,
-    purchaseDateLive: LiveData<String>,
-    orderIdLive: LiveData<String>,
+    priceLive: LiveData<String?>,
+    purchaseDateLive: LiveData<String?>,
+    orderIdLive: LiveData<String?>,
     launchBillingFlow: () -> Unit,
     navController: NavHostController,
     modifier: Modifier = Modifier
