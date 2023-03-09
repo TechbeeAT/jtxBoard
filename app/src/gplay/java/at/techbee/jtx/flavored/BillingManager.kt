@@ -12,10 +12,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import at.techbee.jtx.util.DateTimeUtils
 import com.android.billingclient.api.*
 import kotlinx.coroutines.CoroutineScope
@@ -57,14 +54,14 @@ class BillingManager :
 
 
     override lateinit var isProPurchased: LiveData<Boolean>
-    override val proPrice = Transformations.map(proProductDetails) {
-        it?.oneTimePurchaseOfferDetails?.formattedPrice ?: ""
+    override val proPrice = proProductDetails.map {
+        it?.oneTimePurchaseOfferDetails?.formattedPrice
     }
-    override val proPurchaseDate = Transformations.map(proPurchase) {
-        DateTimeUtils.convertLongToFullDateTimeString(it?.purchaseTime, null)
+    override val proPurchaseDate = proPurchase.map {purchase ->
+        purchase?.let { DateTimeUtils.convertLongToFullDateTimeString(it.purchaseTime, null) }
     }
-    override val proOrderId = Transformations.map(proPurchase) {
-        it?.orderId ?: "-"
+    override val proOrderId = proPurchase.map {
+        it?.orderId
     }
 
     private var billingPrefs: SharedPreferences? = null
@@ -105,8 +102,7 @@ class BillingManager :
          * If the user has no subscription or it expired, the item would not be returned in the purchase list.
          * See also https://developer.android.com/google/play/billing/subscriptions#lifecycle
          */
-        isProPurchased =
-            Transformations.map(proPurchase) { purchase ->
+        isProPurchased = proPurchase.map { purchase ->
                 purchase?.purchaseState == Purchase.PurchaseState.PURCHASED
                     || billingPrefs?.getString(PREFS_BILLING_PURCHASE_STATE, null) == Purchase.PurchaseState.PURCHASED.toString()
             }
