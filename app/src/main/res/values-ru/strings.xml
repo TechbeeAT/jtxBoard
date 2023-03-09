@@ -274,7 +274,7 @@ Global Strings -->
     <string name="collections_tasks_num">"Задачи: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Не обнаружены локальные коллекции"</string>
     <string name="collections_local_noremotecollections">"Не обнаружены отдаленно расположенные коллекции"</string>
-    <string name="collections_info">"Коллекции — это скопление записей наподобие папок с файлами. Вы можете создавать локальные коллекции или настраивать внешние коллекции для синхронизации через DAVx⁵, используя меню."</string>
+    <string name="collections_info">"Коллекции — это скопление записей наподобие папок с файлами. Используйте меню, чтобы создать локальную коллекцию или настроить синхронизацию с внешней коллекцией через DAVx⁵."</string>
     <string name="collections_collection_menu">"Меню"</string>
     <string name="collections_dialog_add_local_collection_title">"Меню коллекции"</string>
     <string name="collections_dialog_edit_local_collection_title">"Редактировать локальную коллекцию"</string>
@@ -300,7 +300,7 @@ Global Strings -->
     <string name="edit_validation_errors_start_due_timezone_check">"Выберите часовые пояса для даты начала и даты завершения или отключите часовой пояс."</string>
     <string name="collections_toast_export_ics_success">"Экспорт коллекции успешно завершен."</string>
     <string name="collections_toast_export_ics_error">"Произошла ошибка при экспорте выбранной коллекции."</string>
-    <string name="menu_collections_add_remote">"Добавить внешнюю Коллекцию (DAVx⁵)"</string>
+    <string name="menu_collections_add_remote">"Добавить внешнюю коллекцию (DAVx⁵)"</string>
     <string name="menu_collection_popup_show_in_davx5">"Показать в DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"Экспорт .ics"</string>
     <string name="journal">"Журнал"</string>
@@ -557,6 +557,7 @@ Global Strings -->
     <string name="menu_view_autosave">"Автосохранение"</string>
     <string name="next">"Далее"</string>
     <string name="previous">"Предыдущий"</string>
+    <string name="preview">"Предпросмотр"</string>
     <string name="x_selected">%1$d/%2$d выбрано</string>
     <string name="select_all">Выбрать все</string>
     <string name="select_none">Снять выделение</string>

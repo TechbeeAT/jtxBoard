@@ -15,7 +15,6 @@ import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -61,7 +60,7 @@ class ICalDatabaseDaoTest {
         val preparedEntry = ICalObject.createNote("myTestJournal")
         preparedEntry.id = database.insertICalObject(preparedEntry)
 
-        val retrievedEntry = database.get(preparedEntry.id).getOrAwaitValue()
+        val retrievedEntry = database.getSync(preparedEntry.id)
         assertEquals(retrievedEntry?.property, preparedEntry)
     }
 
@@ -95,7 +94,7 @@ class ICalDatabaseDaoTest {
         val preparedIcalEntity = ICalEntity(preparedICalObject, listOf(preparedComment), listOf(preparedCategory), listOf(preparedAttendee), preparedOrganizer, listOf(preparedRelatedto), listOf(preparedResource), listOf(preparedAttachment), listOf(), listOf())
         preparedIcalEntity.ICalCollection = database.getCollectionByIdSync(1L)
 
-        val retrievedEntry = database.get(preparedICalObject.id).getOrAwaitValue()
+        val retrievedEntry = database.getSync(preparedICalObject.id)
         assertEquals(retrievedEntry, preparedIcalEntity)
     }
 }
