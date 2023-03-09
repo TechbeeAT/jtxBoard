@@ -83,20 +83,20 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             icalEntity = database.get(icalObjectId)
 
-            relatedSubnotes = Transformations.switchMap(icalEntity) {
+            relatedSubnotes = icalEntity.switchMap {
                 it?.property?.uid?.let { parentUid ->
                     database.getIcal4List(ICal4List.getQueryForAllSubnotesForParentUID(parentUid, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
-            relatedSubtasks = Transformations.switchMap(icalEntity) {
+            relatedSubtasks = icalEntity.switchMap {
                 it?.property?.uid?.let { parentUid ->
                     database.getIcal4List(ICal4List.getQueryForAllSubtasksForParentUID(parentUid, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
                 }
             }
-            seriesElement = Transformations.switchMap(icalEntity) {
+            seriesElement = icalEntity.switchMap {
                 database.getSeriesICalObjectIdByUID(it?.property?.uid)
             }
-            seriesInstances = Transformations.switchMap(icalEntity) {
+            seriesInstances = icalEntity.switchMap {
                 database.getSeriesInstancesICalObjectsByUID(it?.property?.uid)
             }
             isChild = database.isChild(icalObjectId)
