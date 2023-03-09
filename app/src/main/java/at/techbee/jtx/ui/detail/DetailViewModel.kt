@@ -59,7 +59,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var allWriteableCollections: LiveData<List<ICalCollection>>
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var selectFromAllList: LiveData<List<ICal4List>> = Transformations.switchMap(selectFromAllListQuery) {
+    var selectFromAllList: LiveData<List<ICal4List>> = selectFromAllListQuery.switchMap {
         database.getIcal4List(it)
     }
 
@@ -103,7 +103,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             }
             relatedSubnotes = icalEntity.switchMap {
                 it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(ICal4List.getQueryForAllSubnotesForParentUID(parentUid, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))            seriesElement = icalEntity.switchMap {
+                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Component.VJOURNAL, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
+                }
+            }
+            seriesElement = icalEntity.switchMap {
                 database.getSeriesICalObjectIdByUID(it?.property?.uid)
             }
             seriesInstances = icalEntity.switchMap {
