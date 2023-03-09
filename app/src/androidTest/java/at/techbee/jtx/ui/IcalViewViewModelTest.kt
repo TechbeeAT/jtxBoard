@@ -8,24 +8,6 @@
 
 package at.techbee.jtx.ui
 
-import android.app.Application
-import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.SmallTest
-import androidx.test.platform.app.InstrumentationRegistry
-import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.ICalDatabaseDao
-import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.getOrAwaitValue
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
-import org.junit.*
-import org.junit.Assert.*
-import org.junit.runner.RunWith
-
 /*
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
