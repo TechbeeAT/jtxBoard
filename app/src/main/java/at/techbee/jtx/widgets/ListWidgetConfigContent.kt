@@ -219,9 +219,6 @@ fun ListWidgetConfigContent(
                                     isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value
                                     isFilterStartFuture = listSettings.isFilterStartFuture.value
                                     isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value
-                                    isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value
-                                    isFilterNoDueDateSet = listSettings.isFilterNoDueDateSet.value
-                                    isFilterNoCompletedDateSet = listSettings.isFilterNoCompletedDateSet.value
                                     isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value
                                     isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value
                                 }
@@ -269,8 +266,8 @@ data class ListWidgetConfig(
     var searchCategories: List<String> = emptyList(),
     var searchResources: List<String> = emptyList(),
     var searchStatus: List<Status> = emptyList(),
-    @Deprecated("Removed, only for legacy widget configs") var searchStatusTodo: List<StatusTodo> = emptyList(),
-    @Deprecated("Removed, only for legacy widget configs") var searchStatusJournal: List<StatusJournal> = emptyList(),
+    var searchStatusTodo: List<StatusTodo> = emptyList(),   // TODO: remove
+    var searchStatusJournal: List<StatusJournal> = emptyList(),   // TODO: remove
     var searchClassification: List<Classification> = emptyList(),
     var searchCollection: List<String> = emptyList(),
     var searchAccount: List<String> = emptyList(),
@@ -293,11 +290,8 @@ data class ListWidgetConfig(
     var isFilterStartTomorrow: Boolean = false,
     var isFilterStartFuture: Boolean = false,
     var isFilterNoDatesSet: Boolean = false,
-    var isFilterNoStartDateSet: Boolean = false,
-    var isFilterNoDueDateSet: Boolean = false,
-    var isFilterNoCompletedDateSet: Boolean = false,
-    @Deprecated("Removed, only for legacy widget configs") var isFilterNoStatusSet: Boolean = false,
-    @Deprecated("Removed, only for legacy widget configs") var isFilterNoClassificationSet: Boolean = false,
+    var isFilterNoStatusSet: Boolean = false,   // TODO: remove
+    var isFilterNoClassificationSet: Boolean = false,  // TODO: remove
     var isFilterNoCategorySet: Boolean = false,
     var isFilterNoResourceSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!

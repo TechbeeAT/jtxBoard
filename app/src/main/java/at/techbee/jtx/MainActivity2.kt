@@ -10,10 +10,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.Window
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalTextStyle
@@ -29,14 +27,12 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_OSE
-import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.BillingManager
@@ -61,6 +57,7 @@ import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.sync.SyncScreen
+import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidgetReceiver
@@ -68,7 +65,6 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.time.ZonedDateTime
-import kotlin.time.Duration.Companion.minutes
 
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
@@ -120,33 +116,6 @@ class MainActivity2 : AppCompatActivity() {
         createNotificationChannel()   // Register Notification Channel for Reminders
         BillingManager.getInstance().initialise(this)
 
-        /* START Initialise biometric prompt */
-        globalStateHolder.biometricPrompt = BiometricPrompt(this, ContextCompat.getMainExecutor(this),
-            object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                    globalStateHolder.isAuthenticated.value = false
-                    Toast.makeText(applicationContext,
-                        "Authentication error: $errString", Toast.LENGTH_SHORT)
-                        .show()
-                }
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    super.onAuthenticationSucceeded(result)
-                    globalStateHolder.isAuthenticated.value = true
-                    Toast.makeText(applicationContext,
-                        "Authentication succeeded!", Toast.LENGTH_SHORT)
-                        .show()
-                }
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    globalStateHolder.isAuthenticated.value = false
-                    Toast.makeText(applicationContext, "Authentication failed",
-                        Toast.LENGTH_SHORT)
-                        .show()
-                }
-            })
-        /* END Initialise biometric prompt */
-
         setContent {
             val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
             JtxBoardTheme(
@@ -165,7 +134,7 @@ class MainActivity2 : AppCompatActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .semantics {
-                            testTagsAsResourceId = true
+                                   testTagsAsResourceId = true
                         },
                     color = MaterialTheme.colorScheme.background,
                 ) {
@@ -220,19 +189,8 @@ class MainActivity2 : AppCompatActivity() {
                 // Take data also from other sharing intents
                 Intent.ACTION_SEND -> {
                     when {
-                        intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value =
-                            intent.getStringExtra(Intent.EXTRA_TEXT)
-                        intent.type == "text/markdown" -> {
-                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
-                                ?.let { uri ->
-                                    this.contentResolver.openInputStream(uri)?.use { stream ->
-                                        globalStateHolder.icalFromIntentString.value =
-                                            stream.readBytes().decodeToString()
-                                    }
-                                }
-                        }
-                        //intent.type?.startsWith("image/") == true || intent.type == "application/pdf" -> {
-                        else -> {
+                        intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value = intent.getStringExtra(Intent.EXTRA_TEXT)
+                        intent.type?.startsWith("image/") == true || intent.type == "application/pdf" -> {
                             intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
                                 ?.let { uri ->
                                     Attachment.getNewAttachmentFromUri(uri, this)
@@ -240,6 +198,15 @@ class MainActivity2 : AppCompatActivity() {
                                             globalStateHolder.icalFromIntentAttachment.value =
                                                 newAttachment
                                         }
+                                }
+                        }
+                        intent.type == "text/markdown" -> {
+                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
+                                ?.let { uri ->
+                                    this.contentResolver.openInputStream(uri)?.use { stream ->
+                                        globalStateHolder.icalFromIntentString.value =
+                                            stream.readBytes().decodeToString()
+                                    }
                                 }
                         }
                     }
@@ -263,19 +230,11 @@ class MainActivity2 : AppCompatActivity() {
 
         if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI)
             BillingManager.getInstance().initialise(this)  // only Huawei needs to call the update functions again
-
-        // reset authentication state if timeout was set and expired or remove timeout if onResume was done within timeout
-        if(globalStateHolder.isAuthenticated.value && globalStateHolder.authenticationTimeout != null) {
-            if((globalStateHolder.authenticationTimeout!!) < System.currentTimeMillis())
-                globalStateHolder.isAuthenticated.value = false
-            globalStateHolder.authenticationTimeout = null
-        }
     }
 
     override fun onPause() {
         super.onPause()
         ListWidgetReceiver.setOneTimeWork(this)
-        globalStateHolder.authenticationTimeout = System.currentTimeMillis() + (10).minutes.inWholeMilliseconds
     }
 
     private fun createNotificationChannel() {
@@ -305,8 +264,6 @@ fun MainNavHost(
     val navController = rememberNavController()
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
     var showOSEDonationDialog by remember { mutableStateOf(false) }
-
-    globalStateHolder.remoteCollections = ICalDatabase.getInstance(activity).iCalDatabaseDao.getAllRemoteCollectionsLive().observeAsState(emptyList())
 
     NavHost(
         navController = navController,
@@ -339,7 +296,6 @@ fun MainNavHost(
 
             DetailsScreen(
                 navController = navController,
-                globalStateHolder = globalStateHolder,
                 detailViewModel = detailViewModel,
                 editImmediately = editImmediately,
                 returnToLauncher = returnToLauncher,
@@ -379,7 +335,9 @@ fun MainNavHost(
             )
         }
         composable(NavigationDrawerDestination.SYNC.name) {
+            val viewModel: SyncViewModel = viewModel()
             SyncScreen(
+                remoteCollectionsLive = viewModel.remoteCollections,
                 isSyncInProgress = globalStateHolder.isSyncInProgress,
                 navController = navController
             )
@@ -410,8 +368,7 @@ fun MainNavHost(
         composable(NavigationDrawerDestination.SETTINGS.name) {
             SettingsScreen(
                 navController = navController,
-                settingsStateHolder = settingsStateHolder,
-                globalStateHolder = globalStateHolder
+                settingsStateHolder = settingsStateHolder
             )
         }
     }

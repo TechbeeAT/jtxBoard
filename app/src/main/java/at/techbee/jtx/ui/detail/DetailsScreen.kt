@@ -40,7 +40,6 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
@@ -54,7 +53,6 @@ import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
-    globalStateHolder: GlobalStateHolder,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
     returnToLauncher: Boolean = false,
@@ -79,7 +77,6 @@ fun DetailsScreen(
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
-    val parents = detailViewModel.relatedParents.observeAsState(emptyList())
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
     val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
     val seriesElement = detailViewModel.seriesElement.observeAsState(null)
@@ -332,14 +329,12 @@ fun DetailsScreen(
                 iCalEntity = icalEntity,
                 isEditMode = isEditMode,
                 changeState = detailViewModel.changeState,
-                parents = parents,
                 subtasks = subtasks,
                 subnotes = subnotes,
                 isChild = isChild.value,
                 allWriteableCollections = allWriteableCollections.value,
                 allCategories = allCategories.value,
                 allResources = allResources.value,
-                selectFromAllListLive = detailViewModel.selectFromAllList,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
                 seriesInstances = seriesInstances.value,
@@ -349,19 +344,6 @@ fun DetailsScreen(
                 showProgressForSubTasks = detailViewModel.settingsStateHolder.settingShowProgressForSubTasks.value,
                 keepStatusProgressCompletedInSync = detailViewModel.settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 linkProgressToSubtasks = detailViewModel.settingsStateHolder.settingLinkProgressToSubtasks.value,
-                setCurrentLocation = if(isEditMode.value
-                        && detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED
-                        && icalEntity.value?.property?.sequence == 0L
-                        && icalEntity.value?.property?.summary == null
-                        && icalEntity.value?.property?.description == null
-                        && icalEntity.value?.attachments?.isEmpty() == true) {
-                            when(icalEntity.value?.property?.getModuleFromString()) {
-                                Module.JOURNAL -> detailViewModel.settingsStateHolder.settingSetDefaultCurrentLocationJournals.value
-                                Module.NOTE -> detailViewModel.settingsStateHolder.settingSetDefaultCurrentLocationNotes.value
-                                Module.TODO -> detailViewModel.settingsStateHolder.settingSetDefaultCurrentLocationTasks.value
-                                else -> false
-                            }
-                    } else false,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                     detailViewModel.save(
@@ -395,9 +377,6 @@ fun DetailsScreen(
                         newText
                     )
                 },
-                onUnlinkSubEntry = { icalObjectId -> detailViewModel.unlinkFromParent(icalObjectId) },
-                onLinkSubEntries = { newSubEntries -> detailViewModel.linkNewSubentries(newSubEntries) },
-                onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText, globalStateHolder.isAuthenticated.value) },
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },

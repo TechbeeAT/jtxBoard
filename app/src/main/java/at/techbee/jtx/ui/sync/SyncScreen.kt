@@ -8,7 +8,7 @@
 
 package at.techbee.jtx.ui.sync
 
-import android.accounts.Account
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
@@ -32,11 +32,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
@@ -48,14 +49,14 @@ import at.techbee.jtx.util.SyncUtil
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SyncScreen(
+    remoteCollectionsLive: LiveData<List<ICalCollection>>,
     isSyncInProgress: State<Boolean>,
     navController: NavHostController
 ) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
-    val remoteCollections by ICalDatabase.getInstance(context).iCalDatabaseDao.getAllRemoteCollectionsLive().observeAsState(emptyList())
-    val isDAVx5available = if (LocalInspectionMode.current) true else SyncUtil.isDAVx5Available(context)
+    val isDAVx5available = if (LocalInspectionMode.current) true else SyncUtil.isDAVx5Available(context.applicationContext as Application)
 
     Scaffold(
         topBar = {
@@ -64,7 +65,7 @@ fun SyncScreen(
                 title = stringResource(id = R.string.navigation_drawer_sync),
                 actions = {
                     if (isDAVx5available) {
-                        IconButton(onClick = { SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet()) }) {
+                        IconButton(onClick = { SyncUtil.syncAllAccounts(context) }) {
                             Icon(Icons.Outlined.Sync, stringResource(id = R.string.sync_now))
                         }
                     }
@@ -76,7 +77,7 @@ fun SyncScreen(
                 drawerState = drawerState,
                 mainContent = {
                     SyncScreenContent(
-                        remoteCollections = remoteCollections,
+                        remoteCollectionsLive = remoteCollectionsLive,
                         isDAVx5available = isDAVx5available,
                         isSyncInProgress = isSyncInProgress,
                         goToCollections = { navController.navigate(NavigationDrawerDestination.COLLECTIONS.name) })
@@ -91,7 +92,7 @@ fun SyncScreen(
 
 @Composable
 fun SyncScreenContent(
-    remoteCollections: List<ICalCollection>,
+    remoteCollectionsLive: LiveData<List<ICalCollection>>,
     isDAVx5available: Boolean,
     isSyncInProgress: State<Boolean>,
     goToCollections: () -> Unit,
@@ -99,6 +100,7 @@ fun SyncScreenContent(
 ) {
 
     val context = LocalContext.current
+    val remoteCollections by remoteCollectionsLive.observeAsState(emptyList())
 
     Box {
 
@@ -298,6 +300,7 @@ fun SyncScreenContent(
 fun SyncScreen_Preview_no_DAVX5() {
     MaterialTheme {
         SyncScreen(
+            remoteCollectionsLive = MutableLiveData(emptyList()),
             isSyncInProgress = remember { mutableStateOf(false) },
             navController = rememberNavController(),
         )
@@ -312,7 +315,7 @@ fun SyncScreenContent_Preview_no_DAVX5() {
         SyncScreenContent(
             isDAVx5available = false,
             isSyncInProgress = remember { mutableStateOf(false) },
-            remoteCollections = emptyList(),
+            remoteCollectionsLive = MutableLiveData(emptyList()),
             goToCollections = { },
         )
     }
@@ -326,7 +329,9 @@ fun SyncScreenContent_Preview_DAVx5_no_collections() {
         SyncScreenContent(
             isDAVx5available = true,
             isSyncInProgress = remember { mutableStateOf(false) },
-            remoteCollections = emptyList(),
+            remoteCollectionsLive = MutableLiveData(
+                emptyList()
+            ),
             goToCollections = { },
         )
     }
@@ -340,11 +345,12 @@ fun SyncScreenContent_Preview_DAVx5_with_collections() {
         SyncScreenContent(
             isDAVx5available = true,
             isSyncInProgress = remember { mutableStateOf(true) },
-            remoteCollections =
+            remoteCollectionsLive = MutableLiveData(
                 listOf(
                     ICalCollection().apply { this.collectionId = 1 },
                     ICalCollection().apply { this.collectionId = 2 }
-                ),
+                )
+            ),
             goToCollections = { },
         )
     }

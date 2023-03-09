@@ -14,7 +14,7 @@ import at.techbee.jtx.util.DateTimeUtils.convertLongToYYYYMMDDString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.getTodayAsLong
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Test
 
 
@@ -79,9 +79,4 @@ class DateTimeUtilsTest {
     // Tests that require the system timezone are currently not possible
     //@Test fun getDateWithoutTime_test_TZ_UTC() = assertEquals(1642550400000, getDateWithoutTime(1642590117816, "UTC"))
     //@Test fun getDateWithoutTime_TZ_Vienna() = assertEquals(1642546800000, getDateWithoutTime(1642590117816, "Europe/Vienna"))
-
-    @Test fun getMinutesSecondsFormatted_seconds_only_single() = assertEquals("00:05", DateTimeUtils.getMinutesSecondsFormatted(5))
-    @Test fun getMinutesSecondsFormatted_seconds_only_double() = assertEquals("00:55", DateTimeUtils.getMinutesSecondsFormatted(55))
-    @Test fun getMinutesSecondsFormatted_minutes_single() = assertEquals("01:15", DateTimeUtils.getMinutesSecondsFormatted(75))
-    @Test fun getMinutesSecondsFormatted_minutes_double() = assertEquals("11:11", DateTimeUtils.getMinutesSecondsFormatted(671))
 }

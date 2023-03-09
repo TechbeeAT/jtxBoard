@@ -43,7 +43,6 @@ fun CollectionCard(
     onCollectionDeleted: (ICalCollection) -> Unit,
     onEntriesMoved: (old: ICalCollection, new: ICalCollection) -> Unit,
     onImportFromICS: (CollectionsView) -> Unit,
-    onImportFromTxt: (CollectionsView) -> Unit,
     onExportAsICS: (CollectionsView) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -214,16 +213,6 @@ fun CollectionCard(
                                     }
                                 )
                             }
-                            if (!collection.readonly) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(id = R.string.menu_collection_popup_import_from_textfile)) },
-                                    leadingIcon = { Icon(Icons.Outlined.Upload, null) },
-                                    onClick = {
-                                        menuExpanded = false
-                                        onImportFromTxt(collection)
-                                    }
-                                )
-                            }
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.menu_collections_popup_move_entries)) },
                                 leadingIcon = { Icon(Icons.Outlined.MoveDown, null) },
@@ -264,7 +253,6 @@ fun CollectionCardPreview() {
             onCollectionDeleted = { },
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
-            onImportFromTxt = { },
             onExportAsICS = { }
         )
     }
@@ -294,7 +282,6 @@ fun CollectionCardPreview2() {
             onCollectionDeleted = { },
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
-            onImportFromTxt = { },
             onExportAsICS = { }
         )
     }
@@ -319,7 +306,6 @@ fun CollectionCardPreview3() {
             onCollectionDeleted = { },
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
-            onImportFromTxt = { },
             onExportAsICS = { }
         )
     }

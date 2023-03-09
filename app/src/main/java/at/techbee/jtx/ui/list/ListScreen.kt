@@ -36,7 +36,6 @@ fun ListScreen(
     listViewModel: ListViewModel,
     navController: NavController,
     filterBottomSheetState: ModalBottomSheetState,
-    isAuthenticated: Boolean
 ) {
     val context = LocalContext.current
     val settingsStateHolder = SettingsStateHolder(context)
@@ -76,7 +75,7 @@ fun ListScreen(
 
     val groupedList = sortedList.groupBy {
         when (listViewModel.listSettings.groupBy.value) {
-            GroupBy.STATUS -> Status.values().find { status ->  status.status == it.status }?.stringResource?.let { stringRes -> stringResource(id = stringRes)}?: it.status?:""
+            GroupBy.STATUS -> Status.values().find { status ->  status.status == it.status }?.stringResource?.let { stringResource(id = it)}?: it.status?:""
             GroupBy.CLASSIFICATION -> Classification.values().find { classif ->  classif.classification == it.classification }?.stringResource?.let { stringResource(id = it)}?: it.classification?:""
             GroupBy.PRIORITY -> {
                 when (it.priority) {
@@ -119,8 +118,8 @@ fun ListScreen(
             ViewMode.LIST -> {
                 ListScreenList(
                     groupedList = groupedList,
-                    subtasksLive = listViewModel.allSubtasks,
-                    subnotesLive = listViewModel.allSubnotes,
+                    subtasksLive = listViewModel.allSubtasksMap,
+                    subnotesLive = listViewModel.allSubnotesMap,
                     selectedEntries = listViewModel.selectedEntries,
                     attachmentsLive = listViewModel.allAttachmentsMap,
                     scrollOnceId = listViewModel.scrollOnceId,
@@ -150,7 +149,7 @@ fun ListScreen(
             ViewMode.GRID -> {
                 ListScreenGrid(
                     list = list,
-                    subtasksLive = listViewModel.allSubtasks,
+                    subtasksLive = listViewModel.allSubtasksMap,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
@@ -164,7 +163,7 @@ fun ListScreen(
             ViewMode.COMPACT -> {
                 ListScreenCompact(
                     groupedList = groupedList,
-                    subtasksLive = listViewModel.allSubtasks,
+                    subtasksLive = listViewModel.allSubtasksMap,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
@@ -180,7 +179,7 @@ fun ListScreen(
                 ListScreenKanban(
                     module = listViewModel.module,
                     list = list,
-                    subtasksLive = listViewModel.allSubtasks,
+                    subtasksLive = listViewModel.allSubtasksMap,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
@@ -210,7 +209,7 @@ fun ListScreen(
                 allCollectionsLive = listViewModel.allCollections,
                 allCategoriesLive = listViewModel.allCategories,
                 allResourcesLive = listViewModel.allResources,
-                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true, isAuthenticated = isAuthenticated) }
+                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) }
             )
         },
         sheetBackgroundColor = MaterialTheme.colorScheme.surface,

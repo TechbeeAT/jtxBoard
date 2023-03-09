@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -47,12 +47,7 @@ fun MapComposable(
     val context = LocalContext.current
     var location by remember { mutableStateOf(initialLocation ?: "") }
     val marker = rememberMarkerState(null, LatLng(initialGeoLat?:0.0, initialGeoLong?:0.0))
-    val locationPermissionState = if(!LocalInspectionMode.current) rememberMultiplePermissionsState(
-        permissions = listOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-    ) else null
+    val coarseLocationPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.ACCESS_COARSE_LOCATION) else null
 
     val uiSettings by remember {
         mutableStateOf(
@@ -83,8 +78,8 @@ fun MapComposable(
 
 
 
-    LaunchedEffect(locationPermissionState) {
-        if (locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
+    LaunchedEffect(coarseLocationPermissionState) {
+        if (coarseLocationPermissionState?.status?.isGranted == true) {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
             fusedLocationClient.lastLocation.addOnSuccessListener { knownLocation: Location? ->
                 knownLocation?.let { lastKnownLocation ->

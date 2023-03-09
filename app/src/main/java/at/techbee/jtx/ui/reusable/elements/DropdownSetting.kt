@@ -1,10 +1,7 @@
 package at.techbee.jtx.ui.reusable.elements
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material3.*
@@ -22,12 +19,14 @@ import at.techbee.jtx.ui.settings.DropdownSettingOption
 @Composable
 fun DropdownSetting(
     setting: DropdownSetting,
-    selected: DropdownSettingOption,
+    preselected: DropdownSettingOption,
     onSelectionChanged: (selection: DropdownSettingOption) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    var expanded by remember { mutableStateOf(false) }
+    var selected by remember { mutableStateOf(preselected) }
+    var expanded by remember { mutableStateOf(false) } // initial value
+
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -75,6 +74,7 @@ fun DropdownSetting(
 
                 DropdownMenuItem(
                     onClick = {
+                        selected = option
                         expanded = false
                         onSelectionChanged(option)
                     },
@@ -99,7 +99,7 @@ fun DropdownSetting_Theme() {
 
         DropdownSetting(
             setting = DropdownSetting.SETTING_THEME,
-            selected = DropdownSetting.SETTING_THEME.options.last(),
+            preselected = DropdownSetting.SETTING_THEME.options.last(),
             onSelectionChanged = { }
         )
     }
@@ -113,7 +113,7 @@ fun DropdownSetting_Auto_Alarm() {
 
         DropdownSetting(
             setting = DropdownSetting.SETTING_AUTO_ALARM,
-            selected = DropdownSetting.SETTING_AUTO_ALARM.options.last(),
+            preselected = DropdownSetting.SETTING_AUTO_ALARM.options.last(),
             onSelectionChanged = { }
         )
     }
@@ -127,7 +127,7 @@ fun DropdownSetting_AudioTheme() {
 
         DropdownSetting(
             setting = DropdownSetting.SETTING_AUDIO_FORMAT,
-            selected = DropdownSetting.SETTING_AUDIO_FORMAT.options.last(),
+            preselected = DropdownSetting.SETTING_AUDIO_FORMAT.options.last(),
             onSelectionChanged = { }
         )
     }

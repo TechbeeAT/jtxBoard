@@ -41,8 +41,6 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.Reltype
-import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.settings.DropdownSettingOption
@@ -53,8 +51,8 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @Composable
 fun ListScreenList(
     groupedList: Map<String, List<ICal4List>>,
-    subtasksLive: LiveData<List<ICal4ListRel>>,
-    subnotesLive: LiveData<List<ICal4ListRel>>,
+    subtasksLive: LiveData<Map<String?, List<ICal4List>>>,
+    subnotesLive: LiveData<Map<String?, List<ICal4List>>>,
     selectedEntries: SnapshotStateList<Long>,
     attachmentsLive: LiveData<Map<Long, List<Attachment>>>,
     scrollOnceId: MutableLiveData<Long?>,
@@ -72,8 +70,8 @@ fun ListScreenList(
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
-    val subtasks by subtasksLive.observeAsState(emptyList())
-    val subnotes by subnotesLive.observeAsState(emptyList())
+    val subtasks by subtasksLive.observeAsState(emptyMap())
+    val subnotes by subnotesLive.observeAsState(emptyMap())
     val attachments by attachmentsLive.observeAsState(emptyMap())
 
     val scrollId by scrollOnceId.observeAsState(null)
@@ -129,12 +127,12 @@ fun ListScreenList(
                     key = { item -> item.id }
                 ) { iCalObject ->
 
-                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCalObject.uid } }.map { it.iCal4List }
+                    var currentSubtasks = subtasks[iCalObject.uid]
                     if (listSettings.isExcludeDone.value)   // exclude done if applicable
                         currentSubtasks =
-                            currentSubtasks.filter { subtask -> subtask.percent != 100 }
+                            currentSubtasks?.filter { subtask -> subtask.percent != 100 }
 
-                    val currentSubnotes = subnotes.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCalObject.uid } }.map { it.iCal4List }
+                    val currentSubnotes = subnotes[iCalObject.uid]
                     val currentAttachments = attachments[iCalObject.id]
 
                     if (scrollId != null) {
@@ -150,8 +148,8 @@ fun ListScreenList(
 
                     ListCard(
                         iCalObject,
-                        currentSubtasks,
-                        currentSubnotes,
+                        currentSubtasks ?: emptyList(),
+                        currentSubnotes ?: emptyList(),
                         selected = selectedEntries,
                         attachments = currentAttachments ?: emptyList(),
                         isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
@@ -160,7 +158,7 @@ fun ListScreenList(
                         settingShowProgressMaintasks = settingShowProgressMaintasks.value,
                         settingShowProgressSubtasks = settingShowProgressSubtasks.value,
                         progressIncrement = settingProgressIncrement.value.getProgressStepKeyAsInt(),
-                        progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                        progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks?.isNotEmpty() == true,
                         onClick = onClick,
                         onLongClick = onLongClick,
                         onProgressChanged = onProgressChanged,
@@ -228,8 +226,8 @@ fun ListScreenList_TODO() {
         }
         ListScreenList(
             groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
-            subtasksLive = MutableLiveData(emptyList()),
-            subnotesLive = MutableLiveData(emptyList()),
+            subtasksLive = MutableLiveData(emptyMap()),
+            subnotesLive = MutableLiveData(emptyMap()),
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
@@ -294,8 +292,8 @@ fun ListScreenList_JOURNAL() {
         }
         ListScreenList(
             groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
-            subtasksLive = MutableLiveData(emptyList()),
-            subnotesLive = MutableLiveData(emptyList()),
+            subtasksLive = MutableLiveData(emptyMap()),
+            subnotesLive = MutableLiveData(emptyMap()),
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
