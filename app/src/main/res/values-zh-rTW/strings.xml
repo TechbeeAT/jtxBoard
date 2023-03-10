@@ -238,6 +238,7 @@ Global Strings -->
     <string name="edit_dialog_set_attendee_role">"设置参与者角色"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"日期/時間"</string>
+    <string name="alarms_duration">"期間"</string>
     <string name="alarms_onstart">"开始"</string>
     <string name="alarms_ondue">"到期"</string>
     <string name="alarms_custom">"自定义"</string>
