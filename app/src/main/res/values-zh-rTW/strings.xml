@@ -231,7 +231,7 @@ Global Strings -->
     <string name="permission_read_contacts_denied">"已禁止聯絡人權限"</string>
     <string name="permission_record_audio_granted">"已授予錄音權限"</string>
     <string name="permission_record_audio_denied">"已禁止錄音權限"</string>
-    <string name="intent_dialog_title">"是否将内容添加到日志、笔记或任务？"</string>
+    <string name="intent_dialog_title">"是否將內容添加到日誌、筆記或任務？"</string>
     <string name="add">"新增"</string>
     <string name="edit">"編輯"</string>
     <string name="reset">"重設"</string>
@@ -257,9 +257,9 @@ Global Strings -->
     <string name="collections_local_collections">"本地合集"</string>
     <string name="collections_remote_collections">"远程合集"</string>
     <!-- Fuzzy -->
-    <string name="collections_journals_num">"日志：%1$s"</string>
+    <string name="collections_journals_num">"日誌：%1$s"</string>
     <!-- Fuzzy -->
-    <string name="collections_notes_num">"笔记：%1$s"</string>
+    <string name="collections_notes_num">"筆記：%1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_tasks_num">"任务：%1$s"</string>
     <string name="collections_local_nolocalcollections">"未发现本地合集"</string>
