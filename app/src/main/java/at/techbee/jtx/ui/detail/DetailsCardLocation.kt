@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.detail
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.location.Criteria
@@ -45,6 +46,7 @@ import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import com.google.accompanist.permissions.*
 import java.net.URLEncoder
+import java.util.*
 
 
 @SuppressLint("MissingPermission")
@@ -287,17 +289,16 @@ fun DetailsCardLocation(
                     Text(ICalObject.getLatLongString(geoLat, geoLong) ?: "")
 
                     IconButton(onClick = {
+                        val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat)  + ","  + "%.5f".format(Locale.ENGLISH, geoLong)
                         val geoUri = if (location.isNotEmpty())
-                            Uri.parse("geo:0,0?q=$geoLat,$geoLong(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
+                            Uri.parse("geo:0,0?q=$latLngParam(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
                         else
-                            Uri.parse("geo:$geoLat,$geoLong")
+                            Uri.parse("geo:$latLngParam")
 
-                        val geoIntent = Intent(Intent.ACTION_VIEW).apply {
-                            data = geoUri
-                        }
-                        if (geoIntent.resolveActivity(context.packageManager) != null) {
+                        val geoIntent = Intent(Intent.ACTION_VIEW, geoUri)
+                        try {
                             context.startActivity(geoIntent)
-                        } else {
+                        } catch (e: ActivityNotFoundException) {
                             context.startActivity(Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, BuildConfig.FLAVOR)))
                         }
                     }) {
