@@ -13,7 +13,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.SubdirectoryArrowRight
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -40,6 +40,7 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsCardParents(
+    module: Module,
     parents: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
     sliderIncrement: Int,
@@ -51,7 +52,7 @@ fun DetailsCardParents(
     if(isEditMode.value)
         return
 
-    val headline = stringResource(id = R.string.view_feedback_linked_parents)
+    val headline = stringResource(id = if(module == Module.TODO) R.string.view_subtask_of else R.string.view_linked_note_of)
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -66,7 +67,7 @@ fun DetailsCardParents(
                 modifier = Modifier.fillMaxWidth(), 
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HeadlineWithIcon(icon = Icons.Outlined.ExpandLess, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
+                HeadlineWithIcon(icon = Icons.Outlined.SubdirectoryArrowRight, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
             }
 
             AnimatedVisibility(parents.isNotEmpty()) {
@@ -129,6 +130,7 @@ fun DetailsCardParents_Preview_Journal() {
     MaterialTheme {
 
         DetailsCardParents(
+            module = Module.JOURNAL,
             parents = listOf(
                         ICal4List.getSample().apply {
                             this.component = Component.VJOURNAL.name
@@ -151,6 +153,7 @@ fun DetailsCardParents_Preview_Journal() {
 fun DetailsCardParents_Preview_tasksedit() {
     MaterialTheme {
         DetailsCardParents(
+            module = Module.TODO,
             parents = listOf(
                 ICal4List.getSample().apply {
                     this.component = Component.VTODO.name

@@ -609,6 +609,7 @@ fun DetailScreenContent(
 
             AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
                 DetailsCardParents(
+                    module = icalObject.value.getModuleFromString(),
                     parents = parents.value,
                     isEditMode = isEditMode,
                     sliderIncrement = sliderIncrement,
