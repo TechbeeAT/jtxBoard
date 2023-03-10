@@ -792,11 +792,10 @@ data class ICalObject(
         /**
          * @param geoLat  Latitude as Double
          * @param geoLong  Longitude as Double
-         * @return A textual representation of the Latitude and Logitude e.g. (1.234, 5.677)
+         * @return A textual representation of the Latitude and Logitude e.g. (1.23400, 5.67700)
          */
         fun getLatLongString(geoLat: Double?, geoLong: Double?): String? {
             return if(geoLat != null && geoLong != null) {
-                //"(${String.format("%.5f", geoLat)}, ${String.format("%.5f", geoLong)})"
                 "(" + "%.5f".format(Locale.ENGLISH, geoLat)  + ","  + "%.5f".format(Locale.ENGLISH, geoLong) + ")"
             } else {
                null
