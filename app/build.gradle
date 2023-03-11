@@ -15,7 +15,7 @@ apply plugin: "kotlinx-serialization"
 apply plugin: "com.huawei.agconnect"
 
 
-def localPropertiesFile = rootProject.file('local.properties')
+def localPropertiesFile = rootProject.file('local.properties' ?: file("/dev/null"))
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(localPropertiesFile))
 
