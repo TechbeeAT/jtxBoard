@@ -216,35 +216,7 @@ class MainActivity2 : AppCompatActivity() {
                     if (id > 0L)
                         globalStateHolder.icalObject2Open.value = id
                 }
-
                 // Take data also from other sharing intents
-                Intent.ACTION_SEND -> {
-                    when {
-                        intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value =
-                            intent.getStringExtra(Intent.EXTRA_TEXT)
-                        intent.type == "text/markdown" -> {
-                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
-                                ?.let { uri ->
-                                    this.contentResolver.openInputStream(uri)?.use { stream ->
-                                        globalStateHolder.icalFromIntentString.value =
-                                            stream.readBytes().decodeToString()
-                                    }
-                                }
-                        }
-                        //intent.type?.startsWith("image/") == true || intent.type == "application/pdf" -> {
-                        else -> {
-                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)
-                                ?.let { uri ->
-                                    Attachment.getNewAttachmentFromUri(uri, this)
-                                        ?.let { newAttachment ->
-                                            globalStateHolder.icalFromIntentAttachment.value =
-                                                newAttachment
-                                        }
-                                }
-                        }
-                    }
-                }
-
                 Intent.ACTION_VIEW -> {
                     if (intent.type == "text/calendar") {
                         val ics = intent.data ?: return
@@ -252,6 +224,24 @@ class MainActivity2 : AppCompatActivity() {
                             globalStateHolder.icalString2Import.value =
                                 stream.readBytes().decodeToString()
                         }
+                    }
+                }
+                Intent.ACTION_SEND -> {
+                    when (intent.type) {
+                        "text/plain" -> globalStateHolder.icalFromIntentString.value = intent.getStringExtra(Intent.EXTRA_TEXT)
+                        "text/markdown" -> intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)?.let { uri ->
+                                this.contentResolver.openInputStream(uri)?.use { stream ->
+                                    globalStateHolder.icalFromIntentString.value =
+                                        stream.readBytes().decodeToString()
+                                }
+                            }
+                        else -> intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)?.let { uri ->
+                            Attachment.getNewAttachmentFromUri(uri, this)
+                                ?.let { newAttachment ->
+                                    globalStateHolder.icalFromIntentAttachment.value =
+                                        newAttachment
+                                }
+                            }
                     }
                 }
             }
@@ -335,7 +325,7 @@ fun MainNavHost(
              */
 
             val detailViewModel: DetailViewModel = viewModel()
-            detailViewModel.load(icalObjectId)
+            detailViewModel.load(icalObjectId, globalStateHolder.isAuthenticated.value)
 
             DetailsScreen(
                 navController = navController,

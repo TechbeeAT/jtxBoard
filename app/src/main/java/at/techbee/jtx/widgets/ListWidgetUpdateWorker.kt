@@ -156,8 +156,19 @@ class ListWidgetUpdateWorker(
 
                 val entries = if(allEntries.isEmpty()) emptyList() else if (allEntries.size > ListWidget.MAX_ENTRIES) allEntries.subList(0,ListWidget.MAX_ENTRIES) else allEntries
 
-                val subtasksQuery = ICal4List.getQueryForAllSubEntriesOfParents(Component.VTODO, entries.map { it.uid ?:"" }, listWidgetConfig?.subtasksOrderBy ?: OrderBy.CREATED, listWidgetConfig?.subtasksSortOrder ?: SortOrder.ASC)
-                val subnotesQuery = ICal4List.getQueryForAllSubEntriesOfParents(Component.VJOURNAL, entries.map { it.uid ?:"" }, listWidgetConfig?.subnotesOrderBy ?: OrderBy.CREATED, listWidgetConfig?.subnotesSortOrder ?: SortOrder.ASC)
+                val subtasksQuery = ICal4List.getQueryForAllSubEntriesOfParents(
+                    component = Component.VTODO,
+                    hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
+                    parents = entries.map { it.uid ?:"" },
+                    orderBy = listWidgetConfig?.subtasksOrderBy ?: OrderBy.CREATED,
+                    sortOrder = listWidgetConfig?.subtasksSortOrder ?: SortOrder.ASC
+                )
+                val subnotesQuery = ICal4List.getQueryForAllSubEntriesOfParents(
+                    component = Component.VJOURNAL,
+                    hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
+                    parents = entries.map { it.uid ?:"" },
+                    orderBy = listWidgetConfig?.subnotesOrderBy ?: OrderBy.CREATED,
+                    sortOrder = listWidgetConfig?.subnotesSortOrder ?: SortOrder.ASC)
                 val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subtasksQuery)
                 val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subnotesQuery)
 
