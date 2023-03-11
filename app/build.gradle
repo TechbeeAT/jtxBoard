@@ -48,15 +48,19 @@ android {
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         resConfigs locales
 
-        buildConfigField "String", "CROWDIN_API_KEY", "\"" + System.getenv("CROWDIN_API_KEY") + "\""
+        def localPropertiesFile = rootProject.file('local.properties')
+        def localProperties = new Properties()
+        localProperties.load(new FileInputStream(localPropertiesFile))
+
+        buildConfigField "String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: localProperties.getProperty("crowdinApiKey") ) + "\""
     }
 
     signingConfigs {
         jtx {
-            storeFile file(System.getenv("ANDROID_KEYSTORE") ?: "/dev/null")
-            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
-            keyAlias System.getenv("ANDROID_KEY_ALIAS")
-            keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+            storeFile file(System.getenv("ANDROID_KEYSTORE") ?: localProperties.getProperty("keystoreFile") ?: "/dev/null")
+            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD" ?: localProperties.getProperty("keystoreKeyPassword"))
+            keyAlias System.getenv("ANDROID_KEY_ALIAS" ?: localProperties.getProperty("keystoreKeyAlias"))
+            keyPassword System.getenv("ANDROID_KEY_PASSWORD" ?: localProperties.getProperty("keystoreKeyPassword"))
         }
     }
 
