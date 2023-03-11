@@ -15,6 +15,12 @@ apply plugin: "kotlinx-serialization"
 apply plugin: "com.huawei.agconnect"
 
 
+def localPropertiesFile = rootProject.file('local.properties')
+def localProperties = new Properties()
+if(localPropertiesFile.exists()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
+
 android {
     namespace 'at.techbee.jtx'
     compileSdkVersion 33
@@ -48,15 +54,16 @@ android {
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         resConfigs locales
 
-        buildConfigField "String", "CROWDIN_API_KEY", "\"" + System.getenv("CROWDIN_API_KEY") + "\""
+        buildConfigField "String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: localProperties["crowdin.apikey"] ) + "\""
+        resValue "string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: localProperties["google.geo.apikey"] ?: ""
     }
 
     signingConfigs {
         jtx {
-            storeFile file(System.getenv("ANDROID_KEYSTORE") ?: "/dev/null")
-            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
-            keyAlias System.getenv("ANDROID_KEY_ALIAS")
-            keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+            storeFile file(System.getenv("ANDROID_KEYSTORE") ?: localProperties["keystore.file"] ?: file("/dev/null"))
+            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: localProperties["keystore.password"]
+            keyAlias System.getenv("ANDROID_KEY_ALIAS") ?: localProperties["keystore.key.alias"]
+            keyPassword System.getenv("ANDROID_KEY_PASSWORD") ?: localProperties["keystore.key.password"]
         }
     }
 
