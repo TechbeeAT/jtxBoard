@@ -436,8 +436,23 @@ data class ICal4List(
          * @param orderBy
          * @param sortOrder
          */
-        fun getQueryForAllSubEntries(component: Component, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
-            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+        fun getQueryForAllSubEntries(component: Component,
+                                     hideBiometricProtected: List<Classification>,
+                                     orderBy: OrderBy,
+                                     sortOrder: SortOrder
+        ): SimpleSQLiteQuery = SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* " +
+                    "from $VIEW_NAME_ICAL4LIST " +
+                    "INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID " +
+                    "WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' " +
+                    if(hideBiometricProtected.isNotEmpty()) {
+                        if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
+                            "AND ($COLUMN_CLASSIFICATION IS NOT NULL NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                        } else {
+                            "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                        }
+                    } else
+                        ""
+                    + "ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
 
         /**
          * Returns all sub-entries
@@ -446,8 +461,28 @@ data class ICal4List(
          * @param orderBy
          * @param sortOrder
          */
-        fun getQueryForAllSubEntriesOfParents(component: Component, parents: List<String>, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
-            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (${parents.joinToString(separator = ",", transform = { "'$it'" })}) ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+        fun getQueryForAllSubEntriesOfParents(
+            component: Component,
+            hideBiometricProtected: List<Classification>,
+            parents: List<String>,
+            orderBy: OrderBy,
+            sortOrder: SortOrder
+        ): SimpleSQLiteQuery =
+            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* " +
+                    "from $VIEW_NAME_ICAL4LIST " +
+                    "INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID " +
+                    "WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' " +
+                    "AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' " +
+                    "AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (${parents.joinToString(separator = ",", transform = { "'$it'" })}) " +
+                    if(hideBiometricProtected.isNotEmpty()) {
+                        if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
+                            "AND ($COLUMN_CLASSIFICATION IS NOT NULL NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                        } else {
+                            "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                        }
+                    } else
+                        ""
+                    + "ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
 
         /**
          * Returns all subnotes/subjournals of a given entry by its UID
@@ -456,8 +491,27 @@ data class ICal4List(
          * @param orderBy
          * @param sortOrder
          */
-        fun getQueryForAllSubentriesForParentUID(parentUid: String, component: Component, orderBy: OrderBy, sortOrder: SortOrder): SimpleSQLiteQuery =
-            SimpleSQLiteQuery("SELECT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON ${TABLE_NAME_RELATEDTO}.${COLUMN_RELATEDTO_ICALOBJECT_ID} = ${VIEW_NAME_ICAL4LIST}.${COLUMN_ID} WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT = '$parentUid' AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $COLUMN_COMPONENT = '${component.name}' ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+        fun getQueryForAllSubentriesForParentUID(
+            parentUid: String,
+            hideBiometricProtected: List<Classification>,
+            component: Component,
+            orderBy: OrderBy,
+            sortOrder: SortOrder
+        ): SimpleSQLiteQuery = SimpleSQLiteQuery("SELECT $VIEW_NAME_ICAL4LIST.* " +
+                "from $VIEW_NAME_ICAL4LIST " +
+                "INNER JOIN $TABLE_NAME_RELATEDTO ON ${TABLE_NAME_RELATEDTO}.${COLUMN_RELATEDTO_ICALOBJECT_ID} = ${VIEW_NAME_ICAL4LIST}.${COLUMN_ID} " +
+                "WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT = '$parentUid' " +
+                "AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT' " +
+                "AND $COLUMN_COMPONENT = '${component.name}' " +
+                if(hideBiometricProtected.isNotEmpty()) {
+                    if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
+                        "AND ($COLUMN_CLASSIFICATION IS NOT NULL NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                    } else {
+                        "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                    }
+                } else
+                    ""
+                + "ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
 
     }
 

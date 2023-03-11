@@ -817,6 +817,6 @@ class ICalObjectTest {
         assertNull(ICalObject.getMapLink(null, null, MainActivity2.BUILD_FLAVOR_OSE))
     }
 
-    //@Test fun getLatLongString1() = assertEquals("(1.11100, 2.22200)", ICalObject.getLatLongString(1.111, 2.222))
+    @Test fun getLatLongString1() = assertEquals("(1.11100,12345.12312)", ICalObject.getLatLongString(1.111, 12345.123123123))
     @Test fun getLatLongString_null() = assertNull(ICalObject.getLatLongString(null, 2.222))
 }

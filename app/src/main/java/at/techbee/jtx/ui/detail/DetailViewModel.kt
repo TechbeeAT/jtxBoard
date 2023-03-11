@@ -84,7 +84,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun load(icalObjectId: Long) {
+    fun load(icalObjectId: Long, isAuthenticated: Boolean) {
         changeState.value = DetailChangeState.LOADING
         viewModelScope.launch {
             icalEntity = database.get(icalObjectId)
@@ -96,12 +96,28 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             }
             relatedSubtasks = icalEntity.switchMap {
                 it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Component.VTODO, detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC ))
+                    database.getIcal4List(
+                        ICal4List.getQueryForAllSubentriesForParentUID(
+                            parentUid = parentUid,
+                            component = Component.VTODO,
+                            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
+                            orderBy = detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED,
+                            sortOrder = detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC
+                        )
+                    )
                 }
             }
             relatedSubnotes = icalEntity.switchMap {
                 it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(ICal4List.getQueryForAllSubentriesForParentUID(parentUid, Component.VJOURNAL, detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED, detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC ))
+                    database.getIcal4List(
+                        ICal4List.getQueryForAllSubentriesForParentUID(
+                            parentUid = parentUid,
+                            component = Component.VJOURNAL,
+                            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
+                            orderBy = detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED,
+                            sortOrder = detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC
+                        )
+                    )
                 }
             }
             seriesElement = icalEntity.switchMap { database.getSeriesICalObjectIdByUID(it?.property?.uid) }

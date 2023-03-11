@@ -144,12 +144,26 @@ open class ListViewModel(application: Application, val module: Module) : Android
             searchText = listSettings.searchText.value,
             flatView = listSettings.flatView.value,
             searchSettingShowOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value,
-            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
+            hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application)
         )
         listQuery.postValue(query)
 
-        allSubtasksQuery.postValue(ICal4List.getQueryForAllSubEntries(Component.VTODO, listSettings.subtasksOrderBy.value, listSettings.subtasksSortOrder.value))
-        allSubnotesQuery.postValue(ICal4List.getQueryForAllSubEntries(Component.VJOURNAL, listSettings.subnotesOrderBy.value, listSettings.subnotesSortOrder.value))
+        allSubtasksQuery.postValue(
+            ICal4List.getQueryForAllSubEntries(
+                component = Component.VTODO,
+                hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application),
+                orderBy = listSettings.subtasksOrderBy.value,
+                sortOrder = listSettings.subtasksSortOrder.value
+            )
+        )
+        allSubnotesQuery.postValue(
+            ICal4List.getQueryForAllSubEntries(
+                component = Component.VJOURNAL,
+                hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application),
+                orderBy = listSettings.subnotesOrderBy.value,
+                sortOrder = listSettings.subnotesSortOrder.value
+            )
+        )
         if(saveListSettings)
             listSettings.saveToPrefs(prefs)
     }

@@ -39,13 +39,13 @@ import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
-import net.fortuna.ical4j.model.property.DtStart
-import java.net.URLDecoder
 import net.fortuna.ical4j.model.Period
 import net.fortuna.ical4j.model.component.VJournal
 import net.fortuna.ical4j.model.component.VToDo
 import net.fortuna.ical4j.model.parameter.*
 import net.fortuna.ical4j.model.property.*
+import net.fortuna.ical4j.model.property.DtStart
+import java.net.URLDecoder
 import java.text.ParseException
 import java.time.*
 import java.time.format.TextStyle
@@ -792,11 +792,11 @@ data class ICalObject(
         /**
          * @param geoLat  Latitude as Double
          * @param geoLong  Longitude as Double
-         * @return A textual representation of the Latitude and Logitude e.g. (1.234, 5.677)
+         * @return A textual representation of the Latitude and Logitude e.g. (1.23400, 5.67700)
          */
         fun getLatLongString(geoLat: Double?, geoLong: Double?): String? {
             return if(geoLat != null && geoLong != null) {
-                "(${String.format("%.5f", geoLat)}, ${String.format("%.5f", geoLong)})"
+                "(" + "%.5f".format(Locale.ENGLISH, geoLat)  + ","  + "%.5f".format(Locale.ENGLISH, geoLong) + ")"
             } else {
                null
             }
