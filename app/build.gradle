@@ -17,7 +17,9 @@ apply plugin: "com.huawei.agconnect"
 
 def localPropertiesFile = rootProject.file('local.properties')
 def localProperties = new Properties()
-localProperties.load(new FileInputStream(localPropertiesFile))
+if(localPropertiesFile.exists()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
 
 android {
     namespace 'at.techbee.jtx'
