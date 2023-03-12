@@ -529,6 +529,8 @@ Thank you!"</string>
     <string name="dialog_detach_from_series_button">"Detach from series"</string>
     <string name="dialog_davx5_outdated_title">"DAVx⁵ outdated"</string>
     <string name="dialog_davx5_outdated_message">"Your current version of DAVx⁵ is not compatible with this version of jtx Board. Please update DAVx⁵ to 4.3.1 (403010000+) or later! The synchronization is currently suspended."</string>
+    <string name="dialog_save_current_filter_config">"Save current filter config"</string>
+    <string name="dialog_save_current_filter_my_filter">"My filter"</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>
@@ -572,6 +574,7 @@ Thank you!"</string>
     <string name="settings_select_language_system">"System default"</string>
     <string name="settings_details_enable_markdown">"Enable markdown formatting"</string>
     <string name="filter_special">"Special filters"</string>
+    <string name="filter_presets">"Filter presets"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>
@@ -603,6 +606,7 @@ Thank you!"</string>
     <string name="filter_second_order_by">"Then order by"</string>
     <string name="filter_group_by">"Group by"</string>
     <string name="filter_group_by_info">"Grouping is available for list and compact view"</string>
+    <string name="filter_save_as_preset">"Save as preset"</string>
     <string name="menu_list_flat_view">"Flat view"</string>
     <string name="menu_list_flat_view_sub">"Always show child-entries on top level in list"</string>
     <string name="menu_list_limit_recur_entries">"Limit recurring"</string>

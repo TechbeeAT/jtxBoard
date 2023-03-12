@@ -154,8 +154,11 @@ fun ListWidgetConfigContent(
                                 allCollectionsLive = database.getAllCollections(module = selectedModule.value.name),
                                 allCategoriesLive = database.getAllCategoriesAsText(),
                                 allResourcesLive = database.getAllResourcesAsText(),
+                                storedListSettingLive = database.getStoredListSettings(module = selectedModule.value.name),
                                 onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
-                                isWidgetConfig = true
+                                isWidgetConfig = true,
+                                onSaveStoredListSetting = { _, _, ->  /* no saving option in list widget config*/ },
+                                onDeleteStoredListSetting = { /* no option to save/delete list widget config */ }
                             )
                         }
                         tabIndexGroupSort -> {

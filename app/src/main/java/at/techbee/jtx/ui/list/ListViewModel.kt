@@ -24,6 +24,8 @@ import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
+import at.techbee.jtx.database.locals.StoredListSetting
+import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -72,9 +74,10 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     val allCategories = database.getAllCategoriesAsText()
-    val allResources = database.getAllResourcesAsText()   // filter FragmentDialog
+    val allResources = database.getAllResourcesAsText()
     val allWriteableCollections = database.getAllWriteableCollections()
     val allCollections = database.getAllCollections(module = module.name)
+    val storedListSettings = database.getStoredListSettings(module = module.name)
 
 
     var sqlConstraintException = mutableStateOf(false)
@@ -435,6 +438,24 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
             }
+        }
+    }
+
+    fun saveStoredListSettingsData(name: String, config: StoredListSettingData) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.insertStoredListSetting(
+                StoredListSetting(
+                    module = module,
+                    name = name,
+                    storedListSettingData = config
+                )
+            )
+        }
+    }
+
+    fun deleteStoredListSetting(storedListSetting: StoredListSetting) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.deleteStoredListSetting(storedListSetting)
         }
     }
 

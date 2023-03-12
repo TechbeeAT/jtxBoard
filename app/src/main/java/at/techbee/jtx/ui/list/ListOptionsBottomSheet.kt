@@ -28,6 +28,8 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.StoredListSetting
+import at.techbee.jtx.database.locals.StoredListSettingData
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -42,7 +44,10 @@ fun ListOptionsBottomSheet(
     allCollectionsLive: LiveData<List<ICalCollection>>,
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
+    storedListSettingLive: LiveData<List<StoredListSetting>>,
     onListSettingsChanged: () -> Unit,
+    onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
+    onDeleteStoredListSetting: (StoredListSetting) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -96,7 +101,10 @@ fun ListOptionsBottomSheet(
                         allCollectionsLive = allCollectionsLive,
                         allCategoriesLive = allCategoriesLive,
                         allResourcesLive = allResourcesLive,
+                        storedListSettingLive = storedListSettingLive,
                         onListSettingsChanged = onListSettingsChanged,
+                        onSaveStoredListSetting = onSaveStoredListSetting,
+                        onDeleteStoredListSetting = onDeleteStoredListSetting,
                         modifier = modifier
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
@@ -151,7 +159,10 @@ fun ListOptionsBottomSheet_Preview_TODO() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            onListSettingsChanged = { }
+            storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
+            onListSettingsChanged = { },
+            onSaveStoredListSetting = { _, _, -> },
+            onDeleteStoredListSetting = { }
 
         )
     }
@@ -189,7 +200,10 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            onListSettingsChanged = { }
+            storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
+            onListSettingsChanged = { },
+            onSaveStoredListSetting = { _, _, -> },
+            onDeleteStoredListSetting = { }
         )
     }
 }

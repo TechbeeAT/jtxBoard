@@ -210,7 +210,10 @@ fun ListScreen(
                 allCollectionsLive = listViewModel.allCollections,
                 allCategoriesLive = listViewModel.allCategories,
                 allResourcesLive = listViewModel.allResources,
-                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true, isAuthenticated = isAuthenticated) }
+                storedListSettingLive = listViewModel.storedListSettings,
+                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true, isAuthenticated = isAuthenticated) },
+                onSaveStoredListSetting = { name, storedListSettingData -> listViewModel.saveStoredListSettingsData(name, storedListSettingData) },
+                onDeleteStoredListSetting = { storedListSetting -> listViewModel.deleteStoredListSetting(storedListSetting) }
             )
         },
         sheetBackgroundColor = MaterialTheme.colorScheme.surface,
