@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ColorLens
+import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.NavigateBefore
 import androidx.compose.material.icons.outlined.NavigateNext
 import androidx.compose.material3.*
@@ -53,6 +54,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
+import at.techbee.jtx.ui.reusable.elements.ListBadge
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -331,14 +333,11 @@ fun DetailScreenContent(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        iCalEntity.value?.ICalCollection?.color?.let {
-                            Badge(
-                                containerColor = Color(it),
-                                modifier = Modifier.padding(end = 4.dp)
-                            ) {
-                                Text(iCalEntity.value?.ICalCollection?.displayName?.firstOrNull()?.toString() ?: " ")
-                            }
-                        }
+                        ListBadge(
+                            icon = Icons.Outlined.FolderOpen,
+                            iconDesc = stringResource(id = R.string.collection),
+                            containerColor = iCalEntity.value?.ICalCollection?.color?.let {Color(it) } ?: MaterialTheme.colorScheme.primaryContainer
+                        )
                         Text(iCalEntity.value?.ICalCollection?.displayName + iCalEntity.value?.ICalCollection?.accountName?.let { " ($it)" })
                     }
                 }

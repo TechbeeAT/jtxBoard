@@ -104,7 +104,6 @@ fun CollectionCard(
                         ListBadge(
                             icon = Icons.Outlined.FolderOpen,
                             iconDesc = stringResource(id = R.string.collection),
-                            text = collection.displayName?.firstOrNull()?.toString() ?: " ",
                             containerColor = collection.color?.let { Color (it) } ?: MaterialTheme.colorScheme.primaryContainer
                         )
                         Text(

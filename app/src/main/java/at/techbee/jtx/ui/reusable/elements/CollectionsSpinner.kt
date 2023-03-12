@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -13,6 +14,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -47,18 +49,18 @@ fun CollectionsSpinner(
     ) {
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
 
-            selected.color?.let {
-                Badge(
-                    containerColor = Color(it)
-                ) {
-                    Text(selected.displayName?.firstOrNull()?.toString() ?: " ")
-                }
-            }
+            ListBadge(
+                icon = Icons.Outlined.FolderOpen,
+                iconDesc = stringResource(id = R.string.collection),
+                containerColor = selected.color?.let {Color(it) } ?: MaterialTheme.colorScheme.primaryContainer
+            )
             Text(
                 text = selected.displayName + selected.accountName?.let { " ($it)" },
                 modifier = Modifier
