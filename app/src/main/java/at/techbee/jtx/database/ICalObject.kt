@@ -1528,6 +1528,7 @@ data class ICalObject(
     }
 }
 
+
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
  * The possible values differ for Todos and Journals/Notes
  * @param [stringResource] is a reference to the String Resource within JTX
@@ -1576,6 +1577,8 @@ enum class Status(val status: String?, @StringRes val stringResource: Int) : Par
 
     companion object {
 
+        fun getStatusFromString(stringStatus: String?) = Status.values().find { it.status == stringStatus }
+
         fun valuesFor(module: Module): List<Status> {
             return when (module) {
                 Module.JOURNAL, Module.NOTE -> listOf(NO_STATUS, DRAFT, FINAL, CANCELLED)
@@ -1614,6 +1617,7 @@ enum class Classification(val classification: String?, @StringRes val stringReso
     CONFIDENTIAL("CONFIDENTIAL", R.string.classification_confidential);
 
     companion object {
+        fun getClassificationFromString(stringClassification: String?) = Classification.values().find { it.classification == stringClassification }
 
         fun getListFromStringList(stringList: Set<String>?): MutableList<Classification> {
             val list = mutableListOf<Classification>()

@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,11 +31,11 @@ import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsAddOrEditDialog
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsDeleteCollectionDialog
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsMoveCollectionDialog
+import at.techbee.jtx.ui.reusable.elements.ListBadge
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.SyncUtil
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionCard(
     collection: CollectionsView,
@@ -102,13 +101,12 @@ fun CollectionCard(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        collection.color?.let {
-                            Badge(
-                                containerColor = Color(it)
-                            ) {
-                                Text(collection.displayName?.firstOrNull()?.toString() ?: " ")
-                            }
-                        }
+                        ListBadge(
+                            icon = Icons.Outlined.FolderOpen,
+                            iconDesc = stringResource(id = R.string.collection),
+                            text = collection.displayName?.firstOrNull()?.toString() ?: " ",
+                            containerColor = collection.color?.let { Color (it) } ?: MaterialTheme.colorScheme.primaryContainer
+                        )
                         Text(
                             collection.displayName ?: collection.accountName ?: collection.accountType ?: "",
                             style = Typography.bodyMedium,
@@ -123,23 +121,8 @@ fun CollectionCard(
                         )
                     }
 
-
-                    if(collection.ownerDisplayName != null) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Outlined.AccountCircle,
-                                null,
-                                Modifier.size(12.dp)
-                            )
-                            Text(
-                                text = stringResource(R.string.collection_owner_displayname, collection.ownerDisplayName!!),
-                                style = Typography.labelSmall,
-                                fontStyle = FontStyle.Italic
-                            )
-                        }
+                    collection.ownerDisplayName?.let {
+                        ListBadge(icon = Icons.Outlined.AccountCircle, iconDesc = null, text = it)
                     }
 
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -154,33 +137,9 @@ fun CollectionCard(
                         val numTodos = if (collection.supportsVTODO) collection.numTodos?.toString()
                             ?: "0" else notAvailable
 
-                        Badge(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.collections_journals_num, numJournals),
-                                modifier = Modifier.padding(horizontal = 2.dp)
-                            )
-                        }
-                        Badge(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.collections_notes_num, numNotes),
-                                modifier = Modifier.padding(horizontal = 2.dp)
-                            )
-                        }
-                        Badge(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.collections_tasks_num, numTodos),
-                                modifier = Modifier.padding(horizontal = 2.dp)
-                            )
-                        }
+                        ListBadge(text = stringResource(id = R.string.collections_journals_num, numJournals))
+                        ListBadge(text = stringResource(id = R.string.collections_notes_num, numNotes))
+                        ListBadge(text = stringResource(id = R.string.collections_tasks_num, numTodos))
                     }
                 }
 
@@ -321,7 +280,7 @@ fun CollectionCardPreview2() {
         val collection = CollectionsView().apply {
             this.displayName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi sem, sollicitudin tristique leo eget, iaculis pharetra lacus."
             this.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi sem, sollicitudin tristique leo eget, iaculis pharetra lacus. In ex mi, sollicitudin sit amet hendrerit vitae, egestas vitae tortor. Sed dui mi, consequat vel felis sit amet, sagittis mollis urna. Donec varius nec diam et faucibus. Suspendisse potenti. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce eget condimentum justo, at finibus dolor. Quisque posuere erat vel tellus fringilla iaculis. Nullam massa mauris, sodales sit amet scelerisque maximus, interdum in ex."
-            this.color = Color.Cyan.toArgb()
+            this.color = null
             this.numJournals = 0
             this.numNotes = 0
             this.numTodos = 0
