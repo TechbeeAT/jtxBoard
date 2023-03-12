@@ -57,6 +57,9 @@ fun DetailOptionsBottomSheet(
                         selected = enabled,
                         onClick = {
                             detailSettings.detailSetting[setting] = !detailSettings.detailSetting.getOrDefault(setting, false)
+                            if(detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == false && detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == false)
+                                detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] = true
+
                             onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = setting.stringResource)) },

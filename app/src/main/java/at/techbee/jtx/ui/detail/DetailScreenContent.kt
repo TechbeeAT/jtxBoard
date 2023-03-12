@@ -477,72 +477,87 @@ fun DetailScreenContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                OutlinedTextField(
-                    value = summary,
-                    onValueChange = {
-                        summary = it
-                        icalObject.value.summary = it.ifEmpty { null }
-                        icalObject.value = icalObject.value
-                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                    },
-                    label = { Text(stringResource(id = R.string.summary)) },
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                )
+                AnimatedVisibility(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true) {
+                    OutlinedTextField(
+                        value = summary,
+                        onValueChange = {
+                            summary = it
+                            icalObject.value.summary = it.ifEmpty { null }
+                            icalObject.value = icalObject.value
+                            changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                        },
+                        label = { Text(stringResource(id = R.string.summary)) },
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Sentences,
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Default
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    )
+                }
 
-                OutlinedTextField(
-                    value = description,
-                    onValueChange = {
+                AnimatedVisibility(description.text.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == true) {
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = {
 
-                        // START Create bulletpoint if previous line started with a bulletpoint
-                        val enteredCharIndex = StringUtils.indexOfDifference(it.text, description.text)
-                        val enteredCharIsReturn =
-                            enteredCharIndex >= 0
-                                    && it.text.substring(enteredCharIndex).startsWith(System.lineSeparator())
-                                    && it.text.length > description.text.length  // excludes backspace!
+                            // START Create bulletpoint if previous line started with a bulletpoint
+                            val enteredCharIndex = StringUtils.indexOfDifference(it.text, description.text)
+                            val enteredCharIsReturn =
+                                enteredCharIndex >= 0
+                                        && it.text.substring(enteredCharIndex).startsWith(System.lineSeparator())
+                                        && it.text.length > description.text.length  // excludes backspace!
 
-                        val before = it.getTextBeforeSelection(Int.MAX_VALUE)
-                        val after = if (it.selection.start < it.annotatedString.lastIndex) it.annotatedString.subSequence(it.selection.start, it.annotatedString.lastIndex + 1) else AnnotatedString("")
-                        val lines = before.split(System.lineSeparator())
-                        val previous = if (lines.lastIndex > 1) lines[lines.lastIndex - 1] else before
-                        val nextLineStartWith = when {
-                            previous.startsWith("- [ ] ") || previous.startsWith("- [x]") -> "- [ ] "
-                            previous.startsWith("* ") -> "* "
-                            previous.startsWith("- ") -> "- "
-                            else -> null
-                        }
+                            val before = it.getTextBeforeSelection(Int.MAX_VALUE)
+                            val after = if (it.selection.start < it.annotatedString.lastIndex) it.annotatedString.subSequence(
+                                it.selection.start,
+                                it.annotatedString.lastIndex + 1
+                            ) else AnnotatedString("")
+                            val lines = before.split(System.lineSeparator())
+                            val previous = if (lines.lastIndex > 1) lines[lines.lastIndex - 1] else before
+                            val nextLineStartWith = when {
+                                previous.startsWith("- [ ] ") || previous.startsWith("- [x]") -> "- [ ] "
+                                previous.startsWith("* ") -> "* "
+                                previous.startsWith("- ") -> "- "
+                                else -> null
+                            }
 
-                        description = if (description.text != it.text && (nextLineStartWith != null) && enteredCharIsReturn)
-                            TextFieldValue(
-                                annotatedString = before.plus(AnnotatedString(nextLineStartWith)).plus(after),
-                                selection = TextRange(it.selection.start + nextLineStartWith.length)
-                            )
-                        else
-                            it
-                        // END Create bulletpoint if previous line started with a bulletpoint
+                            description = if (description.text != it.text && (nextLineStartWith != null) && enteredCharIsReturn)
+                                TextFieldValue(
+                                    annotatedString = before.plus(AnnotatedString(nextLineStartWith)).plus(after),
+                                    selection = TextRange(it.selection.start + nextLineStartWith.length)
+                                )
+                            else
+                                it
+                            // END Create bulletpoint if previous line started with a bulletpoint
 
-                        icalObject.value.description = it.text.ifEmpty { null }
-                        icalObject.value = icalObject.value
-                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                    },
-                    label = { Text(stringResource(id = R.string.description)) },
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .onFocusChanged { focusState ->
-                            if (
-                                focusState.hasFocus
-                                && markdownState.value == MarkdownState.DISABLED
-                                && detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false
-                            )
-                                markdownState.value = MarkdownState.OBSERVING
-                            else if (!focusState.hasFocus)
-                                markdownState.value = MarkdownState.DISABLED
-                        }
-                )
+                            icalObject.value.description = it.text.ifEmpty { null }
+                            icalObject.value = icalObject.value
+                            changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                        },
+                        label = { Text(stringResource(id = R.string.description)) },
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Sentences,
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Default
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .onFocusChanged { focusState ->
+                                if (
+                                    focusState.hasFocus
+                                    && markdownState.value == MarkdownState.DISABLED
+                                    && detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false
+                                )
+                                    markdownState.value = MarkdownState.OBSERVING
+                                else if (!focusState.hasFocus)
+                                    markdownState.value = MarkdownState.DISABLED
+                            }
+                    )
+                }
             }
         }
 
@@ -777,7 +792,7 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] ?: false || (showAllOptions && icalObject.value.module == Module.TODO.name)))) {
+        AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && icalObject.value.module == Module.TODO.name && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] ?: false || showAllOptions))) {
             DetailsCardAlarms(
                 alarms = alarms,
                 icalObject = icalObject.value,
@@ -785,7 +800,8 @@ fun DetailScreenContent(
                 onAlarmsUpdated = { newAlarms ->
                     alarms.value = newAlarms
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                })
+                }
+            )
         }
 
         AnimatedVisibility(

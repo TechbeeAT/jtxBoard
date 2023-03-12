@@ -27,6 +27,20 @@ enum class DetailSettingsOption(
     val possibleFor: List<Module>
     )
 {
+    ENABLE_SUMMARY(
+        key = "enableSummary",
+        stringResource = R.string.summary,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
+    ENABLE_DESCRIPTION(
+        key = "enableDescription",
+        stringResource = R.string.description,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        default = true,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
     ENABLE_DTSTART(
         key = "enableStarted",
         stringResource = R.string.started,
