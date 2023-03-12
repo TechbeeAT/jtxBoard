@@ -154,7 +154,7 @@ fun ListScreenTabContainer(
     val goToEdit = getActiveViewModel().goToEdit.observeAsState()
     goToEdit.value?.let { icalObjectId ->
         getActiveViewModel().goToEdit.value = null
-        navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = icalObjectId, icalObjectIdList = getActiveViewModel().iCal4List.value?.map { it.id } ?: emptyList(), isEditMode = true))
+        navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = icalObjectId, icalObjectIdList = getActiveViewModel().iCal4ListRel.value?.map { it.iCal4List.id } ?: emptyList(), isEditMode = true))
     }
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -418,7 +418,7 @@ fun ListScreenTabContainer(
                 }) {
                 ListBottomAppBar(
                     module = listViewModel.module,
-                    iCal4ListLive = listViewModel.iCal4List,
+                    iCal4ListRelLive = listViewModel.iCal4ListRel,
                     allowNewEntries = allUsableCollections.any { collection ->
                         ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)

@@ -37,6 +37,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
@@ -60,7 +61,7 @@ fun UpdateEntriesDialog(
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
     allCollectionsLive: LiveData<List<ICalCollection>>,
-    selectFromAllListLive: LiveData<List<ICal4List>>,
+    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     onSelectFromAllListSearchTextUpdated: (String) -> Unit,
     //currentCategories: List<String>,
     //currentResources: List<String>
@@ -335,15 +336,17 @@ fun UpdateEntriesDialog(
                             if(index > selectFromAllListMaxEntriesShown)
                                 return@forEachIndexed
                             ListCardGrid(
-                                iCalObject = entry,
-                                selected = entry == selectFromAllListSelectedEntry,
+                                iCalObject = entry.iCal4List,
+                                categories = entry.categories,
+                                resources = entry.resources,
+                                selected = entry.iCal4List == selectFromAllListSelectedEntry,
                                 progressUpdateDisabled = true,
                                 onProgressChanged = {_, _ -> },
                                 modifier = Modifier.clickable {
-                                    selectFromAllListSelectedEntry = if(entry == selectFromAllListSelectedEntry)
+                                    selectFromAllListSelectedEntry = if(entry.iCal4List == selectFromAllListSelectedEntry)
                                         null
                                     else
-                                        entry
+                                        entry.iCal4List
                                 }
                             )
                         }

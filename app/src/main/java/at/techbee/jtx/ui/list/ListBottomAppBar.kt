@@ -30,7 +30,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.ui.reusable.dialogs.DAVx5IncompatibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.util.DateTimeUtils
@@ -39,7 +39,7 @@ import java.util.*
 @Composable
 fun ListBottomAppBar(
     module: Module,
-    iCal4ListLive: LiveData<List<ICal4List>>,
+    iCal4ListRelLive: LiveData<List<ICal4ListRel>>,
     listSettings: ListSettings,
     showQuickEntry: MutableState<Boolean>,
     multiselectEnabled: MutableState<Boolean>,
@@ -58,7 +58,7 @@ fun ListBottomAppBar(
 
     var showGoToDatePicker by remember { mutableStateOf(false) }
     var showDAVx5IncompatibleDialog by remember { mutableStateOf(false) }
-    val iCal4List by iCal4ListLive.observeAsState(emptyList())
+    val iCal4List by iCal4ListRelLive.observeAsState(emptyList())
 
     val isFilterActive = listSettings.searchCategories.value.isNotEmpty()
                 //|| searchOrganizers.value.isNotEmpty()
@@ -79,7 +79,7 @@ fun ListBottomAppBar(
 
 
     if(showGoToDatePicker) {
-        var dates = iCal4List.map { it.dtstart ?: System.currentTimeMillis() }.toList()
+        var dates = iCal4List.map { it.iCal4List.dtstart ?: System.currentTimeMillis() }.toList()
         if (dates.isEmpty())
             dates = listOf(System.currentTimeMillis())
 
@@ -96,8 +96,8 @@ fun ListBottomAppBar(
             onConfirm = { selectedDate, _ ->
                 selectedDate?.let { selected ->
                     val closestDate = dates.findClosest(selected)
-                    iCal4List.find { it.dtstart == closestDate }?.let { foundEntry ->
-                        onGoToDateSelected(foundEntry.id)
+                    iCal4List.find { it.iCal4List.dtstart == closestDate }?.let { foundEntry ->
+                        onGoToDateSelected(foundEntry.iCal4List.id)
                     }
                 }
             },
@@ -241,11 +241,11 @@ fun ListBottomAppBar(
 
                     TextButton(onClick = {
                         when(selectedEntries.size) {
-                            0 -> selectedEntries.addAll(iCal4List.map { it.id })
+                            0 -> selectedEntries.addAll(iCal4List.map { it.iCal4List.id })
                             iCal4List.size -> selectedEntries.clear()
                             else -> {
                                 selectedEntries.clear()
-                                selectedEntries.addAll(iCal4List.map { it.id })
+                                selectedEntries.addAll(iCal4List.map { it.iCal4List.id })
                             }
                         }
                     }) {
@@ -292,7 +292,7 @@ fun ListBottomAppBar_Preview_Journal() {
 
         ListBottomAppBar(
             module = Module.JOURNAL,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = false,
@@ -322,7 +322,7 @@ fun ListBottomAppBar_Preview_Note() {
 
         ListBottomAppBar(
             module = Module.NOTE,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = false,
             isBiometricsEnabled = false,
@@ -352,7 +352,7 @@ fun ListBottomAppBar_Preview_Todo() {
 
         ListBottomAppBar(
             module = Module.TODO,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
             isDAVx5Incompatible = true,
@@ -383,7 +383,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
 
         ListBottomAppBar(
             module = Module.TODO,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = true,

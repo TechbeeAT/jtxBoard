@@ -46,7 +46,7 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListScreenCompact(
-    groupedList: Map<String, List<ICal4List>>,
+    groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
@@ -105,18 +105,18 @@ fun ListScreenCompact(
             if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
                 items(
                     items = group,
-                    key = { item -> item.id }
+                    key = { item -> item.iCal4List.id }
                 )
-                { iCalObject ->
+                { iCal4ListRelObject ->
 
-                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCalObject.uid } }.map { it.iCal4List }
+                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
                     if (listSettings.isExcludeDone.value)   // exclude done if applicable
                         currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 }
 
 
                     if (scrollId != null) {
                         LaunchedEffect(group) {
-                            val index = group.indexOfFirst { iCalObject -> iCalObject.id == scrollId }
+                            val index = group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
                             if (index > -1) {
                                 listState.animateScrollToItem(index)
                                 scrollOnceId.postValue(null)
@@ -125,7 +125,9 @@ fun ListScreenCompact(
                     }
 
                     ListCardCompact(
-                        iCalObject,
+                        iCal4ListRelObject.iCal4List,
+                        categories = iCal4ListRelObject.categories,
+                        resources = iCal4ListRelObject.resources,
                         subtasks = currentSubtasks,
                         progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
                         selected = selectedEntries,
@@ -135,10 +137,10 @@ fun ListScreenCompact(
                             .animateItemPlacement()
                             .clip(jtxCardCornerShape)
                             .combinedClickable(
-                                onClick = { onClick(iCalObject.id, groupedList.flatMap { it.value }) },
+                                onClick = { onClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List }) },
                                 onLongClick = {
-                                    if (!iCalObject.isReadOnly)
-                                        onLongClick(iCalObject.id, groupedList.flatMap { it.value })
+                                    if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                        onLongClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List })
                                 }
                             ),
                         onProgressChanged = onProgressChanged,
@@ -146,7 +148,7 @@ fun ListScreenCompact(
                         onLongClick = onLongClick
                     )
 
-                    if (iCalObject != group.last())
+                    if (iCal4ListRelObject != group.last())
                         Divider(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             thickness = 1.dp,
@@ -198,7 +200,10 @@ fun ListScreenCompact_TODO() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenCompact(
-            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
+            groupedList = listOf(
+                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
+                .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
@@ -252,7 +257,10 @@ fun ListScreenCompact_JOURNAL() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenCompact(
-            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
+            groupedList = listOf(
+                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
+                .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),

@@ -38,6 +38,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
@@ -54,7 +55,7 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
-    selectFromAllListLive: LiveData<List<ICal4List>>,
+    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,

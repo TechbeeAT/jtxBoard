@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.sp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.AttachmentCard
@@ -52,6 +54,8 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 fun ListCard(
     iCalObject: ICal4List,
+    categories: List<Category>,
+    resources: List<Resource>,
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
     selected: List<Long>,
@@ -116,13 +120,27 @@ fun ListCard(
                     )
                 }
 
-                iCalObject.categories?.let {
+                categories.forEach { category ->
                     Badge(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     ) {
                         Text(
-                            it,
+                            text = category.text,
+                            fontStyle = FontStyle.Italic,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(horizontal = 2.dp)
+                        )
+                    }
+                }
+                resources.forEach { resource ->
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ) {
+                        Text(
+                            text = resource.text?:"",
                             fontStyle = FontStyle.Italic,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -526,6 +544,8 @@ fun ICalObjectListCardPreview_JOURNAL() {
         }
         ListCard(
             icalobject,
+            emptyList(),
+            emptyList(),
             listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
@@ -562,6 +582,8 @@ fun ICalObjectListCardPreview_NOTE() {
         }
         ListCard(
             icalobject,
+            emptyList(),
+            emptyList(),
             listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
@@ -603,6 +625,8 @@ fun ICalObjectListCardPreview_TODO() {
         }
         ListCard(
             icalobject,
+            emptyList(),
+            emptyList(),
             listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
@@ -644,6 +668,8 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
         }
         ListCard(
             icalobject,
+            emptyList(),
+            emptyList(),
             listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
@@ -687,6 +713,8 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
         }
         ListCard(
             icalobject,
+            emptyList(),
+            emptyList(),
             listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
@@ -738,6 +766,8 @@ fun ICalObjectListCardPreview_NOTE_simple() {
         }
         ListCard(
             icalobject,
+            emptyList(),
+            emptyList(),
             emptyList(),
             emptyList(),
             selected = listOf(),

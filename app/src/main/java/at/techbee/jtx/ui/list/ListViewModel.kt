@@ -53,8 +53,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var iCal4List: LiveData<List<ICal4List>> = listQuery.switchMap {
-        database.getIcal4List(it)
+    var iCal4ListRel: LiveData<List<ICal4ListRel>> = listQuery.switchMap {
+        database.getIcal4ListRel(it)
     }
 
     private var allSubtasksQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
@@ -64,7 +64,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     var allSubnotes: LiveData<List<ICal4ListRel>> = allSubnotesQuery.switchMap { database.getSubEntries(it) }
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var selectFromAllList: LiveData<List<ICal4List>> = selectFromAllListQuery.switchMap { database.getIcal4List(it) }
+    var selectFromAllList: LiveData<List<ICal4ListRel>> = selectFromAllListQuery.switchMap { database.getIcal4ListRel(it) }
 
     private val allAttachmentsList: LiveData<List<Attachment>> = database.getAllAttachments()
     val allAttachmentsMap = allAttachmentsList.map { list ->

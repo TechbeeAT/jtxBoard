@@ -29,6 +29,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
 import at.techbee.jtx.ui.reusable.elements.ListStatusBar
@@ -41,6 +43,8 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 fun ListCardCompact(
     iCalObject: ICal4List,
+    categories: List<Category>,
+    resources: List<Resource>,
     subtasks: List<ICal4List>,
     progressUpdateDisabled: Boolean,
     selected: List<Long>,
@@ -75,13 +79,28 @@ fun ListCardCompact(
                     Text(iCalObject.collectionDisplayName?.firstOrNull()?.toString() ?: " ")
                 }
 
-                if (iCalObject.categories?.isNotBlank() == true) {
+                categories.forEach { category ->
                     Badge(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     ) {
                         Text(
-                            iCalObject.categories ?: "",
+                            category.text,
+                            fontStyle = FontStyle.Italic,
+                            modifier = Modifier.padding(horizontal = 2.dp),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+
+                resources.forEach { resource ->
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ) {
+                        Text(
+                            resource.text ?: "",
                             fontStyle = FontStyle.Italic,
                             modifier = Modifier.padding(horizontal = 2.dp),
                             maxLines = 1,
@@ -304,7 +323,9 @@ fun ListCardCompact_JOURNAL() {
         }
         ListCardCompact(
             icalobject,
-            emptyList(),
+            categories = emptyList(),
+            resources = emptyList(),
+            subtasks = emptyList(),
             progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _ -> },
@@ -327,6 +348,8 @@ fun ListCardCompact_JOURNAL2() {
         }
         ListCardCompact(
             icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
             emptyList(),
             progressUpdateDisabled = true,
             selected = emptyList(),
@@ -351,7 +374,9 @@ fun ListCardCompact_NOTE() {
         }
         ListCardCompact(
             icalobject,
-            emptyList(),
+            categories = emptyList(),
+            resources = emptyList(),
+            subtasks = emptyList(),
             progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _ -> },
@@ -379,6 +404,8 @@ fun ListCardCompact_TODO() {
         }
         ListCardCompact(
             icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
             subtasks = listOf(icalobject, icalobject),
             progressUpdateDisabled = true,
             selected = emptyList(),
@@ -421,6 +448,8 @@ fun ListCardCompact_TODO_only_summary() {
         }
         ListCardCompact(
             icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
             subtasks = listOf(icalobject, icalobject),
             progressUpdateDisabled = true,
             selected = emptyList(),

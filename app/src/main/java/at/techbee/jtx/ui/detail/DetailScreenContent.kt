@@ -47,6 +47,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
@@ -77,7 +78,7 @@ fun DetailScreenContent(
     allWriteableCollections: List<ICalCollection>,
     allCategories: List<String>,
     allResources: List<String>,
-    selectFromAllListLive: LiveData<List<ICal4List>>,
+    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
     seriesInstances: List<ICalObject>,

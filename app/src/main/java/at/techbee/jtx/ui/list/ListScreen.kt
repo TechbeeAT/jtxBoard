@@ -46,27 +46,27 @@ fun ListScreen(
         listViewModel.toastMessage.value = null
     }
 
-    val list = listViewModel.iCal4List.observeAsState(emptyList())
+    val list = listViewModel.iCal4ListRel.observeAsState(emptyList())
 
     // first apply a proper sort order, then group
     val sortedList = when (listViewModel.listSettings.groupBy.value) {
         GroupBy.STATUS -> list.value.sortedBy {
-            if (listViewModel.module == Module.TODO && it.percent != 100)
+            if (listViewModel.module == Module.TODO && it.iCal4List.percent != 100)
                 try {
-                    Status.valueOf(it.status ?: Status.NO_STATUS.name).ordinal
+                    Status.valueOf(it.iCal4List.status ?: Status.NO_STATUS.name).ordinal
                 } catch (e: java.lang.IllegalArgumentException) {
                     -1
                 }
             else
                 try {
-                    Status.valueOf(it.status ?: Status.FINAL.name).ordinal
+                    Status.valueOf(it.iCal4List.status ?: Status.FINAL.name).ordinal
                 } catch (e: java.lang.IllegalArgumentException) {
                     -1
                 }
         }.let { if (listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
         GroupBy.CLASSIFICATION -> list.value.sortedBy {
             try {
-                Classification.valueOf(it.classification ?: Classification.PUBLIC.name).ordinal
+                Classification.valueOf(it.iCal4List.classification ?: Classification.PUBLIC.name).ordinal
             } catch (e: java.lang.IllegalArgumentException) {
                 -1
             }
@@ -76,20 +76,20 @@ fun ListScreen(
 
     val groupedList = sortedList.groupBy {
         when (listViewModel.listSettings.groupBy.value) {
-            GroupBy.STATUS -> Status.values().find { status ->  status.status == it.status }?.stringResource?.let { stringRes -> stringResource(id = stringRes)}?: it.status?:""
-            GroupBy.CLASSIFICATION -> Classification.values().find { classif ->  classif.classification == it.classification }?.stringResource?.let { stringResource(id = it)}?: it.classification?:""
+            GroupBy.STATUS -> Status.values().find { status ->  status.status == it.iCal4List.status }?.stringResource?.let { stringRes -> stringResource(id = stringRes)}?: it.iCal4List.status?:""
+            GroupBy.CLASSIFICATION -> Classification.values().find { classif ->  classif.classification == it.iCal4List.classification }?.stringResource?.let { stringRes -> stringResource(id = stringRes)}?: it.iCal4List.classification?:""
             GroupBy.PRIORITY -> {
-                when (it.priority) {
+                when (it.iCal4List.priority) {
                     null -> stringArrayResource(id = R.array.priority)[0]
-                    in 0..9 -> stringArrayResource(id = R.array.priority)[it.priority!!]
-                    else -> it.priority.toString()
+                    in 0..9 -> stringArrayResource(id = R.array.priority)[it.iCal4List.priority!!]
+                    else -> it.iCal4List.priority.toString()
                 }
             }
-            GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = LocalContext.current)
-            GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = LocalContext.current)
-            GroupBy.DUE -> ICalObject.getDueTextInfo(due = it.due, dueTimezone = it.dueTimezone, percent = it.percent, daysOnly = true, context = LocalContext.current)
+            GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = LocalContext.current)
+            GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = LocalContext.current)
+            GroupBy.DUE -> ICalObject.getDueTextInfo(due = it.iCal4List.due, dueTimezone = it.iCal4List.dueTimezone, percent = it.iCal4List.percent, daysOnly = true, context = LocalContext.current)
             else -> {
-                it.module
+                it.iCal4List.module
             }
         }
     }
@@ -149,7 +149,7 @@ fun ListScreen(
             }
             ViewMode.GRID -> {
                 ListScreenGrid(
-                    list = list,
+                    list = list.value,
                     subtasksLive = listViewModel.allSubtasks,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
@@ -179,7 +179,7 @@ fun ListScreen(
             ViewMode.KANBAN -> {
                 ListScreenKanban(
                     module = listViewModel.module,
-                    list = list,
+                    list = list.value,
                     subtasksLive = listViewModel.allSubtasks,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,

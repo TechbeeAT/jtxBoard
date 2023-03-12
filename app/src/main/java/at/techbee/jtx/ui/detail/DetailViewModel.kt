@@ -24,6 +24,7 @@ import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListSettings
@@ -59,7 +60,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var allWriteableCollections: LiveData<List<ICalCollection>>
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var selectFromAllList: LiveData<List<ICal4List>> = selectFromAllListQuery.switchMap {database.getIcal4List(it) }
+    var selectFromAllList: LiveData<List<ICal4ListRel>> = selectFromAllListQuery.switchMap {database.getIcal4ListRel(it) }
 
     var navigateToId = mutableStateOf<Long?>(null)
     var changeState = mutableStateOf(DetailChangeState.LOADING)

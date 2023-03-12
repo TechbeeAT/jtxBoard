@@ -571,6 +571,11 @@ DELETEs by Object
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4List(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
 
+
+    @Transaction
+    @RawQuery(observedEntities = [ICal4List::class])
+    fun getIcal4ListRel(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
+
     @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4List>

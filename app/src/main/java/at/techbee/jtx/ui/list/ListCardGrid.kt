@@ -25,6 +25,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.ListStatusBar
 import at.techbee.jtx.util.DateTimeUtils
@@ -35,6 +37,8 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 fun ListCardGrid(
     iCalObject: ICal4List,
+    categories: List<Category>,
+    resources: List<Resource>,
     selected: Boolean,
     progressUpdateDisabled: Boolean,
     modifier: Modifier = Modifier,
@@ -65,13 +69,27 @@ fun ListCardGrid(
                     Text(iCalObject.collectionDisplayName?.firstOrNull()?.toString() ?: " ")
                 }
 
-                iCalObject.categories?.let {
+                categories.forEach { category ->
                     Badge(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     ) {
                         Text(
-                            it,
+                            category.text,
+                            fontStyle = FontStyle.Italic,
+                            modifier = Modifier.padding(horizontal = 2.dp),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+                resources.forEach { resource ->
+                    Badge(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ) {
+                        Text(
+                            resource.text?:"",
                             fontStyle = FontStyle.Italic,
                             modifier = Modifier.padding(horizontal = 2.dp),
                             maxLines = 1,
@@ -264,6 +282,8 @@ fun ListCardGrid_JOURNAL() {
         }
         ListCardGrid(
             icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
             selected = false,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> }, modifier = Modifier
@@ -286,6 +306,8 @@ fun ListCardGrid_NOTE() {
         }
         ListCardGrid(
             icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
             selected = true,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> },
@@ -317,6 +339,8 @@ fun ListCardGrid_TODO() {
         }
         ListCardGrid(
             icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
             selected = false,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
@@ -349,6 +373,8 @@ fun ListCardGrid_TODO_short() {
         }
         ListCardGrid(
             icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
             selected = false,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)

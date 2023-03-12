@@ -52,7 +52,7 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListScreenList(
-    groupedList: Map<String, List<ICal4List>>,
+    groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
     subnotesLive: LiveData<List<ICal4ListRel>>,
     selectedEntries: SnapshotStateList<Long>,
@@ -126,21 +126,21 @@ fun ListScreenList(
             if (groupedList.keys.size <= 1  || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
                 items(
                     items = group,
-                    key = { item -> item.id }
-                ) { iCalObject ->
+                    key = { item -> item.iCal4List.id }
+                ) { iCal4ListRelObject ->
 
-                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCalObject.uid } }.map { it.iCal4List }
+                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
                     if (listSettings.isExcludeDone.value)   // exclude done if applicable
                         currentSubtasks =
                             currentSubtasks.filter { subtask -> subtask.percent != 100 }
 
-                    val currentSubnotes = subnotes.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCalObject.uid } }.map { it.iCal4List }
-                    val currentAttachments = attachments[iCalObject.id]
+                    val currentSubnotes = subnotes.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
+                    val currentAttachments = attachments[iCal4ListRelObject.iCal4List.id]
 
                     if (scrollId != null) {
                         LaunchedEffect(group) {
                             val index =
-                                group.indexOfFirst { iCalObject -> iCalObject.id == scrollId }
+                                group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
                             if (index > -1) {
                                 listState.animateScrollToItem(index)
                                 scrollOnceId.postValue(null)
@@ -149,9 +149,11 @@ fun ListScreenList(
                     }
 
                     ListCard(
-                        iCalObject,
-                        currentSubtasks,
-                        currentSubnotes,
+                        iCalObject = iCal4ListRelObject.iCal4List,
+                        categories = iCal4ListRelObject.categories,
+                        resources = iCal4ListRelObject.resources,
+                        subtasks = currentSubtasks,
+                        subnotes = currentSubnotes,
                         selected = selectedEntries,
                         attachments = currentAttachments ?: emptyList(),
                         isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
@@ -172,10 +174,10 @@ fun ListScreenList(
                             .clip(jtxCardCornerShape)
                             .animateItemPlacement()
                             .combinedClickable(
-                                onClick = { onClick(iCalObject.id, groupedList.flatMap { it.value })  },
+                                onClick = { onClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List })  },
                                 onLongClick = {
-                                    if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        onLongClick(iCalObject.id, groupedList.flatMap { it.value })
+                                    if (!iCal4ListRelObject.iCal4List.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                        onLongClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List })
                                 }
                             )
                             .testTag("benchmark:ListCard")
@@ -227,7 +229,10 @@ fun ListScreenList_TODO() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenList(
-            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
+            groupedList = listOf(
+                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
+                .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             subnotesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
@@ -293,7 +298,10 @@ fun ListScreenList_JOURNAL() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenList(
-            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
+            groupedList = listOf(
+                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
+                .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             subnotesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
