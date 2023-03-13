@@ -588,6 +588,7 @@ Danke!"</string>
     <string name="settings_select_theme_contrast">"Kontrast (e-Ink)"</string>
     <string name="settings_journals">"Journal-Einstellungen"</string>
     <string name="settings_default_journals_date">"Standard-Datum/-Uhrzeit für Journale"</string>
+    <string name="settings_default_journals_date_previous_day">"Vortag"</string>
     <string name="settings_default_journals_date_current_day">"Aktueller Tag"</string>
     <string name="settings_default_journals_date_current_hour">"Aktuelle Stunde"</string>
     <string name="settings_default_journals_date_current_15min">"Aktuelle 15 Min"</string>
