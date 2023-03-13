@@ -557,6 +557,7 @@ Děkujeme vám!"</string>
     <string name="menu_view_autosave">"Automaticky ukládat"</string>
     <string name="next">"Další"</string>
     <string name="previous">"Předchozí"</string>
+    <string name="preview">"Náhled"</string>
     <string name="x_selected">%1$d/%2$d vybraných</string>
     <string name="select_all">Vybrat vše</string>
     <string name="select_none">Zrušit výběr</string>
