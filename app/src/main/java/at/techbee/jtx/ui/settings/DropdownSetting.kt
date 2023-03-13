@@ -53,6 +53,7 @@ enum class DropdownSetting(
         icon = Icons.Outlined.EditCalendar,
         title = R.string.settings_default_journals_date,
         options = listOf(
+            DropdownSettingOption.DEFAULT_JOURNALS_DATE_PREVIOUS_DAY,
             DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_DAY,
             DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_HOUR,
             DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_15MIN,
