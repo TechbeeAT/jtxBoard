@@ -2,7 +2,7 @@
 <resources>
     <!-- App title and fragment titles -->
     <string name="app_permission_label">"jtx Board 同步日誌 、筆記和任務"</string>
-    <string name="app_permission_desc">"使用诸如DAVx⁵之类的其它程序同步jtx Board内容"</string>
+    <string name="app_permission_desc">"jtx Board 與其他應用程式同步內容，如 DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
@@ -42,7 +42,7 @@ Global Strings -->
     <string name="navigation_drawer_about">"關於 / 授權"</string>
     <string name="navigation_drawer_subtitle">"日誌 、筆記和任務"</string>
     <string name="navigation_drawer_beta_feedback">"测试反馈"</string>
-    <string name="navigation_drawer_settings">"设置"</string>
+    <string name="navigation_drawer_settings">"設定"</string>
     <string name="navigation_drawer_news_updates">"新闻与更新"</string>
     <string name="navigation_drawer_external_links">"外部連結"</string>
     <string name="navigation_drawer_website">"網站"</string>
@@ -60,9 +60,9 @@ Global Strings -->
     <string name="list_start_tomorrow">"明天开始"</string>
     <string name="list_start_inXhours">"计划%d 小时后开始"</string>
     <string name="list_start_inXdays">"计划%d 天后开始"</string>
-    <string name="list_tabitem_journals">"日志"</string>
-    <string name="list_tabitem_notes">"笔记"</string>
-    <string name="list_tabitem_todos">"任务"</string>
+    <string name="list_tabitem_journals">"日誌"</string>
+    <string name="list_tabitem_notes">"筆記"</string>
+    <string name="list_tabitem_todos">"任務"</string>
     <string name="list_fab_add_contentdesc">"添加新项目"</string>
     <string name="list_progress">"进展"</string>
     <string name="list_expand">"展開"</string>
