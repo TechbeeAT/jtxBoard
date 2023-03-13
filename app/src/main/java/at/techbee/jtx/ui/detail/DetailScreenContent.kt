@@ -545,6 +545,7 @@ fun DetailScreenContent(
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
+                            .heightIn(min = 150.dp)
                             .padding(8.dp)
                             .onFocusChanged { focusState ->
                                 if (
