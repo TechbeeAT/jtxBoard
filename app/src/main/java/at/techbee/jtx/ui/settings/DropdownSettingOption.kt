@@ -26,6 +26,7 @@ enum class DropdownSettingOption(
     AUDIO_FORMAT_AAC("audio/aac", R.string.settings_audio_format_aac),
     AUDIO_FORMAT_OGG("audio/ogg", R.string.settings_audio_format_ogg),
 
+    DEFAULT_JOURNALS_DATE_PREVIOUS_DAY("previous_day", R.string.settings_default_journals_date_previous_day),
     DEFAULT_JOURNALS_DATE_CURRENT_DAY("current_day", R.string.settings_default_journals_date_current_day),
     DEFAULT_JOURNALS_DATE_CURRENT_HOUR("current_hour", R.string.settings_default_journals_date_current_hour),
     DEFAULT_JOURNALS_DATE_CURRENT_15MIN("current_15min", R.string.settings_default_journals_date_current_15min),

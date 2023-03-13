@@ -1462,6 +1462,10 @@ data class ICalObject(
             DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.key, null) ?: DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.default.key
         try {
             when(default) {
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_PREVIOUS_DAY.key -> {
+                    this.dtstart = DateTimeUtils.getTodayAsLong()-(1).days.inWholeMilliseconds
+                    this.dtstartTimezone = TZ_ALLDAY
+                }
                 DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_DAY.key -> {
                     this.dtstart = DateTimeUtils.getTodayAsLong()
                     this.dtstartTimezone = TZ_ALLDAY
