@@ -266,6 +266,8 @@ For more information about the Sync please see:"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
     <string name="edit_dialog_set_attendee_role">"Set attendee role"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Date/Time"</string>
+    <string name="alarms_duration">"Duration"</string>
     <string name="alarms_onstart">"On start"</string>
     <string name="alarms_ondue">"On due"</string>
     <string name="alarms_custom">"Custom"</string>
@@ -451,6 +453,7 @@ Thank you!"</string>
     <string name="invalid_url_message">"Please enter a valid URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Start speech recognition"</string>
     <string name="list_quickadd_dialog_sr_listening">"Listening …"</string>
+    <string name="collections_dialog_buypro_info">"Please buy jtx Board Pro to enable editing capabilities for remote collections."</string>
     <string name="list_update_entries_dialog_title">"Update entries"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Attention: Recurring instances must be unlinked from its series before being moved to another collection and will be ignored in this process."</string>
     <string name="details_app_bar_behaviour">"App bar behaviour"</string>
@@ -577,6 +580,7 @@ Thank you!"</string>
     <string name="menu_view_autosave">"Autosave"</string>
     <string name="next">"Next"</string>
     <string name="previous">"Previous"</string>
+    <string name="preview">"Preview"</string>
     <string name="x_selected">%1$d/%2$d selected</string>
     <string name="select_all">Select all</string>
     <string name="select_none">Select none</string>
@@ -608,6 +612,7 @@ Thank you!"</string>
     <string name="settings_select_theme_contrast">"Contrast (e-Ink)"</string>
     <string name="settings_journals">"Journals Settings"</string>
     <string name="settings_default_journals_date">"Set a default date/time for journals"</string>
+    <string name="settings_default_journals_date_previous_day">"Previous day"</string>
     <string name="settings_default_journals_date_current_day">"Current day"</string>
     <string name="settings_default_journals_date_current_hour">"Current hour"</string>
     <string name="settings_default_journals_date_current_15min">"Current 15 minutes"</string>

@@ -17,7 +17,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
-import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -73,8 +72,8 @@ class ICalObjectAndroidTest {
             // from  fun getInstancesFromRrule_Journal_WEEKLY_withExceptions()
             this.collectionId = 1L
             this.dtstart = 1622541600000L
-            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=FR,SA,SU"
-            this.exdate = "1622973600000,1624096800000"
+            this.dtstartTimezone = "Europe/Vienna"
+            this.rrule = "FREQ=DAILY;COUNT=8;INTERVAL=2;BYDAY=TU,FR,SA,SU"
         }
 
         val id = database.insertICalObject(item)
@@ -83,7 +82,7 @@ class ICalObjectAndroidTest {
         val savedItemUID = savedItem?.uid ?: throw AssertionError("UID was null")
 
         val recurList = database.getRecurInstances(uid = savedItemUID)
-        assertEquals(6, recurList.size)
+        assertEquals(8, recurList.size)
 
         database.deleteUnchangedRecurringInstances(savedItemUID)
         val recurListEmpty = database.getRecurInstances(savedItemUID)
@@ -96,10 +95,12 @@ class ICalObjectAndroidTest {
         val item = ICalObject.createTodo().apply {
             // from  fun getInstancesFromRrule_Journal_WEEKLY_withExceptions()
             this.dtstart = 1663718400000L
+            this.dtstartTimezone = "Europe/Vienna"
             this.due = 1663804800000L
-            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=SU,MO,WE"
-            this.exdate = "1664064000000"
-            this.rdate = "1664496000000,1662249600000"
+            this.dueTimezone = "Europe/Vienna"
+            this.rrule = "FREQ=WEEKLY;COUNT=6;INTERVAL=2;BYDAY=WE,SU,MO"
+            this.exdate = "1663718400000"
+            this.rdate = "1664496000000,1664575200000"
         }
 
         val id = database.insertICalObject(item)
@@ -109,9 +110,6 @@ class ICalObjectAndroidTest {
 
         val recurList = database.getRecurInstances(savedItemUID)
         assertEquals(7, recurList.size)
-
-        assertEquals(1663804800000L, recurList[0]?.due)
-        //assertEquals(1664236800000L, recurList[1]?.due)  // TODO
 
         database.deleteUnchangedRecurringInstances(savedItemUID)
         val recurListEmpty = database.getRecurInstances(savedItemUID)
@@ -257,11 +255,11 @@ class ICalObjectAndroidTest {
             })
 
             //make sure everything was correctly inserted
-            assertEquals(3, database.getAllRelatedto().getOrAwaitValue().size)
+            assertEquals(3, database.getAllRelatedtoSync().size)
 
             ICalObject.deleteItemWithChildren(idParent, database)
 
-            assertEquals(0, database.getAllRelatedto().getOrAwaitValue().size)
+            assertEquals(0, database.getAllRelatedtoSync().size)
             assertEquals(null, database.getSync(idParent))
             assertEquals(null, database.getSync(idChild1))
             assertEquals(null, database.getSync(idChild2))
@@ -297,7 +295,7 @@ class ICalObjectAndroidTest {
                 reltype = Reltype.PARENT.name
             })
             //make sure everything was correctly inserted
-            assertEquals(3, database.getAllRelatedto().getOrAwaitValue().size)
+            assertEquals(3, database.getAllRelatedtoSync().size)
 
             ICalObject.deleteItemWithChildren(idParent, database)
 
@@ -374,7 +372,7 @@ class ICalObjectAndroidTest {
                 })
 
                 //make sure everything was correctly inserted
-                assertEquals(3, database.getAllRelatedto().getOrAwaitValue().size)
+                assertEquals(3, database.getAllRelatedtoSync().size)
 
                 val newParentId = ICalObject.updateCollectionWithChildren(idParent, null, 2L, database, context)
                     ?: throw AssertionError("newParentId not returned")

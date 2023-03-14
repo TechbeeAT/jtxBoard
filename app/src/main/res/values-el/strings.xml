@@ -251,6 +251,8 @@ Global Strings -->
     <string name="navigation_drawer_collections">"Συλλογες"</string>
     <string name="edit_dialog_set_attendee_role">"Καθορισμός ρόλου"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Ημερομηνία/Ώρα"</string>
+    <string name="alarms_duration">"Διάρκεια"</string>
     <string name="alarms_onstart">"Έναρξη"</string>
     <string name="alarms_ondue">"Μέχρι"</string>
     <string name="alarms_custom">"Τυπικό"</string>
@@ -432,6 +434,7 @@ Global Strings -->
     <string name="invalid_url_message">"Παρακαλώ επιλέξτε έναν σωστό σύνδεσμο URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Έναρξη αναγνώρισης φωνής"</string>
     <string name="list_quickadd_dialog_sr_listening">"Αναπαραγωγή …"</string>
+    <string name="collections_dialog_buypro_info">"Παρακαλώ αγοράστε jtx Board Pro για να ενεργοποιήσετε τις δυνατότητες επεξεργασίας για απομακρυσμένες συλλογές."</string>
     <string name="list_update_entries_dialog_title">"Ενημέρωση καταχωρήσεων"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Προσοχή: Τα επαναλαμβανόμενα στιγμιότυπα πρέπει να αποσυνδέονται από τη σειρά τους πριν μεταφερθούν σε άλλη συλλογή και θα αγνοηθούν σε αυτή τη διαδικασία."</string>
     <string name="details_app_bar_behaviour">"Συμπεριφορά γραμμής εφαρμογής"</string>
@@ -555,6 +558,7 @@ Global Strings -->
     <string name="menu_view_autosave">"Αυτόματη αποθήκευση"</string>
     <string name="next">"Επόμενο"</string>
     <string name="previous">"Προηγούμενο"</string>
+    <string name="preview">"Προεπισκόπηση"</string>
     <string name="x_selected">%1$d of %2$d επιλέχθηκαν</string>
     <string name="select_all">Επιλογή Όλων</string>
     <string name="select_none">Καμία επιλογή</string>
@@ -584,6 +588,7 @@ Global Strings -->
     <string name="settings_select_theme_contrast">"Αντίθεση (e-Ink)"</string>
     <string name="settings_journals">"Ρυθμίσεις Journals"</string>
     <string name="settings_default_journals_date">"Ορίστε μια προεπιλεγμένη ημερομηνία/ώρα για τα περιοδικά"</string>
+    <string name="settings_default_journals_date_previous_day">"Προηγούμενη ημέρα"</string>
     <string name="settings_default_journals_date_current_day">"Τρέχουσα ημέρα"</string>
     <string name="settings_default_journals_date_current_hour">"Τρέχουσα ώρα"</string>
     <string name="settings_default_journals_date_current_15min">"Τρέχοντα 15 λεπτά"</string>

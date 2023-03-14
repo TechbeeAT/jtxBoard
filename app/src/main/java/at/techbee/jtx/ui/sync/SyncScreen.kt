@@ -56,7 +56,7 @@ fun SyncScreen(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
-    val isDAVx5available = if (LocalInspectionMode.current) true else SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
+    val isDAVx5available = if (LocalInspectionMode.current) true else SyncUtil.isDAVx5Available(context.applicationContext as Application)
 
     Scaffold(
         topBar = {

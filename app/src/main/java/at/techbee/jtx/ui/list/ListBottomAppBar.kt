@@ -45,7 +45,7 @@ fun ListBottomAppBar(
     multiselectEnabled: MutableState<Boolean>,
     selectedEntries: SnapshotStateList<Long>,
     allowNewEntries: Boolean,
-    isDAVx5compatible: Boolean,
+    isDAVx5Incompatible: Boolean,
     onAddNewEntry: () -> Unit,
     onFilterIconClicked: () -> Unit,
     onGoToDateSelected: (Long) -> Unit,
@@ -157,7 +157,7 @@ fun ListBottomAppBar(
                         }
                     }
 
-                    AnimatedVisibility(!isDAVx5compatible) {
+                    AnimatedVisibility(isDAVx5Incompatible) {
                         IconButton(onClick = { showDAVx5IncompatibleDialog = true }) {
                             Icon(
                                 Icons.Outlined.SyncProblem,
@@ -273,7 +273,7 @@ fun ListBottomAppBar_Preview_Journal() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
-            isDAVx5compatible = false,
+            isDAVx5Incompatible = false,
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -300,7 +300,7 @@ fun ListBottomAppBar_Preview_Note() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = false,
-            isDAVx5compatible = true,
+            isDAVx5Incompatible = true,
             multiselectEnabled = remember { mutableStateOf(true) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -327,7 +327,7 @@ fun ListBottomAppBar_Preview_Todo() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
-            isDAVx5compatible = true,
+            isDAVx5Incompatible = true,
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -355,7 +355,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
-            isDAVx5compatible = true,
+            isDAVx5Incompatible = true,
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
