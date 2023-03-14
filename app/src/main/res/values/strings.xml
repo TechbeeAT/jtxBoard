@@ -272,6 +272,7 @@ For more information about the Sync please see:"</string>
     <string name="link_to_parent">"Link to parent"</string>
     <string name="toolbar_text_collections">"Collections"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
+    <string name="navigation_drawer_presets">"Presets"</string>
     <string name="edit_dialog_set_attendee_role">"Set attendee role"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Date/Time"</string>
@@ -531,6 +532,8 @@ Thank you!"</string>
     <string name="dialog_davx5_outdated_message">"Your current version of DAVx⁵ is not compatible with this version of jtx Board. Please update DAVx⁵ to 4.3.1 (403010000+) or later! The synchronization is currently suspended."</string>
     <string name="dialog_save_current_filter_config">"Save current filter config"</string>
     <string name="dialog_save_current_filter_my_filter">"My filter"</string>
+    <string name="dialog_edit_stored_category_title">"Add/edit category preset"</string>
+    <string name="dialog_edit_stored_resource_title">"Add/edit resource preset"</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>
@@ -665,4 +668,6 @@ Thank you!"</string>
     <string name="markdown_horizontal_ruler">"Horizontal ruler"</string>
     <string name="markdown_unordered_list">"List"</string>
     <string name="markdown_code">"Code"</string>
+    <string name="preset_categories">"Preset categories"</string>
+    <string name="preset_resources">"Preset resources"</string>
 </resources>

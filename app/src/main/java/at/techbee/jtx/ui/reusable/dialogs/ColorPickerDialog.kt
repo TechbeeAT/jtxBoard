@@ -8,21 +8,14 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FormatColorReset
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
@@ -30,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
 import com.godaddy.android.colorpicker.HsvColor
 import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
@@ -55,36 +48,16 @@ fun ColorPickerDialog(
             Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
 
 
-                    LazyRow {
-                        items(ICalObject.defaultColors) { color ->
-                            SmallFloatingActionButton(
-                                modifier = Modifier
-                                    .padding(2.dp)
-                                    .border(
-                                        2.dp,
-                                        if (selectedColor == color) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                        RoundedCornerShape(16.dp)
-                                    )
-                                    .alpha(0.5f),
-                                containerColor = if (color == Color.Transparent) Color.White else color,
-                                onClick = {
-                                    selectedColor =
-                                        if (selectedColor == Color.Transparent) null else color
-                                },
-                                content = {
-                                    if (color == Color.Transparent)
-                                        Icon(Icons.Outlined.FormatColorReset, null)
-                                }
-                            )
-                        }
-                    }
+                ColorSelectorRow(
+                    selectedColor = selectedColor,
+                    onColorChanged = { selectedColor = it })
 
-                    HarmonyColorPicker(
-                        color = if(selectedColor == null || selectedColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(selectedColor!!),
-                        harmonyMode = ColorHarmonyMode.NONE,
-                        modifier = Modifier.size(300.dp),
-                        onColorChanged = { hsvColor -> selectedColor = hsvColor.toColor()
-                        })
+                HarmonyColorPicker(
+                    color = if(selectedColor == null || selectedColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(selectedColor!!),
+                    harmonyMode = ColorHarmonyMode.NONE,
+                    modifier = Modifier.size(300.dp),
+                    onColorChanged = { hsvColor -> selectedColor = hsvColor.toColor()
+                    })
             }
         },
         confirmButton = {

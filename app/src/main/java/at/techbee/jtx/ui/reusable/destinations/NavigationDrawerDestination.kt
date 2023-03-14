@@ -26,6 +26,11 @@ enum class NavigationDrawerDestination (
         iconRes = R.drawable.ic_widget_jtx,
         navigationAction = { navHost, _ -> navHost.navigate(BOARD.name)}
     ),
+    PRESETS(
+        titleResource = R.string.navigation_drawer_presets,
+        iconRes = R.drawable.ic_presets,
+        navigationAction = { navHost, _ -> navHost.navigate(PRESETS.name)}
+    ),
     COLLECTIONS(
         titleResource = R.string.navigation_drawer_collections,
         iconRes = R.drawable.ic_collection,
@@ -116,12 +121,12 @@ enum class NavigationDrawerDestination (
 
         fun valuesFor(flavor: String): List<NavigationDrawerDestination> {
             return when(flavor) {
-                MainActivity2.BUILD_FLAVOR_GOOGLEPLAY -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_AMAZON -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_OSE -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, MASTODON, WEBSITE, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_HUAWEI -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_GENERIC -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
-                else -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_GOOGLEPLAY -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_AMAZON -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_OSE -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, MASTODON, WEBSITE, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_HUAWEI -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_GENERIC -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
+                else -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
             }
         }
     }

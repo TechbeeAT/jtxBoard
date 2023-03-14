@@ -13,9 +13,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import at.techbee.jtx.database.locals.COLUMN_STORED_LIST_SETTING_MODULE
-import at.techbee.jtx.database.locals.StoredListSetting
-import at.techbee.jtx.database.locals.TABLE_NAME_STORED_LIST_SETTINGS
+import at.techbee.jtx.database.locals.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
@@ -701,6 +699,9 @@ DELETEs by Object
     fun getRecurInstance(uid: String?, recurid: String): ICalObject?
 
 
+    /**
+     *  StoredListSetting
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStoredListSetting(storedListSetting: StoredListSetting): Long
 
@@ -710,5 +711,33 @@ DELETEs by Object
 
     @Delete
     fun deleteStoredListSetting(storedListSetting: StoredListSetting)
+
+    /**
+     * StoredCategory
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertStoredCategory(storedCategory: StoredCategory)
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_STORED_CATEGORIES")
+    fun getStoredCategories(): LiveData<List<StoredCategory>>
+
+    @Delete
+    fun deleteStoredCategory(storedCategory: StoredCategory)
+
+
+    /**
+     * StoredResourceCategory
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertStoredResource(storedResource: StoredResource)
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_STORED_RESOURCES")
+    fun getStoredResources(): LiveData<List<StoredResource>>
+
+    @Delete
+    fun deleteStoredResource(storedResource: StoredResource)
+
 
 }

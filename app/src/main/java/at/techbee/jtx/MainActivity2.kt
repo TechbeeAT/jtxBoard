@@ -53,6 +53,7 @@ import at.techbee.jtx.ui.donate.DonateScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.ListViewModel
+import at.techbee.jtx.ui.presets.PresetsScreen
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
@@ -357,6 +358,11 @@ fun MainNavHost(
                     }
                     ListSettings.fromPrefs(prefs).saveLastUsedCollectionId(prefs, collectionId)
                 }
+            )
+        }
+        composable(NavigationDrawerDestination.PRESETS.name) {
+            PresetsScreen(
+                navController = navController
             )
         }
         composable(NavigationDrawerDestination.COLLECTIONS.name) {

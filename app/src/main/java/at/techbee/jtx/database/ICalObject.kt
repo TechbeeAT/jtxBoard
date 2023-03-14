@@ -17,7 +17,6 @@ import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
-import androidx.compose.ui.graphics.Color
 import androidx.core.util.PatternsCompat
 import androidx.preference.PreferenceManager
 import androidx.room.*
@@ -491,16 +490,6 @@ data class ICalObject(
     companion object {
 
         const val TZ_ALLDAY = "ALLDAY"
-        val defaultColors = arrayListOf(
-            Color.Transparent,
-            Color.Red,
-            Color.Green,
-            Color.Blue,
-            Color.Yellow,
-            Color.Cyan,
-            Color.Magenta,
-            Color.LightGray
-        )
 
         fun createJournal() = createJournal(null)
 
