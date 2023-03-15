@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
@@ -45,6 +46,7 @@ fun DetailsCardResources(
     allResources: List<String>,
     storedResources: List<StoredResource>,
     onResourcesUpdated: (List<Resource>) -> Unit,
+    onGoToFilteredList: (StoredListSettingData) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -75,7 +77,7 @@ fun DetailsCardResources(
                     items(resources.asReversed()) { resource ->
                         if(!isEditMode) {
                             ElevatedAssistChip(
-                                onClick = { },
+                                onClick = { onGoToFilteredList(StoredListSettingData(searchResources = listOf(resource.text?:""))) },
                                 label = { Text(resource.text ?: "") },
                                 colors = StoredResource.getColorForResource(resource.text?:"", storedResources)?.let { AssistChipDefaults.elevatedAssistChipColors(
                                     containerColor = it,
@@ -193,7 +195,8 @@ fun DetailsCardResources_Preview() {
             isEditMode = false,
             allResources = listOf("projector", "overhead-thingy", "Whatever"),
             storedResources = listOf(StoredResource("projector", Color.Green.toArgb())),
-            onResourcesUpdated = { }
+            onResourcesUpdated = { },
+            onGoToFilteredList = { }
         )
     }
 }
@@ -208,7 +211,8 @@ fun DetailsCardResources_Preview_edit() {
             isEditMode = true,
             allResources = listOf("projector", "overhead-thingy", "Whatever"),
             storedResources = listOf(StoredResource("projector", Color.Green.toArgb())),
-            onResourcesUpdated = { }
+            onResourcesUpdated = { },
+            onGoToFilteredList = { }
         )
     }
 }

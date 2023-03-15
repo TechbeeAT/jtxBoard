@@ -43,6 +43,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
+import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
@@ -405,6 +406,14 @@ fun DetailsScreen(
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },
+                goToFilteredList = {
+                    navController.navigate(
+                        FilteredListDestination.FilteredList.getRoute(
+                            module = icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE,
+                            storedListSettingData = it
+                        )
+                    )
+                },
                 unlinkFromSeries = { instances, series, deleteAfterUnlink -> detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink) },
                 modifier = Modifier.padding(paddingValues)
             )

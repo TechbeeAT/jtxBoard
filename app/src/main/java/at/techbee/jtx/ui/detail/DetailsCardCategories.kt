@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 
@@ -45,6 +46,7 @@ fun DetailsCardCategories(
     allCategories: List<String>,
     storedCategories: List<StoredCategory>,
     onCategoriesUpdated: (List<Category>) -> Unit,
+    onGoToFilteredList: (StoredListSettingData) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -74,7 +76,7 @@ fun DetailsCardCategories(
                     items(categories.asReversed()) { category ->
                         if(!isEditMode) {
                             ElevatedAssistChip(
-                                onClick = { },
+                                onClick = { onGoToFilteredList(StoredListSettingData(searchCategories = listOf(category.text))) },
                                 label = { Text(category.text) },
                                 colors = StoredCategory.getColorForCategory(category.text, storedCategories)?.let { AssistChipDefaults.elevatedAssistChipColors(
                                     containerColor = it,
@@ -201,7 +203,8 @@ fun DetailsCardCategories_Preview() {
             isEditMode = false,
             allCategories = listOf("category1", "category2", "Whatever"),
             storedCategories = listOf(StoredCategory("category1", Color.Green.toArgb())),
-            onCategoriesUpdated = { }
+            onCategoriesUpdated = { },
+            onGoToFilteredList = { }
         )
     }
 }
@@ -216,7 +219,8 @@ fun DetailsCardCategories_Preview_edit() {
             isEditMode = true,
             allCategories = listOf("category1", "category2", "Whatever"),
             storedCategories = listOf(StoredCategory("category1", Color.Green.toArgb())),
-            onCategoriesUpdated = { }
+            onCategoriesUpdated = { },
+            onGoToFilteredList = { }
         )
     }
 }

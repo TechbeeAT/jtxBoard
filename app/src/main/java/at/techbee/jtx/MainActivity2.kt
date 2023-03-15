@@ -38,6 +38,7 @@ import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_OSE
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.JtxReviewManager
@@ -55,6 +56,7 @@ import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.ListViewModel
 import at.techbee.jtx.ui.presets.PresetsScreen
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
+import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
@@ -68,6 +70,7 @@ import at.techbee.jtx.widgets.ListWidgetReceiver
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import java.net.URLDecoder
 import java.time.ZonedDateTime
 import kotlin.time.Duration.Companion.minutes
 
@@ -307,8 +310,29 @@ fun MainNavHost(
             ListScreenTabContainer(
                 navController = navController,
                 globalStateHolder = globalStateHolder,
-                settingsStateHolder = settingsStateHolder
+                settingsStateHolder = settingsStateHolder, 
+                initialModule = settingsStateHolder.lastUsedModule.value
             )
+        }
+        composable(
+            FilteredListDestination.FilteredList.route,
+            arguments = FilteredListDestination.FilteredList.args
+        ) { backStackEntry ->
+
+            val module = Module.values().find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.argModule) } ?: return@composable
+            val storedListSettingData = backStackEntry.arguments?.getString(
+                FilteredListDestination.argStoredListSettingData)?.let {
+                Json.decodeFromString<StoredListSettingData>(URLDecoder.decode(it, "utf-8")
+                ) }
+
+            ListScreenTabContainer(
+                navController = navController,
+                globalStateHolder = globalStateHolder,
+                settingsStateHolder = settingsStateHolder,
+                initialModule = module,
+                storedListSettingData = storedListSettingData
+            )
+
         }
         composable(
             DetailDestination.Detail.route,

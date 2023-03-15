@@ -38,6 +38,7 @@ import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Attachment
@@ -74,7 +75,9 @@ import kotlin.time.Duration.Companion.seconds
 fun ListScreenTabContainer(
     navController: NavHostController,
     globalStateHolder: GlobalStateHolder,
-    settingsStateHolder: SettingsStateHolder
+    settingsStateHolder: SettingsStateHolder,
+    initialModule: Module,
+    storedListSettingData: StoredListSettingData? = null
 ) {
 
     val context = LocalContext.current
@@ -98,8 +101,8 @@ fun ListScreenTabContainer(
                     Module.TODO -> enabledTabs.indexOf(ListTabDestination.Tasks)
                 }
             }
-            else if(enabledTabs.any { tab -> tab.module == settingsStateHolder.lastUsedModule.value }) {
-                when (settingsStateHolder.lastUsedModule.value) {
+            else if(enabledTabs.any { tab -> tab.module == initialModule }) {
+                when (initialModule) {
                     Module.JOURNAL -> enabledTabs.indexOf(ListTabDestination.Journals)
                     Module.NOTE -> enabledTabs.indexOf(ListTabDestination.Notes)
                     Module.TODO -> enabledTabs.indexOf(ListTabDestination.Tasks)
@@ -156,6 +159,14 @@ fun ListScreenTabContainer(
         getActiveViewModel().goToEdit.value = null
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = icalObjectId, icalObjectIdList = getActiveViewModel().iCal4ListRel.value?.map { it.iCal4List.id } ?: emptyList(), isEditMode = true))
     }
+
+    if(storedListSettingData != null) {
+        storedListSettingData.applyToListSettings(icalListViewModelJournals.listSettings)
+        storedListSettingData.applyToListSettings(icalListViewModelNotes.listSettings)
+        storedListSettingData.applyToListSettings(icalListViewModelTodos.listSettings)
+        getActiveViewModel().updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
+    }
+
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -411,6 +422,8 @@ fun ListScreenTabContainer(
             )
         },
         bottomBar = {
+            if(storedListSettingData != null)    // no bottom bar if there are preset filters
+                return@Scaffold
 
             // show the bottom bar only if there is any collection available that supports the component/module
             if (allWriteableCollections.value.any { collection ->

@@ -48,6 +48,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListRel
@@ -109,6 +110,7 @@ fun DetailScreenContent(
     onAllEntriesSearchTextUpdated: (String) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     goBack: () -> Unit,
+    goToFilteredList:  (StoredListSettingData) -> Unit,
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit
 
 ) {
@@ -639,6 +641,7 @@ fun DetailScreenContent(
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 allCategories = allCategories,
+                onGoToFilteredList = goToFilteredList
             )
         }
 
@@ -719,6 +722,7 @@ fun DetailScreenContent(
                     resources.value = newResources
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
+                onGoToFilteredList = goToFilteredList,
                 allResources = allResources,
             )
         }
@@ -963,7 +967,8 @@ fun DetailScreenContent_JOURNAL() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { },
             onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { }
+            onAllEntriesSearchTextUpdated = { }, 
+            goToFilteredList = { }
         )
     }
 }
@@ -1018,7 +1023,8 @@ fun DetailScreenContent_TODO_editInitially() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { },
             onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { }
+            onAllEntriesSearchTextUpdated = { },
+            goToFilteredList = { }
         )
     }
 }
@@ -1073,7 +1079,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { },
             onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { }
+            onAllEntriesSearchTextUpdated = { },
+            goToFilteredList = { }
         )
     }
 }
@@ -1122,7 +1129,8 @@ fun DetailScreenContent_failedLoading() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { },
             onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { }
+            onAllEntriesSearchTextUpdated = { },
+            goToFilteredList = { }
         )
     }
 }
