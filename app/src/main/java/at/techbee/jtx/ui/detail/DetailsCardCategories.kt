@@ -23,6 +23,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -30,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 
@@ -40,6 +43,7 @@ fun DetailsCardCategories(
     initialCategories: List<Category>,
     isEditMode: Boolean,
     allCategories: List<String>,
+    storedCategories: List<StoredCategory>,
     onCategoriesUpdated: (List<Category>) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -47,6 +51,10 @@ fun DetailsCardCategories(
     val headline = stringResource(id = R.string.categories)
     var newCategory by remember { mutableStateOf("") }
     var categories by remember { mutableStateOf(initialCategories) }
+
+    val mergedCategories = mutableListOf<StoredCategory>()
+    mergedCategories.addAll(storedCategories)
+    allCategories.forEach { cat -> if(mergedCategories.none { it.category == cat }) mergedCategories.add(StoredCategory(cat, null)) }
 
 
     ElevatedCard(modifier = modifier) {
@@ -64,11 +72,14 @@ fun DetailsCardCategories(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     items(categories.asReversed()) { category ->
-
                         if(!isEditMode) {
                             ElevatedAssistChip(
                                 onClick = { },
-                                label = { Text(category.text) }
+                                label = { Text(category.text) },
+                                colors = StoredCategory.getColorForCategory(category.text, storedCategories)?.let { AssistChipDefaults.elevatedAssistChipColors(
+                                    containerColor = it,
+                                    labelColor = contentColorFor(it)
+                                ) }?: AssistChipDefaults.elevatedAssistChipColors(),
                             )
                         } else {
                             InputChip(
@@ -89,6 +100,10 @@ fun DetailsCardCategories(
                                         modifier = Modifier.size(24.dp)
                                     )
                                 },
+                                colors = StoredCategory.getColorForCategory(category.text, storedCategories)?.let { InputChipDefaults.inputChipColors(
+                                    containerColor = it,
+                                    labelColor = contentColorFor(it)
+                                ) }?: InputChipDefaults.inputChipColors(),
                                 selected = false
                             )
                         }
@@ -96,24 +111,24 @@ fun DetailsCardCategories(
                 }
             }
 
-            val categoriesToSelect = allCategories.filter { all ->
-                all.lowercase()
-                    .contains(newCategory.lowercase()) && categories.none { existing -> existing.text.lowercase() == all.lowercase() }
+            val categoriesToSelectFiltered = mergedCategories.filter { all ->
+                all.category.lowercase().contains(newCategory.lowercase())
+                        && categories.none { existing -> existing.text.lowercase() == all.category.lowercase() }
             }
-            AnimatedVisibility(categoriesToSelect.isNotEmpty() && isEditMode) {
+            AnimatedVisibility(categoriesToSelectFiltered.isNotEmpty() && isEditMode) {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
 
-                    items(categoriesToSelect) { category ->
+                    items(categoriesToSelectFiltered) { category ->
                         InputChip(
                             onClick = {
-                                categories = categories.plus(Category(text = category))
+                                categories = categories.plus(Category(text = category.category))
                                 onCategoriesUpdated(categories)
                                 newCategory = ""
                             },
-                            label = { Text(category) },
+                            label = { Text(category.category) },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.NewLabel,
@@ -121,6 +136,10 @@ fun DetailsCardCategories(
                                 )
                             },
                             selected = false,
+                            colors = category.color?.let { InputChipDefaults.inputChipColors(
+                                containerColor = Color(it),
+                                labelColor = contentColorFor(Color(it))
+                            ) }?: InputChipDefaults.inputChipColors(),
                             modifier = Modifier.alpha(0.4f)
                         )
                     }
@@ -181,6 +200,7 @@ fun DetailsCardCategories_Preview() {
             initialCategories = listOf(Category(text = "asdf")),
             isEditMode = false,
             allCategories = listOf("category1", "category2", "Whatever"),
+            storedCategories = listOf(StoredCategory("category1", Color.Green.toArgb())),
             onCategoriesUpdated = { }
         )
     }
@@ -195,6 +215,7 @@ fun DetailsCardCategories_Preview_edit() {
             initialCategories = listOf(Category(text = "asdf")),
             isEditMode = true,
             allCategories = listOf("category1", "category2", "Whatever"),
+            storedCategories = listOf(StoredCategory("category1", Color.Green.toArgb())),
             onCategoriesUpdated = { }
         )
     }

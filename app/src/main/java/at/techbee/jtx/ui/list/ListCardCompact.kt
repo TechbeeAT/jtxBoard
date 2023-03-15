@@ -29,6 +29,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
@@ -43,6 +45,8 @@ fun ListCardCompact(
     categories: List<Category>,
     resources: List<Resource>,
     subtasks: List<ICal4List>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
     progressUpdateDisabled: Boolean,
     selected: List<Long>,
     modifier: Modifier = Modifier,
@@ -70,6 +74,8 @@ fun ListCardCompact(
                 ical4List = iCalObject,
                 categories = categories,
                 resources = resources,
+                storedCategories = storedCategories,
+                storedResources = storedResources,
                 includeJournalDate = true
             )
 
@@ -164,6 +170,8 @@ fun ListCardCompact_JOURNAL() {
             categories = emptyList(),
             resources = emptyList(),
             subtasks = emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _ -> },
@@ -186,9 +194,11 @@ fun ListCardCompact_JOURNAL2() {
         }
         ListCardCompact(
             icalobject,
+            subtasks = emptyList(),
             categories = emptyList(),
             resources = emptyList(),
-            emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _ -> },
@@ -215,6 +225,8 @@ fun ListCardCompact_NOTE() {
             categories = emptyList(),
             resources = emptyList(),
             subtasks = emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _ -> },
@@ -245,6 +257,8 @@ fun ListCardCompact_TODO() {
             categories = emptyList(),
             resources = emptyList(),
             subtasks = listOf(icalobject, icalobject),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _ -> },
@@ -289,6 +303,8 @@ fun ListCardCompact_TODO_only_summary() {
             categories = listOf(Category(text = "Category1"), Category(text = "Category2")),
             resources = listOf(Resource(text = "Resource1")),
             subtasks = listOf(icalobject, icalobject),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
             onProgressChanged = { _, _ -> },

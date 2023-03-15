@@ -9,6 +9,7 @@
 package at.techbee.jtx.database.locals
 
 import android.os.Parcelable
+import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -30,4 +31,11 @@ data class StoredResource (
     var resource: String,
 
     @ColumnInfo(name = COLUMN_STORED_RESOURCE_COLOR) var color: Int?
-): Parcelable
+): Parcelable{
+
+    companion object {
+        fun getColorForResource(resource: String?, storedResources: List<StoredResource>): Color? {
+            return storedResources.find { it.resource == resource }?.color?.let { Color(it) }
+        }
+    }
+}

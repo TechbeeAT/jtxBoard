@@ -25,6 +25,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
@@ -35,6 +37,8 @@ fun ListCardGrid(
     iCalObject: ICal4List,
     categories: List<Category>,
     resources: List<Resource>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
     selected: Boolean,
     progressUpdateDisabled: Boolean,
     modifier: Modifier = Modifier,
@@ -57,6 +61,8 @@ fun ListCardGrid(
                 ical4List = iCalObject,
                 categories = categories,
                 resources = resources,
+                storedCategories = storedCategories,
+                storedResources = storedResources,
                 includeJournalDate = true
             )
 
@@ -118,6 +124,8 @@ fun ListCardGrid_JOURNAL() {
             icalobject,
             categories = emptyList(),
             resources = emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> }, modifier = Modifier
@@ -142,6 +150,8 @@ fun ListCardGrid_NOTE() {
             icalobject,
             categories = emptyList(),
             resources = emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = true,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> },
@@ -175,6 +185,8 @@ fun ListCardGrid_TODO() {
             icalobject,
             categories = emptyList(),
             resources = emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
@@ -209,6 +221,8 @@ fun ListCardGrid_TODO_short() {
             icalobject,
             categories = emptyList(),
             resources = emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)

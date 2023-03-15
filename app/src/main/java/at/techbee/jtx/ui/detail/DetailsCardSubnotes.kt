@@ -37,6 +37,8 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -56,6 +58,8 @@ fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
     onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
@@ -82,6 +86,8 @@ fun DetailsCardSubnotes(
     if(showLinkExistingSubentryDialog) {
         LinkExistingSubentryDialog(
             allEntriesLive = selectFromAllListLive,
+            storedCategories = storedCategories,
+            storedResources = storedResources,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
             onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
             onDismiss = { showLinkExistingSubentryDialog = false }
@@ -218,6 +224,8 @@ fun DetailsCardSubnotes_Preview() {
                     ),
             isEditMode = remember { mutableStateOf(false) },
             selectFromAllListLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
@@ -245,6 +253,8 @@ fun DetailsCardSubnotes_Preview_edit() {
             ),
             isEditMode = remember { mutableStateOf(true) },
             selectFromAllListLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },

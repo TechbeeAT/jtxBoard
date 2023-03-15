@@ -78,6 +78,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val allWriteableCollections = database.getAllWriteableCollections()
     val allCollections = database.getAllCollections(module = module.name)
     val storedListSettings = database.getStoredListSettings(module = module.name)
+    val storedCategories = database.getStoredCategories()
+    val storedResources = database.getStoredResources()
 
 
     var sqlConstraintException = mutableStateOf(false)

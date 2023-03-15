@@ -47,6 +47,8 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
@@ -80,6 +82,8 @@ fun DetailScreenContent(
     allWriteableCollections: List<ICalCollection>,
     allCategories: List<String>,
     allResources: List<String>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
@@ -628,6 +632,7 @@ fun DetailScreenContent(
         AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] ?: true || showAllOptions))) {
             DetailsCardCategories(
                 initialCategories = categories.value,
+                storedCategories = storedCategories,
                 isEditMode = isEditMode.value,
                 onCategoriesUpdated = { newCategories ->
                     categories.value = newCategories
@@ -657,6 +662,8 @@ fun DetailScreenContent(
                 selectFromAllListLive = selectFromAllListLive,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgressForSubTasks,
+                storedCategories = storedCategories,
+                storedResources = storedResources,
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
                 },
@@ -680,6 +687,8 @@ fun DetailScreenContent(
                 subnotes = subnotes.value,
                 isEditMode = isEditMode,
                 selectFromAllListLive = selectFromAllListLive,
+                storedCategories = storedCategories,
+                storedResources = storedResources,
                 onSubnoteAdded = { subnote, attachment ->
                     onSubEntryAdded(
                         subnote,
@@ -704,6 +713,7 @@ fun DetailScreenContent(
         AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && icalObject.value.getModuleFromString() == Module.TODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] ?: false || showAllOptions))) {
             DetailsCardResources(
                 initialResources = resources.value,
+                storedResources = storedResources,
                 isEditMode = isEditMode.value,
                 onResourcesUpdated = { newResources ->
                     resources.value = newResources
@@ -937,6 +947,8 @@ fun DetailScreenContent_JOURNAL() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
@@ -983,6 +995,8 @@ fun DetailScreenContent_TODO_editInitially() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
@@ -1036,6 +1050,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
@@ -1083,6 +1099,8 @@ fun DetailScreenContent_failedLoading() {
             allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),

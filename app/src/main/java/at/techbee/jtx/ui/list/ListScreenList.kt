@@ -40,6 +40,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
@@ -55,6 +57,8 @@ fun ListScreenList(
     groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
     subnotesLive: LiveData<List<ICal4ListRel>>,
+    storedCategoriesLive: LiveData<List<StoredCategory>>,
+    storedResourcesLive: LiveData<List<StoredResource>>,
     selectedEntries: SnapshotStateList<Long>,
     attachmentsLive: LiveData<Map<Long, List<Attachment>>>,
     scrollOnceId: MutableLiveData<Long?>,
@@ -75,6 +79,8 @@ fun ListScreenList(
     val subtasks by subtasksLive.observeAsState(emptyList())
     val subnotes by subnotesLive.observeAsState(emptyList())
     val attachments by attachmentsLive.observeAsState(emptyMap())
+    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
+    val storedResources by storedResourcesLive.observeAsState(emptyList())
 
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
@@ -154,6 +160,8 @@ fun ListScreenList(
                         resources = iCal4ListRelObject.resources,
                         subtasks = currentSubtasks,
                         subnotes = currentSubnotes,
+                        storedCategories = storedCategories,
+                        storedResources = storedResources,
                         selected = selectedEntries,
                         attachments = currentAttachments ?: emptyList(),
                         isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
@@ -235,6 +243,8 @@ fun ListScreenList_TODO() {
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             subnotesLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
@@ -304,6 +314,8 @@ fun ListScreenList_JOURNAL() {
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             subnotesLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),

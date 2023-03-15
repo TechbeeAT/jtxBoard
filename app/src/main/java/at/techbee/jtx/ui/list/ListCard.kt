@@ -35,6 +35,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
@@ -59,6 +61,8 @@ fun ListCard(
     subnotes: List<ICal4List>,
     selected: List<Long>,
     attachments: List<Attachment>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     isSubtasksExpandedDefault: Boolean = true,
@@ -106,7 +110,9 @@ fun ListCard(
             ListTopFlowRow(
                 ical4List = iCalObject,
                 categories = categories,
-                resources = resources
+                resources = resources,
+                storedCategories = storedCategories,
+                storedResources = storedResources,
             )
 
             Row(
@@ -384,18 +390,20 @@ fun ICalObjectListCardPreview_JOURNAL() {
             uploadPending = false
         }
         ListCard(
-            icalobject,
-            emptyList(),
-            emptyList(),
-            listOf(ICal4List.getSample().apply {
+            iCalObject = icalobject,
+            categories = listOf(Category(text = "Test"), Category(text = "two")),
+            resources = listOf(Resource(text = "Projector"), Resource(text="another")),
+            subtasks = listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
-            listOf(ICal4List.getSample().apply {
+            subnotes = listOf(ICal4List.getSample().apply {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
@@ -422,18 +430,20 @@ fun ICalObjectListCardPreview_NOTE() {
             status = Status.CANCELLED.status
         }
         ListCard(
-            icalobject,
-            emptyList(),
-            emptyList(),
-            listOf(ICal4List.getSample().apply {
+            iCalObject = icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
+            subtasks = listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
-            listOf(ICal4List.getSample().apply {
+            subnotes  = listOf(ICal4List.getSample().apply {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
@@ -465,10 +475,10 @@ fun ICalObjectListCardPreview_TODO() {
                 "Long category 1, long category 2, long category 3, long category 4"
         }
         ListCard(
-            icalobject,
-            emptyList(),
-            emptyList(),
-            listOf(ICal4List.getSample().apply {
+            iCalObject = icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
+            subtasks = listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
                 this.percent = 34
@@ -477,6 +487,8 @@ fun ICalObjectListCardPreview_TODO() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             onClick = { _, _ -> },
@@ -508,18 +520,20 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             due = null
         }
         ListCard(
-            icalobject,
-            emptyList(),
-            emptyList(),
-            listOf(ICal4List.getSample().apply {
+            iCalObject = icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
+            subtasks = listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
-            listOf(ICal4List.getSample().apply {
+            subnotes = listOf(ICal4List.getSample().apply {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
@@ -553,18 +567,20 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             colorItem = null
         }
         ListCard(
-            icalobject,
-            emptyList(),
-            emptyList(),
-            listOf(ICal4List.getSample().apply {
+            iCalObject = icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
+            subtasks = listOf(ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
-            listOf(ICal4List.getSample().apply {
+            subnotes = listOf(ICal4List.getSample().apply {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
@@ -606,11 +622,13 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             colorItem = Color.Blue.toArgb()
         }
         ListCard(
-            icalobject,
-            emptyList(),
-            emptyList(),
-            emptyList(),
-            emptyList(),
+            iCalObject = icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
+            subtasks = emptyList(),
+            subnotes = emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },

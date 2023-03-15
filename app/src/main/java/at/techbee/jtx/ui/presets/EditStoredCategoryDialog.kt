@@ -9,8 +9,10 @@
 package at.techbee.jtx.ui.presets
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -50,7 +52,9 @@ fun EditStoredCategoryDialog(
         title = { Text(text = stringResource(id = R.string.dialog_edit_stored_category_title)) },
         text = {
             Column(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -85,43 +89,42 @@ fun EditStoredCategoryDialog(
                     harmonyMode = ColorHarmonyMode.NONE,
                     modifier = Modifier.size(300.dp),
                     onColorChanged = { hsvColor -> storedCategoryColor = hsvColor.toColor() })
-
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    TextButton(
-                        onClick = {
-                            onDismiss()
-                        }
-                    ) {
-                        Text(stringResource(id = R.string.cancel))
-                    }
-
-                    if(storedCategory.category.isNotEmpty()) {
-                        TextButton(onClick = {
-                            onDeleteStoredCategory(storedCategory)
-                            onDismiss()
-                        }) {
-                            Text(stringResource(R.string.delete))
-                        }
-                    }
-
-                    TextButton(
-                        onClick = {
-                            onStoredCategoryChanged(StoredCategory(storedCategoryName, storedCategoryColor?.toArgb()))
-                            onDismiss()
-                        },
-                        enabled = storedCategoryName.isNotEmpty()
-                    ) {
-                        Text(stringResource(id = R.string.save))
-                    }
-                }
             }
         },
-        confirmButton = {  }
-    )
+        confirmButton = {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(
+                    onClick = {
+                        onDismiss()
+                    }
+                ) {
+                    Text(stringResource(id = R.string.cancel))
+                }
 
+                if(storedCategory.category.isNotEmpty()) {
+                    TextButton(onClick = {
+                        onDeleteStoredCategory(storedCategory)
+                        onDismiss()
+                    }) {
+                        Text(stringResource(R.string.delete))
+                    }
+                }
+
+                TextButton(
+                    onClick = {
+                        onStoredCategoryChanged(StoredCategory(storedCategoryName, storedCategoryColor?.toArgb()))
+                        onDismiss()
+                    },
+                    enabled = storedCategoryName.isNotEmpty()
+                ) {
+                    Text(stringResource(id = R.string.save))
+                }
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)

@@ -178,6 +178,8 @@ fun ListScreenTabContainer(
             allResourcesLive = getActiveViewModel().allResources,
             allCollectionsLive = getActiveViewModel().allWriteableCollections,
             selectFromAllListLive = getActiveViewModel().selectFromAllList,
+            storedCategoriesLive = getActiveViewModel().storedCategories,
+            storedResourcesLive = getActiveViewModel().storedResources,
             onSelectFromAllListSearchTextUpdated = { getActiveViewModel().updateSelectFromAllListQuery(searchText = it, isAuthenticated = globalStateHolder.isAuthenticated.value) },
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
             onResourcesChanged = { addedResources, deletedResources -> getActiveViewModel().updateResourcesToSelected(addedResources, deletedResources) },

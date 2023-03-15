@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -38,6 +40,8 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 fun ListScreenGrid(
     list: List<ICal4ListRel>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
+    storedCategoriesLive: LiveData<List<StoredCategory>>,
+    storedResourcesLive: LiveData<List<StoredResource>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
@@ -48,6 +52,8 @@ fun ListScreenGrid(
 
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
+    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
+    val storedResources by storedResourcesLive.observeAsState(emptyList())
     val gridState = rememberLazyStaggeredGridState()
 
     if(scrollId != null) {
@@ -80,6 +86,8 @@ fun ListScreenGrid(
                 iCal4ListRelObject.iCal4List,
                 categories = iCal4ListRelObject.categories,
                 resources = iCal4ListRelObject.resources,
+                storedCategories = storedCategories,
+                storedResources = storedResources,
                 selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                 progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
                 modifier = Modifier
@@ -138,6 +146,8 @@ fun ListScreenGrid_TODO() {
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
@@ -187,6 +197,8 @@ fun ListScreenGrid_JOURNAL() {
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,

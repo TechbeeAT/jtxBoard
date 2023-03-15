@@ -31,6 +31,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
@@ -40,6 +42,8 @@ import at.techbee.jtx.ui.list.ListCardGrid
 @Composable
 fun LinkExistingSubentryDialog(
     allEntriesLive: LiveData<List<ICal4ListRel>>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
     onAllEntriesSearchTextUpdated: (String) -> Unit,
     onNewSubentriesConfirmed: (newSubentries: List<ICal4List>) -> Unit,
     onDismiss: () -> Unit
@@ -102,6 +106,8 @@ fun LinkExistingSubentryDialog(
                                 iCalObject = entry.iCal4List,
                                 categories = entry.categories,
                                 resources = entry.resources,
+                                storedCategories = storedCategories,
+                                storedResources = storedResources,
                                 selected = selectedEntries.contains(entry.iCal4List),
                                 progressUpdateDisabled = true,
                                 onProgressChanged = { _, _ -> },
@@ -160,6 +166,8 @@ fun LinkExistingSubentryDialog_Preview() {
                     ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList())
                 )
             ),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
             onAllEntriesSearchTextUpdated = { },
             onNewSubentriesConfirmed = { },
             onDismiss = { }

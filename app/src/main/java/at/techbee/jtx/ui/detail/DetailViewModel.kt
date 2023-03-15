@@ -55,9 +55,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var isChild: LiveData<Boolean> = MutableLiveData(false)
     private var originalEntry: ICalEntity? = null
 
-    lateinit var allCategories: LiveData<List<String>>
-    lateinit var allResources: LiveData<List<String>>
-    lateinit var allWriteableCollections: LiveData<List<ICalCollection>>
+    var allCategories = database.getAllCategoriesAsText()
+    var allResources = database.getAllResourcesAsText()
+    val storedCategories = database.getStoredCategories()
+    val storedResources = database.getStoredResources()
+    var allWriteableCollections = database.getAllWriteableCollections()
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var selectFromAllList: LiveData<List<ICal4ListRel>> = selectFromAllListQuery.switchMap {database.getIcal4ListRel(it) }
@@ -75,14 +77,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         const val PREFS_DETAIL_JOURNALS = "prefsDetailJournals"
         const val PREFS_DETAIL_NOTES = "prefsDetailNotes"
         const val PREFS_DETAIL_TODOS = "prefsDetailTodos"
-    }
-
-    init {
-        viewModelScope.launch {
-            allCategories = database.getAllCategoriesAsText()
-            allResources = database.getAllResourcesAsText()
-            allWriteableCollections = database.getAllWriteableCollections()
-        }
     }
 
     fun load(icalObjectId: Long, isAuthenticated: Boolean) {

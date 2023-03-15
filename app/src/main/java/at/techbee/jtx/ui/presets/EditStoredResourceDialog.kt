@@ -9,8 +9,10 @@
 package at.techbee.jtx.ui.presets
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -50,7 +52,9 @@ fun EditStoredResourceDialog(
         title = { Text(text = stringResource(id = R.string.dialog_edit_stored_resource_title)) },
         text = {
             Column(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -87,41 +91,43 @@ fun EditStoredResourceDialog(
                     onColorChanged = { hsvColor -> storedResourceColor = hsvColor.toColor() })
 
 
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    TextButton(
-                        onClick = {
-                            onDismiss()
-                        }
-                    ) {
-                        Text(stringResource(id = R.string.cancel))
-                    }
 
-                    if(storedResource.resource.isNotEmpty()) {
-                        TextButton(onClick = {
-                            onDeleteStoredResource(storedResource)
-                            onDismiss()
-                        }) {
-                            Text(stringResource(R.string.delete))
-                        }
-                    }
-
-                    TextButton(
-                        onClick = {
-                            onStoredResourceChanged(StoredResource(storedResourceName, storedResourceColor?.toArgb()))
-                            onDismiss()
-                        },
-                        enabled = storedResourceName.isNotEmpty()
-                    ) {
-                        Text(stringResource(id = R.string.save))
-                    }
-                }
 
             }
         },
-        confirmButton = { }
+        confirmButton = {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(
+                    onClick = {
+                        onDismiss()
+                    }
+                ) {
+                    Text(stringResource(id = R.string.cancel))
+                }
+
+                if(storedResource.resource.isNotEmpty()) {
+                    TextButton(onClick = {
+                        onDeleteStoredResource(storedResource)
+                        onDismiss()
+                    }) {
+                        Text(stringResource(R.string.delete))
+                    }
+                }
+
+                TextButton(
+                    onClick = {
+                        onStoredResourceChanged(StoredResource(storedResourceName, storedResourceColor?.toArgb()))
+                        onDismiss()
+                    },
+                    enabled = storedResourceName.isNotEmpty()
+                ) {
+                    Text(stringResource(id = R.string.save))
+                }
+            }
+        }
     )
 
 }

@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,6 +28,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
@@ -37,6 +40,8 @@ fun ListCardKanban(
     iCalObject: ICal4List,
     categories: List<Category>,
     resources: List<Resource>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
     selected: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -58,6 +63,8 @@ fun ListCardKanban(
                 ical4List = iCalObject,
                 categories = categories,
                 resources = resources,
+                storedCategories = storedCategories,
+                storedResources = storedResources,
                 includeJournalDate = true
             )
 
@@ -92,6 +99,8 @@ fun ListCardKanban_JOURNAL() {
             icalobject,
             categories = emptyList(),
             resources = emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = false,
             modifier = Modifier
                 .width(150.dp)
@@ -117,6 +126,8 @@ fun ListCardKanban_NOTE() {
             icalobject,
             categories = emptyList(),
             resources = emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = true,
             modifier = Modifier
                 .width(150.dp)
@@ -150,6 +161,8 @@ fun ListCardKanban_TODO() {
             icalobject,
             categories = emptyList(),
             resources = emptyList(),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = false,
         )
     }

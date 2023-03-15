@@ -23,6 +23,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -30,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 
@@ -40,6 +43,7 @@ fun DetailsCardResources(
     initialResources: List<Resource>,
     isEditMode: Boolean,
     allResources: List<String>,
+    storedResources: List<StoredResource>,
     onResourcesUpdated: (List<Resource>) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -47,6 +51,10 @@ fun DetailsCardResources(
     val headline = stringResource(id = R.string.resources)
     var resources by remember { mutableStateOf(initialResources) }
     var newResource by remember { mutableStateOf("") }
+
+    val mergedResources = mutableListOf<StoredResource>()
+    mergedResources.addAll(storedResources)
+    allResources.forEach { resource -> if(mergedResources.none { it.resource == resource }) mergedResources.add(StoredResource(resource, null)) }
 
 
     ElevatedCard(modifier = modifier) {
@@ -68,7 +76,11 @@ fun DetailsCardResources(
                         if(!isEditMode) {
                             ElevatedAssistChip(
                                 onClick = { },
-                                label = { Text(resource.text ?: "") }
+                                label = { Text(resource.text ?: "") },
+                                colors = StoredResource.getColorForResource(resource.text?:"", storedResources)?.let { AssistChipDefaults.elevatedAssistChipColors(
+                                    containerColor = it,
+                                    labelColor = contentColorFor(it)
+                                ) }?: AssistChipDefaults.elevatedAssistChipColors(),
                             )
                         } else {
                             InputChip(
@@ -84,6 +96,10 @@ fun DetailsCardResources(
                                         modifier = Modifier.size(24.dp)
                                     )
                                 },
+                                colors = StoredResource.getColorForResource(resource.text?:"", storedResources)?.let { InputChipDefaults.inputChipColors(
+                                    containerColor = it,
+                                    labelColor = contentColorFor(it)
+                                ) }?: InputChipDefaults.inputChipColors(),
                                 selected = false
                             )
                         }
@@ -91,21 +107,24 @@ fun DetailsCardResources(
                 }
             }
 
-            val resourcesToSelect = allResources.filter { all -> all.lowercase().contains(newResource.lowercase()) && resources.none { existing -> existing.text?.lowercase() == all.lowercase() }}
+            val resourcesToSelectFiltered = mergedResources.filter { all ->
+                all.resource.lowercase().contains(newResource.lowercase())
+                        && resources.none { existing -> existing.text?.lowercase() == all.resource.lowercase() }
+            }
 
-            AnimatedVisibility(resourcesToSelect.isNotEmpty() && isEditMode) {
+            AnimatedVisibility(resourcesToSelectFiltered.isNotEmpty() && isEditMode) {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(resourcesToSelect) { resource ->
+                    items(resourcesToSelectFiltered) { resource ->
                         InputChip(
                             onClick = {
-                                resources = resources.plus(Resource(text = resource))
+                                resources = resources.plus(Resource(text = resource.resource))
                                 onResourcesUpdated(resources)
                                 newResource = ""
                             },
-                            label = { Text(resource) },
+                            label = { Text(resource.resource) },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.NewLabel,
@@ -113,6 +132,10 @@ fun DetailsCardResources(
                                 )
                             },
                             selected = false,
+                            colors = resource.color?.let { InputChipDefaults.inputChipColors(
+                                containerColor = Color(it),
+                                labelColor = contentColorFor(Color(it))
+                            ) }?: InputChipDefaults.inputChipColors(),
                             modifier = Modifier.alpha(0.4f)
                         )
                     }
@@ -169,6 +192,7 @@ fun DetailsCardResources_Preview() {
             initialResources = listOf(Resource(text = "asdf")),
             isEditMode = false,
             allResources = listOf("projector", "overhead-thingy", "Whatever"),
+            storedResources = listOf(StoredResource("projector", Color.Green.toArgb())),
             onResourcesUpdated = { }
         )
     }
@@ -183,6 +207,7 @@ fun DetailsCardResources_Preview_edit() {
             initialResources = listOf(Resource(text = "asdf")),
             isEditMode = true,
             allResources = listOf("projector", "overhead-thingy", "Whatever"),
+            storedResources = listOf(StoredResource("projector", Color.Green.toArgb())),
             onResourcesUpdated = { }
         )
     }

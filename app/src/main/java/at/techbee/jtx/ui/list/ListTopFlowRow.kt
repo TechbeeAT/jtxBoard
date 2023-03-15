@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -17,6 +18,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
@@ -30,6 +33,8 @@ fun ListTopFlowRow(
     ical4List: ICal4List,
     categories: List<Category>,
     resources: List<Resource>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
     modifier: Modifier = Modifier,
     includeJournalDate: Boolean = false
 ) {
@@ -88,7 +93,8 @@ fun ListTopFlowRow(
             ListBadge(
                 icon = Icons.Outlined.Label,
                 iconDesc = stringResource(id = R.string.category),
-                text = category.text
+                text = category.text,
+                containerColor = StoredCategory.getColorForCategory(category.text, storedCategories) ?: MaterialTheme.colorScheme.primaryContainer
             )
         }
 
@@ -96,7 +102,8 @@ fun ListTopFlowRow(
             ListBadge(
                 icon = Icons.Outlined.WorkOutline,
                 iconDesc = stringResource(id = R.string.resources),
-                text = resource.text
+                text = resource.text,
+                containerColor = StoredResource.getColorForResource(resource.text?:"", storedResources) ?: MaterialTheme.colorScheme.primaryContainer
             )
         }
 
@@ -146,6 +153,7 @@ fun ListTopFlowRow(
                 text = ical4List.numComments.toString()
             )
         }
+        /*
         AnimatedVisibility(ical4List.numResources > 0) {
             ListBadge(
                 icon = Icons.Outlined.WorkOutline,
@@ -153,6 +161,7 @@ fun ListTopFlowRow(
                 text = ical4List.numResources.toString()
             )
         }
+         */
         AnimatedVisibility(ical4List.numAlarms > 0) {
             ListBadge(
                 icon = Icons.Outlined.Alarm,
@@ -235,6 +244,11 @@ fun ListTopFlowRow(
 fun ListTopFlowRow_Preview() {
     MaterialTheme {
         ListTopFlowRow(
-            ical4List = ICal4List.getSample(), categories = emptyList(), resources = emptyList())
+            ical4List = ICal4List.getSample(),
+            categories = listOf(Category(text = "Category"), Category(text = "Test"), Category(text = "Another")),
+            resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb()))
+        )
     }
 }

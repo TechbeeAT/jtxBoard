@@ -37,6 +37,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -48,6 +50,8 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 fun ListScreenCompact(
     groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
+    storedCategoriesLive: LiveData<List<StoredCategory>>,
+    storedResourcesLive: LiveData<List<StoredResource>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
@@ -59,6 +63,8 @@ fun ListScreenCompact(
 
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
+    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
+    val storedResources by storedResourcesLive.observeAsState(emptyList())
     val listState = rememberLazyListState()
 
     val itemsCollapsed = remember { mutableStateListOf<String>() }
@@ -129,6 +135,8 @@ fun ListScreenCompact(
                         categories = iCal4ListRelObject.categories,
                         resources = iCal4ListRelObject.resources,
                         subtasks = currentSubtasks,
+                        storedCategories = storedCategories,
+                        storedResources = storedResources,
                         progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
                         selected = selectedEntries,
                         modifier = Modifier
@@ -137,10 +145,20 @@ fun ListScreenCompact(
                             .animateItemPlacement()
                             .clip(jtxCardCornerShape)
                             .combinedClickable(
-                                onClick = { onClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List }) },
+                                onClick = {
+                                    onClick(
+                                        iCal4ListRelObject.iCal4List.id,
+                                        groupedList
+                                            .flatMap { it.value }
+                                            .map { it.iCal4List })
+                                },
                                 onLongClick = {
                                     if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                        onLongClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List })
+                                        onLongClick(
+                                            iCal4ListRelObject.iCal4List.id,
+                                            groupedList
+                                                .flatMap { it.value }
+                                                .map { it.iCal4List })
                                 }
                             ),
                         onProgressChanged = onProgressChanged,
@@ -205,6 +223,8 @@ fun ListScreenCompact_TODO() {
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
@@ -262,6 +282,8 @@ fun ListScreenCompact_JOURNAL() {
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
