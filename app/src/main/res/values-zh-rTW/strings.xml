@@ -2,7 +2,7 @@
 <resources>
     <!-- App title and fragment titles -->
     <string name="app_permission_label">"jtx Board 同步日誌 、筆記和任務"</string>
-    <string name="app_permission_desc">"使用诸如DAVx⁵之类的其它程序同步jtx Board内容"</string>
+    <string name="app_permission_desc">"jtx Board 與其他應用程式同步內容，如 DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
@@ -42,7 +42,7 @@ Global Strings -->
     <string name="navigation_drawer_about">"關於 / 授權"</string>
     <string name="navigation_drawer_subtitle">"日誌 、筆記和任務"</string>
     <string name="navigation_drawer_beta_feedback">"测试反馈"</string>
-    <string name="navigation_drawer_settings">"设置"</string>
+    <string name="navigation_drawer_settings">"設定"</string>
     <string name="navigation_drawer_news_updates">"新闻与更新"</string>
     <string name="navigation_drawer_external_links">"外部連結"</string>
     <string name="navigation_drawer_website">"網站"</string>
@@ -50,7 +50,7 @@ Global Strings -->
     <string name="navigation_drawer_donate">"贊助"</string>
     <string name="navigation_drawer_privacy_policy">"隱私政策"</string>
     <!-- fragment_ical_list -->
-    <string name="list_due_overdue">"超期"</string>
+    <string name="list_due_overdue">"已過期"</string>
     <string name="list_due_today">"今日到期"</string>
     <string name="list_due_tomorrow">"明日到期"</string>
     <string name="list_due_inXdays">"%d 天到期"</string>
@@ -60,9 +60,9 @@ Global Strings -->
     <string name="list_start_tomorrow">"明天开始"</string>
     <string name="list_start_inXhours">"计划%d 小时后开始"</string>
     <string name="list_start_inXdays">"计划%d 天后开始"</string>
-    <string name="list_tabitem_journals">"日志"</string>
-    <string name="list_tabitem_notes">"笔记"</string>
-    <string name="list_tabitem_todos">"任务"</string>
+    <string name="list_tabitem_journals">"日誌"</string>
+    <string name="list_tabitem_notes">"筆記"</string>
+    <string name="list_tabitem_todos">"任務"</string>
     <string name="list_fab_add_contentdesc">"添加新项目"</string>
     <string name="list_progress">"进展"</string>
     <string name="list_expand">"展開"</string>
@@ -169,8 +169,8 @@ Global Strings -->
     <string name="menu_view_copy_as_note">"复制为笔记"</string>
     <string name="menu_view_copy_item">"创建复本"</string>
     <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"任务截止提醒"</string>
-    <string name="notification_channel_reminder_description">"提醒任务截止"</string>
+    <string name="notification_channel_reminder_name">"任務到期提醒"</string>
+    <string name="notification_channel_reminder_description">"任務到期通知"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"新增日誌"</string>
     <string name="shortcut_addNote_longLabel">"新增筆記"</string>
@@ -366,7 +366,7 @@ Global Strings -->
     <string name="toolbar_text_buypro">"购买Pro版"</string>
     <string name="navigation_drawer_buypro">"购买Pro版"</string>
     <string name="settings_select_theme">"选择主题"</string>
-    <string name="settings_select_theme_dark">"暗黑"</string>
+    <string name="settings_select_theme_dark">"深色"</string>
     <string name="settings_select_theme_light">"轻亮"</string>
     <string name="settings_select_theme_system">"系统默认"</string>
     <string name="donate_dialog_title">"您喜欢jtx Board吗？"</string>
@@ -380,7 +380,7 @@ Global Strings -->
     <string name="buypro_order_id">"原ID：%1$s"</string>
     <string name="buypro_success_header">"感谢您购买jtx Board Pro版！"</string>
     <string name="buypro_success_description">"远程合集、快速输入、长按快速编辑和动态颜色（Android 12以上有效）等编辑功能现已启用。"</string>
-    <string name="buypro_success_thankyou">"十分感谢！"</string>
+    <string name="buypro_success_thankyou">"感謝您 !"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"想要启用远程合集的编辑功能，请购买Pro软件包。"</string>
     <string name="buypro_initial_dialog_message">"您好！jtx Board分为标准版和Pro版。查看“购买Pro版”章节，可了解有关jtx Board Pro版的更多信息！
 十分感谢！"</string>

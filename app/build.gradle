@@ -29,8 +29,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 203000021
-        versionName "2.03.00-rc21"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 203000022
+        versionName "2.03.00-rc22"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Peace begins with a smile\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -255,7 +255,7 @@ dependencies {
     gplayImplementation "com.google.android.play:review-ktx:$version_review"
 
     // Amazon billing & maps support
-    amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.3'
+    amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.4'
     amazonImplementation "com.google.maps.android:maps-compose:2.11.1"
     amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"

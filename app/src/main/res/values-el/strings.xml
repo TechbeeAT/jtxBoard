@@ -588,6 +588,7 @@ Global Strings -->
     <string name="settings_select_theme_contrast">"Αντίθεση (e-Ink)"</string>
     <string name="settings_journals">"Ρυθμίσεις Journals"</string>
     <string name="settings_default_journals_date">"Ορίστε μια προεπιλεγμένη ημερομηνία/ώρα για τα περιοδικά"</string>
+    <string name="settings_default_journals_date_previous_day">"Προηγούμενη ημέρα"</string>
     <string name="settings_default_journals_date_current_day">"Τρέχουσα ημέρα"</string>
     <string name="settings_default_journals_date_current_hour">"Τρέχουσα ώρα"</string>
     <string name="settings_default_journals_date_current_15min">"Τρέχοντα 15 λεπτά"</string>

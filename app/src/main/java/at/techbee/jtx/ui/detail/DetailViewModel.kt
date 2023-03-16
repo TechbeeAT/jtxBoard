@@ -64,6 +64,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var selectFromAllList: LiveData<List<ICal4ListRel>> = selectFromAllListQuery.switchMap {database.getIcal4ListRel(it) }
 
+    private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var selectFromAllList: LiveData<List<ICal4List>> = selectFromAllListQuery.switchMap {database.getIcal4List(it) }
+
     var navigateToId = mutableStateOf<Long?>(null)
     var changeState = mutableStateOf(DetailChangeState.LOADING)
     var toastMessage = mutableStateOf<String?>(null)

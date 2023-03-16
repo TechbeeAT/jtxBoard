@@ -658,7 +658,19 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
+        AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
+                DetailsCardParents(
+                    module = icalObject.value.getModuleFromString(),
+                    parents = parents.value,
+                    isEditMode = isEditMode,
+                    sliderIncrement = sliderIncrement,
+                    showSlider = showProgressForSubTasks,
+                    onProgressChanged = { itemId, newPercent ->
+                        onProgressChanged(itemId, newPercent)
+                    },
+                    goToDetail = goToDetail
+                )
+            }AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
             DetailsCardSubtasks(
                 subtasks = subtasks.value,
                 isEditMode = isEditMode,
@@ -967,7 +979,7 @@ fun DetailScreenContent_JOURNAL() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { },
             onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { }, 
+            onAllEntriesSearchTextUpdated = { },
             goToFilteredList = { }
         )
     }

@@ -557,6 +557,7 @@ Děkujeme vám!"</string>
     <string name="menu_view_autosave">"Automaticky ukládat"</string>
     <string name="next">"Další"</string>
     <string name="previous">"Předchozí"</string>
+    <string name="preview">"Náhled"</string>
     <string name="x_selected">%1$d/%2$d vybraných</string>
     <string name="select_all">Vybrat vše</string>
     <string name="select_none">Zrušit výběr</string>
@@ -586,6 +587,7 @@ Děkujeme vám!"</string>
     <string name="settings_select_theme_contrast">"Kontrast (e-Ink)"</string>
     <string name="settings_journals">"Nastavení Deníků"</string>
     <string name="settings_default_journals_date">"Nastavit výchozí datum a čas pro deníky"</string>
+    <string name="settings_default_journals_date_previous_day">"Předchozí den"</string>
     <string name="settings_default_journals_date_current_day">"Aktuální den"</string>
     <string name="settings_default_journals_date_current_hour">"Aktuální hodina"</string>
     <string name="settings_default_journals_date_current_15min">"Aktuálních 15 minut"</string>
