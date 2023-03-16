@@ -67,11 +67,9 @@ fun ListScreenGrid(
     }
 
     LazyVerticalStaggeredGrid(
-        //columns = GridCells.Adaptive(150.dp),
         columns = StaggeredGridCells.Adaptive(150.dp),
-        //modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
         contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(
