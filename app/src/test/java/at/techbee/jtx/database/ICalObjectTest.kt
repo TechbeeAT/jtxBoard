@@ -740,6 +740,60 @@ class ICalObjectTest {
         assertEquals("https://orf.at", journal.url)
     }
 
+    @Test
+    fun parseLatLng_Test_AppleMaps() {
+        val text = "https://maps.apple.com/?daddr=51.53941363621893,3.866636929370127"
+        val journal = ICalObject.createJournal()
+        journal.parseLatLng(text)
+        assertEquals(51.53941363621893, journal.geoLat)
+        assertEquals(3.866636929370127, journal.geoLong)
+    }
+
+    @Test
+    fun parseLatLng_Test_GoogleMaps() {
+        val text = "https://www.google.at/maps/@50.8557355,4.42243,14z"
+        val journal = ICalObject.createJournal()
+        journal.parseLatLng(text)
+        assertEquals(50.8557355, journal.geoLat)
+        assertEquals(4.42243, journal.geoLong)
+    }
+
+    @Test
+    fun parseLatLng_Test_BingMaps() {
+        val text = "https://www.bing.com/maps?FORM=Z9LH2&cp=50.854125%7E4.271001&lvl=14.0"
+        val journal = ICalObject.createJournal()
+        journal.parseLatLng(text)
+        assertEquals(50.854125, journal.geoLat)
+        assertEquals(4.271001, journal.geoLong)
+    }
+
+    @Test
+    fun parseLatLng_Test_OpenStreetMaps() {
+        val text = "https://www.openstreetmap.org/#map=13/50.8047/4.5844"
+        val journal = ICalObject.createJournal()
+        journal.parseLatLng(text)
+        assertEquals(50.8047, journal.geoLat)
+        assertEquals(4.5844, journal.geoLong)
+    }
+
+    @Test
+    fun parseLatLng_Test2_faulty() {
+        val text = "https://maps.apple.com/?daddr=51.53941363621893,"
+        val journal = ICalObject.createJournal()
+        journal.parseLatLng(text)
+        assertNull(journal.geoLat)
+        assertNull(journal.geoLong)
+    }
+
+    @Test
+    fun parseLatLng_Test3_empty() {
+        val text = "https://maps.apple.com/?daddr=51.53941363621893,"
+        val journal = ICalObject.createJournal()
+        journal.parseLatLng(text)
+        assertNull(journal.geoLat)
+        assertNull(journal.geoLong)
+    }
+
     @Test fun getModuleFromString_journal() = assertEquals(Module.JOURNAL, ICalObject.createJournal().getModuleFromString())
     @Test fun getModuleFromString_note() = assertEquals(Module.NOTE, ICalObject.createNote().getModuleFromString())
     @Test fun getModuleFromString_task() = assertEquals(Module.TODO, ICalObject.createTodo().getModuleFromString())
@@ -763,6 +817,6 @@ class ICalObjectTest {
         assertNull(ICalObject.getMapLink(null, null, MainActivity2.BUILD_FLAVOR_OSE))
     }
 
-    //@Test fun getLatLongString1() = assertEquals("(1.11100, 2.22200)", ICalObject.getLatLongString(1.111, 2.222))
+    @Test fun getLatLongString1() = assertEquals("(1.11100,12345.12312)", ICalObject.getLatLongString(1.111, 12345.123123123))
     @Test fun getLatLongString_null() = assertNull(ICalObject.getLatLongString(null, 2.222))
 }

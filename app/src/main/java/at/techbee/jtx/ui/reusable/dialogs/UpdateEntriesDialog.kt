@@ -10,15 +10,13 @@ package at.techbee.jtx.ui.reusable.dialogs
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.LabelOff
-import androidx.compose.material.icons.outlined.NewLabel
-import androidx.compose.material.icons.outlined.WorkOff
-import androidx.compose.material.icons.outlined.WorkOutline
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -39,6 +37,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.ListCardGrid
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -49,7 +49,8 @@ enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     STATUS(R.string.status),
     CLASSIFICATION(R.string.classification),
     PRIORITY(R.string.priority),
-    COLLECTION(R.string.collection)
+    COLLECTION(R.string.collection),
+    LINK_TO_PARENT(R.string.link_to_parent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -59,6 +60,8 @@ fun UpdateEntriesDialog(
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
     allCollectionsLive: LiveData<List<ICalCollection>>,
+    selectFromAllListLive: LiveData<List<ICal4List>>,
+    onSelectFromAllListSearchTextUpdated: (String) -> Unit,
     //currentCategories: List<String>,
     //currentResources: List<String>
     //current: ICalCollection,
@@ -69,23 +72,28 @@ fun UpdateEntriesDialog(
     onClassificationChanged: (Classification) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     onCollectionChanged: (ICalCollection) -> Unit,
+    onParentAdded: (parent: ICal4List) -> Unit,
     onDismiss: () -> Unit
 ) {
 
     val allCategories by allCategoriesLive.observeAsState(emptyList())
     val allResources by allResourcesLive.observeAsState(emptyList())
     val allCollections by allCollectionsLive.observeAsState(emptyList())
+    val selectFromAllList by selectFromAllListLive.observeAsState(emptyList())
 
     val addedCategories = remember { mutableStateListOf<String>() }
     val removedCategories = remember { mutableStateListOf<String>() }
     val addedResources = remember { mutableStateListOf<String>() }
     val removedResources = remember { mutableStateListOf<String>() }
-    var newStatus by remember { mutableStateOf(Status.NO_STATUS) }
-    var newClassification by remember { mutableStateOf(Classification.NO_CLASSIFICATION) }
+    var newStatus by remember { mutableStateOf<Status?>(null) }
+    var newClassification by remember { mutableStateOf<Classification?>(null) }
     var newPriority by remember { mutableStateOf<Int?>(null) }
     var newCollection by remember { mutableStateOf<ICalCollection?>(null) }
+    var selectFromAllListSearchText by remember { mutableStateOf("") }
+    var selectFromAllListSelectedEntry by remember { mutableStateOf<ICal4List?>(null) }
 
     var updateEntriesDialogMode by remember { mutableStateOf(UpdateEntriesDialogMode.CATEGORIES) }
+    var selectFromAllListMaxEntriesShown by remember { mutableStateOf(10) }
 
 
     AlertDialog(
@@ -288,6 +296,65 @@ fun UpdateEntriesDialog(
                     )
                 }
 
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK_TO_PARENT) {
+                    Text(
+                        text = stringResource(R.string.list_update_entries_dialog_new_parent_info),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+
+                AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.LINK_TO_PARENT) {
+                    OutlinedTextField(
+                        value = selectFromAllListSearchText,
+                        onValueChange = {
+                            selectFromAllListSearchText = it
+                            onSelectFromAllListSearchTextUpdated(it)
+                        },
+                        label = { Text(stringResource(R.string.search)) },
+                        trailingIcon = {
+                            AnimatedVisibility(selectFromAllListSearchText.isNotEmpty()) {
+                                IconButton(
+                                    onClick = {
+                                        selectFromAllListSearchText = ""
+                                        onSelectFromAllListSearchTextUpdated("")
+                                    }
+                                ) {
+                                    Icon(Icons.Outlined.Close, stringResource(R.string.delete))
+                                }
+                            }
+                        }
+                    )
+                }
+
+                AnimatedVisibility(selectFromAllList.isNotEmpty() && updateEntriesDialogMode == UpdateEntriesDialogMode.LINK_TO_PARENT) {
+                    Column(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        selectFromAllList.forEachIndexed { index, entry ->
+                            if(index > selectFromAllListMaxEntriesShown)
+                                return@forEachIndexed
+                            ListCardGrid(
+                                iCalObject = entry,
+                                selected = entry == selectFromAllListSelectedEntry,
+                                progressUpdateDisabled = true,
+                                onProgressChanged = {_, _ -> },
+                                modifier = Modifier.clickable {
+                                    selectFromAllListSelectedEntry = if(entry == selectFromAllListSelectedEntry)
+                                        null
+                                    else
+                                        entry
+                                }
+                            )
+                        }
+                    }
+                }
+
+                AnimatedVisibility(selectFromAllList.isNotEmpty() && selectFromAllListMaxEntriesShown < selectFromAllList.size) {
+                    TextButton(onClick = { selectFromAllListMaxEntriesShown += 10 }) {
+                        Text(stringResource(R.string.more))
+                    }
+                }
             }
         },
         confirmButton = {
@@ -296,12 +363,22 @@ fun UpdateEntriesDialog(
                     when (updateEntriesDialogMode) {
                         UpdateEntriesDialogMode.CATEGORIES -> onCategoriesChanged(addedCategories, removedCategories)
                         UpdateEntriesDialogMode.RESOURCES -> onResourcesChanged(addedResources, removedResources)
-                        UpdateEntriesDialogMode.STATUS -> onStatusChanged(newStatus)
-                        UpdateEntriesDialogMode.CLASSIFICATION -> onClassificationChanged(newClassification)
+                        UpdateEntriesDialogMode.STATUS -> newStatus?.let { onStatusChanged(it) }
+                        UpdateEntriesDialogMode.CLASSIFICATION -> newClassification?.let { onClassificationChanged(it) }
                         UpdateEntriesDialogMode.PRIORITY -> onPriorityChanged(if(newPriority == 0) null else newPriority)
                         UpdateEntriesDialogMode.COLLECTION -> newCollection?.let { onCollectionChanged(it) }
+                        UpdateEntriesDialogMode.LINK_TO_PARENT -> selectFromAllListSelectedEntry?.let { onParentAdded(it) }
                     }
                     onDismiss()
+                },
+                enabled = when(updateEntriesDialogMode) {
+                    UpdateEntriesDialogMode.CATEGORIES -> addedCategories.isNotEmpty() || removedCategories.isNotEmpty()
+                    UpdateEntriesDialogMode.RESOURCES -> addedResources.isNotEmpty() || removedResources.isNotEmpty()
+                    UpdateEntriesDialogMode.STATUS -> newStatus != null
+                    UpdateEntriesDialogMode.CLASSIFICATION -> newClassification != null
+                    UpdateEntriesDialogMode.PRIORITY -> true
+                    UpdateEntriesDialogMode.COLLECTION -> newCollection != null
+                    UpdateEntriesDialogMode.LINK_TO_PARENT -> selectFromAllListSelectedEntry != null
                 }
             ) {
                 Text(stringResource(id = R.string.save))
@@ -329,12 +406,15 @@ fun UpdateEntriesDialog_Preview() {
             allCategoriesLive = MutableLiveData(listOf("cat1", "Hello")),
             allResourcesLive = MutableLiveData(listOf("1234", "aaa")),
             allCollectionsLive = MutableLiveData(listOf(ICalCollection())),
+            selectFromAllListLive = MutableLiveData(listOf()),
+            onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },
             onResourcesChanged = { _, _ -> },
             onStatusChanged = {},
             onClassificationChanged = {},
             onPriorityChanged = {},
             onCollectionChanged = {},
+            onParentAdded = {},
             onDismiss = { }
         )
     }
