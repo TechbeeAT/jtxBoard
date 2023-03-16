@@ -670,7 +670,8 @@ fun DetailScreenContent(
                     },
                     goToDetail = goToDetail
                 )
-            }AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
+            }
+        AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
             DetailsCardSubtasks(
                 subtasks = subtasks.value,
                 isEditMode = isEditMode,
