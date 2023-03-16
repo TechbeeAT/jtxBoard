@@ -587,6 +587,7 @@ Global Strings -->
     <string name="settings_select_theme_contrast">"Контраст (e-Ink)"</string>
     <string name="settings_journals">"Настройки журналов"</string>
     <string name="settings_default_journals_date">"Установить дату/время по умолчанию для журналов"</string>
+    <string name="settings_default_journals_date_previous_day">"Предыдущий день"</string>
     <string name="settings_default_journals_date_current_day">"Текущий день"</string>
     <string name="settings_default_journals_date_current_hour">"Текущий час"</string>
     <string name="settings_default_journals_date_current_15min">"Текущие 15 минут"</string>

@@ -255,7 +255,7 @@ dependencies {
     gplayImplementation "com.google.android.play:review-ktx:$version_review"
 
     // Amazon billing & maps support
-    amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.3'
+    amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.4'
     amazonImplementation "com.google.maps.android:maps-compose:2.11.1"
     amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"

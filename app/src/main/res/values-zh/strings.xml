@@ -374,4 +374,5 @@ Global Strings -->
     <!-- alarms -->
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="settings_default_journals_date_previous_day">"前一天"</string>
 </resources>
