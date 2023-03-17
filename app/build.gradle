@@ -29,8 +29,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 203000022
-        versionName "2.03.00-rc22"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 203000023
+        versionName "2.03.00-rc23"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Peace begins with a smile\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -262,6 +262,7 @@ dependencies {
 
     // Huawei billing
     huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
+    huaweiImplementation 'com.huawei.hms:appservice:6.8.0.300'
 
     // Google Maps
     gplayImplementation "com.google.maps.android:maps-compose:2.11.1"

@@ -37,6 +37,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.JtxReviewManager
+import at.techbee.jtx.flavored.UpdateCheckManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.about.AboutScreen
 import at.techbee.jtx.ui.about.AboutViewModel
@@ -115,6 +116,7 @@ class MainActivity2 : AppCompatActivity() {
         TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
         createNotificationChannel()   // Register Notification Channel for Reminders
         BillingManager.getInstance().initialise(this)
+        UpdateCheckManager(this).checkForUpdates()
 
         setContent {
             val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
