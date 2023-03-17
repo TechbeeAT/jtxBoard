@@ -14,6 +14,10 @@ Global Strings -->
     <string name="gotit">"Rozumím"</string>
     <string name="cont">"Pokračovat"</string>
     <string name="website">"Webová stránka"</string>
+    <string name="latitude">"Zeměpisná šířka"</string>
+    <string name="longitude">"Zeměpisná délka"</string>
+    <string name="unlink">"Zrušit propojení"</string>
+    <string name="current_location">"Současná poloha"</string>
     <string name="toolbar_text_add_journal">"Přidat Deník"</string>
     <string name="toolbar_text_add_note">"Přidat Poznámku"</string>
     <string name="toolbar_text_add_task">"Přidat Úkol"</string>
@@ -83,6 +87,8 @@ Global Strings -->
     <string name="view_comment_playbutton_content_desc">"Přehrát zvukový komentář"</string>
     <string name="view_reccurrence_note_is_exception">"Tato položka je výjimkou z opakujícího se záznamu."</string>
     <string name="view_feedback_linked_notes">"Zpětná vazba / Propojené poznámky"</string>
+    <string name="view_subtask_of">"Dílčí úkol"</string>
+    <string name="view_linked_note_of">"Propojená poznámka"</string>
     <string name="view_add_note">"Přidat poznámku"</string>
     <string name="view_add_audio_note">"Přidat zvuk"</string>
     <string name="view_fab_edit_entry_contentDesc">"Upravit záznam"</string>
