@@ -24,7 +24,6 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.ListBadge
-import at.techbee.jtx.util.DateTimeUtils
 import com.google.accompanist.flowlayout.FlowRow
 
 
@@ -54,9 +53,11 @@ fun ListTopFlowRow(
             ListBadge(
                 iconRes = R.drawable.ic_start2,
                 iconDesc = stringResource(id = R.string.date),
-                text = DateTimeUtils.convertLongToShortDateTimeString(
-                    ical4List.dtstart,
-                    ical4List.dtstartTimezone
+                text = ICalObject.getDtstartTextInfo(
+                    module = Module.JOURNAL,
+                    dtstart = ical4List.dtstart,
+                    dtstartTimezone = ical4List.dtstartTimezone,
+                    context = LocalContext.current
                 )
             )
         }
@@ -64,9 +65,11 @@ fun ListTopFlowRow(
             ListBadge(
                 iconRes = R.drawable.ic_widget_start,
                 iconDesc = stringResource(id = R.string.started),
-                text = DateTimeUtils.convertLongToShortDateTimeString(
-                    ical4List.dtstart,
-                    ical4List.dtstartTimezone
+                text = ICalObject.getDtstartTextInfo(
+                    module = Module.TODO,
+                    dtstart = ical4List.dtstart,
+                    dtstartTimezone = ical4List.dtstartTimezone,
+                    context = LocalContext.current
                 )
             )
         }

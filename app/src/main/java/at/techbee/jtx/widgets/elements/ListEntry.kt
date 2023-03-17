@@ -97,7 +97,7 @@ fun ListEntry(
                                 modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
                             )
                             Text(
-                                text = DateTimeUtils.convertLongToMediumDateString(
+                                text = DateTimeUtils.convertLongToMediumDateShortTimeString(
                                     obj.dtstart,
                                     obj.dtstartTimezone
                                 ),
@@ -112,7 +112,7 @@ fun ListEntry(
                                 modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
                             )
                             Text(
-                                text = DateTimeUtils.convertLongToMediumDateString(
+                                text = DateTimeUtils.convertLongToMediumDateShortTimeString(
                                     obj.due,
                                     obj.dueTimezone
                                 ),

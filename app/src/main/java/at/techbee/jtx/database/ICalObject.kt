@@ -827,13 +827,14 @@ data class ICalObject(
                     daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_start_past)
                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, hoursLeft)
                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
-                    else -> context.getString(R.string.list_start_inXdays, daysLeft+1)
+                    daysLeft <= 7 -> context.getString(R.string.list_start_inXdays, daysLeft+1)
+                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
                 }
             } else {
                 when {
                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_date_today)
                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_date_tomorrow)
-                    else -> DateTimeUtils.convertLongToMediumDateString(dtstart, dtstartTimezone)
+                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
                 }
             }
         }
@@ -856,7 +857,8 @@ data class ICalObject(
                 daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_due_overdue)
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, hoursLeft)
                 localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
-                else -> context.getString(R.string.list_due_inXdays, daysLeft+1)
+                daysLeft <= 7 -> context.getString(R.string.list_due_inXdays, daysLeft+1)
+                else -> DateTimeUtils.convertLongToMediumDateShortTimeString(due, dueTimezone)
             }
         }
 
