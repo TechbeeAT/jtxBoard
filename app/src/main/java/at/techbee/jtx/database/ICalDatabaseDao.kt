@@ -14,6 +14,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.*
 
@@ -114,12 +115,19 @@ SELECTs (global selects without parameter)
 
     /**
      * Retrieve an list of all remote collections ([ICalCollection])
-     *
-     * @return a list of [ICalCollection] as LiveData<List<ICalCollection>>
+     * @return a list of [ICalCollection] as LiveData
      */
     @Transaction
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
-    fun getAllRemoteCollections(): LiveData<List<ICalCollection>>
+    fun getAllRemoteCollectionsLive(): LiveData<List<ICalCollection>>
+
+    /**
+     * Retrieve an list of all remote collections ([ICalCollection])
+     * @return a list of [ICalCollection]
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
+    fun getAllRemoteCollections(): List<ICalCollection>
 
 
 
@@ -131,6 +139,15 @@ SELECTs (global selects without parameter)
     @Transaction
     @Query("SELECT * FROM $TABLE_NAME_RELATEDTO")
     fun getAllRelatedto(): LiveData<List<Relatedto>>
+
+    /**
+     * Retrieve an list of all [ICal4List] their UIDs
+     * @param uids of the entries
+     * @return list of [ICal4List]
+     */
+    @Transaction
+    @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_UID IN (:uids)")
+    fun getICal4ListByUIDs(uids: List<String?>): LiveData<List<ICal4List>>
 
     /**
      * Retrieve an list of all Relatedto ([Relatedto]) as a List
@@ -345,7 +362,6 @@ DELETEs by Object
     fun deleteAccount(accountName: String, accountType: String)
 
 
-
     /**
      * Delete all categories with a specific icalobjectid.
      * @param [icalobjectId] of the icalObject that should be deleted.
@@ -427,6 +443,12 @@ DELETEs by Object
      */
     @Delete
     fun deleteRelatedto(rel: Relatedto)
+
+    /**
+     * Deletes the relatedto for the given [iCalObjectId] and [parentUID] (for Reltype = PARENT)
+     */
+    @Query("DELETE FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_RELATEDTO_TEXT = :parentUID AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT'")
+    fun deleteRelatedto(iCalObjectId: Long, parentUID: String)
 
     /**
      * Delete an attendee by the object.
@@ -554,12 +576,12 @@ DELETEs by Object
     fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4List>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
-    fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
+    @RawQuery(observedEntities = [ICal4ListRel::class])
+    fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
-    fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4List>
+    @RawQuery(observedEntities = [ICal4ListRel::class])
+    fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4ListRel>
 
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")

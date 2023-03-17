@@ -29,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +37,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.ICalCollection.Factory.TEST_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.reusable.cards.CollectionCard
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
@@ -53,6 +51,7 @@ fun CollectionsScreenContent(
     onCollectionDeleted: (ICalCollection) -> Unit,
     onEntriesMoved: (old: ICalCollection, new: ICalCollection) -> Unit,
     onImportFromICS: (CollectionsView) -> Unit,
+    onImportFromTxt: (CollectionsView) -> Unit,
     onExportAsICS: (CollectionsView) -> Unit,
     onCollectionClicked: (CollectionsView) -> Unit,
     onDeleteAccount: (Account) -> Unit
@@ -62,10 +61,11 @@ fun CollectionsScreenContent(
     val grouped = list.groupBy { Account(it.accountName, it.accountType) }
     val showProgressIndicator by isProcessing.observeAsState(false)
 
-    val foundAccounts = if(LocalInspectionMode.current)
-        arrayOf(Account("Test Account Name", TEST_ACCOUNT_TYPE))
-    else
-        AccountManager.get(LocalContext.current).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
+    val foundAccounts = mutableSetOf<Account>()
+    list.map { it.accountType }.distinct().forEach { accountType ->
+        val account = AccountManager.get(LocalContext.current).getAccountsByType(accountType)
+        foundAccounts.addAll(account)
+    }
 
 
     Box {
@@ -116,6 +116,7 @@ fun CollectionsScreenContent(
                         onCollectionDeleted = onCollectionDeleted,
                         onEntriesMoved = onEntriesMoved,
                         onImportFromICS = onImportFromICS,
+                        onImportFromTxt = onImportFromTxt,
                         onExportAsICS = onExportAsICS,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -173,6 +174,7 @@ fun CollectionsScreenContent_Preview() {
             onCollectionDeleted = { },
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
+            onImportFromTxt = { },
             onExportAsICS = { },
             onCollectionClicked = { },
             onDeleteAccount = { }

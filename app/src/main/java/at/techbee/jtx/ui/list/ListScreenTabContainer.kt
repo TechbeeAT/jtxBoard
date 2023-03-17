@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.list
 
 
 import android.widget.Toast
+import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -176,12 +177,15 @@ fun ListScreenTabContainer(
             allCategoriesLive = getActiveViewModel().allCategories,
             allResourcesLive = getActiveViewModel().allResources,
             allCollectionsLive = getActiveViewModel().allWriteableCollections,
+            selectFromAllListLive = getActiveViewModel().selectFromAllList,
+            onSelectFromAllListSearchTextUpdated = { getActiveViewModel().updateSelectFromAllListQuery(searchText = it, isAuthenticated = globalStateHolder.isAuthenticated.value) },
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
             onResourcesChanged = { addedResources, deletedResources -> getActiveViewModel().updateResourcesToSelected(addedResources, deletedResources) },
             onStatusChanged = { newStatus -> getActiveViewModel().updateStatusOfSelected(newStatus) },
             onClassificationChanged = { newClassification -> getActiveViewModel().updateClassificationOfSelected(newClassification) },
             onPriorityChanged = { newPriority -> getActiveViewModel().updatePriorityOfSelected(newPriority) },
             onCollectionChanged = { newCollection -> getActiveViewModel().moveSelectedToNewCollection(newCollection) },
+            onParentAdded = { addedParent -> getActiveViewModel().addNewParentToSelected(addedParent) },
             onDismiss = { showUpdateEntriesDialog = false }
         )
     }
@@ -210,8 +214,14 @@ fun ListScreenTabContainer(
         showSearch = false
         keyboardController?.hide()
         listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
-        listViewModel.updateSearch(saveListSettings = false)
+        listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
         lastUsedPage.value = pagerState.currentPage
+    }
+
+    var lastIsAuthenticated by remember { mutableStateOf(false) }
+    if(lastIsAuthenticated != globalStateHolder.isAuthenticated.value) {
+        lastIsAuthenticated = globalStateHolder.isAuthenticated.value
+        getActiveViewModel().updateSearch(false, globalStateHolder.isAuthenticated.value)
     }
 
     fun addNewEntry(
@@ -222,17 +232,7 @@ fun ListScreenTabContainer(
         editAfterSaving: Boolean
     ) {
 
-        val newICalObject = when (module) {
-            Module.JOURNAL -> ICalObject.createJournal().apply { this.setDefaultJournalDateFromSettings(context) }
-            Module.NOTE -> ICalObject.createNote()
-            Module.TODO -> ICalObject.createTodo().apply {
-                this.setDefaultDueDateFromSettings(context)
-                this.setDefaultStartDateFromSettings(context)
-            }
-        }
-        newICalObject.collectionId = collectionId
-        newICalObject.parseSummaryAndDescription(text)
-        newICalObject.parseURL(text)
+        val newICalObject = ICalObject.fromText(module, collectionId, text, context)
         val categories = Category.extractHashtagsFromText(text)
 
         //handle autoAlarm
@@ -270,7 +270,7 @@ fun ListScreenTabContainer(
                 module = listViewModel.module,
                 searchText = listViewModel.listSettings.searchText,
                 newEntryText = listViewModel.listSettings.newEntryText,
-                onSearchTextUpdated = { listViewModel.updateSearch(saveListSettings = false) },
+                onSearchTextUpdated = { listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value) },
                 onCreateNewEntry = { newEntryText ->
                     addNewEntry(
                         module = listViewModel.module,
@@ -364,7 +364,7 @@ fun ListScreenTabContainer(
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.Sync, null) },
                                 onClick = {
-                                    SyncUtil.syncAllAccounts(context)
+                                    getActiveViewModel().syncAccounts()
                                     topBarMenuExpanded = false
                                 }
                             )
@@ -379,7 +379,7 @@ fun ListScreenTabContainer(
                                         Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
                                     } else {
                                         getActiveViewModel().listSettings.viewMode.value = viewMode
-                                        getActiveViewModel().updateSearch(saveListSettings = true)
+                                        getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                                     }
                                 }
                             )
@@ -391,7 +391,7 @@ fun ListScreenTabContainer(
                             isSelected = getActiveViewModel().listSettings.flatView.value,
                             onCheckedChange = {
                                 getActiveViewModel().listSettings.flatView.value = it
-                                getActiveViewModel().updateSearch(saveListSettings = true)
+                                getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                             }
                         )
                         Divider()
@@ -401,7 +401,7 @@ fun ListScreenTabContainer(
                             isSelected = getActiveViewModel().listSettings.showOneRecurEntryInFuture.value,
                             onCheckedChange = {
                                 getActiveViewModel().listSettings.showOneRecurEntryInFuture.value = it
-                                getActiveViewModel().updateSearch(saveListSettings = true)
+                                getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                             }
                         )
                     }
@@ -443,6 +443,8 @@ fun ListScreenTabContainer(
                     multiselectEnabled = listViewModel.multiselectEnabled,
                     selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,
+                    isBiometricsEnabled = settingsStateHolder.settingProtectBiometric.value != DropdownSettingOption.PROTECT_BIOMETRIC_OFF,
+                    isBiometricsUnlocked = globalStateHolder.isAuthenticated.value,
                     onFilterIconClicked = {
                         scope.launch {
                             if (filterBottomSheetState.isVisible)
@@ -453,7 +455,20 @@ fun ListScreenTabContainer(
                     },
                     onGoToDateSelected = { id -> getActiveViewModel().scrollOnceId.postValue(id) },
                     onDeleteSelectedClicked = { showDeleteSelectedDialog = true },
-                    onUpdateSelectedClicked = { showUpdateEntriesDialog = true }
+                    onUpdateSelectedClicked = { showUpdateEntriesDialog = true },
+                    onToggleBiometricAuthentication = {
+                        if(globalStateHolder.isAuthenticated.value) {
+                            globalStateHolder.isAuthenticated.value = false
+                        } else {
+                            val promptInfo: BiometricPrompt.PromptInfo = BiometricPrompt.PromptInfo.Builder()
+                                .setTitle(context.getString(R.string.settings_protect_biometric))
+                                .setSubtitle(context.getString(R.string.settings_protect_biometric_info_on_unlock))
+                                .setNegativeButtonText(context.getString(R.string.cancel))
+                                .build()
+                            globalStateHolder.biometricPrompt?.authenticate(promptInfo)
+                        }
+                        listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
+                    }
                 )
             } else if(timeout) {
                 BottomAppBar {
@@ -561,6 +576,7 @@ fun ListScreenTabContainer(
                                         },
                                         navController = navController,
                                         filterBottomSheetState = filterBottomSheetState,
+                                        isAuthenticated = globalStateHolder.isAuthenticated.value
                                     )
                                 }
 

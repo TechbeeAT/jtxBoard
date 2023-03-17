@@ -37,6 +37,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.properties.Reltype
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
@@ -45,7 +47,7 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @Composable
 fun ListScreenCompact(
     groupedList: Map<String, List<ICal4List>>,
-    subtasksLive: LiveData<Map<String?, List<ICal4List>>>,
+    subtasksLive: LiveData<List<ICal4ListRel>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
@@ -55,7 +57,7 @@ fun ListScreenCompact(
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
 
-    val subtasks by subtasksLive.observeAsState(emptyMap())
+    val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
 
@@ -107,10 +109,9 @@ fun ListScreenCompact(
                 )
                 { iCalObject ->
 
-                    var currentSubtasks = subtasks[iCalObject.uid]
+                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCalObject.uid } }.map { it.iCal4List }
                     if (listSettings.isExcludeDone.value)   // exclude done if applicable
-
-                        currentSubtasks = currentSubtasks?.filter { subtask -> subtask.percent != 100 }
+                        currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 }
 
 
                     if (scrollId != null) {
@@ -125,8 +126,8 @@ fun ListScreenCompact(
 
                     ListCardCompact(
                         iCalObject,
-                        subtasks = currentSubtasks ?: emptyList(),
-                        progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks?.isNotEmpty() == true,
+                        subtasks = currentSubtasks,
+                        progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
                         selected = selectedEntries,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -198,7 +199,7 @@ fun ListScreenCompact_TODO() {
         }
         ListScreenCompact(
             groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
-            subtasksLive = MutableLiveData(emptyMap()),
+            subtasksLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
@@ -252,7 +253,7 @@ fun ListScreenCompact_JOURNAL() {
         }
         ListScreenCompact(
             groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
-            subtasksLive = MutableLiveData(emptyMap()),
+            subtasksLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
