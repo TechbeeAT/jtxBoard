@@ -70,11 +70,13 @@ Global Strings -->
     <string name="list_due_tomorrow">"Due tomorrow"</string>
     <string name="list_due_inXdays">"Due in %d days"</string>
     <string name="list_due_inXhours">"Due in %d hours"</string>
+    <string name="list_due_on_weekday">"Due on %s"</string>
     <string name="list_start_past">"Start in past"</string>
     <string name="list_start_today">"Planned start today"</string>
     <string name="list_start_tomorrow">"Start tomorrow"</string>
     <string name="list_start_inXhours">"Planned start in %d hours"</string>
     <string name="list_start_inXdays">"Planned start in %d days"</string>
+    <string name="list_start_on_weekday">"Planned start on %s"</string>
     <string name="list_tabitem_journals">"Journals"</string>
     <string name="list_tabitem_notes">"Notes"</string>
     <string name="list_tabitem_todos">"Tasks"</string>
