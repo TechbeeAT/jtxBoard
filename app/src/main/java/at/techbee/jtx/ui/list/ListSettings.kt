@@ -334,4 +334,28 @@ class ListSettings {
 
     fun getLastUsedCollectionId(prefs: SharedPreferences) = prefs.getLong(PREFS_LAST_COLLECTION, 0L)
     fun saveLastUsedCollectionId(prefs: SharedPreferences, collectionId: Long) = prefs.edit()?.putLong(PREFS_LAST_COLLECTION, collectionId)?.apply()
+
+    fun isFilterActive() =
+        searchCategories.value.isNotEmpty()
+                || searchResources.value.isNotEmpty()
+                //|| searchOrganizers.value.isNotEmpty()
+                || searchStatus.value.isNotEmpty()
+                || searchClassification.value.isNotEmpty()
+                || searchCollection.value.isNotEmpty()
+                || searchAccount.value.isNotEmpty()
+                || isExcludeDone.value
+                || isFilterStartInPast.value
+                || isFilterStartToday.value
+                || isFilterStartTomorrow.value
+                || isFilterStartFuture.value
+                || isFilterOverdue.value
+                || isFilterDueToday.value
+                || isFilterDueTomorrow.value
+                || isFilterDueFuture.value
+                || isFilterNoDatesSet.value
+                || isFilterNoStartDateSet.value
+                || isFilterNoDueDateSet.value
+                || isFilterNoCompletedDateSet.value
+                || isFilterNoCategorySet.value
+                || isFilterNoResourceSet.value
 }

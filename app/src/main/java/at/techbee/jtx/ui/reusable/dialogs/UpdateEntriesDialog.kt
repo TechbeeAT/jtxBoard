@@ -44,8 +44,6 @@ import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 
 
 enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
@@ -58,7 +56,7 @@ enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     LINK_TO_PARENT(R.string.link_to_parent)
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun UpdateEntriesDialog(
     module: Module,
@@ -150,9 +148,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.CATEGORIES) {
                     FlowRow(
-                        //horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -189,8 +185,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.RESOURCES) {
                     FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -226,8 +221,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.STATUS) {
                     FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -244,8 +238,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.CLASSIFICATION) {
                     FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -262,8 +255,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.PRIORITY) {
                     FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -280,8 +272,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.COLLECTION) {
                     FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {

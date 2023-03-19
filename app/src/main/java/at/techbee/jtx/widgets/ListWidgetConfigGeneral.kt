@@ -13,9 +13,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.CheckBox
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Opacity
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -27,14 +33,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
-import at.techbee.jtx.ui.list.*
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ListWidgetConfigGeneral(
     listSettings: ListSettings,
@@ -57,7 +61,7 @@ fun ListWidgetConfigGeneral(
 
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
-            mainAxisAlignment = FlowMainAxisAlignment.Center
+            horizontalArrangement = Arrangement.Center
         ) {
 
             Module.values().forEach { module ->

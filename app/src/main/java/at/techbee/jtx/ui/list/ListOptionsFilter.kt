@@ -276,37 +276,7 @@ fun ListOptionsFilter(
                     label = { Text(stringResource(id = R.string.list_without_completed_date)) }
                 )
                 FilterChip(
-                    selected = listSettings.isFilterNoStartDateSet.value,
-                        onClick = {
-                            listSettings.isFilterNoStartDateSet.value =
-                                !listSettings.isFilterNoStartDateSet.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = R.string.list_without_start_date)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    FilterChip(
-                        selected = listSettings.isFilterNoDueDateSet.value,
-                        onClick = {
-                            listSettings.isFilterNoDueDateSet.value =
-                                !listSettings.isFilterNoDueDateSet.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = R.string.list_without_due_date)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    FilterChip(
-                        selected = listSettings.isFilterNoCompletedDateSet.value,
-                        onClick = {
-                            listSettings.isFilterNoCompletedDateSet.value =
-                                !listSettings.isFilterNoCompletedDateSet.value
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = R.string.list_without_completed_date)) },
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    FilterChip(
-                        selected = listSettings.isFilterNoDatesSet.value,
+                    selected = listSettings.isFilterNoDatesSet.value,
                     onClick = {
                         listSettings.isFilterNoDatesSet.value =
                             !listSettings.isFilterNoDatesSet.value

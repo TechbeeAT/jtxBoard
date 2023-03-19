@@ -117,7 +117,7 @@ fun ListCard(
 
             Row(
                 verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.SpaceEvenly
+                modifier = Modifier.padding(vertical = 2.dp)
             ) {
 
                 if (iCalObject.module == Module.JOURNAL.name)
@@ -125,10 +125,8 @@ fun ListCard(
                         iCalObject.dtstart,
                         iCalObject.dtstartTimezone,
                         modifier = Modifier.padding(
-                            start = 8.dp,
-                            end = 4.dp,
-                            bottom = 4.dp,
-                            top = 4.dp
+                            start = 4.dp,
+                            end = 12.dp
                         )
                     )
 
@@ -155,9 +153,7 @@ fun ListCard(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = summarySize,
                                 textDecoration = summaryTextDecoration,
-                                modifier = Modifier
-                                    .padding(top = 4.dp)
-                                    .weight(1f)
+                                modifier = Modifier.weight(1f)
                             )
 
                         if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)

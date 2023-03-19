@@ -673,4 +673,5 @@ Thank you!"</string>
     <string name="markdown_code">"Code"</string>
     <string name="preset_categories">"Preset categories"</string>
     <string name="preset_resources">"Preset resources"</string>
+    <string name="active_filters">Active filters:</string>
 </resources>

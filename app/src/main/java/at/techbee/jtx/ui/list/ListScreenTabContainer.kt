@@ -12,10 +12,7 @@ package at.techbee.jtx.ui.list
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
@@ -69,7 +66,7 @@ import kotlin.time.Duration.Companion.seconds
     ExperimentalMaterial3Api::class,
     ExperimentalPagerApi::class,
     ExperimentalComposeUiApi::class,
-    ExperimentalMaterialApi::class,
+    ExperimentalMaterialApi::class, ExperimentalLayoutApi::class,
 )
 @Composable
 fun ListScreenTabContainer(
@@ -132,6 +129,8 @@ fun ListScreenTabContainer(
             }
         }
     }
+    val storedCategories by listViewModel.storedCategories.observeAsState(emptyList())
+    val storedResources by listViewModel.storedResources.observeAsState(emptyList())
 
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, allWriteableCollections.value) {
@@ -527,6 +526,16 @@ fun ListScreenTabContainer(
                                         )
                                     }
                                 }
+                            }
+
+                            AnimatedVisibility(listViewModel.listSettings.isFilterActive()) {
+                                ListActiveFiltersRow(
+                                    listSettings = listViewModel.listSettings,
+                                    module = listViewModel.module,
+                                    storedCategories = storedCategories,
+                                    storedResources = storedResources,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                )
                             }
 
                             AnimatedVisibility(

@@ -1,6 +1,10 @@
 package at.techbee.jtx.ui.list
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.MaterialTheme
@@ -24,9 +28,9 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.ListBadge
-import com.google.accompanist.flowlayout.FlowRow
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListTopFlowRow(
     ical4List: ICal4List,
@@ -38,15 +42,15 @@ fun ListTopFlowRow(
     includeJournalDate: Boolean = false
 ) {
     FlowRow(
-        mainAxisSpacing = 3.dp,
-        crossAxisSpacing = 3.dp,
+        horizontalArrangement = Arrangement.spacedBy(3.dp),
         modifier = modifier
     ) {
         ListBadge(
             icon = Icons.Outlined.FolderOpen,
             iconDesc = stringResource(id = R.string.collection),
             text = ical4List.collectionDisplayName,
-            containerColor = ical4List.colorCollection?.let { Color(it) } ?: MaterialTheme.colorScheme.primaryContainer
+            containerColor = ical4List.colorCollection?.let { Color(it) } ?: MaterialTheme.colorScheme.primaryContainer,
+            modifier = Modifier.padding(vertical = 2.dp)
         )
 
         if (includeJournalDate && ical4List.module == Module.JOURNAL.name && ical4List.dtstart != null) {
@@ -58,7 +62,8 @@ fun ListTopFlowRow(
                     dtstart = ical4List.dtstart,
                     dtstartTimezone = ical4List.dtstartTimezone,
                     context = LocalContext.current
-                )
+                ),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         if (ical4List.module == Module.TODO.name && ical4List.dtstart != null) {
@@ -70,7 +75,8 @@ fun ListTopFlowRow(
                     dtstart = ical4List.dtstart,
                     dtstartTimezone = ical4List.dtstartTimezone,
                     context = LocalContext.current
-                )
+                ),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         if (ical4List.module == Module.TODO.name && ical4List.due != null) {
@@ -89,6 +95,7 @@ fun ListTopFlowRow(
                         ical4List.dueTimezone
                     ) == true
                 ) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
@@ -97,7 +104,8 @@ fun ListTopFlowRow(
                 icon = Icons.Outlined.Label,
                 iconDesc = stringResource(id = R.string.category),
                 text = category.text,
-                containerColor = StoredCategory.getColorForCategory(category.text, storedCategories) ?: MaterialTheme.colorScheme.primaryContainer
+                containerColor = StoredCategory.getColorForCategory(category.text, storedCategories) ?: MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
@@ -106,7 +114,8 @@ fun ListTopFlowRow(
                 icon = Icons.Outlined.WorkOutline,
                 iconDesc = stringResource(id = R.string.resources),
                 text = resource.text,
-                containerColor = StoredResource.getColorForResource(resource.text?:"", storedResources) ?: MaterialTheme.colorScheme.primaryContainer
+                containerColor = StoredResource.getColorForResource(resource.text?:"", storedResources) ?: MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
@@ -114,7 +123,8 @@ fun ListTopFlowRow(
             ListBadge(
                 icon = Icons.Outlined.PublishedWithChanges,
                 iconDesc = stringResource(R.string.status),
-                text = Status.getStatusFromString(ical4List.status)?.stringResource?.let { stringResource(id = it) } ?: ical4List.status
+                text = Status.getStatusFromString(ical4List.status)?.stringResource?.let { stringResource(id = it) } ?: ical4List.status,
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
@@ -122,7 +132,8 @@ fun ListTopFlowRow(
             ListBadge(
                 icon = Icons.Outlined.AdminPanelSettings,
                 iconDesc = stringResource(R.string.classification),
-                text = Classification.getClassificationFromString(ical4List.classification)?.stringResource?.let { stringResource(id = it) } ?: ical4List.classification
+                text = Classification.getClassificationFromString(ical4List.classification)?.stringResource?.let { stringResource(id = it) } ?: ical4List.classification,
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
@@ -130,7 +141,8 @@ fun ListTopFlowRow(
             ListBadge(
                 icon = Icons.Outlined.WorkOutline,
                 iconDesc = stringResource(id = R.string.priority),
-                text = if (ical4List.priority in 1..9) stringArrayResource(id = R.array.priority)[ical4List.priority!!] else null
+                text = if (ical4List.priority in 1..9) stringArrayResource(id = R.array.priority)[ical4List.priority!!] else null,
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
@@ -139,21 +151,24 @@ fun ListTopFlowRow(
             ListBadge(
                 icon = Icons.Outlined.Group,
                 iconDesc = stringResource(id = R.string.attendees),
-                text = ical4List.numAttendees.toString()
+                text = ical4List.numAttendees.toString(),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         AnimatedVisibility(ical4List.numAttachments > 0) {
             ListBadge(
                 icon = Icons.Outlined.Attachment,
                 iconDesc = stringResource(id = R.string.attachments),
-                text = ical4List.numAttachments.toString()
+                text = ical4List.numAttachments.toString(),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         AnimatedVisibility(ical4List.numComments > 0) {
             ListBadge(
                 icon = Icons.Outlined.Comment,
                 iconDesc = stringResource(id = R.string.comments),
-                text = ical4List.numComments.toString()
+                text = ical4List.numComments.toString(),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         /*
@@ -169,20 +184,23 @@ fun ListTopFlowRow(
             ListBadge(
                 icon = Icons.Outlined.Alarm,
                 iconDesc = stringResource(id = R.string.alarms),
-                text = ical4List.numAlarms.toString()
+                text = ical4List.numAlarms.toString(),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         AnimatedVisibility(!ical4List.url.isNullOrEmpty()) {
             ListBadge(
                 icon = Icons.Outlined.Link,
                 iconDesc = stringResource(id = R.string.url),
-                text = ical4List.url
+                text = ical4List.url,
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         AnimatedVisibility(!ical4List.location.isNullOrEmpty()) {
             ListBadge(
                 icon = Icons.Outlined.PinDrop,
                 iconDesc = stringResource(id = R.string.location),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         /*
@@ -197,20 +215,23 @@ fun ListTopFlowRow(
             ListBadge(
                 icon = Icons.Outlined.ContactMail,
                 iconDesc = stringResource(id = R.string.contact),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         AnimatedVisibility(ical4List.numSubtasks > 0) {
             ListBadge(
                 icon = Icons.Outlined.TaskAlt,
                 iconDesc = stringResource(id = R.string.subtasks),
-                text = ical4List.numSubtasks.toString()
+                text = ical4List.numSubtasks.toString(),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         AnimatedVisibility(ical4List.numSubnotes > 0) {
             ListBadge(
                 icon = Icons.Outlined.Note,
                 iconDesc = stringResource(id = R.string.note),
-                text = ical4List.numSubnotes.toString()
+                text = ical4List.numSubnotes.toString(),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
@@ -218,14 +239,16 @@ fun ListTopFlowRow(
         AnimatedVisibility(ical4List.isReadOnly) {
             ListBadge(
                 iconRes = R.drawable.ic_readonly,
-                iconDesc = stringResource(id = R.string.readyonly)
+                iconDesc = stringResource(id = R.string.readyonly),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
         AnimatedVisibility(ical4List.uploadPending) {
             ListBadge(
                 icon = Icons.Outlined.CloudSync,
-                iconDesc = stringResource(id = R.string.upload_pending)
+                iconDesc = stringResource(id = R.string.upload_pending),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
@@ -233,7 +256,8 @@ fun ListTopFlowRow(
             ListBadge(
                 icon = if(ical4List.rrule != null || (ical4List.recurid != null && ical4List.sequence == 0L)) Icons.Outlined.EventRepeat else null,
                 iconRes = if(ical4List.recurid != null && ical4List.sequence == 0L) R.drawable.ic_recur_exception else null,
-                iconDesc = stringResource(id = R.string.list_item_recurring)
+                iconDesc = stringResource(id = R.string.list_item_recurring),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
     }

@@ -9,10 +9,7 @@
 package at.techbee.jtx.ui.reusable.elements
 
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteSweep
@@ -28,8 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import com.google.accompanist.flowlayout.FlowRow
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FilterSection(
     icon: ImageVector,
@@ -91,8 +88,7 @@ fun FilterSection(
         }
 
         FlowRow(
-            mainAxisSpacing = 4.dp,
-            crossAxisSpacing = 2.dp,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             content()

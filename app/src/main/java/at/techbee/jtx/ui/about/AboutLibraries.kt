@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
-import com.google.accompanist.flowlayout.FlowRow
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
@@ -106,7 +105,7 @@ fun AboutLibraries_Preview() {
 
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun AboutLibrariesLib(
     library: Library
@@ -160,8 +159,7 @@ fun AboutLibrariesLib(
 
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                mainAxisSpacing = 8.dp,
-                crossAxisSpacing = 0.dp
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 if (library.licenses.isNotEmpty()) {
                     library.licenses.forEach { license ->

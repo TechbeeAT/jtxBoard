@@ -34,7 +34,6 @@ import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
-import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -92,7 +91,7 @@ fun PresetsScreen(
 
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun PresetsScreenContent(
     allCategories: List<String>,
@@ -148,8 +147,7 @@ fun PresetsScreenContent(
         HeadlineWithIcon(icon = Icons.Outlined.Label, iconDesc = null, text = "Preset categories")
 
         FlowRow(
-            mainAxisSpacing = 3.dp,
-            crossAxisSpacing = 1.dp
+            horizontalArrangement = Arrangement.spacedBy(3.dp)
         ) {
 
             storedCategories.forEach { storedCategory ->
@@ -189,8 +187,7 @@ fun PresetsScreenContent(
         )
 
         FlowRow(
-            mainAxisSpacing = 3.dp,
-            crossAxisSpacing = 1.dp
+            horizontalArrangement = Arrangement.spacedBy(3.dp)
         ) {
             storedResources.forEach { storedResource ->
                 ElevatedAssistChip(

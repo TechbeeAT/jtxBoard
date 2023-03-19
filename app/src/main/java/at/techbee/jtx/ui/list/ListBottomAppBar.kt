@@ -60,24 +60,6 @@ fun ListBottomAppBar(
     var showDAVx5IncompatibleDialog by remember { mutableStateOf(false) }
     val iCal4List by iCal4ListRelLive.observeAsState(emptyList())
 
-    val isFilterActive = listSettings.searchCategories.value.isNotEmpty()
-                //|| searchOrganizers.value.isNotEmpty()
-            || (listSettings.searchStatus.value.isNotEmpty())
-            || listSettings.searchClassification.value.isNotEmpty()
-            || listSettings.searchCollection.value.isNotEmpty()
-            || listSettings.searchAccount.value.isNotEmpty()
-            || listSettings.isExcludeDone.value
-            || listSettings.isFilterStartInPast.value
-            || listSettings.isFilterStartToday.value
-            || listSettings.isFilterStartTomorrow.value
-            || listSettings.isFilterStartFuture.value
-            || (module == Module.TODO && listSettings.isFilterOverdue.value)
-            || (module == Module.TODO && listSettings.isFilterDueToday.value)
-            || (module == Module.TODO && listSettings.isFilterDueTomorrow.value)
-            || (module == Module.TODO && listSettings.isFilterDueFuture.value)
-            || (module == Module.TODO && listSettings.isFilterNoDatesSet.value)
-
-
     if(showGoToDatePicker) {
         var dates = iCal4List.map { it.iCal4List.dtstart ?: System.currentTimeMillis() }.toList()
         if (dates.isEmpty())
@@ -130,7 +112,7 @@ fun ListBottomAppBar(
                         Icon(
                             Icons.Outlined.FilterList,
                             contentDescription = stringResource(id = R.string.filter),
-                            tint = if (isFilterActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                            tint = if (listSettings.isFilterActive()) MaterialTheme.colorScheme.primary else LocalContentColor.current
                         )
                     }
                     AnimatedVisibility(allowNewEntries) {
