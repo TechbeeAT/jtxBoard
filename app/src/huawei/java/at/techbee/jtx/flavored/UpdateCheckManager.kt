@@ -11,7 +11,6 @@ package at.techbee.jtx.flavored
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
-import androidx.compose.runtime.mutableStateOf
 import com.huawei.hms.jos.JosApps
 import com.huawei.updatesdk.service.appmgr.bean.ApkUpgradeInfo
 import com.huawei.updatesdk.service.otaupdate.CheckUpdateCallBack
@@ -19,8 +18,6 @@ import com.huawei.updatesdk.service.otaupdate.UpdateKey
 
 
 class UpdateCheckManager(val activity: Activity) : UpdateCheckManagerDefinition {
-
-    override var isForcedUpdateAvailable = mutableStateOf(false)
 
     override fun checkForUpdates() {
         val client = JosApps.getAppUpdateClient(activity)
@@ -30,7 +27,7 @@ class UpdateCheckManager(val activity: Activity) : UpdateCheckManagerDefinition 
                     val info = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         intent.getSerializableExtra(UpdateKey.INFO, ApkUpgradeInfo::class.java)
                     } else {
-                        intent.getSerializableExtra(UpdateKey.INFO) as ApkUpgradeInfo
+                        intent.getSerializableExtra(UpdateKey.INFO) as ApkUpgradeInfo?
                     }
                     if(intent.getBooleanExtra(UpdateKey.MUST_UPDATE, false))
                         JosApps.getAppUpdateClient(activity).showUpdateDialog(activity, info, false)

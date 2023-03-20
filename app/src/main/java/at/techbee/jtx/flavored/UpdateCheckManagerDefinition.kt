@@ -8,11 +8,7 @@
 
 package at.techbee.jtx.flavored
 
-import androidx.compose.runtime.MutableState
-
 interface UpdateCheckManagerDefinition {
-
-    var isForcedUpdateAvailable: MutableState<Boolean>
 
     fun checkForUpdates()
 }
