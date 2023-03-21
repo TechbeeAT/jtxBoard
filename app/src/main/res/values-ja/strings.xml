@@ -16,6 +16,7 @@ Global Strings -->
     <string name="website">"ウェブサイト"</string>
     <string name="latitude">"緯度"</string>
     <string name="longitude">"経度"</string>
+    <string name="unlink">"リンク解除"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
     <string name="toolbar_text_add_task">"タスクを追加"</string>
@@ -85,6 +86,7 @@ Global Strings -->
     <string name="view_comment_playbutton_content_desc">"音声コメントを再生"</string>
     <string name="view_reccurrence_note_is_exception">"このアイテムはエントリーの繰り返しの例外です。"</string>
     <string name="view_feedback_linked_notes">"フィードバック / リンクされたメモ"</string>
+    <string name="view_linked_note_of">"メモのリンク先:"</string>
     <string name="view_add_note">"メモを追加"</string>
     <string name="view_add_audio_note">"音声を追加"</string>
     <string name="view_fab_edit_entry_contentDesc">"エントリーを編集"</string>
