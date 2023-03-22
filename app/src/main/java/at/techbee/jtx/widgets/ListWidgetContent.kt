@@ -105,6 +105,8 @@ fun ListWidgetContent(
             ?: stringResource(id = R.string.status_no_status)
             GroupBy.CLASSIFICATION -> Classification.values().find { classif -> classif.classification == it.classification }?.stringResource?.let { stringRes -> stringResource(id = stringRes) }
                 ?: it.classification ?: stringResource(id = R.string.classification_no_classification)
+            GroupBy.ACCOUNT -> it.accountName ?:""
+            GroupBy.COLLECTION -> it.collectionDisplayName ?:""
             GroupBy.PRIORITY -> {
                 when (it.priority) {
                     null -> context.resources.getStringArray(R.array.priority)[0]

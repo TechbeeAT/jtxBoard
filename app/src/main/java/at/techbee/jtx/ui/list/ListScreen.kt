@@ -78,6 +78,8 @@ fun ListScreen(
         when (listViewModel.listSettings.groupBy.value) {
             GroupBy.STATUS -> Status.values().find { status ->  status.status == it.iCal4List.status }?.stringResource?.let { stringRes -> stringResource(id = stringRes)}?: it.iCal4List.status?:""
             GroupBy.CLASSIFICATION -> Classification.values().find { classif ->  classif.classification == it.iCal4List.classification }?.stringResource?.let { stringRes -> stringResource(id = stringRes)}?: it.iCal4List.classification?:""
+            GroupBy.ACCOUNT -> it.iCal4List.accountName ?:""
+            GroupBy.COLLECTION -> it.iCal4List.collectionDisplayName ?:""
             GroupBy.PRIORITY -> {
                 when (it.iCal4List.priority) {
                     null -> stringArrayResource(id = R.array.priority)[0]

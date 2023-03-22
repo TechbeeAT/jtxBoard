@@ -72,6 +72,8 @@ fun ListOptionsGroupSort(
                             GroupBy.PRIORITY -> OrderBy.PRIORITY
                             GroupBy.STATUS -> OrderBy.STATUS
                             GroupBy.DUE -> OrderBy.DUE
+                            GroupBy.ACCOUNT -> OrderBy.ACCOUNT
+                            GroupBy.COLLECTION -> OrderBy.COLLECTION
                             else -> listSettings.orderBy.value
                         }
                         onListSettingsChanged()

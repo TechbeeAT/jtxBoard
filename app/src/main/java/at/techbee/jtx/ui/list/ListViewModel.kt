@@ -546,7 +546,9 @@ enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String
     PRIORITY(R.string.priority, "$COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY "),
     CLASSIFICATION(R.string.classification, "$COLUMN_CLASSIFICATION IS NULL, $COLUMN_CLASSIFICATION "),
     STATUS(R.string.status, "$COLUMN_STATUS IS NULL, $COLUMN_STATUS "),
-    PROGRESS(R.string.progress, "$COLUMN_PERCENT ");
+    PROGRESS(R.string.progress, "$COLUMN_PERCENT "),
+    ACCOUNT(R.string.account, "$COLUMN_COLLECTION_ACCOUNT_NAME "),
+    COLLECTION(R.string.collection, "$COLUMN_COLLECTION_DISPLAYNAME ");
 
     companion object {
         fun getValuesFor(module: Module): Array<OrderBy> =
@@ -569,7 +571,9 @@ enum class GroupBy(@StringRes val stringResource: Int) {
     CLASSIFICATION(R.string.classification),
     DATE(R.string.date),
     START(R.string.started),
-    DUE(R.string.due);
+    DUE(R.string.due),
+    ACCOUNT(R.string.account),
+    COLLECTION(R.string.collection);
 
     companion object {
         fun getValuesFor(module: Module): Array<GroupBy> =
@@ -577,18 +581,24 @@ enum class GroupBy(@StringRes val stringResource: Int) {
                 Module.JOURNAL -> arrayOf(
                     DATE,
                     STATUS,
-                    CLASSIFICATION
+                    CLASSIFICATION,
+                    ACCOUNT,
+                    COLLECTION
                 )
                 Module.NOTE -> arrayOf(
                     STATUS,
-                    CLASSIFICATION
+                    CLASSIFICATION,
+                    ACCOUNT,
+                    COLLECTION
                 )
                 Module.TODO -> arrayOf(
                     START,
                     DUE,
                     STATUS,
                     CLASSIFICATION,
-                    PRIORITY
+                    PRIORITY,
+                    ACCOUNT,
+                    COLLECTION
                 )
             }
     }
