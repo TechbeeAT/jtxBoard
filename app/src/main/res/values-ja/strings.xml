@@ -14,6 +14,8 @@ Global Strings -->
     <string name="gotit">"わかりました"</string>
     <string name="cont">"続行"</string>
     <string name="website">"ウェブサイト"</string>
+    <string name="latitude">"緯度"</string>
+    <string name="longitude">"経度"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
     <string name="toolbar_text_add_task">"タスクを追加"</string>
@@ -544,6 +546,7 @@ Global Strings -->
     <string name="menu_view_autosave">"自動保存"</string>
     <string name="next">"次へ"</string>
     <string name="previous">"前へ"</string>
+    <string name="preview">"プレビュー"</string>
     <string name="x_selected">%1$d/%2$d 選択中</string>
     <string name="select_all">すべて選択</string>
     <string name="select_none">選択を解除</string>
