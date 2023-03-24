@@ -17,6 +17,7 @@ Global Strings -->
     <string name="latitude">"緯度"</string>
     <string name="longitude">"経度"</string>
     <string name="unlink">"リンク解除"</string>
+    <string name="current_location">"現在地"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
     <string name="toolbar_text_add_task">"タスクを追加"</string>
@@ -86,6 +87,7 @@ Global Strings -->
     <string name="view_comment_playbutton_content_desc">"音声コメントを再生"</string>
     <string name="view_reccurrence_note_is_exception">"このアイテムはエントリーの繰り返しの例外です。"</string>
     <string name="view_feedback_linked_notes">"フィードバック / リンクされたメモ"</string>
+    <string name="view_subtask_of">"このエントリーのサブタスク"</string>
     <string name="view_linked_note_of">"メモのリンク先:"</string>
     <string name="view_add_note">"メモを追加"</string>
     <string name="view_add_audio_note">"音声を追加"</string>
@@ -250,10 +252,13 @@ Global Strings -->
     <string name="apply">"適用"</string>
     <string name="not_available_abbreviation">"利用不可"</string>
     <string name="collection">"コレクション"</string>
+    <string name="link_to_parent">"親にリンク"</string>
     <string name="toolbar_text_collections">"コレクション"</string>
     <string name="navigation_drawer_collections">"コレクション"</string>
     <string name="edit_dialog_set_attendee_role">"参加者の役割を設定"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"日付/時刻"</string>
+    <string name="alarms_duration">"期間"</string>
     <string name="alarms_onstart">"着手日時に"</string>
     <string name="alarms_ondue">"締切日時に"</string>
     <string name="alarms_custom">"カスタム"</string>
@@ -301,6 +306,8 @@ Global Strings -->
     <string name="edit_validation_errors_start_due_timezone_check">"着手日時と締切日時の両方のタイムゾーンを選択するか、タイムゾーンを無効化してください。"</string>
     <string name="collections_toast_export_ics_success">"コレクションのエクスポートを正常に完了しました。"</string>
     <string name="collections_toast_export_ics_error">"選択したコレクションのエクスポート中にエラーが発生しました。"</string>
+    <string name="attachment_export_saved_successfully">"保存しました"</string>
+    <string name="attachment_export_error_error_occurred">"選択したファイルの保存中にエラーが発生しました！"</string>
     <string name="menu_collections_add_remote">"リモートのコレクションを追加 (DAVx⁵)"</string>
     <string name="menu_collection_popup_show_in_davx5">"DAVx⁵ 内で表示"</string>
     <string name="menu_collection_popup_export_as_ics">".ics ファイルでエクスポート"</string>
@@ -320,6 +327,7 @@ Global Strings -->
     <string name="resources">"必要なもの"</string>
     <string name="organizer">"主催者"</string>
     <string name="contact">"連絡先"</string>
+    <string name="relatedto">"このエントリーと関連"</string>
     <string name="comments">"コメント"</string>
     <string name="attachments">"添付ファイル"</string>
     <string name="alarms">"アラーム"</string>
@@ -382,6 +390,8 @@ Global Strings -->
     <string name="settings_select_theme_dark">"ダーク"</string>
     <string name="settings_select_theme_light">"ライト"</string>
     <string name="settings_select_theme_system">"システムのデフォルト"</string>
+    <string name="settings_protect_biometric_confidential">"機密"</string>
+    <string name="settings_protect_biometric_all">"すべて"</string>
     <string name="donate_dialog_title">"jtx Board を気に入っていただけましたか？"</string>
     <string name="donate_dialog_message">"アプリの開発は複雑で、開発・メンテナンス・サポートは大変な仕事です。このアプリを気に入り、継続的な開発をご支援いただける場合は、寄付をご検討ください :-)
 ありがとうございます！"</string>
