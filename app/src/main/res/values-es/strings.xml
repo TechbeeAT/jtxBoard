@@ -13,6 +13,10 @@ Global Strings -->
     <string name="discard">"Descartar"</string>
     <string name="gotit">"Entendido"</string>
     <string name="cont">"Continuar"</string>
+    <string name="website">"Sitio web"</string>
+    <string name="latitude">"Latitud"</string>
+    <string name="longitude">"Longitud"</string>
+    <string name="unlink">"Desvincular"</string>
     <string name="toolbar_text_add_journal">"Añadir Diario"</string>
     <string name="toolbar_text_add_note">"Añadir Nota"</string>
     <string name="toolbar_text_add_task">"Añadir Tarea"</string>
@@ -406,6 +410,7 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="invalid_timezone_message">"Por favor, seleccione una zona horaria válida"</string>
     <string name="invalid_url_message">"Por favor, introduzca una URL válida."</string>
     <string name="list_quickadd_dialog_sr_start">"Iniciar reconocimiento de voz"</string>
+    <string name="collections_dialog_buypro_info">"Por favor, compre jtx Board Pro para habilitar las capacidades de edición de colecciones remotas."</string>
     <string name="details_show_all_options">"Mostrar todas las opciones"</string>
     <string name="details_attendees_processing_info">"Atención: Los servidores pueden procesar automáticamente a los asistentes, por ejemplo, enviando mensajes iMIP."</string>
     <string name="details_toast_entry_deleted">"Entrada descartada/borrada"</string>
