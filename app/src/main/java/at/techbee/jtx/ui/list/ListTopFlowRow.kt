@@ -87,9 +87,11 @@ fun ListTopFlowRow(
                     due = ical4List.due,
                     dueTimezone = ical4List.dueTimezone,
                     percent = ical4List.percent,
+                    status = ical4List.status,
                     context = LocalContext.current
                 ),
                 containerColor = if (ICalObject.isOverdue(
+                        ical4List.status,
                         ical4List.percent,
                         ical4List.due,
                         ical4List.dueTimezone
