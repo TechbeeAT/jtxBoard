@@ -89,7 +89,7 @@ fun ListScreen(
             }
             GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = LocalContext.current)
             GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = LocalContext.current)
-            GroupBy.DUE -> ICalObject.getDueTextInfo(due = it.iCal4List.due, dueTimezone = it.iCal4List.dueTimezone, percent = it.iCal4List.percent, daysOnly = true, context = LocalContext.current)
+            GroupBy.DUE -> ICalObject.getDueTextInfo(status = it.status, due = it.iCal4List.due, dueTimezone = it.iCal4List.dueTimezone, percent = it.iCal4List.percent, daysOnly = true, context = LocalContext.current)
             else -> {
                 it.iCal4List.module
             }

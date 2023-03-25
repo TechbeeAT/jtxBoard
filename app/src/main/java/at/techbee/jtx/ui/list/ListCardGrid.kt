@@ -86,7 +86,7 @@ fun ListCardGrid(
 
                 if (iCalObject.module == Module.TODO.name)
                     Checkbox(
-                        checked = iCalObject.percent == 100,
+                        checked = iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status,
                         enabled = !iCalObject.isReadOnly && !progressUpdateDisabled,
                         onCheckedChange = {
                             onProgressChanged(

@@ -59,7 +59,7 @@ fun ListCardCompact(
         colors = CardDefaults.cardColors(
             containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
         ),
-        border = iCalObject.colorItem?.let { BorderStroke(1.dp, Color(it)) }, 
+        border = iCalObject.colorItem?.let { BorderStroke(1.dp, Color(it)) },
         modifier = modifier
     ) {
 
@@ -105,7 +105,7 @@ fun ListCardCompact(
 
                 if (iCalObject.module == Module.TODO.name) {
                     Checkbox(
-                        checked = iCalObject.percent == 100,
+                        checked = iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status,
                         enabled = !iCalObject.isReadOnly && !progressUpdateDisabled,
                         onCheckedChange = {
                             onProgressChanged(

@@ -158,7 +158,7 @@ fun ListCard(
 
                         if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
                             Checkbox(
-                                checked = iCalObject.percent == 100,
+                                checked = iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status,
                                 enabled = !iCalObject.isReadOnly,
                                 onCheckedChange = {
                                     onProgressChanged(
@@ -316,7 +316,7 @@ fun ListCard(
                     label = null,
                     iCalObjectId = iCalObject.id,
                     progress = iCalObject.percent,
-                    isReadOnly = iCalObject.isReadOnly || progressUpdateDisabled,
+                    status = iCalObject.status,isReadOnly = iCalObject.isReadOnly || progressUpdateDisabled,
                     sliderIncrement = progressIncrement,
                     onProgressChanged = onProgressChanged,
                     modifier = Modifier.fillMaxWidth()

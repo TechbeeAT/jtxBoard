@@ -138,7 +138,7 @@ fun ListScreenList(
                     var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
                     if (listSettings.isExcludeDone.value)   // exclude done if applicable
                         currentSubtasks =
-                            currentSubtasks.filter { subtask -> subtask.percent != 100 }
+                            currentSubtasks.filter { subtask -> subtask.percent != 100 && subtask.status != Status.COMPLETED.status }
 
                     val currentSubnotes = subnotes.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
                     val currentAttachments = attachments[iCal4ListRelObject.iCal4List.id]

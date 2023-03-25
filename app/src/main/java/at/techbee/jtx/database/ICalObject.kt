@@ -795,9 +795,9 @@ data class ICalObject(
          * @return true if the current entry is overdue and not completed,
          * null if no due date is set and not completed, false otherwise
          */
-        fun isOverdue(percent: Int?, due: Long?, dueTimezone: String?): Boolean? {
+        fun isOverdue(status: String?, percent: Int?, due: Long?, dueTimezone: String?): Boolean? {
 
-            if(percent == 100)
+            if(percent == 100 || status == Status.COMPLETED.status)
                 return false
             if(due == null)
                 return null
@@ -839,9 +839,9 @@ data class ICalObject(
             }
         }
 
-        fun getDueTextInfo(due: Long?, dueTimezone: String?, percent: Int?, daysOnly: Boolean = false, context: Context): String {
+        fun getDueTextInfo(status: String?, due: Long?, dueTimezone: String?, percent: Int?, daysOnly: Boolean = false, context: Context): String {
 
-            if(percent == 100)
+            if(percent == 100 || status == Status.COMPLETED.status)
                 return context.getString(R.string.completed)
             if(due == null)
                 return context.getString(R.string.list_due_without)

@@ -75,6 +75,7 @@ fun SubtaskCard(
                 label = subtaskText.trim(),
                 iCalObjectId = subtask.id,
                 progress = subtask.percent,
+                status = subtask.status,
                 isReadOnly = subtask.isReadOnly,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgress,

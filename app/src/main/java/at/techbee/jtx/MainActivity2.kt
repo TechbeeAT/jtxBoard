@@ -395,7 +395,8 @@ fun MainNavHost(
             CollectionsScreen(
                 navController = navController,
                 collectionsViewModel = collectionsViewModel,
-                globalStateHolder = globalStateHolder
+                globalStateHolder = globalStateHolder,
+                settingsStateHolder = settingsStateHolder
             )
         }
         composable(NavigationDrawerDestination.SYNC.name) {
