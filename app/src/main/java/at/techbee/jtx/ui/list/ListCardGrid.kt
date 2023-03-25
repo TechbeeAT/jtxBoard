@@ -106,11 +106,11 @@ fun ListCardGrid(
                                 }
                                 if (iCalObject.module == Module.TODO.name && iCalObject.due != null) {
                                     Text(
-                                        ICalObject.getDueTextInfo(due = iCalObject.due, dueTimezone = iCalObject.dueTimezone, percent = iCalObject.percent, context = LocalContext.current),
+                                        ICalObject.getDueTextInfo(status = iCalObject.status, due = iCalObject.due, dueTimezone = iCalObject.dueTimezone, percent = iCalObject.percent, context = LocalContext.current),
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = if(ICalObject.isOverdue(iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
+                                        color = if(ICalObject.isOverdue(iCalObject.status, iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -147,7 +147,7 @@ fun ListCardGrid(
 
                         if (iCalObject.module == Module.TODO.name)
                             Checkbox(
-                                checked = iCalObject.percent == 100,
+                                checked = iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status,
                                 enabled = !iCalObject.isReadOnly && !progressUpdateDisabled,
                                 onCheckedChange = {
                                     onProgressChanged(

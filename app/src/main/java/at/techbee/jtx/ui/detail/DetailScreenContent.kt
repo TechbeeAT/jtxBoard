@@ -539,6 +539,7 @@ fun DetailScreenContent(
                         label = null,
                         iCalObjectId = icalObject.value.id,
                         progress = icalObject.value.percent,
+                        status = icalObject.value.status,
                         isReadOnly = iCalEntity.value?.ICalCollection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
                         sliderIncrement = sliderIncrement,
                         onProgressChanged = { itemId, newPercent ->

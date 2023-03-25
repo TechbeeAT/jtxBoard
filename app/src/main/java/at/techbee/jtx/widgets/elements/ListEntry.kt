@@ -29,6 +29,7 @@ import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.widgets.ICal4ListWidget
 import at.techbee.jtx.widgets.ListWidgetCheckedActionCallback
@@ -72,7 +73,7 @@ fun ListEntry(
 
             if (obj.module == Module.TODO.name && !checkboxEnd && !obj.isReadOnly){
                 CheckBox(
-                    checked = obj.percent == 100,
+                    checked = obj.percent == 100 || obj.status == Status.COMPLETED.status,
                     onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
                         parameters = actionParametersOf(
                             ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
@@ -116,7 +117,7 @@ fun ListEntry(
                                     obj.due,
                                     obj.dueTimezone
                                 ),
-                                style = if(ICalObject.isOverdue(obj.percent, obj.due, obj.dueTimezone) == true) textStyleDateOverdue else textStyleDate,
+                                style = if(ICalObject.isOverdue(obj.status, obj.percent, obj.due, obj.dueTimezone) == true) textStyleDateOverdue else textStyleDate,
                             )
                         }
                     }
@@ -143,7 +144,7 @@ fun ListEntry(
 
             if (obj.module == Module.TODO.name && checkboxEnd && !obj.isReadOnly) {
                 CheckBox(
-                    checked = obj.percent == 100,
+                    checked = obj.percent == 100 || obj.status == Status.COMPLETED.status,
                     onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
                         parameters = actionParametersOf(
                             ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,

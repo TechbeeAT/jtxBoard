@@ -114,7 +114,7 @@ fun ListWidgetContent(
             }
             GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = context)
             GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = context)
-            GroupBy.DUE -> ICalObject.getDueTextInfo(due = it.due, dueTimezone = it.dueTimezone, percent = it.percent, daysOnly = true, context = context)
+            GroupBy.DUE -> ICalObject.getDueTextInfo(status = it.status, due = it.due, dueTimezone = it.dueTimezone, percent = it.percent, daysOnly = true, context = context)
             else -> {
                 it.module
             }
@@ -213,7 +213,7 @@ fun ListWidgetContent(
                     }
 
                     group.forEach group@{ entry ->
-                        if (listWidgetConfig.isExcludeDone && entry.percent == 100)
+                        if (listWidgetConfig.isExcludeDone && (entry.percent == 100 || entry.status == Status.COMPLETED.status))
                             return@group
 
                         if (entry.summary.isNullOrEmpty() && entry.description.isNullOrEmpty())
@@ -238,7 +238,7 @@ fun ListWidgetContent(
                         if (!listWidgetConfig.flatView && listWidgetConfig.showSubtasks) {
                             subtasksGrouped[entry.uid]?.forEach subtasks@{ subtask ->
 
-                                if (listWidgetConfig.isExcludeDone && subtask.percent == 100)
+                                if (listWidgetConfig.isExcludeDone && (subtask.percent == 100 || subtask.status == Status.COMPLETED.status))
                                     return@subtasks
 
                                 if (subtask.summary.isNullOrEmpty() && subtask.description.isNullOrEmpty())

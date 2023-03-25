@@ -144,11 +144,11 @@ fun ListCard(
                             }
                             iCalObject.due?.let {
                                 Text(
-                                    ICalObject.getDueTextInfo(due = it, dueTimezone = iCalObject.dueTimezone, percent = iCalObject.percent, context = LocalContext.current),
+                                    ICalObject.getDueTextInfo(status = iCalObject.status, due = it, dueTimezone = iCalObject.dueTimezone, percent = iCalObject.percent, context = LocalContext.current),
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
-                                    color = if(ICalObject.isOverdue(iCalObject.percent, it, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
+                                    color = if(ICalObject.isOverdue(iCalObject.status, iCalObject.percent, it, iCalObject.dueTimezone) == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                     modifier = Modifier.padding(end = 16.dp).weight(0.2f),
                                     maxLines = 1
                                 )
@@ -214,7 +214,7 @@ fun ListCard(
 
                             if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
                                 Checkbox(
-                                    checked = iCalObject.percent == 100,
+                                    checked = iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status,
                                     enabled = !iCalObject.isReadOnly,
                                     onCheckedChange = {
                                         onProgressChanged(
@@ -403,6 +403,7 @@ fun ListCard(
                         label = null,
                         iCalObjectId = iCalObject.id,
                         progress = iCalObject.percent,
+                        status = iCalObject.status,
                         isReadOnly = iCalObject.isReadOnly || progressUpdateDisabled,
                         sliderIncrement = progressIncrement,
                         onProgressChanged = onProgressChanged,
