@@ -446,7 +446,7 @@ data class ICal4List(
                     "WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' " +
                     if(hideBiometricProtected.isNotEmpty()) {
                         if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
-                            "AND ($COLUMN_CLASSIFICATION IS NOT NULL NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                            "AND ($COLUMN_CLASSIFICATION IS NOT NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
                         } else {
                             "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
                         }
@@ -476,7 +476,7 @@ data class ICal4List(
                     "AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (${parents.joinToString(separator = ",", transform = { "'$it'" })}) " +
                     if(hideBiometricProtected.isNotEmpty()) {
                         if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
-                            "AND ($COLUMN_CLASSIFICATION IS NOT NULL NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                            "AND ($COLUMN_CLASSIFICATION IS NOT NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
                         } else {
                             "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
                         }
@@ -505,7 +505,7 @@ data class ICal4List(
                 "AND $COLUMN_COMPONENT = '${component.name}' " +
                 if(hideBiometricProtected.isNotEmpty()) {
                     if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
-                        "AND ($COLUMN_CLASSIFICATION IS NOT NULL NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                        "AND ($COLUMN_CLASSIFICATION IS NOT NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
                     } else {
                         "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
                     }

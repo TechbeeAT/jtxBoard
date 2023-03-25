@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
+import androidx.biometric.BiometricPrompt
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Backup
 import androidx.compose.material.icons.outlined.FileDownload
@@ -36,6 +37,8 @@ import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsAddOrEditDialog
 import at.techbee.jtx.ui.reusable.dialogs.SelectModuleForTxtImportDialog
+import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import java.util.*
@@ -46,6 +49,7 @@ import java.util.*
 fun CollectionsScreen(
     navController: NavHostController,
     globalStateHolder: GlobalStateHolder,
+    settingsStateHolder: SettingsStateHolder,
     collectionsViewModel: CollectionsViewModel
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -205,6 +209,12 @@ fun CollectionsScreen(
             onDismiss = { showCollectionsAddDialog = false }
         )
 
+    val biometricPromptInfo: BiometricPrompt.PromptInfo = BiometricPrompt.PromptInfo.Builder()
+        .setTitle(context.getString(R.string.collections_biometric_protected_entries_locked_title))
+        .setSubtitle(context.getString(R.string.collections_biometric_protected_entries_locked_subtitle))
+        .setNegativeButtonText(context.getString(R.string.cancel))
+        .build()
+
     Scaffold(
         topBar = {
             JtxTopAppBar(
@@ -236,10 +246,14 @@ fun CollectionsScreen(
                         DropdownMenuItem(
                             text = { Text(text = stringResource(id = R.string.menu_collections_export_all)) },
                             onClick = {
-                                collectionsViewModel.collections.value?.let {
-                                    collectionsViewModel.requestICSForExport(
-                                        it
-                                    )
+                                if(settingsStateHolder.settingProtectBiometric.value == DropdownSettingOption.PROTECT_BIOMETRIC_OFF || globalStateHolder.isAuthenticated.value) {
+                                    collectionsViewModel.collections.value?.let {
+                                        collectionsViewModel.requestICSForExport(
+                                            it
+                                        )
+                                    }
+                                } else {
+                                    globalStateHolder.biometricPrompt?.authenticate(biometricPromptInfo)
                                 }
                                 menuExpanded.value = false
                             },
@@ -281,9 +295,11 @@ fun CollectionsScreen(
                             launcherImportTxt.launch(arrayOf("text/plain", "text/markdown"))
                         },
                         onExportAsICS = { collection ->
-                            collectionsViewModel.requestICSForExport(
-                                listOf(collection)
-                            )
+                            if(settingsStateHolder.settingProtectBiometric.value == DropdownSettingOption.PROTECT_BIOMETRIC_OFF || globalStateHolder.isAuthenticated.value) {
+                                collectionsViewModel.requestICSForExport(listOf(collection))
+                            } else {
+                                globalStateHolder.biometricPrompt?.authenticate(biometricPromptInfo)
+                            }
                         },
                         onCollectionClicked = { collection ->
                             if (globalStateHolder.icalString2Import.value?.isNotEmpty() == true && !collection.readonly)
@@ -312,6 +328,7 @@ fun CollectionsScreen_Preview() {
         CollectionsScreen(
             navController = rememberNavController(),
             globalStateHolder = GlobalStateHolder(LocalContext.current),
+            settingsStateHolder = SettingsStateHolder(LocalContext.current),
             collectionsViewModel = CollectionsViewModel(LocalContext.current.applicationContext as Application)
         )
     }
