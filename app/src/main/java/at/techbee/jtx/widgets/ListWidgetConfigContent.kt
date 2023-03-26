@@ -9,7 +9,10 @@
 package at.techbee.jtx.widgets
 
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -30,13 +33,10 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.ui.list.*
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ListWidgetConfigContent(
     initialConfig: ListWidgetConfig,
@@ -98,7 +98,7 @@ fun ListWidgetConfigContent(
                         selected = false,
                         onClick = {
                             scope.launch {
-                                pagerState.scrollToPage(tabIndexGeneral)
+                                pagerState.animateScrollToPage(tabIndexGeneral)
                             }
                         },
                         content = { Text(stringResource(id = R.string.general)) },
@@ -109,7 +109,7 @@ fun ListWidgetConfigContent(
                         onClick = {
                             if (isPurchased) {
                                 scope.launch {
-                                    pagerState.scrollToPage(tabIndexFilter)
+                                    pagerState.animateScrollToPage(tabIndexFilter)
                                 }
                             } else {
                                 buyProToast.show()
@@ -123,7 +123,7 @@ fun ListWidgetConfigContent(
                         onClick = {
                             if (isPurchased) {
                                 scope.launch {
-                                    pagerState.scrollToPage(tabIndexGroupSort)
+                                    pagerState.animateScrollToPage(tabIndexGroupSort)
                                 }
                             } else {
                                 buyProToast.show()
@@ -136,7 +136,7 @@ fun ListWidgetConfigContent(
 
                 HorizontalPager(
                     state = pagerState,
-                    count = if(isPurchased) 3 else 1,
+                    pageCount = if(isPurchased) 3 else 1,
                     modifier = Modifier.weight(1f).padding(8.dp).verticalScroll(rememberScrollState()),
                     verticalAlignment = Alignment.Top
                 ) { page ->
@@ -157,7 +157,7 @@ fun ListWidgetConfigContent(
                                 storedListSettingLive = database.getStoredListSettings(module = selectedModule.value.name),
                                 onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
                                 isWidgetConfig = true,
-                                onSaveStoredListSetting = { _, _, ->  /* no saving option in list widget config*/ },
+                                onSaveStoredListSetting = { _, _ ->  /* no saving option in list widget config*/ },
                                 onDeleteStoredListSetting = { /* no option to save/delete list widget config */ }
                             )
                         }

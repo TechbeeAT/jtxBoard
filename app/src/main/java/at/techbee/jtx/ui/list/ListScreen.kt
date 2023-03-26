@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.list
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
@@ -18,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -116,7 +118,7 @@ fun ListScreen(
         )
     }
 
-    Column {
+    Column(modifier = Modifier.fillMaxSize()) {
         when (listViewModel.listSettings.viewMode.value) {
             ViewMode.LIST -> {
                 ListScreenList(

@@ -12,7 +12,13 @@ package at.techbee.jtx.ui.list
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
@@ -21,6 +27,7 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,9 +60,6 @@ import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.minutes
@@ -64,9 +68,9 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalPagerApi::class,
     ExperimentalComposeUiApi::class,
-    ExperimentalMaterialApi::class, ExperimentalLayoutApi::class,
+    ExperimentalMaterialApi::class,
+    ExperimentalFoundationApi::class
 )
 @Composable
 fun ListScreenTabContainer(
@@ -511,7 +515,7 @@ fun ListScreenTabContainer(
                                             selected = pagerState.currentPage == enabledTabs.indexOf(enabledTab),
                                             onClick = {
                                                 scope.launch {
-                                                    pagerState.scrollToPage(enabledTabs.indexOf(enabledTab))
+                                                    pagerState.animateScrollToPage(enabledTabs.indexOf(enabledTab))
                                                 }
                                                 settingsStateHolder.lastUsedModule.value = enabledTab.module
                                                 settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule  // in order to save
@@ -571,7 +575,7 @@ fun ListScreenTabContainer(
                                         scope.launch {
                                             val index = enabledTabs.indexOf(enabledTabs.find { tab -> tab.module == module })
                                             if(index >=0)
-                                                pagerState.scrollToPage(index)
+                                                pagerState.animateScrollToPage(index)
                                         }
                                     },
                                     onDismiss = {
@@ -588,8 +592,9 @@ fun ListScreenTabContainer(
                             Box {
                                 HorizontalPager(
                                     state = pagerState,
-                                    count = enabledTabs.size,
+                                    pageCount = enabledTabs.size,
                                     userScrollEnabled = !filterBottomSheetState.isVisible,
+                                    verticalAlignment = Alignment.Top
                                 ) { page ->
 
                                     ListScreen(
