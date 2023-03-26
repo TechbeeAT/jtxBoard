@@ -80,7 +80,7 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"オリジナルへ移動"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"繰り返しの頻度"</string>
-    <string name="view_recurrence_note_to_original">"このエントリーは繰り返しの一部です。編集すると繰り返しのリンクが解除され、独立したイベントとなります。元のイベントの変更はこのエントリーに影響しなくなります。"</string>
+    <string name="view_recurrence_note_to_original">"このエントリーは繰り返しの一部です。編集すると繰り返しのリンクが解除され、独立した予定となります。元の予定の変更はこのエントリーに影響しなくなります。"</string>
     <string name="view_fragment_audio_permission">"アプリの権限"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board は音声を録音する権限または音声文字変換を使用する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"音声メモを追加"</string>
