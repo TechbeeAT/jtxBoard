@@ -559,6 +559,8 @@ Global Strings -->
     <string name="list_start_date_future">"Начинается в будущем"</string>
     <string name="list_hide_completed_tasks">"Скрыть выполненное"</string>
     <string name="list_biometric_protected_entries_locked">Защищенные биометрией записи заблокированы</string>
+    <string name="collections_biometric_protected_entries_locked_title">Защищенные биометрией записи заблокированы</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">Пожалуйста, авторизуйтесь и попробуйте еще раз</string>
     <string name="list_biometric_protected_entries_unlocked">Защищенные биометрией записи разблокированы</string>
     <string name="settings_auto_alarm">"Автоматическое напоминание"</string>
     <string name="alarms_always_ondue">"Всегда по завершению"</string>
