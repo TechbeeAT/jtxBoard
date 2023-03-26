@@ -397,7 +397,7 @@ fun DetailScreenContent(
             }
         }
 
-        DetailsCardDates(
+        DetailsDatesCards(
             icalObject = icalObject.value,
             isEditMode = isEditMode.value,
             enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] ?: true || icalObject.value.getModuleFromString() == Module.JOURNAL,

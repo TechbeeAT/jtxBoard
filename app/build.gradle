@@ -313,11 +313,8 @@ dependencies {
     // jetpack compose
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation "androidx.compose.material3:material3:1.0.1"
-    //implementation "androidx.compose.material3:material3-window-size-class:1.0.0-beta02"
-
-    implementation "androidx.compose.material:material:1.3.1"    // material 2 support as bottom sheet is missing in m3
-    implementation "androidx.compose.material:material-icons-extended:1.3.1"
+    implementation "androidx.compose.material3:material3:1.1.0-beta01"
+    implementation "androidx.compose.material:material-icons-extended:1.4.0"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"

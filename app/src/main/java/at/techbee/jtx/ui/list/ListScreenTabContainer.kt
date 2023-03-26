@@ -19,11 +19,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -69,7 +66,6 @@ import kotlin.time.Duration.Companion.seconds
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalComposeUiApi::class,
-    ExperimentalMaterialApi::class,
     ExperimentalFoundationApi::class
 )
 @Composable
@@ -172,7 +168,7 @@ fun ListScreenTabContainer(
 
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val filterSheetState = rememberModalBottomSheetState()
 
     var showSearch by remember { mutableStateOf(false) }
     val showQuickAdd = remember { mutableStateOf(false) }
@@ -275,6 +271,27 @@ fun ListScreenTabContainer(
             autoAlarm,
             editAfterSaving
         )
+    }
+
+    if(filterSheetState.currentValue != SheetValue.Hidden) {
+        ModalBottomSheet(sheetState = filterSheetState, onDismissRequest = { }) {
+            ListOptionsBottomSheet(
+                module = listViewModel.module,
+                listSettings = listViewModel.listSettings,
+                allCollectionsLive = listViewModel.allCollections,
+                allCategoriesLive = listViewModel.allCategories,
+                allResourcesLive = listViewModel.allResources,
+                storedListSettingLive = listViewModel.storedListSettings,
+                onListSettingsChanged = {
+                    listViewModel.updateSearch(
+                        saveListSettings = true,
+                        isAuthenticated = globalStateHolder.isAuthenticated.value
+                    )
+                },
+                onSaveStoredListSetting = { name, storedListSettingData -> listViewModel.saveStoredListSettingsData(name, storedListSettingData) },
+                onDeleteStoredListSetting = { storedListSetting -> listViewModel.deleteStoredListSetting(storedListSetting) }
+            )
+        }
     }
 
 
@@ -465,10 +482,10 @@ fun ListScreenTabContainer(
                     isBiometricsUnlocked = globalStateHolder.isAuthenticated.value,
                     onFilterIconClicked = {
                         scope.launch {
-                            if (filterBottomSheetState.isVisible)
-                                filterBottomSheetState.hide()
+                            if (filterSheetState.isVisible)
+                                filterSheetState.hide()
                             else
-                                filterBottomSheetState.show()
+                                filterSheetState.show()
                         }
                     },
                     onGoToDateSelected = { id -> getActiveViewModel().scrollOnceId.postValue(id) },
@@ -593,7 +610,7 @@ fun ListScreenTabContainer(
                                 HorizontalPager(
                                     state = pagerState,
                                     pageCount = enabledTabs.size,
-                                    userScrollEnabled = !filterBottomSheetState.isVisible,
+                                    userScrollEnabled = !filterSheetState.isVisible,
                                     verticalAlignment = Alignment.Top
                                 ) { page ->
 
@@ -603,9 +620,7 @@ fun ListScreenTabContainer(
                                             Module.NOTE -> icalListViewModelNotes
                                             Module.TODO -> icalListViewModelTodos
                                         },
-                                        navController = navController,
-                                        filterBottomSheetState = filterBottomSheetState,
-                                        isAuthenticated = globalStateHolder.isAuthenticated.value
+                                        navController = navController
                                     )
                                 }
 

@@ -18,12 +18,8 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -49,9 +45,10 @@ import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
+import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
@@ -70,7 +67,8 @@ fun DetailsScreen(
         else -> null
     }
 
-    val detailsBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val detailsBottomSheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -195,6 +193,25 @@ fun DetailsScreen(
                 detailViewModel.changeState.value = DetailViewModel.DetailChangeState.UNCHANGED
             }
         )
+    }
+
+    if(detailsBottomSheetState.currentValue != SheetValue.Hidden) {
+        ModalBottomSheet(
+            sheetState = detailsBottomSheetState,
+            onDismissRequest = {
+                scope.launch { detailsBottomSheetState.hide() }
+            }) {
+            DetailOptionsBottomSheet(
+                module = try {
+                    Module.valueOf(icalEntity.value?.property?.module ?: Module.NOTE.name)
+                } catch (e: Exception) {
+                    Module.NOTE
+                },
+                detailSettings = detailViewModel.detailSettings,
+                onListSettingsChanged = { detailViewModel.detailSettings.save() },
+                modifier = Modifier.padding(top = 0.dp, start = 8.dp, end = 8.dp, bottom = 32.dp)
+            )
+        }
     }
 
     Scaffold(
@@ -417,24 +434,6 @@ fun DetailsScreen(
                 unlinkFromSeries = { instances, series, deleteAfterUnlink -> detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink) },
                 modifier = Modifier.padding(paddingValues)
             )
-
-            ModalBottomSheetLayout(
-                sheetState = detailsBottomSheetState,
-                sheetContent = {
-                    DetailOptionsBottomSheet(
-                        module = try {
-                            Module.valueOf(icalEntity.value?.property?.module ?: Module.NOTE.name)
-                        } catch (e: Exception) {
-                            Module.NOTE
-                        },
-                        detailSettings = detailViewModel.detailSettings,
-                        onListSettingsChanged = { detailViewModel.detailSettings.save() },
-                        modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = paddingValues.calculateBottomPadding())
-                    )
-                },
-                sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-                sheetContentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface)
-            ) { }
         },
         bottomBar = {
             DetailBottomAppBar(

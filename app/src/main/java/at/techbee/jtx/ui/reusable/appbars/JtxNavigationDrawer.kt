@@ -1,7 +1,10 @@
 package at.techbee.jtx.ui.reusable.appbars
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,7 +23,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JtxNavigationDrawer(
     drawerState: DrawerState,
@@ -46,7 +48,6 @@ fun JtxNavigationDrawer(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun JtxNavigationDrawer_Preview() {
@@ -61,7 +62,6 @@ fun JtxNavigationDrawer_Preview() {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JtxNavigationDrawerMenu(
     items: Map<Int?, List<NavigationDrawerDestination>>,

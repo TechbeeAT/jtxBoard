@@ -12,11 +12,6 @@ package at.techbee.jtx.ui.list
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -25,20 +20,20 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListScreen(
     listViewModel: ListViewModel,
-    navController: NavController,
-    filterBottomSheetState: ModalBottomSheetState,
-    isAuthenticated: Boolean
+    navController: NavController
 ) {
     val context = LocalContext.current
     val settingsStateHolder = SettingsStateHolder(context)
@@ -212,23 +207,4 @@ fun ListScreen(
             }
         }
     }
-
-    ModalBottomSheetLayout(
-        sheetState = filterBottomSheetState,
-        sheetContent = {
-            ListOptionsBottomSheet(
-                module = listViewModel.module,
-                listSettings = listViewModel.listSettings,
-                allCollectionsLive = listViewModel.allCollections,
-                allCategoriesLive = listViewModel.allCategories,
-                allResourcesLive = listViewModel.allResources,
-                storedListSettingLive = listViewModel.storedListSettings,
-                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true, isAuthenticated = isAuthenticated) },
-                onSaveStoredListSetting = { name, storedListSettingData -> listViewModel.saveStoredListSettingsData(name, storedListSettingData) },
-                onDeleteStoredListSetting = { storedListSetting -> listViewModel.deleteStoredListSetting(storedListSetting) }
-            )
-        },
-        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-        sheetContentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface)
-    ) { }
 }

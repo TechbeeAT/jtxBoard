@@ -63,11 +63,7 @@ fun ListOptionsBottomSheet(
         modifier = modifier
     ) {
 
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ) {
+        TabRow(selectedTabIndex = pagerState.currentPage) {
             Tab(
                 selected = false,
                 onClick = {
