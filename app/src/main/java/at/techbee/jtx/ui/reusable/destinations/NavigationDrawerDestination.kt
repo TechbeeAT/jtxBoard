@@ -24,7 +24,7 @@ enum class NavigationDrawerDestination (
     BOARD(
         titleResource = R.string.navigation_drawer_board,
         iconRes = R.drawable.ic_widget_jtx,
-        navigationAction = { navHost, _ -> navHost.navigate(BOARD.name)}
+        navigationAction = { navHost, _ -> navHost.popBackStack(BOARD.name, false)}
     ),
     PRESETS(
         titleResource = R.string.navigation_drawer_presets,
