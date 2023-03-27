@@ -207,6 +207,8 @@ fun ListWidgetConfigContent(
                                     showOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
                                     widgetAlpha = listSettings.widgetAlpha.value
                                     widgetAlphaEntries = listSettings.widgetAlphaEntries.value
+                                    widgetColor = listSettings.widgetColor.value
+                                    widgetColorEntries = listSettings.widgetColorEntries.value
                                     showDescription = listSettings.showDescription.value
                                     showSubtasks = listSettings.showSubtasks.value
                                     showSubnotes = listSettings.showSubnotes.value
@@ -313,5 +315,7 @@ data class ListWidgetConfig(
     var showDescription: Boolean = true,
     var showSubtasks: Boolean = true,
     var showSubnotes: Boolean = true,
-    var widgetHeader: String = ""
+    var widgetHeader: String = "",
+    var widgetColor: Int? = null,
+    var widgetColorEntries: Int? = null
 )

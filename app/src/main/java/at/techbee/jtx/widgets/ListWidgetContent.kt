@@ -44,6 +44,10 @@ fun ListWidgetContent(
     subtasks: List<ICal4ListWidget>,
     subnotes: List<ICal4ListWidget>,
     listExceedLimits: Boolean,
+    textColor: ColorProvider,
+    entryColor: ColorProvider,
+    entryTextColor: ColorProvider,
+    entryOverdueTextColor: ColorProvider,
     modifier: GlanceModifier = GlanceModifier
 ) {
 
@@ -127,13 +131,6 @@ fun ListWidgetContent(
     val subnotesGrouped = subnotes.groupBy { it.parentUID }
 
     val imageSize = 36.dp
-    val textColor = GlanceTheme.colors.onPrimaryContainer
-    val entryColor = if(listWidgetConfig.widgetAlphaEntries == 1F)
-        GlanceTheme.colors.surface
-    else
-        ColorProvider(GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig.widgetAlphaEntries))
-    val entryTextColor = GlanceTheme.colors.onSurface
-    val entryOverdueTextColor = GlanceTheme.colors.error
 
     Column(
         modifier = modifier,

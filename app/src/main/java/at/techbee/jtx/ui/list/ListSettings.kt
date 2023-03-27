@@ -65,6 +65,8 @@ class ListSettings {
     var checkboxPositionEnd: MutableState<Boolean> = mutableStateOf(false)  // widget only
     var widgetAlpha: MutableState<Float> = mutableStateOf(1F)  // widget only
     var widgetAlphaEntries: MutableState<Float> = mutableStateOf(1F)  // widget only
+    var widgetColor: MutableState<Int?> = mutableStateOf(null)  // widget only
+    var widgetColorEntries: MutableState<Int?> = mutableStateOf(null)  // widget only
     var showDescription: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubtasks: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubnotes: MutableState<Boolean> = mutableStateOf(true)  // widget only
@@ -250,6 +252,8 @@ class ListSettings {
             widgetAlpha.value = listWidgetConfig.widgetAlpha
             widgetAlphaEntries.value = listWidgetConfig.widgetAlphaEntries
             widgetHeader.value = listWidgetConfig.widgetHeader
+            widgetColor.value = listWidgetConfig.widgetColor
+            widgetColorEntries.value = listWidgetConfig.widgetColorEntries
         }
     }
 
