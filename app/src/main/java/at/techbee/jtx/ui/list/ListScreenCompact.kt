@@ -69,7 +69,6 @@ fun ListScreenCompact(
 
     val itemsCollapsed = remember { mutableStateListOf<String>() }
 
-
     LazyColumn(
         modifier = Modifier.padding(start = 2.dp, end = 2.dp),
         state = listState,
@@ -88,17 +87,18 @@ fun ListScreenCompact(
                             .background(MaterialTheme.colorScheme.background)
 
                     ) {
-                        Text(
-                            text = groupName,
-                            style = MaterialTheme.typography.titleLarge
-                        )
-
                         TextButton(onClick = {
                             if (itemsCollapsed.contains(groupName))
                                 itemsCollapsed.remove(groupName)
                             else
                                 itemsCollapsed.add(groupName)
                         }) {
+                            Text(
+                                text = groupName,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(horizontal = 4.dp)
+                            )
+
                             if (itemsCollapsed.contains(groupName))
                                 Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
                             else

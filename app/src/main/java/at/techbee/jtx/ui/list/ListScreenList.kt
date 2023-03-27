@@ -95,7 +95,6 @@ fun ListScreenList(
         state = listState,
     ) {
 
-
         groupedList.forEach { (groupName, group) ->
 
             if (groupedList.keys.size > 1) {
@@ -109,17 +108,18 @@ fun ListScreenList(
                             .background(MaterialTheme.colorScheme.background)
 
                     ) {
-                        Text(
-                            text = groupName,
-                            style = MaterialTheme.typography.titleLarge
-                        )
-
                         TextButton(onClick = {
                             if (itemsCollapsed.contains(groupName))
                                 itemsCollapsed.remove(groupName)
                             else
                                 itemsCollapsed.add(groupName)
                         }) {
+                            Text(
+                                text = groupName,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(horizontal = 4.dp)
+                            )
+
                             if(itemsCollapsed.contains(groupName))
                                 Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
                             else
