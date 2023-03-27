@@ -533,6 +533,8 @@ Gràcies!"</string>
     <string name="list_start_date_tomorrow">"S'inicia demà"</string>
     <string name="list_start_date_future">"S'inicia al futur"</string>
     <string name="list_hide_completed_tasks">"Amaga les tasques finalitzades"</string>
+    <string name="collections_biometric_protected_entries_locked_title">Entrades protegides per biometria bloquejades</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">Per favor, autentica\'t i torna-ho a provar</string>
     <string name="settings_auto_alarm">"Alarma automàtica"</string>
     <string name="alarms_always_ondue">"Sempre en vèncer"</string>
     <string name="settings_show_one_recur_entry_in_future">"Mostra sols una entrada recurrent al futur"</string>
