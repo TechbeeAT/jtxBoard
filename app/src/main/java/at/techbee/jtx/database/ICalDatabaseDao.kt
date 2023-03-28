@@ -529,7 +529,15 @@ DELETEs by Object
      * @return a list of the next alarms
      */
     @Transaction
-    @Query("SELECT $TABLE_NAME_ALARM.* FROM $TABLE_NAME_ALARM INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID WHERE $COLUMN_DELETED = 0 AND $COLUMN_RRULE IS NULL AND $COLUMN_ALARM_TRIGGER_TIME > :minDate ORDER BY $COLUMN_ALARM_TRIGGER_TIME ASC LIMIT :limit")
+    @Query("SELECT $TABLE_NAME_ALARM.* " +
+            "FROM $TABLE_NAME_ALARM " +
+            "INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
+            "WHERE $COLUMN_DELETED = 0 " +
+            "AND $COLUMN_RRULE IS NULL " +
+            "AND $COLUMN_ALARM_TRIGGER_TIME > :minDate " +
+            "AND ($COLUMN_PERCENT IS NULL OR $COLUMN_PERCENT < 100) " +
+            "AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS != 'COMPLETED')" +
+            "ORDER BY $COLUMN_ALARM_TRIGGER_TIME ASC LIMIT :limit")
     fun getNextAlarms(limit: Int, minDate: Long = System.currentTimeMillis()): List<Alarm>
 
     /**
@@ -540,7 +548,14 @@ DELETEs by Object
      * @return a list of the next due icalobjects
      */
     @Transaction
-    @Query("SELECT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0 AND $COLUMN_DUE > :minDate AND $COLUMN_RRULE IS NULL ORDER BY $COLUMN_DUE ASC LIMIT :limit")
+    @Query("SELECT $TABLE_NAME_ICALOBJECT.* " +
+            "FROM $TABLE_NAME_ICALOBJECT " +
+            "WHERE $COLUMN_DELETED = 0 " +
+            "AND $COLUMN_DUE > :minDate " +
+            "AND $COLUMN_RRULE IS NULL " +
+            "AND ($COLUMN_PERCENT IS NULL OR $COLUMN_PERCENT < 100) " +
+            "AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS != 'COMPLETED')" +
+            "ORDER BY $COLUMN_DUE ASC LIMIT :limit")
     fun getNextDueEntries(limit: Int, minDate: Long = System.currentTimeMillis()): List<ICalObject>
 
     @Update(onConflict = OnConflictStrategy.ABORT)

@@ -13,8 +13,10 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
@@ -31,7 +33,7 @@ class NotificationPublisher : BroadcastReceiver() {
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = intent.getParcelableExtraCompat(NOTIFICATION, Notification::class)
-        val alarmId = intent.getLongExtra(ALARM_ID, intent.getLongExtra(NOTIFICATION_ID, 0L))
+        val alarmId = intent.getLongExtra(ALARM_ID,  0L)
         val icalObjectId = intent.getLongExtra(ICALOBJECT_ID, 0L)
         val isImplicitAlarm = intent.getBooleanExtra(IS_IMPLICIT_ALARM, false)
         val settingsStateHolder = SettingsStateHolder(context)
@@ -83,8 +85,16 @@ class NotificationPublisher : BroadcastReceiver() {
             else -> {
                 // no action, so here we notify. if we offer snooze depends on the intent (this was decided already on creation of the intent)
                 CoroutineScope(Dispatchers.IO).launch {
-                    if(database.getAlarmSync(alarmId) != null || (isImplicitAlarm && database.getSync(icalObjectId) != null))
+                    val iCalObject = database.getICalObjectByIdSync(icalObjectId)
+                    if( iCalObject != null
+                        && (database.getAlarmSync(alarmId) != null || (isImplicitAlarm))
+                        && iCalObject.percent != 100
+                        && iCalObject.status != Status.COMPLETED.status
+                    ) {
                         notificationManager.notify(alarmId.toInt(), notification)
+                    } else {
+                        Log.d("notificationManager", "Notification skipped")
+                    }
                     Alarm.scheduleNextNotifications(context)
                 }
             }
@@ -92,7 +102,6 @@ class NotificationPublisher : BroadcastReceiver() {
     }
 
     companion object {
-        @Deprecated("Use ALARM_ID instead") var NOTIFICATION_ID = "notification-id"   // identifier behind the value for alarmId
         const val ALARM_ID = "alarm-id"
         const val ICALOBJECT_ID = "icalobject-id"
         const val IS_IMPLICIT_ALARM = "isImplicitAlarm"

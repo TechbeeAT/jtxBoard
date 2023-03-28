@@ -383,7 +383,6 @@ data class Alarm (
         fun getActionIntent(action: String): PendingIntent {
             val actionIntent = Intent(context, NotificationPublisher::class.java).apply {
                 this.action = action
-                putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
                 putExtra(NotificationPublisher.ALARM_ID, alarmId)
                 putExtra(NotificationPublisher.ICALOBJECT_ID, icalObjectId)
                 putExtra(NotificationPublisher.IS_IMPLICIT_ALARM, alarmId == 0L)
@@ -423,7 +422,6 @@ data class Alarm (
 
         // the notificationIntent that is an Intent of the NotificationPublisher Class
         val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
-            putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
             putExtra(NotificationPublisher.NOTIFICATION, notification)
             putExtra(NotificationPublisher.ALARM_ID, alarmId)
             putExtra(NotificationPublisher.ICALOBJECT_ID, icalObjectId)
