@@ -559,6 +559,8 @@ Děkujeme vám!"</string>
     <string name="list_start_date_future">"Začít v budoucnosti"</string>
     <string name="list_hide_completed_tasks">"Skrýt dokončené úkoly"</string>
     <string name="list_biometric_protected_entries_locked">Položky chráněné biometrikou uzamčeny</string>
+    <string name="collections_biometric_protected_entries_locked_title">Položky chráněné biometrikou uzamčeny</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">Ověřte se a zkuste to znovu</string>
     <string name="list_biometric_protected_entries_unlocked">Položky chráněné biometrikou odemčeny</string>
     <string name="settings_auto_alarm">"Automatický budík"</string>
     <string name="alarms_always_ondue">"Vždy v termínu"</string>
