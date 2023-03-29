@@ -21,6 +21,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
@@ -150,6 +151,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
                 SyncUtil.notifyContentObservers(getApplication())
+                NotificationPublisher.scheduleNextNotifications(_application)
                 changeState.value = DetailChangeState.CHANGESAVED
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $id")
@@ -200,6 +202,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             } else {
                 changeState.value = DetailChangeState.CHANGESAVED
             }
+            NotificationPublisher.scheduleNextNotifications(_application)
             SyncUtil.notifyContentObservers(getApplication())
 
         }
@@ -232,7 +235,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         database.update(it)
                     }
                 }
-
             }
         }
     }
@@ -258,6 +260,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 changeState.value = DetailChangeState.SQLERROR
             }
+            NotificationPublisher.scheduleNextNotifications(_application)
         }
     }
 
@@ -333,7 +336,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 database.update(icalObject)
                 icalObject.makeSeriesDirty(database)
                 icalObject.recreateRecurring(getApplication())
-                Alarm.scheduleNextNotifications(getApplication())
+                NotificationPublisher.scheduleNextNotifications(getApplication())
                 SyncUtil.notifyContentObservers(getApplication())
                 changeState.value = DetailChangeState.CHANGESAVED
             } catch (e: SQLiteConstraintException) {
@@ -417,6 +420,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 changeState.value = DetailChangeState.SQLERROR
             }
+            NotificationPublisher.scheduleNextNotifications(_application)
         }
     }
 
@@ -437,6 +441,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 changeState.value = DetailChangeState.SQLERROR
             }
+            NotificationPublisher.scheduleNextNotifications(_application)
         }
     }
 
@@ -521,7 +526,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                Alarm.scheduleNextNotifications(getApplication())
+                NotificationPublisher.scheduleNextNotifications(getApplication())
 
                 if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                     navigateToId.value = newId

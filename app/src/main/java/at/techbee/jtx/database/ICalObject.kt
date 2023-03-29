@@ -23,9 +23,9 @@ import androidx.room.*
 import at.bitfire.ical4android.*
 import at.techbee.jtx.JtxContract
 import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
@@ -728,7 +728,7 @@ data class ICalObject(
                     }
 
                     database.updateRecurringInstanceUIDs(oldUID, newUID, newCollectionId)
-                    Alarm.scheduleNextNotifications(context)
+                    NotificationPublisher.scheduleNextNotifications(context)
                     return newId
                 }
                 return null
@@ -1330,7 +1330,7 @@ data class ICalObject(
                     }
                 }
             }
-            Alarm.scheduleNextNotifications(context)
+            NotificationPublisher.scheduleNextNotifications(context)
         }
     }
 

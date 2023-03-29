@@ -21,6 +21,7 @@ import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
@@ -197,6 +198,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             }
 
             SyncUtil.notifyContentObservers(getApplication())
+            NotificationPublisher.scheduleNextNotifications(getApplication())
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
         }
@@ -219,6 +221,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             database.update(currentItem)
             currentItem.makeSeriesDirty(database)
             SyncUtil.notifyContentObservers(getApplication())
+            NotificationPublisher.scheduleNextNotifications(getApplication())
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
         }
@@ -243,6 +246,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 ICalObject.deleteItemWithChildren(entry.id, database)
                 selectedEntries.clear()
             }
+            NotificationPublisher.scheduleNextNotifications(getApplication())
         }
     }
 
@@ -286,6 +290,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     //sqlConstraintException.value = true
                 }
             }
+            NotificationPublisher.scheduleNextNotifications(getApplication())
             selectedEntries.clear()
             selectedEntries.addAll(newEntries)
         }
@@ -369,6 +374,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     it.makeSeriesDirty(database)
                 }
             }
+            NotificationPublisher.scheduleNextNotifications(getApplication())
         }
     }
 
@@ -440,6 +446,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
             }
+            NotificationPublisher.scheduleNextNotifications(getApplication())
         }
     }
 

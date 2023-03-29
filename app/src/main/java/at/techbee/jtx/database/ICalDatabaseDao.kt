@@ -524,6 +524,7 @@ DELETEs by Object
     /**
      * Gets the next [Alarm]s after a certain date or after now
      * Elements that define a series are excluded.
+     * Sorting is ascending by trigger time.
      * @param limit: The number of [Alarm]s that should be returned
      * @param minDate: The date from which the [Alarm]s should be fetched (default: System.currentTimeMillis())
      * @return a list of the next alarms
@@ -543,6 +544,7 @@ DELETEs by Object
     /**
      * Gets the next due [ICalObject]s after a certain date or after now.
      * Elements that define a series are excluded.
+     * Sorting is ascending by trigger time.
      * @param limit: The number of [ICalObject]s that should be returned
      * @param minDate: The due date from which the [ICalObject]s should be fetched (default: System.currentTimeMillis())
      * @return a list of the next due icalobjects
