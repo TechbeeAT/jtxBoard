@@ -80,7 +80,7 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"オリジナルへ移動"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"繰り返しの頻度"</string>
-    <string name="view_recurrence_note_to_original">"このエントリーは繰り返しの一部です。編集すると繰り返しのリンクが解除され、独立した予定となります。元の予定の変更はこのエントリーに影響しなくなります。"</string>
+    <string name="view_recurrence_note_to_original">"このエントリーはシリーズの一部です。編集するとシリーズのリンクが解除され、独立した予定となります。元の予定の変更はこのエントリーに影響しなくなります。"</string>
     <string name="view_fragment_audio_permission">"アプリの権限"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board は音声を録音する権限または音声文字変換を使用する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"音声メモを追加"</string>
@@ -134,7 +134,7 @@ Global Strings -->
     <string name="edit_recur_on_weekday">"曜日:"</string>
     <string name="edit_recur_on_the_x_day_of_month">"月の"</string>
     <string name="edit_recur_x_day_of_the_month">"日目"</string>
-    <string name="edit_recur_x_times">"回目"</string>
+    <string name="edit_recur_x_times">"回"</string>
     <string name="edit_recur_toast_requires_start_date">"繰り返すには着手日を設定してください！"</string>
     <string name="edit_datepicker_dialog_select_date">"日付を選択"</string>
     <string name="edit_datepicker_dialog_select_time">"時刻を選択"</string>
@@ -371,13 +371,15 @@ Global Strings -->
     <string name="filter_desc">"降順"</string>
     <string name="filter_created">"作成日時"</string>
     <string name="filter_last_modified">"最終更新日時"</string>
-    <string name="filter_no_category">なし</string>
-    <string name="filter_no_resource">なし</string>
+    <string name="filter_no_category">カテゴリーなし</string>
+    <string name="filter_no_resource">必要なものなし</string>
     <string name="filter_subtasks_order_by">サブタスクの並べ替え</string>
     <string name="filter_subnotes_order_by">リンクされたメモの並べ替え</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"エントリーを追加するコレクションをクリックしてください！"</string>
-    <string name="collections_snackbar_x_items_added">"追加: %1$d 件、 スキップ: %2$d 件 (繰り返しのあるエントリーを含むインスタンス)"</string>
+    <string name="collections_snackbar_x_items_added">"追加 %1$d 件、 スキップ %2$d 件 (繰り返しのあるエントリーを含む)"</string>
+    <string name="collections_toast_x_items_added">"%1$d 件のエントリーが追加されました！"</string>
     <string name="menu_collection_popup_import_from_ics">".ics からインポート"</string>
+    <string name="menu_collection_popup_import_from_textfile">"テキストファイルからインポート"</string>
     <string name="notification_done">"完了"</string>
     <string name="notification_add_1h">"+ 1 時間"</string>
     <string name="notification_add_1d">"+ 1 日"</string>
@@ -394,8 +396,11 @@ Global Strings -->
     <string name="settings_select_theme_dark">"ダーク"</string>
     <string name="settings_select_theme_light">"ライト"</string>
     <string name="settings_select_theme_system">"システムのデフォルト"</string>
+    <string name="settings_protect_biometric_private_confidential">"非公開と機密"</string>
     <string name="settings_protect_biometric_confidential">"機密"</string>
     <string name="settings_protect_biometric_all">"すべて"</string>
+    <string name="settings_protect_biometric_info_on_settings_unlock">"この設定を変更するには認証してください！"</string>
+    <string name="settings_protect_biometric_info_on_unlock">"保護されたエントリーを表示するのは認証してください！"</string>
     <string name="donate_dialog_title">"jtx Board を気に入っていただけましたか？"</string>
     <string name="donate_dialog_message">"アプリの開発は複雑で、開発・メンテナンス・サポートは大変な仕事です。このアプリを気に入り、継続的な開発をご支援いただける場合は、寄付をご検討ください :-)
 ありがとうございます！"</string>
@@ -448,7 +453,10 @@ Global Strings -->
     <string name="list_quickadd_dialog_sr_listening">"聞き取り中…"</string>
     <string name="collections_dialog_buypro_info">"リモートコレクションの編集機能を有効にするには jtx Board Pro をご購入ください。"</string>
     <string name="list_update_entries_dialog_title">"エントリーを更新"</string>
-    <string name="list_update_entries_dialog_attention_collection_update">"注意: 繰り返しのあるインスタンスは、別のコレクションに移動する前に、そのシリーズから解除する必要があり、このプロセスでは無視されます。"</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"注意: 繰り返しのあるインスタンスは、別のコレクションに移動する前にシリーズから切り離す必要があるため、このプロセスでは無視されます。"</string>
+    <string name="list_update_entries_dialog_new_parent_info">"選択したエントリーをサブタスク/メモとしてリンクする親を選択してください。"</string>
+    <string name="details_link_existing_subentry_dialog_title">"サブエントリーをリンク"</string>
+    <string name="details_link_existing_subentry_dialog_info">"リンクするサブエントリーを選択してください。"</string>
     <string name="details_app_bar_behaviour">"アプリバーの動作"</string>
     <string name="details_show_all_options">"すべてのオプションを表示"</string>
     <string name="details_show_hide_elements">要素の表示/非表示</string>
@@ -463,6 +471,8 @@ Global Strings -->
     <string name="details_go_to_series">"シリーズに移動"</string>
     <string name="details_detach_from_series">"シリーズから切り離す"</string>
     <string name="details_detach_all_instances">"すべてのインスタンスを切り離す"</string>
+    <string name="dialog_unlink_from_parent_title">"親からリンクを解除"</string>
+    <string name="dialog_unlink_from_parent_message">"サブエントリーとしての関係を解除しますか？ エントリーは独立して残ります。"</string>
     <string name="edit_comment">"コメントを編集"</string>
     <string name="edit_subnote_add_helper">"サブメモを追加"</string>
     <string name="edit_subtask">"サブタスクを編集"</string>
@@ -487,6 +497,7 @@ Global Strings -->
     <string name="dialog_revert_changes_title">"変更を元に戻しますか？"</string>
     <string name="dialog_revert_changes_message">"本当に変更を破棄して内容を編集前に戻しますか？"</string>
     <string name="dialog_revert_changes_message2">"注意: サブタスクとサブメモは別のエントリーであるため、元に戻せません。"</string>
+    <string name="dialog_select_module_txt_dialog_title">"%1$d 件のファイルのインポート先"</string>
     <string name="dialog_collection_new_entries_title">"新しいエントリー用のコレクション"</string>
     <string name="dialog_detach_from_series_title">"シリーズから切り離しますか？"</string>
     <string name="dialog_detach_from_series_text_attention">"注意: この操作は元に戻せません！"</string>
@@ -520,6 +531,7 @@ Global Strings -->
     <string name="settings_link_progress_to_subtasks">"進捗状況をサブタスクにリンク"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"同期でステータス、進捗状況、完了を維持"</string>
     <string name="settings_attention_experimental_feature">"注意: これは試験運用中の機能です"</string>
+    <string name="settings_create_with_current_location">"新規作成するエントリーに現在の位置情報を設定"</string>
     <string name="sync_button_go_to_collections">"コレクションに移動"</string>
     <string name="buypro_snackbar_please_purchase_pro">"この機能を有効にするにはプロ版を購入してください。"</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -541,16 +553,27 @@ Global Strings -->
     <string name="list_start_date_today">"今日から着手"</string>
     <string name="list_start_date_tomorrow">"明日から着手"</string>
     <string name="list_start_date_future">"今後に着手"</string>
-    <string name="list_hide_completed_tasks">"完了したタスクを非表示にする"</string>
+    <string name="list_hide_completed_tasks">"完了したタスクを非表示"</string>
+    <string name="list_biometric_protected_entries_locked">生体認証で保護されたエントリーはロックされています</string>
+    <string name="collections_biometric_protected_entries_locked_title">生体認証で保護されたエントリーはロックされています</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">認証してもう一度お試しください</string>
+    <string name="list_biometric_protected_entries_unlocked">生体認証で保護されたエントリーはロック解除されています</string>
     <string name="settings_auto_alarm">"自動アラーム"</string>
     <string name="alarms_always_ondue">"締切日時に通知"</string>
     <string name="settings_show_one_recur_entry_in_future">"将来の繰り返しエントリーは 1 つだけ表示"</string>
     <string name="settings_auto_alarm_sub">"オンにすると自動でアラームを作成します。「締切日時に通知」を選択するとアラームを作成せずに、締切日時に通知します。"</string>
+    <string name="settings_protect_biometric">"エントリーを生体認証で保護"</string>
+    <string name="settings_protect_biometric_sub">"この機能は、選択されたエントリーを生体認証でロック解除されるまで非表示にしますが、バックグラウンドでデータを暗号化/復号するものではありません。"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"ステータスなし"</string>
     <string name="classification_no_classification">"公開設定なし (公開)"</string>
     <string name="map">"地図"</string>
     <string name="open_in_browser">"ブラウザーで開く"</string>
+    <string name="list_date_without">"日付なし"</string>
+    <string name="list_start_without">"着手日なし"</string>
+    <string name="list_due_without">"締切日なし"</string>
+    <string name="list_dialog_delete_visible_message2">"注意: 繰り返しのあるエントリーのインスタンスは除外されます！"</string>
+    <string name="list_snackbar_no_collection">"ローカルコレクションを追加するか、このモジュールをサポートするリモートコレクションと同期してください。"</string>
     <string name="filter_second_order_by">"次に…で並べ替え"</string>
     <string name="filter_group_by">"…でグループ化"</string>
     <string name="filter_group_by_info">"リスト表示とコンパクト表示のみグループ化に対応しています"</string>
@@ -591,6 +614,7 @@ Global Strings -->
     <string name="settings_select_theme_true_dark">"ブラック (有機 EL 向け)"</string>
     <string name="settings_select_theme_contrast">"コントラスト (電子ペーパー向け)"</string>
     <string name="settings_journals">"ジャーナルの設定"</string>
+    <string name="settings_notes">"メモ設定"</string>
     <string name="settings_default_journals_date">"ジャーナルのデフォルトの日付/時間"</string>
     <string name="settings_default_journals_date_previous_day">"前日"</string>
     <string name="settings_default_journals_date_current_day">"当日"</string>
