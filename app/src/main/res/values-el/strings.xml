@@ -14,6 +14,10 @@ Global Strings -->
     <string name="gotit">"Το κατάλαβα"</string>
     <string name="cont">"Συνέχεια"</string>
     <string name="website">"Website"</string>
+    <string name="latitude">"Γεωγραφικό πλάτος"</string>
+    <string name="longitude">"Γεωγραφικό μήκος"</string>
+    <string name="unlink">"Κατάργηση σύνδεσης"</string>
+    <string name="current_location">"Τρέχουσα τοποθεσία"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
     <string name="toolbar_text_add_note">"Προσθήκη σημείωσης"</string>
     <string name="toolbar_text_add_task">"Προσθήκη εργασίας"</string>
@@ -83,6 +87,8 @@ Global Strings -->
     <string name="view_comment_playbutton_content_desc">"Αναπαραγωγή ηχητικής σημείωσης"</string>
     <string name="view_reccurrence_note_is_exception">"Αυτό το στοιχείο αποτελεί εξαίρεση σε μια επαναλαμβανόμενη καταχώριση."</string>
     <string name="view_feedback_linked_notes">"Σχόλια / Συνδεδεμένες σημειώσεις"</string>
+    <string name="view_subtask_of">"Υποεργασία του"</string>
+    <string name="view_linked_note_of">"Συνδεδεμένη σημείωση του"</string>
     <string name="view_add_note">"Προσθήκη σημείωσης"</string>
     <string name="view_add_audio_note">"Προσθήκη ήχου"</string>
     <string name="view_fab_edit_entry_contentDesc">"Επεξεργασία καταχώρισης"</string>
@@ -247,6 +253,7 @@ Global Strings -->
     <string name="apply">"Καταχώρηση"</string>
     <string name="not_available_abbreviation">"Δ/Υ"</string>
     <string name="collection">"Συλλογή"</string>
+    <string name="link_to_parent">"Πίσω στην αρχική"</string>
     <string name="toolbar_text_collections">"Συλλογές"</string>
     <string name="navigation_drawer_collections">"Συλλογες"</string>
     <string name="edit_dialog_set_attendee_role">"Καθορισμός ρόλου"</string>
@@ -300,6 +307,8 @@ Global Strings -->
     <string name="edit_validation_errors_start_due_timezone_check">"Παρακαλώ επιλέξτε και για τα δυο ζώνη ζώνη ώρας, αρχή και μέχρι, ή απενεργοποιήστε την ζώνη ώρας."</string>
     <string name="collections_toast_export_ics_success">"Η εξαγωγή της συλλογής τελείωσε αποτελεσματικά."</string>
     <string name="collections_toast_export_ics_error">"Ένα πρόβλημα παρουσιάστηκε κατά την διαδικασία εξαγωγής της επιλεγμένης συλλογής."</string>
+    <string name="attachment_export_saved_successfully">"Αποθηκεύτηκε επιτυχώς"</string>
+    <string name="attachment_export_error_error_occurred">"Παρουσιάστηκε σφάλμα κατά την αποθήκευση του επιλεγμένου αρχείου!"</string>
     <string name="menu_collections_add_remote">"Προσθήκη απομακρυσμένης συλλογής (DAVx⁵)"</string>
     <string name="menu_collection_popup_show_in_davx5">"Προβολή στο (DAVx⁵)"</string>
     <string name="menu_collection_popup_export_as_ics">"Εξαγωγή ως .ics"</string>
@@ -533,6 +542,8 @@ Global Strings -->
     <string name="list_start_date_tomorrow">"Έναρξη αύριο"</string>
     <string name="list_start_date_future">"Έναρξη στο μέλλον"</string>
     <string name="list_hide_completed_tasks">"Απόκριψη ολοκληρωμένων εργασιών"</string>
+    <string name="collections_biometric_protected_entries_locked_title">Οι βιομετρικές προστατευόμενες καταχωρήσεις κλειδώθηκαν</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">Παρακαλώ πιστοποιήστε και προσπαθήστε ξανά</string>
     <string name="settings_auto_alarm">"Αυτόματο ξυπνητήρι"</string>
     <string name="alarms_always_ondue">"Εντός προθεσμίας"</string>
     <string name="settings_show_one_recur_entry_in_future">"Εμφάνιση μόνο μιας επαναλαμβανόμενης καταχώρισης στο μέλλον"</string>
