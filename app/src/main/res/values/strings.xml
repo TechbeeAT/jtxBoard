@@ -96,7 +96,6 @@ Global Strings -->
     <string name="view_recurrence_note_to_original">"This entry is part of a series. Editing this entry will unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore."</string>
     <string name="view_fragment_audio_permission">"App Permission"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Add Audio Note"</string>
     <string name="view_comment_playbutton_content_desc">"Play audio comment"</string>
     <string name="view_reccurrence_note_is_exception">"This item is an exception to a recurring entry."</string>
     <string name="view_feedback_linked_notes">"Feedback / Linked Notes"</string>
@@ -258,6 +257,7 @@ For more information about the Sync please see:"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Speech-to-text engine is listening."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Speech-to-text engine stopped listening."</string>
     <string name="list_quickadd_dialog_sr_error">"Sorry, Speech-to-text engine encountered an error. (%1$s)"</string>
+    <string name="list_quickadd_add_audio_attachment">"Record audio attachment"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Read contacts permission granted"</string>
     <string name="permission_read_contacts_denied">"Read contacts permission denied"</string>
@@ -536,6 +536,7 @@ Thank you!"</string>
     <string name="dialog_save_current_filter_my_filter">"My filter"</string>
     <string name="dialog_edit_stored_category_title">"Add/edit category preset"</string>
     <string name="dialog_edit_stored_resource_title">"Add/edit resource preset"</string>
+    <string name="dialog_add_audio_entry_title">"Add audio entry"</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>

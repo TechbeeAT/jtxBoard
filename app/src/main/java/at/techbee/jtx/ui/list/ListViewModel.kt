@@ -13,6 +13,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteConstraintException
+import android.media.MediaPlayer
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
@@ -53,7 +54,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
     val listSettings = ListSettings.fromPrefs(prefs)
     val settingsStateHolder = SettingsStateHolder(_application)
-
+    val mediaPlayer = MediaPlayer()
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var iCal4ListRel: LiveData<List<ICal4ListRel>> = listQuery.switchMap {
@@ -417,7 +418,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      * @param icalObject to be inserted
      * @param categories the list of categories that should be linked to the icalObject
      */
-    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachment: Attachment?, alarm: Alarm?, editAfterSaving: Boolean) {
+    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachments: List<Attachment>, alarm: Alarm?, editAfterSaving: Boolean) {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -428,9 +429,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     database.insertCategory(it)
                 }
 
-                attachment?.let {
-                    it.icalObjectId = newId
-                    database.insertAttachment(it)
+                attachments.forEach { attachment ->
+                    attachment.icalObjectId = newId
+                    database.insertAttachment(attachment)
                 }
 
                 alarm?.let {

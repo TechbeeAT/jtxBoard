@@ -45,6 +45,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.AttachmentCard
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
+import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.reusable.elements.VerticalDateBlock
 import at.techbee.jtx.ui.theme.Typography
@@ -137,6 +138,15 @@ fun ListCard(
                         .weight(1f)
 
                 ) {
+                    iCalObject.getAudioAttachmentAsUri()?.let {
+                        AudioPlaybackElement(
+                            uri = it,
+                            player = player,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 4.dp)
+                        )
+                    }
 
                     val summarySize =
                         if (iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
@@ -292,7 +302,7 @@ fun ListCard(
                                     attachment = attachment,
                                     isEditMode = false,
                                     isRemoteCollection = false,   // ATTENTION: We pass false here, because the warning for large file sizes is only relevant for edit mode
-                                    withPreview = true,
+                                    player = player,
                                     onAttachmentDeleted = { /* nothing to do, no edit here */ },
                                     modifier = Modifier.size(100.dp, 140.dp)
                                 )
@@ -304,7 +314,7 @@ fun ListCard(
                             attachment = attachment,
                             isEditMode = false,
                             isRemoteCollection = false,   // ATTENTION: We pass false here, because the warning for large file sizes is only relevant for edit mode
-                            withPreview = false,
+                            player = player,
                             onAttachmentDeleted = { /* nothing to do, no edit here */ },
                         )
                     }

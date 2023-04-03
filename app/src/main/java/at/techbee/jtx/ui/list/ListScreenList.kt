@@ -70,6 +70,7 @@ fun ListScreenList(
     settingShowProgressSubtasks: MutableState<Boolean>,
     settingProgressIncrement: MutableState<DropdownSettingOption>,
     settingLinkProgressToSubtasks: Boolean,
+    player: MediaPlayer?,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -84,9 +85,6 @@ fun ListScreenList(
 
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
-
-    val mediaPlayer = remember { MediaPlayer() }   // todo: Move to viewmodel?
-
     val itemsCollapsed = remember { mutableStateListOf<String>() }
 
 
@@ -175,7 +173,7 @@ fun ListScreenList(
                         onLongClick = onLongClick,
                         onProgressChanged = onProgressChanged,
                         onExpandedChanged = onExpandedChanged,
-                        player = mediaPlayer,
+                        player = player,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
@@ -255,6 +253,7 @@ fun ListScreenList_TODO() {
             settingShowProgressSubtasks = remember { mutableStateOf(true) },
             settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
@@ -326,6 +325,7 @@ fun ListScreenList_JOURNAL() {
             settingShowProgressSubtasks = remember { mutableStateOf(false) },
             settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },

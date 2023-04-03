@@ -44,7 +44,7 @@ import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
-import at.techbee.jtx.ui.reusable.dialogs.AddAudioNoteDialog
+import at.techbee.jtx.ui.reusable.dialogs.AddAudioEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
 import at.techbee.jtx.ui.reusable.dialogs.LinkExistingSubentryDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
@@ -76,7 +76,8 @@ fun DetailsCardSubnotes(
 
     var showAddAudioNoteDialog by rememberSaveable { mutableStateOf(false) }
     if(showAddAudioNoteDialog) {
-        AddAudioNoteDialog(
+        AddAudioEntryDialog(
+            module = Module.NOTE,
             player = player,
             onConfirm = { newEntry, attachment -> onSubnoteAdded(newEntry, attachment) },
             onDismiss = { showAddAudioNoteDialog = false }
@@ -88,6 +89,7 @@ fun DetailsCardSubnotes(
             allEntriesLive = selectFromAllListLive,
             storedCategories = storedCategories,
             storedResources = storedResources,
+            player = player,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
             onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
             onDismiss = { showLinkExistingSubentryDialog = false }

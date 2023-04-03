@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.list
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -30,6 +31,7 @@ import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 
 
 @Composable
@@ -41,6 +43,7 @@ fun ListCardGrid(
     storedResources: List<StoredResource>,
     selected: Boolean,
     progressUpdateDisabled: Boolean,
+    player: MediaPlayer?,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit
 ) {
@@ -65,6 +68,16 @@ fun ListCardGrid(
                 storedResources = storedResources,
                 includeJournalDate = true
             )
+
+            iCalObject.getAudioAttachmentAsUri()?.let {
+                AudioPlaybackElement(
+                    uri = it,
+                    player = player,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 4.dp)
+                )
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -128,6 +141,7 @@ fun ListCardGrid_JOURNAL() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
+            player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier
                 .width(150.dp)
         )
@@ -155,6 +169,7 @@ fun ListCardGrid_NOTE() {
             selected = true,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> },
+            player = null,
             modifier = Modifier.width(150.dp)
         )
     }
@@ -189,6 +204,7 @@ fun ListCardGrid_TODO() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
+            player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }
@@ -225,6 +241,7 @@ fun ListCardGrid_TODO_short() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
+            player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
         )
     }

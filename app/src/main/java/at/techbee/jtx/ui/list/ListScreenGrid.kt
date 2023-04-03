@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.list
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +46,7 @@ fun ListScreenGrid(
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
+    player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
@@ -88,6 +90,7 @@ fun ListScreenGrid(
                 storedResources = storedResources,
                 selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                 progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                player = player,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(jtxCardCornerShape)
@@ -149,6 +152,7 @@ fun ListScreenGrid_TODO() {
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -200,6 +204,7 @@ fun ListScreenGrid_JOURNAL() {
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }

@@ -48,10 +48,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
-import at.techbee.jtx.ui.reusable.dialogs.CollectionSelectorDialog
-import at.techbee.jtx.ui.reusable.dialogs.DeleteSelectedDialog
-import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
-import at.techbee.jtx.ui.reusable.dialogs.UpdateEntriesDialog
+import at.techbee.jtx.ui.reusable.dialogs.*
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
@@ -190,6 +187,7 @@ fun ListScreenTabContainer(
             selectFromAllListLive = getActiveViewModel().selectFromAllList,
             storedCategoriesLive = getActiveViewModel().storedCategories,
             storedResourcesLive = getActiveViewModel().storedResources,
+            player = getActiveViewModel().mediaPlayer,
             onSelectFromAllListSearchTextUpdated = { getActiveViewModel().updateSelectFromAllListQuery(searchText = it, isAuthenticated = globalStateHolder.isAuthenticated.value) },
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
             onResourcesChanged = { addedResources, deletedResources -> getActiveViewModel().updateResourcesToSelected(addedResources, deletedResources) },
@@ -240,7 +238,7 @@ fun ListScreenTabContainer(
         module: Module,
         text: String?,
         collectionId: Long,
-        attachment: Attachment?,
+        attachments: List<Attachment>,
         editAfterSaving: Boolean
     ) {
 
@@ -267,7 +265,7 @@ fun ListScreenTabContainer(
         getActiveViewModel().insertQuickItem(
             newICalObject,
             categories,
-            attachment,
+            attachments,
             autoAlarm,
             editAfterSaving
         )
@@ -309,7 +307,7 @@ fun ListScreenTabContainer(
                         module = listViewModel.module,
                         text = newEntryText,
                         collectionId = listViewModel.listSettings.topAppBarCollectionId.value,
-                        attachment = null,
+                        attachments = emptyList(),
                         editAfterSaving = false
                     )
                 },
@@ -470,7 +468,7 @@ fun ListScreenTabContainer(
                         settingsStateHolder.lastUsedModule.value = listViewModel.module
                         settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
 
-                        addNewEntry(module = listViewModel.module, text = listViewModel.listSettings.newEntryText.value.ifEmpty { null }, collectionId = proposedCollectionId, attachment = null, editAfterSaving = true)
+                        addNewEntry(module = listViewModel.module, text = listViewModel.listSettings.newEntryText.value.ifEmpty { null }, collectionId = proposedCollectionId, attachments = emptyList(), editAfterSaving = true)
                         listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
@@ -577,7 +575,8 @@ fun ListScreenTabContainer(
                                     presetCollectionId = globalStateHolder.icalFromIntentCollection.value?.let {fromIntent ->
                                         allUsableCollections.find { fromIntent == it.displayName }?.collectionId
                                     } ?: listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
-                                    onSaveEntry = { module, text, attachment, collectionId,  editAfterSaving ->
+                                    player = listViewModel.mediaPlayer,
+                                    onSaveEntry = { module, text, attachments, collectionId,  editAfterSaving ->
 
                                         listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, collectionId)
                                         settingsStateHolder.lastUsedModule.value = module
@@ -588,7 +587,7 @@ fun ListScreenTabContainer(
                                         globalStateHolder.icalFromIntentModule.value = null
                                         globalStateHolder.icalFromIntentCollection.value = null
 
-                                        addNewEntry(module, text, collectionId, attachment, editAfterSaving)
+                                        addNewEntry(module, text, collectionId, attachments, editAfterSaving)
                                         scope.launch {
                                             val index = enabledTabs.indexOf(enabledTabs.find { tab -> tab.module == module })
                                             if(index >=0)

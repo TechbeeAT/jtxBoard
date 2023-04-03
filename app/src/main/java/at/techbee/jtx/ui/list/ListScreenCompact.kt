@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.list
 
 import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -56,6 +57,7 @@ fun ListScreenCompact(
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
     settingLinkProgressToSubtasks: Boolean,
+    player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
@@ -139,6 +141,7 @@ fun ListScreenCompact(
                         storedResources = storedResources,
                         progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
                         selected = selectedEntries,
+                        player = player,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 4.dp, bottom = 4.dp)
@@ -229,6 +232,7 @@ fun ListScreenCompact_TODO() {
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -288,6 +292,7 @@ fun ListScreenCompact_JOURNAL() {
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }

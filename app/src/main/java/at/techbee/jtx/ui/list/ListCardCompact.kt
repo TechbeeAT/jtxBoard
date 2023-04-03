@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.list
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -35,6 +36,7 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
+import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
@@ -49,6 +51,7 @@ fun ListCardCompact(
     storedResources: List<StoredResource>,
     progressUpdateDisabled: Boolean,
     selected: List<Long>,
+    player: MediaPlayer?,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
@@ -78,6 +81,16 @@ fun ListCardCompact(
                 storedResources = storedResources,
                 includeJournalDate = true
             )
+
+            iCalObject.getAudioAttachmentAsUri()?.let {
+                AudioPlaybackElement(
+                    uri = it,
+                    player = player,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 4.dp)
+                )
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -174,6 +187,7 @@ fun ListCardCompact_JOURNAL() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -201,6 +215,7 @@ fun ListCardCompact_JOURNAL2() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -229,6 +244,7 @@ fun ListCardCompact_NOTE() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -261,6 +277,7 @@ fun ListCardCompact_TODO() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -307,6 +324,7 @@ fun ListCardCompact_TODO_only_summary() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }

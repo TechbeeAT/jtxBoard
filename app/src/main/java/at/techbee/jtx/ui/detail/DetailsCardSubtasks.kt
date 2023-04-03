@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.detail
 
+import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -60,6 +61,7 @@ fun DetailsCardSubtasks(
     showSlider: Boolean,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    player: MediaPlayer?,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
@@ -80,6 +82,7 @@ fun DetailsCardSubtasks(
             allEntriesLive = selectFromAllListLive,
             storedCategories = storedCategories,
             storedResources = storedResources,
+            player = player,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
             onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
             onDismiss = { showLinkExistingSubentryDialog = false }
@@ -208,6 +211,7 @@ fun DetailsCardSubtasks_Preview() {
             showSlider = true,
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
@@ -239,6 +243,7 @@ fun DetailsCardSubtasks_Preview_edit() {
             showSlider = true,
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
@@ -270,6 +275,7 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
             showSlider = false,
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },

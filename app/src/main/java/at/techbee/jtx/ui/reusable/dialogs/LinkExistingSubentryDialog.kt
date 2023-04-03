@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
+import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +23,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,12 +38,13 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LinkExistingSubentryDialog(
     allEntriesLive: LiveData<List<ICal4ListRel>>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    player: MediaPlayer?,
     onAllEntriesSearchTextUpdated: (String) -> Unit,
     onNewSubentriesConfirmed: (newSubentries: List<ICal4List>) -> Unit,
     onDismiss: () -> Unit
@@ -111,6 +112,7 @@ fun LinkExistingSubentryDialog(
                                 selected = selectedEntries.contains(entry.iCal4List),
                                 progressUpdateDisabled = true,
                                 onProgressChanged = { _, _ -> },
+                                player = player,
                                 modifier = Modifier.clickable {
                                     if (selectedEntries.contains(entry.iCal4List))
                                         selectedEntries.remove(entry.iCal4List)
@@ -168,6 +170,7 @@ fun LinkExistingSubentryDialog_Preview() {
             ),
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            player = null,
             onAllEntriesSearchTextUpdated = { },
             onNewSubentriesConfirmed = { },
             onDismiss = { }

@@ -159,7 +159,7 @@ fun ListOptionsBottomSheet_Preview_TODO() {
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
-            onSaveStoredListSetting = { _, _, -> },
+            onSaveStoredListSetting = { _, _ -> },
             onDeleteStoredListSetting = { }
 
         )
@@ -200,7 +200,7 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
-            onSaveStoredListSetting = { _, _, -> },
+            onSaveStoredListSetting = { _, _ -> },
             onDeleteStoredListSetting = { }
         )
     }

@@ -680,6 +680,7 @@ fun DetailScreenContent(
                 showSlider = showProgressForSubTasks,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
+                player = player,
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
                 },
@@ -813,6 +814,7 @@ fun DetailScreenContent(
                 initialAttachments = attachments.value,
                 isEditMode = isEditMode.value,
                 isRemoteCollection = iCalEntity.value?.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE,
+                player = player,
                 onAttachmentsUpdated = { newAttachments ->
                     attachments.value = newAttachments
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED

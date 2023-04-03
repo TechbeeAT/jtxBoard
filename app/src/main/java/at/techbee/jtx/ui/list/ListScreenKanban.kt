@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.list
 
 import android.content.Context.VIBRATOR_MANAGER_SERVICE
 import android.content.Context.VIBRATOR_SERVICE
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -64,6 +65,7 @@ fun ListScreenKanban(
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
+    player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int, scrollOnce: Boolean) -> Unit,
     onStatusChanged: (itemid: Long, status: Status, scrollOnce: Boolean) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
@@ -139,6 +141,7 @@ fun ListScreenKanban(
                         storedCategories = storedCategories,
                         storedResources = storedResources,
                         selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
+                        player = player,
                         modifier = Modifier
                             .animateItemPlacement()
                             .clip(jtxCardCornerShape)
@@ -261,6 +264,7 @@ fun ListScreenKanban_TODO() {
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _, _ -> },
             onStatusChanged = {_, _, _ -> },
             onClick = { _, _ -> },
@@ -314,6 +318,7 @@ fun ListScreenKanban_JOURNAL() {
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _, _ -> },
             onStatusChanged = {_, _, _ -> },
             onClick = { _, _ -> },

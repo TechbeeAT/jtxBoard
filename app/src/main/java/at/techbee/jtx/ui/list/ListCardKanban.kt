@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.list
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
@@ -33,6 +34,7 @@ import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 
 
 @Composable
@@ -43,6 +45,7 @@ fun ListCardKanban(
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
     selected: Boolean,
+    player: MediaPlayer?,
     modifier: Modifier = Modifier
 ) {
 
@@ -67,6 +70,16 @@ fun ListCardKanban(
                 storedResources = storedResources,
                 includeJournalDate = true
             )
+
+            iCalObject.getAudioAttachmentAsUri()?.let {
+                AudioPlaybackElement(
+                    uri = it,
+                    player = player,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 4.dp)
+                )
+            }
 
             if (iCalObject.summary?.isNotBlank() == true)
                 Text(
@@ -102,6 +115,7 @@ fun ListCardKanban_JOURNAL() {
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = false,
+            player = null,
             modifier = Modifier
                 .width(150.dp)
                 .height(150.dp)
@@ -129,6 +143,7 @@ fun ListCardKanban_NOTE() {
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = true,
+            player = null,
             modifier = Modifier
                 .width(150.dp)
                 .height(150.dp)
@@ -164,6 +179,7 @@ fun ListCardKanban_TODO() {
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = false,
+            player = null,
         )
     }
 }

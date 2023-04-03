@@ -133,6 +133,7 @@ fun ListScreen(
                     settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
                     settingProgressIncrement = settingsStateHolder.settingStepForProgress,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent ->
@@ -157,6 +158,7 @@ fun ListScreen(
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent ->
@@ -174,6 +176,7 @@ fun ListScreen(
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent ->
@@ -191,6 +194,7 @@ fun ListScreen(
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent, scrollOnce ->

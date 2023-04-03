@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
+import android.media.MediaPlayer
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -21,7 +22,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -56,7 +56,7 @@ enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     LINK_TO_PARENT(R.string.link_to_parent)
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun UpdateEntriesDialog(
     module: Module,
@@ -66,6 +66,7 @@ fun UpdateEntriesDialog(
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     storedResourcesLive: LiveData<List<StoredResource>>,
+    player: MediaPlayer?,
     onSelectFromAllListSearchTextUpdated: (String) -> Unit,
     //currentCategories: List<String>,
     //currentResources: List<String>
@@ -342,6 +343,7 @@ fun UpdateEntriesDialog(
                                 storedResources = storedResources,
                                 selected = entry.iCal4List == selectFromAllListSelectedEntry,
                                 progressUpdateDisabled = true,
+                                player = player,
                                 onProgressChanged = {_, _ -> },
                                 modifier = Modifier.clickable {
                                     selectFromAllListSelectedEntry = if(entry.iCal4List == selectFromAllListSelectedEntry)
@@ -413,6 +415,7 @@ fun UpdateEntriesDialog_Preview() {
             selectFromAllListLive = MutableLiveData(listOf()),
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedResourcesLive = MutableLiveData(listOf(StoredResource("1234", Color.Green.toArgb()))),
+            player = null,
             onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },
             onResourcesChanged = { _, _ -> },
