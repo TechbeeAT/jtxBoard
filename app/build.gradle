@@ -6,11 +6,11 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.mikepenz.aboutlibraries.plugin'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
+apply plugin: "com.android.application"
+apply plugin: "com.mikepenz.aboutlibraries.plugin"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-parcelize"
+apply plugin: "kotlin-kapt"
 apply plugin: "kotlinx-serialization"
 apply plugin: "com.huawei.agconnect"
 
@@ -22,7 +22,7 @@ if(localPropertiesFile.exists()) {
 }
 
 android {
-    namespace 'at.techbee.jtx'
+    namespace "at.techbee.jtx"
     compileSdkVersion 33
     defaultConfig {
         applicationId "at.techbee.jtx"
