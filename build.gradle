@@ -32,7 +32,7 @@ buildscript {
         version_about_libraries = "10.6.1"
         version_huawei = "1.8.1.300"
         version_huawei_iap = "6.10.0.300"
-        version_accompanist = "0.28.0"
+        version_accompanist = "0.30.1"
         version_osmdroid = "6.1.14"
     }
 
