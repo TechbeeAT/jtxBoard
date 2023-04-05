@@ -457,7 +457,11 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="list_update_entries_dialog_title">"Actualizar entradas"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Atención: las instancias recurrentes deben ser desvinculadas de su serie antes de ser movidas a otra colección y serán ignoradas en este proceso."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Elija el nivel superior al que las entradas seleccionadas deben estar enlazadas como subtareas/notas enlazadas."</string>
+    <string name="details_link_existing_subentry_dialog_title">"Enlazar subentradas"</string>
+    <string name="details_link_existing_subentry_dialog_info">"Elija las subentradas que deben estar enlazadas."</string>
+    <string name="details_app_bar_behaviour">"Comportamiento de la barra app"</string>
     <string name="details_show_all_options">"Mostrar todas las opciones"</string>
+    <string name="details_show_hide_elements">Mostrar/ocultar elementos</string>
     <string name="details_attendees_processing_info">"Atención: Los servidores pueden procesar automáticamente a los asistentes, por ejemplo, enviando mensajes iMIP."</string>
     <string name="details_toast_entry_deleted">"Entrada descartada/borrada"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Se ha detectado una regla de recurrencia no soportada."</string>
@@ -465,6 +469,12 @@ Para más información sobre la sincronización, por favor, consulte:"</string>
     <string name="details_entry_could_not_be_loaded">"
 This entry was either deleted in the background or could not be loaded."</string>
     <string name="details_attachment_beta_info">"* La sincronización de archivos adjuntos es una característica experimental. Recomendamos encarecidamente que sólo se utilicen archivos adjuntos pequeños (hasta 100 KB), ya que los de mayor tamaño podrían dar lugar a largos tiempos de sincronización y a un comportamiento inesperado."</string>
+    <string name="details_unchanged_part_of_series">"Esta entrada es parte de una serie. Esta entrada copiará cualquier cambio realizado para la serie."</string>
+    <string name="details_changed_part_of_series">"Esta entrada es parte de una serie pero ha sido modificada. Esta entrada no se verá afectada por cambios en la serie."</string>
+    <string name="details_go_to_series">"Ir a las series"</string>
+    <string name="details_detach_from_series">"Separar de la serie"</string>
+    <string name="details_detach_all_instances">"Desvincular todas las instancias"</string>
+    <string name="dialog_unlink_from_parent_title">"Desvincular del nivel superior"</string>
     <string name="edit_comment">"Editar comentario"</string>
     <string name="edit_subnote_add_helper">"Añadir una subnota"</string>
     <string name="edit_subtask">"Editar una subtarea"</string>
