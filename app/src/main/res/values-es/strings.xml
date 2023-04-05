@@ -499,6 +499,10 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="dialog_revert_changes_title">"¿Revertir cambios?"</string>
     <string name="dialog_revert_changes_message">"¿Está seguro de que desea descartar los cambios y revertir el contenido al estado previo a la edición?"</string>
     <string name="dialog_revert_changes_message2">"Atención: Las subtareas y las subnotas son entradas separadas y no se pueden revertir."</string>
+    <string name="dialog_select_module_txt_dialog_title">"Importar %1$d archivo(s) como"</string>
+    <string name="dialog_detach_from_series_button">"Desvincular de las series"</string>
+    <string name="dialog_davx5_outdated_title">"DAVx⁵ desactualizado"</string>
+    <string name="dialog_davx5_outdated_message">"Su versión actual de DAVx⁵ no es compatible con esta versión de jtx Board. ¡Actualice DAVx⁵ a 4.3.1 (403010000+) o superior! La sincronización está actualmente suspendida."</string>
     <string name="menu_list_viewmode_compact">"Vista compacta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
     <string name="settings_details">"Ajustes para los detalles de la entrada"</string>
@@ -523,8 +527,13 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="settings_progress_step_50">"Incrementar en 50 (2 pasos)"</string>
     <string name="settings_progress_step">"Establecer el paso para el control deslizante de progreso"</string>
     <string name="settings_disable_alarms_for_readonly">"Deshabilitar alarmas para colecciones de solo lectura"</string>
+    <string name="settings_link_progress_to_subtasks">"Enlazar progreso a las subtareas"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Mantener estado, progreso y completado en sincronización"</string>
+    <string name="settings_attention_experimental_feature">"Atención: Esta es una característica experimental"</string>
+    <string name="settings_create_with_current_location">"Crear nuevas entradas con la ubicación actual"</string>
     <string name="sync_button_go_to_collections">"Ir a Colecciones"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Por favor, adquiera el paquete Pro para activar esta característica."</string>
+    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="error_no_app_found_to_open_entry">"No se ha encontrado ninguna aplicación para enviar esta entrada."</string>
     <string name="close">"Cerrar"</string>
     <string name="menu_view_share_mail">"Compartir como correo electrónico"</string>
@@ -544,10 +553,15 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="list_start_date_tomorrow">"Empezar mañana"</string>
     <string name="list_start_date_future">"Empezar en el futuro"</string>
     <string name="list_hide_completed_tasks">"Ocultar tareas completadas"</string>
+    <string name="list_biometric_protected_entries_locked">Entradas biométricas protegidas bloqueadas</string>
+    <string name="collections_biometric_protected_entries_locked_title">Entradas biométricas protegidas bloqueadas</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">Por favor, autentifíquese y vuelva a intentarlo</string>
+    <string name="list_biometric_protected_entries_unlocked">Entradas biométricas protegidas desbloqueadas</string>
     <string name="settings_auto_alarm">"Alarma automática"</string>
     <string name="alarms_always_ondue">"Siempre pendiente"</string>
     <string name="settings_show_one_recur_entry_in_future">"Mostrar solo una entrada recurrente en el futuro"</string>
     <string name="settings_auto_alarm_sub">"Activar para crear alarmas automáticamente. Elija \"Siempre pendiente\" para no crear una alarma pero recibir una notificación en cualquier caso cuando vence una tarea."</string>
+    <string name="settings_protect_biometric_sub">"Esta función oculta las entradas seleccionadas hasta que estén desbloqueadas con datos biométricos, pero no encripta/desencripta datos en segundo plano."</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"Sin estado"</string>
     <string name="classification_no_classification">"No clasificado (público)"</string>
@@ -569,6 +583,11 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="menu_view_autosave">"Guardado automático"</string>
     <string name="next">"Siguiente"</string>
     <string name="previous">"Anterior"</string>
+    <string name="preview">"Vista previa"</string>
+    <string name="select_all">Seleccionar todo</string>
+    <string name="select_none">No seleccionar ninguna</string>
+    <string name="visible">Visible</string>
+    <string name="invisible">Invisible</string>
     <string name="widget_list_description">"Lista de widgets"</string>
     <string name="widget_list_configuration">"Configuración de widgets"</string>
     <string name="widget_list_configuration_beta_info">"Tenga en cuenta que jtx Board está utilizando una nueva forma experimental de manejar los widgets que, en casos excepcionales, podría causar un comportamiento inesperado."</string>
@@ -576,4 +595,17 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="widget_list_configuration_checkbox_position">"Posición de la casilla de verificación"</string>
     <string name="widget_list_no_entries_found">"No se han encontrado entradas que coincidan con sus criterios de filtrado"</string>
     <string name="widget_list_view_settings">"Ver configuración"</string>
+    <string name="edit_recur_second">"segundo(s)"</string>
+    <string name="edit_recur_minute">"minuto(s)"</string>
+    <string name="edit_recur_hour">"hora(s)"</string>
+    <string name="markdown_bold">"Negrita"</string>
+    <string name="markdown_italic">"Cursiva"</string>
+    <string name="markdown_underlined">"Subrayado"</string>
+    <string name="markdown_strikethrough">"Tachado"</string>
+    <string name="markdown_heading1">"Título 1"</string>
+    <string name="markdown_heading2">"Título 2"</string>
+    <string name="markdown_heading3">"Título 3"</string>
+    <string name="markdown_horizontal_ruler">"Regla horizontal"</string>
+    <string name="markdown_unordered_list">"Lista"</string>
+    <string name="markdown_code">"Código"</string>
 </resources>
