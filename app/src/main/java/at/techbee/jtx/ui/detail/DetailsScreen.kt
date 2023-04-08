@@ -386,7 +386,7 @@ fun DetailsScreen(
                     } else false,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
-                    detailViewModel.save(
+                    detailViewModel.saveEntry(
                         changedICalObject,
                         changedCategories,
                         changedComments,
@@ -400,9 +400,18 @@ fun DetailsScreen(
                 onProgressChanged = { itemId, newPercent ->
                     detailViewModel.updateProgress(itemId, newPercent)
                 },
-                onMoveToNewCollection = { icalObject, newCollection ->
+                onMoveToNewCollection = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms, newCollection ->
                     navController.popBackStack()
-                    detailViewModel.moveToNewCollection(icalObject, newCollection.collectionId)
+                    detailViewModel.moveToNewCollection(
+                        changedICalObject,
+                        changedCategories,
+                        changedComments,
+                        changedAttendees,
+                        changedResources,
+                        changedAttachments,
+                        changedAlarms,
+                        newCollection.collectionId
+                    )
                 },
                 onSubEntryAdded = { icalObject, attachment ->
                     detailViewModel.addSubEntry(

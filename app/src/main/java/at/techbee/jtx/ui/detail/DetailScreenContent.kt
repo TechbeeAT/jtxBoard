@@ -101,7 +101,7 @@ fun DetailScreenContent(
     player: MediaPlayer?,
     saveICalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onMoveToNewCollection: (icalObject: ICalObject, newCollection: ICalCollection) -> Unit,
+    onMoveToNewCollection: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>, newCollection: ICalCollection) -> Unit,
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
@@ -373,16 +373,16 @@ fun DetailScreenContent(
                         includeVTODO = if (iCalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
                         onSelectionChanged = { newCollection ->
                             if (icalObject.value.collectionId != newCollection.collectionId) {
-                                saveICalObject(
+                                onMoveToNewCollection(
                                     icalObject.value,
                                     categories.value,
                                     comments.value,
                                     attendees.value,
                                     resources.value,
                                     attachments.value,
-                                    alarms.value
+                                    alarms.value,
+                                    newCollection
                                 )
-                                onMoveToNewCollection(icalObject.value, newCollection)
                             }
                         },
                         enabled = icalObject.value.recurid.isNullOrEmpty(),
@@ -973,7 +973,7 @@ fun DetailScreenContent_JOURNAL() {
             icalObjectIdList = emptyList(),
             saveICalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _ -> },
-            onMoveToNewCollection = { _, _ -> },
+            onMoveToNewCollection = { _, _, _, _, _, _, _, _ -> },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
@@ -1029,7 +1029,7 @@ fun DetailScreenContent_TODO_editInitially() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             saveICalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _ -> },
-            onMoveToNewCollection = { _, _ -> },
+            onMoveToNewCollection = { _, _, _, _, _, _, _, _ -> },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
@@ -1085,7 +1085,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             saveICalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _ -> },
-            onMoveToNewCollection = { _, _ -> },
+            onMoveToNewCollection = { _, _, _, _, _, _, _, _ -> },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
@@ -1135,7 +1135,7 @@ fun DetailScreenContent_failedLoading() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             saveICalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _ -> },
-            onMoveToNewCollection = { _, _ -> },
+            onMoveToNewCollection = { _, _, _, _, _, _, _, _ -> },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
