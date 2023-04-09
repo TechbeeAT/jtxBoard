@@ -468,6 +468,7 @@ Global Strings -->
     <string name="details_attachment_beta_info">"* 添付ファイルの同期は試験運用中の機能です。大きなサイズのファイルでは同期に時間がかかったり予期せぬ動作が発生したりする可能性があります。サイズの小さな添付ファイル (最大 100 KB) の使用を強くおすすめします。"</string>
     <string name="details_unchanged_part_of_series">"このエントリーはシリーズの一部です。このエントリーは、シリーズに対して行われた変更をすべてコピーします。"</string>
     <string name="details_changed_part_of_series">"このエントリーはシリーズの一部ですが、変更されました。このエントリーはシリーズの変更による影響を受けません。"</string>
+    <string name="details_series_attention_subentries">"注意: シリーズの各要素は、シリーズからサブタスクとリンクされたメモを反映します。シリーズの一部のみサブタスクまたはリンクされたノートを変更する場合は、最初にシリーズからリンクを解除してください。"</string>
     <string name="details_go_to_series">"シリーズに移動"</string>
     <string name="details_detach_from_series">"シリーズから切り離す"</string>
     <string name="details_detach_all_instances">"すべてのインスタンスを切り離す"</string>
@@ -500,6 +501,8 @@ Global Strings -->
     <string name="dialog_select_module_txt_dialog_title">"%1$d 件のファイルのインポート先"</string>
     <string name="dialog_collection_new_entries_title">"新しいエントリー用のコレクション"</string>
     <string name="dialog_detach_from_series_title">"シリーズから切り離しますか？"</string>
+    <string name="dialog_detach_from_series_text_all">"すべての要素を切り離すとシリーズが削除され、各インスタンスそれぞれにサブタスクやリンクされたメモを設定できるようになります。しかし、元のシリーズや他のインスタンスへのリンクは無くなります。続行しますか？"</string>
+    <string name="dialog_detach_from_series_text_single">"この要素を切り離すと、独立したサブタスクやリンクされたメモを設定できるようになります。しかし、元のシリーズへのリンクは無くなります。続行しますか？"</string>
     <string name="dialog_detach_from_series_text_attention">"注意: この操作は元に戻せません！"</string>
     <string name="dialog_detach_from_series_button">"シリーズから切り離す"</string>
     <string name="dialog_davx5_outdated_title">"DAVx⁵ のバージョンが古すぎます"</string>
