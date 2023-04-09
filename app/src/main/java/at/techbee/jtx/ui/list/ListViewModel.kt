@@ -479,6 +479,20 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     /**
+     * Deletes all tasks that are marked as done.
+     * Subtasks are deleted if their parent is marked as done independent of their status.
+     */
+    fun deleteDone() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val doneTasks = database.getDoneTasks()
+            doneTasks.forEach { doneTask ->
+                ICalObject.deleteItemWithChildren(doneTask.id, database)
+            }
+            toastMessage.value = _application.getString(R.string.toast_done_tasks_deleted, doneTasks.size)
+        }
+    }
+
+    /**
      * Retrieves the remote collections from the database
      * and triggers sync for their accounts
      */

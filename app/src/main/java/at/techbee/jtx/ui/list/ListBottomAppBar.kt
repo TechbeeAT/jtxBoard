@@ -31,8 +31,10 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.relations.ICal4ListRel
+import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.dialogs.DAVx5IncompatibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
+import at.techbee.jtx.ui.reusable.dialogs.DeleteDoneDialog
 import at.techbee.jtx.util.DateTimeUtils
 import java.util.*
 
@@ -53,11 +55,14 @@ fun ListBottomAppBar(
     onGoToDateSelected: (Long) -> Unit,
     onDeleteSelectedClicked: () -> Unit,
     onUpdateSelectedClicked: () -> Unit,
-    onToggleBiometricAuthentication: () -> Unit
+    onToggleBiometricAuthentication: () -> Unit,
+    onDeleteDone: () -> Unit
 ) {
 
     var showGoToDatePicker by remember { mutableStateOf(false) }
     var showDAVx5IncompatibleDialog by remember { mutableStateOf(false) }
+    var showDeleteDoneDialog by remember { mutableStateOf(false) }
+    val showMoreActionsMenu = remember { mutableStateOf(false) }
     val iCal4List by iCal4ListRelLive.observeAsState(emptyList())
 
     if(showGoToDatePicker) {
@@ -92,6 +97,13 @@ fun ListBottomAppBar(
 
     if(showDAVx5IncompatibleDialog) {
         DAVx5IncompatibleDialog(onDismiss = { showDAVx5IncompatibleDialog = false } )
+    }
+
+    if(showDeleteDoneDialog) {
+        DeleteDoneDialog(
+            onConfirm = { onDeleteDone() },
+            onDismiss = { showDeleteDoneDialog = false }
+        )
     }
 
     BottomAppBar(
@@ -169,6 +181,19 @@ fun ListBottomAppBar(
                                 Icons.Outlined.SyncProblem,
                                 contentDescription = stringResource(id = R.string.dialog_davx5_outdated_title),
                                 tint = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+
+                    AnimatedVisibility(module == Module.TODO) {
+                        OverflowMenu(menuExpanded = showMoreActionsMenu) {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(R.string.list_delete_done)) },
+                                onClick = {
+                                    showDeleteDoneDialog = true
+                                    showMoreActionsMenu.value = false
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.DeleteSweep, null) },
                             )
                         }
                     }
@@ -290,7 +315,8 @@ fun ListBottomAppBar_Preview_Journal() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }
@@ -320,7 +346,8 @@ fun ListBottomAppBar_Preview_Note() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }
@@ -350,7 +377,8 @@ fun ListBottomAppBar_Preview_Todo() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }
@@ -381,7 +409,8 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }

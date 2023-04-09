@@ -48,7 +48,10 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
-import at.techbee.jtx.ui.reusable.dialogs.*
+import at.techbee.jtx.ui.reusable.dialogs.CollectionSelectorDialog
+import at.techbee.jtx.ui.reusable.dialogs.DeleteSelectedDialog
+import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
+import at.techbee.jtx.ui.reusable.dialogs.UpdateEntriesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
@@ -501,7 +504,8 @@ fun ListScreenTabContainer(
                             globalStateHolder.biometricPrompt?.authenticate(promptInfo)
                         }
                         listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
-                    }
+                    },
+                    onDeleteDone = { listViewModel.deleteDone() }
                 )
             } else if(timeout) {
                 BottomAppBar {

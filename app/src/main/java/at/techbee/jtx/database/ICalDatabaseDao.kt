@@ -235,6 +235,13 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NOT NULL ORDER BY $COLUMN_RECURID")
     fun getSeriesInstancesICalObjectsByUID(uid: String?): LiveData<List<ICalObject>>
 
+    /**
+     * Retrieve all tasks that are done (Status = Completed or Percent = 100)
+     * @return list of [ICalObject]
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_COMPONENT = 'VTODO' AND $COLUMN_STATUS = 'COMPLETED' OR $COLUMN_PERCENT = 100")
+    fun getDoneTasks(): List<ICalObject>
+
 
     /**
      * Retrieve an [ICalCollection] by Id synchronously (non-suspend)

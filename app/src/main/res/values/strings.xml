@@ -161,6 +161,8 @@ Global Strings -->
     <string name="edit_task_completed_add">"Pick completed date/time"</string>
     <string name="edit_dialog_sure_to_delete_title">"Delete \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Discard this entry?"</string>
+    <string name="dialog_delete_done_title">"Delete all done tasks?"</string>
+    <string name="dialog_delete_done_message">"Attention: Subtasks are deleted independent of their status if their parent is marked as done. This operation cannot be undone!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Are you sure you want to delete \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Are you sure you want to discard this entry? This entry will not be saved."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"The Due date cannot be before the Start date."</string>
@@ -235,6 +237,7 @@ For more information about the Sync please see:"</string>
     <string name="donate_other_donation_methods">"If you would like to consider any other donation method, please check our website:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"No app was found to open this file/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Recurring item is now an exception."</string>
+    <string name="toast_done_tasks_deleted">"Done tasks deleted (%d)."</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again."</string>
     <string name="about_translations_thanks_to">"Thanks to"</string>
@@ -592,6 +595,7 @@ Thank you!"</string>
     <string name="list_start_date_future">"Start in future"</string>
     <string name="list_hide_completed_tasks">"Hide completed tasks"</string>
     <string name="list_biometric_protected_entries_locked">Biometric protected entries locked</string>
+    <string name="list_delete_done">"Delete done"</string>
     <string name="collections_biometric_protected_entries_locked_title">Biometric protected entries locked</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Please authenticate and try again</string>
     <string name="list_biometric_protected_entries_unlocked">Biometric protected entries unlocked</string>
