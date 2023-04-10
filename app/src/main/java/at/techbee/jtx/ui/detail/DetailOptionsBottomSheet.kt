@@ -34,7 +34,6 @@ fun DetailOptionsBottomSheet(
     modifier: Modifier = Modifier
 ) {
 
-
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
 
         Text(
@@ -56,7 +55,7 @@ fun DetailOptionsBottomSheet(
                         selected = enabled,
                         onClick = {
                             detailSettings.detailSetting[setting] = !detailSettings.detailSetting.getOrDefault(setting, false)
-                            if(detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == false && detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == false)
+                            if (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == false && detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == false)
                                 detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] = true
 
                             onListSettingsChanged()
@@ -64,7 +63,7 @@ fun DetailOptionsBottomSheet(
                         label = { Text(stringResource(id = setting.stringResource)) },
                         trailingIcon = {
                             Crossfade(enabled) {
-                                if(it)
+                                if (it)
                                     Icon(Icons.Outlined.Visibility, stringResource(id = R.string.visible))
                                 else
                                     Icon(Icons.Outlined.VisibilityOff, stringResource(id = R.string.invisible))
