@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board同步日志、笔记和任务"</string>
+    <string name="app_permission_label">"jtx Board 同步日记、笔记和任务"</string>
     <string name="app_permission_desc">"使用诸如DAVx⁵之类的其它程序同步jtx Board内容"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
@@ -43,7 +43,7 @@ Global Strings -->
     <string name="navigation_drawer_board">"白板"</string>
     <string name="navigation_drawer_sync">"使用DAVx⁵同步"</string>
     <string name="navigation_drawer_about">"关于/许可协议"</string>
-    <string name="navigation_drawer_subtitle">"安卓上的日志、笔记和任务管理工具"</string>
+    <string name="navigation_drawer_subtitle">"日记、笔记和任务"</string>
     <string name="navigation_drawer_beta_feedback">"测试反馈"</string>
     <string name="navigation_drawer_settings">"设置"</string>
     <string name="navigation_drawer_news_updates">"新闻与更新"</string>
@@ -63,7 +63,7 @@ Global Strings -->
     <string name="list_start_tomorrow">"明天开始"</string>
     <string name="list_start_inXhours">"计划%d 小时后开始"</string>
     <string name="list_start_inXdays">"计划%d 天后开始"</string>
-    <string name="list_tabitem_journals">"日志"</string>
+    <string name="list_tabitem_journals">"日记"</string>
     <string name="list_tabitem_notes">"笔记"</string>
     <string name="list_tabitem_todos">"任务"</string>
     <string name="list_fab_add_contentdesc">"添加新项目"</string>
@@ -86,6 +86,8 @@ Global Strings -->
     <string name="view_comment_playbutton_content_desc">"播放音频评论"</string>
     <string name="view_reccurrence_note_is_exception">"相对于常见条目，此项目比较少见。"</string>
     <string name="view_feedback_linked_notes">"反馈/链接笔记"</string>
+    <string name="view_subtask_of">"父任务为"</string>
+    <string name="view_linked_note_of">"关联的笔记为"</string>
     <string name="view_add_note">"添加笔记"</string>
     <string name="view_add_audio_note">"添加音频"</string>
     <string name="view_fab_edit_entry_contentDesc">"编辑条目"</string>
@@ -135,6 +137,10 @@ Global Strings -->
     <string name="edit_recur_toast_requires_start_date">"重复出现需要设置开始日期！"</string>
     <string name="edit_datepicker_dialog_select_date">"选择日期"</string>
     <string name="edit_datepicker_dialog_select_time">"选择时间"</string>
+    <string name="edit_datepicker_dialog_add_time">"添加时间"</string>
+    <string name="edit_datepicker_dialog_edit_time">"修改时间"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"添加时区"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"修改时区"</string>
     <string name="edit_task_started_add">"选择开始日期/时间"</string>
     <string name="edit_task_due_add">"选择截止日期/时间"</string>
     <string name="edit_task_completed_add">"选择完成日期/时间"</string>
@@ -159,13 +165,13 @@ Global Strings -->
     <string name="about_thanks_ffg">"特别感谢FFG信任并财务支持实现此项目。"</string>
     <!-- menus -->
     <string name="menu_list_gotodate">"转到日期"</string>
-    <string name="menu_list_quick_journal">"快速日志"</string>
+    <string name="menu_list_quick_journal">"快速日记"</string>
     <string name="menu_list_quick_note">"快速笔记"</string>
     <string name="menu_list_quick_todo">"快速任务"</string>
     <string name="menu_list_delete_visible">"删除可见"</string>
     <string name="menu_list_syncnow">"立即同步"</string>
     <string name="menu_view_share_ics">"共享为.ics"</string>
-    <string name="menu_view_copy_as_journal">"复制为日志"</string>
+    <string name="menu_view_copy_as_journal">"复制为日记"</string>
     <string name="menu_view_copy_as_todo">"复制为任务"</string>
     <string name="menu_view_copy_as_note">"复制为笔记"</string>
     <string name="menu_view_copy_item">"创建复本"</string>
@@ -173,7 +179,7 @@ Global Strings -->
     <string name="notification_channel_reminder_name">"任务截止提醒"</string>
     <string name="notification_channel_reminder_description">"提醒任务截止"</string>
     <!-- Shortcuts -->
-    <string name="shortcut_addJournal_longLabel">"添加日志"</string>
+    <string name="shortcut_addJournal_longLabel">"添加日记"</string>
     <string name="shortcut_addNote_longLabel">"添加笔记"</string>
     <string name="shortcut_addTodo_longLabel">"添加任务"</string>
     <!-- Settings fragment -->
@@ -181,19 +187,24 @@ Global Strings -->
     <string name="settings_list">"项目列表设置"</string>
     <string name="settings_show_subtasks_in_list">"在列表中显示子任务"</string>
     <string name="settings_show_attachments_in_list">"在列表中显示附件"</string>
-    <string name="settings_group_settings_for_subentries">"子任务、子笔记和子日志设置"</string>
-    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"在任务列表中显示日志和笔记的子任务"</string>
-    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"在笔记列表中显示日志和任务的子笔记"</string>
-    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"在日志列表中显示笔记和任务的子日志"</string>
+    <string name="settings_show_progress_for_subtasks">显示子任务进度</string>
+    <string name="settings_show_progress_for_maintasks">显示主任务进度</string>
+    <string name="settings_group_settings_for_subentries">"子任务、子笔记和子日记设置"</string>
+    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"在任务列表中显示日记和笔记的子任务"</string>
+    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"在笔记列表中显示日记和任务的子笔记"</string>
+    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"在日记列表中显示笔记和任务的子日记"</string>
     <string name="settings_app">"应用设置"</string>
     <string name="settings_select_mimetype_for_audio">"选择音频笔记的Mimetype"</string>
     <!-- Sync fragment -->
     <string name="sync_with_davx5_heading">"使用DAVx⁵同步（测试版）*"</string>
+    <string name="sync_basic_info">"jtx Board 本身不提供服务器同步，但将支持通过 DAVx⁵ 同步。此方法允许您选择一个兼容的 CalDAV 服务器来存储、备份和同步您的数据。*请注意，此功能仍被视为测试版。虽然此功能已经过测试，但仍可能出现问题。如遇到任何问题，请反馈，感谢！"</string>
     <string name="sync_congratulations">"恭喜！ :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"在您的电话上侦测到了DAVx⁵。如您尚未设置DAVx⁵账号，请按照我们主页上的介绍进行操作："</string>
     <string name="sync_davx5_installed_with_collections_found">"在您的电话上侦测到了DAVx⁵。如有问题或疑惑，请先查看我们的主页："</string>
     <string name="sync_davx5_installed_with_collections_synched_collections">"以下帐户（日历）当前已同步："</string>
     <string name="sync_check_out_davx5">"查看DAVx⁵！"</string>
+    <string name="sync_davx5_not_found">"未在手机上检测到 DAVx⁵。
+了解更多有关同步的信息，请查看："</string>
     <string name="sync_davx5_get_davx5_on">"或获取DAVx⁵"</string>
     <string name="sync_furhter_info_davx5">"了解更多DAVx⁵信息，请查看"</string>
     <string name="sync_button_add_account_in_davx5">"添加DAVx⁵账号"</string>
@@ -210,14 +221,17 @@ Global Strings -->
     <string name="about_translations_thanks_to">"感谢"</string>
     <string name="about_translations_for_contributions_in">"贡献"</string>
     <string name="about_translations_basic_info">"jtx Board是一款开源应用程序，感谢开源社区的参与和贡献。在此，我们想展示社区成员在翻译方面所做的努力。"</string>
-    <string name="list_welcome_entry_journal_summary">"恭喜，这是您的首篇日志:-)"</string>
+    <string name="about_translations_contribution_info">"想要为此应用程序编辑/添加翻译，随时可在 Crowdin 翻译平台上加入 jtx Board 项目："</string>
+    <string name="list_welcome_entry_journal_summary">"恭喜，这是您的首篇日记:-)"</string>
     <string name="list_welcome_entry_journal_description">"日志可用于在特定日期撰写笔记。草案、会议记录和日记等需要使用此功能。编辑此条目，可添加类别、与会者、附件等等……此为示例条目，您可随时删除！"</string>
     <string name="list_welcome_entry_note_summary">"恭喜，这是您的首篇笔记:-)"</string>
-    <string name="list_welcome_entry_note_description">"笔记即传统的笔记，不必指定撰写日期。类似日志，笔记也可以添加附件、参与者以及更多内容。还有，您还可以将子任务添加到任何条目，而不论它是日志、笔记还是任务！"</string>
+    <string name="list_welcome_entry_note_description">"笔记即传统的笔记，不必指定撰写日期。类似日记，笔记也可以添加附件、参与者以及更多内容。还有，您还可以将子任务添加到任何条目，而不论它是日记、笔记还是任务！"</string>
     <string name="list_welcome_entry_todo_summary">"恭喜，这是您的首个任务项目:-)"</string>
-    <string name="list_welcome_entry_todo_description">"除了日志和笔记之外，任务还可以有计划的开始日期、到期日期和完成日期。完成后可以查看它们，也可以设置进度。编辑此条目可以查看出所有选项：-）"</string>
+    <string name="list_welcome_entry_todo_description">"除了日记和笔记之外，任务还可以有计划的开始日期、到期日期和完成日期。完成后可以查看它们，也可以设置进度。编辑此条目可以查看出所有选项 :-)"</string>
     <string name="list_welcome_category">"#第一步"</string>
     <string name="save_and_edit">"保存并编辑"</string>
+    <string name="save_and_new">"保存并新建下一个"</string>
+    <string name="save_and_close">"保存并关闭"</string>
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"使用语音转文本"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"语音转文本引擎正在侦听。"</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"语音转文本引擎停止了侦听。"</string>
@@ -227,16 +241,19 @@ Global Strings -->
     <string name="permission_read_contacts_denied">"已禁止读取联系人权限"</string>
     <string name="permission_record_audio_granted">"已授予录音权限"</string>
     <string name="permission_record_audio_denied">"已禁止录音权限"</string>
-    <string name="intent_dialog_title">"是否将内容添加到日志、笔记或任务？"</string>
+    <string name="intent_dialog_title">"是否将内容添加到日记、笔记或任务？"</string>
     <string name="add">"添加"</string>
     <string name="edit">"编辑"</string>
     <string name="reset">"重置"</string>
     <string name="apply">"应用"</string>
     <string name="collection">"合集"</string>
+    <string name="link_to_parent">"关联到父级"</string>
     <string name="toolbar_text_collections">"合集"</string>
     <string name="navigation_drawer_collections">"合集"</string>
     <string name="edit_dialog_set_attendee_role">"设置参与者角色"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"日期/时间"</string>
+    <string name="alarms_duration">"持续时间"</string>
     <string name="alarms_onstart">"开始"</string>
     <string name="alarms_ondue">"到期"</string>
     <string name="alarms_custom">"自定义"</string>
@@ -251,7 +268,7 @@ Global Strings -->
     <string name="collections_local_collections">"本地合集"</string>
     <string name="collections_remote_collections">"远程合集"</string>
     <!-- Fuzzy -->
-    <string name="collections_journals_num">"日志：%1$s"</string>
+    <string name="collections_journals_num">"日记：%1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_notes_num">"笔记：%1$s"</string>
     <!-- Fuzzy -->
@@ -263,7 +280,7 @@ Global Strings -->
     <string name="collections_dialog_add_local_collection_title">"添加本地合集"</string>
     <string name="collections_dialog_edit_local_collection_title">"编辑本地合集"</string>
     <string name="collections_dialog_delete_local_title">"删除“%1$s”吗？"</string>
-    <string name="collections_dialog_delete_local_message">"删除合集将删除其中包含的日志、笔记和任务。此操作不能撤销。确定继续吗？"</string>
+    <string name="collections_dialog_delete_local_message">"删除合集将删除其中包含的日记、笔记和任务。此操作不能撤销。确定继续吗？"</string>
     <string name="menu_collections_add_local">"添加本地合集"</string>
     <string name="navigation_drawer_website_news">"新闻和发行说明"</string>
     <string name="list_quickadd_toast_no_summary_description">"无法创建没有摘要/说明的条目。"</string>
@@ -284,10 +301,12 @@ Global Strings -->
     <string name="edit_validation_errors_start_due_timezone_check">"请为“开始”和“到期”选择时区，或者停用时区。"</string>
     <string name="collections_toast_export_ics_success">"导出合集成功完成。"</string>
     <string name="collections_toast_export_ics_error">"导出选定的合集时出错。"</string>
+    <string name="attachment_export_saved_successfully">"保存成功"</string>
+    <string name="attachment_export_error_error_occurred">"保存所选文件时出错！"</string>
     <string name="menu_collections_add_remote">"添加远程合集（DAVx⁵）"</string>
     <string name="menu_collection_popup_show_in_davx5">"显示在DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"导出为.ics"</string>
-    <string name="journal">"日志"</string>
+    <string name="journal">"日记"</string>
     <string name="note">"笔记"</string>
     <string name="task">"任务"</string>
     <string name="account">"账号"</string>
@@ -313,6 +332,9 @@ Global Strings -->
     <string name="summary">"摘要"</string>
     <string name="description">"详情"</string>
     <string name="search">"搜索"</string>
+    <string name="search_journals">搜索日记</string>
+    <string name="search_notes">搜索笔记</string>
+    <string name="search_todos">搜索任务</string>
     <string name="filter">"过滤"</string>
     <string name="sync_now">"立即同步"</string>
     <string name="due">"到期"</string>
@@ -330,20 +352,29 @@ Global Strings -->
     <string name="view_share_part_of_series">"此条目是系列的一部分。"</string>
     <string name="view_share_repeats">"此条目重复，每"</string>
     <string name="collections_dialog_move_title">"从“%1$s”移动所有条目到"</string>
-    <string name="collection_dialog_move_info">"请注意：只能选择可写合集和支持相同组件（日志、笔记、任务）的集合。"</string>
+    <string name="collection_dialog_move_info">"请注意：只能选择可写合集和支持相同组件（日记、笔记、任务）的集合。"</string>
     <string name="menu_collections_popup_move_entries">"移动条目"</string>
     <string name="adinfo_adfree_success_thankyou">"感谢！"</string>
     <string name="adinfo_adfree_purchase_date">"已在%1$s购买"</string>
     <string name="adinfo_adfree_order_id">"原ID：%1$s"</string>
     <string name="list_no_dates_set">"未设置日期"</string>
+    <string name="list_without_start_date">"没有开始日期"</string>
+    <string name="list_without_due_date">"没有截止日期"</string>
+    <string name="list_without_completed_date">"没有完成日期"</string>
     <string name="filter_order_by">"排序，按"</string>
     <string name="filter_asc">"升序"</string>
     <string name="filter_desc">"降序"</string>
     <string name="filter_created">"创建"</string>
     <string name="filter_last_modified">"最近修改"</string>
+    <string name="filter_no_category">没有类别</string>
+    <string name="filter_no_resource">没有资源</string>
+    <string name="filter_subtasks_order_by">子任务排序方式</string>
+    <string name="filter_subnotes_order_by">排序关联的笔记方式</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"请单击要添加条目的合集！"</string>
     <string name="collections_snackbar_x_items_added">"%1$d已添加，%2$d已跳过。（重复条目的独占实例。）"</string>
+    <string name="collections_toast_x_items_added">"添加了 %1$d 条记录！"</string>
     <string name="menu_collection_popup_import_from_ics">"从.ics导入"</string>
+    <string name="menu_collection_popup_import_from_textfile">"从文本文件导入"</string>
     <string name="notification_done">"完成"</string>
     <string name="notification_add_1h">"+ 1 小时"</string>
     <string name="notification_add_1d">"+ 1 天"</string>
@@ -360,6 +391,7 @@ Global Strings -->
     <string name="settings_select_theme_dark">"暗黑"</string>
     <string name="settings_select_theme_light">"轻亮"</string>
     <string name="settings_select_theme_system">"系统默认"</string>
+    <string name="settings_protect_biometric_all">"全部"</string>
     <string name="donate_dialog_title">"您喜欢jtx Board吗？"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"应用程序的开发是一个复杂的主题，开发、维护和提供支持是一项艰巨的工作。如您想使用高级功能，或想支持我们的项目，请考虑以下应用内购买："</string>
@@ -375,10 +407,67 @@ Global Strings -->
     <string name="buypro_snackbar_remote_entries_blocked">"想要启用远程合集的编辑功能，请购买Pro软件包。"</string>
     <string name="buypro_initial_dialog_message">"您好！jtx Board分为标准版和Pro版。查看“购买Pro版”章节，可了解有关jtx Board Pro版的更多信息！
 十分感谢！"</string>
+    <string name="menu_list_viewmode_list">"列表视图"</string>
+    <string name="menu_list_viewmode_grid">"网格视图"</string>
+    <string name="settings_modules_enable_journals">"日记"</string>
+    <string name="settings_modules_enable_notes">"笔记"</string>
+    <string name="settings_modules_enable_tasks">"任务"</string>
+    <string name="date">"日期"</string>
+    <string name="timezone">"时区"</string>
     <string name="collections_dialog_buypro_info">"想要启用远程收藏的编辑功能，请购买Pro软件包。"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意：重复的项目在被移动到另一个集合之前必须从其系列中取消链接，并且在此过程中将被忽略。"</string>
+    <string name="details_link_existing_subentry_dialog_title">"关联子条目"</string>
+    <string name="details_show_all_options">"显示所有选项"</string>
+    <string name="details_show_hide_elements">显示/隐藏元素</string>
+    <string name="details_attendees_processing_info">"注意：服务器可能会自动处理参与者，例如通过发送 iMIP 消息。"</string>
+    <string name="details_toast_entry_deleted">"条目已丢弃/删除"</string>
+    <string name="details_recur_unknown_rrule_dialog_title">"检测到不支持的重复规则！"</string>
+    <string name="details_recur_unknown_rrule_dialog_message">"检测到未知或不受支持的重复规则。如果继续，现有重复规则将被删除/覆盖。"</string>
+    <string name="details_entry_could_not_be_loaded">"此条目已在后台删除或无法加载。"</string>
+    <string name="details_attachment_beta_info">"* 同步附件是一项试验性功能。我们强烈建议仅使用较小的附件（最大 100KB），因为较大的附件可能会导致较长的同步时间和意外行为。"</string>
+    <string name="edit_comment">"修改说明"</string>
+    <string name="edit_subnote_add_helper">"添加子笔记"</string>
+    <string name="edit_subtask">"修改子任务"</string>
+    <string name="edit_subnote">"修改子笔记"</string>
+    <string name="edit_fragment_app_notification_permission_message">"jtx Board 显示闹钟通知。请授予通知权限以使用此功能。"</string>
     <!-- alarms -->
+    <string name="alarms_alarm">"闹钟"</string>
+    <string name="menu_list_viewmode_compact">"紧凑视图"</string>
+    <string name="menu_list_viewmode_kanban">"看板视图"</string>
+    <string name="close">"关闭"</string>
+    <string name="menu_view_share_mail">"以电子邮件方式分享"</string>
+    <string name="menu_view_copy_to_clipboard">"复制到剪贴板"</string>
+    <string name="menu_view_copy_to_clipboard_copied">"已复制"</string>
+    <string name="settings_select_language">"选择语言"</string>
+    <string name="settings_select_language_system">"系统默认"</string>
+    <string name="settings_details_enable_markdown">"启用 markdown 格式"</string>
     <!-- fragment_ical_list -->
+    <string name="list_date_today">"今天"</string>
+    <string name="list_date_tomorrow">"明天"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="menu_view_autosave">"自动保存"</string>
+    <string name="x_selected">已选取 %1$d 个，共 %2$d 个</string>
+    <string name="select_all">全选</string>
+    <string name="select_none">不选</string>
+    <string name="settings_journals">"日记设置"</string>
+    <string name="settings_notes">"笔记设置"</string>
+    <string name="settings_default_journals_date">"设置日记默认日期/时间"</string>
     <string name="settings_default_journals_date_previous_day">"前一天"</string>
+    <string name="settings_default_journals_date_current_day">"当天"</string>
+    <string name="settings_default_journals_date_current_hour">"当前小时"</string>
+    <string name="settings_default_journals_date_current_15min">"当前 15 分钟"</string>
+    <string name="settings_default_journals_date_current_5min">"当前 5 分钟"</string>
+    <string name="settings_default_journals_date_current_min">"当前分钟"</string>
+    <string name="widget_list_show_subtasks">"显示子任务"</string>
+    <string name="widget_list_show_subnotes">"显示子笔记"</string>
+    <string name="markdown_bold">"粗体"</string>
+    <string name="markdown_italic">"斜体"</string>
+    <string name="markdown_underlined">"下划线"</string>
+    <string name="markdown_strikethrough">"删除线"</string>
+    <string name="markdown_heading1">"一级标题"</string>
+    <string name="markdown_heading2">"二级标题"</string>
+    <string name="markdown_heading3">"三级标题"</string>
+    <string name="markdown_horizontal_ruler">"水平线"</string>
+    <string name="markdown_unordered_list">"列表"</string>
+    <string name="markdown_code">"代码"</string>
 </resources>
