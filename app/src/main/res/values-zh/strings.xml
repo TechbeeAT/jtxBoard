@@ -13,6 +13,10 @@ Global Strings -->
     <string name="discard">"丢弃"</string>
     <string name="gotit">"明白"</string>
     <string name="cont">"继续"</string>
+    <string name="latitude">"纬度"</string>
+    <string name="longitude">"经度"</string>
+    <string name="unlink">"取消关联"</string>
+    <string name="current_location">"当前位置"</string>
     <string name="toolbar_text_add_journal">"添加日志"</string>
     <string name="toolbar_text_add_note">"添加笔记"</string>
     <string name="toolbar_text_add_task">"添加任务"</string>
@@ -65,6 +69,8 @@ Global Strings -->
     <string name="list_fab_add_contentdesc">"添加新项目"</string>
     <string name="list_progress">"进展"</string>
     <string name="list_expand">"扩展"</string>
+    <string name="list_dialog_delete_selected_title">删除选定的条目？</string>
+    <string name="list_dialog_delete_selected_message">此操作将删除所有选定条目（%1$d）。确定要继续吗？此操作不能撤消！</string>
     <string name="list_quickadd_dialog_summary_description_hint">"摘要/说明"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"第一行被提取为摘要，其余当做为说明。hashtags被提取为类别（例如#category）。"</string>
     <string name="list_item_upload_pending">"上传挂起"</string>
