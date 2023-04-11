@@ -13,6 +13,7 @@ Global Strings -->
     <string name="discard">"丢弃"</string>
     <string name="gotit">"明白"</string>
     <string name="cont">"继续"</string>
+    <string name="website">"网站"</string>
     <string name="latitude">"纬度"</string>
     <string name="longitude">"经度"</string>
     <string name="unlink">"取消关联"</string>
@@ -20,8 +21,8 @@ Global Strings -->
     <string name="toolbar_text_add_journal">"添加日志"</string>
     <string name="toolbar_text_add_note">"添加笔记"</string>
     <string name="toolbar_text_add_task">"添加任务"</string>
-    <string name="default_local_collection_name">"位置"</string>
-    <string name="default_local_account_name">"位置"</string>
+    <string name="default_local_collection_name">"本地"</string>
+    <string name="default_local_account_name">"本地"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"草稿"</string>
     <string name="journal_status_final">"定稿"</string>
@@ -70,7 +71,7 @@ Global Strings -->
     <string name="list_progress">"进展"</string>
     <string name="list_expand">"扩展"</string>
     <string name="list_dialog_delete_selected_title">删除选定的条目？</string>
-    <string name="list_dialog_delete_selected_message">此操作将删除所有选定条目（%1$d）。确定要继续吗？此操作不能撤消！</string>
+    <string name="list_dialog_delete_selected_message">此操作将删除所有选定条目（%1$d）。是否继续？此操作不能撤消！</string>
     <string name="list_quickadd_dialog_summary_description_hint">"摘要/说明"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"第一行被提取为摘要，其余当做为说明。hashtags被提取为类别（例如#category）。"</string>
     <string name="list_item_upload_pending">"上传挂起"</string>
@@ -93,8 +94,8 @@ Global Strings -->
     <string name="view_fab_edit_entry_contentDesc">"编辑条目"</string>
     <string name="view_subtasks_header">"子任务"</string>
     <string name="view_progress_label">"进展"</string>
-    <string name="view_dialog_sure_to_delete_title">"删除“%1$s”吗？"</string>
-    <string name="view_dialog_sure_to_delete_message">"确定删除“%1$s”吗？"</string>
+    <string name="view_dialog_sure_to_delete_title">"删除“%1$s”？"</string>
+    <string name="view_dialog_sure_to_delete_message">"确定要删除“%1$s”？"</string>
     <string name="view_toast_deleted_successfully">"已成功删除“%1$s”"</string>
     <string name="view_dialog_add_note">"添加笔记"</string>
     <string name="view_dialog_add_note_dialog_hint">"在此处添加您的笔记"</string>
@@ -144,10 +145,10 @@ Global Strings -->
     <string name="edit_task_started_add">"选择开始日期/时间"</string>
     <string name="edit_task_due_add">"选择截止日期/时间"</string>
     <string name="edit_task_completed_add">"选择完成日期/时间"</string>
-    <string name="edit_dialog_sure_to_delete_title">"删除“%1$s”吗？"</string>
+    <string name="edit_dialog_sure_to_delete_title">"删除“%1$s”？"</string>
     <string name="edit_dialog_sure_to_discard_title">"舍弃此条目？"</string>
-    <string name="edit_dialog_sure_to_delete_message">"确定要删除“%1$s”吗？"</string>
-    <string name="edit_dialog_sure_to_discard_message">"确定要舍弃此条目吗？此操作无法撤销。"</string>
+    <string name="edit_dialog_sure_to_delete_message">"确定要删除“%1$s”？"</string>
+    <string name="edit_dialog_sure_to_discard_message">"确定要舍弃此条目？此操作无法撤销。"</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"截止日期不能早于开始日期。"</string>
     <string name="edit_fragment_app_permission">"应用权限"</string>
     <string name="edit_fragment_app_permission_message">"在输入参与者时，jtx Board可以根据您的联系人给出建议值。启用此功能，需要授予其读取联系人的权限。"</string>
@@ -279,7 +280,7 @@ Global Strings -->
     <string name="collections_collection_menu">"合集菜单"</string>
     <string name="collections_dialog_add_local_collection_title">"添加本地合集"</string>
     <string name="collections_dialog_edit_local_collection_title">"编辑本地合集"</string>
-    <string name="collections_dialog_delete_local_title">"删除“%1$s”吗？"</string>
+    <string name="collections_dialog_delete_local_title">"删除“%1$s”？"</string>
     <string name="collections_dialog_delete_local_message">"删除合集将删除其中包含的日记、笔记和任务。此操作不能撤销。确定继续吗？"</string>
     <string name="menu_collections_add_local">"添加本地合集"</string>
     <string name="navigation_drawer_website_news">"新闻和发行说明"</string>
@@ -392,7 +393,9 @@ Global Strings -->
     <string name="settings_select_theme_light">"轻亮"</string>
     <string name="settings_select_theme_system">"系统默认"</string>
     <string name="settings_protect_biometric_all">"全部"</string>
-    <string name="donate_dialog_title">"您喜欢jtx Board吗？"</string>
+    <string name="settings_protect_biometric_info_on_settings_unlock">"请进行身份验证以更改此设置！"</string>
+    <string name="settings_protect_biometric_info_on_unlock">"请进行身份验证以显示受保护的条目！"</string>
+    <string name="donate_dialog_title">"喜欢 jtx Board 吗？"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"应用程序的开发是一个复杂的主题，开发、维护和提供支持是一项艰巨的工作。如您想使用高级功能，或想支持我们的项目，请考虑以下应用内购买："</string>
     <string name="buypro_purchase_header">"升级到jtx Board Pro版"</string>
@@ -407,16 +410,37 @@ Global Strings -->
     <string name="buypro_snackbar_remote_entries_blocked">"想要启用远程合集的编辑功能，请购买Pro软件包。"</string>
     <string name="buypro_initial_dialog_message">"您好！jtx Board分为标准版和Pro版。查看“购买Pro版”章节，可了解有关jtx Board Pro版的更多信息！
 十分感谢！"</string>
+    <string name="buypro_purchase_init_error_message">"请检查网络连接或稍后再试！"</string>
     <string name="menu_list_viewmode_list">"列表视图"</string>
     <string name="menu_list_viewmode_grid">"网格视图"</string>
+    <string name="settings_modules">"激活模块"</string>
     <string name="settings_modules_enable_journals">"日记"</string>
     <string name="settings_modules_enable_notes">"笔记"</string>
     <string name="settings_modules_enable_tasks">"任务"</string>
+    <string name="settings_default_expand_subtasks">"默认在列表中展开子任务"</string>
+    <string name="settings_default_expand_subnotes">"默认在列表中展开子笔记"</string>
+    <string name="settings_default_expand_attachments">"默认在列表中展开附件"</string>
+    <string name="sorry">"抱歉"</string>
     <string name="date">"日期"</string>
     <string name="timezone">"时区"</string>
+    <string name="invert_selection">"反选"</string>
+    <string name="clear_selection">"清除选择"</string>
+    <string name="audio_play">"播放"</string>
+    <string name="audio_record">"录音"</string>
+    <string name="audio_stop">"停止"</string>
+    <string name="audio_pause">"暂停"</string>
+    <string name="audio_error_toast">"抱歉，无法开始播放。"</string>
+    <string name="sync_in_progress">"正在同步"</string>
+    <string name="saving">"正在保存……"</string>
+    <string name="invalid_timezone_message">"请选择有效的时区！"</string>
+    <string name="invalid_url_message">"请输入有效的URL！"</string>
+    <string name="list_quickadd_dialog_sr_start">"开始语音识别"</string>
+    <string name="list_quickadd_dialog_sr_listening">"正在聆听……"</string>
     <string name="collections_dialog_buypro_info">"想要启用远程收藏的编辑功能，请购买Pro软件包。"</string>
+    <string name="list_update_entries_dialog_title">"更新条目"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意：重复的项目在被移动到另一个集合之前必须从其系列中取消链接，并且在此过程中将被忽略。"</string>
     <string name="details_link_existing_subentry_dialog_title">"关联子条目"</string>
+    <string name="details_app_bar_behaviour">"应用程序栏行为"</string>
     <string name="details_show_all_options">"显示所有选项"</string>
     <string name="details_show_hide_elements">显示/隐藏元素</string>
     <string name="details_attendees_processing_info">"注意：服务器可能会自动处理参与者，例如通过发送 iMIP 消息。"</string>
@@ -432,8 +456,22 @@ Global Strings -->
     <string name="edit_fragment_app_notification_permission_message">"jtx Board 显示闹钟通知。请授予通知权限以使用此功能。"</string>
     <!-- alarms -->
     <string name="alarms_alarm">"闹钟"</string>
+    <string name="collections_account_not_found_info">"在账号管理器中找不到此账号。如已过期，请删除。"</string>
+    <string name="collections_account_delete_dialog_title">"删除“%1$s”？"</string>
+    <string name="collections_account_delete_dialog_message">"确定要从 jtx Board 中删除此账号？此账号中的所有收藏将被删除。 此操作不能撤消。"</string>
+    <string name="dialog_move_item_to_collection_title">"移动此条目到“%1$s”？"</string>
+    <string name="dialog_move_item_to_collection_text">"请注意，所有更改会立即保存。"</string>
+    <string name="dialog_unsaved_changes_title">"保存更改？"</string>
+    <string name="dialog_unsaved_changes_text">"检测到未保存的更改。想要保存还是放弃更改？"</string>
+    <string name="dialog_error_on_update_message">"插入/更新此条目时出错。该条目或集合可能不再存在。"</string>
+    <string name="dialog_revert_changes_title">"重做？"</string>
+    <string name="dialog_revert_changes_message">"是否确定要放弃更改并将内容恢复到开始编辑前的状态？"</string>
+    <string name="dialog_revert_changes_message2">"注意：子任务和子笔记是单独的条目，不能重做。"</string>
+    <string name="dialog_collection_new_entries_title">"新条目的合集"</string>
+    <string name="dialog_detach_from_series_text_attention">"注意：此操作不能撤消！"</string>
     <string name="menu_list_viewmode_compact">"紧凑视图"</string>
     <string name="menu_list_viewmode_kanban">"看板视图"</string>
+    <string name="settings_disable_alarms_for_readonly">"对只读合集禁用闹钟"</string>
     <string name="close">"关闭"</string>
     <string name="menu_view_share_mail">"以电子邮件方式分享"</string>
     <string name="menu_view_copy_to_clipboard">"复制到剪贴板"</string>
@@ -444,7 +482,9 @@ Global Strings -->
     <!-- fragment_ical_list -->
     <string name="list_date_today">"今天"</string>
     <string name="list_date_tomorrow">"明天"</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">请进行身份验证并重试</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="list_snackbar_no_collection">"请添加本地集合或同步支持此模块的远程合集。"</string>
     <string name="menu_view_autosave">"自动保存"</string>
     <string name="x_selected">已选取 %1$d 个，共 %2$d 个</string>
     <string name="select_all">全选</string>
