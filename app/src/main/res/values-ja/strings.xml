@@ -83,7 +83,6 @@ Global Strings -->
     <string name="view_recurrence_note_to_original">"このエントリーは系列の一部です。編集すると系列へのリンクが解除され、独立した予定となります。元の予定の変更はこのエントリーに影響しなくなります。"</string>
     <string name="view_fragment_audio_permission">"アプリの権限"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board は音声を録音する権限または音声文字変換を使用する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"音声メモを追加"</string>
     <string name="view_comment_playbutton_content_desc">"音声コメントを再生"</string>
     <string name="view_reccurrence_note_is_exception">"このアイテムはエントリーの繰り返しの例外です。"</string>
     <string name="view_feedback_linked_notes">"フィードバック / リンクされたメモ"</string>
