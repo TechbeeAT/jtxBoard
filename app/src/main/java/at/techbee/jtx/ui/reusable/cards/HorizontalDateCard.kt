@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.cards
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -55,7 +57,7 @@ fun HorizontalDateCard(
         shape = if(isEditMode) CardDefaults.outlinedShape else CardDefaults.elevatedShape,
         colors = if(isEditMode) CardDefaults.outlinedCardColors() else CardDefaults.elevatedCardColors(),
         elevation = if(isEditMode) CardDefaults.outlinedCardElevation() else CardDefaults.elevatedCardElevation(),
-        border = CardDefaults.outlinedCardBorder(enabled = isEditMode),
+        border = if(isEditMode) CardDefaults.outlinedCardBorder() else BorderStroke(0.dp, Color.Transparent),
         enabled = !isEditMode || enabled,
         modifier = modifier
     ) {

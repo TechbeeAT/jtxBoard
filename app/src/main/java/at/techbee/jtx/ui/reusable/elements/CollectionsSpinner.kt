@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -13,11 +14,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.flavored.BillingManager
 
 
@@ -41,68 +42,69 @@ fun CollectionsSpinner(
 
     OutlinedCard(
         modifier = modifier,
-        onClick =  {
-            if(enabled)
+        onClick = {
+            if (enabled)
                 expanded = !expanded
         }
     ) {
 
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            ColoredEdge(colorItem = null, colorCollection = selected.color)
-
-            Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
+        ) {
+
+            ListBadge(
+                icon = Icons.Outlined.FolderOpen,
+                iconDesc = stringResource(id = R.string.collection),
+                containerColor = selected.color?.let {Color(it) } ?: MaterialTheme.colorScheme.primaryContainer
+            )
+            Text(
+                text = selected.displayName + selected.accountName?.let { " ($it)" },
+                modifier = Modifier
+                    .weight(1f)
+                    .alpha(if (!enabled) 0.5f else 1f)
+            )
+            Icon(Icons.Outlined.ArrowDropDown, null)
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
             ) {
+                collections.forEach { collection ->
 
-                Text(
-                    text = selected.displayName + selected.accountName?.let { " ($it)" },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .alpha(if (!enabled) 0.5f else 1f)
-                )
-                Icon(Icons.Outlined.ArrowDropDown, null, modifier = Modifier.padding(8.dp))
+                    if (collection.readonly && !includeReadOnly)
+                        return@forEach
 
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                ) {
-                    collections.forEach { collection ->
+                    if (selected.collectionId == collection.collectionId)
+                        return@forEach
 
-                        if (collection.readonly && !includeReadOnly)
-                            return@forEach
+                    includeVJOURNAL?.let { if (!it || (it && !collection.supportsVJOURNAL)) return@forEach }
+                    includeVTODO?.let { if (!it || (it && !collection.supportsVTODO)) return@forEach }
 
-                        if (selected.collectionId == collection.collectionId)
-                            return@forEach
-
-                        includeVJOURNAL?.let { if(!it || (it && !collection.supportsVJOURNAL)) return@forEach }
-                        includeVTODO?.let { if(!it || (it && !collection.supportsVTODO)) return@forEach }
-
-                        DropdownMenuItem(
-                            onClick = {
-                                if(collection.accountType != LOCAL_ACCOUNT_TYPE && !isProPurchased) {
-                                    expanded = false
-                                    Toast.makeText(context, context.getString(R.string.collections_dialog_buypro_info), Toast.LENGTH_LONG).show()
-                                } else {
-                                    selected = collection
-                                    expanded = false
-                                    onSelectionChanged(selected)
-                                }
-                            },
-                            text = {
-                                Text(
-                                    text = (collection.displayName ?: collection.accountName)
-                                        ?: " ",
-                                    modifier = Modifier
-                                        .wrapContentWidth()
-                                        .align(Alignment.Start)
-                                )
+                    DropdownMenuItem(
+                        onClick = {
+                            if(collection.accountType != ICalCollection.LOCAL_ACCOUNT_TYPE && !isProPurchased) {
+                                expanded = false
+                                Toast.makeText(context, context.getString(R.string.collections_dialog_buypro_info), Toast.LENGTH_LONG).show()
+                            } else {
+                                selected = collection
+                                expanded = false
+                                onSelectionChanged(selected)
                             }
-                        )
-                    }
+                        },
+                        text = {
+                            Text(
+                                text = (collection.displayName ?: collection.accountName)
+                                    ?: " ",
+                                modifier = Modifier
+                                    .wrapContentWidth()
+                                    .align(Alignment.Start)
+                            )
+                        }
+                    )
                 }
             }
         }
@@ -159,6 +161,33 @@ fun CollectionsSpinner_Preview_notenabled() {
         val collection1 = ICalCollection(
             collectionId = 1L,
             color = Color.Cyan.toArgb(),
+            displayName = "Collection Display Name",
+            description = "Here comes the desc",
+            accountName = "My account",
+            accountType = "LOCAL"
+        )
+        CollectionsSpinner(
+            listOf(collection1),
+            preselected = collection1,
+            includeReadOnly = true,
+            includeVJOURNAL = true,
+            includeVTODO = true,
+            onSelectionChanged = { },
+            enabled = false,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun CollectionsSpinner_Preview_no_color() {
+    MaterialTheme {
+        val collection1 = ICalCollection(
+            collectionId = 1L,
+            color = null,
             displayName = "Collection Display Name",
             description = "Here comes the desc",
             accountName = "My account",

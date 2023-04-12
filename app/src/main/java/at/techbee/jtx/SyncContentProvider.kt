@@ -180,6 +180,9 @@ class SyncContentProvider : ContentProvider() {
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
+            NotificationPublisher.scheduleNextNotifications(context!!)
+
         if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(
                 uri
             ) == CODE_COLLECTION_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_DIR
@@ -286,7 +289,7 @@ class SyncContentProvider : ContentProvider() {
         }
 
         if(sUriMatcher.match(uri) == CODE_ALARM_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)
-            Alarm.scheduleNextNotifications(context!!)
+            NotificationPublisher.scheduleNextNotifications(context!!)
 
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
@@ -554,7 +557,7 @@ class SyncContentProvider : ContentProvider() {
             || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM
             || sUriMatcher.match(uri) == CODE_ALARM_ITEM
         )
-            Alarm.scheduleNextNotifications(context!!)
+            NotificationPublisher.scheduleNextNotifications(context!!)
 
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 

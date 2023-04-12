@@ -9,22 +9,25 @@
 package at.techbee.jtx.ui.about
 
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.about.*
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import com.mikepenz.aboutlibraries.Libs
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun AboutScreen(
     translatorsPoeditor: MutableState<List<String>>,
@@ -34,7 +37,6 @@ fun AboutScreen(
     navController: NavHostController
 ) {
 
-    var selectedTab by remember { mutableStateOf(0) }
     val screens = listOf(
         AboutTabDestination.Jtx,
         AboutTabDestination.Releasenotes,
@@ -42,8 +44,9 @@ fun AboutScreen(
         AboutTabDestination.Translations,
         AboutTabDestination.Thanks
     )
-
+    val pagerState = rememberPagerState(initialPage = screens.indexOf(AboutTabDestination.Jtx))
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
 
     Scaffold(
@@ -58,10 +61,12 @@ fun AboutScreen(
                 drawerState = drawerState,
                 mainContent = {
                     Column {
-                        TabRow(selectedTabIndex = selectedTab) {
+                        TabRow(selectedTabIndex = pagerState.currentPage) {
                             screens.forEach { screen ->
-                                Tab(selected = selectedTab == screen.tabIndex,
-                                    onClick = { selectedTab = screen.tabIndex },
+                                Tab(selected = pagerState.currentPage == screen.tabIndex,
+                                    onClick = {
+                                        scope.launch { pagerState.animateScrollToPage(screen.tabIndex) }
+                                              },
                                     text = {
                                         Icon(
                                             screen.icon,
@@ -70,9 +75,12 @@ fun AboutScreen(
                                     })
                             }
                         }
-
-                        Crossfade(targetState = selectedTab) {
-                            when (it) {
+                        HorizontalPager(
+                            state = pagerState,
+                            pageCount = screens.size,
+                            verticalAlignment = Alignment.Top
+                        ) { page ->
+                            when (page) {
                                 AboutTabDestination.Jtx.tabIndex -> AboutJtx()
                                 AboutTabDestination.Releasenotes.tabIndex -> AboutReleaseinfo(
                                     releaseinfo

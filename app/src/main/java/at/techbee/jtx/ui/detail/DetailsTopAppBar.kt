@@ -1,9 +1,9 @@
 package at.techbee.jtx.ui.detail
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -45,8 +45,6 @@ fun DetailsTopAppBar(
 
     CenterAlignedTopAppBar(
         title = {
-
-
             OutlinedTextField(
                 value = textFieldText,
                 onValueChange = {
@@ -60,7 +58,8 @@ fun DetailsTopAppBar(
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     unfocusedBorderColor = Color.Transparent,
-                    textColor = MaterialTheme.colorScheme.onSurfaceVariant),
+                    focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                ),
                 shape = RoundedCornerShape(32.dp),
                 textStyle = MaterialTheme.typography.bodyLarge,
                 placeholder = {
@@ -120,8 +119,7 @@ fun DetailsTopAppBar(
 }
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Preview(showBackground = true)
 @Composable
 fun DetailsTopAppBar_Preview_withSubtitle() {
@@ -135,7 +133,9 @@ fun DetailsTopAppBar_Preview_withSubtitle() {
                     onAddSubtask = { }
                 )
             },
-            content = {}
+            content = { paddingValues ->
+                Box(modifier = Modifier.padding(paddingValues)) { }
+            }
         )
     }
 }

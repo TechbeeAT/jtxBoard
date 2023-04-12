@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
+import android.media.MediaPlayer
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -21,9 +22,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -37,10 +39,11 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 
 
 enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
@@ -53,14 +56,17 @@ enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     LINK_TO_PARENT(R.string.link_to_parent)
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun UpdateEntriesDialog(
     module: Module,
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
     allCollectionsLive: LiveData<List<ICalCollection>>,
-    selectFromAllListLive: LiveData<List<ICal4List>>,
+    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
+    storedCategoriesLive: LiveData<List<StoredCategory>>,
+    storedResourcesLive: LiveData<List<StoredResource>>,
+    player: MediaPlayer?,
     onSelectFromAllListSearchTextUpdated: (String) -> Unit,
     //currentCategories: List<String>,
     //currentResources: List<String>
@@ -80,6 +86,8 @@ fun UpdateEntriesDialog(
     val allResources by allResourcesLive.observeAsState(emptyList())
     val allCollections by allCollectionsLive.observeAsState(emptyList())
     val selectFromAllList by selectFromAllListLive.observeAsState(emptyList())
+    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
+    val storedResources by storedResourcesLive.observeAsState(emptyList())
 
     val addedCategories = remember { mutableStateListOf<String>() }
     val removedCategories = remember { mutableStateListOf<String>() }
@@ -141,9 +149,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.CATEGORIES) {
                     FlowRow(
-                        //horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -180,8 +186,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.RESOURCES) {
                     FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -217,8 +222,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.STATUS) {
                     FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -235,8 +239,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.CLASSIFICATION) {
                     FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -253,8 +256,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.PRIORITY) {
                     FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -271,8 +273,7 @@ fun UpdateEntriesDialog(
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.COLLECTION) {
                     FlowRow(
-                        mainAxisSpacing = 8.dp,
-                        mainAxisAlignment = FlowMainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
@@ -335,15 +336,20 @@ fun UpdateEntriesDialog(
                             if(index > selectFromAllListMaxEntriesShown)
                                 return@forEachIndexed
                             ListCardGrid(
-                                iCalObject = entry,
-                                selected = entry == selectFromAllListSelectedEntry,
+                                iCalObject = entry.iCal4List,
+                                categories = entry.categories,
+                                resources = entry.resources,
+                                storedCategories = storedCategories,
+                                storedResources = storedResources,
+                                selected = entry.iCal4List == selectFromAllListSelectedEntry,
                                 progressUpdateDisabled = true,
+                                player = player,
                                 onProgressChanged = {_, _ -> },
                                 modifier = Modifier.clickable {
-                                    selectFromAllListSelectedEntry = if(entry == selectFromAllListSelectedEntry)
+                                    selectFromAllListSelectedEntry = if(entry.iCal4List == selectFromAllListSelectedEntry)
                                         null
                                     else
-                                        entry
+                                        entry.iCal4List
                                 }
                             )
                         }
@@ -407,6 +413,9 @@ fun UpdateEntriesDialog_Preview() {
             allResourcesLive = MutableLiveData(listOf("1234", "aaa")),
             allCollectionsLive = MutableLiveData(listOf(ICalCollection())),
             selectFromAllListLive = MutableLiveData(listOf()),
+            storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
+            storedResourcesLive = MutableLiveData(listOf(StoredResource("1234", Color.Green.toArgb()))),
+            player = null,
             onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },
             onResourcesChanged = { _, _ -> },
