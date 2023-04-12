@@ -83,7 +83,6 @@ Global Strings -->
     <string name="view_recurrence_note_to_original">"Αυτή η καταχώρηση είναι μέρος μιας σειράς επαναλαμβανόμενων καταχωρήσεων. Η επεξεργασία αυτής της καταχώρισης θα την αποσυνδέσει από τη ακολουθία, θα συνεχιστεί ως αυτόνομο συμβάν και οι αλλαγές στο αρχικό συμβάν δεν θα επηρεάζουν πλέον αυτήν την καταχώριση."</string>
     <string name="view_fragment_audio_permission">"Άδεια εφαρμογής"</string>
     <string name="view_fragment_audio_permission_message">"Η εφαρμογή jtx Board χρειάζεται την άδεια σας για την εγγραφή ήχου. Παρακαλούμε παραχωρήστε την άδεια χρήσης αυτής της δυνατότητας."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Προσθήκη ηχητικής σημείωσης"</string>
     <string name="view_comment_playbutton_content_desc">"Αναπαραγωγή ηχητικής σημείωσης"</string>
     <string name="view_reccurrence_note_is_exception">"Αυτό το στοιχείο αποτελεί εξαίρεση σε μια επαναλαμβανόμενη καταχώριση."</string>
     <string name="view_feedback_linked_notes">"Σχόλια / Συνδεδεμένες σημειώσεις"</string>

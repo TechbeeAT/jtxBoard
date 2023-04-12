@@ -83,7 +83,6 @@ Global Strings -->
     <string name="view_recurrence_note_to_original">"Эта запись — часть серии. Редактирование этой записи отсоединит ее от серии, она будет продолжаться как отдельное событие, и изменения в исходном событии больше не повлияют на эту запись."</string>
     <string name="view_fragment_audio_permission">"Разрешение приложения"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board требуется разрешение для записи звука или использования функций преобразования речи в текст. Предоставьте разрешение на использование этой функции."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Добавить аудио-заметку"</string>
     <string name="view_comment_playbutton_content_desc">"Воспроизвести аудиокомментарий"</string>
     <string name="view_reccurrence_note_is_exception">"Этот элемент является исключением из повторяющейся записи."</string>
     <string name="view_feedback_linked_notes">"Фидбэк / связанные заметки"</string>

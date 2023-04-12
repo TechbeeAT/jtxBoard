@@ -83,7 +83,6 @@ Global Strings -->
     <string name="view_recurrence_note_to_original">"Tento záznam je součástí série. Úpravou tohoto záznamu se zruší jeho propojení se sérií, bude pokračovat jako samostatná událost a změny v původní události již nebudou mít na tento záznam vliv. "</string>
     <string name="view_fragment_audio_permission">"Oprávnění aplikace"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board potřebuje oprávnění k nahrávání zvuku nebo používání funkcí převodu řeči na text. Udělte prosím oprávnění k používání této funkce."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Přidat zvukovou poznámku"</string>
     <string name="view_comment_playbutton_content_desc">"Přehrát zvukový komentář"</string>
     <string name="view_reccurrence_note_is_exception">"Tato položka je výjimkou z opakujícího se záznamu."</string>
     <string name="view_feedback_linked_notes">"Zpětná vazba / Propojené poznámky"</string>
