@@ -11,8 +11,7 @@ package at.techbee.jtx.database.relations
 import androidx.room.Embedded
 import androidx.room.Relation
 import at.techbee.jtx.database.COLUMN_ID
-import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_ICALOBJECT_ID
-import at.techbee.jtx.database.properties.Relatedto
+import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.ICal4List
 
 
@@ -23,4 +22,9 @@ data class ICal4ListRel(
     @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_RELATEDTO_ICALOBJECT_ID, entity = Relatedto::class)
     var relatedto: List<Relatedto>,
 
+    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_CATEGORY_ICALOBJECT_ID, entity = Category::class)
+    var categories: List<Category>,
+
+    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_RESOURCE_ICALOBJECT_ID, entity = Resource::class)
+    var resources: List<Resource>
     )

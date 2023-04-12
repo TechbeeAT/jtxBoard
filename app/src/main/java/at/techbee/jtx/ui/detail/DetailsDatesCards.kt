@@ -32,7 +32,7 @@ import kotlin.time.Duration.Companion.days
 
 
 @Composable
-fun DetailsCardDates(
+fun DetailsDatesCards(
     icalObject: ICalObject,
     isEditMode: Boolean,
     enableDtstart: Boolean,
@@ -148,7 +148,7 @@ fun DetailsCardDates(
 @Composable
 fun DetailsCardDates_Journal_Preview() {
     MaterialTheme {
-        DetailsCardDates(
+        DetailsDatesCards(
             icalObject = ICalObject.createJournal(),
             isEditMode = false,
             enableDtstart = true,
@@ -168,7 +168,7 @@ fun DetailsCardDates_Journal_Preview() {
 @Composable
 fun DetailsCardDates_Todo_Preview() {
     MaterialTheme {
-        DetailsCardDates(
+        DetailsDatesCards(
             icalObject = ICalObject.createTodo().apply {
                 this.dtstart = System.currentTimeMillis()
                 this.dtstartTimezone = TZ_ALLDAY
@@ -193,7 +193,7 @@ fun DetailsCardDates_Todo_Preview() {
 @Composable
 fun DetailsCardDates_Journal_edit_Preview() {
     MaterialTheme {
-        DetailsCardDates(
+        DetailsDatesCards(
             icalObject = ICalObject.createJournal(),
             isEditMode = true,
             enableDtstart = true,
@@ -213,7 +213,7 @@ fun DetailsCardDates_Journal_edit_Preview() {
 @Composable
 fun DetailsCardDates_Todo_edit_Preview() {
     MaterialTheme {
-        DetailsCardDates(
+        DetailsDatesCards(
             icalObject = ICalObject.createTodo().apply {
                 this.due = System.currentTimeMillis()
                 this.dueTimezone = TZ_ALLDAY
@@ -235,7 +235,7 @@ fun DetailsCardDates_Todo_edit_Preview() {
 @Composable
 fun DetailsCardDates_Todo_edit_Preview_completed_hidden() {
     MaterialTheme {
-        DetailsCardDates(
+        DetailsDatesCards(
             icalObject = ICalObject.createTodo().apply {
                 this.due = System.currentTimeMillis()
                 this.dueTimezone = TZ_ALLDAY
@@ -256,7 +256,7 @@ fun DetailsCardDates_Todo_edit_Preview_completed_hidden() {
 @Composable
 fun DetailsCardDates_Note_edit_Preview() {
     MaterialTheme {
-        DetailsCardDates(
+        DetailsDatesCards(
             icalObject = ICalObject.createNote(),
             isEditMode = true,
             enableDtstart = true,
@@ -274,7 +274,7 @@ fun DetailsCardDates_Note_edit_Preview() {
 @Composable
 fun DetailsCardDates_Note_Preview() {
     MaterialTheme {
-        DetailsCardDates(
+        DetailsDatesCards(
             icalObject = ICalObject.createNote(),
             isEditMode = false,
             enableDtstart = true,

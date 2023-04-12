@@ -30,16 +30,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.database.relations.ICal4ListRel
+import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.dialogs.DAVx5IncompatibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
+import at.techbee.jtx.ui.reusable.dialogs.DeleteDoneDialog
 import at.techbee.jtx.util.DateTimeUtils
 import java.util.*
 
 @Composable
 fun ListBottomAppBar(
     module: Module,
-    iCal4ListLive: LiveData<List<ICal4List>>,
+    iCal4ListRelLive: LiveData<List<ICal4ListRel>>,
     listSettings: ListSettings,
     showQuickEntry: MutableState<Boolean>,
     multiselectEnabled: MutableState<Boolean>,
@@ -53,33 +55,18 @@ fun ListBottomAppBar(
     onGoToDateSelected: (Long) -> Unit,
     onDeleteSelectedClicked: () -> Unit,
     onUpdateSelectedClicked: () -> Unit,
-    onToggleBiometricAuthentication: () -> Unit
+    onToggleBiometricAuthentication: () -> Unit,
+    onDeleteDone: () -> Unit
 ) {
 
     var showGoToDatePicker by remember { mutableStateOf(false) }
     var showDAVx5IncompatibleDialog by remember { mutableStateOf(false) }
-    val iCal4List by iCal4ListLive.observeAsState(emptyList())
-
-    val isFilterActive = listSettings.searchCategories.value.isNotEmpty()
-                //|| searchOrganizers.value.isNotEmpty()
-            || (listSettings.searchStatus.value.isNotEmpty())
-            || listSettings.searchClassification.value.isNotEmpty()
-            || listSettings.searchCollection.value.isNotEmpty()
-            || listSettings.searchAccount.value.isNotEmpty()
-            || listSettings.isExcludeDone.value
-            || listSettings.isFilterStartInPast.value
-            || listSettings.isFilterStartToday.value
-            || listSettings.isFilterStartTomorrow.value
-            || listSettings.isFilterStartFuture.value
-            || (module == Module.TODO && listSettings.isFilterOverdue.value)
-            || (module == Module.TODO && listSettings.isFilterDueToday.value)
-            || (module == Module.TODO && listSettings.isFilterDueTomorrow.value)
-            || (module == Module.TODO && listSettings.isFilterDueFuture.value)
-            || (module == Module.TODO && listSettings.isFilterNoDatesSet.value)
-
+    var showDeleteDoneDialog by remember { mutableStateOf(false) }
+    val showMoreActionsMenu = remember { mutableStateOf(false) }
+    val iCal4List by iCal4ListRelLive.observeAsState(emptyList())
 
     if(showGoToDatePicker) {
-        var dates = iCal4List.map { it.dtstart ?: System.currentTimeMillis() }.toList()
+        var dates = iCal4List.map { it.iCal4List.dtstart ?: System.currentTimeMillis() }.toList()
         if (dates.isEmpty())
             dates = listOf(System.currentTimeMillis())
 
@@ -96,8 +83,8 @@ fun ListBottomAppBar(
             onConfirm = { selectedDate, _ ->
                 selectedDate?.let { selected ->
                     val closestDate = dates.findClosest(selected)
-                    iCal4List.find { it.dtstart == closestDate }?.let { foundEntry ->
-                        onGoToDateSelected(foundEntry.id)
+                    iCal4List.find { it.iCal4List.dtstart == closestDate }?.let { foundEntry ->
+                        onGoToDateSelected(foundEntry.iCal4List.id)
                     }
                 }
             },
@@ -110,6 +97,13 @@ fun ListBottomAppBar(
 
     if(showDAVx5IncompatibleDialog) {
         DAVx5IncompatibleDialog(onDismiss = { showDAVx5IncompatibleDialog = false } )
+    }
+
+    if(showDeleteDoneDialog) {
+        DeleteDoneDialog(
+            onConfirm = { onDeleteDone() },
+            onDismiss = { showDeleteDoneDialog = false }
+        )
     }
 
     BottomAppBar(
@@ -130,7 +124,7 @@ fun ListBottomAppBar(
                         Icon(
                             Icons.Outlined.FilterList,
                             contentDescription = stringResource(id = R.string.filter),
-                            tint = if (isFilterActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                            tint = if (listSettings.isFilterActive()) MaterialTheme.colorScheme.primary else LocalContentColor.current
                         )
                     }
                     AnimatedVisibility(allowNewEntries) {
@@ -151,6 +145,7 @@ fun ListBottomAppBar(
                         }
                     }
 
+                    /*
                     AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null) {
                         IconButton(onClick = { showGoToDatePicker = true }) {
                             Icon(
@@ -159,6 +154,7 @@ fun ListBottomAppBar(
                             )
                         }
                     }
+                     */
 
                     AnimatedVisibility(isBiometricsEnabled) {
                         IconButton(onClick = { onToggleBiometricAuthentication() }) {
@@ -185,6 +181,19 @@ fun ListBottomAppBar(
                                 Icons.Outlined.SyncProblem,
                                 contentDescription = stringResource(id = R.string.dialog_davx5_outdated_title),
                                 tint = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+
+                    AnimatedVisibility(module == Module.TODO) {
+                        OverflowMenu(menuExpanded = showMoreActionsMenu) {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(R.string.list_delete_done)) },
+                                onClick = {
+                                    showDeleteDoneDialog = true
+                                    showMoreActionsMenu.value = false
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.DeleteSweep, null) },
                             )
                         }
                     }
@@ -241,11 +250,11 @@ fun ListBottomAppBar(
 
                     TextButton(onClick = {
                         when(selectedEntries.size) {
-                            0 -> selectedEntries.addAll(iCal4List.map { it.id })
+                            0 -> selectedEntries.addAll(iCal4List.map { it.iCal4List.id })
                             iCal4List.size -> selectedEntries.clear()
                             else -> {
                                 selectedEntries.clear()
-                                selectedEntries.addAll(iCal4List.map { it.id })
+                                selectedEntries.addAll(iCal4List.map { it.iCal4List.id })
                             }
                         }
                     }) {
@@ -292,7 +301,7 @@ fun ListBottomAppBar_Preview_Journal() {
 
         ListBottomAppBar(
             module = Module.JOURNAL,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = false,
@@ -306,7 +315,8 @@ fun ListBottomAppBar_Preview_Journal() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }
@@ -322,7 +332,7 @@ fun ListBottomAppBar_Preview_Note() {
 
         ListBottomAppBar(
             module = Module.NOTE,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = false,
             isBiometricsEnabled = false,
@@ -336,7 +346,8 @@ fun ListBottomAppBar_Preview_Note() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }
@@ -352,7 +363,7 @@ fun ListBottomAppBar_Preview_Todo() {
 
         ListBottomAppBar(
             module = Module.TODO,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
             isDAVx5Incompatible = true,
@@ -366,7 +377,8 @@ fun ListBottomAppBar_Preview_Todo() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }
@@ -383,7 +395,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
 
         ListBottomAppBar(
             module = Module.TODO,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = true,
@@ -397,7 +409,8 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }

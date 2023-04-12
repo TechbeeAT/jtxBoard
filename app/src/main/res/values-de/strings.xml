@@ -80,7 +80,7 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Zum Original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instanz von wiederkehrendem Eintrag"</string>
-    <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, al s eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen."</string>
+    <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, als eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen."</string>
     <string name="view_fragment_audio_permission">"App Berechtigungen"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board benötigt Ihre Zustimmung, um Audio aufzunehmen und um die Spracherkennung zu nutzen. Bitte geben Sie die Berechtigung, um diese Funktionalität zu nutzen."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Audio-Notiz hinzufügen"</string>

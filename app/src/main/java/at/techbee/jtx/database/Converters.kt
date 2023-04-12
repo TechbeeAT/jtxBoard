@@ -8,14 +8,17 @@
 
 package at.techbee.jtx.database
 
+import androidx.room.TypeConverter
+import at.techbee.jtx.database.locals.StoredListSettingData
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+
 class Converters {
 
-    /*
     @TypeConverter
-    fun listToJson(value: ArrayList<String>?) = Gson().toJson(value)
+    fun listSettingsParcelToString(value: StoredListSettingData) = Json.encodeToString(value)
 
     @TypeConverter
-    fun jsonToList(value: String) = Gson().fromJson(value, ArrayList<String>().javaClass).toArray()
-    */
-
+    fun stringToListSettingsParcel(value: String) = Json.decodeFromString<StoredListSettingData>(value)
 }

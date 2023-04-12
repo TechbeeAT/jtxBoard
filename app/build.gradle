@@ -6,11 +6,11 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.mikepenz.aboutlibraries.plugin'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
+apply plugin: "com.android.application"
+apply plugin: "com.mikepenz.aboutlibraries.plugin"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-parcelize"
+apply plugin: "kotlin-kapt"
 apply plugin: "kotlinx-serialization"
 apply plugin: "com.huawei.agconnect"
 
@@ -22,15 +22,15 @@ if(localPropertiesFile.exists()) {
 }
 
 android {
-    namespace 'at.techbee.jtx'
+    namespace "at.techbee.jtx"
     compileSdkVersion 33
     defaultConfig {
         applicationId "at.techbee.jtx"
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 203010003
-        versionName "2.03.01-rc03"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 203010004
+        versionName "2.03.01-rc04"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Peace begins with a smile\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -95,7 +95,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.4.3"
+        kotlinCompilerExtensionVersion "1.4.4"
     }
 
     packagingOptions {
@@ -278,7 +278,7 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$version_work"
 
     //support for java.time for older Android versions (<O)
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.2")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
     androidTestImplementation "androidx.test.ext:junit-ktx:1.1.5"
     //androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0-alpha07"
@@ -313,11 +313,8 @@ dependencies {
     // jetpack compose
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation "androidx.compose.material3:material3:1.0.1"
-    //implementation "androidx.compose.material3:material3-window-size-class:1.0.0-beta02"
-
-    implementation "androidx.compose.material:material:1.3.1"    // material 2 support as bottom sheet is missing in m3
-    implementation "androidx.compose.material:material-icons-extended:1.3.1"
+    implementation "androidx.compose.material3:material3:1.1.0-beta01"
+    implementation "androidx.compose.material:material-icons-extended:1.4.0"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
@@ -331,10 +328,6 @@ dependencies {
 
     // permissions from accompanist
     implementation "com.google.accompanist:accompanist-permissions:$version_accompanist"
-    // Paging Compose
-    implementation "com.google.accompanist:accompanist-pager:$version_accompanist"
-    implementation "com.google.accompanist:accompanist-pager-indicators:$version_accompanist"
-    implementation "com.google.accompanist:accompanist-flowlayout:$version_accompanist"
 
     implementation "androidx.glance:glance-appwidget:1.0.0-alpha05"
 
@@ -342,6 +335,6 @@ dependencies {
     
     implementation "androidx.profileinstaller:profileinstaller:1.3.0"
 
-    implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
+
 }
 

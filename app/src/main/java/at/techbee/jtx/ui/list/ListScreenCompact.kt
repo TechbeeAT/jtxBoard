@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.list
 
 import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -37,6 +38,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -46,12 +49,15 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListScreenCompact(
-    groupedList: Map<String, List<ICal4List>>,
+    groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
+    storedCategoriesLive: LiveData<List<StoredCategory>>,
+    storedResourcesLive: LiveData<List<StoredResource>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
     settingLinkProgressToSubtasks: Boolean,
+    player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
@@ -59,10 +65,11 @@ fun ListScreenCompact(
 
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
+    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
+    val storedResources by storedResourcesLive.observeAsState(emptyList())
     val listState = rememberLazyListState()
 
     val itemsCollapsed = remember { mutableStateListOf<String>() }
-
 
     LazyColumn(
         modifier = Modifier.padding(start = 2.dp, end = 2.dp),
@@ -82,17 +89,18 @@ fun ListScreenCompact(
                             .background(MaterialTheme.colorScheme.background)
 
                     ) {
-                        Text(
-                            text = groupName,
-                            style = MaterialTheme.typography.titleLarge
-                        )
-
                         TextButton(onClick = {
                             if (itemsCollapsed.contains(groupName))
                                 itemsCollapsed.remove(groupName)
                             else
                                 itemsCollapsed.add(groupName)
                         }) {
+                            Text(
+                                text = groupName,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(horizontal = 4.dp)
+                            )
+
                             if (itemsCollapsed.contains(groupName))
                                 Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
                             else
@@ -105,18 +113,18 @@ fun ListScreenCompact(
             if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
                 items(
                     items = group,
-                    key = { item -> item.id }
+                    key = { item -> item.iCal4List.id }
                 )
-                { iCalObject ->
+                { iCal4ListRelObject ->
 
-                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCalObject.uid } }.map { it.iCal4List }
+                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
                     if (listSettings.isExcludeDone.value)   // exclude done if applicable
                         currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 && subtask.status != Status.COMPLETED.status }
 
 
                     if (scrollId != null) {
                         LaunchedEffect(group) {
-                            val index = group.indexOfFirst { iCalObject -> iCalObject.id == scrollId }
+                            val index = group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
                             if (index > -1) {
                                 listState.animateScrollToItem(index)
                                 scrollOnceId.postValue(null)
@@ -125,20 +133,35 @@ fun ListScreenCompact(
                     }
 
                     ListCardCompact(
-                        iCalObject,
+                        iCal4ListRelObject.iCal4List,
+                        categories = iCal4ListRelObject.categories,
+                        resources = iCal4ListRelObject.resources,
                         subtasks = currentSubtasks,
+                        storedCategories = storedCategories,
+                        storedResources = storedResources,
                         progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
                         selected = selectedEntries,
+                        player = player,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 4.dp, bottom = 4.dp)
                             .animateItemPlacement()
                             .clip(jtxCardCornerShape)
                             .combinedClickable(
-                                onClick = { onClick(iCalObject.id, groupedList.flatMap { it.value }) },
+                                onClick = {
+                                    onClick(
+                                        iCal4ListRelObject.iCal4List.id,
+                                        groupedList
+                                            .flatMap { it.value }
+                                            .map { it.iCal4List })
+                                },
                                 onLongClick = {
-                                    if (!iCalObject.isReadOnly)
-                                        onLongClick(iCalObject.id, groupedList.flatMap { it.value })
+                                    if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                        onLongClick(
+                                            iCal4ListRelObject.iCal4List.id,
+                                            groupedList
+                                                .flatMap { it.value }
+                                                .map { it.iCal4List })
                                 }
                             ),
                         onProgressChanged = onProgressChanged,
@@ -146,7 +169,7 @@ fun ListScreenCompact(
                         onLongClick = onLongClick
                     )
 
-                    if (iCalObject != group.last())
+                    if (iCal4ListRelObject != group.last())
                         Divider(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             thickness = 1.dp,
@@ -198,12 +221,18 @@ fun ListScreenCompact_TODO() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenCompact(
-            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
+            groupedList = listOf(
+                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
+                .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -252,12 +281,18 @@ fun ListScreenCompact_JOURNAL() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenCompact(
-            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
+            groupedList = listOf(
+                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
+                .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }

@@ -23,10 +23,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
-import com.google.accompanist.flowlayout.FlowRow
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun DetailOptionsBottomSheet(
     module: Module,
@@ -34,7 +33,6 @@ fun DetailOptionsBottomSheet(
     onListSettingsChanged: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
 
@@ -57,12 +55,15 @@ fun DetailOptionsBottomSheet(
                         selected = enabled,
                         onClick = {
                             detailSettings.detailSetting[setting] = !detailSettings.detailSetting.getOrDefault(setting, false)
+                            if (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == false && detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == false)
+                                detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] = true
+
                             onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = setting.stringResource)) },
                         trailingIcon = {
                             Crossfade(enabled) {
-                                if(it)
+                                if (it)
                                     Icon(Icons.Outlined.Visibility, stringResource(id = R.string.visible))
                                 else
                                     Icon(Icons.Outlined.VisibilityOff, stringResource(id = R.string.invisible))

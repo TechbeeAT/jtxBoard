@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
+import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +23,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,14 +31,20 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LinkExistingSubentryDialog(
-    allEntriesLive: LiveData<List<ICal4List>>,
+    allEntriesLive: LiveData<List<ICal4ListRel>>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
+    player: MediaPlayer?,
     onAllEntriesSearchTextUpdated: (String) -> Unit,
     onNewSubentriesConfirmed: (newSubentries: List<ICal4List>) -> Unit,
     onDismiss: () -> Unit
@@ -98,15 +104,20 @@ fun LinkExistingSubentryDialog(
                                 return@forEachIndexed
 
                             ListCardGrid(
-                                iCalObject = entry,
-                                selected = selectedEntries.contains(entry),
+                                iCalObject = entry.iCal4List,
+                                categories = entry.categories,
+                                resources = entry.resources,
+                                storedCategories = storedCategories,
+                                storedResources = storedResources,
+                                selected = selectedEntries.contains(entry.iCal4List),
                                 progressUpdateDisabled = true,
                                 onProgressChanged = { _, _ -> },
+                                player = player,
                                 modifier = Modifier.clickable {
-                                    if (selectedEntries.contains(entry))
-                                        selectedEntries.remove(entry)
+                                    if (selectedEntries.contains(entry.iCal4List))
+                                        selectedEntries.remove(entry.iCal4List)
                                     else
-                                        selectedEntries.add(entry)
+                                        selectedEntries.add(entry.iCal4List)
                                 }
                             )
                         }
@@ -150,7 +161,16 @@ fun LinkExistingSubentryDialog_Preview() {
     MaterialTheme {
 
         LinkExistingSubentryDialog(
-            allEntriesLive = MutableLiveData(listOf(ICal4List.getSample(), ICal4List.getSample(), ICal4List.getSample())),
+            allEntriesLive = MutableLiveData(
+                listOf(
+                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList()),
+                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList()),
+                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList())
+                )
+            ),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            player = null,
             onAllEntriesSearchTextUpdated = { },
             onNewSubentriesConfirmed = { },
             onDismiss = { }
