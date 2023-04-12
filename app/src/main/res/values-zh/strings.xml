@@ -83,7 +83,6 @@ Global Strings -->
     <string name="view_recurrence_note_to_original">"此条目是一系列条目的一部分。编辑此条目将使其与系列断开链接，它将继续作为独立条目存在，而对原始条目的修改将不再影响它。"</string>
     <string name="view_fragment_audio_permission">"应用权限"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board 需要获得权限才能录制音频或使用语音转文本的功能。请授予使用此功能的权限。"</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"添加音频笔记"</string>
     <string name="view_comment_playbutton_content_desc">"播放音频评论"</string>
     <string name="view_reccurrence_note_is_exception">"相对于常见条目，此项目比较少见。"</string>
     <string name="view_feedback_linked_notes">"反馈/链接笔记"</string>
