@@ -70,7 +70,7 @@ fun ListBadge(
 @Composable
 fun ListBadge_Preview() {
     MaterialTheme {
-        ElevatedCard() {
+        ElevatedCard {
             ListBadge(
                 icon = Icons.Outlined.Folder,
                 iconDesc = "Collections",

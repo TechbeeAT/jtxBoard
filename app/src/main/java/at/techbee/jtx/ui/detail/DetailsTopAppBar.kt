@@ -56,7 +56,7 @@ fun DetailsTopAppBar(
                     .padding(4.dp)
                     .clip(RoundedCornerShape(32.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
+                colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.Transparent,
                     focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                 ),

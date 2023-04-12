@@ -1,6 +1,5 @@
 package at.techbee.jtx.ui.list
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -69,7 +68,7 @@ fun ListTopAppBar(
                     .padding(4.dp)
                     .clip(RoundedCornerShape(32.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
+                colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.Transparent
                 ),
                 shape = RoundedCornerShape(32.dp),
@@ -174,8 +173,6 @@ fun ListTopAppBar(
 }
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun ListTopAppBar_Preview() {
@@ -204,8 +201,6 @@ fun ListTopAppBar_Preview() {
 }
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun ListTopAppBar_Preview_add_entry() {

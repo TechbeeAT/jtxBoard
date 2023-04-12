@@ -27,7 +27,7 @@ import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import com.mikepenz.aboutlibraries.Libs
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AboutScreen(
     translatorsPoeditor: MutableState<List<String>>,

@@ -125,7 +125,7 @@ fun ListWidgetConfigGeneral(
             },
             singleLine = true,
             maxLines = 1,
-            colors = TextFieldDefaults.textFieldColors(),
+            colors = OutlinedTextFieldDefaults.colors(),
             textStyle = MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Center, fontWeight = FontWeight.Bold),
             trailingIcon = {
                 AnimatedVisibility(listSettings.widgetHeader.value.isNotEmpty()) {

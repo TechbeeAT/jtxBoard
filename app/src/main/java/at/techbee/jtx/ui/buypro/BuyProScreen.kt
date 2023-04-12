@@ -14,7 +14,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -35,7 +38,6 @@ import at.techbee.jtx.ui.reusable.cards.BuyProCardPurchased
 import at.techbee.jtx.ui.theme.Typography
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuyProScreen(
     isPurchased: State<Boolean?>,

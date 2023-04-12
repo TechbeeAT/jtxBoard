@@ -38,7 +38,6 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LinkExistingSubentryDialog(
     allEntriesLive: LiveData<List<ICal4ListRel>>,

@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SaveListSettingsPresetDialog(
     onConfirm: (String) -> Unit,
