@@ -14,10 +14,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddTask
+import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material.icons.outlined.Task
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -33,6 +36,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
@@ -49,9 +53,13 @@ import at.techbee.jtx.ui.reusable.dialogs.LinkExistingSubentryDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorder
+import org.burnoutcrew.reorderable.rememberReorderableLazyListState
+import org.burnoutcrew.reorderable.reorderable
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsCardSubtasks(
     subtasks: List<ICal4List>,
@@ -75,6 +83,8 @@ fun DetailsCardSubtasks(
 
     val headline = stringResource(id = R.string.subtasks)
     var newSubtaskText by rememberSaveable { mutableStateOf("") }
+
+    var detailsTasksSortDialog by remember { mutableStateOf(false) }
 
     var showLinkExistingSubentryDialog by rememberSaveable { mutableStateOf(false) }
     if(showLinkExistingSubentryDialog) {
@@ -103,11 +113,15 @@ fun DetailsCardSubtasks(
                 HeadlineWithIcon(icon = Icons.Outlined.Task, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
 
                 AnimatedVisibility(isEditMode.value) {
+                    IconButton(onClick = { detailsTasksSortDialog = true }) {
+                        Icon(Icons.Outlined.Sort, "TODO")
+                    }
+                }
+                AnimatedVisibility(isEditMode.value) {
                     IconButton(onClick = { showLinkExistingSubentryDialog = true }) {
                         Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_subentry_dialog_title))
                     }
                 }
-
             }
 
 
@@ -187,6 +201,63 @@ fun DetailsCardSubtasks(
                         newSubtaskText = ""
                     })
                 )
+            }
+        }
+    }
+
+
+    if(detailsTasksSortDialog) {
+        AlertDialog(
+            onDismissRequest = { detailsTasksSortDialog= false },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            val state = rememberReorderableLazyListState(onMove = { from, to ->
+                //data.value = data.value.toMutableList().apply {
+                //    add(to.index, removeAt(from.index))
+                //}
+            })
+            LazyColumn(
+                state = state.listState,
+                modifier = Modifier
+                    .reorderable(state)
+                    .detectReorder(state)
+                    //.detectReorderAfterLongPress(state)
+            ) {
+                items(subtasks) { subtask ->
+                    subtask.isReadOnly = true
+
+                    ReorderableItem(state, key = subtask.id) { isDragging ->
+                        Box {
+                        SubtaskCard(
+                            subtask = subtask,
+                            selected = false,
+                            isEditMode = false,
+                            showProgress = showSlider,
+                            sliderIncrement = sliderIncrement,
+                            onProgressChanged = { _, _ -> },
+                            onDeleteClicked = { },
+                            onUnlinkClicked = { },
+                            modifier = Modifier.fillMaxWidth().clip(jtxCardCornerShape)
+                        )
+                        }
+                    }
+                }
+
+                /*
+                items(data.value, { it }) { item ->
+                    ReorderableItem(state, key = item) { isDragging ->
+                        val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
+                        Column(
+                            modifier = Modifier
+                                .shadow(elevation.value)
+                                .background(MaterialTheme.colorScheme.surface)
+                        ) {
+                            Text(item)
+                        }
+                    }
+                }
+
+                 */
             }
         }
     }
