@@ -56,7 +56,6 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Sovelluksen lupa"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board tarvitsee luvan äänen nauhoittamiseksi sekä puheentunnistusta varten. Anna lupa ominaisuutta varten."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Lisää äänite"</string>
     <string name="view_comment_playbutton_content_desc">"Toista äänite"</string>
     <string name="view_reccurrence_note_is_exception">"Tämä on poikkeus toistuvasta merkinnästä"</string>
     <string name="view_feedback_linked_notes">"Palaute / Linkitetyt muistiinpanot"</string>
