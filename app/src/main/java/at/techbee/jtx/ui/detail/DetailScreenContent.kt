@@ -549,9 +549,9 @@ fun DetailScreenContent(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Default
                         ),
+                        minLines = 3,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 150.dp)
                             .padding(8.dp)
                             .onFocusChanged { focusState ->
                                 if (
