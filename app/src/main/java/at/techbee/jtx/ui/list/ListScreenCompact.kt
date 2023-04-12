@@ -17,9 +17,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowDropUp
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -37,7 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
@@ -46,7 +53,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ListScreenCompact(
     groupedList: Map<String, List<ICal4ListRel>>,
@@ -60,7 +67,8 @@ fun ListScreenCompact(
     player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onSyncRequested: () -> Unit
 ) {
 
     val subtasks by subtasksLive.observeAsState(emptyList())
@@ -71,113 +79,131 @@ fun ListScreenCompact(
 
     val itemsCollapsed = remember { mutableStateListOf<String>() }
 
-    LazyColumn(
-        modifier = Modifier.padding(start = 2.dp, end = 2.dp),
-        state = listState,
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = false,
+        onRefresh = { onSyncRequested() }
+    )
+
+    Box(
+        contentAlignment = Alignment.TopCenter
     ) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(start = 2.dp, end = 2.dp)
+                .pullRefresh(pullRefreshState),
+            state = listState,
+        ) {
 
-        groupedList.forEach { (groupName, group) ->
+            groupedList.forEach { (groupName, group) ->
 
-            if (groupedList.keys.size > 1) {
-                stickyHeader {
+                if (groupedList.keys.size > 1) {
+                    stickyHeader {
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.background)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.background)
 
-                    ) {
-                        TextButton(onClick = {
-                            if (itemsCollapsed.contains(groupName))
-                                itemsCollapsed.remove(groupName)
-                            else
-                                itemsCollapsed.add(groupName)
-                        }) {
-                            Text(
-                                text = groupName,
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(horizontal = 4.dp)
-                            )
+                        ) {
+                            TextButton(onClick = {
+                                if (itemsCollapsed.contains(groupName))
+                                    itemsCollapsed.remove(groupName)
+                                else
+                                    itemsCollapsed.add(groupName)
+                            }) {
+                                Text(
+                                    text = groupName,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.padding(horizontal = 4.dp)
+                                )
 
-                            if (itemsCollapsed.contains(groupName))
-                                Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
-                            else
-                                Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
-                        }
-                    }
-                }
-            }
-
-            if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
-                items(
-                    items = group,
-                    key = { item -> item.iCal4List.id }
-                )
-                { iCal4ListRelObject ->
-
-                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
-                    if (listSettings.isExcludeDone.value)   // exclude done if applicable
-                        currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 && subtask.status != Status.COMPLETED.status }
-
-
-                    if (scrollId != null) {
-                        LaunchedEffect(group) {
-                            val index = group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
-                            if (index > -1) {
-                                listState.animateScrollToItem(index)
-                                scrollOnceId.postValue(null)
+                                if (itemsCollapsed.contains(groupName))
+                                    Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
+                                else
+                                    Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
                             }
                         }
                     }
+                }
 
-                    ListCardCompact(
-                        iCal4ListRelObject.iCal4List,
-                        categories = iCal4ListRelObject.categories,
-                        resources = iCal4ListRelObject.resources,
-                        subtasks = currentSubtasks,
-                        storedCategories = storedCategories,
-                        storedResources = storedResources,
-                        progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
-                        selected = selectedEntries,
-                        player = player,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 4.dp, bottom = 4.dp)
-                            .animateItemPlacement()
-                            .clip(jtxCardCornerShape)
-                            .combinedClickable(
-                                onClick = {
-                                    onClick(
-                                        iCal4ListRelObject.iCal4List.id,
-                                        groupedList
-                                            .flatMap { it.value }
-                                            .map { it.iCal4List })
-                                },
-                                onLongClick = {
-                                    if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                        onLongClick(
+                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
+                    items(
+                        items = group,
+                        key = { item -> item.iCal4List.id }
+                    )
+                    { iCal4ListRelObject ->
+
+                        var currentSubtasks =
+                            subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
+                                .map { it.iCal4List }
+                        if (listSettings.isExcludeDone.value)   // exclude done if applicable
+                            currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 && subtask.status != Status.COMPLETED.status }
+
+
+                        if (scrollId != null) {
+                            LaunchedEffect(group) {
+                                val index = group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
+                                if (index > -1) {
+                                    listState.animateScrollToItem(index)
+                                    scrollOnceId.postValue(null)
+                                }
+                            }
+                        }
+
+                        ListCardCompact(
+                            iCal4ListRelObject.iCal4List,
+                            categories = iCal4ListRelObject.categories,
+                            resources = iCal4ListRelObject.resources,
+                            subtasks = currentSubtasks,
+                            storedCategories = storedCategories,
+                            storedResources = storedResources,
+                            progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                            selected = selectedEntries,
+                            player = player,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 4.dp, bottom = 4.dp)
+                                .animateItemPlacement()
+                                .clip(jtxCardCornerShape)
+                                .combinedClickable(
+                                    onClick = {
+                                        onClick(
                                             iCal4ListRelObject.iCal4List.id,
                                             groupedList
                                                 .flatMap { it.value }
                                                 .map { it.iCal4List })
-                                }
-                            ),
-                        onProgressChanged = onProgressChanged,
-                        onClick = onClick,
-                        onLongClick = onLongClick
-                    )
-
-                    if (iCal4ListRelObject != group.last())
-                        Divider(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            thickness = 1.dp,
-                            modifier = Modifier.alpha(0.25f)
+                                    },
+                                    onLongClick = {
+                                        if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                            onLongClick(
+                                                iCal4ListRelObject.iCal4List.id,
+                                                groupedList
+                                                    .flatMap { it.value }
+                                                    .map { it.iCal4List })
+                                    }
+                                ),
+                            onProgressChanged = onProgressChanged,
+                            onClick = onClick,
+                            onLongClick = onLongClick
                         )
+
+                        if (iCal4ListRelObject != group.last())
+                            Divider(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                thickness = 1.dp,
+                                modifier = Modifier.alpha(0.25f)
+                            )
+                    }
                 }
             }
         }
+
+        PullRefreshIndicator(
+            refreshing = false,
+            state = pullRefreshState
+        )
     }
 }
 
@@ -223,7 +249,8 @@ fun ListScreenCompact_TODO() {
         ListScreenCompact(
             groupedList = listOf(
                 ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+            )
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
@@ -235,7 +262,8 @@ fun ListScreenCompact_TODO() {
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onSyncRequested = { }
         )
     }
 }
@@ -283,7 +311,8 @@ fun ListScreenCompact_JOURNAL() {
         ListScreenCompact(
             groupedList = listOf(
                 ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+            )
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
@@ -295,7 +324,8 @@ fun ListScreenCompact_JOURNAL() {
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onSyncRequested = { }
         )
     }
 }

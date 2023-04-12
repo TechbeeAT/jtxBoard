@@ -13,16 +13,21 @@ import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.ArrowDropUp
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -39,7 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Attachment
@@ -51,7 +59,7 @@ import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ListScreenList(
     groupedList: Map<String, List<ICal4ListRel>>,
@@ -74,7 +82,8 @@ fun ListScreenList(
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
+    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
+    onSyncRequested: () -> Unit
 ) {
 
     val subtasks by subtasksLive.observeAsState(emptyList())
@@ -86,111 +95,128 @@ fun ListScreenList(
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
     val itemsCollapsed = remember { mutableStateListOf<String>() }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = false,
+        onRefresh = { onSyncRequested() }
+    )
 
-
-    LazyColumn(
-        modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
-        state = listState,
+    Box(
+        contentAlignment = Alignment.TopCenter
     ) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(start = 8.dp, end = 8.dp, top = 4.dp)
+                .pullRefresh(pullRefreshState),
+            state = listState,
+        ) {
+            groupedList.forEach { (groupName, group) ->
 
-        groupedList.forEach { (groupName, group) ->
+                if (groupedList.keys.size > 1) {
+                    stickyHeader {
 
-            if (groupedList.keys.size > 1) {
-                stickyHeader {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.background)
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.background)
+                        ) {
+                            TextButton(onClick = {
+                                if (itemsCollapsed.contains(groupName))
+                                    itemsCollapsed.remove(groupName)
+                                else
+                                    itemsCollapsed.add(groupName)
+                            }) {
+                                Text(
+                                    text = groupName,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.padding(horizontal = 4.dp)
+                                )
 
-                    ) {
-                        TextButton(onClick = {
-                            if (itemsCollapsed.contains(groupName))
-                                itemsCollapsed.remove(groupName)
-                            else
-                                itemsCollapsed.add(groupName)
-                        }) {
-                            Text(
-                                text = groupName,
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(horizontal = 4.dp)
-                            )
-
-                            if(itemsCollapsed.contains(groupName))
-                                Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
-                            else
-                                Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
-                        }
-                    }
-                }
-            }
-
-            if (groupedList.keys.size <= 1  || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
-                items(
-                    items = group,
-                    key = { item -> item.iCal4List.id }
-                ) { iCal4ListRelObject ->
-
-                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
-                    if (listSettings.isExcludeDone.value)   // exclude done if applicable
-                        currentSubtasks =
-                            currentSubtasks.filter { subtask -> subtask.percent != 100 && subtask.status != Status.COMPLETED.status }
-
-                    val currentSubnotes = subnotes.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
-                    val currentAttachments = attachments[iCal4ListRelObject.iCal4List.id]
-
-                    if (scrollId != null) {
-                        LaunchedEffect(group) {
-                            val index =
-                                group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
-                            if (index > -1) {
-                                listState.animateScrollToItem(index)
-                                scrollOnceId.postValue(null)
+                                if (itemsCollapsed.contains(groupName))
+                                    Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
+                                else
+                                    Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
                             }
                         }
                     }
+                }
 
-                    ListCard(
-                        iCalObject = iCal4ListRelObject.iCal4List,
-                        categories = iCal4ListRelObject.categories,
-                        resources = iCal4ListRelObject.resources,
-                        subtasks = currentSubtasks,
-                        subnotes = currentSubnotes,
-                        storedCategories = storedCategories,
-                        storedResources = storedResources,
-                        selected = selectedEntries,
-                        attachments = currentAttachments ?: emptyList(),
-                        isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
-                        isSubnotesExpandedDefault = isSubnotesExpandedDefault.value,
-                        isAttachmentsExpandedDefault = isAttachmentsExpandedDefault.value,
-                        settingShowProgressMaintasks = settingShowProgressMaintasks.value,
-                        settingShowProgressSubtasks = settingShowProgressSubtasks.value,
-                        progressIncrement = settingProgressIncrement.value.getProgressStepKeyAsInt(),
-                        progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
-                        onClick = onClick,
-                        onLongClick = onLongClick,
-                        onProgressChanged = onProgressChanged,
-                        onExpandedChanged = onExpandedChanged,
-                        player = player,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp)
-                            .clip(jtxCardCornerShape)
-                            .animateItemPlacement()
-                            .combinedClickable(
-                                onClick = { onClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List })  },
-                                onLongClick = {
-                                    if (!iCal4ListRelObject.iCal4List.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        onLongClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List })
+                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
+                    items(
+                        items = group,
+                        key = { item -> item.iCal4List.id }
+                    ) { iCal4ListRelObject ->
+
+                        var currentSubtasks =
+                            subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
+                                .map { it.iCal4List }
+                        if (listSettings.isExcludeDone.value)   // exclude done if applicable
+                            currentSubtasks =
+                                currentSubtasks.filter { subtask -> subtask.percent != 100 && subtask.status != Status.COMPLETED.status }
+
+                        val currentSubnotes =
+                            subnotes.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
+                                .map { it.iCal4List }
+                        val currentAttachments = attachments[iCal4ListRelObject.iCal4List.id]
+
+                        if (scrollId != null) {
+                            LaunchedEffect(group) {
+                                val index =
+                                    group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
+                                if (index > -1) {
+                                    listState.animateScrollToItem(index)
+                                    scrollOnceId.postValue(null)
                                 }
-                            )
-                            .testTag("benchmark:ListCard")
-                    )
+                            }
+                        }
+
+                        ListCard(
+                            iCalObject = iCal4ListRelObject.iCal4List,
+                            categories = iCal4ListRelObject.categories,
+                            resources = iCal4ListRelObject.resources,
+                            subtasks = currentSubtasks,
+                            subnotes = currentSubnotes,
+                            storedCategories = storedCategories,
+                            storedResources = storedResources,
+                            selected = selectedEntries,
+                            attachments = currentAttachments ?: emptyList(),
+                            isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
+                            isSubnotesExpandedDefault = isSubnotesExpandedDefault.value,
+                            isAttachmentsExpandedDefault = isAttachmentsExpandedDefault.value,
+                            settingShowProgressMaintasks = settingShowProgressMaintasks.value,
+                            settingShowProgressSubtasks = settingShowProgressSubtasks.value,
+                            progressIncrement = settingProgressIncrement.value.getProgressStepKeyAsInt(),
+                            progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                            onClick = onClick,
+                            onLongClick = onLongClick,
+                            onProgressChanged = onProgressChanged,
+                            onExpandedChanged = onExpandedChanged,
+                            player = player,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 8.dp)
+                                .clip(jtxCardCornerShape)
+                                .animateItemPlacement()
+                                .combinedClickable(
+                                    onClick = { onClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List }) },
+                                    onLongClick = {
+                                        if (!iCal4ListRelObject.iCal4List.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                            onLongClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List })
+                                    }
+                                )
+                                .testTag("benchmark:ListCard")
+                        )
+                    }
                 }
             }
         }
+
+        PullRefreshIndicator(
+            refreshing = false,
+            state = pullRefreshState
+        )
     }
 }
 
@@ -258,7 +284,8 @@ fun ListScreenList_TODO() {
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             listSettings = listSettings,
-            onExpandedChanged = { _, _, _, _ -> }
+            onExpandedChanged = { _, _, _, _ -> },
+            onSyncRequested = { }
         )
     }
 }
@@ -330,7 +357,8 @@ fun ListScreenList_JOURNAL() {
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             listSettings = listSettings,
-            onExpandedChanged = { _, _, _, _ -> }
+            onExpandedChanged = { _, _, _, _ -> },
+            onSyncRequested = { }
         )
     }
 }
