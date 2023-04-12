@@ -1,5 +1,6 @@
 package at.techbee.jtx
 
+import android.accounts.Account
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -65,8 +67,11 @@ import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidgetReceiver
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
@@ -184,6 +189,10 @@ class MainActivity2 : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         ListWidgetReceiver.setPeriodicWork(this)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
+            SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+        }
 
         //handle intents, but only if it wasn't already handled
         if (intent.hashCode() != lastProcessedIntentHash) {
