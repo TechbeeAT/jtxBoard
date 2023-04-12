@@ -432,7 +432,7 @@ fun DetailScreenContent(
             }
         )
 
-        AnimatedVisibility(!isEditMode.value) {
+        AnimatedVisibility(!isEditMode.value && (summary.isNotBlank() || description.text.isNotBlank())) {
             SelectionContainer {
                 ElevatedCard(
                     onClick = {
