@@ -37,11 +37,14 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
-import at.techbee.jtx.ui.reusable.dialogs.AddAudioNoteDialog
+import at.techbee.jtx.ui.reusable.dialogs.AddAudioEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
 import at.techbee.jtx.ui.reusable.dialogs.LinkExistingSubentryDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
@@ -49,12 +52,14 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
-    selectFromAllListLive: LiveData<List<ICal4List>>,
+    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
     onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
@@ -71,7 +76,8 @@ fun DetailsCardSubnotes(
 
     var showAddAudioNoteDialog by rememberSaveable { mutableStateOf(false) }
     if(showAddAudioNoteDialog) {
-        AddAudioNoteDialog(
+        AddAudioEntryDialog(
+            module = Module.NOTE,
             player = player,
             onConfirm = { newEntry, attachment -> onSubnoteAdded(newEntry, attachment) },
             onDismiss = { showAddAudioNoteDialog = false }
@@ -81,6 +87,9 @@ fun DetailsCardSubnotes(
     if(showLinkExistingSubentryDialog) {
         LinkExistingSubentryDialog(
             allEntriesLive = selectFromAllListLive,
+            storedCategories = storedCategories,
+            storedResources = storedResources,
+            player = player,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
             onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
             onDismiss = { showLinkExistingSubentryDialog = false }
@@ -217,6 +226,8 @@ fun DetailsCardSubnotes_Preview() {
                     ),
             isEditMode = remember { mutableStateOf(false) },
             selectFromAllListLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
@@ -244,6 +255,8 @@ fun DetailsCardSubnotes_Preview_edit() {
             ),
             isEditMode = remember { mutableStateOf(true) },
             selectFromAllListLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },

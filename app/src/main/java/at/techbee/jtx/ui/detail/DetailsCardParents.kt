@@ -141,7 +141,7 @@ fun DetailsCardParents_Preview_Journal() {
             isEditMode = remember { mutableStateOf(false) },
             sliderIncrement = 10,
             showSlider = true,
-            onProgressChanged = { _, _, -> },
+            onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
         )
     }
@@ -164,7 +164,7 @@ fun DetailsCardParents_Preview_tasksedit() {
             isEditMode = remember { mutableStateOf(false) },
             sliderIncrement = 10,
             showSlider = true,
-            onProgressChanged = { _, _, -> },
+            onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
         )
     }

@@ -65,6 +65,8 @@ class ListSettings {
     var checkboxPositionEnd: MutableState<Boolean> = mutableStateOf(false)  // widget only
     var widgetAlpha: MutableState<Float> = mutableStateOf(1F)  // widget only
     var widgetAlphaEntries: MutableState<Float> = mutableStateOf(1F)  // widget only
+    var widgetColor: MutableState<Int?> = mutableStateOf(null)  // widget only
+    var widgetColorEntries: MutableState<Int?> = mutableStateOf(null)  // widget only
     var showDescription: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubtasks: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubnotes: MutableState<Boolean> = mutableStateOf(true)  // widget only
@@ -250,6 +252,8 @@ class ListSettings {
             widgetAlpha.value = listWidgetConfig.widgetAlpha
             widgetAlphaEntries.value = listWidgetConfig.widgetAlphaEntries
             widgetHeader.value = listWidgetConfig.widgetHeader
+            widgetColor.value = listWidgetConfig.widgetColor
+            widgetColorEntries.value = listWidgetConfig.widgetColorEntries
         }
     }
 
@@ -334,4 +338,28 @@ class ListSettings {
 
     fun getLastUsedCollectionId(prefs: SharedPreferences) = prefs.getLong(PREFS_LAST_COLLECTION, 0L)
     fun saveLastUsedCollectionId(prefs: SharedPreferences, collectionId: Long) = prefs.edit()?.putLong(PREFS_LAST_COLLECTION, collectionId)?.apply()
+
+    fun isFilterActive() =
+        searchCategories.value.isNotEmpty()
+                || searchResources.value.isNotEmpty()
+                //|| searchOrganizers.value.isNotEmpty()
+                || searchStatus.value.isNotEmpty()
+                || searchClassification.value.isNotEmpty()
+                || searchCollection.value.isNotEmpty()
+                || searchAccount.value.isNotEmpty()
+                || isExcludeDone.value
+                || isFilterStartInPast.value
+                || isFilterStartToday.value
+                || isFilterStartTomorrow.value
+                || isFilterStartFuture.value
+                || isFilterOverdue.value
+                || isFilterDueToday.value
+                || isFilterDueTomorrow.value
+                || isFilterDueFuture.value
+                || isFilterNoDatesSet.value
+                || isFilterNoStartDateSet.value
+                || isFilterNoDueDateSet.value
+                || isFilterNoCompletedDateSet.value
+                || isFilterNoCategorySet.value
+                || isFilterNoResourceSet.value
 }

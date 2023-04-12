@@ -45,7 +45,6 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import at.techbee.jtx.util.SyncUtil
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SyncScreen(
     isSyncInProgress: State<Boolean>,

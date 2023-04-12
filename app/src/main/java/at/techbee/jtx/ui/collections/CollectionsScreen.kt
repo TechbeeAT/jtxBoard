@@ -44,7 +44,6 @@ import at.techbee.jtx.util.SyncUtil
 import java.util.*
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionsScreen(
     navController: NavHostController,

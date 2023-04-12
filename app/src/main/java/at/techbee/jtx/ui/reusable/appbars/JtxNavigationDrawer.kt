@@ -1,13 +1,16 @@
 package at.techbee.jtx.ui.reusable.appbars
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,7 +23,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JtxNavigationDrawer(
     drawerState: DrawerState,
@@ -30,7 +32,7 @@ fun JtxNavigationDrawer(
 ) {
     val scope = rememberCoroutineScope()
     val items =
-        NavigationDrawerDestination.valuesFor(BuildConfig.FLAVOR).groupBy { it.groupResource }
+        NavigationDrawerDestination.valuesFor(BuildConfig.FLAVOR).groupBy { it.groupRes }
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -46,7 +48,6 @@ fun JtxNavigationDrawer(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun JtxNavigationDrawer_Preview() {
@@ -61,7 +62,6 @@ fun JtxNavigationDrawer_Preview() {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JtxNavigationDrawerMenu(
     items: Map<Int?, List<NavigationDrawerDestination>>,
@@ -118,17 +118,13 @@ fun JtxNavigationDrawerMenu(
             entry.value.forEach { item ->
 
                 NavigationDrawerItem(
-                    icon = {
-                        item.icon?.let { Icon(it, contentDescription = null, tint = if(item.name == navController.currentDestination?.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface) }
-                            ?: item.iconResource?.let {
-                                Image(
-                                    painterResource(id = it),
-                                    null,
-                                    modifier = Modifier.size(24.dp),
-                                    colorFilter = ColorFilter.tint(if(item.name == navController.currentDestination?.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface)
-                                )
-                            }
-                    },
+                    icon = item.getIconComposable(
+                        modifier = Modifier.size(24.dp),
+                        tint = if(item == NavigationDrawerDestination.TWITTER) Color.Unspecified
+                        else if (item == NavigationDrawerDestination.MASTODON) Color.Unspecified
+                        else if(item.name == navController.currentDestination?.route) MaterialTheme.colorScheme.onPrimary
+                        else MaterialTheme.colorScheme.onSurface
+                    ),
                     label = { Text(stringResource(item.titleResource)) },
                     selected = item.name == navController.currentDestination?.route,
                     onClick = {
@@ -155,7 +151,7 @@ fun JtxNavigationDrawerMenu(
 fun JtxNavigationDrawerMenu_Preview() {
     MaterialTheme {
         val items =
-            NavigationDrawerDestination.valuesFor(BuildConfig.FLAVOR).groupBy { it.groupResource }
+            NavigationDrawerDestination.valuesFor(BuildConfig.FLAVOR).groupBy { it.groupRes }
 
         JtxNavigationDrawerMenu(
             items = items,

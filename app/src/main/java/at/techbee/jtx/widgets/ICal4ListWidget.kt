@@ -23,6 +23,8 @@ data class ICal4ListWidget(
     var status: String?,
     var classification: String?,
     var priority: Int?,
+    var accountName: String?,
+    var collectionDisplayName: String?,
 
     var isChildOfJournal: Boolean,
     var isChildOfNote: Boolean,
@@ -49,6 +51,8 @@ data class ICal4ListWidget(
                 uid = iCal4List.uid,
                 status = iCal4List.status,
                 classification = iCal4List.classification,
+                accountName = iCal4List.accountName,
+                collectionDisplayName = iCal4List.collectionDisplayName,
                 priority = iCal4List.priority,
                 isChildOfJournal = iCal4List.isChildOfJournal,
                 isChildOfNote = iCal4List.isChildOfNote,

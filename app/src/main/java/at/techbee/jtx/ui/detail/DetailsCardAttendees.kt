@@ -212,7 +212,7 @@ fun DetailsCardAttendees(
                             if (newAttendee.isNotEmpty()) {
                                 IconButton(onClick = {
                                     val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee))
-                                        Attendee(caladdress = "mailto:" + newAttendee)
+                                        Attendee(caladdress = "mailto:$newAttendee")
                                     else
                                         Attendee(cn = newAttendee)
                                     attendees = attendees.plus(newAttendeeObject)
@@ -248,7 +248,7 @@ fun DetailsCardAttendees(
                         keyboardActions = KeyboardActions(onDone = {
                             //if(newAttendee.value.isNotEmpty() && attendees.value.none { existing -> existing.getDisplayString() == newAttendee.value } )
                             val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee))
-                                Attendee(caladdress = "mailto:" + newAttendee)
+                                Attendee(caladdress = "mailto:$newAttendee")
                             else
                                 Attendee(cn = newAttendee)
                             attendees = attendees.plus(newAttendeeObject)

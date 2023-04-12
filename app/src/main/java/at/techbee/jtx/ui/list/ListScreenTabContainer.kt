@@ -12,18 +12,19 @@ package at.techbee.jtx.ui.list
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +39,7 @@ import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Attachment
@@ -55,9 +57,6 @@ import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.minutes
@@ -66,15 +65,16 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalPagerApi::class,
     ExperimentalComposeUiApi::class,
-    ExperimentalMaterialApi::class,
+    ExperimentalFoundationApi::class
 )
 @Composable
 fun ListScreenTabContainer(
     navController: NavHostController,
     globalStateHolder: GlobalStateHolder,
-    settingsStateHolder: SettingsStateHolder
+    settingsStateHolder: SettingsStateHolder,
+    initialModule: Module,
+    storedListSettingData: StoredListSettingData? = null
 ) {
 
     val context = LocalContext.current
@@ -98,8 +98,8 @@ fun ListScreenTabContainer(
                     Module.TODO -> enabledTabs.indexOf(ListTabDestination.Tasks)
                 }
             }
-            else if(enabledTabs.any { tab -> tab.module == settingsStateHolder.lastUsedModule.value }) {
-                when (settingsStateHolder.lastUsedModule.value) {
+            else if(enabledTabs.any { tab -> tab.module == initialModule }) {
+                when (initialModule) {
                     Module.JOURNAL -> enabledTabs.indexOf(ListTabDestination.Journals)
                     Module.NOTE -> enabledTabs.indexOf(ListTabDestination.Notes)
                     Module.TODO -> enabledTabs.indexOf(ListTabDestination.Tasks)
@@ -129,6 +129,8 @@ fun ListScreenTabContainer(
             }
         }
     }
+    val storedCategories by listViewModel.storedCategories.observeAsState(emptyList())
+    val storedResources by listViewModel.storedResources.observeAsState(emptyList())
 
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, allWriteableCollections.value) {
@@ -154,11 +156,19 @@ fun ListScreenTabContainer(
     val goToEdit = getActiveViewModel().goToEdit.observeAsState()
     goToEdit.value?.let { icalObjectId ->
         getActiveViewModel().goToEdit.value = null
-        navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = icalObjectId, icalObjectIdList = getActiveViewModel().iCal4List.value?.map { it.id } ?: emptyList(), isEditMode = true))
+        navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = icalObjectId, icalObjectIdList = getActiveViewModel().iCal4ListRel.value?.map { it.iCal4List.id } ?: emptyList(), isEditMode = true))
     }
 
+    if(storedListSettingData != null) {
+        storedListSettingData.applyToListSettings(icalListViewModelJournals.listSettings)
+        storedListSettingData.applyToListSettings(icalListViewModelNotes.listSettings)
+        storedListSettingData.applyToListSettings(icalListViewModelTodos.listSettings)
+        getActiveViewModel().updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
+    }
+
+
     val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val filterSheetState = rememberModalBottomSheetState()
 
     var showSearch by remember { mutableStateOf(false) }
     val showQuickAdd = remember { mutableStateOf(false) }
@@ -178,6 +188,9 @@ fun ListScreenTabContainer(
             allResourcesLive = getActiveViewModel().allResources,
             allCollectionsLive = getActiveViewModel().allWriteableCollections,
             selectFromAllListLive = getActiveViewModel().selectFromAllList,
+            storedCategoriesLive = getActiveViewModel().storedCategories,
+            storedResourcesLive = getActiveViewModel().storedResources,
+            player = getActiveViewModel().mediaPlayer,
             onSelectFromAllListSearchTextUpdated = { getActiveViewModel().updateSelectFromAllListQuery(searchText = it, isAuthenticated = globalStateHolder.isAuthenticated.value) },
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
             onResourcesChanged = { addedResources, deletedResources -> getActiveViewModel().updateResourcesToSelected(addedResources, deletedResources) },
@@ -228,7 +241,7 @@ fun ListScreenTabContainer(
         module: Module,
         text: String?,
         collectionId: Long,
-        attachment: Attachment?,
+        attachments: List<Attachment>,
         editAfterSaving: Boolean
     ) {
 
@@ -255,10 +268,31 @@ fun ListScreenTabContainer(
         getActiveViewModel().insertQuickItem(
             newICalObject,
             categories,
-            attachment,
+            attachments,
             autoAlarm,
             editAfterSaving
         )
+    }
+
+    if(filterSheetState.currentValue != SheetValue.Hidden) {
+        ModalBottomSheet(sheetState = filterSheetState, onDismissRequest = { }) {
+            ListOptionsBottomSheet(
+                module = listViewModel.module,
+                listSettings = listViewModel.listSettings,
+                allCollectionsLive = listViewModel.allCollections,
+                allCategoriesLive = listViewModel.allCategories,
+                allResourcesLive = listViewModel.allResources,
+                storedListSettingLive = listViewModel.storedListSettings,
+                onListSettingsChanged = {
+                    listViewModel.updateSearch(
+                        saveListSettings = true,
+                        isAuthenticated = globalStateHolder.isAuthenticated.value
+                    )
+                },
+                onSaveStoredListSetting = { name, storedListSettingData -> listViewModel.saveStoredListSettingsData(name, storedListSettingData) },
+                onDeleteStoredListSetting = { storedListSetting -> listViewModel.deleteStoredListSetting(storedListSetting) }
+            )
+        }
     }
 
 
@@ -276,7 +310,7 @@ fun ListScreenTabContainer(
                         module = listViewModel.module,
                         text = newEntryText,
                         collectionId = listViewModel.listSettings.topAppBarCollectionId.value,
-                        attachment = null,
+                        attachments = emptyList(),
                         editAfterSaving = false
                     )
                 },
@@ -409,6 +443,8 @@ fun ListScreenTabContainer(
             )
         },
         bottomBar = {
+            if(storedListSettingData != null)    // no bottom bar if there are preset filters
+                return@Scaffold
 
             // show the bottom bar only if there is any collection available that supports the component/module
             if (allWriteableCollections.value.any { collection ->
@@ -418,7 +454,7 @@ fun ListScreenTabContainer(
                 }) {
                 ListBottomAppBar(
                     module = listViewModel.module,
-                    iCal4ListLive = listViewModel.iCal4List,
+                    iCal4ListRelLive = listViewModel.iCal4ListRel,
                     allowNewEntries = allUsableCollections.any { collection ->
                         ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
@@ -435,7 +471,7 @@ fun ListScreenTabContainer(
                         settingsStateHolder.lastUsedModule.value = listViewModel.module
                         settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
 
-                        addNewEntry(module = listViewModel.module, text = listViewModel.listSettings.newEntryText.value.ifEmpty { null }, collectionId = proposedCollectionId, attachment = null, editAfterSaving = true)
+                        addNewEntry(module = listViewModel.module, text = listViewModel.listSettings.newEntryText.value.ifEmpty { null }, collectionId = proposedCollectionId, attachments = emptyList(), editAfterSaving = true)
                         listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
@@ -447,10 +483,10 @@ fun ListScreenTabContainer(
                     isBiometricsUnlocked = globalStateHolder.isAuthenticated.value,
                     onFilterIconClicked = {
                         scope.launch {
-                            if (filterBottomSheetState.isVisible)
-                                filterBottomSheetState.hide()
+                            if (filterSheetState.isVisible)
+                                filterSheetState.hide()
                             else
-                                filterBottomSheetState.show()
+                                filterSheetState.show()
                         }
                     },
                     onGoToDateSelected = { id -> getActiveViewModel().scrollOnceId.postValue(id) },
@@ -468,7 +504,8 @@ fun ListScreenTabContainer(
                             globalStateHolder.biometricPrompt?.authenticate(promptInfo)
                         }
                         listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
-                    }
+                    },
+                    onDeleteDone = { listViewModel.deleteDone() }
                 )
             } else if(timeout) {
                 BottomAppBar {
@@ -497,7 +534,7 @@ fun ListScreenTabContainer(
                                             selected = pagerState.currentPage == enabledTabs.indexOf(enabledTab),
                                             onClick = {
                                                 scope.launch {
-                                                    pagerState.scrollToPage(enabledTabs.indexOf(enabledTab))
+                                                    pagerState.animateScrollToPage(enabledTabs.indexOf(enabledTab))
                                                 }
                                                 settingsStateHolder.lastUsedModule.value = enabledTab.module
                                                 settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule  // in order to save
@@ -512,6 +549,16 @@ fun ListScreenTabContainer(
                                         )
                                     }
                                 }
+                            }
+
+                            AnimatedVisibility(listViewModel.listSettings.isFilterActive()) {
+                                ListActiveFiltersRow(
+                                    listSettings = listViewModel.listSettings,
+                                    module = listViewModel.module,
+                                    storedCategories = storedCategories,
+                                    storedResources = storedResources,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                )
                             }
 
                             AnimatedVisibility(
@@ -532,7 +579,8 @@ fun ListScreenTabContainer(
                                     presetCollectionId = globalStateHolder.icalFromIntentCollection.value?.let {fromIntent ->
                                         allUsableCollections.find { fromIntent == it.displayName }?.collectionId
                                     } ?: listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
-                                    onSaveEntry = { module, text, attachment, collectionId,  editAfterSaving ->
+                                    player = listViewModel.mediaPlayer,
+                                    onSaveEntry = { module, text, attachments, collectionId,  editAfterSaving ->
 
                                         listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, collectionId)
                                         settingsStateHolder.lastUsedModule.value = module
@@ -543,11 +591,11 @@ fun ListScreenTabContainer(
                                         globalStateHolder.icalFromIntentModule.value = null
                                         globalStateHolder.icalFromIntentCollection.value = null
 
-                                        addNewEntry(module, text, collectionId, attachment, editAfterSaving)
+                                        addNewEntry(module, text, collectionId, attachments, editAfterSaving)
                                         scope.launch {
                                             val index = enabledTabs.indexOf(enabledTabs.find { tab -> tab.module == module })
                                             if(index >=0)
-                                                pagerState.scrollToPage(index)
+                                                pagerState.animateScrollToPage(index)
                                         }
                                     },
                                     onDismiss = {
@@ -564,8 +612,9 @@ fun ListScreenTabContainer(
                             Box {
                                 HorizontalPager(
                                     state = pagerState,
-                                    count = enabledTabs.size,
-                                    userScrollEnabled = !filterBottomSheetState.isVisible,
+                                    pageCount = enabledTabs.size,
+                                    userScrollEnabled = !filterSheetState.isVisible,
+                                    verticalAlignment = Alignment.Top
                                 ) { page ->
 
                                     ListScreen(
@@ -574,9 +623,7 @@ fun ListScreenTabContainer(
                                             Module.NOTE -> icalListViewModelNotes
                                             Module.TODO -> icalListViewModelTodos
                                         },
-                                        navController = navController,
-                                        filterBottomSheetState = filterBottomSheetState,
-                                        isAuthenticated = globalStateHolder.isAuthenticated.value
+                                        navController = navController
                                     )
                                 }
 

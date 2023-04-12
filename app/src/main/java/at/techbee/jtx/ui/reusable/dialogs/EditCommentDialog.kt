@@ -27,7 +27,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Comment
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditCommentDialog(
     comment: Comment,

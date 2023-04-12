@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.list
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -36,11 +39,14 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListScreenGrid(
-    list: State<List<ICal4List>>,
+    list: List<ICal4ListRel>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
+    storedCategoriesLive: LiveData<List<StoredCategory>>,
+    storedResourcesLive: LiveData<List<StoredResource>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
+    player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
@@ -48,11 +54,13 @@ fun ListScreenGrid(
 
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
+    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
+    val storedResources by storedResourcesLive.observeAsState(emptyList())
     val gridState = rememberLazyStaggeredGridState()
 
     if(scrollId != null) {
         LaunchedEffect(list) {
-            val index = list.value.indexOfFirst { iCalObject -> iCalObject.id == scrollId }
+            val index = list.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId }
             if(index > -1) {
                 gridState.animateScrollToItem(index)
                 scrollOnceId.postValue(null)
@@ -67,26 +75,31 @@ fun ListScreenGrid(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(
-            items = list.value,
-            key = { item -> item.id }
+            items = list,
+            key = { item -> item.iCal4List.id }
         )
-        { iCalObject ->
+        { iCal4ListRelObject ->
 
-            val currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCalObject.uid } }.map { it.iCal4List }
+            val currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
 
             ListCardGrid(
-                iCalObject,
-                selected = selectedEntries.contains(iCalObject.id),
+                iCal4ListRelObject.iCal4List,
+                categories = iCal4ListRelObject.categories,
+                resources = iCal4ListRelObject.resources,
+                storedCategories = storedCategories,
+                storedResources = storedResources,
+                selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                 progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                player = player,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(jtxCardCornerShape)
                     //.animateItemPlacement()
                     .combinedClickable(
-                        onClick = { onClick(iCalObject.id, list.value) },
+                        onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }) },
                         onLongClick = {
-                            if (!iCalObject.isReadOnly)
-                                onLongClick(iCalObject.id, list.value)
+                            if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
                         }
                     ),
                 onProgressChanged = onProgressChanged,
@@ -129,11 +142,17 @@ fun ListScreenGrid_TODO() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenGrid(
-            list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
+            list = listOf(
+                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+            ),
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }
@@ -175,11 +194,17 @@ fun ListScreenGrid_JOURNAL() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenGrid(
-            list = remember { mutableStateOf(listOf(icalobject, icalobject2)) },
+            list = listOf(
+                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+            ),
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
             onLongClick = { _, _ -> }

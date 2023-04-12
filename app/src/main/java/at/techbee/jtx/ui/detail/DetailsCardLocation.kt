@@ -50,7 +50,7 @@ import java.util.*
 
 
 @SuppressLint("MissingPermission")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun DetailsCardLocation(
     initialLocation: String?,
@@ -121,7 +121,7 @@ fun DetailsCardLocation(
                 // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
                 val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                 val bestProvider = locationManager.getBestProvider(Criteria(), false) ?: return@LaunchedEffect
-                val locListener = LocationListener() { }
+                val locListener = LocationListener { }
                 locationManager.requestLocationUpdates(bestProvider, 0, 0f, locListener)
                 locationManager.getLastKnownLocation(bestProvider)?.let { lastKnownLocation ->
                     geoLat = lastKnownLocation.latitude

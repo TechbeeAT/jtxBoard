@@ -25,10 +25,9 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
-import com.google.accompanist.flowlayout.FlowRow
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ListOptionsGroupSort(
     module: Module,
@@ -73,6 +72,8 @@ fun ListOptionsGroupSort(
                             GroupBy.PRIORITY -> OrderBy.PRIORITY
                             GroupBy.STATUS -> OrderBy.STATUS
                             GroupBy.DUE -> OrderBy.DUE
+                            GroupBy.ACCOUNT -> OrderBy.ACCOUNT
+                            GroupBy.COLLECTION -> OrderBy.COLLECTION
                             else -> listSettings.orderBy.value
                         }
                         onListSettingsChanged()

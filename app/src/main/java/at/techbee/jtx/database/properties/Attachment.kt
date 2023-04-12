@@ -128,10 +128,7 @@ data class Attachment (
     @ColumnInfo(name = COLUMN_ATTACHMENT_EXTENSION)                      var extension: String? = null,
     @ColumnInfo(name = COLUMN_ATTACHMENT_FILESIZE)                      var filesize: Long? = null
 
-): Parcelable
-
-
-{
+): Parcelable {
     companion object Factory {
 
         /**
@@ -149,6 +146,39 @@ data class Attachment (
                 return null
 
             return Attachment().applyContentValues(values)
+        }
+
+        /**
+         * Creates a new attachment and persists the file given in
+         * @param cachedRecordingUri
+         * @param context
+         */
+        fun fromCachedRecordingUri(cachedRecordingUri: Uri?, context: Context): Attachment? {
+            if(cachedRecordingUri == null)
+                return null
+
+            try {
+                val cachedFile = File(cachedRecordingUri.toString())
+                val fileExtension = MimeTypeMap.getFileExtensionFromUrl(cachedRecordingUri.toString())
+                val newFilename = "${System.currentTimeMillis()}.$fileExtension"
+                val newFile = File(getAttachmentDirectory(context), newFilename)
+                newFile.createNewFile()
+                newFile.writeBytes(cachedFile.readBytes())
+
+                return Attachment(
+                    fmttype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension),
+                    uri = FileProvider.getUriForFile(
+                        context,
+                        AUTHORITY_FILEPROVIDER,
+                        newFile
+                    ).toString(),
+                    filename = newFilename,
+                    extension = fileExtension,
+                )
+            } catch (e: IOException) {
+                Log.e("IOException", "Failed to process file\n${e.stackTraceToString()}")
+                return null
+            }
         }
 
 

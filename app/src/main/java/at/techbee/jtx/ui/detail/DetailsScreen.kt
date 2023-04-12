@@ -18,12 +18,8 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -43,14 +39,16 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
+import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
+import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
@@ -69,7 +67,8 @@ fun DetailsScreen(
         else -> null
     }
 
-    val detailsBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val detailsBottomSheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -87,6 +86,8 @@ fun DetailsScreen(
     val isChild = detailViewModel.isChild.observeAsState(false)
     val allCategories = detailViewModel.allCategories.observeAsState(emptyList())
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
+    val storedCategories by detailViewModel.storedCategories.observeAsState(emptyList())
+    val storedResources by detailViewModel.storedResources.observeAsState(emptyList())
     val allWriteableCollections = detailViewModel.allWriteableCollections.observeAsState(emptyList())
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
@@ -192,6 +193,25 @@ fun DetailsScreen(
                 detailViewModel.changeState.value = DetailViewModel.DetailChangeState.UNCHANGED
             }
         )
+    }
+
+    if(detailsBottomSheetState.currentValue != SheetValue.Hidden) {
+        ModalBottomSheet(
+            sheetState = detailsBottomSheetState,
+            onDismissRequest = {
+                scope.launch { detailsBottomSheetState.hide() }
+            }) {
+            DetailOptionsBottomSheet(
+                module = try {
+                    Module.valueOf(icalEntity.value?.property?.module ?: Module.NOTE.name)
+                } catch (e: Exception) {
+                    Module.NOTE
+                },
+                detailSettings = detailViewModel.detailSettings,
+                onListSettingsChanged = { detailViewModel.detailSettings.save() },
+                modifier = Modifier.padding(top = 0.dp, start = 8.dp, end = 8.dp, bottom = 32.dp)
+            )
+        }
     }
 
     Scaffold(
@@ -339,6 +359,8 @@ fun DetailsScreen(
                 allWriteableCollections = allWriteableCollections.value,
                 allCategories = allCategories.value,
                 allResources = allResources.value,
+                storedCategories = storedCategories,
+                storedResources = storedResources,
                 selectFromAllListLive = detailViewModel.selectFromAllList,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
@@ -364,7 +386,7 @@ fun DetailsScreen(
                     } else false,
                 markdownState = markdownState,
                 saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
-                    detailViewModel.save(
+                    detailViewModel.saveEntry(
                         changedICalObject,
                         changedCategories,
                         changedComments,
@@ -378,9 +400,18 @@ fun DetailsScreen(
                 onProgressChanged = { itemId, newPercent ->
                     detailViewModel.updateProgress(itemId, newPercent)
                 },
-                onMoveToNewCollection = { icalObject, newCollection ->
+                onMoveToNewCollection = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms, newCollection ->
                     navController.popBackStack()
-                    detailViewModel.moveToNewCollection(icalObject, newCollection.collectionId)
+                    detailViewModel.moveToNewCollection(
+                        changedICalObject,
+                        changedCategories,
+                        changedComments,
+                        changedAttendees,
+                        changedResources,
+                        changedAttachments,
+                        changedAlarms,
+                        newCollection.collectionId
+                    )
                 },
                 onSubEntryAdded = { icalObject, attachment ->
                     detailViewModel.addSubEntry(
@@ -401,27 +432,17 @@ fun DetailsScreen(
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },
+                goToFilteredList = {
+                    navController.navigate(
+                        FilteredListDestination.FilteredList.getRoute(
+                            module = icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE,
+                            storedListSettingData = it
+                        )
+                    )
+                },
                 unlinkFromSeries = { instances, series, deleteAfterUnlink -> detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink) },
                 modifier = Modifier.padding(paddingValues)
             )
-
-            ModalBottomSheetLayout(
-                sheetState = detailsBottomSheetState,
-                sheetContent = {
-                    DetailOptionsBottomSheet(
-                        module = try {
-                            Module.valueOf(icalEntity.value?.property?.module ?: Module.NOTE.name)
-                        } catch (e: Exception) {
-                            Module.NOTE
-                        },
-                        detailSettings = detailViewModel.detailSettings,
-                        onListSettingsChanged = { detailViewModel.detailSettings.save() },
-                        modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = paddingValues.calculateBottomPadding())
-                    )
-                },
-                sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-                sheetContentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface)
-            ) { }
         },
         bottomBar = {
             DetailBottomAppBar(
