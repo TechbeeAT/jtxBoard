@@ -28,7 +28,7 @@ buildscript {
         version_work = "2.8.1"
         version_billing = "5.1.0"
         version_review = "2.0.1"
-        version_compose = "1.4.0-rc01"
+        version_compose = "1.5.0-alpha02"
         version_about_libraries = "10.6.1"
         version_huawei = "1.8.1.300"
         version_huawei_iap = "6.10.0.300"
