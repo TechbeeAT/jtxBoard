@@ -59,6 +59,8 @@ class SettingsStateHolder(val context: Context) {
     var settingSetDefaultCurrentLocationNotes = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.default))
     var settingSetDefaultCurrentLocationTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.default))
 
+    var settingStickyAlarms = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default))
+
     //invisible settings
     var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))
         set(newValue) {

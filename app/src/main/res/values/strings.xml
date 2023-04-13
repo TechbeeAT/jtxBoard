@@ -571,6 +571,8 @@ Thank you!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Keep status, progress &amp; completed in sync"</string>
     <string name="settings_attention_experimental_feature">"Attention: This is an experimental feature"</string>
     <string name="settings_create_with_current_location">"Create new entries with current location"</string>
+    <string name="settings_sticky_alarms">"Sticky alarms"</string>
+    <string name="settings_sticky_alarms_sub">"Keep notifications until done or postponed"</string>
     <string name="sync_button_go_to_collections">"Go to Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Please purchase the Pro package to enable this feature."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>

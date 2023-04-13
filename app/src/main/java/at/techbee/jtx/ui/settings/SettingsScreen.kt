@@ -402,7 +402,16 @@ fun SettingsScreen(
                             onCheckedChanged = {
                                 settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = it
                                 SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
-                            })
+                            }
+                        )
+                        SwitchSetting(
+                            setting = SETTING_STICKY_ALARMS,
+                            initiallyChecked = settingsStateHolder.settingStickyAlarms.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingStickyAlarms.value = it
+                                SETTING_STICKY_ALARMS.save(it, context)
+                            }
+                        )
                     }
                 }
             },
