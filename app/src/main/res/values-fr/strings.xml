@@ -59,11 +59,13 @@ Global Strings -->
     <string name="list_due_tomorrow">"Échéance demain"</string>
     <string name="list_due_inXdays">"Échéance dans %d jours"</string>
     <string name="list_due_inXhours">"Échéance dans %d heures"</string>
+    <string name="list_due_on_weekday">"Échéance le %s"</string>
     <string name="list_start_past">"Début dans le passé"</string>
     <string name="list_start_today">"Début prévu aujourd'hui"</string>
     <string name="list_start_tomorrow">"Début planifié pour demain"</string>
     <string name="list_start_inXhours">"Début planifié dans %d heures"</string>
     <string name="list_start_inXdays">"Début prévu dans %d jours"</string>
+    <string name="list_start_on_weekday">"Début prévu dans %s"</string>
     <string name="list_tabitem_journals">"Journaux"</string>
     <string name="list_tabitem_notes">"Remarques"</string>
     <string name="list_tabitem_todos">"Tâches"</string>
@@ -76,6 +78,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"La première ligne est interprétée comme un résumé, le reste comme une description. Les hashtags sont interprétés comme des catégories (par exemple #catégorie)."</string>
     <string name="list_item_upload_pending">"Chargement en cours"</string>
     <string name="list_item_recurring">"Entrée récurrente"</string>
+    <string name="list_item_edited_recurring">"Evénement périodique modifié"</string>
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Aller à l'original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instance d'une entrée récurrence"</string>
@@ -145,6 +148,8 @@ Global Strings -->
     <string name="edit_task_completed_add">"Sélectionner la date / l'heure de fin"</string>
     <string name="edit_dialog_sure_to_delete_title">"Supprimer \"%1$s\" ?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Rejeter cette entrée ?"</string>
+    <string name="dialog_delete_done_title">"Supprimer toutes les tâches terminées?"</string>
+    <string name="dialog_delete_done_message">"Attention : Les sous-tâches sont supprimées indépendamment de leur statut si leur parent est marqué comme terminé. Cette opération ne peut pas être annulée !"</string>
     <string name="edit_dialog_sure_to_delete_message">"Êtes-vous sûr de vouloir supprimer \"%1$s\" ?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Êtes-vous sûr de vouloir supprimer cette entrée ? Cette entrée ne sera pas enregistrée."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La date d'échéance ne peut pas être antérieure à la date de début."</string>
@@ -217,6 +222,7 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="donate_other_donation_methods">"Si vous souhaitez utiliser une autre méthode de don, veuillez consulter notre site web :"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Aucune application n'a été trouvée pour ouvrir ce fichier/URL."</string>
     <string name="toast_item_is_now_recu_exception">"L'élément récurrent est maintenant une exception."</string>
+    <string name="toast_done_tasks_deleted">"Tâches terminées supprimées (%d)."</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Désolé, jtx Board a du mal à se synchroniser. Veuillez fermer DAVx⁵ et recommencer la synchronisation."</string>
     <string name="about_translations_thanks_to">"Merci à"</string>
@@ -239,6 +245,7 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Le moteur de synthèse vocale est à l'écoute."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Le moteur de synthèse vocale a cessé d'écouter."</string>
     <string name="list_quickadd_dialog_sr_error">"Désolé, le moteur de synthèse vocale a rencontré une erreur. (%1$s)"</string>
+    <string name="list_quickadd_add_audio_attachment">"Enregistrer l'audio en pièce jointe"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Lire les contacts - permission accordée"</string>
     <string name="permission_read_contacts_denied">"Autorisation de lecture des contacts refusée"</string>
@@ -251,9 +258,11 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="apply">"Appliquer"</string>
     <string name="not_available_abbreviation">"s/o"</string>
     <string name="collection">"Collection"</string>
+    <string name="collection_owner_displayname">"Propriétaire : %1$s"</string>
     <string name="link_to_parent">"Lier à un parent"</string>
     <string name="toolbar_text_collections">"Collections"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
+    <string name="navigation_drawer_presets">"Préconfigurations"</string>
     <string name="edit_dialog_set_attendee_role">"Définir le rôle des participants"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Date/Heure"</string>
