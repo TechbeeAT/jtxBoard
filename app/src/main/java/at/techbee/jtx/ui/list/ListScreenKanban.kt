@@ -54,6 +54,7 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import at.techbee.jtx.util.SyncUtil
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -239,10 +240,12 @@ fun ListScreenKanban(
             }
         }
 
-        PullRefreshIndicator(
-            refreshing = false,
-            state = pullRefreshState
-        )
+        if(SyncUtil.isDAVx5Compatible(context)) {
+            PullRefreshIndicator(
+                refreshing = false,
+                state = pullRefreshState
+            )
+        }
     }
 }
 
