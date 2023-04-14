@@ -156,20 +156,10 @@ class NotificationPublisher : BroadcastReceiver() {
                     //cancel obsolete alarms
                     it.forEach { iCalObjectId ->
                         val iCalObject = database.getICalObjectByIdSync(iCalObjectId.toLong())
-                        if(iCalObject == null || iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.name) {
-                            /*
-                            val pendingIntent = PendingIntent.getBroadcast(
-                                context,
-                                iCalObjectId,
-                                Intent(context, NotificationPublisher::class.java),
-                                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                            )
-                            alarmManager.cancel(pendingIntent)
-                             */
+                        if(iCalObject == null || iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.name)
                             NotificationManagerCompat.from(context).cancel(iCalObjectId)
-                        } else {
+                        else
                             stillActiveAlarms.add(iCalObjectId)
-                        }
                     }
                 }
 

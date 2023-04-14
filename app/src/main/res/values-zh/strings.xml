@@ -59,11 +59,13 @@ Global Strings -->
     <string name="list_due_tomorrow">"明天到期"</string>
     <string name="list_due_inXdays">"%d 天到期"</string>
     <string name="list_due_inXhours">"%d 小时到期"</string>
+    <string name="list_due_on_weekday">"到期时间：%s"</string>
     <string name="list_start_past">"已开始"</string>
     <string name="list_start_today">"计划从今天开始"</string>
     <string name="list_start_tomorrow">"明天开始"</string>
     <string name="list_start_inXhours">"计划 %d 小时后开始"</string>
     <string name="list_start_inXdays">"计划 %d 天后开始"</string>
+    <string name="list_start_on_weekday">"计划开始时间：%s"</string>
     <string name="list_tabitem_journals">"日记"</string>
     <string name="list_tabitem_notes">"笔记"</string>
     <string name="list_tabitem_todos">"任务"</string>
@@ -146,6 +148,7 @@ Global Strings -->
     <string name="edit_task_completed_add">"选择完成日期/时间"</string>
     <string name="edit_dialog_sure_to_delete_title">"删除“%1$s”？"</string>
     <string name="edit_dialog_sure_to_discard_title">"舍弃此条目？"</string>
+    <string name="dialog_delete_done_title">"删除所有已完成的任务？"</string>
     <string name="edit_dialog_sure_to_delete_message">"确定要删除“%1$s”？"</string>
     <string name="edit_dialog_sure_to_discard_message">"确定要舍弃此条目？此操作无法撤销。"</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"截止日期不能早于开始日期。"</string>
