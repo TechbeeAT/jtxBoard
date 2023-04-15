@@ -12,31 +12,49 @@ import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.staggeredgrid.*
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import at.techbee.jtx.util.SyncUtil
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ListScreenGrid(
     list: List<ICal4ListRel>,
@@ -49,65 +67,85 @@ fun ListScreenGrid(
     player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onSyncRequested: () -> Unit
 ) {
 
+    val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
     val storedResources by storedResourcesLive.observeAsState(emptyList())
     val gridState = rememberLazyStaggeredGridState()
 
-    if(scrollId != null) {
+    if (scrollId != null) {
         LaunchedEffect(list) {
             val index = list.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId }
-            if(index > -1) {
+            if (index > -1) {
                 gridState.animateScrollToItem(index)
                 scrollOnceId.postValue(null)
             }
         }
     }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = false,
+        onRefresh = { onSyncRequested() }
+    )
 
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Adaptive(150.dp),
-        contentPadding = PaddingValues(8.dp),
-        verticalItemSpacing = 8.dp,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    Box(
+        contentAlignment = Alignment.TopCenter
     ) {
-        items(
-            items = list,
-            key = { item -> item.iCal4List.id }
-        )
-        { iCal4ListRelObject ->
 
-            val currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }.map { it.iCal4List }
+        LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Adaptive(150.dp),
+            contentPadding = PaddingValues(8.dp),
+            verticalItemSpacing = 8.dp,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.pullRefresh(pullRefreshState),
+        ) {
+            items(
+                items = list,
+                key = { item -> item.iCal4List.id }
+            )
+            { iCal4ListRelObject ->
 
-            ListCardGrid(
-                iCal4ListRelObject.iCal4List,
-                categories = iCal4ListRelObject.categories,
-                resources = iCal4ListRelObject.resources,
-                storedCategories = storedCategories,
-                storedResources = storedResources,
-                selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
-                progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
-                player = player,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(jtxCardCornerShape)
-                    //.animateItemPlacement()
-                    .combinedClickable(
-                        onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }) },
-                        onLongClick = {
-                            if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
-                        }
-                    ),
-                onProgressChanged = onProgressChanged,
+                val currentSubtasks =
+                    subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
+                        .map { it.iCal4List }
+
+                ListCardGrid(
+                    iCal4ListRelObject.iCal4List,
+                    categories = iCal4ListRelObject.categories,
+                    resources = iCal4ListRelObject.resources,
+                    storedCategories = storedCategories,
+                    storedResources = storedResources,
+                    selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
+                    progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                    player = player,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(jtxCardCornerShape)
+                        //.animateItemPlacement()
+                        .combinedClickable(
+                            onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }) },
+                            onLongClick = {
+                                if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                    onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
+                            }
+                        ),
+                    onProgressChanged = onProgressChanged,
                 )
+            }
+        }
+
+        if(SyncUtil.isDAVx5Compatible(context)) {
+            PullRefreshIndicator(
+                refreshing = false,
+                state = pullRefreshState
+            )
         }
     }
 }
-
 
 
 @Preview(showBackground = true)
@@ -127,7 +165,8 @@ fun ListScreenGrid_TODO() {
             numAttachments = 0
             numSubnotes = 0
             numSubtasks = 0
-            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            summary =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         }
         val icalobject2 = ICal4List.getSample().apply {
             id = 2L
@@ -138,7 +177,8 @@ fun ListScreenGrid_TODO() {
             classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
-            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            summary =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             colorItem = Color.Blue.toArgb()
         }
         ListScreenGrid(
@@ -155,11 +195,11 @@ fun ListScreenGrid_TODO() {
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onSyncRequested = { }
         )
     }
 }
-
 
 
 @Preview(showBackground = true)
@@ -179,7 +219,8 @@ fun ListScreenGrid_JOURNAL() {
             numAttachments = 0
             numSubnotes = 0
             numSubtasks = 0
-            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            summary =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         }
         val icalobject2 = ICal4List.getSample().apply {
             id = 2L
@@ -190,7 +231,8 @@ fun ListScreenGrid_JOURNAL() {
             classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
-            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            summary =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             colorItem = Color.Blue.toArgb()
         }
         ListScreenGrid(
@@ -207,7 +249,8 @@ fun ListScreenGrid_JOURNAL() {
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onSyncRequested = { }
         )
     }
 }

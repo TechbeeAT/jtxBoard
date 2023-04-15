@@ -147,6 +147,7 @@ fun ListScreen(
                             isAttachmentsExpanded
                         )
                     },
+                    onSyncRequested = { listViewModel.syncAccounts() }
                 )
             }
             ViewMode.GRID -> {
@@ -163,7 +164,8 @@ fun ListScreen(
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent ->
                         processOnProgressChanged(itemId, newPercent)
-                    }
+                    },
+                    onSyncRequested = { listViewModel.syncAccounts() }
                 )
             }
             ViewMode.COMPACT -> {
@@ -179,9 +181,8 @@ fun ListScreen(
                     player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                    onProgressChanged = { itemId, newPercent ->
-                        processOnProgressChanged(itemId, newPercent)
-                    }
+                    onProgressChanged = { itemId, newPercent -> processOnProgressChanged(itemId, newPercent) },
+                    onSyncRequested = { listViewModel.syncAccounts() }
                 )
             }
             ViewMode.KANBAN -> {
@@ -206,7 +207,8 @@ fun ListScreen(
                             newStatus,
                             scrollOnce
                         )
-                    }
+                    },
+                    onSyncRequested = { listViewModel.syncAccounts() }
                 )
             }
         }

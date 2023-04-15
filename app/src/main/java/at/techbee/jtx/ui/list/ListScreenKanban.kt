@@ -25,6 +25,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -50,11 +54,12 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import at.techbee.jtx.util.SyncUtil
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ListScreenKanban(
     module: Module,
@@ -69,7 +74,8 @@ fun ListScreenKanban(
     onProgressChanged: (itemId: Long, newPercent: Int, scrollOnce: Boolean) -> Unit,
     onStatusChanged: (itemid: Long, status: Status, scrollOnce: Boolean) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onSyncRequested: () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -79,146 +85,169 @@ fun ListScreenKanban(
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
     val storedResources by storedResourcesLive.observeAsState(emptyList())
 
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = false,
+        onRefresh = { onSyncRequested() }
+    )
 
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Box(
+        contentAlignment = Alignment.TopCenter
+    ) {
 
-        statusColumns.forEach { status ->
+        Row(modifier = Modifier.fillMaxWidth()) {
 
-            val listState = rememberLazyListState()
-            val listFilteredByStatus = list.filter { it.iCal4List.status == status.status      // below we handle also empty status for todos
-                    || (it.iCal4List.status == null && it.iCal4List.component == Component.VTODO.name && (it.iCal4List.percent == null || it.iCal4List.percent == 0) && status == Status.NEEDS_ACTION)
-                    || (it.iCal4List.status == null && it.iCal4List.component == Component.VTODO.name && it.iCal4List.percent in 1..99 && status == Status.IN_PROCESS)
-                    || (it.iCal4List.status == null && it.iCal4List.component == Component.VTODO.name && it.iCal4List.percent == 100 && status == Status.COMPLETED)
-                    || (it.iCal4List.status == null && it.iCal4List.component == Component.VJOURNAL.name && status == Status.FINAL)
-            }
-            if(scrollId != null) {
-                LaunchedEffect(list) {
-                    val index = listFilteredByStatus.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId }
-                    if(index > -1) {
-                        listState.animateScrollToItem(index)
-                        scrollOnceId.postValue(null)
+            statusColumns.forEach { status ->
+
+                val listState = rememberLazyListState()
+                val listFilteredByStatus = list.filter {
+                    it.iCal4List.status == status.status      // below we handle also empty status for todos
+                            || (it.iCal4List.status == null && it.iCal4List.component == Component.VTODO.name && (it.iCal4List.percent == null || it.iCal4List.percent == 0) && status == Status.NEEDS_ACTION)
+                            || (it.iCal4List.status == null && it.iCal4List.component == Component.VTODO.name && it.iCal4List.percent in 1..99 && status == Status.IN_PROCESS)
+                            || (it.iCal4List.status == null && it.iCal4List.component == Component.VTODO.name && it.iCal4List.percent == 100 && status == Status.COMPLETED)
+                            || (it.iCal4List.status == null && it.iCal4List.component == Component.VJOURNAL.name && status == Status.FINAL)
+                }
+                if (scrollId != null) {
+                    LaunchedEffect(list) {
+                        val index = listFilteredByStatus.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId }
+                        if (index > -1) {
+                            listState.animateScrollToItem(index)
+                            scrollOnceId.postValue(null)
+                        }
+                    }
+                }
+
+                LazyColumn(
+                    state = listState,
+                    contentPadding = PaddingValues(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1F)
+                        .pullRefresh(pullRefreshState)
+                    ) {
+
+                    stickyHeader {
+                        Text(
+                            text = stringResource(id = status.stringResource),
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .background(MaterialTheme.colorScheme.background)
+                                .fillMaxWidth(),
+                            style = MaterialTheme.typography.titleSmall,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+
+                    items(
+                        items = listFilteredByStatus,
+                        key = { item -> item.iCal4List.id }
+                    )
+                    { iCal4ListRelObject ->
+
+                        val currentSubtasks =
+                            subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRel.iCal4List.uid } }
+                                .map { it.iCal4List }
+
+                        var offsetX by remember { mutableStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
+                        val maxOffset = 50f
+
+                        ListCardKanban(
+                            iCal4ListRelObject.iCal4List,
+                            categories = iCal4ListRelObject.categories,
+                            resources = iCal4ListRelObject.resources,
+                            storedCategories = storedCategories,
+                            storedResources = storedResources,
+                            selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
+                            player = player,
+                            modifier = Modifier
+                                .animateItemPlacement()
+                                .clip(jtxCardCornerShape)
+                                .combinedClickable(
+                                    onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }) },
+                                    onLongClick = {
+                                        if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                            onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
+                                    }
+                                )
+                                .height(150.dp)
+                                .fillMaxWidth()
+                                .offset { IntOffset(offsetX.roundToInt(), 0) }
+                                .draggable(
+                                    orientation = Orientation.Horizontal,
+                                    state = rememberDraggableState { delta ->
+                                        if (iCal4ListRelObject.iCal4List.isReadOnly)   // no drag state for read only objects!
+                                            return@rememberDraggableState
+                                        if (settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty())
+                                            return@rememberDraggableState  // no drag is status depends on subtasks
+                                        if (abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
+                                            offsetX += delta
+                                    },
+                                    onDragStopped = {
+                                        if (abs(offsetX) > maxOffset / 2) {
+                                            if (iCal4ListRelObject.iCal4List.component == Component.VTODO.name) {
+                                                when {
+                                                    (iCal4ListRelObject.iCal4List.percent ?: 0) == 0 && offsetX > 0f -> onProgressChanged(
+                                                        iCal4ListRelObject.iCal4List.id,
+                                                        1,
+                                                        true
+                                                    )   // positive change, from Needs Action to In Process
+                                                    (iCal4ListRelObject.iCal4List.percent ?: 0) in 1..99 && offsetX > 0f -> onProgressChanged(
+                                                        iCal4ListRelObject.iCal4List.id,
+                                                        100,
+                                                        true
+                                                    )   // positive change, from In Process to Completed
+                                                    (iCal4ListRelObject.iCal4List.percent ?: 0) == 100 && offsetX < 0f -> onProgressChanged(
+                                                        iCal4ListRelObject.iCal4List.id,
+                                                        99,
+                                                        true
+                                                    )   // negative change, from Completed to In Process
+                                                    (iCal4ListRelObject.iCal4List.percent ?: 0) in 1..99 && offsetX < 0f -> onProgressChanged(
+                                                        iCal4ListRelObject.iCal4List.id,
+                                                        0,
+                                                        true
+                                                    )   // negative change, from In Process to Needs Action
+                                                }
+                                            } else {   // VJOURNAL
+                                                when {
+                                                    (iCal4ListRelObject.iCal4List.status == Status.DRAFT.status && offsetX > 0f) -> onStatusChanged(iCal4ListRelObject.iCal4List.id, Status.FINAL, true)
+                                                    ((iCal4ListRelObject.iCal4List.status == Status.FINAL.status || iCal4ListRelObject.iCal4List.status == Status.NO_STATUS.status) && offsetX < 0f) -> onStatusChanged(
+                                                        iCal4ListRelObject.iCal4List.id,
+                                                        Status.DRAFT,
+                                                        true
+                                                    )
+                                                }
+                                            }
+                                            // make a short vibration
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                val vibratorManager = context.getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                                                val vibrator = vibratorManager.defaultVibrator
+                                                val vibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
+                                                vibrator.vibrate(vibrationEffect)
+                                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                @Suppress("DEPRECATION")
+                                                val vibrator = context.getSystemService(VIBRATOR_SERVICE) as Vibrator
+                                                val vibrationEffect = VibrationEffect.createOneShot(150, 10)
+                                                vibrator.vibrate(vibrationEffect)
+                                            }
+                                        }
+                                        offsetX = 0f
+                                    }
+                                ),
+                        )
                     }
                 }
             }
+        }
 
-            LazyColumn(
-                state = listState,
-                contentPadding = PaddingValues(4.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1F)
-            ) {
-
-                stickyHeader {
-                    Text(
-                        text = stringResource(id = status.stringResource),
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .background(MaterialTheme.colorScheme.background)
-                            .fillMaxWidth(),
-                        style = MaterialTheme.typography.titleSmall,
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                items(
-                    items = listFilteredByStatus,
-                    key = { item -> item.iCal4List.id }
-                )
-                { iCal4ListRelObject ->
-
-                    val currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRel.iCal4List.uid } }.map { it.iCal4List }
-
-                    var offsetX by remember { mutableStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
-                    val maxOffset = 50f
-
-                    ListCardKanban(
-                        iCal4ListRelObject.iCal4List,
-                        categories = iCal4ListRelObject.categories,
-                        resources = iCal4ListRelObject.resources,
-                        storedCategories = storedCategories,
-                        storedResources = storedResources,
-                        selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
-                        player = player,
-                        modifier = Modifier
-                            .animateItemPlacement()
-                            .clip(jtxCardCornerShape)
-                            .combinedClickable(
-                                onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }) },
-                                onLongClick = {
-                                    if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                        onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
-                                }
-                            )
-                            .height(150.dp)
-                            .fillMaxWidth()
-                            .offset { IntOffset(offsetX.roundToInt(), 0) }
-                            .draggable(
-                                orientation = Orientation.Horizontal,
-                                state = rememberDraggableState { delta ->
-                                    if (iCal4ListRelObject.iCal4List.isReadOnly)   // no drag state for read only objects!
-                                        return@rememberDraggableState
-                                    if (settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty())
-                                        return@rememberDraggableState  // no drag is status depends on subtasks
-                                    if (abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
-                                        offsetX += delta
-                                },
-                                onDragStopped = {
-                                    if (abs(offsetX) > maxOffset / 2) {
-                                        if (iCal4ListRelObject.iCal4List.component == Component.VTODO.name) {
-                                            when {
-                                                (iCal4ListRelObject.iCal4List.percent ?: 0) == 0 && offsetX > 0f -> onProgressChanged(
-                                                    iCal4ListRelObject.iCal4List.id,
-                                                    1,
-                                                    true
-                                                )   // positive change, from Needs Action to In Process
-                                                (iCal4ListRelObject.iCal4List.percent ?: 0) in 1..99 && offsetX > 0f -> onProgressChanged(
-                                                    iCal4ListRelObject.iCal4List.id,
-                                                    100,
-                                                    true
-                                                )   // positive change, from In Process to Completed
-                                                (iCal4ListRelObject.iCal4List.percent ?: 0) == 100 && offsetX < 0f -> onProgressChanged(
-                                                    iCal4ListRelObject.iCal4List.id,
-                                                    99,
-                                                    true
-                                                )   // negative change, from Completed to In Process
-                                                (iCal4ListRelObject.iCal4List.percent ?: 0) in 1..99 && offsetX < 0f -> onProgressChanged(
-                                                    iCal4ListRelObject.iCal4List.id,
-                                                    0,
-                                                    true
-                                                )   // negative change, from In Process to Needs Action
-                                            }
-                                        } else {   // VJOURNAL
-                                            when {
-                                                (iCal4ListRelObject.iCal4List.status == Status.DRAFT.status && offsetX > 0f) -> onStatusChanged(iCal4ListRelObject.iCal4List.id, Status.FINAL, true)
-                                                ((iCal4ListRelObject.iCal4List.status == Status.FINAL.status || iCal4ListRelObject.iCal4List.status == Status.NO_STATUS.status) && offsetX < 0f) -> onStatusChanged(iCal4ListRelObject.iCal4List.id, Status.DRAFT, true)
-                                            }
-                                        }
-                                        // make a short vibration
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                            val vibratorManager = context.getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                                            val vibrator = vibratorManager.defaultVibrator
-                                            val vibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
-                                            vibrator.vibrate(vibrationEffect)
-                                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            @Suppress("DEPRECATION")
-                                            val vibrator = context.getSystemService(VIBRATOR_SERVICE) as Vibrator
-                                            val vibrationEffect = VibrationEffect.createOneShot(150, 10)
-                                            vibrator.vibrate(vibrationEffect)
-                                        }
-                                    }
-                                    offsetX = 0f
-                                }
-                            ),
-                        )
-                }
-            }
+        if(SyncUtil.isDAVx5Compatible(context)) {
+            PullRefreshIndicator(
+                refreshing = false,
+                state = pullRefreshState
+            )
         }
     }
 }
-
 
 
 @Preview(showBackground = true)
@@ -238,7 +267,8 @@ fun ListScreenKanban_TODO() {
             numAttachments = 0
             numSubnotes = 0
             numSubtasks = 0
-            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            summary =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         }
         val icalobject2 = ICal4List.getSample().apply {
             id = 2L
@@ -249,7 +279,8 @@ fun ListScreenKanban_TODO() {
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
-            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            summary =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             colorItem = Color.Blue.toArgb()
         }
         ListScreenKanban(
@@ -266,13 +297,13 @@ fun ListScreenKanban_TODO() {
             settingLinkProgressToSubtasks = false,
             player = null,
             onProgressChanged = { _, _, _ -> },
-            onStatusChanged = {_, _, _ -> },
+            onStatusChanged = { _, _, _ -> },
             onClick = { _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onSyncRequested = { }
         )
     }
 }
-
 
 
 @Preview(showBackground = true)
@@ -292,7 +323,8 @@ fun ListScreenKanban_JOURNAL() {
             numAttachments = 0
             numSubnotes = 0
             numSubtasks = 0
-            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            summary =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         }
         val icalobject2 = ICal4List.getSample().apply {
             id = 2L
@@ -303,7 +335,8 @@ fun ListScreenKanban_JOURNAL() {
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
             due = System.currentTimeMillis()
-            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            summary =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             colorItem = Color.Blue.toArgb()
         }
         ListScreenKanban(
@@ -320,9 +353,10 @@ fun ListScreenKanban_JOURNAL() {
             settingLinkProgressToSubtasks = false,
             player = null,
             onProgressChanged = { _, _, _ -> },
-            onStatusChanged = {_, _, _ -> },
+            onStatusChanged = { _, _, _ -> },
             onClick = { _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onSyncRequested = { }
         )
     }
 }
