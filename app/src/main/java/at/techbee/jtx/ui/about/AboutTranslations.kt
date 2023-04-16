@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.reusable.cards.TranslatorCard
 import at.techbee.jtx.ui.theme.Typography
 
 

@@ -13,7 +13,9 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
+import at.techbee.jtx.database.locals.*
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.*
 
@@ -114,12 +116,19 @@ SELECTs (global selects without parameter)
 
     /**
      * Retrieve an list of all remote collections ([ICalCollection])
-     *
-     * @return a list of [ICalCollection] as LiveData<List<ICalCollection>>
+     * @return a list of [ICalCollection] as LiveData
      */
     @Transaction
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
-    fun getAllRemoteCollections(): LiveData<List<ICalCollection>>
+    fun getAllRemoteCollectionsLive(): LiveData<List<ICalCollection>>
+
+    /**
+     * Retrieve an list of all remote collections ([ICalCollection])
+     * @return a list of [ICalCollection]
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
+    fun getAllRemoteCollections(): List<ICalCollection>
 
 
 
@@ -131,6 +140,15 @@ SELECTs (global selects without parameter)
     @Transaction
     @Query("SELECT * FROM $TABLE_NAME_RELATEDTO")
     fun getAllRelatedto(): LiveData<List<Relatedto>>
+
+    /**
+     * Retrieve an list of all [ICal4List] their UIDs
+     * @param uids of the entries
+     * @return list of [ICal4List]
+     */
+    @Transaction
+    @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_UID IN (:uids)")
+    fun getICal4ListByUIDs(uids: List<String?>): LiveData<List<ICal4List>>
 
     /**
      * Retrieve an list of all Relatedto ([Relatedto]) as a List
@@ -216,6 +234,13 @@ SELECTs (global selects without parameter)
      */
     @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NOT NULL ORDER BY $COLUMN_RECURID")
     fun getSeriesInstancesICalObjectsByUID(uid: String?): LiveData<List<ICalObject>>
+
+    /**
+     * Retrieve all tasks that are done (Status = Completed or Percent = 100)
+     * @return list of [ICalObject]
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_COMPONENT = 'VTODO' AND $COLUMN_STATUS = 'COMPLETED' OR $COLUMN_PERCENT = 100")
+    fun getDoneTasks(): List<ICalObject>
 
 
     /**
@@ -345,7 +370,6 @@ DELETEs by Object
     fun deleteAccount(accountName: String, accountType: String)
 
 
-
     /**
      * Delete all categories with a specific icalobjectid.
      * @param [icalobjectId] of the icalObject that should be deleted.
@@ -429,6 +453,12 @@ DELETEs by Object
     fun deleteRelatedto(rel: Relatedto)
 
     /**
+     * Deletes the relatedto for the given [iCalObjectId] and [parentUID] (for Reltype = PARENT)
+     */
+    @Query("DELETE FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_RELATEDTO_TEXT = :parentUID AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT'")
+    fun deleteRelatedto(iCalObjectId: Long, parentUID: String)
+
+    /**
      * Delete an attendee by the object.
      *
      * @param attendee The object of the attendee that should be deleted.
@@ -501,23 +531,40 @@ DELETEs by Object
     /**
      * Gets the next [Alarm]s after a certain date or after now
      * Elements that define a series are excluded.
+     * Sorting is ascending by trigger time.
      * @param limit: The number of [Alarm]s that should be returned
      * @param minDate: The date from which the [Alarm]s should be fetched (default: System.currentTimeMillis())
      * @return a list of the next alarms
      */
     @Transaction
-    @Query("SELECT $TABLE_NAME_ALARM.* FROM $TABLE_NAME_ALARM INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID WHERE $COLUMN_DELETED = 0 AND $COLUMN_RRULE IS NULL AND $COLUMN_ALARM_TRIGGER_TIME > :minDate ORDER BY $COLUMN_ALARM_TRIGGER_TIME ASC LIMIT :limit")
+    @Query("SELECT $TABLE_NAME_ALARM.* " +
+            "FROM $TABLE_NAME_ALARM " +
+            "INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
+            "WHERE $COLUMN_DELETED = 0 " +
+            "AND $COLUMN_RRULE IS NULL " +
+            "AND $COLUMN_ALARM_TRIGGER_TIME > :minDate " +
+            "AND ($COLUMN_PERCENT IS NULL OR $COLUMN_PERCENT < 100) " +
+            "AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS != 'COMPLETED')" +
+            "ORDER BY $COLUMN_ALARM_TRIGGER_TIME ASC LIMIT :limit")
     fun getNextAlarms(limit: Int, minDate: Long = System.currentTimeMillis()): List<Alarm>
 
     /**
      * Gets the next due [ICalObject]s after a certain date or after now.
      * Elements that define a series are excluded.
+     * Sorting is ascending by trigger time.
      * @param limit: The number of [ICalObject]s that should be returned
      * @param minDate: The due date from which the [ICalObject]s should be fetched (default: System.currentTimeMillis())
      * @return a list of the next due icalobjects
      */
     @Transaction
-    @Query("SELECT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0 AND $COLUMN_DUE > :minDate AND $COLUMN_RRULE IS NULL ORDER BY $COLUMN_DUE ASC LIMIT :limit")
+    @Query("SELECT $TABLE_NAME_ICALOBJECT.* " +
+            "FROM $TABLE_NAME_ICALOBJECT " +
+            "WHERE $COLUMN_DELETED = 0 " +
+            "AND $COLUMN_DUE > :minDate " +
+            "AND $COLUMN_RRULE IS NULL " +
+            "AND ($COLUMN_PERCENT IS NULL OR $COLUMN_PERCENT < 100) " +
+            "AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS != 'COMPLETED')" +
+            "ORDER BY $COLUMN_DUE ASC LIMIT :limit")
     fun getNextDueEntries(limit: Int, minDate: Long = System.currentTimeMillis()): List<ICalObject>
 
     @Update(onConflict = OnConflictStrategy.ABORT)
@@ -549,17 +596,22 @@ DELETEs by Object
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4List(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
 
+
+    @Transaction
+    @RawQuery(observedEntities = [ICal4List::class])
+    fun getIcal4ListRel(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
+
     @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4List>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
-    fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
+    @RawQuery(observedEntities = [ICal4ListRel::class])
+    fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
-    fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4List>
+    @RawQuery(observedEntities = [ICal4ListRel::class])
+    fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4ListRel>
 
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")
@@ -669,4 +721,47 @@ DELETEs by Object
     @Transaction
     @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID = :recurid")
     fun getRecurInstance(uid: String?, recurid: String): ICalObject?
+
+
+    /**
+     *  StoredListSetting
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStoredListSetting(storedListSetting: StoredListSetting): Long
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_STORED_LIST_SETTINGS WHERE $COLUMN_STORED_LIST_SETTING_MODULE = :module")
+    fun getStoredListSettings(module: String): LiveData<List<StoredListSetting>>
+
+    @Delete
+    fun deleteStoredListSetting(storedListSetting: StoredListSetting)
+
+    /**
+     * StoredCategory
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertStoredCategory(storedCategory: StoredCategory)
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_STORED_CATEGORIES")
+    fun getStoredCategories(): LiveData<List<StoredCategory>>
+
+    @Delete
+    fun deleteStoredCategory(storedCategory: StoredCategory)
+
+
+    /**
+     * StoredResourceCategory
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertStoredResource(storedResource: StoredResource)
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_STORED_RESOURCES")
+    fun getStoredResources(): LiveData<List<StoredResource>>
+
+    @Delete
+    fun deleteStoredResource(storedResource: StoredResource)
+
+
 }

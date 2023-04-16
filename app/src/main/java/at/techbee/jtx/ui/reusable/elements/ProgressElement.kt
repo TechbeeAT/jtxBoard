@@ -25,12 +25,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Status
 
 @Composable
 fun ProgressElement(
     label: String?,
     iCalObjectId: Long,
     progress: Int?,
+    status: String?,
     isReadOnly: Boolean,
     sliderIncrement: Int,
     modifier: Modifier = Modifier,
@@ -110,7 +112,7 @@ fun ProgressElement(
         }
 
         Checkbox(
-            checked = sliderPosition == 100f,
+            checked = sliderPosition == 100f || status == Status.COMPLETED.status,
             onCheckedChange = {
                 sliderPosition = if (it) 100f else 0f     // update comes from state change!
                 onProgressChanged(iCalObjectId, if (it) 100 else 0)
@@ -128,6 +130,7 @@ fun ProgressElementPreview() {
             label = null,
             iCalObjectId = 1L,
             progress = 57,
+            status = Status.IN_PROCESS.status,
             isReadOnly = false,
             sliderIncrement = 50,
             onProgressChanged = { _, _ -> })
@@ -142,6 +145,7 @@ fun ProgressElementPreview_readonly() {
             label = null,
             iCalObjectId = 1L,
             progress = 57,
+            status = Status.COMPLETED.status,
             isReadOnly = true,
             sliderIncrement = 5,
             onProgressChanged = { _, _ -> })
@@ -156,6 +160,7 @@ fun ProgressElementPreview_increment25_with_label() {
             label = "could be a subtask",
             iCalObjectId = 1L,
             progress = 100,
+            status = Status.COMPLETED.status,
             isReadOnly = false,
             onProgressChanged = { _, _ -> },
             sliderIncrement = 20
@@ -172,6 +177,7 @@ fun ProgressElementPreview_without_label() {
             label = null,
             iCalObjectId = 1L,
             progress = 8,
+            status = Status.IN_PROCESS.status,
             isReadOnly = false,
             onProgressChanged = { _, _ -> },
             sliderIncrement = 1,
@@ -188,6 +194,7 @@ fun ProgressElementPreview_without_label_and_slider() {
             label = null,
             iCalObjectId = 1L,
             progress = 100,
+            status = Status.COMPLETED.status,
             isReadOnly = false,
             onProgressChanged = { _, _ -> },
             sliderIncrement = 1,

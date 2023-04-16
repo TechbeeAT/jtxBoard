@@ -14,6 +14,10 @@ Global Strings -->
     <string name="gotit">"Alles klar"</string>
     <string name="cont">"Weiter"</string>
     <string name="website">"Webseite"</string>
+    <string name="latitude">"Breitengrad"</string>
+    <string name="longitude">"Längengrad"</string>
+    <string name="unlink">"Verlinkung aufheben"</string>
+    <string name="current_location">"Aktueller Standort"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
     <string name="toolbar_text_add_note">"Notiz hinzufügen"</string>
     <string name="toolbar_text_add_task">"Aufgabe hinzufügen"</string>
@@ -55,11 +59,13 @@ Global Strings -->
     <string name="list_due_tomorrow">"Morgen fällig"</string>
     <string name="list_due_inXdays">"In %d Tagen fällig"</string>
     <string name="list_due_inXhours">"In %d Stunden fällig"</string>
+    <string name="list_due_on_weekday">"Fällig am %s"</string>
     <string name="list_start_past">"Start in Vergangenheit"</string>
     <string name="list_start_today">"Geplanter Start heute"</string>
     <string name="list_start_tomorrow">"Geplanter Start morgen"</string>
     <string name="list_start_inXhours">"Geplanter Start in %d Stunden"</string>
     <string name="list_start_inXdays">"Geplanter Start in %d Tagen"</string>
+    <string name="list_start_on_weekday">"Geplanter Start am %s"</string>
     <string name="list_tabitem_journals">"Journale"</string>
     <string name="list_tabitem_notes">"Notizen"</string>
     <string name="list_tabitem_todos">"Aufgaben"</string>
@@ -76,13 +82,14 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Zum Original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instanz von wiederkehrendem Eintrag"</string>
-    <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, al s eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen."</string>
+    <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, als eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen."</string>
     <string name="view_fragment_audio_permission">"App Berechtigungen"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board benötigt Ihre Zustimmung, um Audio aufzunehmen und um die Spracherkennung zu nutzen. Bitte geben Sie die Berechtigung, um diese Funktionalität zu nutzen."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Audio-Notiz hinzufügen"</string>
     <string name="view_comment_playbutton_content_desc">"Audio-Notiz abspielen"</string>
     <string name="view_reccurrence_note_is_exception">"Dieser Eintrag ist Teil einer Serie."</string>
     <string name="view_feedback_linked_notes">"Verknüpfte Notizen"</string>
+    <string name="view_subtask_of">"Teilaufgabe von"</string>
+    <string name="view_linked_note_of">"Verknüpfte Notiz vom"</string>
     <string name="view_add_note">"Notiz hinzufügen"</string>
     <string name="view_add_audio_note">"Audio-Notiz hinzufügen"</string>
     <string name="view_fab_edit_entry_contentDesc">"Eintrag bearbeiten"</string>
@@ -141,6 +148,8 @@ Global Strings -->
     <string name="edit_task_completed_add">"Fertiggestellt-Datum/Zeit auswählen"</string>
     <string name="edit_dialog_sure_to_delete_title">"\"%1$s\" löschen?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Diesen Eintrag verwerfen?"</string>
+    <string name="dialog_delete_done_title">"Alle erledigten Aufgaben löschen?"</string>
+    <string name="dialog_delete_done_message">"Achtung: Unteraufgaben werden unabhängig von ihrem Status gelöscht, wenn ihr übergeordneter Eintrag als erledigt markiert ist. Dieser Vorgang kann nicht rückgängig gemacht werden!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Sind Sie sicher, dass Sie \"%1$s\" löschen wollen?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Sind Sie sicher, dass Sie diesen Eintrag verwerfen wollen? Der Eintrag wird nicht gespeichert."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Das Fälligkeitsdatum kann nicht vor dem Startdatum sein."</string>
@@ -213,6 +222,7 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="donate_other_donation_methods">"Weitere Optionen zum Spenden finden Sie auf unserer Website:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Es wurde keine App gefunden, um diese Datei/URL zu öffnen."</string>
     <string name="toast_item_is_now_recu_exception">"Wiederkehrender Eintrag ist jetzt eine Ausnahme."</string>
+    <string name="toast_done_tasks_deleted">"Erledigte Aufgaben gelöscht (%d)."</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Entschuldigung, jtx Board hat gerade Probleme beim Synchronisieren. Bitte schließen Sie DAVx⁵ und probieren Sie es erneut."</string>
     <string name="about_translations_thanks_to">"Dank an"</string>
@@ -235,6 +245,7 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="list_quickadd_dialog_sr_start_listening">"Spracherkennung gestartet."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Spracherkennung gestoppt."</string>
     <string name="list_quickadd_dialog_sr_error">"Entschuldigung, bei der Spracherkennung ist ein Problem aufgetreten. (%1$s)"</string>
+    <string name="list_quickadd_add_audio_attachment">"Audioanhang aufnehmen"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Leseberechtigung für Kontakte erteilt"</string>
     <string name="permission_read_contacts_denied">"Leseberechtigung für Kontakte abgelehnt"</string>
@@ -247,8 +258,11 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="apply">"Anwenden"</string>
     <string name="not_available_abbreviation">"n.V."</string>
     <string name="collection">"Collection"</string>
+    <string name="collection_owner_displayname">"Besitzer: %1$s"</string>
+    <string name="link_to_parent">"Zu übergeordnetem Element verknüpfen"</string>
     <string name="toolbar_text_collections">"Collections"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
+    <string name="navigation_drawer_presets">"Voreinstellungen"</string>
     <string name="edit_dialog_set_attendee_role">"Teilnehmer-Rolle vergeben"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Datum/Uhrzeit"</string>
@@ -300,6 +314,8 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="edit_validation_errors_start_due_timezone_check">"Bitte wählen Sie eine Zeitzone für Startzeit und Fälligkeit oder deaktivieren Sie Zeitzonen."</string>
     <string name="collections_toast_export_ics_success">"Export der Collection erfolgreich durchgeführt."</string>
     <string name="collections_toast_export_ics_error">"Beim Exportieren der Collection ist ein Fehler aufgetreten."</string>
+    <string name="attachment_export_saved_successfully">"Erfolgreich gespeichert"</string>
+    <string name="attachment_export_error_error_occurred">"Beim Speichern der Datei ist ein Fehler aufgetreten!"</string>
     <string name="menu_collections_add_remote">"Remote Collection hinzufügen (DAVx⁵)"</string>
     <string name="menu_collection_popup_show_in_davx5">"In DAVx⁵ anzeigen"</string>
     <string name="menu_collection_popup_export_as_ics">"Als .ics exportieren"</string>
@@ -355,6 +371,9 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="adinfo_adfree_purchase_date">"Gekauft am %1$s"</string>
     <string name="adinfo_adfree_order_id">"Bestellnummer: %1$s"</string>
     <string name="list_no_dates_set">"Ohne Datumsangaben"</string>
+    <string name="list_without_start_date">"Ohne Start"</string>
+    <string name="list_without_due_date">"Ohne Fälligkeit"</string>
+    <string name="list_without_completed_date">"Ohne Fertigstellungsdatum"</string>
     <string name="filter_order_by">"Sortieren nach"</string>
     <string name="filter_asc">"Aufsteigend"</string>
     <string name="filter_desc">"Absteigend"</string>
@@ -366,7 +385,9 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="filter_subnotes_order_by">Verlinkte Notizen sortieren nach</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Bitte klicken Sie auf die Collection, zu der die Einträge hinzugefügt werden sollen!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d hinzugefügt, %2$d übersprungen. (Exklusive Instanzen von wiederkehrenden Einträgen)"</string>
+    <string name="collections_toast_x_items_added">"%1$d Einträge hinzugefügt!"</string>
     <string name="menu_collection_popup_import_from_ics">"Von .ics importieren"</string>
+    <string name="menu_collection_popup_import_from_textfile">"Aus Textdatei importieren"</string>
     <string name="notification_done">"Erledigt"</string>
     <string name="notification_add_1h">"+ 1 Stunde"</string>
     <string name="notification_add_1d">"+ 1 Tag"</string>
@@ -383,6 +404,11 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="settings_select_theme_dark">"Dunkel"</string>
     <string name="settings_select_theme_light">"Hell"</string>
     <string name="settings_select_theme_system">"Systemstandard"</string>
+    <string name="settings_protect_biometric_private_confidential">"Privat &amp; vertraulich"</string>
+    <string name="settings_protect_biometric_confidential">"Vertraulich"</string>
+    <string name="settings_protect_biometric_all">"Alle"</string>
+    <string name="settings_protect_biometric_info_on_settings_unlock">"Bitte authentifizieren Sie sich, um diese Einstellung zu ändern!"</string>
+    <string name="settings_protect_biometric_info_on_unlock">"Bitte authentifizieren Sie sich, um geschützte Einträge anzuzeigen!"</string>
     <string name="donate_dialog_title">"Gefällt dir jtx Board?"</string>
     <string name="donate_dialog_message">"Die Entwicklung und Wartung einer App sind viel Arbeit. Wenn dir jtx Board gefällt und du die kontinuierliche Entwicklung sicherstellen möchtest, dann denke bitte auch an die Möglichkeit einer Spende! :-)
 Vielen Dank!"</string>
@@ -437,6 +463,9 @@ Danke!"</string>
     <string name="collections_dialog_buypro_info">"Bitte kaufen Sie jtx Board Pro, um Remote Collections zu bearbeiten."</string>
     <string name="list_update_entries_dialog_title">"Einträge aktualisieren"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Achtung: Wiederkehrende Instanzen müssen von ihrer Serie getrennt werden, bevor sie in eine andere Collection verschoben werden und werden in diesem Prozess ignoriert."</string>
+    <string name="list_update_entries_dialog_new_parent_info">"Wählen Sie das übergeordnete Element, zu dem die ausgewählten Einträge als Unteraufgaben/verknüpfte Notizen verlinkt werden sollen."</string>
+    <string name="details_link_existing_subentry_dialog_title">"Untereinträge verlinken"</string>
+    <string name="details_link_existing_subentry_dialog_info">"Wählen Sie die Untereinträge, die verlinkt werden sollen."</string>
     <string name="details_app_bar_behaviour">"App Bar Verhalten"</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
     <string name="details_show_hide_elements">Elemente ein-/ausblenden</string>
@@ -452,6 +481,8 @@ Danke!"</string>
     <string name="details_go_to_series">"Gehe zur Serie"</string>
     <string name="details_detach_from_series">"Von der Serie trennen"</string>
     <string name="details_detach_all_instances">"Alle Instanzen trennen"</string>
+    <string name="dialog_unlink_from_parent_title">"Von übergeordnetem Element trennen"</string>
+    <string name="dialog_unlink_from_parent_message">"Die Beziehung als Untereintrag entfernen? Der Eintrag bleibt als eigenständiger Eintrag."</string>
     <string name="edit_comment">"Kommentar bearbeiten"</string>
     <string name="edit_subnote_add_helper">"Unternotiz hinzufügen"</string>
     <string name="edit_subtask">"Unteraufgabe bearbeiten"</string>
@@ -476,6 +507,7 @@ Danke!"</string>
     <string name="dialog_revert_changes_title">"Änderungen zurücksetzen?"</string>
     <string name="dialog_revert_changes_message">"Sind Sie sicher, dass Sie die Änderungen verwerfen und die Inhalte zurücksetzen wollen?"</string>
     <string name="dialog_revert_changes_message2">"Achtung: Unteraufgaben und Unternotizen sind unabhängige Einträge und können nicht zurückgesetzt werden."</string>
+    <string name="dialog_select_module_txt_dialog_title">"%1$d Datei(en) importieren als"</string>
     <string name="dialog_collection_new_entries_title">"Collection für neue Einträge"</string>
     <string name="dialog_detach_from_series_title">"Von der Serie trennen?"</string>
     <string name="dialog_detach_from_series_text_all">"Das Entfernen aller Elemente löscht die Serie und verwandelt die Instanzen in unabhängige Einträge, die eigene Unteraufgaben oder verknüpfte Notizen haben können. Es wird keinen Link mehr zu den Originalserien oder anderen Instanzen geben. Möchten Sie fortfahren?"</string>
@@ -484,6 +516,11 @@ Danke!"</string>
     <string name="dialog_detach_from_series_button">"Von der Serie trennen"</string>
     <string name="dialog_davx5_outdated_title">"DAVx⁵ veraltet"</string>
     <string name="dialog_davx5_outdated_message">"Ihre aktuelle Version von DAVx5 ist mit dieser Version von jtx Board nicht kompatibel. Bitte aktualisieren Sie DAVx5 auf 4.3.1 (403010000+) oder neuer! Die Synchronisierung ist derzeit ausgesetzt."</string>
+    <string name="dialog_save_current_filter_config">"Aktuelle Filterkonfiguration speichern"</string>
+    <string name="dialog_save_current_filter_my_filter">"Meine Filter"</string>
+    <string name="dialog_edit_stored_category_title">"Kategorie-Vorlage hinzufügen/bearbeiten"</string>
+    <string name="dialog_edit_stored_resource_title">"Ressourcen-Vorlage hinzufügen/bearbeiten"</string>
+    <string name="dialog_add_audio_entry_title">"Audio-Eintrag hinzufügen"</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
     <string name="settings_details">"Einstellungen für die Detailansicht"</string>
@@ -511,6 +548,9 @@ Danke!"</string>
     <string name="settings_link_progress_to_subtasks">"Fortschritt mit Unteraufgaben verknüpfen"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Status, Fortschritt und Fertiggestellt synchron halten"</string>
     <string name="settings_attention_experimental_feature">"Achtung: Dies ist eine experimentelle Funktion"</string>
+    <string name="settings_create_with_current_location">"Neue Einträge mit aktuellem Standort erstellen"</string>
+    <string name="settings_sticky_alarms">"Fixierte Alarme"</string>
+    <string name="settings_sticky_alarms_sub">"Benachrichtigungen erhalten bis erledigt oder verschoben"</string>
     <string name="sync_button_go_to_collections">"Zu den Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Bitte kaufen Sie jtx Board Pro, um diese Funktion zu nutzen."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -523,6 +563,7 @@ Danke!"</string>
     <string name="settings_select_language_system">"Systemstandard"</string>
     <string name="settings_details_enable_markdown">"Markdown-Formatierung aktivieren"</string>
     <string name="filter_special">"Spezialfilter"</string>
+    <string name="filter_presets">"Filter-Voreinstellungen"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
     <string name="list_date_today">"Heute"</string>
@@ -533,10 +574,17 @@ Danke!"</string>
     <string name="list_start_date_tomorrow">"Start morgen"</string>
     <string name="list_start_date_future">"Start in Zukunft"</string>
     <string name="list_hide_completed_tasks">"Fertiggestellte Aufgaben ausblenden"</string>
+    <string name="list_biometric_protected_entries_locked">Biometrische geschützte Einträge gesperrt</string>
+    <string name="list_delete_done">"Löschen erledigt"</string>
+    <string name="collections_biometric_protected_entries_locked_title">Biometrische geschützte Einträge gesperrt</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">Bitte authentifizieren Sie sich und versuchen Sie es erneut</string>
+    <string name="list_biometric_protected_entries_unlocked">Biometrische geschützte Einträge entsperrt</string>
     <string name="settings_auto_alarm">"Automatischer Alarm"</string>
     <string name="alarms_always_ondue">"Immer wenn fällig"</string>
     <string name="settings_show_one_recur_entry_in_future">"Zeige nur einen wiederkehrenden Eintrag in der Zukunft"</string>
     <string name="settings_auto_alarm_sub">"Erstellt automatisch Alarme, wenn aktiviert. \"Immer wenn fällig\" triggert immer eine Benachrichtigung, wenn eine Aufgabe fällig wird, auch wenn es keinen expliziten Alarm gibt."</string>
+    <string name="settings_protect_biometric">"Einträge mit Biometrie schützen"</string>
+    <string name="settings_protect_biometric_sub">"Diese Funktion verbirgt die ausgewählten Einträge, bis sie mit Biometrie entsperrt sind, allerdings werden die Daten nicht verschlüsselt."</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"Kein Status"</string>
     <string name="classification_no_classification">"Keine Klassifizierung (öffentlich)"</string>
@@ -550,6 +598,7 @@ Danke!"</string>
     <string name="filter_second_order_by">"Danach sortieren nach"</string>
     <string name="filter_group_by">"Gruppieren nach"</string>
     <string name="filter_group_by_info">"Gruppierung ist verfügbar für Listen- und Kompakt-Ansicht"</string>
+    <string name="filter_save_as_preset">"Als Vorlage speichern"</string>
     <string name="menu_list_flat_view">"Flache Ansicht"</string>
     <string name="menu_list_flat_view_sub">"Zeige Untereinträge immer auf höchster Ebene"</string>
     <string name="menu_list_limit_recur_entries">"Wiederkehrende Einträge limitieren"</string>
@@ -574,6 +623,8 @@ Danke!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Achtung: Aktuell wird nur eine Hierarchieebene im Widget unterstützt. Um Einträge weiterer Ebenen zu sehen, benutzen Sie bitte die flache Ansicht."</string>
     <string name="widget_list_maximum_entries_reached">"Maximale Anzahl an Einträgen im Widget erreicht (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualisiere Widget"</string>
+    <string name="widget_list_opacity_warning">"Hinweis: Dies ist eine experimentelle Funktion. Mit reduzierter Deckkraft werden Änderungen im System-Farbschema möglicherweise nicht sofort übernommen!"</string>
+    <string name="widget_list_color_warning">"Hinweis: Dies ist eine experimentelle Funktion. Änderungen im System-Farbschema werden nicht übernommen! Wählen Sie keine Farbe, um zum Systemstandard zurückzukehren."</string>
     <string name="opacity">"Transparenz"</string>
     <string name="general">"Allgemein"</string>
     <string name="list_collapse">"Zuklappen"</string>
@@ -587,6 +638,7 @@ Danke!"</string>
     <string name="settings_select_theme_true_dark">"Richtig dunkel (AMOLED)"</string>
     <string name="settings_select_theme_contrast">"Kontrast (e-Ink)"</string>
     <string name="settings_journals">"Journal-Einstellungen"</string>
+    <string name="settings_notes">"Notiz-Einstellungen"</string>
     <string name="settings_default_journals_date">"Standard-Datum/-Uhrzeit für Journale"</string>
     <string name="settings_default_journals_date_previous_day">"Vortag"</string>
     <string name="settings_default_journals_date_current_day">"Aktueller Tag"</string>
@@ -606,4 +658,7 @@ Danke!"</string>
     <string name="markdown_horizontal_ruler">"Horizontale Linie"</string>
     <string name="markdown_unordered_list">"Liste"</string>
     <string name="markdown_code">"Code"</string>
+    <string name="preset_categories">"Voreingestellte Kategorien"</string>
+    <string name="preset_resources">"Voreingestellte Ressourcen"</string>
+    <string name="active_filters">Aktive Filter:</string>
 </resources>

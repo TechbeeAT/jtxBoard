@@ -66,7 +66,11 @@ object DateTimeUtils {
         return zonedDateTime.format(formatter)
     }
 
-    fun convertLongToMediumDateString(date: Long?, timezone: String?): String {
+    fun convertLongToMediumDateShortTimeString(date: Long?, timezone: String?): String {
+        return convertLongToMediumDateString(date, timezone) + if(timezone != TZ_ALLDAY) " " + convertLongToTimeString(date, timezone) else ""
+    }
+
+    private fun convertLongToMediumDateString(date: Long?, timezone: String?): String {
         if (date == null || date == 0L)
             return ""
         val zonedDateTime =
@@ -76,7 +80,7 @@ object DateTimeUtils {
     }
 
     fun convertLongToTimeString(time: Long?, timezone: String?): String {
-        if (time == null || time == 0L)
+        if (time == null || time == 0L || timezone == TZ_ALLDAY)
             return ""
         val zonedDateTime =
             ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), requireTzId(timezone))
@@ -254,7 +258,6 @@ object DateTimeUtils {
      * @return the minutes and seconds as string like '00:00'
      */
     fun getMinutesSecondsFormatted(seconds: Int): String {
-        // TODO: Create a test!
         var secondsMinutesText = ""
         if(seconds/60 < 10)
             secondsMinutesText += "0"

@@ -37,8 +37,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.coroutines.delay
@@ -57,13 +57,9 @@ fun AudioRecordElement(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-
-    val permissionLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
     var showAudioPermissionDialog by rememberSaveable { mutableStateOf(false) }
-
     var recording by remember { mutableStateOf(false) }
-
 
     // set default audio format (might be overwritten by settings)
     var audioFileExtension = "3gp"
@@ -113,7 +109,6 @@ fun AudioRecordElement(
         onRecorded(cachedFilename)
         recording = false
         secondsRemaining = maxRecordingDurationMillis/1000
-
     }
 
     Box(modifier = modifier) {
@@ -121,12 +116,13 @@ fun AudioRecordElement(
             onClick = {
 
                 when {
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED -> showAudioPermissionDialog = true
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED -> {
+                        showAudioPermissionDialog = true
+                    }
                     recording -> {   // recording - we stop here
                         recorder?.reset()
                         recording = false
-                        onRecorded(cachedFilename)
-
+                        //onRecorded(cachedFilename)
                     }
                     else -> {    // not recording - we start recording
                         recorder?.apply {

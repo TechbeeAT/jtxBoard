@@ -9,6 +9,8 @@
 package at.techbee.jtx.ui.settings
 
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -28,8 +30,9 @@ import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
-import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.DropdownSetting
@@ -41,11 +44,11 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
     settingsStateHolder: SettingsStateHolder,
+    globalStateHolder: GlobalStateHolder,
     modifier: Modifier = Modifier
 ) {
 
@@ -59,6 +62,13 @@ fun SettingsScreen(
             languageOptions.add(Locale.TRADITIONAL_CHINESE)
         else
             languageOptions.add(Locale.forLanguageTag(language))
+    }
+
+    var pendingSettingProtectiometric: DropdownSettingOption? by remember { mutableStateOf(null) }
+    if(globalStateHolder.isAuthenticated.value && pendingSettingProtectiometric != null) {
+        settingsStateHolder.settingProtectBiometric.value = pendingSettingProtectiometric!!
+        SETTING_PROTECT_BIOMETRIC.save(pendingSettingProtectiometric!!, context = context)
+        pendingSettingProtectiometric = null
     }
 
     Scaffold(
@@ -91,7 +101,7 @@ fun SettingsScreen(
                         
                         DropdownSetting(
                             setting = SETTING_THEME,
-                            preselected = settingsStateHolder.settingTheme.value,
+                            selected = settingsStateHolder.settingTheme.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingTheme.value = selection
                                 SETTING_THEME.save(selection, context = context)
@@ -177,13 +187,36 @@ fun SettingsScreen(
 
                         DropdownSetting(
                             setting = SETTING_AUDIO_FORMAT,
-                            preselected = settingsStateHolder.settingAudioFormat.value,
+                            selected = settingsStateHolder.settingAudioFormat.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingAudioFormat.value = selection
                                 SETTING_AUDIO_FORMAT.save(selection, context = context)
                             }
                         )
 
+                        if(globalStateHolder.biometricStatus == BiometricManager.BIOMETRIC_SUCCESS) {
+                            DropdownSetting(
+                                setting = SETTING_PROTECT_BIOMETRIC,
+                                selected = settingsStateHolder.settingProtectBiometric.value,
+                                onSelectionChanged = { selection ->
+                                    if(settingsStateHolder.settingProtectBiometric.value == selection)
+                                        return@DropdownSetting
+
+                                    if(!globalStateHolder.isAuthenticated.value) {
+                                        val promptInfo: BiometricPrompt.PromptInfo = BiometricPrompt.PromptInfo.Builder()
+                                            .setTitle(context.getString(R.string.settings_protect_biometric))
+                                            .setSubtitle(context.getString(R.string.settings_protect_biometric_info_on_settings_unlock))
+                                            .setNegativeButtonText(context.getString(R.string.cancel))
+                                            .build()
+                                        globalStateHolder.biometricPrompt?.authenticate(promptInfo)
+                                        pendingSettingProtectiometric = selection
+                                    } else {
+                                        settingsStateHolder.settingProtectBiometric.value = selection
+                                        SETTING_PROTECT_BIOMETRIC.save(selection, context = context)
+                                    }
+                                }
+                            )
+                        }
                     }
 
                     ExpandableSettingsSection(
@@ -257,12 +290,33 @@ fun SettingsScreen(
                     ) {
                         DropdownSetting(
                             setting = SETTING_DEFAULT_JOURNALS_DATE,
-                            preselected = settingsStateHolder.settingDefaultJournalsDate.value,
+                            selected = settingsStateHolder.settingDefaultJournalsDate.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingDefaultJournalsDate.value = selection
                                 SETTING_DEFAULT_JOURNALS_DATE.save(selection, context = context)
                             }
                         )
+                        SwitchSetting(
+                            setting = SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION,
+                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationJournals.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingSetDefaultCurrentLocationJournals.value = it
+                                SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
+                            })
+                    }
+
+                    ExpandableSettingsSection(
+                        headerText = R.string.settings_notes,
+                        expandedDefault = false,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        SwitchSetting(
+                            setting = SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION,
+                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationNotes.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingSetDefaultCurrentLocationNotes.value = it
+                                SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
+                            })
                     }
 
                     ExpandableSettingsSection(
@@ -287,7 +341,7 @@ fun SettingsScreen(
 
                         DropdownSetting(
                             setting = SETTING_DEFAULT_START_DATE,
-                            preselected = settingsStateHolder.settingDefaultStartDate.value,
+                            selected = settingsStateHolder.settingDefaultStartDate.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingDefaultStartDate.value = selection
                                 SETTING_DEFAULT_START_DATE.save(selection, context = context)
@@ -295,7 +349,7 @@ fun SettingsScreen(
                         )
                         DropdownSetting(
                             setting = SETTING_DEFAULT_DUE_DATE,
-                            preselected = settingsStateHolder.settingDefaultDueDate.value,
+                            selected = settingsStateHolder.settingDefaultDueDate.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingDefaultDueDate.value = selection
                                 SETTING_DEFAULT_DUE_DATE.save(selection, context = context)
@@ -303,7 +357,7 @@ fun SettingsScreen(
                         )
                         DropdownSetting(
                             setting = SETTING_PROGRESS_STEP,
-                            preselected = settingsStateHolder.settingStepForProgress.value,
+                            selected = settingsStateHolder.settingStepForProgress.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingStepForProgress.value = selection
                                 SETTING_PROGRESS_STEP.save(selection, context = context)
@@ -319,11 +373,11 @@ fun SettingsScreen(
                         )
                         DropdownSetting(
                             setting = SETTING_AUTO_ALARM,
-                            preselected = settingsStateHolder.settingAutoAlarm.value,
+                            selected = settingsStateHolder.settingAutoAlarm.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingAutoAlarm.value = selection
                                 SETTING_AUTO_ALARM.save(selection, context = context)
-                                scope.launch(Dispatchers.IO) { Alarm.scheduleNextNotifications(context) }
+                                scope.launch(Dispatchers.IO) { NotificationPublisher.scheduleNextNotifications(context) }
                             }
                         )
                         SwitchSetting(
@@ -342,6 +396,22 @@ fun SettingsScreen(
                                 SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.save(it, context)
                             }
                         )
+                        SwitchSetting(
+                            setting = SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION,
+                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationTasks.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = it
+                                SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
+                            }
+                        )
+                        SwitchSetting(
+                            setting = SETTING_STICKY_ALARMS,
+                            initiallyChecked = settingsStateHolder.settingStickyAlarms.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingStickyAlarms.value = it
+                                SETTING_STICKY_ALARMS.save(it, context)
+                            }
+                        )
                     }
                 }
             },
@@ -358,7 +428,8 @@ fun SettingsScreen_Preview() {
 
         SettingsScreen(
             rememberNavController(),
-            settingsStateHolder = SettingsStateHolder(LocalContext.current)
+            settingsStateHolder = SettingsStateHolder(LocalContext.current),
+            globalStateHolder = GlobalStateHolder(LocalContext.current)
         )
     }
 }

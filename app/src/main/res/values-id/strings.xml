@@ -12,22 +12,9 @@ Global Strings -->
     <string name="discard">"Buang"</string>
     <string name="gotit">"Mengerti"</string>
     <string name="cont">"Lanjut"</string>
-    <string name="toolbar_text_view_journal_details">"Rincian Jurnal
-"</string>
-    <string name="toolbar_text_view_note_details">"Rincian Catatan"</string>
-    <string name="toolbar_text_view_task_details">"Rincian Tugas"</string>
     <string name="toolbar_text_add_journal">"Tambah Jurnal"</string>
     <string name="toolbar_text_add_note">"Tambah Catatan"</string>
     <string name="toolbar_text_add_task">"Tambah Tugas"</string>
-    <string name="toolbar_text_edit_journal">"Edit Jurnal"</string>
-    <string name="toolbar_text_edit_note">"Edit Catatan"</string>
-    <string name="toolbar_text_edit_task">"Edit Tugas"</string>
-    <string name="toolbar_text_filter">"Saring"</string>
-    <string name="toolbar_text_settings">"Pengaturan"</string>
-    <string name="toolbar_text_about">"Tentang"</string>
-    <string name="toolbar_text_sync">"Sinkronkan"</string>
-    <string name="toolbar_text_donate">"Donasi"</string>
-    <string name="toolbar_text_adinfo">"Info Iklan"</string>
     <string name="default_local_collection_name">"Lokal"</string>
     <string name="default_local_account_name">"Lokal"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -43,7 +30,6 @@ Global Strings -->
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
-    <!-- fragment_ical_filter -->
     <!-- fragment_about -->
     <!-- menus -->
     <!-- Notification channel for Reminders -->
@@ -51,7 +37,6 @@ Global Strings -->
     <!-- Settings fragment -->
     <!-- Sync fragment -->
     <!-- Donate fragment -->
-    <!-- Adinfo fragment -->
     <!-- sync content provider -->
     <!-- Permissions -->
     <!-- alarms -->

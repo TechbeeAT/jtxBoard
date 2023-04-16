@@ -30,7 +30,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.util.UiUtil
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddAttachmentLinkDialog(
     onConfirm: (String) -> Unit,

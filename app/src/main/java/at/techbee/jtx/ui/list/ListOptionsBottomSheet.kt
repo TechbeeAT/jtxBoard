@@ -9,15 +9,19 @@
 package at.techbee.jtx.ui.list
 
 import android.content.Context
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -28,13 +32,12 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
+import at.techbee.jtx.database.locals.StoredListSetting
+import at.techbee.jtx.database.locals.StoredListSettingData
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListOptionsBottomSheet(
     module: Module,
@@ -42,7 +45,10 @@ fun ListOptionsBottomSheet(
     allCollectionsLive: LiveData<List<ICalCollection>>,
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
+    storedListSettingLive: LiveData<List<StoredListSetting>>,
     onListSettingsChanged: () -> Unit,
+    onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
+    onDeleteStoredListSetting: (StoredListSetting) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -57,16 +63,12 @@ fun ListOptionsBottomSheet(
         modifier = modifier
     ) {
 
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ) {
+        TabRow(selectedTabIndex = pagerState.currentPage) {
             Tab(
                 selected = false,
                 onClick = {
                     scope.launch {
-                        pagerState.scrollToPage(tabIndexFilter)
+                        pagerState.animateScrollToPage(tabIndexFilter)
                     }
                 },
                 content = { Text(stringResource(id = R.string.filter)) },
@@ -76,7 +78,7 @@ fun ListOptionsBottomSheet(
                 selected = false,
                 onClick = {
                     scope.launch {
-                        pagerState.scrollToPage(tabIndexGroupSort)
+                        pagerState.animateScrollToPage(tabIndexGroupSort)
                     }
                 },
                 content = { Text(stringResource(id = R.string.filter_group_sort)) },
@@ -86,7 +88,8 @@ fun ListOptionsBottomSheet(
 
         HorizontalPager(
             state = pagerState,
-            count = 2
+            pageCount = 2,
+            verticalAlignment = Alignment.Top
         ) { page ->
             when (page) {
                 tabIndexFilter -> {
@@ -96,7 +99,10 @@ fun ListOptionsBottomSheet(
                         allCollectionsLive = allCollectionsLive,
                         allCategoriesLive = allCategoriesLive,
                         allResourcesLive = allResourcesLive,
+                        storedListSettingLive = storedListSettingLive,
                         onListSettingsChanged = onListSettingsChanged,
+                        onSaveStoredListSetting = onSaveStoredListSetting,
+                        onDeleteStoredListSetting = onDeleteStoredListSetting,
                         modifier = modifier
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
@@ -151,7 +157,10 @@ fun ListOptionsBottomSheet_Preview_TODO() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            onListSettingsChanged = { }
+            storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
+            onListSettingsChanged = { },
+            onSaveStoredListSetting = { _, _ -> },
+            onDeleteStoredListSetting = { }
 
         )
     }
@@ -189,7 +198,10 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            onListSettingsChanged = { }
+            storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
+            onListSettingsChanged = { },
+            onSaveStoredListSetting = { _, _ -> },
+            onDeleteStoredListSetting = { }
         )
     }
 }

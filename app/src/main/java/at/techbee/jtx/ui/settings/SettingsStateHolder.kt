@@ -52,7 +52,14 @@ class SettingsStateHolder(val context: Context) {
         DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key) } ?: DropdownSetting.SETTING_AUTO_ALARM.default )
     var settingLinkProgressToSubtasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS.key, SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS.default))
     var settingKeepStatusProgressCompletedInSync = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.key, SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.default))
+    var settingProtectBiometric = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
+        DropdownSetting.SETTING_PROTECT_BIOMETRIC.key, DropdownSetting.SETTING_PROTECT_BIOMETRIC.default.key) } ?: DropdownSetting.SETTING_PROTECT_BIOMETRIC.default )
 
+    var settingSetDefaultCurrentLocationJournals = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.default))
+    var settingSetDefaultCurrentLocationNotes = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.default))
+    var settingSetDefaultCurrentLocationTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.default))
+
+    var settingStickyAlarms = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default))
 
     //invisible settings
     var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))

@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
+import androidx.biometric.BiometricPrompt
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Backup
 import androidx.compose.material.icons.outlined.FileDownload
@@ -28,22 +29,26 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsAddOrEditDialog
+import at.techbee.jtx.ui.reusable.dialogs.SelectModuleForTxtImportDialog
+import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import java.util.*
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionsScreen(
     navController: NavHostController,
     globalStateHolder: GlobalStateHolder,
+    settingsStateHolder: SettingsStateHolder,
     collectionsViewModel: CollectionsViewModel
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -93,37 +98,86 @@ fun CollectionsScreen(
     }
 
     /* IMPORT FUNCTIONALITIES */
-    val resultImportFilepath = remember { mutableStateOf<Uri?>(null) }
-    val launcherImport = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
-        resultImportFilepath.value = it
+    var resultImportICSFilepaths by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    val launcherImportICS = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) {
+        resultImportICSFilepaths = it
     }
-    val importCollection = remember { mutableStateOf<CollectionsView?>(null) }
-    // import from file uri
-    if (resultImportFilepath.value != null && importCollection.value != null) {
-        context.contentResolver?.openInputStream(resultImportFilepath.value!!)?.use {
-            val icsString = it.readBytes().decodeToString()
-            collectionsViewModel.insertICSFromReader(
-                importCollection.value!!.toICalCollection(),
-                icsString
-            )
-            importCollection.value = null
-            resultImportFilepath.value = null
-            it.close()
+    var resultImportTxtFilepaths by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    val launcherImportTxt = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) {
+        resultImportTxtFilepaths = it
+    }
+    var importCollection by remember { mutableStateOf<CollectionsView?>(null) }
+    var importModule by remember { mutableStateOf<Module?>(null) }
+
+
+    LaunchedEffect(resultImportICSFilepaths, importCollection) {
+        // import from file uri
+        if (resultImportICSFilepaths.isNotEmpty() && importCollection != null) {
+            resultImportICSFilepaths.forEach { filepath ->
+                context.contentResolver?.openInputStream(filepath)?.use {
+                    val icsString = it.readBytes().decodeToString()
+                    collectionsViewModel.insertICSFromReader(
+                        importCollection!!.toICalCollection(),
+                        icsString
+                    )
+
+                    it.close()
+                }
+            }
+            importCollection = null
+            resultImportICSFilepaths = emptyList()
         }
     }
-    // import from intent
-    if (importCollection.value != null && globalStateHolder.icalString2Import.value != null) {
-        collectionsViewModel.insertICSFromReader(
-            importCollection.value!!.toICalCollection(),
-            globalStateHolder.icalString2Import.value!!
+
+    var showSelectModuleForTxtImportDialog by remember { mutableStateOf(false) }
+    if(showSelectModuleForTxtImportDialog && importCollection != null && resultImportTxtFilepaths.isNotEmpty()) {
+        SelectModuleForTxtImportDialog(
+            files = resultImportTxtFilepaths,
+            onModuleSelected = { module -> importModule = module },
+            onDismiss = { showSelectModuleForTxtImportDialog = false }
         )
-        importCollection.value = null
-        globalStateHolder.icalString2Import.value = null
+    }
+
+    LaunchedEffect(resultImportTxtFilepaths, importCollection, importModule) {
+        // import from file uri
+        if(importModule == null) {
+            showSelectModuleForTxtImportDialog = true
+            return@LaunchedEffect
+        }
+
+        if (resultImportTxtFilepaths.isNotEmpty() && importCollection != null) {
+            resultImportTxtFilepaths.forEach { filepath ->
+                context.contentResolver?.openInputStream(filepath)?.use {
+                    collectionsViewModel.insertTxt(text = it.readBytes().decodeToString(), module = importModule!!, collection = importCollection!!.toICalCollection())
+                    it.close()
+                }
+            }
+            Toast.makeText(
+                context,
+                context.getString(R.string.collections_toast_x_items_added, resultImportTxtFilepaths.size),
+                Toast.LENGTH_LONG
+            ).show()
+            importCollection = null
+            importModule = null
+            resultImportTxtFilepaths = emptyList()
+        }
+    }
+
+    LaunchedEffect(resultImportICSFilepaths, globalStateHolder.icalString2Import.value) {
+        // import from intent
+        if (importCollection != null && globalStateHolder.icalString2Import.value != null) {
+            collectionsViewModel.insertICSFromReader(
+                importCollection!!.toICalCollection(),
+                globalStateHolder.icalString2Import.value!!
+            )
+            importCollection = null
+            globalStateHolder.icalString2Import.value = null
+        }
     }
 
     val snackbarMessage = stringResource(id = R.string.collections_snackbar_select_collection_for_ics_import)
-    LaunchedEffect(key1 = importCollection, key2 = globalStateHolder.icalString2Import) {
-        if (importCollection.value == null && globalStateHolder.icalString2Import.value != null) {
+    LaunchedEffect(importCollection, globalStateHolder.icalString2Import) {
+        if (importCollection == null && globalStateHolder.icalString2Import.value != null) {
             snackbarHostState.showSnackbar(
                 snackbarMessage,
                 duration = SnackbarDuration.Indefinite
@@ -133,14 +187,16 @@ fun CollectionsScreen(
 
     // show result
     val insertResult by collectionsViewModel.resultInsertedFromICS.observeAsState()
-    insertResult?.let {
-        Toast.makeText(
-            context,
-            stringResource(R.string.collections_snackbar_x_items_added, it.first, it.second),
-            Toast.LENGTH_LONG
-        ).show()
-        collectionsViewModel.resultInsertedFromICS.value = null
-        snackbarHostState.currentSnackbarData?.dismiss()
+    LaunchedEffect(insertResult) {
+        insertResult?.let {
+            Toast.makeText(
+                context,
+                context.getString(R.string.collections_snackbar_x_items_added, it.first, it.second),
+                Toast.LENGTH_LONG
+            ).show()
+            snackbarHostState.currentSnackbarData?.dismiss()
+            collectionsViewModel.resultInsertedFromICS.value = null
+        }
     }
 
 
@@ -151,6 +207,12 @@ fun CollectionsScreen(
             onCollectionChanged = { collection -> collectionsViewModel.saveCollection(collection) },
             onDismiss = { showCollectionsAddDialog = false }
         )
+
+    val biometricPromptInfo: BiometricPrompt.PromptInfo = BiometricPrompt.PromptInfo.Builder()
+        .setTitle(context.getString(R.string.collections_biometric_protected_entries_locked_title))
+        .setSubtitle(context.getString(R.string.collections_biometric_protected_entries_locked_subtitle))
+        .setNegativeButtonText(context.getString(R.string.cancel))
+        .build()
 
     Scaffold(
         topBar = {
@@ -183,10 +245,14 @@ fun CollectionsScreen(
                         DropdownMenuItem(
                             text = { Text(text = stringResource(id = R.string.menu_collections_export_all)) },
                             onClick = {
-                                collectionsViewModel.collections.value?.let {
-                                    collectionsViewModel.requestICSForExport(
-                                        it
-                                    )
+                                if(settingsStateHolder.settingProtectBiometric.value == DropdownSettingOption.PROTECT_BIOMETRIC_OFF || globalStateHolder.isAuthenticated.value) {
+                                    collectionsViewModel.collections.value?.let {
+                                        collectionsViewModel.requestICSForExport(
+                                            it
+                                        )
+                                    }
+                                } else {
+                                    globalStateHolder.biometricPrompt?.authenticate(biometricPromptInfo)
                                 }
                                 menuExpanded.value = false
                             },
@@ -220,17 +286,23 @@ fun CollectionsScreen(
                             )
                         },
                         onImportFromICS = { collection ->
-                            importCollection.value = collection
-                            launcherImport.launch(arrayOf("text/calendar"))
+                            importCollection = collection
+                            launcherImportICS.launch(arrayOf("text/calendar"))
+                        },
+                        onImportFromTxt = { collection ->
+                            importCollection = collection
+                            launcherImportTxt.launch(arrayOf("text/plain", "text/markdown"))
                         },
                         onExportAsICS = { collection ->
-                            collectionsViewModel.requestICSForExport(
-                                listOf(collection)
-                            )
+                            if(settingsStateHolder.settingProtectBiometric.value == DropdownSettingOption.PROTECT_BIOMETRIC_OFF || globalStateHolder.isAuthenticated.value) {
+                                collectionsViewModel.requestICSForExport(listOf(collection))
+                            } else {
+                                globalStateHolder.biometricPrompt?.authenticate(biometricPromptInfo)
+                            }
                         },
                         onCollectionClicked = { collection ->
                             if (globalStateHolder.icalString2Import.value?.isNotEmpty() == true && !collection.readonly)
-                                importCollection.value = collection
+                                importCollection = collection
                         },
                         onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) }
                     )
@@ -255,6 +327,7 @@ fun CollectionsScreen_Preview() {
         CollectionsScreen(
             navController = rememberNavController(),
             globalStateHolder = GlobalStateHolder(LocalContext.current),
+            settingsStateHolder = SettingsStateHolder(LocalContext.current),
             collectionsViewModel = CollectionsViewModel(LocalContext.current.applicationContext as Application)
         )
     }

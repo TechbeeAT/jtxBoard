@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.views.ICal4List
 
 @Composable
@@ -56,7 +57,7 @@ fun SubtaskCardCompact(
         )
 
         Checkbox(
-            checked = subtask.percent == 100,
+            checked = subtask.percent == 100 || subtask.status == Status.COMPLETED.status,
             onCheckedChange = {
                 onProgressChanged(subtask.id, if(subtask.percent == 100) 0 else 100)
             },

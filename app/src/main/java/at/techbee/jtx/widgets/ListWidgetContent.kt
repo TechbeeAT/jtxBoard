@@ -44,6 +44,10 @@ fun ListWidgetContent(
     subtasks: List<ICal4ListWidget>,
     subnotes: List<ICal4ListWidget>,
     listExceedLimits: Boolean,
+    textColor: ColorProvider,
+    entryColor: ColorProvider,
+    entryTextColor: ColorProvider,
+    entryOverdueTextColor: ColorProvider,
     modifier: GlanceModifier = GlanceModifier
 ) {
 
@@ -105,6 +109,8 @@ fun ListWidgetContent(
             ?: stringResource(id = R.string.status_no_status)
             GroupBy.CLASSIFICATION -> Classification.values().find { classif -> classif.classification == it.classification }?.stringResource?.let { stringRes -> stringResource(id = stringRes) }
                 ?: it.classification ?: stringResource(id = R.string.classification_no_classification)
+            GroupBy.ACCOUNT -> it.accountName ?:""
+            GroupBy.COLLECTION -> it.collectionDisplayName ?:""
             GroupBy.PRIORITY -> {
                 when (it.priority) {
                     null -> context.resources.getStringArray(R.array.priority)[0]
@@ -114,24 +120,17 @@ fun ListWidgetContent(
             }
             GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = context)
             GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.dtstart, dtstartTimezone = it.dtstartTimezone, daysOnly = true, context = context)
-            GroupBy.DUE -> ICalObject.getDueTextInfo(due = it.due, dueTimezone = it.dueTimezone, percent = it.percent, daysOnly = true, context = context)
+            GroupBy.DUE -> ICalObject.getDueTextInfo(status = it.status, due = it.due, dueTimezone = it.dueTimezone, percent = it.percent, daysOnly = true, context = context)
             else -> {
                 it.module
             }
         }
     }
 
-    val subtasksGrouped = subtasks.groupBy { it.vtodoUidOfParent }
-    val subnotesGrouped = subnotes.groupBy { it.vjournalUidOfParent }
+    val subtasksGrouped = subtasks.groupBy { it.parentUID }
+    val subnotesGrouped = subnotes.groupBy { it.parentUID }
 
     val imageSize = 36.dp
-    val textColor = GlanceTheme.colors.onPrimaryContainer
-    val entryColor = if(listWidgetConfig.widgetAlphaEntries == 1F)
-        GlanceTheme.colors.surface
-    else
-        ColorProvider(GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig.widgetAlphaEntries))
-    val entryTextColor = GlanceTheme.colors.onSurface
-    val entryOverdueTextColor = GlanceTheme.colors.error
 
     Column(
         modifier = modifier,
@@ -213,7 +212,7 @@ fun ListWidgetContent(
                     }
 
                     group.forEach group@{ entry ->
-                        if (listWidgetConfig.isExcludeDone && entry.percent == 100)
+                        if (listWidgetConfig.isExcludeDone && (entry.percent == 100 || entry.status == Status.COMPLETED.status))
                             return@group
 
                         if (entry.summary.isNullOrEmpty() && entry.description.isNullOrEmpty())
@@ -238,7 +237,7 @@ fun ListWidgetContent(
                         if (!listWidgetConfig.flatView && listWidgetConfig.showSubtasks) {
                             subtasksGrouped[entry.uid]?.forEach subtasks@{ subtask ->
 
-                                if (listWidgetConfig.isExcludeDone && subtask.percent == 100)
+                                if (listWidgetConfig.isExcludeDone && (subtask.percent == 100 || subtask.status == Status.COMPLETED.status))
                                     return@subtasks
 
                                 if (subtask.summary.isNullOrEmpty() && subtask.description.isNullOrEmpty())

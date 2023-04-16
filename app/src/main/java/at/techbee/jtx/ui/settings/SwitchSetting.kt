@@ -102,8 +102,32 @@ enum class SwitchSetting(
     icon = { Icon(Icons.Outlined.PublishedWithChanges, contentDescription = null, modifier = Modifier.padding(16.dp)) },
     title = R.string.settings_keep_status_progress_completed_in_sync,
     default = true
-    )
-    ;
+    ),
+    SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION(
+        key = "settings_journals_set_default_current_location",
+        icon = { Icon(Icons.Outlined.MyLocation, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_create_with_current_location,
+        default = false
+    ),
+    SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION(
+        key = "settings_notes_set_default_current_location",
+        icon = { Icon(Icons.Outlined.MyLocation, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_create_with_current_location,
+        default = false
+    ),
+    SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION(
+        key = "settings_tasks_set_default_current_location",
+        icon = { Icon(Icons.Outlined.MyLocation, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_create_with_current_location,
+        default = false
+    ),
+    SETTING_STICKY_ALARMS(
+        key = "settings_sticky_alarms",
+        icon = { Icon(Icons.Outlined.Alarm, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_sticky_alarms,
+        subtitle = R.string.settings_sticky_alarms_sub,
+        default = false
+    );
     fun save(newSwitchValue: Boolean, context: Context) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, newSwitchValue).apply()
     }

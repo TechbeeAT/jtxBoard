@@ -6,10 +6,9 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.cards
+package at.techbee.jtx.ui.collections
 
 import android.accounts.Account
-import android.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -17,6 +16,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,7 +31,7 @@ import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsAddOrEditDialog
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsDeleteCollectionDialog
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsMoveCollectionDialog
-import at.techbee.jtx.ui.reusable.elements.ColoredEdge
+import at.techbee.jtx.ui.reusable.elements.ListBadge
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.SyncUtil
 
@@ -43,6 +44,7 @@ fun CollectionCard(
     onCollectionDeleted: (ICalCollection) -> Unit,
     onEntriesMoved: (old: ICalCollection, new: ICalCollection) -> Unit,
     onImportFromICS: (CollectionsView) -> Unit,
+    onImportFromTxt: (CollectionsView) -> Unit,
     onExportAsICS: (CollectionsView) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -83,10 +85,6 @@ fun CollectionCard(
         modifier = modifier
     ) {
 
-        Box {
-
-            ColoredEdge(null, collection.color)
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -95,14 +93,26 @@ fun CollectionCard(
                 verticalAlignment = Alignment.Top
             ) {
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Text(
-                        collection.displayName ?: collection.accountName ?: collection.accountType
-                        ?: "",
-                        style = Typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        ListBadge(
+                            icon = Icons.Outlined.FolderOpen,
+                            iconDesc = stringResource(id = R.string.collection),
+                            containerColor = collection.color?.let { Color (it) } ?: MaterialTheme.colorScheme.primaryContainer
+                        )
+                        Text(
+                            collection.displayName ?: collection.accountName ?: collection.accountType ?: "",
+                            style = Typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                     if (collection.description?.isNotBlank() == true) {
                         Text(
                             collection.description ?: "",
@@ -110,7 +120,11 @@ fun CollectionCard(
                         )
                     }
 
-                    Row {
+                    collection.ownerDisplayName?.let {
+                        ListBadge(icon = Icons.Outlined.AccountCircle, iconDesc = null, text = it)
+                    }
+
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
 
                         val notAvailable = stringResource(id = R.string.not_available_abbreviation)
                         val numJournals =
@@ -122,20 +136,9 @@ fun CollectionCard(
                         val numTodos = if (collection.supportsVTODO) collection.numTodos?.toString()
                             ?: "0" else notAvailable
 
-                        Text(
-                            stringResource(id = R.string.collections_journals_num, numJournals),
-                            style = Typography.bodySmall,
-                        )
-                        Text(
-                            stringResource(id = R.string.collections_notes_num, numNotes),
-                            style = Typography.bodySmall,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                        Text(
-                            stringResource(id = R.string.collections_tasks_num, numTodos),
-                            style = Typography.bodySmall,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
+                        ListBadge(text = stringResource(id = R.string.collections_journals_num, numJournals))
+                        ListBadge(text = stringResource(id = R.string.collections_notes_num, numNotes))
+                        ListBadge(text = stringResource(id = R.string.collections_tasks_num, numTodos))
                     }
                 }
 
@@ -213,6 +216,16 @@ fun CollectionCard(
                                     }
                                 )
                             }
+                            if (!collection.readonly) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(id = R.string.menu_collection_popup_import_from_textfile)) },
+                                    leadingIcon = { Icon(Icons.Outlined.Upload, null) },
+                                    onClick = {
+                                        menuExpanded = false
+                                        onImportFromTxt(collection)
+                                    }
+                                )
+                            }
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.menu_collections_popup_move_entries)) },
                                 leadingIcon = { Icon(Icons.Outlined.MoveDown, null) },
@@ -226,7 +239,6 @@ fun CollectionCard(
                 }
 
             }
-        }
     }
 }
 
@@ -238,7 +250,7 @@ fun CollectionCardPreview() {
         val collection = CollectionsView().apply {
             this.displayName = "My collection name"
             this.description = "My collection desc\nription"
-            this.color = Color.CYAN
+            this.color = Color.Cyan.toArgb()
             this.numJournals = 24
             this.numNotes = 33
             this.numTodos = 1
@@ -253,6 +265,7 @@ fun CollectionCardPreview() {
             onCollectionDeleted = { },
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
+            onImportFromTxt = { },
             onExportAsICS = { }
         )
     }
@@ -266,13 +279,14 @@ fun CollectionCardPreview2() {
         val collection = CollectionsView().apply {
             this.displayName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi sem, sollicitudin tristique leo eget, iaculis pharetra lacus."
             this.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi sem, sollicitudin tristique leo eget, iaculis pharetra lacus. In ex mi, sollicitudin sit amet hendrerit vitae, egestas vitae tortor. Sed dui mi, consequat vel felis sit amet, sagittis mollis urna. Donec varius nec diam et faucibus. Suspendisse potenti. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce eget condimentum justo, at finibus dolor. Quisque posuere erat vel tellus fringilla iaculis. Nullam massa mauris, sodales sit amet scelerisque maximus, interdum in ex."
-            this.color = Color.CYAN
+            this.color = null
             this.numJournals = 0
             this.numNotes = 0
             this.numTodos = 0
             this.supportsVJOURNAL = false
             this.supportsVTODO = false
             this.readonly = true
+            this.ownerDisplayName = "Owner John Doe"
         }
 
         CollectionCard(
@@ -282,6 +296,7 @@ fun CollectionCardPreview2() {
             onCollectionDeleted = { },
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
+            onImportFromTxt = { },
             onExportAsICS = { }
         )
     }
@@ -294,7 +309,7 @@ fun CollectionCardPreview3() {
 
         val collection = CollectionsView().apply {
             this.displayName = "My collection name"
-            this.color = Color.MAGENTA
+            this.color = Color.Magenta.toArgb()
             this.supportsVJOURNAL = true
             this.supportsVTODO = true
         }
@@ -306,6 +321,7 @@ fun CollectionCardPreview3() {
             onCollectionDeleted = { },
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
+            onImportFromTxt = { },
             onExportAsICS = { }
         )
     }

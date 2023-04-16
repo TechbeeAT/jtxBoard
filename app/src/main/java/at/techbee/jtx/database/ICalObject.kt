@@ -17,16 +17,15 @@ import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
-import androidx.compose.ui.graphics.Color
 import androidx.core.util.PatternsCompat
 import androidx.preference.PreferenceManager
 import androidx.room.*
 import at.bitfire.ical4android.*
 import at.techbee.jtx.JtxContract
 import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
@@ -44,6 +43,8 @@ import net.fortuna.ical4j.model.component.VJournal
 import net.fortuna.ical4j.model.component.VToDo
 import net.fortuna.ical4j.model.parameter.*
 import net.fortuna.ical4j.model.property.*
+import net.fortuna.ical4j.model.property.DtStart
+import java.net.URLDecoder
 import java.text.ParseException
 import java.time.*
 import java.time.format.TextStyle
@@ -489,16 +490,6 @@ data class ICalObject(
     companion object {
 
         const val TZ_ALLDAY = "ALLDAY"
-        val defaultColors = arrayListOf(
-            Color.Transparent,
-            Color.Red,
-            Color.Green,
-            Color.Blue,
-            Color.Yellow,
-            Color.Cyan,
-            Color.Magenta,
-            Color.LightGray
-        )
 
         fun createJournal() = createJournal(null)
 
@@ -556,6 +547,26 @@ data class ICalObject(
             return ICalObject().applyContentValues(values)
         }
 
+        fun fromText(module: Module, collectionId: Long, text: String?, context: Context): ICalObject {
+            val iCalObject = when(module) {
+                Module.JOURNAL -> createJournal()
+                Module.NOTE -> createNote()
+                Module.TODO -> createTodo()
+            }
+            if(module == Module.JOURNAL) {
+                iCalObject.setDefaultJournalDateFromSettings(context)
+            }
+            if(module == Module.TODO) {
+                iCalObject.setDefaultDueDateFromSettings(context)
+                iCalObject.setDefaultStartDateFromSettings(context)
+            }
+            iCalObject.parseSummaryAndDescription(text)
+            iCalObject.parseURL(text)
+            iCalObject.parseLatLng(text)
+            iCalObject.collectionId = collectionId
+            return iCalObject
+        }
+
 
         fun getRecurId(dtstart: Long?, dtstartTimezone: String?): String? {
             if (dtstart == null)
@@ -579,18 +590,29 @@ data class ICalObject(
          * this function takes a parent [id], the function recursively calls itself and deletes all items and linked children (for local collections)
          * or updates the linked children and marks them as deleted.
          */
-        suspend fun deleteItemWithChildren(id: Long, database: ICalDatabaseDao) {
+        suspend fun deleteItemWithChildren(id: Long, database: ICalDatabaseDao, parentUID: String? = null) {
 
             if (id == 0L)
                 return // do nothing, the item was never saved in DB
 
+            val item = database.getSync(id)?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
             val children = database.getRelatedChildren(id)
             children.forEach { child ->
-                    deleteItemWithChildren(child.id, database)    // call the function again to recursively delete all children, then delete the item
+                    deleteItemWithChildren(child.id, database, item.property.uid)    // call the function again to recursively delete all children, then delete the item
             }
 
-            database.getICalObjectByIdSync(id)?.let { database.deleteRecurringInstances(it.uid) }  // recurring instances are always physically deleted
-            val item = database.getSync(id)?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
+            database.deleteRecurringInstances(item.property.uid)  // recurring instances are always physically deleted
+
+            // if the entry has multiple parents, we only delete the reference, but not the entry itself
+            if((item.relatedto?.filter { it.reltype == Reltype.PARENT.name }?.size?:0) > 1) {
+                item.relatedto?.find { it.text == parentUID && it.reltype == Reltype.PARENT.name }?.let {
+                    database.deleteRelatedto(it)
+                    item.property.makeDirty()
+                    database.update(item.property)
+                    return
+                }
+            }
+
             when {
                 item.property.recurid != null -> {
                     unlinkFromSeries(item.property, database)   // if the current item
@@ -706,7 +728,7 @@ data class ICalObject(
                     }
 
                     database.updateRecurringInstanceUIDs(oldUID, newUID, newCollectionId)
-                    Alarm.scheduleNextNotifications(context)
+                    NotificationPublisher.scheduleNextNotifications(context)
                     return newId
                 }
                 return null
@@ -759,11 +781,11 @@ data class ICalObject(
         /**
          * @param geoLat  Latitude as Double
          * @param geoLong  Longitude as Double
-         * @return A textual representation of the Latitude and Logitude e.g. (1.234, 5.677)
+         * @return A textual representation of the Latitude and Logitude e.g. (1.23400, 5.67700)
          */
         fun getLatLongString(geoLat: Double?, geoLong: Double?): String? {
             return if(geoLat != null && geoLong != null) {
-                "(${String.format("%.5f", geoLat)}, ${String.format("%.5f", geoLong)})"
+                "(" + "%.5f".format(Locale.ENGLISH, geoLat)  + ","  + "%.5f".format(Locale.ENGLISH, geoLong) + ")"
             } else {
                null
             }
@@ -773,9 +795,9 @@ data class ICalObject(
          * @return true if the current entry is overdue and not completed,
          * null if no due date is set and not completed, false otherwise
          */
-        fun isOverdue(percent: Int?, due: Long?, dueTimezone: String?): Boolean? {
+        fun isOverdue(status: String?, percent: Int?, due: Long?, dueTimezone: String?): Boolean? {
 
-            if(percent == 100)
+            if(percent == 100 || status == Status.COMPLETED.status)
                 return false
             if(due == null)
                 return null
@@ -805,20 +827,21 @@ data class ICalObject(
                     daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_start_past)
                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, hoursLeft)
                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
-                    else -> context.getString(R.string.list_start_inXdays, daysLeft+1)
+                    daysLeft <= 7 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
                 }
             } else {
                 when {
                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_date_today)
                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_date_tomorrow)
-                    else -> DateTimeUtils.convertLongToMediumDateString(dtstart, dtstartTimezone)
+                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
                 }
             }
         }
 
-        fun getDueTextInfo(due: Long?, dueTimezone: String?, percent: Int?, daysOnly: Boolean = false, context: Context): String {
+        fun getDueTextInfo(status: String?, due: Long?, dueTimezone: String?, percent: Int?, daysOnly: Boolean = false, context: Context): String {
 
-            if(percent == 100)
+            if(percent == 100 || status == Status.COMPLETED.status)
                 return context.getString(R.string.completed)
             if(due == null)
                 return context.getString(R.string.list_due_without)
@@ -834,7 +857,8 @@ data class ICalObject(
                 daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_due_overdue)
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, hoursLeft)
                 localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
-                else -> context.getString(R.string.list_due_inXdays, daysLeft+1)
+                daysLeft <= 7 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                else -> DateTimeUtils.convertLongToMediumDateShortTimeString(due, dueTimezone)
             }
         }
 
@@ -842,9 +866,21 @@ data class ICalObject(
 
             val allRelatedTo = database.getAllRelatedtoSync()
             var topParent = database.getICalObjectById(iCalObjectId)
+
             while(allRelatedTo.any { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}) {
+                if(allRelatedTo.filter { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name }.size > 1) {
+                    Log.w("findTopParent", "Entry has multiple parents, cannot return single parent.")
+                    return null
+                }
+
                 val parentUID = allRelatedTo.find { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}?.text
                 parentUID?.let { uid -> database.getICalObjectFor(uid)?.let { topParent = it } }
+
+                //make sure no endless loop occurs in the error case that an entry links to itself
+                if(allRelatedTo.any { it.icalObjectId == topParent?.id && it.text == topParent?.uid }) {
+                    Log.w("findTopParent", "Entry links to itself, cannot return parent.")
+                    return null
+                }
             }
             return topParent
         }
@@ -864,7 +900,7 @@ data class ICalObject(
         }
 
         @VisibleForTesting
-        fun getAsRecurId(datetime: Long, timezone: String?) = when {
+        fun getAsRecurId(datetime: Long, timezone: String?): String = when {
             timezone == TZ_ALLDAY -> DtStart(Date(datetime)).value
             timezone.isNullOrEmpty() -> DtStart(DateTime(datetime)).value
             else -> DtStart(DateTime(datetime)).apply {
@@ -1294,7 +1330,7 @@ data class ICalObject(
                     }
                 }
             }
-            Alarm.scheduleNextNotifications(context)
+            NotificationPublisher.scheduleNextNotifications(context)
         }
     }
 
@@ -1327,6 +1363,32 @@ data class ICalObject(
         while (matcher.find()) {
             this.url = matcher.group()
             return
+        }
+    }
+
+    fun parseLatLng(text: String?) {
+        if (text.isNullOrEmpty())
+            return
+
+        val formats = listOf(
+            Regex("\\d*[.]\\d*[,]\\d*[.]\\d*"),   // Google Maps & Apple Maps
+            Regex("\\d*[.]\\d*[~]\\d*[.]\\d*"),   // Bing Maps (Microsoft)
+            Regex("\\d*[.]\\d*[/]\\d*[.]\\d*"),   // Open Street Maps
+        )
+
+        formats.forEach { format ->
+            format.find(URLDecoder.decode(text, "UTF-8"))?.value?.let {
+                val latLng = it.split(",", "~", "/")
+                if (latLng.size != 2)
+                    return@let
+                val lat = latLng[0].toDoubleOrNull()
+                val lng = latLng[1].toDoubleOrNull()
+                if (lat != null && lng != null) {
+                    this.geoLat = lat
+                    this.geoLong = lng
+                    return
+                }
+            }
         }
     }
 
@@ -1461,6 +1523,7 @@ data class ICalObject(
     }
 }
 
+
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
  * The possible values differ for Todos and Journals/Notes
  * @param [stringResource] is a reference to the String Resource within JTX
@@ -1509,6 +1572,8 @@ enum class Status(val status: String?, @StringRes val stringResource: Int) : Par
 
     companion object {
 
+        fun getStatusFromString(stringStatus: String?) = Status.values().find { it.status == stringStatus }
+
         fun valuesFor(module: Module): List<Status> {
             return when (module) {
                 Module.JOURNAL, Module.NOTE -> listOf(NO_STATUS, DRAFT, FINAL, CANCELLED)
@@ -1547,6 +1612,7 @@ enum class Classification(val classification: String?, @StringRes val stringReso
     CONFIDENTIAL("CONFIDENTIAL", R.string.classification_confidential);
 
     companion object {
+        fun getClassificationFromString(stringClassification: String?) = Classification.values().find { it.classification == stringClassification }
 
         fun getListFromStringList(stringList: Set<String>?): MutableList<Classification> {
             val list = mutableListOf<Classification>()
