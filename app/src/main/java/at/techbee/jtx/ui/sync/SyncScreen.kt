@@ -13,14 +13,33 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Sync
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +61,7 @@ import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
 
 
@@ -54,7 +74,8 @@ fun SyncScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     val remoteCollections by ICalDatabase.getInstance(context).iCalDatabaseDao.getAllRemoteCollectionsLive().observeAsState(emptyList())
-    val isDAVx5available = if (LocalInspectionMode.current) true else SyncUtil.isDAVx5Available(context)
+    val isDAVx5available = if (LocalInspectionMode.current) true else SyncUtil.availableSyncApps(context).contains(SyncApp.DAVX5)
+    val isAnySyncAppAvailable = if (LocalInspectionMode.current) true else SyncUtil.availableSyncApps(context).isNotEmpty()
 
     Scaffold(
         topBar = {
@@ -62,7 +83,7 @@ fun SyncScreen(
                 drawerState = drawerState,
                 title = stringResource(id = R.string.navigation_drawer_sync),
                 actions = {
-                    if (isDAVx5available) {
+                    if (isAnySyncAppAvailable) {
                         IconButton(onClick = { SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet()) }) {
                             Icon(Icons.Outlined.Sync, stringResource(id = R.string.sync_now))
                         }
@@ -207,7 +228,7 @@ fun SyncScreenContent(
                 }
 
                 Button(
-                    onClick = { SyncUtil.openDAVx5LoginActivity(context) },
+                    onClick = { SyncUtil.openSyncAppLoginActivity(SyncApp.DAVX5, context) },
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
                     Text(stringResource(id = R.string.sync_button_add_account_in_davx5))
@@ -251,7 +272,7 @@ fun SyncScreenContent(
                     style = Typography.bodyLarge,
                     textAlign = TextAlign.Center
                 )
-                TextButton(onClick = { SyncUtil.openDAVx5inPlayStore(context) }) {
+                TextButton(onClick = { SyncUtil.openSyncAppInPlayStore(SyncApp.DAVX5, context) }) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_google_play),
                         contentDescription = "Google Play",
