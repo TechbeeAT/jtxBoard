@@ -43,6 +43,7 @@ import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.launch
 
@@ -376,7 +377,7 @@ fun DetailBottomAppBar_Preview_View() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = "bitfire.at.davdroid"
+            this.accountType = SyncApp.DAVX5.accountType
         }
 
         DetailBottomAppBar(
@@ -405,7 +406,7 @@ fun DetailBottomAppBar_Preview_edit() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = "bitfire.at.davdroid"
+            this.accountType = SyncApp.DAVX5.accountType
         }
 
         DetailBottomAppBar(
@@ -433,7 +434,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = "bitfire.at.davdroid"
+            this.accountType = SyncApp.DAVX5.accountType
         }
 
         DetailBottomAppBar(
@@ -461,7 +462,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
 
         val collection = ICalCollection().apply {
             this.readonly = true
-            this.accountType = "bitfire.at.davdroid"
+            this.accountType = SyncApp.DAVX5.accountType
         }
 
         DetailBottomAppBar(
@@ -489,7 +490,7 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = "bitfire.at.davdroid"
+            this.accountType = SyncApp.DAVX5.accountType
         }
 
         DetailBottomAppBar(
