@@ -56,13 +56,13 @@ class SyncUtil {
          */
         fun availableSyncApps(context: Context): List<SyncApp> {
             val availableSyncApps = mutableListOf<SyncApp>()
-            try {
-                SyncApp.values().forEach { syncApp ->
+            SyncApp.values().forEach { syncApp ->
+                try {
                     if(context.packageManager?.getPackageInfoCompat(syncApp.packageName, 0) != null)
                         availableSyncApps.add(syncApp)
+                } catch (e: PackageManager.NameNotFoundException) {
+                    Log.d("SyncAppNotFound", e.stackTraceToString())
                 }
-            } catch (e: PackageManager.NameNotFoundException) {
-                Log.d("SyncAppNotFound", e.stackTraceToString())
             }
             return availableSyncApps
         }
