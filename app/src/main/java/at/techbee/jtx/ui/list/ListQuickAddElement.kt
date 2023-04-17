@@ -117,24 +117,60 @@ fun ListQuickAddElement(
     var currentText by remember { mutableStateOf(TextFieldValue(text = presetText, selection = TextRange(presetText.length))) }
     val currentAttachments = remember { mutableStateListOf(presetAttachment) }
     val focusRequester = remember { FocusRequester() }
+    val sr = remember {
+        when {
+            isPreview -> null   // enables preview
+            SpeechRecognizer.isRecognitionAvailable(context) -> SpeechRecognizer.createSpeechRecognizer(
+                context
+            )
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && SpeechRecognizer.isOnDeviceRecognitionAvailable(
+                context
+            ) -> SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
+            else -> null
+        }
+    }
+    var srTextResult by remember { mutableStateOf("") }
+    var srListening by remember { mutableStateOf(false) }
+    val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+    }
 
     LaunchedEffect(Unit) {
         // try catch block as the FocsRequester might not yet be initialized when the focus is requested (see https://github.com/TechbeeAT/jtxBoard/issues/121)
         try { focusRequester.requestFocus() } catch (e: IllegalStateException) { Log.w("ListQuickAddElement", e.stackTraceToString())}
+
+        sr?.setRecognitionListener(object : RecognitionListener {
+            override fun onReadyForSpeech(p0: Bundle?) {}
+            override fun onBeginningOfSpeech() { srListening = true }
+            override fun onEndOfSpeech() { srListening = false }
+            override fun onRmsChanged(p0: Float) {}
+            override fun onBufferReceived(p0: ByteArray?) {}
+            override fun onError(errorCode: Int) { srListening = false }
+            override fun onPartialResults(bundle: Bundle?) {
+                val data: ArrayList<String>? = bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at the first position.
+                srTextResult = data?.firstOrNull() ?: ""
+            }
+            override fun onEvent(p0: Int, p1: Bundle?) {}
+            override fun onResults(bundle: Bundle?) {
+                srListening = false
+                srTextResult = ""
+                val data: ArrayList<String>? =
+                    bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (currentText.text.isNotBlank())   // add a return if there is already text present to add it in a new line
+                    currentText = TextFieldValue(currentText.text + System.lineSeparator())
+                // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
+                if (data?.isNotEmpty() == true) {
+                    currentText = TextFieldValue(currentText.text + data[0], selection = TextRange(currentText.text.length + data[0].length))
+                    sr.startListening(srIntent)
+                    srListening = true
+                }
+            }
+        })
     }
 
-    val sr: SpeechRecognizer? = when {
-        LocalInspectionMode.current -> null   // enables preview
-        SpeechRecognizer.isRecognitionAvailable(context) -> SpeechRecognizer.createSpeechRecognizer(
-            context
-        )
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && SpeechRecognizer.isOnDeviceRecognitionAvailable(
-            context
-        ) -> SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
-        else -> null
-    }
-    var srTextResult by remember { mutableStateOf("") }
-    var srListening by remember { mutableStateOf(false) }
 
     fun saveEntry(goToEdit: Boolean) {
         if(currentCollection == null || currentModule == null)
@@ -218,66 +254,24 @@ fun ListQuickAddElement(
                     trailingIcon = {
                         if (sr != null) {
                             IconButton(onClick = {
-
                                 // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
                                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
                                     showAudioPermissionDialog = true
+                                else if (srListening) {
+                                    sr.stopListening()
+                                    srListening = false
+                                }
                                 else {
-                                    val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-                                    srIntent.putExtra(
-                                        RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                                    )
-                                    srIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-                                    srIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-
-                                    sr.setRecognitionListener(object : RecognitionListener {
-                                        override fun onReadyForSpeech(p0: Bundle?) {}
-                                        override fun onBeginningOfSpeech() {
-                                            srListening = true
-                                        }
-
-                                        override fun onEndOfSpeech() {
-                                            srListening = false
-                                        }
-
-                                        override fun onRmsChanged(p0: Float) {}
-                                        override fun onBufferReceived(p0: ByteArray?) {}
-                                        override fun onError(errorCode: Int) { srListening = false }
-                                        override fun onPartialResults(bundle: Bundle?) {
-                                            val data: ArrayList<String>? =
-                                                bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                                            // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
-                                            if (data?.isNotEmpty() == true) {
-                                                srTextResult = data[0]
-                                            }
-                                        }
-
-                                        override fun onEvent(p0: Int, p1: Bundle?) {}
-                                        override fun onResults(bundle: Bundle?) {
-                                            srListening = false
-                                            srTextResult = ""
-                                            val data: ArrayList<String>? =
-                                                bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                                            if (currentText.text.isNotBlank())   // add a return if there is already text present to add it in a new line
-                                                currentText = TextFieldValue(currentText.text + System.lineSeparator())
-                                            // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
-                                            if (data?.isNotEmpty() == true) {
-                                                currentText = TextFieldValue(currentText.text + data[0], selection = TextRange(currentText.text.length + data[0].length))
-                                                sr.startListening(srIntent)
-                                                srListening = true
-                                            }
-                                        }
-                                    })
                                     srListening = true
+                                    //sr.stopListening()
                                     sr.startListening(srIntent)
                                 }
                             }) {
                                 Crossfade(srListening) { listening ->
-                                if (listening)
-                                    Icon(Icons.Outlined.Mic, stringResource(id = R.string.list_quickadd_dialog_sr_listening), tint = MaterialTheme.colorScheme.primary)
-                                else
-                                    Icon(Icons.Outlined.MicOff, stringResource(id = R.string.list_quickadd_dialog_sr_start))
+                                    if (listening)
+                                        Icon(Icons.Outlined.Mic, stringResource(id = R.string.list_quickadd_dialog_sr_listening), tint = MaterialTheme.colorScheme.primary)
+                                    else
+                                        Icon(Icons.Outlined.MicOff, stringResource(id = R.string.list_quickadd_dialog_sr_start))
                                 }
                             }
                         }
@@ -347,7 +341,10 @@ fun ListQuickAddElement(
                     ) {
 
                         TextButton(
-                            onClick = { saveEntry(goToEdit = true) },
+                            onClick = {
+                                sr?.destroy()
+                                saveEntry(goToEdit = true)
+                            },
                             enabled = (currentText.text.isNotEmpty() || currentAttachments.isNotEmpty()) && currentCollection?.readonly == false
                         ) {
                             Text(stringResource(id = R.string.save_and_edit), textAlign = TextAlign.Center)
@@ -371,6 +368,7 @@ fun ListQuickAddElement(
                     ) {
                         TextButton(
                             onClick = {
+                                sr?.destroy()
                                 saveEntry(goToEdit = false)
                                 onDismiss()
                             },
@@ -381,6 +379,7 @@ fun ListQuickAddElement(
 
                         TextButton(
                             onClick = {
+                                sr?.destroy()
                                 onDismiss()
                             }
                         ) {
