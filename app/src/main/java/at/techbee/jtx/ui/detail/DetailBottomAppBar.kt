@@ -254,12 +254,9 @@ fun DetailBottomAppBar(
                                 )
                             }
                             DetailViewModel.DetailChangeState.CHANGESAVING -> {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_saving),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.alpha(0.3f)
-                                )
+                                IconButton(onClick = { /* no action, icon button just to keep the same style */  }) {
+                                    CircularProgressIndicator(modifier = Modifier.alpha(0.3f).size(24.dp))
+                                }
                             }
                             DetailViewModel.DetailChangeState.CHANGESAVED -> {
                                 Icon(
