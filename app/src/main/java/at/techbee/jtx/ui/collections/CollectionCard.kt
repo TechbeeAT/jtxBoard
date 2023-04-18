@@ -9,11 +9,33 @@
 package at.techbee.jtx.ui.collections
 
 import android.accounts.Account
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Download
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.FolderOpen
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.MoveDown
+import androidx.compose.material.icons.outlined.Sync
+import androidx.compose.material.icons.outlined.Upload
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +55,7 @@ import at.techbee.jtx.ui.reusable.dialogs.CollectionsDeleteCollectionDialog
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsMoveCollectionDialog
 import at.techbee.jtx.ui.reusable.elements.ListBadge
 import at.techbee.jtx.ui.theme.Typography
+import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
 
 
@@ -55,6 +78,8 @@ fun CollectionCard(
     var showCollectionsAddOrEditDialog by remember { mutableStateOf(false) }
     var showCollectionsDeleteCollectionDialog by remember { mutableStateOf(false) }
     var showCollectionsMoveCollectionDialog by remember { mutableStateOf(false) }
+    val syncApp = SyncApp.fromAccountType(collection.accountType)
+
 
     if (showCollectionsAddOrEditDialog)
         CollectionsAddOrEditDialog(
@@ -188,12 +213,12 @@ fun CollectionCard(
                                     }
                                 )
                             }
-                            if (collection.accountType != LOCAL_ACCOUNT_TYPE) {
+                            if (syncApp != null) {
                                 DropdownMenuItem(
-                                    text = { Text(stringResource(id = R.string.menu_collection_popup_show_in_davx5)) },
+                                    text = { Text(stringResource(R.string.menu_collection_popup_show_in_sync_app, syncApp.appName)) },
                                     leadingIcon = { Icon(Icons.Outlined.Sync, null) },
                                     onClick = {
-                                        SyncUtil.openDAVx5AccountActivity(Account(collection.accountName, collection.accountType), context)
+                                        SyncUtil.openSyncAppAccountActivity(syncApp, Account(collection.accountName, collection.accountType), context)
                                         menuExpanded = false
                                     }
                                 )

@@ -9,11 +9,21 @@
 package at.techbee.jtx.ui.collections
 
 import android.accounts.Account
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsAccountDeleteDialog
+import at.techbee.jtx.util.SyncApp
 
 
 @Composable
@@ -84,7 +95,7 @@ fun CollectionsAccountHeader_Preview() {
     MaterialTheme {
 
         CollectionsAccountHeader(
-            Account("Test Account Name", "at.bitfire.davdroid"),
+            Account("Test Account Name", SyncApp.DAVX5.accountType),
             isFoundInAccountmanager = true,
             onDeleteAccount = { }
         )
@@ -98,7 +109,7 @@ fun CollectionsAccountHeader_Preview2() {
     MaterialTheme {
 
         CollectionsAccountHeader(
-            Account("Test Account Name", "at.bitfire.davdroid"),
+            Account("Test Account Name", SyncApp.DAVX5.accountType),
             false,
             onDeleteAccount = { }
         )
