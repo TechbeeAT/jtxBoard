@@ -93,7 +93,7 @@ class SyncUtil {
                 return
 
             val intent = Intent(Intent.ACTION_MAIN)
-            intent.setClassName(syncApp.packageName,"${syncApp.packageName}.ui.setup.LoginActivity")
+            intent.setClassName(syncApp.packageName,"${syncApp.activityBaseClass}.ui.setup.LoginActivity")
             try {
                 context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
@@ -111,7 +111,7 @@ class SyncUtil {
                 return
 
             val intent = Intent(Intent.ACTION_MAIN)
-            intent.setClassName(syncApp.packageName,"${syncApp.packageName}.ui.AccountsActivity")
+            intent.setClassName(syncApp.packageName,"${syncApp.activityBaseClass}.ui.AccountsActivity")
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
             try {
                 context.startActivity(intent)
@@ -130,7 +130,7 @@ class SyncUtil {
 
             // open davx5
             val intent = Intent(Intent.ACTION_MAIN)
-            intent.setClassName(syncApp.packageName,"${syncApp.packageName}.ui.account.AccountActivity")
+            intent.setClassName(syncApp.packageName,"${syncApp.activityBaseClass}.ui.account.AccountActivity")
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("account", account)
 
@@ -173,11 +173,12 @@ enum class SyncApp(
     val appName: String,
     val packageName: String,
     val accountType: String,
+    val activityBaseClass: String,
     val minVersionCode: Long,
     val minVersionName: String
 ) {
-    DAVX5("DAVx⁵", "at.bitfire.davdroid", "bitfire.at.davdroid", 403010000L, "4.3.1"),
-    KSYNC("kSync", "com.infomaniak.sync", "infomaniak.com.sync", 403010000L, "4.3.1");
+    DAVX5("DAVx⁵", "at.bitfire.davdroid", "bitfire.at.davdroid", "at.bitfire.davdroid",403010000L, "4.3.1"),
+    KSYNC("kSync", "com.infomaniak.sync", "infomaniak.com.sync", "at.bitfire.davdroid",403010000L, "4.3.1");
 
     companion object {
         fun fromAccountType(accountType: String?): SyncApp? {
