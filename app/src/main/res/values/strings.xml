@@ -229,6 +229,7 @@ For more information about the Sync please see:"</string>
     <string name="sync_furhter_info_davx5">"For more information about DAVx⁵ please check out"</string>
     <string name="sync_button_add_account_in_davx5">"Add account in DAVx⁵"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Failed opening DAVx⁵, please open the app manually."</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Failed opening %1$s, please open the app manually."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Triggering sync in DAVx⁵ failed, please check in DAVx⁵."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Hey, I'm Patrick, the developer of jtx Board. I am putting a lot of time and effort into this app that I am offering to you for free. If you like my app, please send some love and make a small donation!"</string>
@@ -335,7 +336,9 @@ For more information about the Sync please see:"</string>
     <string name="attachment_export_saved_successfully">"Saved successfully"</string>
     <string name="attachment_export_error_error_occurred">"An error occurred while saving the selected file!"</string>
     <string name="menu_collections_add_remote">"Add remote Collection (DAVx⁵)"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"Add remote Collection (%1$s)"</string>
     <string name="menu_collection_popup_show_in_davx5">"Show in DAVx⁵"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"Show in %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Export as .ics"</string>
     <string name="journal">"Journal"</string>
     <string name="note">"Note"</string>
@@ -535,6 +538,8 @@ Thank you!"</string>
     <string name="dialog_detach_from_series_button">"Detach from series"</string>
     <string name="dialog_davx5_outdated_title">"DAVx⁵ outdated"</string>
     <string name="dialog_davx5_outdated_message">"Your current version of DAVx⁵ is not compatible with this version of jtx Board. Please update DAVx⁵ to 4.3.1 (403010000+) or later! The synchronization is currently suspended."</string>
+    <string name="dialog_sync_app_outdated_title">"Sync app outdated"</string>
+    <string name="dialog_sync_app_outdated_message">"Your current version of %1$s is not compatible with this version of jtx Board. Please update to %1$s %2$s or later! The synchronization through %1$s is currently suspended."</string>
     <string name="dialog_save_current_filter_config">"Save current filter config"</string>
     <string name="dialog_save_current_filter_my_filter">"My filter"</string>
     <string name="dialog_edit_stored_category_title">"Add/edit category preset"</string>
