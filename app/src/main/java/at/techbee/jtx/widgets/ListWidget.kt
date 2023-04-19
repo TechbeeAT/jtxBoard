@@ -9,18 +9,23 @@
 package at.techbee.jtx.widgets
 
 import android.util.Log
-import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
-import androidx.glance.*
+import androidx.glance.GlanceModifier
+import androidx.glance.LocalContext
+import androidx.glance.LocalGlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.appWidgetBackground
+import androidx.glance.background
+import androidx.glance.currentState
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.unit.ColorProvider
+import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -59,7 +64,7 @@ class ListWidget : GlanceAppWidget() {
         val textColor = if(listWidgetConfig.widgetColor == null)
             GlanceTheme.colors.onPrimaryContainer
         else
-            ColorProvider(contentColorFor(Color(listWidgetConfig.widgetColor!!).copy(alpha = listWidgetConfig.widgetAlpha)))
+            ColorProvider(MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(listWidgetConfig.widgetColor!!).copy(alpha = listWidgetConfig.widgetAlpha)))
 
         val entryColor = if(listWidgetConfig.widgetAlphaEntries == 1F && listWidgetConfig.widgetColorEntries == null)
             GlanceTheme.colors.surface
@@ -71,7 +76,7 @@ class ListWidget : GlanceAppWidget() {
         val entryTextColor = if(listWidgetConfig.widgetColorEntries == null)
             GlanceTheme.colors.onSurface
         else
-            ColorProvider(contentColorFor(Color(listWidgetConfig.widgetColorEntries!!).copy(alpha = listWidgetConfig.widgetAlphaEntries)))
+            ColorProvider(MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(listWidgetConfig.widgetColorEntries!!).copy(alpha = listWidgetConfig.widgetAlphaEntries)))
 
         val entryOverdueTextColor = GlanceTheme.colors.error
 

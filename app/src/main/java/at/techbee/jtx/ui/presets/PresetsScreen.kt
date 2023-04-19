@@ -34,6 +34,7 @@ import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
+import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -156,7 +157,7 @@ fun PresetsScreenContent(
                     colors = storedCategory.color?.let {
                         AssistChipDefaults.assistChipColors(
                             containerColor = Color(it),
-                            labelColor = contentColorFor(Color(it))
+                            labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(it))
                         )
                     } ?: AssistChipDefaults.elevatedAssistChipColors()
                 )
@@ -195,7 +196,7 @@ fun PresetsScreenContent(
                     colors = storedResource.color?.let {
                         AssistChipDefaults.assistChipColors(
                             containerColor = Color(it),
-                            labelColor = contentColorFor(Color(it))
+                            labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(it))
                         )
                     } ?: AssistChipDefaults.elevatedAssistChipColors()
                 )

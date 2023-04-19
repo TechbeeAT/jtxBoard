@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,9 +36,11 @@ fun ListBadge(
     text: String? = null,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
 ) {
+    val contentColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(containerColor)
+
     Badge(
         containerColor = containerColor,
-        contentColor = contentColorFor(backgroundColor = containerColor),
+        contentColor = contentColor,
         modifier = modifier
     ) {
         Row(
@@ -49,7 +52,7 @@ fun ListBadge(
                 Icon(
                     imageVector = it,
                     contentDescription = iconDesc,
-                    tint = contentColorFor(backgroundColor = containerColor),
+                    tint = contentColor,
                     modifier = Modifier.size(12.dp)
                 )
             }
@@ -57,7 +60,7 @@ fun ListBadge(
                 Icon(
                     painterResource(id = it),
                     contentDescription = iconDesc,
-                    tint = contentColorFor(backgroundColor = containerColor),
+                    tint = contentColor,
                     modifier = Modifier.size(12.dp)
                 )
             }

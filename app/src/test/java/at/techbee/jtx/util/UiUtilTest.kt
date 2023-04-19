@@ -8,11 +8,14 @@
 
 package at.techbee.jtx.util
 
+import androidx.compose.ui.graphics.Color
 import at.techbee.jtx.util.UiUtil.getAttachmentSizeString
+import at.techbee.jtx.util.UiUtil.isDarkColor
 import at.techbee.jtx.util.UiUtil.isValidEmail
 import at.techbee.jtx.util.UiUtil.isValidURL
-import org.junit.Assert.*
-
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class UiUtilTest {
@@ -46,4 +49,9 @@ class UiUtilTest {
     @Test fun getAttachmentSizeString_bytes() = assertEquals("100 Bytes", getAttachmentSizeString(100))
     @Test fun getAttachmentSizeString_kilobytes() = assertEquals("1 KB", getAttachmentSizeString(1024))
     @Test fun getAttachmentSizeString_megabytes() = assertEquals("1 MB", getAttachmentSizeString(1048576))
+
+    @Test fun isDarkColor_black() = assertTrue(isDarkColor(Color.Black))
+    @Test fun isDarkColor_blue() = assertTrue(isDarkColor(Color.Blue))
+    @Test fun isDarkColor_white() = assertFalse(isDarkColor(Color.White))
+    @Test fun isDarkColor_yellow() = assertFalse(isDarkColor(Color.Yellow))
 }

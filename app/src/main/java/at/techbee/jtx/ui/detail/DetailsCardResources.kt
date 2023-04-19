@@ -36,6 +36,7 @@ import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
+import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +82,7 @@ fun DetailsCardResources(
                                 label = { Text(resource.text ?: "") },
                                 colors = StoredResource.getColorForResource(resource.text?:"", storedResources)?.let { AssistChipDefaults.elevatedAssistChipColors(
                                     containerColor = it,
-                                    labelColor = contentColorFor(it)
+                                    labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(it)
                                 ) }?: AssistChipDefaults.elevatedAssistChipColors(),
                             )
                         } else {
@@ -100,7 +101,7 @@ fun DetailsCardResources(
                                 },
                                 colors = StoredResource.getColorForResource(resource.text?:"", storedResources)?.let { InputChipDefaults.inputChipColors(
                                     containerColor = it,
-                                    labelColor = contentColorFor(it)
+                                    labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(it)
                                 ) }?: InputChipDefaults.inputChipColors(),
                                 selected = false
                             )
@@ -136,7 +137,7 @@ fun DetailsCardResources(
                             selected = false,
                             colors = resource.color?.let { InputChipDefaults.inputChipColors(
                                 containerColor = Color(it),
-                                labelColor = contentColorFor(Color(it))
+                                labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(it))
                             ) }?: InputChipDefaults.inputChipColors(),
                             modifier = Modifier.alpha(0.4f)
                         )
