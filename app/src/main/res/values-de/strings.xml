@@ -214,6 +214,7 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="sync_furhter_info_davx5">"Für weitere Informationen zu DAVx⁵ schauen Sie bitte auf"</string>
     <string name="sync_button_add_account_in_davx5">"Account in DAVx⁵ hinzufügen"</string>
     <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ konnte nicht geöffnet werden, bitte öffnen Sie die App manuell."</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Fehler beim Öffnen von %1$s, bitte öffnen Sie die App manuell."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Der Sync konnte nicht in DAVx⁵ getriggert werden, bitte kontrollieren Sie direkt in DAVx⁵."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Hallo, ich bin Patrick, Entwickler von jtx Board. Die Entwicklung meiner App nimmt viel Zeit in Anspruch und trotzdem stelle ich sie kostenlos zur Verfügung. Wenn euch meine App gefällt, zeigt euch bitte ein wenig Erkenntlich und unterstützt mich mit einer kleinen Spende!"</string>
@@ -317,7 +318,9 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="attachment_export_saved_successfully">"Erfolgreich gespeichert"</string>
     <string name="attachment_export_error_error_occurred">"Beim Speichern der Datei ist ein Fehler aufgetreten!"</string>
     <string name="menu_collections_add_remote">"Remote Collection hinzufügen (DAVx⁵)"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"Remote Collection hinzufügen (%1$s)"</string>
     <string name="menu_collection_popup_show_in_davx5">"In DAVx⁵ anzeigen"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"In %1$s anzeigen"</string>
     <string name="menu_collection_popup_export_as_ics">"Als .ics exportieren"</string>
     <string name="journal">"Journal"</string>
     <string name="note">"Notiz"</string>
@@ -516,6 +519,8 @@ Danke!"</string>
     <string name="dialog_detach_from_series_button">"Von der Serie trennen"</string>
     <string name="dialog_davx5_outdated_title">"DAVx⁵ veraltet"</string>
     <string name="dialog_davx5_outdated_message">"Ihre aktuelle Version von DAVx5 ist mit dieser Version von jtx Board nicht kompatibel. Bitte aktualisieren Sie DAVx5 auf 4.3.1 (403010000+) oder neuer! Die Synchronisierung ist derzeit ausgesetzt."</string>
+    <string name="dialog_sync_app_outdated_title">"Sync-App veraltet"</string>
+    <string name="dialog_sync_app_outdated_message">"Ihre aktuelle Version von %1$s ist nicht mit dieser Version von jtx Board kompatibel. Bitte aktualisieren Sie auf %1$s %2$s oder neuer! Die Synchronisierung über %1$s ist derzeit ausgesetzt."</string>
     <string name="dialog_save_current_filter_config">"Aktuelle Filterkonfiguration speichern"</string>
     <string name="dialog_save_current_filter_my_filter">"Meine Filter"</string>
     <string name="dialog_edit_stored_category_title">"Kategorie-Vorlage hinzufügen/bearbeiten"</string>
