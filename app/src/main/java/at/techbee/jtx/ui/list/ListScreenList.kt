@@ -225,7 +225,7 @@ fun ListScreenList(
             }
         }
 
-        if(SyncUtil.isDAVx5Compatible(context)) {
+        if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
             PullRefreshIndicator(
                 refreshing = false,
                 state = pullRefreshState

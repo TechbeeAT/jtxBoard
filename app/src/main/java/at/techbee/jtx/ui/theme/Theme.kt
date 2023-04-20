@@ -3,7 +3,12 @@ package at.techbee.jtx.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
@@ -12,6 +17,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import at.techbee.jtx.util.UiUtil
 
 private val DarkColorScheme = darkColorScheme(
     primary = md_theme_light_primary,
@@ -31,7 +37,8 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = md_theme_dark_onBackground,
     onSurface = md_theme_dark_onSurface,
     surfaceVariant = md_theme_dark_surfaceVariant,
-    onSurfaceVariant = md_theme_dark_onSurfaceVariant
+    onSurfaceVariant = md_theme_dark_onSurfaceVariant,
+    inverseOnSurface = md_theme_dark_inverseOnSurface
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -52,7 +59,8 @@ private val LightColorScheme = lightColorScheme(
     onBackground = md_theme_light_onBackground,
     onSurface = md_theme_light_onSurface,
     surfaceVariant = md_theme_light_surfaceVariant,
-    onSurfaceVariant = md_theme_light_onSurfaceVariant
+    onSurfaceVariant = md_theme_light_onSurfaceVariant,
+    inverseOnSurface = md_theme_light_inverseOnSurface
 )
 
 private val ContrastColorScheme = lightColorScheme(
@@ -73,8 +81,25 @@ private val ContrastColorScheme = lightColorScheme(
     onTertiary = Color.White,
     onBackground = Color.Black,
     surfaceVariant = Color(0xFFD1D1D1),
-    onSurfaceVariant = Color.Black
+    onSurfaceVariant = Color.Black,
+    inverseOnSurface = Color.White
 )
+
+/**
+ * This extension function returns a surface color that has enough contrast to be
+ * readable on the given background color
+ * @param backgroundColor for which an appropriate content color should be returned
+ * @return [Color] either the current onSurface or the current inverseOnSurface, whatever is more appropriate for good contrast
+ */
+fun ColorScheme.getContrastSurfaceColorFor(backgroundColor: Color): Color {
+    return when {
+        UiUtil.isDarkColor(backgroundColor) && UiUtil.isDarkColor(onSurface) -> inverseOnSurface
+        UiUtil.isDarkColor(backgroundColor) && !UiUtil.isDarkColor(onSurface) -> onSurface
+        !UiUtil.isDarkColor(backgroundColor) && UiUtil.isDarkColor(onSurface) -> onSurface
+        !UiUtil.isDarkColor(backgroundColor) && !UiUtil.isDarkColor(onSurface) -> inverseOnSurface
+        else -> onSurface
+    }
+}
 
 @Composable
 fun JtxBoardTheme(

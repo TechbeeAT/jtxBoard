@@ -11,12 +11,40 @@ package at.techbee.jtx.ui.list
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.AddTask
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DeleteSweep
+import androidx.compose.material.icons.outlined.EventNote
+import androidx.compose.material.icons.outlined.FilterList
+import androidx.compose.material.icons.outlined.LibraryAddCheck
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.NoteAdd
+import androidx.compose.material.icons.outlined.SyncProblem
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,11 +60,12 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
-import at.techbee.jtx.ui.reusable.dialogs.DAVx5IncompatibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.DeleteDoneDialog
+import at.techbee.jtx.ui.reusable.dialogs.SyncAppIncompatibleDialog
 import at.techbee.jtx.util.DateTimeUtils
-import java.util.*
+import at.techbee.jtx.util.SyncApp
+import java.util.TimeZone
 
 @Composable
 fun ListBottomAppBar(
@@ -49,7 +78,7 @@ fun ListBottomAppBar(
     allowNewEntries: Boolean,
     isBiometricsEnabled: Boolean,
     isBiometricsUnlocked: Boolean,
-    isDAVx5Incompatible: Boolean,
+    incompatibleSyncApps: List<SyncApp>,
     onAddNewEntry: () -> Unit,
     onFilterIconClicked: () -> Unit,
     onGoToDateSelected: (Long) -> Unit,
@@ -60,7 +89,7 @@ fun ListBottomAppBar(
 ) {
 
     var showGoToDatePicker by remember { mutableStateOf(false) }
-    var showDAVx5IncompatibleDialog by remember { mutableStateOf(false) }
+    var showSyncAppIncompatibleDialog by remember { mutableStateOf(false) }
     var showDeleteDoneDialog by remember { mutableStateOf(false) }
     val showMoreActionsMenu = remember { mutableStateOf(false) }
     val iCal4List by iCal4ListRelLive.observeAsState(emptyList())
@@ -95,8 +124,11 @@ fun ListBottomAppBar(
         )
     }
 
-    if(showDAVx5IncompatibleDialog) {
-        DAVx5IncompatibleDialog(onDismiss = { showDAVx5IncompatibleDialog = false } )
+    if(showSyncAppIncompatibleDialog) {
+        SyncAppIncompatibleDialog(
+            incompatibleSyncApps = incompatibleSyncApps,
+            onDismiss = { showSyncAppIncompatibleDialog = false }
+        )
     }
 
     if(showDeleteDoneDialog) {
@@ -175,11 +207,11 @@ fun ListBottomAppBar(
                         }
                     }
 
-                    AnimatedVisibility(isDAVx5Incompatible) {
-                        IconButton(onClick = { showDAVx5IncompatibleDialog = true }) {
+                    AnimatedVisibility(incompatibleSyncApps.isNotEmpty()) {
+                        IconButton(onClick = { showSyncAppIncompatibleDialog = true }) {
                             Icon(
                                 Icons.Outlined.SyncProblem,
-                                contentDescription = stringResource(id = R.string.dialog_davx5_outdated_title),
+                                contentDescription = stringResource(id = R.string.dialog_sync_app_outdated_title),
                                 tint = MaterialTheme.colorScheme.error
                             )
                         }
@@ -306,7 +338,7 @@ fun ListBottomAppBar_Preview_Journal() {
             allowNewEntries = true,
             isBiometricsEnabled = false,
             isBiometricsUnlocked = false,
-            isDAVx5Incompatible = false,
+            incompatibleSyncApps = emptyList(),
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -337,7 +369,7 @@ fun ListBottomAppBar_Preview_Note() {
             allowNewEntries = false,
             isBiometricsEnabled = false,
             isBiometricsUnlocked = false,
-            isDAVx5Incompatible = true,
+            incompatibleSyncApps = listOf(SyncApp.DAVX5),
             multiselectEnabled = remember { mutableStateOf(true) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -366,7 +398,7 @@ fun ListBottomAppBar_Preview_Todo() {
             iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
-            isDAVx5Incompatible = true,
+            incompatibleSyncApps = listOf(SyncApp.DAVX5),
             isBiometricsEnabled = true,
             isBiometricsUnlocked = false,
             multiselectEnabled = remember { mutableStateOf(false) },
@@ -400,7 +432,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             allowNewEntries = true,
             isBiometricsEnabled = true,
             isBiometricsUnlocked = true,
-            isDAVx5Incompatible = true,
+            incompatibleSyncApps = listOf(SyncApp.DAVX5),
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },

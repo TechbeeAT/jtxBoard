@@ -18,13 +18,28 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Attendee
+import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Comment
+import at.techbee.jtx.database.properties.Relatedto
+import at.techbee.jtx.database.properties.Reltype
+import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
@@ -358,9 +373,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             icalObject.makeDirty()
             database.update(icalObject)
             icalObject.makeSeriesDirty(database)
-            icalObject.recreateRecurring(getApplication())
-            NotificationPublisher.scheduleNextNotifications(getApplication())
-            SyncUtil.notifyContentObservers(getApplication())
+            icalObject.recreateRecurring(_application)
+            NotificationPublisher.scheduleNextNotifications(_application)
+            SyncUtil.notifyContentObservers(_application)
             changeState.value = DetailChangeState.CHANGESAVED
         } catch (e: SQLiteConstraintException) {
             Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")

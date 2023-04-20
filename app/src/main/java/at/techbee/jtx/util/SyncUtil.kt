@@ -30,9 +30,6 @@ class SyncUtil {
 
     companion object {
 
-        const val DAVX5_PACKAGE_NAME = "at.bitfire.davdroid"
-
-
         /**
          * @param [accounts] for which the sync should be checked
          * @return true if a sync is running for the jtx Sync Provider Authority for any of the given accounts
@@ -55,29 +52,33 @@ class SyncUtil {
         }
 
         /**
-         * @return true if DAVx5 was found
+         * @return true if a known sync app found
          */
-        fun isDAVx5Available(context: Context): Boolean {
-            try {
-                context.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
-            } catch (e: PackageManager.NameNotFoundException) {
-                return false
+        fun availableSyncApps(context: Context): List<SyncApp> {
+            val availableSyncApps = mutableListOf<SyncApp>()
+            SyncApp.values().forEach { syncApp ->
+                try {
+                    if(context.packageManager?.getPackageInfoCompat(syncApp.packageName, 0) != null)
+                        availableSyncApps.add(syncApp)
+                } catch (e: PackageManager.NameNotFoundException) {
+                    Log.d("SyncAppNotFound", e.stackTraceToString())
+                }
             }
-            return true
+            return availableSyncApps
         }
 
 
         /**
-         * @return true if DAVx5 was found and the version is compatible/includes jtx Board sync through the packageManager, else false
+         * @return true if [syncApp] was found and the known minVersion is compatible/includes jtx Board sync through the packageManager, else false
          */
-        fun isDAVx5Compatible(context: Context): Boolean {
+        fun isSyncAppCompatible(syncApp: SyncApp, context: Context): Boolean {
             try {
-                val davx5Info = context.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
+                val syncAppInfo = context.packageManager?.getPackageInfoCompat(syncApp.packageName, 0) ?: return false
                 return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    davx5Info.longVersionCode >= 403010000L
+                    syncAppInfo.longVersionCode >= syncApp.minVersionCode
                 } else {
                     @Suppress("DEPRECATION")
-                    davx5Info.versionCode >= 403010000
+                    syncAppInfo.versionCode >= syncApp.minVersionCode
                 }
             } catch (e: PackageManager.NameNotFoundException) {
                 return false
@@ -87,45 +88,49 @@ class SyncUtil {
         /**
          * Starts an intent to open DAVx5 Login Activity (to add a new account)
          */
-        fun openDAVx5LoginActivity(context: Context?) {
-            // open davx5
+        fun openSyncAppLoginActivity(syncApp: SyncApp, context: Context?) {
+            if(context == null)
+                return
+
             val intent = Intent(Intent.ACTION_MAIN)
-            intent.setClassName(DAVX5_PACKAGE_NAME,"${DAVX5_PACKAGE_NAME}.ui.setup.LoginActivity")
+            intent.setClassName(syncApp.packageName,"${syncApp.activityBaseClass}.ui.setup.LoginActivity")
             try {
-                context?.startActivity(intent)
+                context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
-                Log.w("SyncFragment", "DAVx5 should be there but opening the Activity failed. \n$e")
+                Toast.makeText(context, context.getString(R.string.sync_toast_intent_open_sync_app_failed, syncApp.appName), Toast.LENGTH_LONG).show()
+                Log.w("SyncFragment", "${syncApp.appName} should be there but opening the Activity failed. \n$e")
             }
         }
 
 
         /**
-         * Starts an intent to open DAVx5 Accounts Activity (to add a new account)
+         * Starts an intent to open the known sync apps Accounts Activity (to add a new account)
          */
-        fun openDAVx5AccountsActivity(context: Context?) {
-            // open davx5
+        fun openSyncAppAccountsActivity(syncApp: SyncApp, context: Context?) {
+            if(context == null)
+                return
+
             val intent = Intent(Intent.ACTION_MAIN)
-            intent.setClassName(DAVX5_PACKAGE_NAME,"${DAVX5_PACKAGE_NAME}.ui.AccountsActivity")
+            intent.setClassName(syncApp.packageName,"${syncApp.activityBaseClass}.ui.AccountsActivity")
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
             try {
-                context?.startActivity(intent)
+                context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
-                Log.w(TAG, "DAVx5 should be there but opening the Activity failed. \n$e")
+                Toast.makeText(context, context.getString(R.string.sync_toast_intent_open_sync_app_failed, syncApp.appName), Toast.LENGTH_LONG).show()
+                Log.w(TAG, "${syncApp.appName} should be there but opening the Activity failed. \n$e")
             }
         }
 
         /**
          * Starts an intent to open DAVx5 Accounts Activity (to add a new account)
          */
-        fun openDAVx5AccountActivity(account: Account, context: Context?) {
+        fun openSyncAppAccountActivity(syncApp: SyncApp, account: Account, context: Context?) {
             if(context == null)
                 return
 
             // open davx5
             val intent = Intent(Intent.ACTION_MAIN)
-            intent.setClassName(DAVX5_PACKAGE_NAME,"${DAVX5_PACKAGE_NAME}.ui.account.AccountActivity")
+            intent.setClassName(syncApp.packageName,"${syncApp.activityBaseClass}.ui.account.AccountActivity")
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("account", account)
 
@@ -133,14 +138,14 @@ class SyncUtil {
                 try {
                     context.startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
-                    Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
-                    Log.w(TAG, "DAVx5 should be there but opening the Activity failed. \n${e.stackTraceToString()}")
+                    Toast.makeText(context, context.getString(R.string.sync_toast_intent_open_sync_app_failed, syncApp.appName), Toast.LENGTH_LONG).show()
+                    Log.w(TAG, "${syncApp.appName} should be there but opening the Activity failed. \n${e.stackTraceToString()}")
                 } catch (e: SecurityException) {
-                    Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
-                    Log.w(TAG, "DAVx5 is old, AccountActivity is not exposed yet. \n${e.stackTraceToString()}")
+                    Toast.makeText(context, context.getString(R.string.sync_toast_intent_open_sync_app_failed, syncApp.appName), Toast.LENGTH_LONG).show()
+                    Log.w(TAG, "${syncApp.appName} is old, AccountActivity is not exposed yet. \n${e.stackTraceToString()}")
                 }
             } else {
-                openDAVx5AccountsActivity(context)
+                openSyncAppAccountsActivity(syncApp, context)
             }
         }
 
@@ -154,12 +159,30 @@ class SyncUtil {
             }
         }
 
-        fun openDAVx5inPlayStore(context: Context?) {
+        fun openSyncAppInPlayStore(syncApp: SyncApp, context: Context?) {
             try {
-                context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${DAVX5_PACKAGE_NAME}")))
+                context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${syncApp.packageName}")))
             } catch (anfe: ActivityNotFoundException) {
-                context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${DAVX5_PACKAGE_NAME}")))
+                context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${syncApp.packageName}")))
             }
+        }
+    }
+}
+
+enum class SyncApp(
+    val appName: String,
+    val packageName: String,
+    val accountType: String,
+    val activityBaseClass: String,
+    val minVersionCode: Long,
+    val minVersionName: String
+) {
+    DAVX5("DAVx⁵", "at.bitfire.davdroid", "bitfire.at.davdroid", "at.bitfire.davdroid",403010000L, "4.3.1"),
+    KSYNC("kSync", "com.infomaniak.sync", "infomaniak.com.sync", "at.bitfire.davdroid",403010000L, "4.3.1");
+
+    companion object {
+        fun fromAccountType(accountType: String?): SyncApp? {
+            return values().firstOrNull { it.accountType == accountType }
         }
     }
 }

@@ -11,6 +11,7 @@ package at.techbee.jtx.util
 import android.content.Context
 import android.provider.ContactsContract
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 import androidx.core.util.PatternsCompat
 import at.techbee.jtx.database.properties.Attendee
 import net.fortuna.ical4j.model.WeekDay
@@ -109,5 +110,19 @@ object UiUtil {
             WeekDay.SU -> DayOfWeek.SUNDAY
             else -> null
         }
+    }
+
+    /**
+     * This function can be used to determine whether a color is perceived as dark or light
+     * and can be useful to determine a contrast color for a background.
+     * The algorithm is copied from https://stackoverflow.com/questions/1855884/determine-font-color-based-on-background-color
+     * @param color as int for which it should be determined if a color should be seen as dark
+     * @return true if the color is likely to be perceived as dark, otherwise false
+     */
+    fun isDarkColor(color: Color): Boolean {
+        // Counting the perceptive luminance - human eye favors green color...
+        val a = 1 - ((0.299 * color.red + 0.586 * color.green + 0.115 * color.blue) / color.colorSpace.getMaxValue(0))
+        println(color.toString() + " " + a*100)
+        return a > 0.5
     }
 }

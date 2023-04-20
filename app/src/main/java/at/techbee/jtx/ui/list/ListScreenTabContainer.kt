@@ -417,7 +417,7 @@ fun ListScreenTabContainer(
                         Divider()
 
 
-                        if(SyncUtil.isDAVx5Compatible(context)) {
+                        if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
                             DropdownMenuItem(
                                 text = {
                                     Text(
@@ -504,7 +504,7 @@ fun ListScreenTabContainer(
                         listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
-                    isDAVx5Incompatible = SyncUtil.isDAVx5Available(context) && !SyncUtil.isDAVx5Compatible(context),
+                    incompatibleSyncApps = SyncUtil.availableSyncApps(context).filter { !SyncUtil.isSyncAppCompatible(it, context) },
                     multiselectEnabled = listViewModel.multiselectEnabled,
                     selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,

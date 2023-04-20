@@ -69,6 +69,7 @@
     <queries>
         <!-- package visiblity – which apps do we need to see? -->
         <package android:name="at.bitfire.davdroid" />
+        <package android:name="com.infomaniak.sync" />
 
         <!-- necessary for Speech Recognition for Devices > APi 30 -->
         <intent>

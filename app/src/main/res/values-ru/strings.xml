@@ -214,6 +214,7 @@ Global Strings -->
     <string name="sync_furhter_info_davx5">"Дополнительные сведения о DAVx⁵ см."</string>
     <string name="sync_button_add_account_in_davx5">"Добавить аккаунт в DAVx⁵"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Не удалось открыть DAVx⁵. Откройте приложение вручную."</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Не удалось открыть %1$s, пожалуйста, откройте приложение вручную."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Не удалось запустить синхронизацию в DAVx⁵. Проверьте в DAVx⁵."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Привет, я Патрик, разработчик jtx Board. Я уделяю много времени и усилий этому приложению и распространяю его бесплатно. Если вам нравится мое приложение, вы можете отправить мне сердечек и небольшое пожертвование!"</string>
@@ -245,7 +246,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_sr_start_listening">"Преобразователь речи в текст слушает."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Преобразователь речи в текст перестал слушать."</string>
     <string name="list_quickadd_dialog_sr_error">"К сожалению, модуль преобразования речи в текст обнаружил ошибку. (%1$s)"</string>
-    <string name="list_quickadd_add_audio_attachment">"Прикрепить аудиозапись"</string>
+    <string name="list_quickadd_add_audio_attachment">"Прикрепить аудио"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Разрешение на чтение контактов предоставлено"</string>
     <string name="permission_read_contacts_denied">"Разрешение на чтение контактов отклонено"</string>
@@ -262,7 +263,7 @@ Global Strings -->
     <string name="link_to_parent">"Привязать к родителю"</string>
     <string name="toolbar_text_collections">"Коллекции"</string>
     <string name="navigation_drawer_collections">"Коллекции"</string>
-    <string name="navigation_drawer_presets">"Шаблоны"</string>
+    <string name="navigation_drawer_presets">"Пресеты"</string>
     <string name="edit_dialog_set_attendee_role">"Установить роль участника"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Дата/Время"</string>
@@ -317,7 +318,9 @@ Global Strings -->
     <string name="attachment_export_saved_successfully">"Сохранено"</string>
     <string name="attachment_export_error_error_occurred">"Ошибка при сохранении файла"</string>
     <string name="menu_collections_add_remote">"Добавить внешнюю коллекцию (DAVx⁵)"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"Добавить внешнюю коллекцию (%1$s)"</string>
     <string name="menu_collection_popup_show_in_davx5">"Показать в DAVx⁵"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"Показать в %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Экспорт .ics"</string>
     <string name="journal">"Журнал"</string>
     <string name="note">"Заметка"</string>
@@ -515,11 +518,13 @@ Global Strings -->
     <string name="dialog_detach_from_series_button">"Отвязать от серии"</string>
     <string name="dialog_davx5_outdated_title">"DAVx⁵ устарел"</string>
     <string name="dialog_davx5_outdated_message">"Ваша текущая версия DAVx⁵ не совместима с этой версией jtx Board. Пожалуйста, обновите DAVx⁵ до версии 4.3.1 (403010000+) или до последней версии! Синхронизация приостановлена."</string>
+    <string name="dialog_sync_app_outdated_title">"Приложение для синхронизации устарело"</string>
+    <string name="dialog_sync_app_outdated_message">"Ваша текущая версия %1$s не совместима с этой версией jtx Board. Пожалуйста, обновите %1$s до версии %2$s или до последней версии! Синхронизация через %1$s приостановлена."</string>
     <string name="dialog_save_current_filter_config">"Сохранить текущую настройку фильтра"</string>
     <string name="dialog_save_current_filter_my_filter">"Мой фильтр"</string>
-    <string name="dialog_edit_stored_category_title">"Добавить/изменить шаблон категории"</string>
-    <string name="dialog_edit_stored_resource_title">"Добавить/изменить шаблон ресурсов"</string>
-    <string name="dialog_add_audio_entry_title">"Добавить аудиозапись"</string>
+    <string name="dialog_edit_stored_category_title">"Добавить/изменить пресет категории"</string>
+    <string name="dialog_edit_stored_resource_title">"Добавить/изменить пресет ресурсов"</string>
+    <string name="dialog_add_audio_entry_title">"Добавить аудио как запись"</string>
     <string name="menu_list_viewmode_compact">"Компактно"</string>
     <string name="menu_list_viewmode_kanban">"Канбан"</string>
     <string name="settings_details">"Настройки деталей элемента"</string>
@@ -548,8 +553,8 @@ Global Strings -->
     <string name="settings_keep_status_progress_completed_in_sync">"Синхронизировать статус, прогресс и дату выполнения"</string>
     <string name="settings_attention_experimental_feature">"Внимание: это экспериментальная функция"</string>
     <string name="settings_create_with_current_location">"Создавать новые записи с текущим местоположением"</string>
-    <string name="settings_sticky_alarms">"Постоянные уведомления"</string>
-    <string name="settings_sticky_alarms_sub">"Уведомление находится в шторке до тех пор, пока не отмечено как выполненное или отложенное"</string>
+    <string name="settings_sticky_alarms">"Закрепленные напоминания"</string>
+    <string name="settings_sticky_alarms_sub">"Уведомление находится в шторке, пока не отмечено как выполненное или отложенное"</string>
     <string name="sync_button_go_to_collections">"Перейти в Коллекции"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Пожалуйста, купите Pro-версию, чтобы активировать эту функцию."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -562,7 +567,7 @@ Global Strings -->
     <string name="settings_select_language_system">"Системный"</string>
     <string name="settings_details_enable_markdown">"Включить Markdown форматирование"</string>
     <string name="filter_special">"Специальные фильтры"</string>
-    <string name="filter_presets">"Фильтр шаблонов"</string>
+    <string name="filter_presets">"Пресеты фильтров"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Дата в прошлом"</string>
     <string name="list_date_today">"Сегодня"</string>
@@ -597,7 +602,7 @@ Global Strings -->
     <string name="filter_second_order_by">"Затем сортировать по"</string>
     <string name="filter_group_by">"Группировать по"</string>
     <string name="filter_group_by_info">"Группировка доступна для видов Список и Компактно"</string>
-    <string name="filter_save_as_preset">"Сохранить как шаблон"</string>
+    <string name="filter_save_as_preset">"Сохранить как пресет"</string>
     <string name="menu_list_flat_view">"Без иерархии"</string>
     <string name="menu_list_flat_view_sub">"Всегда показывать дочерние записи на верхнем уровне в списке"</string>
     <string name="menu_list_limit_recur_entries">"Лимит повторений"</string>
@@ -622,8 +627,8 @@ Global Strings -->
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Внимание: В настоящее время в виджете поддерживается только первый уровень иерархии. Чтобы увидеть записи более низких уровней, выберите настройку Без иерархии."</string>
     <string name="widget_list_maximum_entries_reached">"Достигнуто максимальное количество записей в виджете (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Обновление виджета"</string>
-    <string name="widget_list_opacity_warning">"Примечание: Это экспериментальная функция! С уменьшенной непрозрачностью изменения в цветовой теме могут отобразиться не сразу!"</string>
-    <string name="widget_list_color_warning">"Внимание: Это экспериментальная функция! Изменения в цветовой теме не будут отражены! Удалите выбор цвета для возврата к системным настройкам."</string>
+    <string name="widget_list_opacity_warning">"Примечание: Это экспериментальная функция! Изменения параметров непрозрачности могут отобразиться не сразу!"</string>
+    <string name="widget_list_color_warning">"Примечание: Это экспериментальная функция! Системные настройки цветового оформления будут переопределены! Удалите выбор цвета для возврата к системному цветовому оформлению."</string>
     <string name="opacity">"Непрозрачность"</string>
     <string name="general">"Общее"</string>
     <string name="list_collapse">"Свернуть"</string>
@@ -657,7 +662,7 @@ Global Strings -->
     <string name="markdown_horizontal_ruler">"Горизонтальная линия"</string>
     <string name="markdown_unordered_list">"Список"</string>
     <string name="markdown_code">"Код"</string>
-    <string name="preset_categories">"Шаблоны категорий"</string>
-    <string name="preset_resources">"Шаблоны ресурсов"</string>
+    <string name="preset_categories">"Пресеты категорий"</string>
+    <string name="preset_resources">"Пресеты ресурсов"</string>
     <string name="active_filters">Активные фильтры:</string>
 </resources>

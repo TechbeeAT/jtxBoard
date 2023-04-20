@@ -19,21 +19,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
+import at.techbee.jtx.util.SyncApp
 
 
 @Composable
-fun DAVx5IncompatibleDialog(
+fun SyncAppIncompatibleDialog(
+    incompatibleSyncApps: List<SyncApp>,
     onDismiss: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text(stringResource(id = R.string.dialog_davx5_outdated_title)) },
+        title = { Text(stringResource(id = R.string.dialog_sync_app_outdated_title)) },
         text = {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(stringResource(id = R.string.dialog_davx5_outdated_message))
+                incompatibleSyncApps.forEach { incompatibleSyncApp ->
+                    Text(stringResource(id = R.string.dialog_sync_app_outdated_message, incompatibleSyncApp.appName, incompatibleSyncApp.minVersionName))
+                }
+
             }
         },
         confirmButton = {
@@ -48,11 +53,23 @@ fun DAVx5IncompatibleDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun DAVx5IncompatibleDialog_Preview() {
+fun DAVx5IncompatibleDialog_Preview1() {
     MaterialTheme {
-        DAVx5IncompatibleDialog(
+        SyncAppIncompatibleDialog(
+            listOf(SyncApp.DAVX5),
             onDismiss = { },
         )
     }
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun DAVx5IncompatibleDialog_Preview2() {
+    MaterialTheme {
+        SyncAppIncompatibleDialog(
+            SyncApp.values().toList(),
+            onDismiss = { },
+        )
+    }
+}
