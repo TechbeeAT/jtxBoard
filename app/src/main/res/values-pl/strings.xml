@@ -64,7 +64,6 @@ Global Strings -->
     <string name="edit_location_helper">"Dodaj lokalizację do tego wpisu"</string>
     <string name="edit_attachment_add_dialog_hint">"Twój załącznik URL (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Twój komentarz"</string>
-    <string name="edit_attachment_beta_info">"* Załączniki są eksperymentalną funkcją. Obecnie tylko małe załączniki (do 100 KB) mogą zostać wyeksportowane jako plik .ics i być zsynchronizowane poprzez DAVx⁵. Jeśli napotkasz jakiekolwiek problem, daj nam znać poprzez fora pomocy technicznej lub zapytania na stronie!"</string>
     <string name="edit_subtasks_add_hint">"Twoje podzadanie"</string>
     <string name="edit_subtasks_add_helper">"Dodaj podzadanie"</string>
     <string name="edit_attachment_delete_attachment">"Usuń załącznik"</string>
@@ -93,7 +92,6 @@ Global Strings -->
     <string name="settings_app">"Ustawienia aplikacji"</string>
     <!-- Sync fragment -->
     <string name="sync_congratulations">"Gratulacje! :-)"</string>
-    <string name="sync_check_out_davx5">"Sprawdź DAVx⁵!"</string>
     <!-- Donate fragment -->
     <string name="donate_thank_you">"Dziękujemy!"</string>
     <!-- sync content provider -->
@@ -140,7 +138,6 @@ Global Strings -->
     <string name="edit_recur_week">"tydzień/tygodnie"</string>
     <string name="edit_recur_month">"miesiąc/miesiące"</string>
     <string name="edit_recur_year">"rok/lata"</string>
-    <string name="menu_collection_popup_show_in_davx5">"Pokaż w DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"Wyeksportuj jako .ics"</string>
     <string name="journal">"Dziennik"</string>
     <string name="note">"Notatka"</string>
