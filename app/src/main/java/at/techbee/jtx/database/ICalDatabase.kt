@@ -17,6 +17,9 @@ import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import at.techbee.jtx.R
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredListSetting
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.database.views.ICal4List
@@ -39,11 +42,14 @@ import at.techbee.jtx.database.views.ICal4List
         Resource::class,
         Alarm::class,
         Unknown::class,
-        Attachment::class],
+        Attachment::class,
+        StoredListSetting::class,
+        StoredCategory::class,
+        StoredResource::class],
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 23,
+    version = 25,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -66,9 +72,11 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 20, to = 21),  // view update
         AutoMigration (from = 21, to = 22),  // view update
         AutoMigration (from = 22, to = 23),  // view update
+        AutoMigration (from = 23, to = 24),  // added ListSettingsStorage
+        AutoMigration (from = 24, to = 25),  // added StoredCategory, StoredResource
     ]
 )
-//@TypeConverters(Converters::class)
+@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {
 
     /**

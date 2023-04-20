@@ -19,9 +19,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Backup
 import androidx.compose.material.icons.outlined.FileDownload
 import androidx.compose.material.icons.outlined.LocalLibrary
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,10 +55,9 @@ import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
-import java.util.*
+import java.util.TimeZone
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionsScreen(
     navController: NavHostController,
@@ -54,7 +67,7 @@ fun CollectionsScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
-    val isDAVx5available = SyncUtil.isDAVx5Available(context)
+    val availableSyncApps = SyncUtil.availableSyncApps(context)
     val snackbarHostState = remember { SnackbarHostState() }
 
     /* EXPORT FUNCTIONALITIES */
@@ -233,11 +246,11 @@ fun CollectionsScreen(
                             },
                             leadingIcon = { Icon(Icons.Outlined.LocalLibrary, null) },
                         )
-                        if (isDAVx5available) {
+                        availableSyncApps.forEach { syncApp ->
                             DropdownMenuItem(
-                                text = { Text(text = stringResource(id = R.string.menu_collections_add_remote)) },
+                                text = { Text(text = stringResource(R.string.menu_collections_add_remote_to_sync_app, syncApp.appName)) },
                                 onClick = {
-                                    SyncUtil.openDAVx5AccountsActivity(context)
+                                    SyncUtil.openSyncAppAccountsActivity(syncApp, context)
                                     menuExpanded.value = false
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.Backup, null) }

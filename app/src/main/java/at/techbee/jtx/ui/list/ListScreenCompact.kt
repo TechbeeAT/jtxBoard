@@ -9,19 +9,36 @@
 package at.techbee.jtx.ui.list
 
 import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowDropUp
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,124 +53,172 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import at.techbee.jtx.util.SyncUtil
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ListScreenCompact(
-    groupedList: Map<String, List<ICal4List>>,
+    groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
+    storedCategoriesLive: LiveData<List<StoredCategory>>,
+    storedResourcesLive: LiveData<List<StoredResource>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
     settingLinkProgressToSubtasks: Boolean,
+    player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onSyncRequested: () -> Unit
 ) {
 
+    val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
+    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
+    val storedResources by storedResourcesLive.observeAsState(emptyList())
     val listState = rememberLazyListState()
 
     val itemsCollapsed = remember { mutableStateListOf<String>() }
 
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = false,
+        onRefresh = { onSyncRequested() }
+    )
 
-    LazyColumn(
-        modifier = Modifier.padding(start = 2.dp, end = 2.dp),
-        state = listState,
+    Box(
+        contentAlignment = Alignment.TopCenter
     ) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(start = 2.dp, end = 2.dp)
+                .pullRefresh(pullRefreshState),
+            state = listState,
+        ) {
 
-        groupedList.forEach { (groupName, group) ->
+            groupedList.forEach { (groupName, group) ->
 
-            if (groupedList.keys.size > 1) {
-                stickyHeader {
+                if (groupedList.keys.size > 1) {
+                    stickyHeader {
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.background)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.background)
 
-                    ) {
-                        Text(
-                            text = groupName,
-                            style = MaterialTheme.typography.titleLarge
-                        )
+                        ) {
+                            TextButton(onClick = {
+                                if (itemsCollapsed.contains(groupName))
+                                    itemsCollapsed.remove(groupName)
+                                else
+                                    itemsCollapsed.add(groupName)
+                            }) {
+                                Text(
+                                    text = groupName,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.padding(horizontal = 4.dp)
+                                )
 
-                        TextButton(onClick = {
-                            if (itemsCollapsed.contains(groupName))
-                                itemsCollapsed.remove(groupName)
-                            else
-                                itemsCollapsed.add(groupName)
-                        }) {
-                            if (itemsCollapsed.contains(groupName))
-                                Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
-                            else
-                                Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
-                        }
-                    }
-                }
-            }
-
-            if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
-                items(
-                    items = group,
-                    key = { item -> item.id }
-                )
-                { iCalObject ->
-
-                    var currentSubtasks = subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCalObject.uid } }.map { it.iCal4List }
-                    if (listSettings.isExcludeDone.value)   // exclude done if applicable
-                        currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 && subtask.status != Status.COMPLETED.status }
-
-
-                    if (scrollId != null) {
-                        LaunchedEffect(group) {
-                            val index = group.indexOfFirst { iCalObject -> iCalObject.id == scrollId }
-                            if (index > -1) {
-                                listState.animateScrollToItem(index)
-                                scrollOnceId.postValue(null)
+                                if (itemsCollapsed.contains(groupName))
+                                    Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
+                                else
+                                    Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
                             }
                         }
                     }
+                }
 
-                    ListCardCompact(
-                        iCalObject,
-                        subtasks = currentSubtasks,
-                        progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
-                        selected = selectedEntries,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 4.dp, bottom = 4.dp)
-                            .animateItemPlacement()
-                            .clip(jtxCardCornerShape)
-                            .combinedClickable(
-                                onClick = { onClick(iCalObject.id, groupedList.flatMap { it.value }) },
-                                onLongClick = {
-                                    if (!iCalObject.isReadOnly)
-                                        onLongClick(iCalObject.id, groupedList.flatMap { it.value })
-                                }
-                            ),
-                        onProgressChanged = onProgressChanged,
-                        onClick = onClick,
-                        onLongClick = onLongClick
+                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
+                    items(
+                        items = group,
+                        key = { item -> item.iCal4List.id }
                     )
+                    { iCal4ListRelObject ->
 
-                    if (iCalObject != group.last())
-                        Divider(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            thickness = 1.dp,
-                            modifier = Modifier.alpha(0.25f)
+                        var currentSubtasks =
+                            subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
+                                .map { it.iCal4List }
+                        if (listSettings.isExcludeDone.value)   // exclude done if applicable
+                            currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 && subtask.status != Status.COMPLETED.status }
+
+
+                        if (scrollId != null) {
+                            LaunchedEffect(group) {
+                                val index = group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
+                                if (index > -1) {
+                                    listState.animateScrollToItem(index)
+                                    scrollOnceId.postValue(null)
+                                }
+                            }
+                        }
+
+                        ListCardCompact(
+                            iCal4ListRelObject.iCal4List,
+                            categories = iCal4ListRelObject.categories,
+                            resources = iCal4ListRelObject.resources,
+                            subtasks = currentSubtasks,
+                            storedCategories = storedCategories,
+                            storedResources = storedResources,
+                            progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                            selected = selectedEntries,
+                            player = player,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 4.dp, bottom = 4.dp)
+                                .animateItemPlacement()
+                                .clip(jtxCardCornerShape)
+                                .combinedClickable(
+                                    onClick = {
+                                        onClick(
+                                            iCal4ListRelObject.iCal4List.id,
+                                            groupedList
+                                                .flatMap { it.value }
+                                                .map { it.iCal4List })
+                                    },
+                                    onLongClick = {
+                                        if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                            onLongClick(
+                                                iCal4ListRelObject.iCal4List.id,
+                                                groupedList
+                                                    .flatMap { it.value }
+                                                    .map { it.iCal4List })
+                                    }
+                                ),
+                            onProgressChanged = onProgressChanged,
+                            onClick = onClick,
+                            onLongClick = onLongClick
                         )
+
+                        if (iCal4ListRelObject != group.last())
+                            Divider(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                thickness = 1.dp,
+                                modifier = Modifier.alpha(0.25f)
+                            )
+                    }
                 }
             }
+        }
+
+        if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
+            PullRefreshIndicator(
+                refreshing = false,
+                state = pullRefreshState
+            )
         }
     }
 }
@@ -198,15 +263,23 @@ fun ListScreenCompact_TODO() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenCompact(
-            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
+            groupedList = listOf(
+                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+            )
+                .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onSyncRequested = { }
         )
     }
 }
@@ -252,15 +325,23 @@ fun ListScreenCompact_JOURNAL() {
             colorItem = Color.Blue.toArgb()
         }
         ListScreenCompact(
-            groupedList = listOf(icalobject, icalobject2).groupBy { it.status ?: "" },
+            groupedList = listOf(
+                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
+                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+            )
+                .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
+            player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onSyncRequested = { }
         )
     }
 }

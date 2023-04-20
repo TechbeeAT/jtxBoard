@@ -1,9 +1,7 @@
 package at.techbee.jtx.ui.reusable.dialogs
 
 import android.net.Uri
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -16,10 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SelectModuleForTxtImportDialog(
     files: List<Uri>,
@@ -40,9 +36,7 @@ fun SelectModuleForTxtImportDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 FlowRow(
-                    mainAxisAlignment = FlowMainAxisAlignment.Center,
-                    mainAxisSpacing = 8.dp,
-                    crossAxisSpacing = 8.dp
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                 ) {
                     Module.values().forEach { module ->
                         ElevatedFilterChip(

@@ -9,12 +9,10 @@
 package at.techbee.jtx.database.properties
 
 import android.app.AlarmManager
-import android.app.Notification
 import android.app.PendingIntent
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Parcelable
 import android.provider.BaseColumns
@@ -31,11 +29,9 @@ import at.techbee.jtx.MainActivity2.Companion.INTENT_EXTRA_ITEM2SHOW
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
-import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.ui.settings.DropdownSetting
-import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import at.techbee.jtx.ui.settings.SwitchSetting
 import kotlinx.parcelize.Parcelize
 import kotlin.time.Duration
 
@@ -197,10 +193,6 @@ data class Alarm (
 {
     companion object Factory {
 
-        private const val MAX_ALARMS_SCHEDULED = 5
-        private const val MAX_DUE_ALARMS_SCHEDULED = 5
-
-
         /**
          * Create a new [Alarm] Property from the specified [ContentValues].
          *
@@ -249,45 +241,6 @@ data class Alarm (
             action = AlarmAction.DISPLAY.name
             triggerTime = time
             triggerTimezone = timezone
-        }
-
-
-        fun scheduleNextNotifications(context: Context) {
-
-            // Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-                return
-
-            val database = ICalDatabase.getInstance(context).iCalDatabaseDao
-            val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED).toMutableList()
-
-            val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-            val settingAutoAlarm = prefs.getString(DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key)
-            if(settingAutoAlarm == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_DUE.key) {
-                val dueEntries = database.getNextDueEntries(MAX_DUE_ALARMS_SCHEDULED)
-                dueEntries.forEach { dueEntry ->
-                    alarms.add(Alarm(
-                        icalObjectId = dueEntry.id,
-                        triggerTime = dueEntry.due,
-                        triggerTimezone = dueEntry.dueTimezone
-                    ))
-                }
-            }
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-            //cancel previous alarm on this code
-            for (i in 0 until MAX_ALARMS_SCHEDULED + MAX_DUE_ALARMS_SCHEDULED) {
-                val pendingIntent = PendingIntent.getBroadcast(context, i, Intent(context, NotificationPublisher::class.java), PendingIntent.FLAG_IMMUTABLE)
-                alarmManager.cancel(pendingIntent)
-            }
-
-            alarms.forEachIndexed { index, alarm ->
-                if(alarms.isNotEmpty() && alarms.size > index) {
-                    val iCalObject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return@forEachIndexed
-                    val collection = database.getCollectionByIdSync(iCalObject.collectionId) ?: return@forEachIndexed
-                    alarm.scheduleNotification(context = context, requestCode = index, isReadOnly = collection.readonly, notificationSummary = iCalObject.summary, notificationDescription = iCalObject.description)
-                }
-            }
         }
     }
 
@@ -358,7 +311,7 @@ data class Alarm (
         }
     }
 
-    private fun scheduleNotification(context: Context, requestCode: Int, isReadOnly: Boolean, notificationSummary: String?, notificationDescription: String?) {
+    fun scheduleNotification(context: Context, requestCode: Int, isReadOnly: Boolean, notificationSummary: String?, notificationDescription: String?) {
 
         if((this.triggerTime?:0) < System.currentTimeMillis())
             return
@@ -376,17 +329,15 @@ data class Alarm (
             this.action = INTENT_ACTION_OPEN_ICALOBJECT
             this.putExtra(INTENT_EXTRA_ITEM2SHOW, icalObjectId)
         }
-        val contentIntent: PendingIntent = PendingIntent.getActivity(context, this.icalObjectId.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        val contentIntent: PendingIntent = PendingIntent.getActivity(context, icalObjectId.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
 
         /* function to create intents for snooze and done */
         fun getActionIntent(action: String): PendingIntent {
             val actionIntent = Intent(context, NotificationPublisher::class.java).apply {
                 this.action = action
-                putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
                 putExtra(NotificationPublisher.ALARM_ID, alarmId)
                 putExtra(NotificationPublisher.ICALOBJECT_ID, icalObjectId)
-                putExtra(NotificationPublisher.IS_IMPLICIT_ALARM, alarmId == 0L)
             }
             return PendingIntent.getBroadcast(context, alarmId.toInt(), actionIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         }
@@ -399,6 +350,12 @@ data class Alarm (
             setContentIntent(contentIntent)
             priority = NotificationCompat.PRIORITY_MAX
             setCategory(NotificationCompat.CATEGORY_REMINDER)     //  CATEGORY_REMINDER might also be an alternative
+            if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default)) {
+                setAutoCancel(false)
+                setOngoing(true)
+            } else {
+                setAutoCancel(true)
+            }
             //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
             if(!isReadOnly && alarmId != 0L) {    // no alarm for readonly entries and implicit alarms that come only from the due date
                 addAction(
@@ -419,15 +376,13 @@ data class Alarm (
             }
         }
             .build()
-        notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL
+        notification.flags = notification.flags
 
         // the notificationIntent that is an Intent of the NotificationPublisher Class
         val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
-            putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
             putExtra(NotificationPublisher.NOTIFICATION, notification)
             putExtra(NotificationPublisher.ALARM_ID, alarmId)
             putExtra(NotificationPublisher.ICALOBJECT_ID, icalObjectId)
-            putExtra(NotificationPublisher.IS_IMPLICIT_ALARM, alarmId == 0L)
         }
 
         // the pendingIntent is initiated that is passed on to the alarm manager

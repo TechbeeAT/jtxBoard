@@ -11,12 +11,40 @@ package at.techbee.jtx.ui.list
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.AddTask
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DeleteSweep
+import androidx.compose.material.icons.outlined.EventNote
+import androidx.compose.material.icons.outlined.FilterList
+import androidx.compose.material.icons.outlined.LibraryAddCheck
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.NoteAdd
+import androidx.compose.material.icons.outlined.SyncProblem
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,16 +58,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.reusable.dialogs.DAVx5IncompatibleDialog
+import at.techbee.jtx.database.relations.ICal4ListRel
+import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
+import at.techbee.jtx.ui.reusable.dialogs.DeleteDoneDialog
+import at.techbee.jtx.ui.reusable.dialogs.SyncAppIncompatibleDialog
 import at.techbee.jtx.util.DateTimeUtils
-import java.util.*
+import at.techbee.jtx.util.SyncApp
+import java.util.TimeZone
 
 @Composable
 fun ListBottomAppBar(
     module: Module,
-    iCal4ListLive: LiveData<List<ICal4List>>,
+    iCal4ListRelLive: LiveData<List<ICal4ListRel>>,
     listSettings: ListSettings,
     showQuickEntry: MutableState<Boolean>,
     multiselectEnabled: MutableState<Boolean>,
@@ -47,39 +78,24 @@ fun ListBottomAppBar(
     allowNewEntries: Boolean,
     isBiometricsEnabled: Boolean,
     isBiometricsUnlocked: Boolean,
-    isDAVx5Incompatible: Boolean,
+    incompatibleSyncApps: List<SyncApp>,
     onAddNewEntry: () -> Unit,
     onFilterIconClicked: () -> Unit,
     onGoToDateSelected: (Long) -> Unit,
     onDeleteSelectedClicked: () -> Unit,
     onUpdateSelectedClicked: () -> Unit,
-    onToggleBiometricAuthentication: () -> Unit
+    onToggleBiometricAuthentication: () -> Unit,
+    onDeleteDone: () -> Unit
 ) {
 
     var showGoToDatePicker by remember { mutableStateOf(false) }
-    var showDAVx5IncompatibleDialog by remember { mutableStateOf(false) }
-    val iCal4List by iCal4ListLive.observeAsState(emptyList())
-
-    val isFilterActive = listSettings.searchCategories.value.isNotEmpty()
-                //|| searchOrganizers.value.isNotEmpty()
-            || (listSettings.searchStatus.value.isNotEmpty())
-            || listSettings.searchClassification.value.isNotEmpty()
-            || listSettings.searchCollection.value.isNotEmpty()
-            || listSettings.searchAccount.value.isNotEmpty()
-            || listSettings.isExcludeDone.value
-            || listSettings.isFilterStartInPast.value
-            || listSettings.isFilterStartToday.value
-            || listSettings.isFilterStartTomorrow.value
-            || listSettings.isFilterStartFuture.value
-            || (module == Module.TODO && listSettings.isFilterOverdue.value)
-            || (module == Module.TODO && listSettings.isFilterDueToday.value)
-            || (module == Module.TODO && listSettings.isFilterDueTomorrow.value)
-            || (module == Module.TODO && listSettings.isFilterDueFuture.value)
-            || (module == Module.TODO && listSettings.isFilterNoDatesSet.value)
-
+    var showSyncAppIncompatibleDialog by remember { mutableStateOf(false) }
+    var showDeleteDoneDialog by remember { mutableStateOf(false) }
+    val showMoreActionsMenu = remember { mutableStateOf(false) }
+    val iCal4List by iCal4ListRelLive.observeAsState(emptyList())
 
     if(showGoToDatePicker) {
-        var dates = iCal4List.map { it.dtstart ?: System.currentTimeMillis() }.toList()
+        var dates = iCal4List.map { it.iCal4List.dtstart ?: System.currentTimeMillis() }.toList()
         if (dates.isEmpty())
             dates = listOf(System.currentTimeMillis())
 
@@ -96,8 +112,8 @@ fun ListBottomAppBar(
             onConfirm = { selectedDate, _ ->
                 selectedDate?.let { selected ->
                     val closestDate = dates.findClosest(selected)
-                    iCal4List.find { it.dtstart == closestDate }?.let { foundEntry ->
-                        onGoToDateSelected(foundEntry.id)
+                    iCal4List.find { it.iCal4List.dtstart == closestDate }?.let { foundEntry ->
+                        onGoToDateSelected(foundEntry.iCal4List.id)
                     }
                 }
             },
@@ -108,8 +124,18 @@ fun ListBottomAppBar(
         )
     }
 
-    if(showDAVx5IncompatibleDialog) {
-        DAVx5IncompatibleDialog(onDismiss = { showDAVx5IncompatibleDialog = false } )
+    if(showSyncAppIncompatibleDialog) {
+        SyncAppIncompatibleDialog(
+            incompatibleSyncApps = incompatibleSyncApps,
+            onDismiss = { showSyncAppIncompatibleDialog = false }
+        )
+    }
+
+    if(showDeleteDoneDialog) {
+        DeleteDoneDialog(
+            onConfirm = { onDeleteDone() },
+            onDismiss = { showDeleteDoneDialog = false }
+        )
     }
 
     BottomAppBar(
@@ -130,7 +156,7 @@ fun ListBottomAppBar(
                         Icon(
                             Icons.Outlined.FilterList,
                             contentDescription = stringResource(id = R.string.filter),
-                            tint = if (isFilterActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                            tint = if (listSettings.isFilterActive()) MaterialTheme.colorScheme.primary else LocalContentColor.current
                         )
                     }
                     AnimatedVisibility(allowNewEntries) {
@@ -151,6 +177,7 @@ fun ListBottomAppBar(
                         }
                     }
 
+                    /*
                     AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null) {
                         IconButton(onClick = { showGoToDatePicker = true }) {
                             Icon(
@@ -159,6 +186,7 @@ fun ListBottomAppBar(
                             )
                         }
                     }
+                     */
 
                     AnimatedVisibility(isBiometricsEnabled) {
                         IconButton(onClick = { onToggleBiometricAuthentication() }) {
@@ -179,12 +207,25 @@ fun ListBottomAppBar(
                         }
                     }
 
-                    AnimatedVisibility(isDAVx5Incompatible) {
-                        IconButton(onClick = { showDAVx5IncompatibleDialog = true }) {
+                    AnimatedVisibility(incompatibleSyncApps.isNotEmpty()) {
+                        IconButton(onClick = { showSyncAppIncompatibleDialog = true }) {
                             Icon(
                                 Icons.Outlined.SyncProblem,
-                                contentDescription = stringResource(id = R.string.dialog_davx5_outdated_title),
+                                contentDescription = stringResource(id = R.string.dialog_sync_app_outdated_title),
                                 tint = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+
+                    AnimatedVisibility(module == Module.TODO) {
+                        OverflowMenu(menuExpanded = showMoreActionsMenu) {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(R.string.list_delete_done)) },
+                                onClick = {
+                                    showDeleteDoneDialog = true
+                                    showMoreActionsMenu.value = false
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.DeleteSweep, null) },
                             )
                         }
                     }
@@ -241,11 +282,11 @@ fun ListBottomAppBar(
 
                     TextButton(onClick = {
                         when(selectedEntries.size) {
-                            0 -> selectedEntries.addAll(iCal4List.map { it.id })
+                            0 -> selectedEntries.addAll(iCal4List.map { it.iCal4List.id })
                             iCal4List.size -> selectedEntries.clear()
                             else -> {
                                 selectedEntries.clear()
-                                selectedEntries.addAll(iCal4List.map { it.id })
+                                selectedEntries.addAll(iCal4List.map { it.iCal4List.id })
                             }
                         }
                     }) {
@@ -292,12 +333,12 @@ fun ListBottomAppBar_Preview_Journal() {
 
         ListBottomAppBar(
             module = Module.JOURNAL,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = false,
             isBiometricsUnlocked = false,
-            isDAVx5Incompatible = false,
+            incompatibleSyncApps = emptyList(),
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -306,7 +347,8 @@ fun ListBottomAppBar_Preview_Journal() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }
@@ -322,12 +364,12 @@ fun ListBottomAppBar_Preview_Note() {
 
         ListBottomAppBar(
             module = Module.NOTE,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = false,
             isBiometricsEnabled = false,
             isBiometricsUnlocked = false,
-            isDAVx5Incompatible = true,
+            incompatibleSyncApps = listOf(SyncApp.DAVX5),
             multiselectEnabled = remember { mutableStateOf(true) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -336,7 +378,8 @@ fun ListBottomAppBar_Preview_Note() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }
@@ -352,10 +395,10 @@ fun ListBottomAppBar_Preview_Todo() {
 
         ListBottomAppBar(
             module = Module.TODO,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
-            isDAVx5Incompatible = true,
+            incompatibleSyncApps = listOf(SyncApp.DAVX5),
             isBiometricsEnabled = true,
             isBiometricsUnlocked = false,
             multiselectEnabled = remember { mutableStateOf(false) },
@@ -366,7 +409,8 @@ fun ListBottomAppBar_Preview_Todo() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }
@@ -383,12 +427,12 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
 
         ListBottomAppBar(
             module = Module.TODO,
-            iCal4ListLive = MutableLiveData(emptyList()),
+            iCal4ListRelLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = true,
             isBiometricsUnlocked = true,
-            isDAVx5Incompatible = true,
+            incompatibleSyncApps = listOf(SyncApp.DAVX5),
             multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
@@ -397,7 +441,8 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             onGoToDateSelected = { },
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
-            onToggleBiometricAuthentication = { }
+            onToggleBiometricAuthentication = { },
+            onDeleteDone = { }
         )
     }
 }

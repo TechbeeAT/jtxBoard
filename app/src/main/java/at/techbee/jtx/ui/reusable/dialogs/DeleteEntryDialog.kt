@@ -27,13 +27,16 @@ fun DeleteEntryDialog(
     onDismiss: () -> Unit
 ) {
 
+    val maxSummaryLength = 30
+    val summaryTrunc = if((icalObject.summary?.length?:0) > maxSummaryLength) icalObject.summary?.take(maxSummaryLength-3) + "..." else icalObject.summary?:""
+
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = {
             if(icalObject.sequence == 0L)
                 Text(stringResource(id = R.string.edit_dialog_sure_to_discard_title))
             else
-                Text(stringResource(id = R.string.edit_dialog_sure_to_delete_title, icalObject.summary?:""))
+                Text(stringResource(id = R.string.edit_dialog_sure_to_delete_title, summaryTrunc))
         },
         text = {
             if(icalObject.sequence == 0L)
@@ -42,7 +45,7 @@ fun DeleteEntryDialog(
                     overflow = TextOverflow.Ellipsis
                 )
             else
-                Text(stringResource(id = R.string.edit_dialog_sure_to_delete_message, icalObject.summary?:""),
+                Text(stringResource(id = R.string.edit_dialog_sure_to_delete_message, summaryTrunc),
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -83,7 +86,7 @@ fun DeleteEntryDialog_Preview_discard() {
     MaterialTheme {
 
         DeleteEntryDialog(
-            icalObject = ICalObject.createTask("MyTask..."),
+            icalObject = ICalObject.createTask("MyTask with a very long description, at least more than 25 characters!"),
             onConfirm = { },
             onDismiss = { }
         )
@@ -97,7 +100,21 @@ fun DeleteEntryDialog_Preview_delete() {
     MaterialTheme {
 
         DeleteEntryDialog(
-            icalObject = ICalObject.createTask("MyTask...").apply { sequence = 1 },
+            icalObject = ICalObject.createTask("MyTask with a very long description, at least more than 25 characters!").apply { sequence = 1 },
+            onConfirm = { },
+            onDismiss = { }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DeleteEntryDialog_Preview_delete_short() {
+    MaterialTheme {
+
+        DeleteEntryDialog(
+            icalObject = ICalObject.createTask("MyTask").apply { sequence = 1 },
             onConfirm = { },
             onDismiss = { }
         )

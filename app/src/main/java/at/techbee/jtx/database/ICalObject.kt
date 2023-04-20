@@ -17,16 +17,15 @@ import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
-import androidx.compose.ui.graphics.Color
 import androidx.core.util.PatternsCompat
 import androidx.preference.PreferenceManager
 import androidx.room.*
 import at.bitfire.ical4android.*
 import at.techbee.jtx.JtxContract
 import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
@@ -491,16 +490,6 @@ data class ICalObject(
     companion object {
 
         const val TZ_ALLDAY = "ALLDAY"
-        val defaultColors = arrayListOf(
-            Color.Transparent,
-            Color.Red,
-            Color.Green,
-            Color.Blue,
-            Color.Yellow,
-            Color.Cyan,
-            Color.Magenta,
-            Color.LightGray
-        )
 
         fun createJournal() = createJournal(null)
 
@@ -739,7 +728,7 @@ data class ICalObject(
                     }
 
                     database.updateRecurringInstanceUIDs(oldUID, newUID, newCollectionId)
-                    Alarm.scheduleNextNotifications(context)
+                    NotificationPublisher.scheduleNextNotifications(context)
                     return newId
                 }
                 return null
@@ -838,13 +827,14 @@ data class ICalObject(
                     daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_start_past)
                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, hoursLeft)
                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
-                    else -> context.getString(R.string.list_start_inXdays, daysLeft+1)
+                    daysLeft <= 7 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
                 }
             } else {
                 when {
                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_date_today)
                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_date_tomorrow)
-                    else -> DateTimeUtils.convertLongToMediumDateString(dtstart, dtstartTimezone)
+                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
                 }
             }
         }
@@ -867,7 +857,8 @@ data class ICalObject(
                 daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_due_overdue)
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, hoursLeft)
                 localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
-                else -> context.getString(R.string.list_due_inXdays, daysLeft+1)
+                daysLeft <= 7 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                else -> DateTimeUtils.convertLongToMediumDateShortTimeString(due, dueTimezone)
             }
         }
 
@@ -1339,7 +1330,7 @@ data class ICalObject(
                     }
                 }
             }
-            Alarm.scheduleNextNotifications(context)
+            NotificationPublisher.scheduleNextNotifications(context)
         }
     }
 
@@ -1532,6 +1523,7 @@ data class ICalObject(
     }
 }
 
+
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
  * The possible values differ for Todos and Journals/Notes
  * @param [stringResource] is a reference to the String Resource within JTX
@@ -1580,6 +1572,8 @@ enum class Status(val status: String?, @StringRes val stringResource: Int) : Par
 
     companion object {
 
+        fun getStatusFromString(stringStatus: String?) = Status.values().find { it.status == stringStatus }
+
         fun valuesFor(module: Module): List<Status> {
             return when (module) {
                 Module.JOURNAL, Module.NOTE -> listOf(NO_STATUS, DRAFT, FINAL, CANCELLED)
@@ -1618,6 +1612,7 @@ enum class Classification(val classification: String?, @StringRes val stringReso
     CONFIDENTIAL("CONFIDENTIAL", R.string.classification_confidential);
 
     companion object {
+        fun getClassificationFromString(stringClassification: String?) = Classification.values().find { it.classification == stringClassification }
 
         fun getListFromStringList(stringList: Set<String>?): MutableList<Classification> {
             val list = mutableListOf<Classification>()

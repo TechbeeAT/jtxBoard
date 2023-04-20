@@ -10,16 +10,45 @@ package at.techbee.jtx.widgets
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.CheckBox
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Colorize
+import androidx.compose.material.icons.outlined.Opacity
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,20 +56,42 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
-import at.techbee.jtx.ui.list.*
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.ui.list.ListSettings
+import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
+import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ListWidgetConfigGeneral(
     listSettings: ListSettings,
     selectedModule: MutableState<Module>,
     modifier: Modifier = Modifier
 ) {
+
+    var showColorPickerBackground by remember { mutableStateOf(false) }
+    var showColorPickerEntryBackground by remember { mutableStateOf(false) }
+
+    val widgetColorCalculated = listSettings.widgetColor.value?.let { Color(it).copy(alpha = listSettings.widgetAlpha.value) } ?: MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value)
+    val widgetColorEntriesCalculated = listSettings.widgetColorEntries.value?.let { Color(it).copy(alpha = listSettings.widgetAlphaEntries.value) } ?: MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value)
+
+    if(showColorPickerBackground) {
+        ColorPickerDialog(
+            initialColor = listSettings.widgetColor.value,
+            onColorChanged = { listSettings.widgetColor.value = it },
+            onDismiss = { showColorPickerBackground = false }
+        )
+    }
+
+    if(showColorPickerEntryBackground) {
+        ColorPickerDialog(
+            initialColor = listSettings.widgetColorEntries.value,
+            onColorChanged = { listSettings.widgetColorEntries.value = it },
+            onDismiss = { showColorPickerEntryBackground = false }
+        )
+    }
 
     Column(
         modifier = modifier,
@@ -57,7 +108,7 @@ fun ListWidgetConfigGeneral(
 
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
-            mainAxisAlignment = FlowMainAxisAlignment.Center
+            horizontalArrangement = Arrangement.Center
         ) {
 
             Module.values().forEach { module ->
@@ -96,12 +147,14 @@ fun ListWidgetConfigGeneral(
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.fillMaxWidth().alpha(0.5f)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(0.5f)
                 )
             },
             singleLine = true,
             maxLines = 1,
-            colors = TextFieldDefaults.textFieldColors(),
+            colors = OutlinedTextFieldDefaults.colors(),
             textStyle = MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Center, fontWeight = FontWeight.Bold),
             trailingIcon = {
                 AnimatedVisibility(listSettings.widgetHeader.value.isNotEmpty()) {
@@ -203,6 +256,12 @@ fun ListWidgetConfigGeneral(
             iconDesc = stringResource(id = R.string.opacity),
             text = stringResource(id = R.string.opacity)
         )
+        Text(
+            text = stringResource(R.string.widget_list_opacity_warning),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.labelSmall,
+            fontStyle = FontStyle.Italic
+        )
 
         Text(
             text = stringResource(R.string.widget_list_configuration_widget_background),
@@ -216,8 +275,8 @@ fun ListWidgetConfigGeneral(
                 listSettings.widgetAlpha.value = it
             },
             colors = SliderDefaults.colors(
-                thumbColor = MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value),
-                activeTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value)
+                thumbColor = widgetColorCalculated,
+                activeTrackColor = widgetColorCalculated
             ),
             steps = 20,
             modifier = Modifier.padding(horizontal = 16.dp)
@@ -235,16 +294,57 @@ fun ListWidgetConfigGeneral(
                 listSettings.widgetAlphaEntries.value = it
             },
             colors = SliderDefaults.colors(
-                thumbColor = MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value),
-                activeTrackColor = MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value)
+                thumbColor = widgetColorEntriesCalculated,
+                activeTrackColor = widgetColorEntriesCalculated
             ),
             steps = 20,
             modifier = Modifier
                 .padding(horizontal = 8.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value))
+                .background(listSettings.widgetColor.value?.let { Color(it).copy(alpha = listSettings.widgetAlpha.value) }
+                    ?: MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value))
                 .padding(horizontal = 8.dp)
         )
+
+        Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+        HeadlineWithIcon(
+            icon = Icons.Outlined.Colorize,
+            iconDesc = stringResource(id = R.string.color),
+            text = stringResource(id = R.string.color)
+        )
+        Text(
+            text = stringResource(R.string.widget_list_color_warning),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.labelSmall,
+            fontStyle = FontStyle.Italic
+        )
+
+        FlowRow(
+            modifier = Modifier
+                .padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+        ) {
+            AssistChip(
+                modifier = Modifier.padding(2.dp),
+                colors = AssistChipDefaults.assistChipColors(
+                    containerColor = widgetColorCalculated,
+                    labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(widgetColorCalculated)
+                ),
+                onClick = { showColorPickerBackground = true },
+                label = { Text(stringResource(R.string.widget_list_configuration_widget_background)) }
+            )
+            AssistChip(
+                modifier = Modifier.padding(2.dp),
+                colors = AssistChipDefaults.assistChipColors(
+                    containerColor = widgetColorEntriesCalculated,
+                    labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(widgetColorEntriesCalculated)
+                ),
+                onClick = { showColorPickerEntryBackground = true },
+                label = { Text(stringResource(R.string.widget_list_configuration_entries_background), modifier = Modifier.padding(horizontal = 8.dp)) }
+            )
+        }
     }
 }
 

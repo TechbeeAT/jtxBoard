@@ -9,10 +9,7 @@
 package at.techbee.jtx.ui.reusable.elements
 
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteSweep
@@ -26,8 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FilterSection(
     icon: ImageVector,
@@ -35,6 +34,7 @@ fun FilterSection(
     onResetSelection: () -> Unit,
     onInvertSelection: () -> Unit,
     modifier: Modifier = Modifier,
+    showMenu: Boolean = true,
     content: @Composable () -> Unit,
     ) {
 
@@ -57,35 +57,42 @@ fun FilterSection(
                 text = headline,
                 modifier = Modifier.weight(1f)
             )
-            Row {
+            if(showMenu) {
+                Row {
                 IconButton(onClick = { expanded = !expanded }) {
                     Icon(Icons.Outlined.MoreVert, stringResource(id = R.string.more))
                 }
-
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    DropdownMenuItem(
-                        leadingIcon = { Icon(Icons.Outlined.SwapHoriz, null) },
-                        text = { Text(stringResource(id = R.string.invert_selection)) },
-                        onClick = {
-                            onInvertSelection()
-                            expanded = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        leadingIcon = { Icon(Icons.Outlined.DeleteSweep, null) },
-                        text = { Text(stringResource(id = R.string.clear_selection)) },
-                        onClick = {
-                            onResetSelection()
-                            expanded = false
-                        }
-                    )
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            leadingIcon = { Icon(Icons.Outlined.SwapHoriz, null) },
+                            text = { Text(stringResource(id = R.string.invert_selection)) },
+                            onClick = {
+                                onInvertSelection()
+                                expanded = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            leadingIcon = { Icon(Icons.Outlined.DeleteSweep, null) },
+                            text = { Text(stringResource(id = R.string.clear_selection)) },
+                            onClick = {
+                                onResetSelection()
+                                expanded = false
+                            }
+                        )
+                    }
                 }
             }
         }
-        content()
+
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            content()
+        }
     }
 }
 

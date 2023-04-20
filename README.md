@@ -52,7 +52,7 @@ jtx Board provides different flavors:
 - **huawei** is the flavor used for is the flavor for the Huawei app gallery that comes in a standard and pro version. 
 - **amazon** is the flavor used for is the flavor for the amazon app store that comes in a standard and pro version. 
 - **generic** deprecated - was the flavor other app stores like Amazon. This flavor contains only open source libraries and is meant to be paid before downloading. 
-- **ose** is the open source edition. **If you would like to create build the app from source, this is the recommended flavor.** This flavor contains only open source libraries. Instead of an in app-purchase this flavor has an additional page for donations visible. As Google Maps is not open source, the ose flavor does not include Map functionalities.
+- **ose** is the open source edition. **If you would like to create build the app from source, this is the recommended flavor.** This flavor contains only open source libraries. Instead of an in app-purchase this flavor has an additional page for donations visible. As Google Maps is not open source, the ose flavor uses OpenStreetMap.
 
 
 ### Permissions

@@ -120,6 +120,13 @@ enum class SwitchSetting(
         icon = { Icon(Icons.Outlined.MyLocation, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_create_with_current_location,
         default = false
+    ),
+    SETTING_STICKY_ALARMS(
+        key = "settings_sticky_alarms",
+        icon = { Icon(Icons.Outlined.Alarm, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_sticky_alarms,
+        subtitle = R.string.settings_sticky_alarms_sub,
+        default = false
     );
     fun save(newSwitchValue: Boolean, context: Context) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, newSwitchValue).apply()

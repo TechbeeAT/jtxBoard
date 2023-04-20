@@ -30,8 +30,8 @@ import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
-import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
@@ -44,7 +44,6 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
@@ -378,7 +377,7 @@ fun SettingsScreen(
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingAutoAlarm.value = selection
                                 SETTING_AUTO_ALARM.save(selection, context = context)
-                                scope.launch(Dispatchers.IO) { Alarm.scheduleNextNotifications(context) }
+                                scope.launch(Dispatchers.IO) { NotificationPublisher.scheduleNextNotifications(context) }
                             }
                         )
                         SwitchSetting(
@@ -403,7 +402,16 @@ fun SettingsScreen(
                             onCheckedChanged = {
                                 settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = it
                                 SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
-                            })
+                            }
+                        )
+                        SwitchSetting(
+                            setting = SETTING_STICKY_ALARMS,
+                            initiallyChecked = settingsStateHolder.settingStickyAlarms.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingStickyAlarms.value = it
+                                SETTING_STICKY_ALARMS.save(it, context)
+                            }
+                        )
                     }
                 }
             },

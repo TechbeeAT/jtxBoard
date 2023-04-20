@@ -10,7 +10,6 @@ package at.techbee.jtx.widgets
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
@@ -22,8 +21,18 @@ import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
-import androidx.glance.layout.*
-import androidx.glance.text.*
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Column
+import androidx.glance.layout.Row
+import androidx.glance.layout.fillMaxHeight
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.padding
+import androidx.glance.layout.size
+import androidx.glance.text.FontStyle
+import androidx.glance.text.FontWeight
+import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
+import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
@@ -44,6 +53,10 @@ fun ListWidgetContent(
     subtasks: List<ICal4ListWidget>,
     subnotes: List<ICal4ListWidget>,
     listExceedLimits: Boolean,
+    textColor: ColorProvider,
+    entryColor: ColorProvider,
+    entryTextColor: ColorProvider,
+    entryOverdueTextColor: ColorProvider,
     modifier: GlanceModifier = GlanceModifier
 ) {
 
@@ -101,10 +114,10 @@ fun ListWidgetContent(
 
     val groupedList = sortedList.groupBy {
         when (listWidgetConfig.groupBy) {
-            GroupBy.STATUS -> Status.values().find { status -> status.status == it.status }?.stringResource?.let { stringRes -> stringResource(id = stringRes) } ?: it.status
-            ?: stringResource(id = R.string.status_no_status)
-            GroupBy.CLASSIFICATION -> Classification.values().find { classif -> classif.classification == it.classification }?.stringResource?.let { stringRes -> stringResource(id = stringRes) }
-                ?: it.classification ?: stringResource(id = R.string.classification_no_classification)
+            GroupBy.STATUS -> Status.values().firstOrNull { status -> status.status == it.status }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.status ?: context.getString(R.string.status_no_status)
+            GroupBy.CLASSIFICATION -> Classification.values().firstOrNull { classif -> classif.classification == it.classification }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.classification ?: context.getString(R.string.classification_no_classification)
+            GroupBy.ACCOUNT -> it.accountName ?:""
+            GroupBy.COLLECTION -> it.collectionDisplayName ?:""
             GroupBy.PRIORITY -> {
                 when (it.priority) {
                     null -> context.resources.getStringArray(R.array.priority)[0]
@@ -125,13 +138,6 @@ fun ListWidgetContent(
     val subnotesGrouped = subnotes.groupBy { it.parentUID }
 
     val imageSize = 36.dp
-    val textColor = GlanceTheme.colors.onPrimaryContainer
-    val entryColor = if(listWidgetConfig.widgetAlphaEntries == 1F)
-        GlanceTheme.colors.surface
-    else
-        ColorProvider(GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig.widgetAlphaEntries))
-    val entryTextColor = GlanceTheme.colors.onSurface
-    val entryOverdueTextColor = GlanceTheme.colors.error
 
     Column(
         modifier = modifier,

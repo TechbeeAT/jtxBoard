@@ -59,11 +59,13 @@ Global Strings -->
     <string name="list_due_tomorrow">"Morgen fällig"</string>
     <string name="list_due_inXdays">"In %d Tagen fällig"</string>
     <string name="list_due_inXhours">"In %d Stunden fällig"</string>
+    <string name="list_due_on_weekday">"Fällig am %s"</string>
     <string name="list_start_past">"Start in Vergangenheit"</string>
     <string name="list_start_today">"Geplanter Start heute"</string>
     <string name="list_start_tomorrow">"Geplanter Start morgen"</string>
     <string name="list_start_inXhours">"Geplanter Start in %d Stunden"</string>
     <string name="list_start_inXdays">"Geplanter Start in %d Tagen"</string>
+    <string name="list_start_on_weekday">"Geplanter Start am %s"</string>
     <string name="list_tabitem_journals">"Journale"</string>
     <string name="list_tabitem_notes">"Notizen"</string>
     <string name="list_tabitem_todos">"Aufgaben"</string>
@@ -80,10 +82,9 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Zum Original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instanz von wiederkehrendem Eintrag"</string>
-    <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, al s eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen."</string>
+    <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, als eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen."</string>
     <string name="view_fragment_audio_permission">"App Berechtigungen"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board benötigt Ihre Zustimmung, um Audio aufzunehmen und um die Spracherkennung zu nutzen. Bitte geben Sie die Berechtigung, um diese Funktionalität zu nutzen."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Audio-Notiz hinzufügen"</string>
     <string name="view_comment_playbutton_content_desc">"Audio-Notiz abspielen"</string>
     <string name="view_reccurrence_note_is_exception">"Dieser Eintrag ist Teil einer Serie."</string>
     <string name="view_feedback_linked_notes">"Verknüpfte Notizen"</string>
@@ -147,6 +148,8 @@ Global Strings -->
     <string name="edit_task_completed_add">"Fertiggestellt-Datum/Zeit auswählen"</string>
     <string name="edit_dialog_sure_to_delete_title">"\"%1$s\" löschen?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Diesen Eintrag verwerfen?"</string>
+    <string name="dialog_delete_done_title">"Alle erledigten Aufgaben löschen?"</string>
+    <string name="dialog_delete_done_message">"Achtung: Unteraufgaben werden unabhängig von ihrem Status gelöscht, wenn ihr übergeordneter Eintrag als erledigt markiert ist. Dieser Vorgang kann nicht rückgängig gemacht werden!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Sind Sie sicher, dass Sie \"%1$s\" löschen wollen?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Sind Sie sicher, dass Sie diesen Eintrag verwerfen wollen? Der Eintrag wird nicht gespeichert."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Das Fälligkeitsdatum kann nicht vor dem Startdatum sein."</string>
@@ -211,6 +214,7 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="sync_furhter_info_davx5">"Für weitere Informationen zu DAVx⁵ schauen Sie bitte auf"</string>
     <string name="sync_button_add_account_in_davx5">"Account in DAVx⁵ hinzufügen"</string>
     <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ konnte nicht geöffnet werden, bitte öffnen Sie die App manuell."</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Fehler beim Öffnen von %1$s, bitte öffnen Sie die App manuell."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Der Sync konnte nicht in DAVx⁵ getriggert werden, bitte kontrollieren Sie direkt in DAVx⁵."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Hallo, ich bin Patrick, Entwickler von jtx Board. Die Entwicklung meiner App nimmt viel Zeit in Anspruch und trotzdem stelle ich sie kostenlos zur Verfügung. Wenn euch meine App gefällt, zeigt euch bitte ein wenig Erkenntlich und unterstützt mich mit einer kleinen Spende!"</string>
@@ -219,6 +223,7 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="donate_other_donation_methods">"Weitere Optionen zum Spenden finden Sie auf unserer Website:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Es wurde keine App gefunden, um diese Datei/URL zu öffnen."</string>
     <string name="toast_item_is_now_recu_exception">"Wiederkehrender Eintrag ist jetzt eine Ausnahme."</string>
+    <string name="toast_done_tasks_deleted">"Erledigte Aufgaben gelöscht (%d)."</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Entschuldigung, jtx Board hat gerade Probleme beim Synchronisieren. Bitte schließen Sie DAVx⁵ und probieren Sie es erneut."</string>
     <string name="about_translations_thanks_to">"Dank an"</string>
@@ -241,6 +246,7 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="list_quickadd_dialog_sr_start_listening">"Spracherkennung gestartet."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Spracherkennung gestoppt."</string>
     <string name="list_quickadd_dialog_sr_error">"Entschuldigung, bei der Spracherkennung ist ein Problem aufgetreten. (%1$s)"</string>
+    <string name="list_quickadd_add_audio_attachment">"Audioanhang aufnehmen"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Leseberechtigung für Kontakte erteilt"</string>
     <string name="permission_read_contacts_denied">"Leseberechtigung für Kontakte abgelehnt"</string>
@@ -253,9 +259,11 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="apply">"Anwenden"</string>
     <string name="not_available_abbreviation">"n.V."</string>
     <string name="collection">"Collection"</string>
+    <string name="collection_owner_displayname">"Besitzer: %1$s"</string>
     <string name="link_to_parent">"Zu übergeordnetem Element verknüpfen"</string>
     <string name="toolbar_text_collections">"Collections"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
+    <string name="navigation_drawer_presets">"Voreinstellungen"</string>
     <string name="edit_dialog_set_attendee_role">"Teilnehmer-Rolle vergeben"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Datum/Uhrzeit"</string>
@@ -310,7 +318,9 @@ Für weitere Informationen zur Synchronisierung, schauen Sie bitte auf:"</string
     <string name="attachment_export_saved_successfully">"Erfolgreich gespeichert"</string>
     <string name="attachment_export_error_error_occurred">"Beim Speichern der Datei ist ein Fehler aufgetreten!"</string>
     <string name="menu_collections_add_remote">"Remote Collection hinzufügen (DAVx⁵)"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"Remote Collection hinzufügen (%1$s)"</string>
     <string name="menu_collection_popup_show_in_davx5">"In DAVx⁵ anzeigen"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"In %1$s anzeigen"</string>
     <string name="menu_collection_popup_export_as_ics">"Als .ics exportieren"</string>
     <string name="journal">"Journal"</string>
     <string name="note">"Notiz"</string>
@@ -509,6 +519,13 @@ Danke!"</string>
     <string name="dialog_detach_from_series_button">"Von der Serie trennen"</string>
     <string name="dialog_davx5_outdated_title">"DAVx⁵ veraltet"</string>
     <string name="dialog_davx5_outdated_message">"Ihre aktuelle Version von DAVx5 ist mit dieser Version von jtx Board nicht kompatibel. Bitte aktualisieren Sie DAVx5 auf 4.3.1 (403010000+) oder neuer! Die Synchronisierung ist derzeit ausgesetzt."</string>
+    <string name="dialog_sync_app_outdated_title">"Sync-App veraltet"</string>
+    <string name="dialog_sync_app_outdated_message">"Ihre aktuelle Version von %1$s ist nicht mit dieser Version von jtx Board kompatibel. Bitte aktualisieren Sie auf %1$s %2$s oder neuer! Die Synchronisierung über %1$s ist derzeit ausgesetzt."</string>
+    <string name="dialog_save_current_filter_config">"Aktuelle Filterkonfiguration speichern"</string>
+    <string name="dialog_save_current_filter_my_filter">"Meine Filter"</string>
+    <string name="dialog_edit_stored_category_title">"Kategorie-Vorlage hinzufügen/bearbeiten"</string>
+    <string name="dialog_edit_stored_resource_title">"Ressourcen-Vorlage hinzufügen/bearbeiten"</string>
+    <string name="dialog_add_audio_entry_title">"Audio-Eintrag hinzufügen"</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
     <string name="settings_details">"Einstellungen für die Detailansicht"</string>
@@ -537,6 +554,8 @@ Danke!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Status, Fortschritt und Fertiggestellt synchron halten"</string>
     <string name="settings_attention_experimental_feature">"Achtung: Dies ist eine experimentelle Funktion"</string>
     <string name="settings_create_with_current_location">"Neue Einträge mit aktuellem Standort erstellen"</string>
+    <string name="settings_sticky_alarms">"Fixierte Alarme"</string>
+    <string name="settings_sticky_alarms_sub">"Benachrichtigungen erhalten bis erledigt oder verschoben"</string>
     <string name="sync_button_go_to_collections">"Zu den Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Bitte kaufen Sie jtx Board Pro, um diese Funktion zu nutzen."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -549,6 +568,7 @@ Danke!"</string>
     <string name="settings_select_language_system">"Systemstandard"</string>
     <string name="settings_details_enable_markdown">"Markdown-Formatierung aktivieren"</string>
     <string name="filter_special">"Spezialfilter"</string>
+    <string name="filter_presets">"Filter-Voreinstellungen"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
     <string name="list_date_today">"Heute"</string>
@@ -560,6 +580,7 @@ Danke!"</string>
     <string name="list_start_date_future">"Start in Zukunft"</string>
     <string name="list_hide_completed_tasks">"Fertiggestellte Aufgaben ausblenden"</string>
     <string name="list_biometric_protected_entries_locked">Biometrische geschützte Einträge gesperrt</string>
+    <string name="list_delete_done">"Löschen erledigt"</string>
     <string name="collections_biometric_protected_entries_locked_title">Biometrische geschützte Einträge gesperrt</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Bitte authentifizieren Sie sich und versuchen Sie es erneut</string>
     <string name="list_biometric_protected_entries_unlocked">Biometrische geschützte Einträge entsperrt</string>
@@ -582,6 +603,7 @@ Danke!"</string>
     <string name="filter_second_order_by">"Danach sortieren nach"</string>
     <string name="filter_group_by">"Gruppieren nach"</string>
     <string name="filter_group_by_info">"Gruppierung ist verfügbar für Listen- und Kompakt-Ansicht"</string>
+    <string name="filter_save_as_preset">"Als Vorlage speichern"</string>
     <string name="menu_list_flat_view">"Flache Ansicht"</string>
     <string name="menu_list_flat_view_sub">"Zeige Untereinträge immer auf höchster Ebene"</string>
     <string name="menu_list_limit_recur_entries">"Wiederkehrende Einträge limitieren"</string>
@@ -606,6 +628,8 @@ Danke!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Achtung: Aktuell wird nur eine Hierarchieebene im Widget unterstützt. Um Einträge weiterer Ebenen zu sehen, benutzen Sie bitte die flache Ansicht."</string>
     <string name="widget_list_maximum_entries_reached">"Maximale Anzahl an Einträgen im Widget erreicht (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualisiere Widget"</string>
+    <string name="widget_list_opacity_warning">"Hinweis: Dies ist eine experimentelle Funktion. Mit reduzierter Deckkraft werden Änderungen im System-Farbschema möglicherweise nicht sofort übernommen!"</string>
+    <string name="widget_list_color_warning">"Hinweis: Dies ist eine experimentelle Funktion. Änderungen im System-Farbschema werden nicht übernommen! Wählen Sie keine Farbe, um zum Systemstandard zurückzukehren."</string>
     <string name="opacity">"Transparenz"</string>
     <string name="general">"Allgemein"</string>
     <string name="list_collapse">"Zuklappen"</string>
@@ -639,4 +663,7 @@ Danke!"</string>
     <string name="markdown_horizontal_ruler">"Horizontale Linie"</string>
     <string name="markdown_unordered_list">"Liste"</string>
     <string name="markdown_code">"Code"</string>
+    <string name="preset_categories">"Voreingestellte Kategorien"</string>
+    <string name="preset_resources">"Voreingestellte Ressourcen"</string>
+    <string name="active_filters">Aktive Filter:</string>
 </resources>

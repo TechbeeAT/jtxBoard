@@ -1,5 +1,6 @@
 package at.techbee.jtx
 
+import android.accounts.Account
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,6 +40,7 @@ import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_OSE
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.JtxReviewManager
@@ -53,7 +56,9 @@ import at.techbee.jtx.ui.donate.DonateScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.ListViewModel
+import at.techbee.jtx.ui.presets.PresetsScreen
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
+import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
@@ -62,11 +67,15 @@ import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidgetReceiver
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import java.net.URLDecoder
 import java.time.ZonedDateTime
 import kotlin.time.Duration.Companion.minutes
 
@@ -180,6 +189,10 @@ class MainActivity2 : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         ListWidgetReceiver.setPeriodicWork(this)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
+            SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+        }
 
         //handle intents, but only if it wasn't already handled
         if (intent.hashCode() != lastProcessedIntentHash) {
@@ -306,8 +319,29 @@ fun MainNavHost(
             ListScreenTabContainer(
                 navController = navController,
                 globalStateHolder = globalStateHolder,
-                settingsStateHolder = settingsStateHolder
+                settingsStateHolder = settingsStateHolder, 
+                initialModule = settingsStateHolder.lastUsedModule.value
             )
+        }
+        composable(
+            FilteredListDestination.FilteredList.route,
+            arguments = FilteredListDestination.FilteredList.args
+        ) { backStackEntry ->
+
+            val module = Module.values().find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.argModule) } ?: return@composable
+            val storedListSettingData = backStackEntry.arguments?.getString(
+                FilteredListDestination.argStoredListSettingData)?.let {
+                Json.decodeFromString<StoredListSettingData>(URLDecoder.decode(it, "utf-8")
+                ) }
+
+            ListScreenTabContainer(
+                navController = navController,
+                globalStateHolder = globalStateHolder,
+                settingsStateHolder = settingsStateHolder,
+                initialModule = module,
+                storedListSettingData = storedListSettingData
+            )
+
         }
         composable(
             DetailDestination.Detail.route,
@@ -357,6 +391,11 @@ fun MainNavHost(
                     }
                     ListSettings.fromPrefs(prefs).saveLastUsedCollectionId(prefs, collectionId)
                 }
+            )
+        }
+        composable(NavigationDrawerDestination.PRESETS.name) {
+            PresetsScreen(
+                navController = navController
             )
         }
         composable(NavigationDrawerDestination.COLLECTIONS.name) {

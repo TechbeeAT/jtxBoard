@@ -76,7 +76,6 @@ Global Strings -->
     <string name="view_recurrence_note_to_original">"Questa voce fa parte di una serie. Ogni modifica a questo elemento, farà in modo che venga disconnesso dalla serie, rendendolo un evento autonomo. Successive modifiche all'evento originale non avranno influenza su questo elemento."</string>
     <string name="view_fragment_audio_permission">"Autorizzazione app"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board ha bisogno dell'autorizzazione per usare il microfono del dispositivo. Si prega di concedere l'autorizzazione per utilizzare questa funzione."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Aggiungi nota audio"</string>
     <string name="view_comment_playbutton_content_desc">"Riproduci commento audio"</string>
     <string name="view_reccurrence_note_is_exception">"Questo elemento è un'eccezione a una voce ricorrente."</string>
     <string name="view_feedback_linked_notes">"Feedback/Note collegate"</string>

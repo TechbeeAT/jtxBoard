@@ -11,6 +11,8 @@ package at.techbee.jtx.ui.list
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
 import android.speech.RecognitionListener
@@ -25,6 +27,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.MicOff
@@ -32,7 +35,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -42,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -58,11 +61,12 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.ui.reusable.cards.AttachmentCard
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
+import at.techbee.jtx.ui.reusable.elements.AudioRecordElement
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import java.util.*
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListQuickAddElement(
     presetModule: Module?,
@@ -72,7 +76,8 @@ fun ListQuickAddElement(
     presetAttachment: Attachment? = null,
     allWriteableCollections: List<ICalCollection>,
     presetCollectionId: Long,
-    onSaveEntry: (module: Module, newEntryText: String, attachment: Attachment?, collectionId: Long, editAfterSaving: Boolean) -> Unit,
+    player: MediaPlayer?,
+    onSaveEntry: (module: Module, newEntryText: String, attachments: List<Attachment>, collectionId: Long, editAfterSaving: Boolean) -> Unit,
     onDismiss: () -> Unit,
     keepDialogOpen: () -> Unit
 ) {
@@ -81,6 +86,7 @@ fun ListQuickAddElement(
         return
 
     val context = LocalContext.current
+    val isPreview = LocalInspectionMode.current
     val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
     var showAudioPermissionDialog by rememberSaveable { mutableStateOf(false) }
     var currentCollection by rememberSaveable {
@@ -109,48 +115,87 @@ fun ListQuickAddElement(
         )
     }
     var currentText by remember { mutableStateOf(TextFieldValue(text = presetText, selection = TextRange(presetText.length))) }
-    var currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
-    var noTextError by rememberSaveable { mutableStateOf(false) }
-
+    val currentAttachments = remember { mutableStateListOf(presetAttachment) }
     val focusRequester = remember { FocusRequester() }
+    val sr = remember {
+        when {
+            isPreview -> null   // enables preview
+            SpeechRecognizer.isRecognitionAvailable(context) -> SpeechRecognizer.createSpeechRecognizer(
+                context
+            )
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && SpeechRecognizer.isOnDeviceRecognitionAvailable(
+                context
+            ) -> SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
+            else -> null
+        }
+    }
+    var srTextResult by remember { mutableStateOf("") }
+    var srListening by remember { mutableStateOf(false) }
+    val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+    }
 
     LaunchedEffect(Unit) {
         // try catch block as the FocsRequester might not yet be initialized when the focus is requested (see https://github.com/TechbeeAT/jtxBoard/issues/121)
         try { focusRequester.requestFocus() } catch (e: IllegalStateException) { Log.w("ListQuickAddElement", e.stackTraceToString())}
+
+        sr?.setRecognitionListener(object : RecognitionListener {
+            override fun onReadyForSpeech(p0: Bundle?) {}
+            override fun onBeginningOfSpeech() { srListening = true }
+            override fun onEndOfSpeech() { srListening = false }
+            override fun onRmsChanged(p0: Float) {}
+            override fun onBufferReceived(p0: ByteArray?) {}
+            override fun onError(errorCode: Int) { srListening = false }
+            override fun onPartialResults(bundle: Bundle?) {
+                val data: ArrayList<String>? = bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at the first position.
+                srTextResult = data?.firstOrNull() ?: ""
+            }
+            override fun onEvent(p0: Int, p1: Bundle?) {}
+            override fun onResults(bundle: Bundle?) {
+                srListening = false
+                srTextResult = ""
+                val data: ArrayList<String>? =
+                    bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (currentText.text.isNotBlank())   // add a return if there is already text present to add it in a new line
+                    currentText = TextFieldValue(currentText.text + System.lineSeparator())
+                // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
+                if (data?.isNotEmpty() == true) {
+                    currentText = TextFieldValue(currentText.text + data[0], selection = TextRange(currentText.text.length + data[0].length))
+                    sr.startListening(srIntent)
+                    srListening = true
+                }
+            }
+        })
     }
 
-    val sr: SpeechRecognizer? = when {
-        LocalInspectionMode.current -> null   // enables preview
-        SpeechRecognizer.isRecognitionAvailable(context) -> SpeechRecognizer.createSpeechRecognizer(
-            context
-        )
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && SpeechRecognizer.isOnDeviceRecognitionAvailable(
-            context
-        ) -> SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
-        else -> null
-    }
-    var srTextResult by remember { mutableStateOf("") }
-    var srListening by remember { mutableStateOf(false) }
 
     fun saveEntry(goToEdit: Boolean) {
         if(currentCollection == null || currentModule == null)
             return
 
-        if (currentText.text.isNotBlank()) {
-            onSaveEntry(currentModule!!, currentText.text, currentAttachment, currentCollection!!.collectionId, goToEdit)
-            currentText = TextFieldValue(text = "")
-            if(goToEdit)
-                onDismiss()
-        } else {
-            noTextError = true
-        }
+        onSaveEntry(currentModule!!, currentText.text, currentAttachments.filterNotNull(), currentCollection!!.collectionId, goToEdit)
+        currentText = TextFieldValue(text = "")
+        if(goToEdit)
+            onDismiss()
+    }
+
+    @Suppress("DEPRECATION") val recorder = remember {
+        if (isPreview)
+            null
+        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            MediaRecorder(context)
+        else
+            MediaRecorder()
     }
 
     AlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
         onDismissRequest = onDismiss,
         text = {
-            Column(modifier = modifier) {
+            Column(modifier = modifier.verticalScroll(rememberScrollState())) {
 
                 if(currentModule == null || enabledModules.size > 1) {
                     Row(
@@ -204,74 +249,29 @@ fun ListQuickAddElement(
 
                 OutlinedTextField(
                     value = currentText,
-                    onValueChange = {
-                        currentText = it
-                        noTextError = false
-                    },
+                    onValueChange = {currentText = it },
                     label = { Text(stringResource(id = R.string.list_quickadd_dialog_summary_description_hint)) },
                     trailingIcon = {
                         if (sr != null) {
                             IconButton(onClick = {
-
                                 // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
                                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
                                     showAudioPermissionDialog = true
+                                else if (srListening) {
+                                    sr.stopListening()
+                                    srListening = false
+                                }
                                 else {
-                                    val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-                                    srIntent.putExtra(
-                                        RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                                    )
-                                    srIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-                                    srIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-
-                                    sr.setRecognitionListener(object : RecognitionListener {
-                                        override fun onReadyForSpeech(p0: Bundle?) {}
-                                        override fun onBeginningOfSpeech() {
-                                            srListening = true
-                                        }
-
-                                        override fun onEndOfSpeech() {
-                                            srListening = false
-                                        }
-
-                                        override fun onRmsChanged(p0: Float) {}
-                                        override fun onBufferReceived(p0: ByteArray?) {}
-                                        override fun onError(errorCode: Int) { srListening = false }
-                                        override fun onPartialResults(bundle: Bundle?) {
-                                            val data: ArrayList<String>? =
-                                                bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                                            // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
-                                            if (data?.isNotEmpty() == true) {
-                                                srTextResult = data[0]
-                                            }
-                                        }
-
-                                        override fun onEvent(p0: Int, p1: Bundle?) {}
-                                        override fun onResults(bundle: Bundle?) {
-                                            srListening = false
-                                            srTextResult = ""
-                                            val data: ArrayList<String>? =
-                                                bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                                            if (currentText.text.isNotBlank())   // add a return if there is already text present to add it in a new line
-                                                currentText = TextFieldValue(currentText.text + System.lineSeparator())
-                                            // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
-                                            if (data?.isNotEmpty() == true) {
-                                                currentText = TextFieldValue(currentText.text + data[0], selection = TextRange(currentText.text.length + data[0].length))
-                                                sr.startListening(srIntent)
-                                                srListening = true
-                                            }
-                                        }
-                                    })
                                     srListening = true
+                                    //sr.stopListening()
                                     sr.startListening(srIntent)
                                 }
                             }) {
                                 Crossfade(srListening) { listening ->
-                                if (listening)
-                                    Icon(Icons.Outlined.Mic, stringResource(id = R.string.list_quickadd_dialog_sr_listening), tint = MaterialTheme.colorScheme.primary)
-                                else
-                                    Icon(Icons.Outlined.MicOff, stringResource(id = R.string.list_quickadd_dialog_sr_start))
+                                    if (listening)
+                                        Icon(Icons.Outlined.Mic, stringResource(id = R.string.list_quickadd_dialog_sr_listening), tint = MaterialTheme.colorScheme.primary)
+                                    else
+                                        Icon(Icons.Outlined.MicOff, stringResource(id = R.string.list_quickadd_dialog_sr_start))
                                 }
                             }
                         }
@@ -280,7 +280,6 @@ fun ListQuickAddElement(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequester),
-                    isError = noTextError,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Sentences,
                         keyboardType = KeyboardType.Text,
@@ -298,13 +297,36 @@ fun ListQuickAddElement(
                     Text(srTextResult, modifier = Modifier.padding(vertical = 8.dp))
                 }
 
-                currentAttachment?.let {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    AudioRecordElement(
+                        onRecorded = { cachedRecordingUri ->
+                            Attachment.fromCachedRecordingUri(cachedRecordingUri, context)?.let {
+                                currentAttachments.add(it)
+                            }
+                        },
+                        recorder = recorder
+                    )
+                    Text(
+                        text = stringResource(R.string.list_quickadd_add_audio_attachment),
+                        fontStyle = FontStyle.Italic
+                    )
+
+                }
+
+
+                currentAttachments.forEach { attachment ->
+                    if(attachment == null)
+                        return@forEach
                     AttachmentCard(
-                        attachment = it,
-                        isEditMode = false,
+                        attachment = attachment,
+                        isEditMode = true,
                         isRemoteCollection = currentCollection?.accountType != LOCAL_ACCOUNT_TYPE,
-                        withPreview = false,
-                        onAttachmentDeleted = { /* no editing here */ },
+                        player = player,
+                        onAttachmentDeleted = { currentAttachments.remove(attachment) },
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
@@ -319,8 +341,11 @@ fun ListQuickAddElement(
                     ) {
 
                         TextButton(
-                            onClick = { saveEntry(goToEdit = true) },
-                            enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false
+                            onClick = {
+                                sr?.destroy()
+                                saveEntry(goToEdit = true)
+                            },
+                            enabled = (currentText.text.isNotEmpty() || currentAttachments.isNotEmpty()) && currentCollection?.readonly == false
                         ) {
                             Text(stringResource(id = R.string.save_and_edit), textAlign = TextAlign.Center)
                         }
@@ -329,10 +354,10 @@ fun ListQuickAddElement(
                             onClick = {
                                 saveEntry(goToEdit = false)
                                 currentText = TextFieldValue("")
-                                currentAttachment = null
+                                currentAttachments.clear()
                                 keepDialogOpen()
                             },
-                            enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false
+                            enabled = (currentText.text.isNotEmpty() || currentAttachments.isNotEmpty()) && currentCollection?.readonly == false
                         ) {
                             Text(stringResource(id = R.string.save_and_new), textAlign = TextAlign.Center)
                         }
@@ -343,16 +368,18 @@ fun ListQuickAddElement(
                     ) {
                         TextButton(
                             onClick = {
+                                sr?.destroy()
                                 saveEntry(goToEdit = false)
                                 onDismiss()
                             },
-                            enabled = currentText.text.isNotEmpty() && currentCollection?.readonly == false
+                            enabled = (currentText.text.isNotEmpty() || currentAttachments.isNotEmpty()) && currentCollection?.readonly == false
                         ) {
                             Text(stringResource(id = R.string.save_and_close), textAlign = TextAlign.Center)
                         }
 
                         TextButton(
                             onClick = {
+                                sr?.destroy()
                                 onDismiss()
                             }
                         ) {
@@ -418,6 +445,7 @@ fun ListQuickAddElement_Preview() {
             presetText = "This is my preset text",
             presetAttachment = Attachment(filename = "My File.PDF"),
             presetCollectionId = 0L,
+            player = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
@@ -452,6 +480,7 @@ fun ListQuickAddElement_Preview_empty() {
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
+            player = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
@@ -486,6 +515,7 @@ fun ListQuickAddElement_Preview_only_one_enabled() {
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
+            player = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)

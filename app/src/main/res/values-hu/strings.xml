@@ -59,7 +59,6 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Ugrás az eredetire"</string>
     <string name="view_fragment_audio_permission">"Engedélyek"</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Hangmelléklet hozzáadása"</string>
     <string name="view_comment_playbutton_content_desc">"Hangmelléklet lejátszása"</string>
     <string name="view_add_audio_note">"Hang hozzáadása"</string>
     <string name="view_fab_edit_entry_contentDesc">"Bejegyzés szerkesztése"</string>

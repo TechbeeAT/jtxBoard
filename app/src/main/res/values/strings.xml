@@ -70,11 +70,13 @@ Global Strings -->
     <string name="list_due_tomorrow">"Due tomorrow"</string>
     <string name="list_due_inXdays">"Due in %d days"</string>
     <string name="list_due_inXhours">"Due in %d hours"</string>
+    <string name="list_due_on_weekday">"Due on %s"</string>
     <string name="list_start_past">"Start in past"</string>
     <string name="list_start_today">"Planned start today"</string>
     <string name="list_start_tomorrow">"Start tomorrow"</string>
     <string name="list_start_inXhours">"Planned start in %d hours"</string>
     <string name="list_start_inXdays">"Planned start in %d days"</string>
+    <string name="list_start_on_weekday">"Planned start on %s"</string>
     <string name="list_tabitem_journals">"Journals"</string>
     <string name="list_tabitem_notes">"Notes"</string>
     <string name="list_tabitem_todos">"Tasks"</string>
@@ -94,7 +96,6 @@ Global Strings -->
     <string name="view_recurrence_note_to_original">"This entry is part of a series. Editing this entry will unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore."</string>
     <string name="view_fragment_audio_permission">"App Permission"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Add Audio Note"</string>
     <string name="view_comment_playbutton_content_desc">"Play audio comment"</string>
     <string name="view_reccurrence_note_is_exception">"This item is an exception to a recurring entry."</string>
     <string name="view_feedback_linked_notes">"Feedback / Linked Notes"</string>
@@ -160,6 +161,8 @@ Global Strings -->
     <string name="edit_task_completed_add">"Pick completed date/time"</string>
     <string name="edit_dialog_sure_to_delete_title">"Delete \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Discard this entry?"</string>
+    <string name="dialog_delete_done_title">"Delete all done tasks?"</string>
+    <string name="dialog_delete_done_message">"Attention: Subtasks are deleted independent of their status if their parent is marked as done. This operation cannot be undone!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Are you sure you want to delete \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Are you sure you want to discard this entry? This entry will not be saved."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"The Due date cannot be before the Start date."</string>
@@ -226,6 +229,7 @@ For more information about the Sync please see:"</string>
     <string name="sync_furhter_info_davx5">"For more information about DAVx⁵ please check out"</string>
     <string name="sync_button_add_account_in_davx5">"Add account in DAVx⁵"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Failed opening DAVx⁵, please open the app manually."</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Failed opening %1$s, please open the app manually."</string>
     <string name="sync_toast_intent_start_davx5_sync">"Triggering sync in DAVx⁵ failed, please check in DAVx⁵."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Hey, I'm Patrick, the developer of jtx Board. I am putting a lot of time and effort into this app that I am offering to you for free. If you like my app, please send some love and make a small donation!"</string>
@@ -234,6 +238,7 @@ For more information about the Sync please see:"</string>
     <string name="donate_other_donation_methods">"If you would like to consider any other donation method, please check our website:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"No app was found to open this file/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Recurring item is now an exception."</string>
+    <string name="toast_done_tasks_deleted">"Done tasks deleted (%d)."</string>
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again."</string>
     <string name="about_translations_thanks_to">"Thanks to"</string>
@@ -256,6 +261,7 @@ For more information about the Sync please see:"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Speech-to-text engine is listening."</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Speech-to-text engine stopped listening."</string>
     <string name="list_quickadd_dialog_sr_error">"Sorry, Speech-to-text engine encountered an error. (%1$s)"</string>
+    <string name="list_quickadd_add_audio_attachment">"Record audio attachment"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Read contacts permission granted"</string>
     <string name="permission_read_contacts_denied">"Read contacts permission denied"</string>
@@ -268,9 +274,11 @@ For more information about the Sync please see:"</string>
     <string name="apply">"Apply"</string>
     <string name="not_available_abbreviation">"n/a"</string>
     <string name="collection">"Collection"</string>
+    <string name="collection_owner_displayname">"Owner: %1$s"</string>
     <string name="link_to_parent">"Link to parent"</string>
     <string name="toolbar_text_collections">"Collections"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
+    <string name="navigation_drawer_presets">"Presets"</string>
     <string name="edit_dialog_set_attendee_role">"Set attendee role"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Date/Time"</string>
@@ -328,7 +336,9 @@ For more information about the Sync please see:"</string>
     <string name="attachment_export_saved_successfully">"Saved successfully"</string>
     <string name="attachment_export_error_error_occurred">"An error occurred while saving the selected file!"</string>
     <string name="menu_collections_add_remote">"Add remote Collection (DAVx⁵)"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"Add remote Collection (%1$s)"</string>
     <string name="menu_collection_popup_show_in_davx5">"Show in DAVx⁵"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"Show in %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Export as .ics"</string>
     <string name="journal">"Journal"</string>
     <string name="note">"Note"</string>
@@ -528,6 +538,13 @@ Thank you!"</string>
     <string name="dialog_detach_from_series_button">"Detach from series"</string>
     <string name="dialog_davx5_outdated_title">"DAVx⁵ outdated"</string>
     <string name="dialog_davx5_outdated_message">"Your current version of DAVx⁵ is not compatible with this version of jtx Board. Please update DAVx⁵ to 4.3.1 (403010000+) or later! The synchronization is currently suspended."</string>
+    <string name="dialog_sync_app_outdated_title">"Sync app outdated"</string>
+    <string name="dialog_sync_app_outdated_message">"Your current version of %1$s is not compatible with this version of jtx Board. Please update to %1$s %2$s or later! The synchronization through %1$s is currently suspended."</string>
+    <string name="dialog_save_current_filter_config">"Save current filter config"</string>
+    <string name="dialog_save_current_filter_my_filter">"My filter"</string>
+    <string name="dialog_edit_stored_category_title">"Add/edit category preset"</string>
+    <string name="dialog_edit_stored_resource_title">"Add/edit resource preset"</string>
+    <string name="dialog_add_audio_entry_title">"Add audio entry"</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>
@@ -559,6 +576,8 @@ Thank you!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Keep status, progress &amp; completed in sync"</string>
     <string name="settings_attention_experimental_feature">"Attention: This is an experimental feature"</string>
     <string name="settings_create_with_current_location">"Create new entries with current location"</string>
+    <string name="settings_sticky_alarms">"Sticky alarms"</string>
+    <string name="settings_sticky_alarms_sub">"Keep notifications until done or postponed"</string>
     <string name="sync_button_go_to_collections">"Go to Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Please purchase the Pro package to enable this feature."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -571,6 +590,7 @@ Thank you!"</string>
     <string name="settings_select_language_system">"System default"</string>
     <string name="settings_details_enable_markdown">"Enable markdown formatting"</string>
     <string name="filter_special">"Special filters"</string>
+    <string name="filter_presets">"Filter presets"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>
@@ -582,6 +602,7 @@ Thank you!"</string>
     <string name="list_start_date_future">"Start in future"</string>
     <string name="list_hide_completed_tasks">"Hide completed tasks"</string>
     <string name="list_biometric_protected_entries_locked">Biometric protected entries locked</string>
+    <string name="list_delete_done">"Delete done"</string>
     <string name="collections_biometric_protected_entries_locked_title">Biometric protected entries locked</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Please authenticate and try again</string>
     <string name="list_biometric_protected_entries_unlocked">Biometric protected entries unlocked</string>
@@ -604,6 +625,7 @@ Thank you!"</string>
     <string name="filter_second_order_by">"Then order by"</string>
     <string name="filter_group_by">"Group by"</string>
     <string name="filter_group_by_info">"Grouping is available for list and compact view"</string>
+    <string name="filter_save_as_preset">"Save as preset"</string>
     <string name="menu_list_flat_view">"Flat view"</string>
     <string name="menu_list_flat_view_sub">"Always show child-entries on top level in list"</string>
     <string name="menu_list_limit_recur_entries">"Limit recurring"</string>
@@ -628,6 +650,8 @@ Thank you!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attention: Currently only one level of hierarchy is supported in the widget. In order to see the entries of lower levels, please use the flat view instead."</string>
     <string name="widget_list_maximum_entries_reached">"Maximum number of entries in widget reached (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Updating widget"</string>
+    <string name="widget_list_opacity_warning">"Note: This is an experimental feature! With reduced opacity changes in the color theme might not be reflected immediately!"</string>
+    <string name="widget_list_color_warning">"Note: This is an experimental feature! Changes in the color theme will not be reflected! Choose no color to return to system default."</string>
     <string name="opacity">"Opacity"</string>
     <string name="link_jtx_mastodon" translatable="false">"https://fosstodon.org/@jtx"</string>
     <string name="mastodon_account_name" translatable="false">"@jtx@fosstodon.org"</string>
@@ -663,4 +687,7 @@ Thank you!"</string>
     <string name="markdown_horizontal_ruler">"Horizontal ruler"</string>
     <string name="markdown_unordered_list">"List"</string>
     <string name="markdown_code">"Code"</string>
+    <string name="preset_categories">"Preset categories"</string>
+    <string name="preset_resources">"Preset resources"</string>
+    <string name="active_filters">Active filters:</string>
 </resources>

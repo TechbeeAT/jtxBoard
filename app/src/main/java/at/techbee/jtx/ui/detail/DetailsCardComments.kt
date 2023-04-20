@@ -36,7 +36,6 @@ import at.techbee.jtx.ui.reusable.cards.CommentCard
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsCardComments(
     initialComments: List<Comment>,

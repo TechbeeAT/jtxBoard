@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.detail
 
+import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -37,6 +38,9 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
@@ -47,14 +51,17 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsCardSubtasks(
     subtasks: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
-    selectFromAllListLive: LiveData<List<ICal4List>>,
+    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     sliderIncrement: Int,
     showSlider: Boolean,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
+    player: MediaPlayer?,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
@@ -73,6 +80,9 @@ fun DetailsCardSubtasks(
     if(showLinkExistingSubentryDialog) {
         LinkExistingSubentryDialog(
             allEntriesLive = selectFromAllListLive,
+            storedCategories = storedCategories,
+            storedResources = storedResources,
+            player = player,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
             onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
             onDismiss = { showLinkExistingSubentryDialog = false }
@@ -199,6 +209,9 @@ fun DetailsCardSubtasks_Preview() {
             selectFromAllListLive = MutableLiveData(emptyList()),
             sliderIncrement = 25,
             showSlider = true,
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
@@ -228,6 +241,9 @@ fun DetailsCardSubtasks_Preview_edit() {
             selectFromAllListLive = MutableLiveData(emptyList()),
             sliderIncrement = 25,
             showSlider = true,
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
@@ -257,6 +273,9 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
             selectFromAllListLive = MutableLiveData(emptyList()),
             sliderIncrement = 25,
             showSlider = false,
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },

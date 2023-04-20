@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -38,6 +39,7 @@ class ListWidgetCheckedActionCallback: ActionCallback {
                 ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
             }
         }
+        NotificationPublisher.scheduleNextNotifications(context)
         ListWidgetReceiver.setOneTimeWork(context, null)
     }
 }

@@ -14,6 +14,10 @@ Global Strings -->
     <string name="gotit">"Το κατάλαβα"</string>
     <string name="cont">"Συνέχεια"</string>
     <string name="website">"Website"</string>
+    <string name="latitude">"Γεωγραφικό πλάτος"</string>
+    <string name="longitude">"Γεωγραφικό μήκος"</string>
+    <string name="unlink">"Κατάργηση σύνδεσης"</string>
+    <string name="current_location">"Τρέχουσα τοποθεσία"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
     <string name="toolbar_text_add_note">"Προσθήκη σημείωσης"</string>
     <string name="toolbar_text_add_task">"Προσθήκη εργασίας"</string>
@@ -79,10 +83,11 @@ Global Strings -->
     <string name="view_recurrence_note_to_original">"Αυτή η καταχώρηση είναι μέρος μιας σειράς επαναλαμβανόμενων καταχωρήσεων. Η επεξεργασία αυτής της καταχώρισης θα την αποσυνδέσει από τη ακολουθία, θα συνεχιστεί ως αυτόνομο συμβάν και οι αλλαγές στο αρχικό συμβάν δεν θα επηρεάζουν πλέον αυτήν την καταχώριση."</string>
     <string name="view_fragment_audio_permission">"Άδεια εφαρμογής"</string>
     <string name="view_fragment_audio_permission_message">"Η εφαρμογή jtx Board χρειάζεται την άδεια σας για την εγγραφή ήχου. Παρακαλούμε παραχωρήστε την άδεια χρήσης αυτής της δυνατότητας."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Προσθήκη ηχητικής σημείωσης"</string>
     <string name="view_comment_playbutton_content_desc">"Αναπαραγωγή ηχητικής σημείωσης"</string>
     <string name="view_reccurrence_note_is_exception">"Αυτό το στοιχείο αποτελεί εξαίρεση σε μια επαναλαμβανόμενη καταχώριση."</string>
     <string name="view_feedback_linked_notes">"Σχόλια / Συνδεδεμένες σημειώσεις"</string>
+    <string name="view_subtask_of">"Υποεργασία του"</string>
+    <string name="view_linked_note_of">"Συνδεδεμένη σημείωση του"</string>
     <string name="view_add_note">"Προσθήκη σημείωσης"</string>
     <string name="view_add_audio_note">"Προσθήκη ήχου"</string>
     <string name="view_fab_edit_entry_contentDesc">"Επεξεργασία καταχώρισης"</string>
@@ -247,6 +252,7 @@ Global Strings -->
     <string name="apply">"Καταχώρηση"</string>
     <string name="not_available_abbreviation">"Δ/Υ"</string>
     <string name="collection">"Συλλογή"</string>
+    <string name="link_to_parent">"Πίσω στην αρχική"</string>
     <string name="toolbar_text_collections">"Συλλογές"</string>
     <string name="navigation_drawer_collections">"Συλλογες"</string>
     <string name="edit_dialog_set_attendee_role">"Καθορισμός ρόλου"</string>
@@ -300,6 +306,8 @@ Global Strings -->
     <string name="edit_validation_errors_start_due_timezone_check">"Παρακαλώ επιλέξτε και για τα δυο ζώνη ζώνη ώρας, αρχή και μέχρι, ή απενεργοποιήστε την ζώνη ώρας."</string>
     <string name="collections_toast_export_ics_success">"Η εξαγωγή της συλλογής τελείωσε αποτελεσματικά."</string>
     <string name="collections_toast_export_ics_error">"Ένα πρόβλημα παρουσιάστηκε κατά την διαδικασία εξαγωγής της επιλεγμένης συλλογής."</string>
+    <string name="attachment_export_saved_successfully">"Αποθηκεύτηκε επιτυχώς"</string>
+    <string name="attachment_export_error_error_occurred">"Παρουσιάστηκε σφάλμα κατά την αποθήκευση του επιλεγμένου αρχείου!"</string>
     <string name="menu_collections_add_remote">"Προσθήκη απομακρυσμένης συλλογής (DAVx⁵)"</string>
     <string name="menu_collection_popup_show_in_davx5">"Προβολή στο (DAVx⁵)"</string>
     <string name="menu_collection_popup_export_as_ics">"Εξαγωγή ως .ics"</string>
@@ -355,6 +363,9 @@ Global Strings -->
     <string name="adinfo_adfree_purchase_date">"Αγοράστηκε στις %1$s"</string>
     <string name="adinfo_adfree_order_id">"Αναγνωριστικό παραγγελίας: %1$s"</string>
     <string name="list_no_dates_set">"Ελλιπής ημερομηνία"</string>
+    <string name="list_without_start_date">"Χωρίς ημερομηνία έναρξης"</string>
+    <string name="list_without_due_date">"Χωρίς διάρκεια ημερομηνίας"</string>
+    <string name="list_without_completed_date">"Χωρίς ημερομηνία ολοκλήρωσης"</string>
     <string name="filter_order_by">"Κατάταξη"</string>
     <string name="filter_asc">"Αύξουσα"</string>
     <string name="filter_desc">"Φθίνουσα"</string>
@@ -366,7 +377,9 @@ Global Strings -->
     <string name="filter_subnotes_order_by">Ταξινόμηση συνδεδεμένων σημειώσεων κατά</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Κάντε κλικ στη συλλογή στην οποία πρέπει να προστεθούν οι καταχωρήσεις/καταχωρήσεις!"</string>
     <string name="collections_snackbar_x_items_added">"Προστέθηκε %1$d, παράβλεψη %2$d. (Αποκλειστικές περιπτώσεις επαναλαμβανόμενων εγγραφών.)"</string>
+    <string name="collections_toast_x_items_added">"%1$d καταχωρήσεις προστέθηκαν!"</string>
     <string name="menu_collection_popup_import_from_ics">"Προσθήκη από .ics"</string>
+    <string name="menu_collection_popup_import_from_textfile">"Εισαγωγή από αρχείο"</string>
     <string name="notification_done">"Ολοκληρώθηκε"</string>
     <string name="notification_add_1h">"+ 1 ώρα"</string>
     <string name="notification_add_1d">"+1 ημέρα"</string>
@@ -383,6 +396,11 @@ Global Strings -->
     <string name="settings_select_theme_dark">"Σκοτεινό"</string>
     <string name="settings_select_theme_light">"Φωτεινό"</string>
     <string name="settings_select_theme_system">"Επαναφορά αρχικού"</string>
+    <string name="settings_protect_biometric_private_confidential">"Ιδιωτικό &amp; εμπιστευτικό"</string>
+    <string name="settings_protect_biometric_confidential">"Εμπιστευτικό"</string>
+    <string name="settings_protect_biometric_all">"Όλα"</string>
+    <string name="settings_protect_biometric_info_on_settings_unlock">"Παρακαλώ πιστοποιήστε για να αλλάξετε αυτή τη ρύθμιση!"</string>
+    <string name="settings_protect_biometric_info_on_unlock">"Παρακαλώ πιστοποιήστε για να εμφανίσετε προστατευμένες καταχωρήσεις!"</string>
     <string name="donate_dialog_title">"Σας αρέσει το jtx Board;"</string>
     <string name="donate_dialog_message">"Η δημιουργία μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μια σκληρή δουλειά. Εάν σας αρέσει αυτή η εφαρμογή και εάν θέλετε να εξασφαλίσετε την συνεχή ανάπτυξη της, σκεφτείτε για μια δωρεά :-)
  Ευχαριστώ!"</string>
@@ -437,6 +455,9 @@ Global Strings -->
     <string name="collections_dialog_buypro_info">"Παρακαλώ αγοράστε jtx Board Pro για να ενεργοποιήσετε τις δυνατότητες επεξεργασίας για απομακρυσμένες συλλογές."</string>
     <string name="list_update_entries_dialog_title">"Ενημέρωση καταχωρήσεων"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Προσοχή: Τα επαναλαμβανόμενα στιγμιότυπα πρέπει να αποσυνδέονται από τη σειρά τους πριν μεταφερθούν σε άλλη συλλογή και θα αγνοηθούν σε αυτή τη διαδικασία."</string>
+    <string name="list_update_entries_dialog_new_parent_info">"Επιλέξτε την κύρια εγγραφή με την οποία οι επιλεγμένες καταχωρήσεις θα συνδέονται ως υποεργασίες/συνδεδεμένες σημειώσεις."</string>
+    <string name="details_link_existing_subentry_dialog_title">"Σύνδεση υπο-καταχωρήσεων"</string>
+    <string name="details_link_existing_subentry_dialog_info">"Επιλέξτε τις υπο-καταχωρήσεις που θα πρέπει να συνδεθούν."</string>
     <string name="details_app_bar_behaviour">"Συμπεριφορά γραμμής εφαρμογής"</string>
     <string name="details_show_all_options">"Εμφάνιση όλων των επιλογών"</string>
     <string name="details_show_hide_elements">Εμφάνιση/απόκρυψη στοιχείων</string>
@@ -452,6 +473,8 @@ Global Strings -->
     <string name="details_go_to_series">"Μετάβαση στη ακολουθία"</string>
     <string name="details_detach_from_series">"Αποκόλληση από την ακολουθία"</string>
     <string name="details_detach_all_instances">"Αποσύνδεση όλων των περιπτώσεων"</string>
+    <string name="dialog_unlink_from_parent_title">"Αποσύνδεση από την κύρια εγγραφή"</string>
+    <string name="dialog_unlink_from_parent_message">"Αφαιρέστε τη σχέση ως υποκαταχώρηση? Η καταχώρηση θα παραμείνει ως αυτόνομη."</string>
     <string name="edit_comment">"Επεξεργασία σημείωσης"</string>
     <string name="edit_subnote_add_helper">"Προσθήκη υποσημείωσης"</string>
     <string name="edit_subtask">"Επεξεργασία υποεργασίας"</string>
@@ -476,6 +499,7 @@ Global Strings -->
     <string name="dialog_revert_changes_title">"Επαναφορά αλλαγών;"</string>
     <string name="dialog_revert_changes_message">"Είστε βέβαιοι ότι θέλετε να απορρίψετε τις αλλαγές σας και να επαναφέρετε τα περιεχόμενα στην κατάσταση πριν ξεκινήσετε την επεξεργασία;"</string>
     <string name="dialog_revert_changes_message2">"Προσοχή: Οι δευτερεύουσες εργασίες και οι δευτερεύουσες σημειώσεις είναι ξεχωριστές εγγραφές και δεν μπορούν να επιστραφούν."</string>
+    <string name="dialog_select_module_txt_dialog_title">"Εισαγωγή %1$d αρχείου(ων) ως"</string>
     <string name="dialog_collection_new_entries_title">"Συλλογή για νέες καταχωρήσεις"</string>
     <string name="dialog_detach_from_series_title">"Αποκόλληση από την ακολουθία;"</string>
     <string name="dialog_detach_from_series_text_all">"Η αποσύνδεση όλων των στοιχείων θα διαγράψει τη σειρά και θα μετατρέψει τις παρουσίες σε ανεξάρτητες καταχωρήσεις που μπορούν να έχουν τις δικές τους υποεργασίες ή συνδεδεμένες σημειώσεις. Αλλά δε θα υπάρχει πλέον σύνδεση με την αρχική σειρά ή άλλες περιπτώσεις. Θα θέλατε να συνεχίσετε;"</string>
@@ -511,6 +535,7 @@ Global Strings -->
     <string name="settings_link_progress_to_subtasks">"Εμφάνιση προόδου για δευτερεύουσες εργασίες"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Διατήρηση κατάστασης, προόδου &amp; ολοκλήρωση συγχρονισμού"</string>
     <string name="settings_attention_experimental_feature">"Προσοχή: Αυτό είναι ένα πειραματικό χαρακτηριστικό"</string>
+    <string name="settings_create_with_current_location">"Δημιουργήστε νέες καταχωρήσεις με την τρέχουσα τοποθεσία"</string>
     <string name="sync_button_go_to_collections">"Πήγαινε στις συλλογέ"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε αυτήν τη δυνατότητα."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -533,6 +558,8 @@ Global Strings -->
     <string name="list_start_date_tomorrow">"Έναρξη αύριο"</string>
     <string name="list_start_date_future">"Έναρξη στο μέλλον"</string>
     <string name="list_hide_completed_tasks">"Απόκριψη ολοκληρωμένων εργασιών"</string>
+    <string name="collections_biometric_protected_entries_locked_title">Οι βιομετρικές προστατευόμενες καταχωρήσεις κλειδώθηκαν</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">Παρακαλώ πιστοποιήστε και προσπαθήστε ξανά</string>
     <string name="settings_auto_alarm">"Αυτόματο ξυπνητήρι"</string>
     <string name="alarms_always_ondue">"Εντός προθεσμίας"</string>
     <string name="settings_show_one_recur_entry_in_future">"Εμφάνιση μόνο μιας επαναλαμβανόμενης καταχώρισης στο μέλλον"</string>

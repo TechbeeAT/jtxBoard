@@ -20,14 +20,10 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -47,10 +43,11 @@ import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailBottomAppBar(
     icalObject: ICalObject?,
@@ -60,7 +57,7 @@ fun DetailBottomAppBar(
     markdownState: MutableState<MarkdownState>,
     isProActionAvailable: Boolean,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
-    detailsBottomSheetState: ModalBottomSheetState,
+    detailsBottomSheetState: SheetState,
     isProcessing: Boolean,
     onDeleteClicked: () -> Unit,
     onCopyRequested: (Module) -> Unit,
@@ -257,12 +254,9 @@ fun DetailBottomAppBar(
                                 )
                             }
                             DetailViewModel.DetailChangeState.CHANGESAVING -> {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_saving),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.alpha(0.3f)
-                                )
+                                IconButton(onClick = { /* no action, icon button just to keep the same style */  }) {
+                                    CircularProgressIndicator(modifier = Modifier.alpha(0.3f).size(24.dp))
+                                }
                             }
                             DetailViewModel.DetailChangeState.CHANGESAVED -> {
                                 Icon(
@@ -372,7 +366,7 @@ fun DetailBottomAppBar(
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View() {
@@ -380,7 +374,7 @@ fun DetailBottomAppBar_Preview_View() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = "bitfire.at.davdroid"
+            this.accountType = SyncApp.DAVX5.accountType
         }
 
         DetailBottomAppBar(
@@ -391,7 +385,7 @@ fun DetailBottomAppBar_Preview_View() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
-            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            detailsBottomSheetState = rememberModalBottomSheetState(),
             isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
@@ -401,7 +395,7 @@ fun DetailBottomAppBar_Preview_View() {
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_edit() {
@@ -409,7 +403,7 @@ fun DetailBottomAppBar_Preview_edit() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = "bitfire.at.davdroid"
+            this.accountType = SyncApp.DAVX5.accountType
         }
 
         DetailBottomAppBar(
@@ -420,7 +414,7 @@ fun DetailBottomAppBar_Preview_edit() {
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            detailsBottomSheetState = rememberModalBottomSheetState(),
             isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
@@ -429,7 +423,7 @@ fun DetailBottomAppBar_Preview_edit() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_edit_markdown() {
@@ -437,7 +431,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = "bitfire.at.davdroid"
+            this.accountType = SyncApp.DAVX5.accountType
         }
 
         DetailBottomAppBar(
@@ -448,7 +442,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.OBSERVING) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            detailsBottomSheetState = rememberModalBottomSheetState(),
             isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
@@ -457,7 +451,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View_readonly() {
@@ -465,7 +459,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
 
         val collection = ICalCollection().apply {
             this.readonly = true
-            this.accountType = "bitfire.at.davdroid"
+            this.accountType = SyncApp.DAVX5.accountType
         }
 
         DetailBottomAppBar(
@@ -476,7 +470,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
-            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            detailsBottomSheetState = rememberModalBottomSheetState(),
             isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
@@ -485,7 +479,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View_proOnly() {
@@ -493,7 +487,7 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
 
         val collection = ICalCollection().apply {
             this.readonly = false
-            this.accountType = "bitfire.at.davdroid"
+            this.accountType = SyncApp.DAVX5.accountType
         }
 
         DetailBottomAppBar(
@@ -504,7 +498,7 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = false,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
-            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            detailsBottomSheetState = rememberModalBottomSheetState(),
             isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
@@ -514,7 +508,7 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View_local() {
@@ -535,7 +529,7 @@ fun DetailBottomAppBar_Preview_View_local() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            detailsBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            detailsBottomSheetState = rememberModalBottomSheetState(),
             isProcessing = true,
             onDeleteClicked = { },
             onCopyRequested = { },

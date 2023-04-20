@@ -18,12 +18,29 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Attendee
+import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Comment
+import at.techbee.jtx.database.properties.Relatedto
+import at.techbee.jtx.database.properties.Reltype
+import at.techbee.jtx.database.properties.Resource
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListSettings
@@ -33,7 +50,6 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -54,12 +70,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var isChild: LiveData<Boolean> = MutableLiveData(false)
     private var originalEntry: ICalEntity? = null
 
-    lateinit var allCategories: LiveData<List<String>>
-    lateinit var allResources: LiveData<List<String>>
-    lateinit var allWriteableCollections: LiveData<List<ICalCollection>>
+    var allCategories = database.getAllCategoriesAsText()
+    var allResources = database.getAllResourcesAsText()
+    val storedCategories = database.getStoredCategories()
+    val storedResources = database.getStoredResources()
+    var allWriteableCollections = database.getAllWriteableCollections()
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var selectFromAllList: LiveData<List<ICal4List>> = selectFromAllListQuery.switchMap {database.getIcal4List(it) }
+    var selectFromAllList: LiveData<List<ICal4ListRel>> = selectFromAllListQuery.switchMap {database.getIcal4ListRel(it) }
 
     var navigateToId = mutableStateOf<Long?>(null)
     var changeState = mutableStateOf(DetailChangeState.LOADING)
@@ -74,14 +92,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         const val PREFS_DETAIL_JOURNALS = "prefsDetailJournals"
         const val PREFS_DETAIL_NOTES = "prefsDetailNotes"
         const val PREFS_DETAIL_TODOS = "prefsDetailTodos"
-    }
-
-    init {
-        viewModelScope.launch {
-            allCategories = database.getAllCategoriesAsText()
-            allResources = database.getAllResourcesAsText()
-            allWriteableCollections = database.getAllWriteableCollections()
-        }
     }
 
     fun load(icalObjectId: Long, isAuthenticated: Boolean) {
@@ -155,6 +165,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
                 SyncUtil.notifyContentObservers(getApplication())
+                NotificationPublisher.scheduleNextNotifications(_application)
                 changeState.value = DetailChangeState.CHANGESAVED
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $id")
@@ -205,6 +216,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             } else {
                 changeState.value = DetailChangeState.CHANGESAVED
             }
+            NotificationPublisher.scheduleNextNotifications(_application)
             SyncUtil.notifyContentObservers(getApplication())
 
         }
@@ -237,37 +249,62 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         database.update(it)
                     }
                 }
-
             }
         }
     }
 
-    fun moveToNewCollection(icalObject: ICalObject, newCollectionId: Long) {
-
+    fun moveToNewCollection(
+        icalObject: ICalObject,
+        categories: List<Category>,
+        comments: List<Comment>,
+        attendees: List<Attendee>,
+        resources: List<Resource>,
+        attachments: List<Attachment>,
+        alarms: List<Alarm>,
+        newCollectionId: Long
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
-            while(changeState.value != DetailChangeState.CHANGESAVED)
-                delay(50)
-
-            changeState.value = DetailChangeState.CHANGESAVING
-            try {
-                val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, database, getApplication())
-                // once the newId is there, the local entries can be deleted (or marked as deleted)
-                ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
-                if (icalObject.rrule != null)
-                    icalObject.recreateRecurring(getApplication())
-                changeState.value = DetailChangeState.CHANGESAVED
-                navigateToId.value = newId
-                changeState.value = DetailChangeState.CHANGESAVED
-            } catch (e: SQLiteConstraintException) {
-                Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
-                Log.d("SQLConstraint", e.stackTraceToString())
-                changeState.value = DetailChangeState.SQLERROR
-            }
+            save(icalObject, categories, comments, attendees, resources, attachments, alarms)
+            move(icalObject, newCollectionId)
         }
     }
 
 
-    fun save(icalObject: ICalObject,
+    private suspend fun move(icalObject: ICalObject, newCollectionId: Long) {
+        changeState.value = DetailChangeState.CHANGESAVING
+        try {
+            val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, database, _application)
+            // once the newId is there, the local entries can be deleted (or marked as deleted)
+            ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+            if (icalObject.rrule != null)
+                icalObject.recreateRecurring(_application)
+            changeState.value = DetailChangeState.CHANGESAVED
+            navigateToId.value = newId
+        } catch (e: SQLiteConstraintException) {
+            Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
+            Log.d("SQLConstraint", e.stackTraceToString())
+            changeState.value = DetailChangeState.SQLERROR
+        }
+        NotificationPublisher.scheduleNextNotifications(_application)
+    }
+
+
+
+    fun saveEntry(icalObject: ICalObject,
+                  categories: List<Category>,
+                  comments: List<Comment>,
+                  attendees: List<Attendee>,
+                  resources: List<Resource>,
+                  attachments: List<Attachment>,
+                  alarms: List<Alarm>
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            save(icalObject, categories, comments, attendees, resources, attachments, alarms)
+        }
+    }
+
+
+    private suspend fun save(icalObject: ICalObject,
              categories: List<Category>,
              comments: List<Comment>,
              attendees: List<Attendee>,
@@ -275,77 +312,75 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
              attachments: List<Attachment>,
              alarms: List<Alarm>
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            changeState.value = DetailChangeState.CHANGESAVING
+        changeState.value = DetailChangeState.CHANGESAVING
 
-            try {
-                if (icalEntity.value?.categories != categories) {
-                    icalObject.makeDirty()
-                    database.deleteCategories(icalObject.id)
-                    categories.forEach { changedCategory ->
-                        changedCategory.icalObjectId = icalObject.id
-                        database.insertCategory(changedCategory)
-                    }
-                }
-
-                if (icalEntity.value?.comments != comments) {
-                    icalObject.makeDirty()
-                    database.deleteComments(icalObject.id)
-                    comments.forEach { changedComment ->
-                        changedComment.icalObjectId = icalObject.id
-                        database.insertComment(changedComment)
-                    }
-                }
-
-                if (icalEntity.value?.attendees != attendees) {
-                    icalObject.makeDirty()
-                    database.deleteAttendees(icalObject.id)
-                    attendees.forEach { changedAttendee ->
-                        changedAttendee.icalObjectId = icalObject.id
-                        database.insertAttendee(changedAttendee)
-                    }
-                }
-
-                if (icalEntity.value?.resources != resources) {
-                    icalObject.makeDirty()
-                    database.deleteResources(icalObject.id)
-                    resources.forEach { changedResource ->
-                        changedResource.icalObjectId = icalObject.id
-                        database.insertResource(changedResource)
-                    }
-                }
-
-                if (icalEntity.value?.attachments != attachments) {
-                    icalObject.makeDirty()
-                    database.deleteAttachments(icalObject.id)
-                    attachments.forEach { changedAttachment ->
-                        changedAttachment.icalObjectId = icalObject.id
-                        database.insertAttachment(changedAttachment)
-                    }
-                    Attachment.scheduleCleanupJob(getApplication())
-                }
-
-                if (icalEntity.value?.alarms != alarms) {
-                    icalObject.makeDirty()
-                    database.deleteAlarms(icalObject.id)
-                    alarms.forEach { changedAlarm ->
-                        changedAlarm.icalObjectId = icalObject.id
-                        changedAlarm.alarmId = database.insertAlarm(changedAlarm)
-                    }
-                }
-
+        try {
+            if (icalEntity.value?.categories != categories) {
                 icalObject.makeDirty()
-                database.update(icalObject)
-                icalObject.makeSeriesDirty(database)
-                icalObject.recreateRecurring(getApplication())
-                Alarm.scheduleNextNotifications(getApplication())
-                SyncUtil.notifyContentObservers(getApplication())
-                changeState.value = DetailChangeState.CHANGESAVED
-            } catch (e: SQLiteConstraintException) {
-                Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
-                Log.d("SQLConstraint", e.stackTraceToString())
-                changeState.value = DetailChangeState.SQLERROR
+                database.deleteCategories(icalObject.id)
+                categories.forEach { changedCategory ->
+                    changedCategory.icalObjectId = icalObject.id
+                    database.insertCategory(changedCategory)
+                }
             }
+
+            if (icalEntity.value?.comments != comments) {
+                icalObject.makeDirty()
+                database.deleteComments(icalObject.id)
+                comments.forEach { changedComment ->
+                    changedComment.icalObjectId = icalObject.id
+                    database.insertComment(changedComment)
+                }
+            }
+
+            if (icalEntity.value?.attendees != attendees) {
+                icalObject.makeDirty()
+                database.deleteAttendees(icalObject.id)
+                attendees.forEach { changedAttendee ->
+                    changedAttendee.icalObjectId = icalObject.id
+                    database.insertAttendee(changedAttendee)
+                }
+            }
+
+            if (icalEntity.value?.resources != resources) {
+                icalObject.makeDirty()
+                database.deleteResources(icalObject.id)
+                resources.forEach { changedResource ->
+                    changedResource.icalObjectId = icalObject.id
+                    database.insertResource(changedResource)
+                }
+            }
+
+            if (icalEntity.value?.attachments != attachments) {
+                icalObject.makeDirty()
+                database.deleteAttachments(icalObject.id)
+                attachments.forEach { changedAttachment ->
+                    changedAttachment.icalObjectId = icalObject.id
+                    database.insertAttachment(changedAttachment)
+                }
+                Attachment.scheduleCleanupJob(getApplication())
+            }
+
+            if (icalEntity.value?.alarms != alarms) {
+                icalObject.makeDirty()
+                database.deleteAlarms(icalObject.id)
+                alarms.forEach { changedAlarm ->
+                    changedAlarm.icalObjectId = icalObject.id
+                    changedAlarm.alarmId = database.insertAlarm(changedAlarm)
+                }
+            }
+
+            icalObject.makeDirty()
+            database.update(icalObject)
+            icalObject.makeSeriesDirty(database)
+            icalObject.recreateRecurring(_application)
+            NotificationPublisher.scheduleNextNotifications(_application)
+            SyncUtil.notifyContentObservers(_application)
+            changeState.value = DetailChangeState.CHANGESAVED
+        } catch (e: SQLiteConstraintException) {
+            Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
+            Log.d("SQLConstraint", e.stackTraceToString())
+            changeState.value = DetailChangeState.SQLERROR
         }
     }
 
@@ -353,22 +388,23 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * reverts the current entry back to the original values that were stored in originalEntry
      */
     fun revert() {
-
         val originalICalObject = originalEntry?.property?: return
-        save(
-            icalObject = originalICalObject.apply {
-                eTag = icalEntity.value?.property?.eTag
-                sequence = (icalEntity.value?.property?.sequence?:0)+1
-            },
-            categories = originalEntry?.categories ?: emptyList(),
-            comments = originalEntry?.comments ?: emptyList(),
+        viewModelScope.launch(Dispatchers.IO) {
+            save(
+                icalObject = originalICalObject.apply {
+                    eTag = icalEntity.value?.property?.eTag
+                    sequence = (icalEntity.value?.property?.sequence?:0)+1
+                },
+                categories = originalEntry?.categories ?: emptyList(),
+                comments = originalEntry?.comments ?: emptyList(),
 
-            attendees = originalEntry?.attendees ?: emptyList(),
-            resources = originalEntry?.resources ?: emptyList(),
-            attachments = originalEntry?.attachments ?: emptyList(),
-            alarms = originalEntry?.alarms ?: emptyList()
-        )
-        navigateToId.value = icalEntity.value?.property?.id
+                attendees = originalEntry?.attendees ?: emptyList(),
+                resources = originalEntry?.resources ?: emptyList(),
+                attachments = originalEntry?.attachments ?: emptyList(),
+                alarms = originalEntry?.alarms ?: emptyList()
+            )
+            navigateToId.value = icalEntity.value?.property?.id
+        }
     }
 
 
@@ -422,6 +458,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 changeState.value = DetailChangeState.SQLERROR
             }
+            NotificationPublisher.scheduleNextNotifications(_application)
         }
     }
 
@@ -442,6 +479,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 changeState.value = DetailChangeState.SQLERROR
             }
+            NotificationPublisher.scheduleNextNotifications(_application)
         }
     }
 
@@ -526,7 +564,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                Alarm.scheduleNextNotifications(getApplication())
+                NotificationPublisher.scheduleNextNotifications(getApplication())
 
                 if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                     navigateToId.value = newId

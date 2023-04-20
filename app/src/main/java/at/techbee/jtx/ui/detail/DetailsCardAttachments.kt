@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.detail
 
 import android.content.pm.PackageManager
+import android.media.MediaPlayer
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,6 +43,7 @@ fun DetailsCardAttachments(
     initialAttachments: List<Attachment>,
     isEditMode: Boolean,
     isRemoteCollection: Boolean,
+    player: MediaPlayer?,
     onAttachmentsUpdated: (List<Attachment>) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -110,7 +112,7 @@ fun DetailsCardAttachments(
                                     attachment = attachment,
                                     isEditMode = isEditMode,
                                     isRemoteCollection = isRemoteCollection,
-                                    withPreview = true,
+                                    player = player,
                                     onAttachmentDeleted = {
                                         attachments = attachments.minus(attachment)
                                         onAttachmentsUpdated(attachments)
@@ -125,7 +127,7 @@ fun DetailsCardAttachments(
                             attachment = attachment,
                             isEditMode = isEditMode,
                             isRemoteCollection = isRemoteCollection,
-                            withPreview = false,
+                            player = player,
                             onAttachmentDeleted = {
                                 attachments = attachments.minus(attachment)
                                 onAttachmentsUpdated(attachments)
@@ -190,6 +192,7 @@ fun DetailsCardAttachments_Preview() {
             initialAttachments = listOf(Attachment(filename = "test.pdf")),
             isEditMode = false,
             isRemoteCollection = true,
+            player = null,
             onAttachmentsUpdated = { }
         )
     }
@@ -204,6 +207,7 @@ fun DetailsCardAttachments_Preview_Images() {
             initialAttachments = listOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")),
             isEditMode = false,
             isRemoteCollection = true,
+            player = null,
             onAttachmentsUpdated = { }
         )
     }
@@ -218,6 +222,7 @@ fun DetailsCardAttachments_Preview_edit() {
             initialAttachments = listOf(Attachment(filename = "test.pdf")),
             isEditMode = true,
             isRemoteCollection = true,
+            player = null,
             onAttachmentsUpdated = { }
         )
     }
@@ -233,6 +238,7 @@ fun DetailsCardAttachments_Preview_Images_edit() {
             initialAttachments = listOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")),
             isEditMode = true,
             isRemoteCollection = true,
+            player = null,
             onAttachmentsUpdated = { }
         )
     }

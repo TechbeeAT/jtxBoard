@@ -9,7 +9,11 @@
 package at.techbee.jtx
 
 import android.accounts.Account
-import android.content.*
+import android.content.ContentProvider
+import android.content.ContentUris
+import android.content.ContentValues
+import android.content.Intent
+import android.content.UriMatcher
 import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
@@ -19,8 +23,60 @@ import android.webkit.MimeTypeMap
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.FileProvider
 import androidx.sqlite.db.SimpleSQLiteQuery
-import at.techbee.jtx.database.*
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_NAME
+import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_TYPE
+import at.techbee.jtx.database.COLUMN_COLLECTION_ID
+import at.techbee.jtx.database.COLUMN_EXDATE
+import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
+import at.techbee.jtx.database.COLUMN_ID
+import at.techbee.jtx.database.COLUMN_RDATE
+import at.techbee.jtx.database.COLUMN_RECURID
+import at.techbee.jtx.database.COLUMN_RRULE
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.TABLE_NAME_COLLECTION
+import at.techbee.jtx.database.TABLE_NAME_ICALOBJECT
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.AlarmRelativeTo
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Attendee
+import at.techbee.jtx.database.properties.COLUMN_ALARM_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ALARM_ID
+import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_ID
+import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_URI
+import at.techbee.jtx.database.properties.COLUMN_ATTENDEE_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ATTENDEE_ID
+import at.techbee.jtx.database.properties.COLUMN_CATEGORY_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_CATEGORY_ID
+import at.techbee.jtx.database.properties.COLUMN_COMMENT_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_COMMENT_ID
+import at.techbee.jtx.database.properties.COLUMN_ORGANIZER_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ORGANIZER_ID
+import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_ID
+import at.techbee.jtx.database.properties.COLUMN_RESOURCE_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_RESOURCE_ID
+import at.techbee.jtx.database.properties.COLUMN_UNKNOWN_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_UNKNOWN_ID
+import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Comment
+import at.techbee.jtx.database.properties.Organizer
+import at.techbee.jtx.database.properties.Relatedto
+import at.techbee.jtx.database.properties.Resource
+import at.techbee.jtx.database.properties.TABLE_NAME_ALARM
+import at.techbee.jtx.database.properties.TABLE_NAME_ATTACHMENT
+import at.techbee.jtx.database.properties.TABLE_NAME_ATTENDEE
+import at.techbee.jtx.database.properties.TABLE_NAME_CATEGORY
+import at.techbee.jtx.database.properties.TABLE_NAME_COMMENT
+import at.techbee.jtx.database.properties.TABLE_NAME_ORGANIZER
+import at.techbee.jtx.database.properties.TABLE_NAME_RELATEDTO
+import at.techbee.jtx.database.properties.TABLE_NAME_RESOURCE
+import at.techbee.jtx.database.properties.TABLE_NAME_UNKNOWN
+import at.techbee.jtx.database.properties.Unknown
+import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.widgets.ListWidgetReceiver
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
@@ -180,6 +236,9 @@ class SyncContentProvider : ContentProvider() {
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
+            NotificationPublisher.scheduleNextNotifications(context!!)
+
         if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(
                 uri
             ) == CODE_COLLECTION_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_DIR
@@ -286,7 +345,7 @@ class SyncContentProvider : ContentProvider() {
         }
 
         if(sUriMatcher.match(uri) == CODE_ALARM_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)
-            Alarm.scheduleNextNotifications(context!!)
+            NotificationPublisher.scheduleNextNotifications(context!!)
 
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
@@ -554,7 +613,7 @@ class SyncContentProvider : ContentProvider() {
             || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM
             || sUriMatcher.match(uri) == CODE_ALARM_ITEM
         )
-            Alarm.scheduleNextNotifications(context!!)
+            NotificationPublisher.scheduleNextNotifications(context!!)
 
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
@@ -605,8 +664,9 @@ class SyncContentProvider : ContentProvider() {
 
         val isSyncAdapter = uri.getBooleanQueryParameter(CALLER_IS_SYNCADAPTER, false)
         if (isSyncAdapter) {
-            if(callingPackage == SyncUtil.DAVX5_PACKAGE_NAME && !SyncUtil.isDAVx5Compatible(context!!))
-                throw java.lang.IllegalArgumentException(context!!.getString(R.string.dialog_davx5_outdated_message))
+            val syncApp = SyncApp.values().firstOrNull { it.packageName == callingPackage }
+            if(syncApp != null && !SyncUtil.isSyncAppCompatible(syncApp, context!!))
+                throw java.lang.IllegalArgumentException(context!!.getString(R.string.dialog_sync_app_outdated_message, syncApp.appName, syncApp.minVersionName ))
              else
                 return true
         } else {
