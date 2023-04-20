@@ -5,10 +5,8 @@
     <string name="app_permission_label">"jtx Board sync Journals, Notes &amp; Tasks"</string>
     <string name="app_permission_desc">"sync jtx Board content with other applications like DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <string name="link_davx5" translatable="false">"https://www.davx5.com/"</string>
     <string name="link_ffg" translatable="false">"https://www.ffg.at"</string>
     <string name="link_jtx" translatable="false">"https://jtx.techbee.at"</string>
-    <string name="link_jtx_sync" translatable="false">"https://jtx.techbee.at/sync-with-davx5"</string>
     <string name="link_jtx_support" translatable="false">"https://jtx.techbee.at/support"</string>
     <string name="link_jtx_privacy_policy" translatable="false">"https://jtx.techbee.at/privacy"</string>
     <string name="link_jtx_twitter" translatable="false">"https://twitter.com/jtxBoard"</string>
@@ -53,7 +51,7 @@ Global Strings -->
     <string name="navigation_drawer_open">"Open navigation drawer"</string>
     <string name="navigation_drawer_close">"Close navigation drawer"</string>
     <string name="navigation_drawer_board">"Board"</string>
-    <string name="navigation_drawer_sync">"Sync with DAVx⁵"</string>
+    <string name="navigation_drawer_synchronization">"Synchronization"</string>
     <string name="navigation_drawer_about">"About / License"</string>
     <string name="navigation_drawer_subtitle">"journals, notes &amp; tasks"</string>
     <string name="navigation_drawer_beta_feedback">"Beta feedback"</string>
@@ -137,7 +135,7 @@ Global Strings -->
     <string name="edit_location_helper">"Add a location for this entry"</string>
     <string name="edit_attachment_add_dialog_hint">"Your attachment-url (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Your comment"</string>
-    <string name="edit_attachment_beta_info">"* Please note that attachments are considered an experimental feature. Currently only small attachments (up to 100 KB) can be exported as .ics and synchronized via DAVx⁵. If you encounter any issues, please let us know through the support forums or a support request on the website!"</string>
+    <string name="edit_attachment_beta_info">"* Please note that attachments are considered an experimental feature. Currently only small attachments (up to 100 KB) can be exported as .ics and synchronized. If you encounter any issues, please let us know through the support forums or a support request on the website!"</string>
     <string name="edit_subtasks_add_hint">"Your subtask"</string>
     <string name="edit_subtasks_add_helper">"Add a subtask"</string>
     <string name="edit_attachment_delete_attachment">"Delete attachment"</string>
@@ -216,21 +214,21 @@ Global Strings -->
     <string name="settings_app">"App Settings"</string>
     <string name="settings_select_mimetype_for_audio">"Select Mimetype for audio notes"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"Sync with DAVx⁵ (beta)*"</string>
-    <string name="sync_basic_info">"jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data. * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!"</string>
+    <string name="sync_with_sync_app_heading">"Sync with %1$s"</string>
+    <string name="sync_basic_info">"jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and synchronise your data."</string>
+    <string name="sync_ksync_basic_info">"kSync is an app based on DAVx⁵ developed by Infomaniak especially for their services. While DAVx⁵ is open to any compatible CalDAV-server, kSync only allows Infomaniak-accounts for synchronisation."</string>
     <string name="sync_congratulations">"Congratulations! :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"We have detected DAVx⁵ on your phone. If you haven't set up any accounts yet, please follow the instructions on our website:"</string>
-    <string name="sync_davx5_installed_with_collections_found">"We have detected DAVx⁵ on your phone. If you have any troubles or doubts, please check out our website first:"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"The following accounts (calendars) are currently synchronised:"</string>
-    <string name="sync_check_out_davx5">"Check out DAVx⁵!"</string>
-    <string name="sync_davx5_not_found">"We have not detected DAVx⁵ on your phone.
-For more information about the Sync please see:"</string>
-    <string name="sync_davx5_get_davx5_on">"or get DAVx⁵ on"</string>
-    <string name="sync_furhter_info_davx5">"For more information about DAVx⁵ please check out"</string>
-    <string name="sync_button_add_account_in_davx5">"Add account in DAVx⁵"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"Failed opening DAVx⁵, please open the app manually."</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"We have detected %1$s on your phone."</string>
+    <string name="sync_setup_instructions">"Setup instructions"</string>
+    <string name="sync_sync_app_installed_with_collections_found">"We have detected %1$s on your phone. If you have any troubles or doubts, please check out our website first:"</string>
+    <string name="sync_sync_app_installed_with_collections_synched_collections">"The following accounts (calendars) are currently synchronised:"</string>
+    <string name="sync_check_out_sync_app">"Check out %1$s!"</string>
+    <string name="sync_sync_app_not_found">"We have not detected %1$s on your phone."</string>
+    <string name="sync_more_information_about_sync_app">"More information about %1$s"</string>
+    <string name="sync_download_sync_app">"Download %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Add account in %1$s"</string>
     <string name="sync_toast_intent_open_sync_app_failed">"Failed opening %1$s, please open the app manually."</string>
-    <string name="sync_toast_intent_start_davx5_sync">"Triggering sync in DAVx⁵ failed, please check in DAVx⁵."</string>
+    <string name="sync_toast_intent_start_sync_in_sync_app_failed">"Triggering sync in %1$s failed, please check in %1$s."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Hey, I'm Patrick, the developer of jtx Board. I am putting a lot of time and effort into this app that I am offering to you for free. If you like my app, please send some love and make a small donation!"</string>
     <string name="donate_thank_you">"Thank you!"</string>
@@ -240,7 +238,6 @@ For more information about the Sync please see:"</string>
     <string name="toast_item_is_now_recu_exception">"Recurring item is now an exception."</string>
     <string name="toast_done_tasks_deleted">"Done tasks deleted (%d)."</string>
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again."</string>
     <string name="about_translations_thanks_to">"Thanks to"</string>
     <string name="about_translations_for_contributions_in">"for contributions in"</string>
     <string name="about_translations_basic_info">"jtx Board is an open source app that appreciates the participation and contribution of the open source community. On this page we would like to attribute the efforts of community members for translations."</string>
@@ -306,7 +303,7 @@ For more information about the Sync please see:"</string>
     <string name="collections_tasks_num">"Tasks: %1$s"</string>
     <string name="collections_local_nolocalcollections">"No local Collections found"</string>
     <string name="collections_local_noremotecollections">"No remote Collections found"</string>
-    <string name="collections_info">"Collections are an accumulation of entries like folders with files. You can create new local collections through the menu or you can set up new remote collections to synchronize through DAVx⁵."</string>
+    <string name="collections_info">"Collections are an accumulation of entries like folders with files. You can create new local collections through the menu or you can set up new remote collections to synchronize if you have a sync-app installed (e.g. DAVx⁵)."</string>
     <string name="collections_collection_menu">"Collection menu"</string>
     <string name="collections_dialog_add_local_collection_title">"Add local Collection"</string>
     <string name="collections_dialog_edit_local_collection_title">"Edit local Collection"</string>
@@ -335,9 +332,7 @@ For more information about the Sync please see:"</string>
     <string name="collections_toast_export_ics_error">"An error occurred while exporting the selected collection."</string>
     <string name="attachment_export_saved_successfully">"Saved successfully"</string>
     <string name="attachment_export_error_error_occurred">"An error occurred while saving the selected file!"</string>
-    <string name="menu_collections_add_remote">"Add remote Collection (DAVx⁵)"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Add remote Collection (%1$s)"</string>
-    <string name="menu_collection_popup_show_in_davx5">"Show in DAVx⁵"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Show in %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Export as .ics"</string>
     <string name="journal">"Journal"</string>
@@ -536,8 +531,6 @@ Thank you!"</string>
     <string name="dialog_detach_from_series_text_single">"Detaching this element from the series will allow you to have independent subtasks or linked notes, but there will be no more link to the original series. Would you like to continue?"</string>
     <string name="dialog_detach_from_series_text_attention">"Attention: This operation cannot be undone!"</string>
     <string name="dialog_detach_from_series_button">"Detach from series"</string>
-    <string name="dialog_davx5_outdated_title">"DAVx⁵ outdated"</string>
-    <string name="dialog_davx5_outdated_message">"Your current version of DAVx⁵ is not compatible with this version of jtx Board. Please update DAVx⁵ to 4.3.1 (403010000+) or later! The synchronization is currently suspended."</string>
     <string name="dialog_sync_app_outdated_title">"Sync app outdated"</string>
     <string name="dialog_sync_app_outdated_message">"Your current version of %1$s is not compatible with this version of jtx Board. Please update to %1$s %2$s or later! The synchronization through %1$s is currently suspended."</string>
     <string name="dialog_save_current_filter_config">"Save current filter config"</string>
