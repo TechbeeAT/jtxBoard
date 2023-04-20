@@ -42,7 +42,6 @@ Global Strings -->
     <string name="navigation_drawer_open">"打开导航抽屉"</string>
     <string name="navigation_drawer_close">"关闭导航抽屉"</string>
     <string name="navigation_drawer_board">"白板"</string>
-    <string name="navigation_drawer_sync">"使用 DAVx⁵ 同步"</string>
     <string name="navigation_drawer_about">"关于/许可协议"</string>
     <string name="navigation_drawer_subtitle">"日记、笔记和任务"</string>
     <string name="navigation_drawer_beta_feedback">"测试反馈"</string>
@@ -124,7 +123,6 @@ Global Strings -->
     <string name="edit_location_helper">"为此条目添加位置"</string>
     <string name="edit_attachment_add_dialog_hint">"您的附件网址（https://…）"</string>
     <string name="edit_comment_add_dialog_hint">"您的评论"</string>
-    <string name="edit_attachment_beta_info">"* 请注意，附件被认为是一种实验性功能。目前，只有小型附件（最大100KB）可以导出为 .ics 并通过 DAVx⁵ 同步。如遇问题，请通过支持论坛或网站上的支持请求告知我们！"</string>
     <string name="edit_subtasks_add_hint">"您的子任务"</string>
     <string name="edit_subtasks_add_helper">"添加子任务"</string>
     <string name="edit_attachment_delete_attachment">"删除附件"</string>
@@ -199,20 +197,7 @@ Global Strings -->
     <string name="settings_app">"应用设置"</string>
     <string name="settings_select_mimetype_for_audio">"选择音频笔记的Mimetype"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"使用 DAVx⁵ 同步（测试）*"</string>
-    <string name="sync_basic_info">"jtx Board 本身不提供服务器同步，但将支持通过 DAVx⁵ 同步。此方法允许您选择一个兼容的 CalDAV 服务器来存储、备份和同步您的数据。* 请注意，此功能仍被视为测试版。虽然此功能已经过测试，但仍可能出现问题。如遇到任何问题，请反馈，感谢！"</string>
     <string name="sync_congratulations">"恭喜！ :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"在手机上检测到 DAVx⁵。如未建立任何账户，请按照网站上的说明进行操作："</string>
-    <string name="sync_davx5_installed_with_collections_found">"在手机上检测到 DAVx⁵。如有任何问题，请先查看网站："</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"当前同步以下账号（日历）："</string>
-    <string name="sync_check_out_davx5">"查看 DAVx⁵！"</string>
-    <string name="sync_davx5_not_found">"未在手机上检测到 DAVx⁵。
-了解更多有关同步的信息，请查看："</string>
-    <string name="sync_davx5_get_davx5_on">"或获取 DAVx⁵"</string>
-    <string name="sync_furhter_info_davx5">"了解更多 DAVx⁵ 信息，请查看"</string>
-    <string name="sync_button_add_account_in_davx5">"在 DAVx⁵ 中添加账号"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"打开 DAVx⁵ 失败，请手动打开应用软件。"</string>
-    <string name="sync_toast_intent_start_davx5_sync">"在 DAVx⁵ 中触发同步失败，请在 DAVx⁵ 中检查。"</string>
     <!-- Donate fragment -->
     <string name="donate_thank_you">"感谢您！"</string>
     <string name="donate_donate_with">"使用PayPal捐赠"</string>
@@ -220,7 +205,6 @@ Global Strings -->
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"找不到可打开此文件或网址的应用程序。"</string>
     <string name="toast_item_is_now_recu_exception">"定期项目现在是例外。"</string>
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"jtx很难同步。请关闭DAVx⁵ 然后再次启动同步。"</string>
     <string name="about_translations_thanks_to">"感谢"</string>
     <string name="about_translations_for_contributions_in">"贡献"</string>
     <string name="about_translations_basic_info">"jtx Board是一款开源应用程序，感谢开源社区的参与和贡献。在此，我们想展示社区成员在翻译方面所做的努力。"</string>
@@ -280,7 +264,6 @@ Global Strings -->
     <string name="collections_tasks_num">"任务：%1$s"</string>
     <string name="collections_local_nolocalcollections">"未发现本地合集"</string>
     <string name="collections_local_noremotecollections">"未发现远程合集"</string>
-    <string name="collections_info">"合集是条目的累积，类似内有文件的文件夹。您可通过菜单新建本地合集，也可设置新的远程合集并使用 DAVx⁵ 进行同步。"</string>
     <string name="collections_collection_menu">"合集菜单"</string>
     <string name="collections_dialog_add_local_collection_title">"添加本地合集"</string>
     <string name="collections_dialog_edit_local_collection_title">"编辑本地合集"</string>
@@ -308,8 +291,6 @@ Global Strings -->
     <string name="collections_toast_export_ics_error">"导出选定的合集时出错。"</string>
     <string name="attachment_export_saved_successfully">"保存成功"</string>
     <string name="attachment_export_error_error_occurred">"保存所选文件时出错！"</string>
-    <string name="menu_collections_add_remote">"添加远程合集（DAVx⁵）"</string>
-    <string name="menu_collection_popup_show_in_davx5">"在 DAVx⁵ 中显示"</string>
     <string name="menu_collection_popup_export_as_ics">"导出为.ics"</string>
     <string name="journal">"日记"</string>
     <string name="note">"笔记"</string>
@@ -478,8 +459,6 @@ Global Strings -->
     <string name="dialog_revert_changes_message2">"注意：子任务和子笔记是单独的条目，不能重做。"</string>
     <string name="dialog_collection_new_entries_title">"新条目的合集"</string>
     <string name="dialog_detach_from_series_text_attention">"注意：此操作不能撤消！"</string>
-    <string name="dialog_davx5_outdated_title">"DAVx⁵ 过旧"</string>
-    <string name="dialog_davx5_outdated_message">"当前 DAVx⁵ 版本与 jtx Board 不兼容。 请升级 DAVx⁵ 到 4.3.1 (403010000+) 或更新版本！同步已暂停。"</string>
     <string name="menu_list_viewmode_compact">"紧凑视图"</string>
     <string name="menu_list_viewmode_kanban">"看板视图"</string>
     <string name="settings_details_autosave_while_editing">"编辑时自动保存"</string>
