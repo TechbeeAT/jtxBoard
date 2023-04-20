@@ -30,7 +30,6 @@ Global Strings -->
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Navigációs sáv megnyitása"</string>
     <string name="navigation_drawer_close">"Navigációs sáv bezárása"</string>
-    <string name="navigation_drawer_sync">"Szinkronizálás DAVx⁵-en keresztül"</string>
     <string name="navigation_drawer_about">"Névjegy / Licencek"</string>
     <string name="navigation_drawer_settings">"Beállítások"</string>
     <string name="navigation_drawer_news_updates">"Hírek &amp; frissítések"</string>
