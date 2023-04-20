@@ -73,7 +73,6 @@ Global Strings -->
     <string name="view_created_text">"Luotu: %1$s"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_comment_add_dialog_hint">"Kommenttisi"</string>
-    <string name="edit_attachment_beta_info">"* Huomioithan, että liitteiden käyttö on koekäytössä oleva ominaisuus. Toistaiseksi ainoastaan pienikokoiset liitetiedostot (enintään 100 KB) voidaan viedä .ics tiedostoon ja sykronoida DAVx⁵:llä. Jos kohtaat ongelmia, otathan yhteyttä tukipalstalla tai kotisivun tukipyyntölomakkeella."</string>
     <string name="edit_subtasks_add_hint">"Alitehtäväsi"</string>
     <string name="edit_subtasks_add_helper">"Lisää alitehtävä"</string>
     <string name="edit_attachment_delete_attachment">"Poista liite"</string>
