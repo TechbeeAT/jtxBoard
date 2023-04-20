@@ -42,7 +42,6 @@ Global Strings -->
     <string name="navigation_drawer_open">"ナビゲーション ドロワーを開く"</string>
     <string name="navigation_drawer_close">"ナビゲーション ドロワーを閉じる"</string>
     <string name="navigation_drawer_board">"ボード"</string>
-    <string name="navigation_drawer_sync">"DAVx⁵ で同期"</string>
     <string name="navigation_drawer_about">"アプリについて / ライセンス"</string>
     <string name="navigation_drawer_subtitle">"ジャーナル、メモ、タスク"</string>
     <string name="navigation_drawer_beta_feedback">"ベータ版へのフィードバック"</string>
@@ -122,7 +121,6 @@ Global Strings -->
     <string name="edit_location_helper">"場所を追加"</string>
     <string name="edit_attachment_add_dialog_hint">"あなたのリンク URL (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"あなたのコメント"</string>
-    <string name="edit_attachment_beta_info">"* 添付ファイルは試験運用中の機能です。現在、サイズの小さな添付ファイル (最大 100 KB) のみ .ics としてエクスポートし、DAVx⁵ で同期できます。問題が発生した場合は、サポートフォーラムまたはウェブサイトのサポートリクエストからお知らせください！"</string>
     <string name="edit_subtasks_add_hint">"あなたのサブタスク"</string>
     <string name="edit_subtasks_add_helper">"サブタスクを追加"</string>
     <string name="edit_attachment_delete_attachment">"添付ファイルを削除"</string>
@@ -197,19 +195,7 @@ Global Strings -->
     <string name="settings_app">"アプリの設定"</string>
     <string name="settings_select_mimetype_for_audio">"音声メモの MIME タイプを選択"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"DAVx⁵ で同期 (ベータ)*"</string>
-    <string name="sync_basic_info">"jtx Board 自体にサーバー同期機能はありませんが、DAVx⁵ 経由での同期に対応しています。これにより、CalDAV と互換性のあるサーバーにデータを保存、バックアップ、同期できます。*この機能はベータ版としています。テスト済みですが、まだ問題が発生する可能性があります。何か問題に遭遇したらフィードバックにご協力ください！"</string>
     <string name="sync_congratulations">"おめでとうございます！ :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"お使いの携帯電話で DAVx⁵ を検出しました。まだアカウントを設定していない場合は、私たちのウェブサイトの指示に従ってください。"</string>
-    <string name="sync_davx5_installed_with_collections_found">"お使いの携帯電話で DAVx⁵ を検出しました。問題や疑問がありましたら、まず私たちのウェブサイトをご確認ください:"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"現在、これらのアカウント (カレンダー) が同期されています:"</string>
-    <string name="sync_check_out_davx5">"DAVx⁵ を確認してください！"</string>
-    <string name="sync_davx5_not_found">"お使いの携帯電話で DAVx⁵ を検出できませんでした。同期についての詳細はこちらをご覧ください:"</string>
-    <string name="sync_davx5_get_davx5_on">"または、こちらから DAVx⁵ を入手"</string>
-    <string name="sync_furhter_info_davx5">"DAVx⁵ についての詳細はこちらをご覧ください"</string>
-    <string name="sync_button_add_account_in_davx5">"DAVx⁵ でアカウントを追加"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"DAVx⁵ を開けませんでした。手動で DAVx⁵ アプリを開いてください。"</string>
-    <string name="sync_toast_intent_start_davx5_sync">"DAVx⁵ で同期をトリガーできませんでした。DAVx⁵ アプリから確認してください。"</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"こんにちは。jtx Board 開発者のパトリックです。このアプリは皆さんに無料で提供していますが、開発には多くの時間と労力を要します。もし私のアプリを気に入っていただけましたら、愛を込めて少額の寄付をお願いします。"</string>
     <string name="donate_thank_you">"ありがとうございます！"</string>
@@ -218,7 +204,6 @@ Global Strings -->
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"この ファイル/URL を開けるアプリが見つかりませんでした。"</string>
     <string name="toast_item_is_now_recu_exception">"繰り返しのあるアイテムが例外になりました。"</string>
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"申し訳ありません。jtx の同期に問題があります。DAVx⁵ を閉じて、もう一度同期を開始してみてください。"</string>
     <string name="about_translations_thanks_to">"Thanks to"</string>
     <string name="about_translations_for_contributions_in">"for contributions in"</string>
     <string name="about_translations_basic_info">"jtx Board は、オープンソースコミュニティへの参加と貢献を評価するオープンソースアプリです。このページではコミュニティメンバーの翻訳への取り組みを紹介します。"</string>
@@ -279,7 +264,6 @@ Global Strings -->
     <string name="collections_tasks_num">"タスク: %1$s"</string>
     <string name="collections_local_nolocalcollections">"ローカルのコレクションが見つかりません"</string>
     <string name="collections_local_noremotecollections">"リモートのコレクションが見つかりません"</string>
-    <string name="collections_info">"コレクションは、ファイルのあるフォルダーのようなエントリーの集積です。メニューから新しいローカルのコレクションを作成したり、新しいリモートのコレクションを設定して DAVx⁵ で同期したりできます。"</string>
     <string name="collections_collection_menu">"コレクション メニュー"</string>
     <string name="collections_dialog_add_local_collection_title">"ローカルのコレクションを追加"</string>
     <string name="collections_dialog_edit_local_collection_title">"ローカルのコレクションを編集"</string>
@@ -307,8 +291,6 @@ Global Strings -->
     <string name="collections_toast_export_ics_error">"選択したコレクションのエクスポート中にエラーが発生しました。"</string>
     <string name="attachment_export_saved_successfully">"保存しました"</string>
     <string name="attachment_export_error_error_occurred">"選択したファイルの保存中にエラーが発生しました！"</string>
-    <string name="menu_collections_add_remote">"リモートのコレクションを追加 (DAVx⁵)"</string>
-    <string name="menu_collection_popup_show_in_davx5">"DAVx⁵ 内で表示"</string>
     <string name="menu_collection_popup_export_as_ics">".ics ファイルでエクスポート"</string>
     <string name="journal">"ジャーナル"</string>
     <string name="note">"メモ"</string>
@@ -504,8 +486,6 @@ Global Strings -->
     <string name="dialog_detach_from_series_text_single">"この要素を切り離すと、独立したサブタスクやリンクされたメモを設定できるようになります。しかし、元の系列へのリンクは無くなります。続行しますか？"</string>
     <string name="dialog_detach_from_series_text_attention">"注意: この操作は元に戻せません！"</string>
     <string name="dialog_detach_from_series_button">"系列から切り離す"</string>
-    <string name="dialog_davx5_outdated_title">"DAVx⁵ のバージョンが古すぎます"</string>
-    <string name="dialog_davx5_outdated_message">"使用中のバージョンの DAVx⁵ はこのバージョンの jtx Board に対応していません。DAVx⁵ を 4.3.1 (403010000+) 以降にアップデートしてください！ 現在、同期は停止しています。"</string>
     <string name="menu_list_viewmode_compact">"コンパクト表示"</string>
     <string name="menu_list_viewmode_kanban">"カンバン表示"</string>
     <string name="settings_details">"アイテム詳細の設定"</string>
