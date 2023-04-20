@@ -32,7 +32,6 @@ Global Strings -->
     <string name="navigation_drawer_open">"بازکردن کشوی ناوبری"</string>
     <string name="navigation_drawer_close">"بستن کشوی ناوبری"</string>
     <string name="navigation_drawer_board">"تابلو"</string>
-    <string name="navigation_drawer_sync">"همگام سازی با DAVx⁵"</string>
     <string name="navigation_drawer_about">"درباره / مجوز"</string>
     <string name="navigation_drawer_subtitle">"وقایع روزانه، یادداشت ها و &amp; کارها"</string>
     <string name="navigation_drawer_beta_feedback">"بازخورد آزمایشی"</string>
@@ -129,18 +128,7 @@ Global Strings -->
     <string name="settings_show_progress_for_maintasks">نمایش پیش رفت برای کارهای قبلی</string>
     <string name="settings_app">"تنظیمات برنامه"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"همگام سازی با DAVx⁵ (آزمایشی)"</string>
     <string name="sync_congratulations">"تبریک! :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"ما DAVx⁵ را روی دستگاهتان شناسایی کردیم. اگر هنوز حسابی تنظیم نکردید، لطفا دستورالعمل آن را در سایت ما پی بگیرید:"</string>
-    <string name="sync_davx5_installed_with_collections_found">"ما DAVx⁵ را روی دستگاهتان شناسایی کردیم. اگر در این مسئله مشکل یا شکی دارید، لطفا نگاهی به سایتمان بیاندازید:"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"این حساب‌ها (تقویم‌ها) اکنون همگام‌سازی شده‌اند:"</string>
-    <string name="sync_check_out_davx5">"DAVx⁵ را بررسی کنید!"</string>
-    <string name="sync_davx5_not_found">"ما DAVx⁵ را روی دستگاهتان شناسایی نکردیم.
-برای اظلاعات بیشتر در مورد همگام‌سازی لطفا نگاهی بیاندازید به:"</string>
-    <string name="sync_davx5_get_davx5_on">"یا DAVx⁵ را بگیرید از"</string>
-    <string name="sync_furhter_info_davx5">"برای اطلاعات بیشتر درباره DAVx⁵ لطفا بررسی کنید"</string>
-    <string name="sync_button_add_account_in_davx5">"افزودن حساب در DAVx⁵"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"خطا در بازکردن DAVx⁵، لطفا برنامه را خودتان باز کنید."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"سلام، من پاتریک هستم، توسعه‌دهنده‌ی jtx Board. من وقت و تلاش زیادی رو روی این برنامه گداشتم که اون رو رایگان بهتون پیشنهاد دادم. اگر این برنامه رو دوست دارید، لطفا کمی عشق بفرستید و یه هدیه کوچولو بدید!"</string>
     <string name="donate_thank_you">"ممنون از شما!"</string>
@@ -195,7 +183,6 @@ Global Strings -->
     <string name="menu_collections_add_local">"افزودن مجموعه محلی"</string>
     <string name="navigation_drawer_website_news">"اخبار &amp; یادداشت های انتشار"</string>
     <string name="edit_recur_year">"سال"</string>
-    <string name="menu_collection_popup_show_in_davx5">"نمایش در DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"خروجی به صورت ics."</string>
     <string name="note">"یادداشت"</string>
     <string name="account">"حساب"</string>
