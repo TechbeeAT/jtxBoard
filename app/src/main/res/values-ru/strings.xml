@@ -42,7 +42,6 @@ Global Strings -->
     <string name="navigation_drawer_open">"Открыть панель навигации"</string>
     <string name="navigation_drawer_close">"Закрыть панель навигации"</string>
     <string name="navigation_drawer_board">"Доска"</string>
-    <string name="navigation_drawer_sync">"Синхронизация с DAVx⁵"</string>
     <string name="navigation_drawer_about">"О приложении / Лицензия"</string>
     <string name="navigation_drawer_subtitle">"журналы, заметки и задачи"</string>
     <string name="navigation_drawer_beta_feedback">"Отзыв о бета-версии"</string>
@@ -124,7 +123,6 @@ Global Strings -->
     <string name="edit_location_helper">"Добавьте местоположение для этой записи"</string>
     <string name="edit_attachment_add_dialog_hint">"Ваш URL-адрес вложения (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Ваш комментарий"</string>
-    <string name="edit_attachment_beta_info">"* Обратите внимание, что синхронизация вложений с DAVx⁵ является экспериментальной функцией. Помните, что это может привести к неожиданному поведению или ошибкам. Если у вас возникнут какие-либо проблемы, сообщите нам об этом через форумы поддержки или запрос в службу поддержки на веб-сайте!"</string>
     <string name="edit_subtasks_add_hint">"Ваша подзадача"</string>
     <string name="edit_subtasks_add_helper">"Добавить подзадачу"</string>
     <string name="edit_attachment_delete_attachment">"Удалить вложение"</string>
@@ -201,21 +199,8 @@ Global Strings -->
     <string name="settings_app">"Настройки приложения"</string>
     <string name="settings_select_mimetype_for_audio">"Выберите Mimetype для аудиозаметок"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"Синхронизация с DAVx⁵ (бета)*"</string>
-    <string name="sync_basic_info">"jtx Board само по себе не поддерживает синхронизацию с сервером, но может использовать для этих целей функционал DAVx⁵. Данный метод позволяет вам использовать любой совместимый CalDAV-сервер для хранения, резервного копирования и синхронизации ваших данных. * Обратите внимание, что этот функционал по-прежнему находится в бета-тестировании, и во время работы могут возникать ошибки. Если вы столкнулись с подобным, пожалуйста, сообщите об этом нам!"</string>
     <string name="sync_congratulations">"Поздравляем! :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"Мы обнаружили DAVx⁵ на вашем телефоне. Если вы еще не создали ни одной учетной записи, следуйте инструкциям на нашем сайте:"</string>
-    <string name="sync_davx5_installed_with_collections_found">"Мы обнаружили DAVx⁵ на вашем телефоне. Если у вас есть какие-либо проблемы или сомнения, сначала посетите наш веб-сайт:"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"В настоящее время синхронизированы cледующие аккаунты (календари):"</string>
-    <string name="sync_check_out_davx5">"Попробуйте DAVx⁵!"</string>
-    <string name="sync_davx5_not_found">"Мы не обнаружили DAVx⁵ на вашем телефоне.
-Дополнительные сведения о синхронизации см."</string>
-    <string name="sync_davx5_get_davx5_on">"или установите DAVx⁵ через"</string>
-    <string name="sync_furhter_info_davx5">"Дополнительные сведения о DAVx⁵ см."</string>
-    <string name="sync_button_add_account_in_davx5">"Добавить аккаунт в DAVx⁵"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"Не удалось открыть DAVx⁵. Откройте приложение вручную."</string>
     <string name="sync_toast_intent_open_sync_app_failed">"Не удалось открыть %1$s, пожалуйста, откройте приложение вручную."</string>
-    <string name="sync_toast_intent_start_davx5_sync">"Не удалось запустить синхронизацию в DAVx⁵. Проверьте в DAVx⁵."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Привет, я Патрик, разработчик jtx Board. Я уделяю много времени и усилий этому приложению и распространяю его бесплатно. Если вам нравится мое приложение, вы можете отправить мне сердечек и небольшое пожертвование!"</string>
     <string name="donate_thank_you">"Спасибо !"</string>
@@ -225,7 +210,6 @@ Global Strings -->
     <string name="toast_item_is_now_recu_exception">"Повторяющееся событие теперь в исключениях."</string>
     <string name="toast_done_tasks_deleted">"Завершенные задачи удалены (%d)."</string>
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"Извините, jtx не может синхронизироваться. Пожалуйста, закройте DAVx⁵ и запустите синхронизацию снова."</string>
     <string name="about_translations_thanks_to">"Спасибо"</string>
     <string name="about_translations_for_contributions_in">"за вклад"</string>
     <string name="about_translations_basic_info">"jtx Board — приложение с открытым исходным кодом, и мы высоко ценим участие и вклад нашего сообщества. На этой странице мы хотели бы отметить усилия всех переводчиков."</string>
@@ -289,7 +273,6 @@ Global Strings -->
     <string name="collections_tasks_num">"Задачи: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Не обнаружены локальные коллекции"</string>
     <string name="collections_local_noremotecollections">"Не обнаружены отдаленно расположенные коллекции"</string>
-    <string name="collections_info">"Коллекции — это скопление записей наподобие папок с файлами. Используйте меню, чтобы создать локальную коллекцию или настроить синхронизацию с внешней коллекцией через DAVx⁵."</string>
     <string name="collections_collection_menu">"Меню"</string>
     <string name="collections_dialog_add_local_collection_title">"Меню коллекции"</string>
     <string name="collections_dialog_edit_local_collection_title">"Редактировать локальную коллекцию"</string>
@@ -317,9 +300,7 @@ Global Strings -->
     <string name="collections_toast_export_ics_error">"Произошла ошибка при экспорте выбранной коллекции."</string>
     <string name="attachment_export_saved_successfully">"Сохранено"</string>
     <string name="attachment_export_error_error_occurred">"Ошибка при сохранении файла"</string>
-    <string name="menu_collections_add_remote">"Добавить внешнюю коллекцию (DAVx⁵)"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Добавить внешнюю коллекцию (%1$s)"</string>
-    <string name="menu_collection_popup_show_in_davx5">"Показать в DAVx⁵"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Показать в %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Экспорт .ics"</string>
     <string name="journal">"Журнал"</string>
@@ -516,8 +497,6 @@ Global Strings -->
     <string name="dialog_detach_from_series_text_single">"Отсоединение этого элемента от серии позволит вам иметь независимые подзадачи или связанные заметки, но связи с исходной серией больше не будет. Хотите продолжить?"</string>
     <string name="dialog_detach_from_series_text_attention">"Внимание: эту операцию невозможно отменить!"</string>
     <string name="dialog_detach_from_series_button">"Отвязать от серии"</string>
-    <string name="dialog_davx5_outdated_title">"DAVx⁵ устарел"</string>
-    <string name="dialog_davx5_outdated_message">"Ваша текущая версия DAVx⁵ не совместима с этой версией jtx Board. Пожалуйста, обновите DAVx⁵ до версии 4.3.1 (403010000+) или до последней версии! Синхронизация приостановлена."</string>
     <string name="dialog_sync_app_outdated_title">"Приложение для синхронизации устарело"</string>
     <string name="dialog_sync_app_outdated_message">"Ваша текущая версия %1$s не совместима с этой версией jtx Board. Пожалуйста, обновите %1$s до версии %2$s или до последней версии! Синхронизация через %1$s приостановлена."</string>
     <string name="dialog_save_current_filter_config">"Сохранить текущую настройку фильтра"</string>
