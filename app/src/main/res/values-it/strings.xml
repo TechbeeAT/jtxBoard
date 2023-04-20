@@ -38,7 +38,6 @@ Global Strings -->
     <string name="navigation_drawer_open">"Apri il cassetto di navigazione"</string>
     <string name="navigation_drawer_close">"Chiudi il riquadro di navigazione"</string>
     <string name="navigation_drawer_board">"Tavola"</string>
-    <string name="navigation_drawer_sync">"Sincronizza con DAVx⁵"</string>
     <string name="navigation_drawer_about">"Informazioni / Licenza"</string>
     <string name="navigation_drawer_subtitle">"Diari, Note ed Attività"</string>
     <string name="navigation_drawer_beta_feedback">"Feedback beta"</string>
@@ -113,7 +112,6 @@ Global Strings -->
     <string name="edit_location_helper">"Aggiungi una posizione per questa voce"</string>
     <string name="edit_attachment_add_dialog_hint">"Il tuo allegato-url (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Il tuo commento"</string>
-    <string name="edit_attachment_beta_info">"* Si noti che la sincronizzazione degli allegati con DAVx⁵ è una funzionalità sperimentale. Tieni presente che ciò potrebbe causare comportamenti o errori imprevisti. Se riscontri problemi, faccelo sapere tramite i forum di supporto o una richiesta di supporto sul sito web!"</string>
     <string name="edit_subtasks_add_hint">"La tua sottoattività"</string>
     <string name="edit_subtasks_add_helper">"Aggiungi una sottoattività"</string>
     <string name="edit_attachment_delete_attachment">"Elimina allegato"</string>
@@ -184,20 +182,7 @@ Global Strings -->
     <string name="settings_app">"Impostazioni dell'app"</string>
     <string name="settings_select_mimetype_for_audio">"Seleziona Tipo MI per le note audio"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"Sincronizzazione con DAVx⁵ (beta)*"</string>
-    <string name="sync_basic_info">"jtx Board non fornisce la sincronizzazione del server in sé, ma supporta la sincronizzazione tramite DAVx⁵. Questo metodo ti consente di utilizzare qualsiasi server CalDAV compatibile di tua scelta per archiviare, eseguire il backup e sincronizzare i tuoi dati. * Si prega di notare che questa funzionalità è ancora considerata come beta. Sebbene questa funzionalità sia stata testata, i problemi potrebbero ancora verificarsi. In caso di problemi, apprezzeremmo il tuo feedback!"</string>
     <string name="sync_congratulations">"Congratulazioni! :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"Abbiamo rilevato DAVx⁵ sul tuo telefono. Se non hai ancora creato alcun account, segui le istruzioni sul nostro sito:"</string>
-    <string name="sync_davx5_installed_with_collections_found">"Abbiamo rilevato DAVx⁵ sul tuo telefono. In caso di problemi o dubbi, consultare prima il nostro sito:"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"I seguenti account (calendari) sono attualmente sincronizzati:"</string>
-    <string name="sync_check_out_davx5">"Dai un'occhiata a DAVx⁵!"</string>
-    <string name="sync_davx5_not_found">"Non abbiamo rilevato DAVx⁵ sul tuo telefono.
-Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
-    <string name="sync_davx5_get_davx5_on">"o scarica DAVx⁵ su"</string>
-    <string name="sync_furhter_info_davx5">"Per ulteriori informazioni su DAVx⁵ si prega di consultare"</string>
-    <string name="sync_button_add_account_in_davx5">"Aggiungi account in DAVx⁵"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"Impossibile aprire DAVx⁵, aprire l'app manualmente."</string>
-    <string name="sync_toast_intent_start_davx5_sync">"L'attivazione della sincronizzazione in DAVx⁵ non è riuscita, controllare in DAVx⁵."</string>
     <!-- Donate fragment -->
     <string name="donate_thank_you">"Grazie!"</string>
     <string name="donate_donate_with">"Dona con"</string>
@@ -205,7 +190,6 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nessuna app trovata per aprire questo file/URL."</string>
     <string name="toast_item_is_now_recu_exception">"L'elemento ricorrente è ora un'eccezione."</string>
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"Spiacenti, jtx Board ha difficoltà a sincronizzarsi. Chiudere DAVx⁵ e riavviare la sincronizzazione."</string>
     <string name="about_translations_thanks_to">"Grazie a"</string>
     <string name="about_translations_for_contributions_in">"per i contributi in"</string>
     <string name="about_translations_basic_info">"jtx Board è un'app open source che apprezza la partecipazione e il contributo della comunità open source. In questa pagina vorremmo attribuire gli sforzi dei membri della comunità per le traduzioni."</string>
@@ -261,7 +245,6 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="collections_tasks_num">"Attività: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Alcuna collezione locale trovato"</string>
     <string name="collections_local_noremotecollections">"Alcuna collezione remota trovato"</string>
-    <string name="collections_info">"Le collezioni sono un accumulo di voci come le cartelle con i file. Puoi creare nuove collezioni locali attraverso il menu o puoi impostare nuove collezioni remote da sincronizzare attraverso DAVx⁵."</string>
     <string name="collections_collection_menu">"Menu collezioni"</string>
     <string name="collections_dialog_add_local_collection_title">"Aggiungi collezione locale"</string>
     <string name="collections_dialog_edit_local_collection_title">"Aggiungi collezione remota"</string>
@@ -287,8 +270,6 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="edit_validation_errors_start_due_timezone_check">"Scegli un fuso orario per entrambi, inizio e fine, o disattiva i fusi orari."</string>
     <string name="collections_toast_export_ics_success">"L'esportazione della collezione è terminata con successo."</string>
     <string name="collections_toast_export_ics_error">"Si è verificato un errore durante l'esportazione della collezione selezionata."</string>
-    <string name="menu_collections_add_remote">"Aggiungi collezione remota (DAVx⁵)"</string>
-    <string name="menu_collection_popup_show_in_davx5">"Mostra in DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"Esportare come .ics"</string>
     <string name="journal">"Diario"</string>
     <string name="note">"Nota"</string>
