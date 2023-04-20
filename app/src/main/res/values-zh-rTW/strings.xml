@@ -38,7 +38,6 @@ Global Strings -->
     <string name="navigation_drawer_open">"開啟側邊選單"</string>
     <string name="navigation_drawer_close">"關閉側邊選單"</string>
     <string name="navigation_drawer_board">"白板"</string>
-    <string name="navigation_drawer_sync">"使用DAVx⁵同步"</string>
     <string name="navigation_drawer_about">"關於 / 授權"</string>
     <string name="navigation_drawer_subtitle">"日誌 、筆記和任務"</string>
     <string name="navigation_drawer_beta_feedback">"测试反馈"</string>
@@ -113,7 +112,6 @@ Global Strings -->
     <string name="edit_location_helper">"為此項目加上位置"</string>
     <string name="edit_attachment_add_dialog_hint">"您的附件網址（https://…）"</string>
     <string name="edit_comment_add_dialog_hint">"您的評論"</string>
-    <string name="edit_attachment_beta_info">"*请注意，附件被认为是一种实验性功能。目前，只有小型附件（最大100KB）可以导出为.ics并通过DAVx⁵同步。如遇问题，请通过支持论坛或网站上的支持请求告知我们！"</string>
     <string name="edit_subtasks_add_hint">"您的子任务"</string>
     <string name="edit_subtasks_add_helper">"添加子任务"</string>
     <string name="edit_attachment_delete_attachment">"删除附件"</string>
@@ -188,17 +186,7 @@ Global Strings -->
     <string name="settings_app">"應用程式設定"</string>
     <string name="settings_select_mimetype_for_audio">"选择音频笔记的Mimetype"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"使用DAVx⁵同步（测试版）*"</string>
     <string name="sync_congratulations">"恭喜！ :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"在您的电话上侦测到了DAVx⁵。如您尚未设置DAVx⁵账号，请按照我们主页上的介绍进行操作："</string>
-    <string name="sync_davx5_installed_with_collections_found">"在您的电话上侦测到了DAVx⁵。如有问题或疑惑，请先查看我们的主页："</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"以下帐户（日历）当前已同步："</string>
-    <string name="sync_check_out_davx5">"查看DAVx⁵！"</string>
-    <string name="sync_davx5_get_davx5_on">"或获取DAVx⁵"</string>
-    <string name="sync_furhter_info_davx5">"了解更多DAVx⁵信息，请查看"</string>
-    <string name="sync_button_add_account_in_davx5">"添加DAVx⁵账号"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"打开DAVx⁵失败，请手动打开应用。"</string>
-    <string name="sync_toast_intent_start_davx5_sync">"在DAVx⁵中触发同步失败，请登录DAVx⁵。"</string>
     <!-- Donate fragment -->
     <string name="donate_thank_you">"感謝您！"</string>
     <string name="donate_donate_with">"使用 PayPal 贊助"</string>
@@ -206,7 +194,6 @@ Global Strings -->
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"找不到可開啟此文件或網址的應用程式。"</string>
     <string name="toast_item_is_now_recu_exception">"定期项目现在是例外。"</string>
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"jtx 同步發生困難。請關閉 DAVx⁵ 然後再次啟動同步。"</string>
     <string name="about_translations_thanks_to">"感謝"</string>
     <string name="about_translations_for_contributions_in">"貢獻"</string>
     <string name="about_translations_basic_info">"jtx Board 是一款開源應用程式，感謝開源社群的參與和貢獻。在此，我們想展示社群成員在翻譯方面所做的努力。"</string>
@@ -263,7 +250,6 @@ Global Strings -->
     <string name="collections_tasks_num">"任务：%1$s"</string>
     <string name="collections_local_nolocalcollections">"未发现本地合集"</string>
     <string name="collections_local_noremotecollections">"未发现远程合集"</string>
-    <string name="collections_info">"合集是条目的累积，类似内有文件的文件夹。您可通过菜单新建本地合集，也可设置新的远程合集，并使用DAVx⁵进行同步。"</string>
     <string name="collections_collection_menu">"合集菜单"</string>
     <string name="collections_dialog_add_local_collection_title">"添加本地合集"</string>
     <string name="collections_dialog_edit_local_collection_title">"编辑本地合集"</string>
@@ -289,8 +275,6 @@ Global Strings -->
     <string name="edit_validation_errors_start_due_timezone_check">"请为“开始”和“到期”选择时区，或者停用时区。"</string>
     <string name="collections_toast_export_ics_success">"导出合集成功完成。"</string>
     <string name="collections_toast_export_ics_error">"导出选定的合集时出错。"</string>
-    <string name="menu_collections_add_remote">"添加远程合集（DAVx⁵）"</string>
-    <string name="menu_collection_popup_show_in_davx5">"顯示在 DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"輸出為 .ics"</string>
     <string name="journal">"日誌"</string>
     <string name="note">"筆記"</string>
