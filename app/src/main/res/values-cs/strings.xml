@@ -42,7 +42,6 @@ Global Strings -->
     <string name="navigation_drawer_open">"Otevřít navigační panel"</string>
     <string name="navigation_drawer_close">"Zavřít navigační panel"</string>
     <string name="navigation_drawer_board">"Deska"</string>
-    <string name="navigation_drawer_sync">"Synchronizovat s DAVx⁵"</string>
     <string name="navigation_drawer_about">"O aplikaci / Licence"</string>
     <string name="navigation_drawer_subtitle">"deníky, poznámky a úkoly"</string>
     <string name="navigation_drawer_beta_feedback">"Zpětná vazba Beta"</string>
@@ -122,7 +121,6 @@ Global Strings -->
     <string name="edit_location_helper">"Přidat místo pro tento záznam"</string>
     <string name="edit_attachment_add_dialog_hint">"URL vaší přílohy (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Váš komentář"</string>
-    <string name="edit_attachment_beta_info">"* Pamatujte, že přílohy jsou považovány za experimentální funkci. V současné době lze exportovat pouze malé přílohy (do 100 KB) jako .ics a synchronizovat je prostřednictvím DAVx⁵. Pokud narazíte na nějaké problémy, dejte nám prosím vědět prostřednictvím fóra podpory nebo žádosti o podporu na webových stránkách!"</string>
     <string name="edit_subtasks_add_hint">"Váš dílčí úkol"</string>
     <string name="edit_subtasks_add_helper">"Přidat dílčí úkol"</string>
     <string name="edit_attachment_delete_attachment">"Odstranit přílohu"</string>
@@ -197,20 +195,7 @@ Global Strings -->
     <string name="settings_app">"Nastavení aplikace"</string>
     <string name="settings_select_mimetype_for_audio">"Vybrat Mimetype pro zvukové poznámky"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"Synchronizovat s DAVx⁵ (beta)*"</string>
-    <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale bude podporovat synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožní používat vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat. * Pamatujte, že tato funkce je stále považována za beta verzi. Přestože byla tato funkce testována, mohou se stále vyskytovat problémy. Pokud narazíte na nějaký problém, budeme rádi za vaši zpětnou vazbu!"</string>
     <string name="sync_congratulations">"Gratulujeme! :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud jste si ještě nenastavili žádný účet, postupujte podle pokynů na našich webových stránkách:"</string>
-    <string name="sync_davx5_installed_with_collections_found">"Ve vašem telefonu jsme rozpoznali DAVx⁵. Pokud máte jakékoliv potíže nebo pochybnosti, podívejte se nejprve na naše webové stránky:"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"Aktuálně jsou synchronizovány následující účty (kalendáře):"</string>
-    <string name="sync_check_out_davx5">"Vyzkoušejte DAVx⁵!"</string>
-    <string name="sync_davx5_not_found">"Ve vašem telefonu jsme nerozpoznali DAVx⁵.
-Další informace o synchronizaci naleznete na:"</string>
-    <string name="sync_davx5_get_davx5_on">"nebo získejte DAVx⁵ na"</string>
-    <string name="sync_furhter_info_davx5">"Další informace o DAVx⁵ naleznete na"</string>
-    <string name="sync_button_add_account_in_davx5">"Přidat účet v DAVx⁵"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"Nepodařilo se otevřít DAVx⁵, otevřete aplikaci ručně."</string>
-    <string name="sync_toast_intent_start_davx5_sync">"Spuštění synchronizace v DAVx⁵ se nezdařilo, zkontrolujte to v DAVx⁵."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Ahoj, jsem Patrick, vývojář jtx Board. Této aplikaci, kterou vám nabízím zdarma, věnuji spoustu času a úsilí. Pokud se vám moje aplikace líbí, pošlete mi prosím lásku a věnujte malý příspěvek!"</string>
     <string name="donate_thank_you">"Děkujeme!"</string>
@@ -219,7 +204,6 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nebyla nalezena žádná aplikace pro otevření tohoto souboru nebo URL."</string>
     <string name="toast_item_is_now_recu_exception">"Opakující se položka je nyní výjimkou."</string>
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"Omlouváme se, ale jtx má potíže se synchronizací. Zavřete prosím DAVx⁵ a spusťte synchronizaci znovu."</string>
     <string name="about_translations_thanks_to">"Díky"</string>
     <string name="about_translations_for_contributions_in">"za příspěvky v rámci"</string>
     <string name="about_translations_basic_info">"jtx Board je aplikace s otevřeným zdrojovým kódem, která si cení účasti a příspěvků komunity open source. Na této stránce bychom rádi ocenili úsilí členů komunity v oblasti překladů."</string>
@@ -280,7 +264,6 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="collections_tasks_num">"Úkoly: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Nebyly nalezeny žádné místní Sbírky"</string>
     <string name="collections_local_noremotecollections">"Nebyly nalezeny žádné vzdálené Sbírky"</string>
-    <string name="collections_info">"Sbírky jsou nahromaděním položek podobně jako složky se soubory. Prostřednictvím nabídky můžete vytvářet nové místní sbírky nebo můžete nastavit nové vzdálené sbírky pro synchronizaci prostřednictvím DAVx⁵."</string>
     <string name="collections_collection_menu">"Nabídka Sbírky"</string>
     <string name="collections_dialog_add_local_collection_title">"Přidat místní Sbírku"</string>
     <string name="collections_dialog_edit_local_collection_title">"Upravit místní Sbírku"</string>
@@ -308,8 +291,6 @@ Další informace o synchronizaci naleznete na:"</string>
     <string name="collections_toast_export_ics_error">"Během exportu vybrané sbírky došlo k chybě."</string>
     <string name="attachment_export_saved_successfully">"Úspěšně úloženo"</string>
     <string name="attachment_export_error_error_occurred">"Při ukládání vybraného souboru došlo k chybě!"</string>
-    <string name="menu_collections_add_remote">"Přidat vzdálenou Sbírku (DAVx⁵)"</string>
-    <string name="menu_collection_popup_show_in_davx5">"Zobrazit v DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"Exportovat jako .ics"</string>
     <string name="journal">"Deník"</string>
     <string name="note">"Poznámka"</string>
@@ -505,8 +486,6 @@ Děkujeme vám!"</string>
     <string name="dialog_detach_from_series_text_single">"Odpojení tohoto prvku od série vám umožní mít nezávislé dílčí úkoly nebo propojené poznámky, ale nebude již existovat žádný další odkaz na původní sérii. Chcete pokračovat?"</string>
     <string name="dialog_detach_from_series_text_attention">"Upozornění: Tuto operaci nelze vrátit zpět!"</string>
     <string name="dialog_detach_from_series_button">"Odpojit od série"</string>
-    <string name="dialog_davx5_outdated_title">"DAVx⁵ je zastaralý"</string>
-    <string name="dialog_davx5_outdated_message">"Vaše aktuální verze DAVx⁵ není kompatibilní s touto verzí jtx Board. Aktualizujte prosím DAVx⁵ na 4.3.1 (403010000+) nebo novější! Synchronizace je aktuálně pozastavena."</string>
     <string name="menu_list_viewmode_compact">"Kompaktní zobrazení"</string>
     <string name="menu_list_viewmode_kanban">"Zobrazení Kanban"</string>
     <string name="settings_details">"Nastavení pro podrobnosti položky"</string>
