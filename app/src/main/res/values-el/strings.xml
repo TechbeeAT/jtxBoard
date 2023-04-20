@@ -42,7 +42,6 @@ Global Strings -->
     <string name="navigation_drawer_open">"Άνοιγμα πλοηγού"</string>
     <string name="navigation_drawer_close">"Κλείσιμο πλοηγού"</string>
     <string name="navigation_drawer_board">"Board"</string>
-    <string name="navigation_drawer_sync">"Συγχρονισμός με DAVx⁵"</string>
     <string name="navigation_drawer_about">"Σχετικά / Άδεια"</string>
     <string name="navigation_drawer_subtitle">"Ημερολόγια, σημειώσεις &amp; εργασίες"</string>
     <string name="navigation_drawer_beta_feedback">"Beta σχόλια"</string>
@@ -122,7 +121,6 @@ Global Strings -->
     <string name="edit_location_helper">"Γι’ αυτή την καταχώρηση προσθέστε μια τοποθεσία"</string>
     <string name="edit_attachment_add_dialog_hint">"Το συνημμένο-url σας (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Το σχόλιο σου"</string>
-    <string name="edit_attachment_beta_info">"*Λάβετε υπόψη σας ότι ο συγχρονισμός συνημμένων με το DAVx⁵ είναι μια πειραματική δυνατότητα και αυτό μπορεί να προκαλέσει κάποια απροσδόκητη συμπεριφορά ή σφάλματα. Εάν αντιμετωπίζετε προβλήματα, ενημερώστε μας μέσω του φόρουμ υποστήριξης ή ενός αιτήματος υποστήριξης στον ιστότοπο!"</string>
     <string name="edit_subtasks_add_hint">"Η υποεργασία σας"</string>
     <string name="edit_subtasks_add_helper">"Προσθήκη υποεργασίας"</string>
     <string name="edit_attachment_delete_attachment">"Διαγραφή συνημμένου"</string>
@@ -197,20 +195,7 @@ Global Strings -->
     <string name="settings_app">"Ρυθμίσεις εφαρμογής"</string>
     <string name="settings_select_mimetype_for_audio">"Επιλέξτε Mimetype για ηχητικές σημειώσεις"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"Συγχρονισμός με DAVx⁵ (beta)*"</string>
-    <string name="sync_basic_info">"Το jtx Board δεν παρέχει τον συγχρονισμό με τον διακομιστή, αλλά θα υποστηρίζει συγχρονισμό μέσω DAVx⁵. Αυτή η μέθοδος σάς επιτρέπει να χρησιμοποιείτε οποιονδήποτε συμβατό διακομιστή CalDAV της επιλογής σας για αποθήκευση, δημιουργία αντιγράφων ασφαλείας και συγχρονισμό των δεδομένων σας. * Λάβετε υπόψη σας ότι αυτή η λειτουργία εξακολουθεί να θεωρείται beta. Παρόλο που αυτή η λειτουργία έχει δοκιμαστεί, ενδέχεται να παρουσιαστούν προβλήματα. Εάν αντιμετωπίσετε οποιοδήποτε πρόβλημα, θα εκτιμούσαμε τα σχόλιά σας!"</string>
     <string name="sync_congratulations">"Συγχαρητήρια! :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"Εντοπίσαμε έναν DAVx⁵ λογαριασμό στο τηλέφωνό σας. Εάν δεν τον έχετε ακόμα εγκαταστήσει, ακολουθήστε τις οδηγίες στον ιστότοπό μας:"</string>
-    <string name="sync_davx5_installed_with_collections_found">"Εντοπίσαμε έναν λογαριασμό DAVx⁵ στο τηλέφωνο σας. Εάν έχετε οποιοδήποτε πρόβλημα ή αμφιβολίες, παρακαλώ ενημερωθείται πρώτα από τον ιστότοπο μας:"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"Οι ακόλουθοι λογαριασμοί (ημερολόγια) είναι επί του παρόντος συγχρονισμένοι:"</string>
-    <string name="sync_check_out_davx5">"Ολοκληρώθηκε DAVx⁵!"</string>
-    <string name="sync_davx5_not_found">"Δεν εντοπίσαμε DAVx⁵ λογαριασμό στο τηλέφωνό σας.
-Για περισσότερες πληροφορίες σχετικά με τον συγχρονισμό, παρακαλούμε να ανατρέξετε στο:"</string>
-    <string name="sync_davx5_get_davx5_on">"ή λάβεται το DAVx⁵ στο"</string>
-    <string name="sync_furhter_info_davx5">"Για περισσότερες πληροφορίες σχετικά με το DAVx⁵ παρκαλώ επισκεφθείτε το"</string>
-    <string name="sync_button_add_account_in_davx5">"Προσθέστε έναν λογαριασμό στο DAVx⁵"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"Αποτυχία ανοίγματος του DAVx⁵, παρακαλώ ανοίξτε χειροκίνητα την εφαρμογή."</string>
-    <string name="sync_toast_intent_start_davx5_sync">"Η ενεργοποίηση του συγχρονισμού με το DAVx⁵ απαίτυχε, παρακαλώ ελέγξτε το DAVx⁵."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Γεια σου, είμαι ο Πάτρικ, ο προγραμματιστής του jtx Board. Αφιερώνω πολύ χρόνο και προσπάθεια σε αυτή την εφαρμογή που σου προσφέρω δωρεάν. Εάν σ' αρέσει η εφαρμογή μου, παρακαλώ στείλε λίγη αγάπη και κανε και μία μικρή δωρεά!"</string>
     <string name="donate_thank_you">"Ευχαριστούμε!"</string>
@@ -219,7 +204,6 @@ Global Strings -->
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Δεν βρέθηκε εφαρμογή για να ανοίξει αυτό το αρχείο/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Το επαναλαμβανόμενο στοιχείο αποτελεί πλέον εξαίρεση."</string>
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"Λυπούμαστε, το jtx board δυσκολεύεται να συγχρονίστει. Κλείστε το DAVx⁵ και ξεκινήστε τον συγχρονισμό εκ νέου."</string>
     <string name="about_translations_thanks_to">"Ευχαριστίες"</string>
     <string name="about_translations_for_contributions_in">"Συνεισφορά"</string>
     <string name="about_translations_basic_info">"Η jtx Board είναι μια εφαρμογή ανοιχτού κώδικα που εκτιμά τη συμμετοχή και τη συνεισφορά της κοινότητας ανοιχτού κώδικα. Σε αυτή τη σελίδα θα θέλαμε να αποδώσουμε τις προσπάθειες των μελών της κοινότητας για μεταφράσεις."</string>
@@ -280,7 +264,6 @@ Global Strings -->
     <string name="collections_tasks_num">"Εργασίες: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Δεν βρέθηκαν προσωπικές συλλογές"</string>
     <string name="collections_local_noremotecollections">"Δεν βρέθηκαν απομακρυσμένες συλλογές"</string>
-    <string name="collections_info">"Οι συλλογές είναι μια συσσώρευση καταχωρήσεων όπως φάκελοι με αρχεία. Μπορείτε να δημιουργήσετε νέες προσωπικές συλλογές μέσω του μενού ή να ρυθμίσετε νέες απομακρυσμένες συλλογές για συγχρονισμό με το DAVx⁵."</string>
     <string name="collections_collection_menu">"Μενού συλλογής"</string>
     <string name="collections_dialog_add_local_collection_title">"Προσθήκη προσωπικής συλλογής"</string>
     <string name="collections_dialog_edit_local_collection_title">"Επεξεργασία προσωπικής συλλογής"</string>
@@ -308,8 +291,6 @@ Global Strings -->
     <string name="collections_toast_export_ics_error">"Ένα πρόβλημα παρουσιάστηκε κατά την διαδικασία εξαγωγής της επιλεγμένης συλλογής."</string>
     <string name="attachment_export_saved_successfully">"Αποθηκεύτηκε επιτυχώς"</string>
     <string name="attachment_export_error_error_occurred">"Παρουσιάστηκε σφάλμα κατά την αποθήκευση του επιλεγμένου αρχείου!"</string>
-    <string name="menu_collections_add_remote">"Προσθήκη απομακρυσμένης συλλογής (DAVx⁵)"</string>
-    <string name="menu_collection_popup_show_in_davx5">"Προβολή στο (DAVx⁵)"</string>
     <string name="menu_collection_popup_export_as_ics">"Εξαγωγή ως .ics"</string>
     <string name="journal">"Ημερολόγιο"</string>
     <string name="note">"Σημείωση"</string>
@@ -506,8 +487,6 @@ Global Strings -->
     <string name="dialog_detach_from_series_text_single">"Η αποσύνδεση αυτού του στοιχείου από την ακολουθία θα σας επιτρέψει να έχετε ανεξάρτητες δευτερεύουσες εργασίες ή συνδεδεμένες σημειώσεις, αλλά δε θα υπάρχει πλέον σύνδεση με την αρχική σειρά. Θέλετε να συνεχίσετε;"</string>
     <string name="dialog_detach_from_series_text_attention">"Προσοχή: Αυτή η λειτουργία δεν μπορεί να αναιρεθεί!"</string>
     <string name="dialog_detach_from_series_button">"Αποκόλληση από την ακολουθία"</string>
-    <string name="dialog_davx5_outdated_title">"Το DAVx5 δεν είναι ενημερωμένο"</string>
-    <string name="dialog_davx5_outdated_message">"Η τρέχουσα έκδοση του DAVx5 δεν είναι συμβατή με αυτήν την έκδοση του jtx Board. Παρακαλούμε ενημερώστε το DAVx5 σε 4.3.1 (403010000+) ή νεώτερη! Ο συγχρονισμός προσωρινά αναστέλλεται."</string>
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
     <string name="settings_details">"Ρυθμίσεις για τις λεπτομέρειες του στοιχείου"</string>
