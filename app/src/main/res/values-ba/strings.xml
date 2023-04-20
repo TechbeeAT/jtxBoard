@@ -36,7 +36,6 @@ Global Strings -->
     <string name="navigation_drawer_open">"Навигация панелен асырға"</string>
     <string name="navigation_drawer_close">"Навигация панелен ябырға"</string>
     <string name="navigation_drawer_board">"Таҡта"</string>
-    <string name="navigation_drawer_sync">"DAVx⁵ менән синхронизация"</string>
     <string name="navigation_drawer_about">"Тураһында / Лицензия"</string>
     <string name="navigation_drawer_subtitle">"көндәлектәр, яҙмалар &amp; мәсьәләләр"</string>
     <string name="navigation_drawer_beta_feedback">"Бета версия тураһында баһа бирергә"</string>
