@@ -136,10 +136,7 @@ fun SyncScreenContent(
             SyncApp.values().forEach { syncApp ->
 
                 Image(
-                    painter = when(syncApp) {
-                        SyncApp.DAVX5 -> painterResource(id = R.drawable.ic_davx5_icon_green_bg_without_shadow)
-                        SyncApp.KSYNC -> painterResource(id = R.drawable.logo_ksync)
-                    },
+                    painter = painterResource(id = syncApp.logoRes),
                     contentDescription = null,
                     modifier = Modifier.size(150.dp)
                 )
@@ -150,10 +147,7 @@ fun SyncScreenContent(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = when(syncApp) {
-                        SyncApp.DAVX5 -> stringResource(id = R.string.sync_basic_info)
-                        SyncApp.KSYNC -> stringResource(id = R.string.sync_ksync_basic_info)
-                    },
+                    text = stringResource(syncApp.infoText),
                     style = Typography.bodyLarge,
                     textAlign = TextAlign.Center
                 )
