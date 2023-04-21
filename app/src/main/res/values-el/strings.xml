@@ -41,6 +41,7 @@ Global Strings -->
     <string name="navigation_drawer_open">"Άνοιγμα πλοηγού"</string>
     <string name="navigation_drawer_close">"Κλείσιμο πλοηγού"</string>
     <string name="navigation_drawer_board">"Board"</string>
+    <string name="navigation_drawer_synchronization">"Συγχρονισμός"</string>
     <string name="navigation_drawer_about">"Σχετικά / Άδεια"</string>
     <string name="navigation_drawer_subtitle">"Ημερολόγια, σημειώσεις &amp; εργασίες"</string>
     <string name="navigation_drawer_settings">"Ρυθμίσεις"</string>
@@ -55,10 +56,12 @@ Global Strings -->
     <string name="list_due_today">"Μέχρι σήμερα"</string>
     <string name="list_due_tomorrow">"Μέχρι αύριο"</string>
     <string name="list_due_inXhours">"Μέχρι %d ώρες"</string>
+    <string name="list_due_on_weekday">"Προθεσμία στις %s"</string>
     <string name="list_start_past">"Παρελθοντικά"</string>
     <string name="list_start_today">"Για σήμερα"</string>
     <string name="list_start_tomorrow">"Αρχίζουν αύριο"</string>
     <string name="list_start_inXhours">"Σχεδιασμένα να αρχήσουν σε %d ώρες"</string>
+    <string name="list_start_on_weekday">"Προγραμματισμένη έναρξη στις %s"</string>
     <string name="list_tabitem_journals">"Ημερολόγια"</string>
     <string name="list_tabitem_notes">"Σημειώσεις"</string>
     <string name="list_tabitem_todos">"Εργασίες"</string>
@@ -102,6 +105,8 @@ Global Strings -->
     <string name="edit_datepicker_dialog_edit_timezone">"Προσθήκη ζώνης ώρας"</string>
     <string name="edit_dialog_sure_to_delete_title">"Διαγραφή του \"%1$s\";"</string>
     <string name="edit_dialog_sure_to_discard_title">"Θέλετε να διαγράψετε αυτή την καταχώριση;"</string>
+    <string name="dialog_delete_done_title">"Διαγραφή όλων των ολοκληρωμένων εργασιών;"</string>
+    <string name="dialog_delete_done_message">"Προσοχή: Οι υποεργασίες διαγράφονται ανεξάρτητα από την κατάστασή τους αν η κύρια τους έχει επισημανθεί ως έχει. Αυτή η λειτουργία δεν μπορεί να αναιρεθεί!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Είστε βέβαιοι ότι θέλετε να διαγράψετε το \"%1$s\";"</string>
     <string name="edit_dialog_sure_to_discard_message">"Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτή την καταχώριση; Αυτή η καταχώρηση δεν θα αποθηκευτεί."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Η ημερομηνία λήξης δεν μπορεί να είναι πριν από την ημερομηνία έναρξης."</string>
@@ -140,7 +145,18 @@ Global Strings -->
     <string name="settings_app">"Ρυθμίσεις εφαρμογής"</string>
     <string name="settings_select_mimetype_for_audio">"Επιλέξτε Mimetype για ηχητικές σημειώσεις"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"Συγχρονισμός με %1$s"</string>
+    <string name="sync_basic_info">"Το jtx Board δεν παρέχει τον συγχρονισμό με τον διακομιστή, αλλά υποστηρίζει τον συγχρονισμό μέσω του DAVx⁵. Αυτή η μέθοδος θα σας επιτρέψει να χρησιμοποιήσετε έναν συμβατό διακομιστή CalDAV της επιλογής σας για αποθήκευση, δημιουργία αντιγράφων ασφαλείας και συγχρονισμό των δεδομένων σας."</string>
+    <string name="sync_ksync_basic_info">"Το kSync είναι μια εφαρμογή βασισμένη στο DAVx5 που αναπτύχθηκε από τη Infomaniak ειδικά για τις υπηρεσίες τους. Ενώ το DAVx5 είναι ανοιχτό σε οποιονδήποτε συμβατό διακομιστή CalDAV, το kSync επιτρέπει μόνο λογαριασμούς Infomaniak για συγχρονισμό."</string>
+    <string name="sync_manageddavx5_basic_info">"Η διαχείριση του DAVx5 καθιστά διαθέσιμη τη λειτουργικότητα του DAVx5 για τους οργανισμούς και έρχεται με πρόσθετα χαρακτηριστικά επιχειρήσεων, όπως η μαζική ανάπτυξη, η εταιρική επωνυμία και οι προ-διαμορφώσιμες ρυθμίσεις."</string>
     <string name="sync_congratulations">"Συγχαρητήρια! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"Εντοπίσαμε το %1$s στο τηλέφωνό σας."</string>
+    <string name="sync_setup_instructions">"Οδηγίες εγκατάστασης"</string>
+    <string name="sync_check_out_sync_app">"Ελέγξτε το %1$s!"</string>
+    <string name="sync_sync_app_not_found">"Εντοπίσαμε το %1$s στο τηλέφωνό σας."</string>
+    <string name="sync_download_sync_app">"Λήψη του %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Προσθήκη λογαριασμού στο %1$s"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Αποτυχία ανοίγματος του %1$s, παρακαλώ ανοίξτε την εφαρμογή χειροκίνητα."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Γεια σου, είμαι ο Πάτρικ, ο προγραμματιστής του jtx Board. Αφιερώνω πολύ χρόνο και προσπάθεια σε αυτή την εφαρμογή που σου προσφέρω δωρεάν. Εάν σ' αρέσει η εφαρμογή μου, παρακαλώ στείλε λίγη αγάπη και κανε και μία μικρή δωρεά!"</string>
     <string name="donate_thank_you">"Ευχαριστούμε!"</string>
@@ -148,6 +164,7 @@ Global Strings -->
     <string name="donate_other_donation_methods">"Εάν θέλετε να εξετάσετε οποιαδήποτε άλλη μέθοδο δωρεάς, ελέγξτε τον ιστότοπό μας:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Δεν βρέθηκε εφαρμογή για να ανοίξει αυτό το αρχείο/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Το επαναλαμβανόμενο στοιχείο αποτελεί πλέον εξαίρεση."</string>
+    <string name="toast_done_tasks_deleted">"Έγινε διαγραφή των ολοκληρωμένων εργασιών (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Ευχαριστίες"</string>
     <string name="about_translations_basic_info">"Η jtx Board είναι μια εφαρμογή ανοιχτού κώδικα που εκτιμά τη συμμετοχή και τη συνεισφορά της κοινότητας ανοιχτού κώδικα. Σε αυτή τη σελίδα θα θέλαμε να αποδώσουμε τις προσπάθειες των μελών της κοινότητας για μεταφράσεις."</string>
@@ -164,6 +181,7 @@ Global Strings -->
     <string name="save_and_edit">"Αποθήκευση και επεξεργασία"</string>
     <string name="save_and_new">"Αποθήκευση &amp; δημιουργία νέου"</string>
     <string name="save_and_close">"Αποθήκευση &amp; κλείσιμο"</string>
+    <string name="list_quickadd_add_audio_attachment">"Επισύναψη ηχογραφημένου αρχείου"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Παραχωρήθηκε η άδεια ανάγνωσης επαφών"</string>
     <string name="permission_read_contacts_denied">"Η άδεια ανάγνωσης των επαφών απορρίφθηκε"</string>
@@ -176,8 +194,10 @@ Global Strings -->
     <string name="apply">"Καταχώρηση"</string>
     <string name="not_available_abbreviation">"Δ/Υ"</string>
     <string name="collection">"Συλλογή"</string>
+    <string name="collection_owner_displayname">"Ιδιοκτήτης: %1$s"</string>
     <string name="link_to_parent">"Πίσω στην αρχική"</string>
     <string name="navigation_drawer_collections">"Συλλογες"</string>
+    <string name="navigation_drawer_presets">"Προκαθορισμένα"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Ημερομηνία/Ώρα"</string>
     <string name="alarms_duration">"Διάρκεια"</string>
@@ -195,6 +215,7 @@ Global Strings -->
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Σημειώσεις: %1$s"</string>
     <string name="collections_tasks_num">"Εργασίες: %1$s"</string>
+    <string name="collections_info">"Οι συλλογές είναι μια συσσώρευση καταχωρήσεων όπως φάκελοι με αρχεία. Μπορείτε να δημιουργήσετε νέες προσωπικές συλλογές μέσω του μενού ή να ρυθμίσετε νέες απομακρυσμένες συλλογές για συγχρονισμό εάν έχετε εφαρμογή συγχρονισμού εγκατεστημένη στο κινητό σας (π.χ το DAVx⁵)."</string>
     <string name="collections_collection_menu">"Μενού συλλογής"</string>
     <string name="collections_dialog_add_local_collection_title">"Προσθήκη προσωπικής συλλογής"</string>
     <string name="collections_dialog_edit_local_collection_title">"Επεξεργασία προσωπικής συλλογής"</string>
@@ -218,6 +239,8 @@ Global Strings -->
     <string name="collections_toast_export_ics_error">"Ένα πρόβλημα παρουσιάστηκε κατά την διαδικασία εξαγωγής της επιλεγμένης συλλογής."</string>
     <string name="attachment_export_saved_successfully">"Αποθηκεύτηκε επιτυχώς"</string>
     <string name="attachment_export_error_error_occurred">"Παρουσιάστηκε σφάλμα κατά την αποθήκευση του επιλεγμένου αρχείου!"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"Προσθήκη απομακρυσμένης συλλογής (%1$s)"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"Εμφάνισε το %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Εξαγωγή ως .ics"</string>
     <string name="journal">"Ημερολόγιο"</string>
     <string name="note">"Σημείωση"</string>
@@ -403,6 +426,13 @@ Global Strings -->
     <string name="dialog_detach_from_series_text_single">"Η αποσύνδεση αυτού του στοιχείου από την ακολουθία θα σας επιτρέψει να έχετε ανεξάρτητες δευτερεύουσες εργασίες ή συνδεδεμένες σημειώσεις, αλλά δε θα υπάρχει πλέον σύνδεση με την αρχική σειρά. Θέλετε να συνεχίσετε;"</string>
     <string name="dialog_detach_from_series_text_attention">"Προσοχή: Αυτή η λειτουργία δεν μπορεί να αναιρεθεί!"</string>
     <string name="dialog_detach_from_series_button">"Αποκόλληση από την ακολουθία"</string>
+    <string name="dialog_sync_app_outdated_title">"Συγχρονισμός απαρχαιωμένης εφαρμογής"</string>
+    <string name="dialog_sync_app_outdated_message">"Η τρέχουσα έκδοση του %1$s δεν είναι συμβατή με αυτήν την έκδοση του jtx Board. Παρακαλούμε ενημερώστε σε %1$s %2$s ή νεότερη! Ο συγχρονισμός μέσω %1$s έχει ανασταλεί."</string>
+    <string name="dialog_save_current_filter_config">"Αποθήκευση ρυθμίσεων τρέχοντος φίλτρου"</string>
+    <string name="dialog_save_current_filter_my_filter">"Τα φίλτρα μου"</string>
+    <string name="dialog_edit_stored_category_title">"Προσθήκη/Επεξεργασία προεπιλογής κατηγορίας"</string>
+    <string name="dialog_edit_stored_resource_title">"Προσθήκη/Επεξεργασία προεπιλογής κατηγορίας"</string>
+    <string name="dialog_add_audio_entry_title">"Προσθήκη καταχώρησης ήχου"</string>
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
     <string name="settings_tasks">"Ρυθμίσεις εργασιών"</string>
@@ -429,6 +459,8 @@ Global Strings -->
     <string name="settings_keep_status_progress_completed_in_sync">"Διατήρηση κατάστασης, προόδου &amp; ολοκλήρωση συγχρονισμού"</string>
     <string name="settings_attention_experimental_feature">"Προσοχή: Αυτό είναι ένα πειραματικό χαρακτηριστικό"</string>
     <string name="settings_create_with_current_location">"Δημιουργήστε νέες καταχωρήσεις με την τρέχουσα τοποθεσία"</string>
+    <string name="settings_sticky_alarms">"Κολλημένες ειδοποιήσεις"</string>
+    <string name="settings_sticky_alarms_sub">"Διατήρηση ειδοποιήσεων μέχρι να ολοκληρωθούν ή αναβληθούν"</string>
     <string name="sync_button_go_to_collections">"Πήγαινε στις συλλογέ"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε αυτήν τη δυνατότητα."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
