@@ -61,7 +61,7 @@ Global Strings -->
     <string name="list_start_today">"本日から着手"</string>
     <string name="list_start_tomorrow">"明日から着手"</string>
     <string name="list_start_inXhours">"%d 時間後に着手予定"</string>
-    <string name="list_start_on_weekday">"%d に着手予定"</string>
+    <string name="list_start_on_weekday">"%s に着手予定"</string>
     <string name="list_tabitem_journals">"ジャーナル"</string>
     <string name="list_tabitem_notes">"メモ"</string>
     <string name="list_tabitem_todos">"タスク"</string>
