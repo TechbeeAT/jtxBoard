@@ -41,6 +41,7 @@ Global Strings -->
     <string name="navigation_drawer_open">"ナビゲーション ドロワーを開く"</string>
     <string name="navigation_drawer_close">"ナビゲーション ドロワーを閉じる"</string>
     <string name="navigation_drawer_board">"ボード"</string>
+    <string name="navigation_drawer_synchronization">"同期"</string>
     <string name="navigation_drawer_about">"アプリについて / ライセンス"</string>
     <string name="navigation_drawer_subtitle">"ジャーナル、メモ、タスク"</string>
     <string name="navigation_drawer_settings">"設定"</string>
@@ -55,10 +56,12 @@ Global Strings -->
     <string name="list_due_today">"今日が締め切り"</string>
     <string name="list_due_tomorrow">"明日が締め切り"</string>
     <string name="list_due_inXhours">"締め切りまで %d 時間"</string>
+    <string name="list_due_on_weekday">"%s に締め切り"</string>
     <string name="list_start_past">"過去に着手"</string>
     <string name="list_start_today">"本日から着手"</string>
     <string name="list_start_tomorrow">"明日から着手"</string>
     <string name="list_start_inXhours">"%d 時間後に着手予定"</string>
+    <string name="list_start_on_weekday">"%d に着手予定"</string>
     <string name="list_tabitem_journals">"ジャーナル"</string>
     <string name="list_tabitem_notes">"メモ"</string>
     <string name="list_tabitem_todos">"タスク"</string>
@@ -102,6 +105,8 @@ Global Strings -->
     <string name="edit_datepicker_dialog_edit_timezone">"タイムゾーンを編集"</string>
     <string name="edit_dialog_sure_to_delete_title">"「%1$s」を削除しますか？"</string>
     <string name="edit_dialog_sure_to_discard_title">"このエントリーを破棄しますか？"</string>
+    <string name="dialog_delete_done_title">"完了したタスクをすべて削除しますか？"</string>
+    <string name="dialog_delete_done_message">"注意: 親が完了としてマークされている場合、サブタスクはステータスに関係なく削除されます。この操作は元に戻せません！"</string>
     <string name="edit_dialog_sure_to_delete_message">"本当に「%1$s」を削除しますか？"</string>
     <string name="edit_dialog_sure_to_discard_message">"本当にこのエントリーを破棄しますか？ 破棄を選択すると保存されません。"</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"着手より前の日時を締め切りに設定することはできません。"</string>
@@ -140,6 +145,10 @@ Global Strings -->
     <string name="settings_app">"アプリの設定"</string>
     <string name="settings_select_mimetype_for_audio">"音声メモの MIME タイプを選択"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"%1$s で同期"</string>
+    <string name="sync_basic_info">"jtx Board 自体にサーバー同期機能はありませんが、DAVx⁵ 経由での同期に対応しています。これにより、CalDAV と互換性のあるサーバーにデータを保存、バックアップ、同期できます。"</string>
+    <string name="sync_ksync_basic_info">"kSync は DAVx⁵ をベースに Infomaniak が開発したアプリで。DAVx⁵ は互換性のある CalDAV サーバーに対して開かれていますが、kSync は Infomaniak アカウントにのみ同期を許可します。"</string>
+    <string name="sync_manageddavx5_basic_info">"Managed DAVx⁵ は大規模展開、企業ブランディング、事前設定などのエンタープライズ機能が追加された、組織で DAVx⁵ の機能を利用するためのアプリです。"</string>
     <string name="sync_congratulations">"おめでとうございます！ :-)"</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"こんにちは。jtx Board 開発者のパトリックです。このアプリは皆さんに無料で提供していますが、開発には多くの時間と労力を要します。もし私のアプリを気に入っていただけましたら、愛を込めて少額の寄付をお願いします。"</string>
