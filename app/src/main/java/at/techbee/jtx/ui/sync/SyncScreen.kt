@@ -16,6 +16,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,8 +26,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -128,111 +129,130 @@ fun SyncScreenContent(
             modifier = modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             SyncApp.values().forEach { syncApp ->
 
-                Image(
-                    painter = painterResource(id = syncApp.logoRes),
-                    contentDescription = null,
-                    modifier = Modifier.size(150.dp)
-                )
-                Text(
-                    text = stringResource(id = R.string.sync_with_sync_app_heading, syncApp.appName),
-                    style = Typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(syncApp.infoText),
-                    style = Typography.bodyLarge,
-                    textAlign = TextAlign.Center
-                )
+                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
 
-                // Sync App is available
-                if (availableSyncApps.contains(syncApp)) {
-                    Text(
-                        text = stringResource(id = R.string.sync_congratulations),
-                        style = Typography.titleMedium,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = stringResource(id = R.string.sync_sync_app_installed_but_no_collections_found, syncApp.appName),
-                        style = Typography.bodyLarge,
-                        textAlign = TextAlign.Center
-                    )
-                    if (remoteCollections.none { it.accountType == syncApp.accountType } && syncApp != SyncApp.KSYNC) {
-                        Button(
-                            onClick = { SyncUtil.openSyncAppLoginActivity(syncApp, context) },
-                        ) {
-                            Text(stringResource(R.string.sync_button_add_account_in_sync_app, syncApp.appName))
-                        }
-                    } else {
-                        Button(
-                            onClick = { goToCollections() },
-                        ) {
-                            Text(stringResource(id = R.string.sync_button_go_to_collections))
-                        }
-                    }
-                    TextButton(
-                        content = {
-                            Text(
-                                text = stringResource(id = R.string.sync_setup_instructions),
-                                style = Typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
-                            )
-                        },
-                        onClick = {
-                            context.startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse(syncApp.setupURL)
-                                )
-                            )
-                        }
-                    )
-                } else {       // Sync App is NOT available
-                    Text(
-                        text = stringResource(id = R.string.sync_sync_app_not_found, syncApp.appName),
-                        style = Typography.bodyLarge,
-                        textAlign = TextAlign.Center
-                    )
-                    Text(
-                        text = stringResource(id = R.string.sync_check_out_sync_app, syncApp.appName),
-                        style = Typography.titleMedium,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Button(
-                        onClick = { SyncUtil.openSyncAppInStore(syncApp, context) },
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally, 
+                        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
                     ) {
-                        Text(stringResource(R.string.sync_download_sync_app, syncApp.appName))
-                    }
 
-                    TextButton(
-                        content = {
+                        Text(
+                            text = stringResource(id = R.string.sync_with_sync_app_heading, syncApp.appName),
+                            style = Typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = syncApp.logoRes),
+                                contentDescription = null,
+                                modifier = Modifier.size(75.dp)
+                            )
                             Text(
-                                text = stringResource(id = R.string.sync_more_information_about_sync_app, syncApp.appName),
+                                text = stringResource(syncApp.infoText),
+                                style = Typography.bodyLarge,
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+
+                        // Sync App is available
+                        if (availableSyncApps.contains(syncApp)) {
+                            /*
+                            Text(
+                                text = stringResource(id = R.string.sync_congratulations),
                                 style = Typography.titleMedium,
+                                textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold
                             )
-                        },
-                        onClick = {
-                            context.startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse(syncApp.websiteURL)
-                                )
+                             */
+                            Text(
+                                text = stringResource(id = R.string.sync_sync_app_installed_but_no_collections_found, syncApp.appName),
+                                style = Typography.bodyLarge,
+                                textAlign = TextAlign.Center
+                            )
+                            if (remoteCollections.none { it.accountType == syncApp.accountType } && syncApp != SyncApp.KSYNC) {
+                                Button(
+                                    onClick = { SyncUtil.openSyncAppLoginActivity(syncApp, context) },
+                                ) {
+                                    Text(stringResource(R.string.sync_button_add_account_in_sync_app, syncApp.appName))
+                                }
+                            } else {
+                                Button(
+                                    onClick = { goToCollections() },
+                                ) {
+                                    Text(stringResource(id = R.string.sync_button_go_to_collections))
+                                }
+                            }
+                            TextButton(
+                                content = {
+                                    Text(
+                                        text = stringResource(id = R.string.sync_setup_instructions),
+                                        style = Typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        textAlign = TextAlign.Center
+                                    )
+                                },
+                                onClick = {
+                                    context.startActivity(
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse(syncApp.setupURL)
+                                        )
+                                    )
+                                }
+                            )
+                        } else {       // Sync App is NOT available
+                            Text(
+                                text = stringResource(id = R.string.sync_sync_app_not_found, syncApp.appName),
+                                style = Typography.bodyLarge,
+                                textAlign = TextAlign.Center
+                            )
+                            /*
+                            Text(
+                                text = stringResource(id = R.string.sync_check_out_sync_app, syncApp.appName),
+                                style = Typography.titleMedium,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                            )
+                             */
+                            Button(
+                                onClick = { SyncUtil.openSyncAppInStore(syncApp, context) },
+                            ) {
+                                Text(stringResource(R.string.sync_download_sync_app, syncApp.appName))
+                            }
+
+                            TextButton(
+                                content = {
+                                    Text(
+                                        text = stringResource(id = R.string.sync_more_about_sync_app, syncApp.appName),
+                                        style = Typography.titleMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                },
+                                onClick = {
+                                    context.startActivity(
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse(syncApp.websiteURL)
+                                        )
+                                    )
+                                }
                             )
                         }
-                    )
+                    }
                 }
-                Divider()
             }
         }
     }
@@ -286,10 +306,10 @@ fun SyncScreenContent_Preview_DAVx5_with_collections() {
             availableSyncApps = SyncApp.values().toList(),
             isSyncInProgress = remember { mutableStateOf(true) },
             remoteCollections =
-                listOf(
-                    ICalCollection().apply { this.collectionId = 1 },
-                    ICalCollection().apply { this.collectionId = 2 }
-                ),
+            listOf(
+                ICalCollection().apply { this.collectionId = 1 },
+                ICalCollection().apply { this.collectionId = 2 }
+            ),
             goToCollections = { },
         )
     }
