@@ -9,7 +9,6 @@ Global Strings -->
     <string name="ok">"OK"</string>
     <string name="delete">"Törlés"</string>
     <string name="discard">"Elvetés"</string>
-    <string name="gotit">"Rendben"</string>
     <string name="cont">"Tovább"</string>
     <string name="website">"Honlap"</string>
     <string name="toolbar_text_add_task">"Feladat hozzáadása"</string>
@@ -30,7 +29,6 @@ Global Strings -->
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Navigációs sáv megnyitása"</string>
     <string name="navigation_drawer_close">"Navigációs sáv bezárása"</string>
-    <string name="navigation_drawer_sync">"Szinkronizálás DAVx⁵-en keresztül"</string>
     <string name="navigation_drawer_about">"Névjegy / Licencek"</string>
     <string name="navigation_drawer_settings">"Beállítások"</string>
     <string name="navigation_drawer_news_updates">"Hírek &amp; frissítések"</string>
@@ -43,60 +41,37 @@ Global Strings -->
     <string name="list_due_overdue">"Késésben"</string>
     <string name="list_due_today">"Mai határidő"</string>
     <string name="list_due_tomorrow">"Holnapi határidő"</string>
-    <string name="list_due_inXdays">"Határidő %d napon belül"</string>
     <string name="list_due_inXhours">"%d órán belül esedékes"</string>
     <string name="list_start_today">"Tervezett kezdés ma"</string>
     <string name="list_start_tomorrow">"Holnap kezdődik"</string>
     <string name="list_start_inXhours">"Tervezett kezdés %d órán belül"</string>
-    <string name="list_start_inXdays">"Tervezett kezdés %d napon belül"</string>
     <string name="list_tabitem_journals">"Naplók"</string>
     <string name="list_tabitem_notes">"Jegyzetek"</string>
     <string name="list_tabitem_todos">"Feladatok"</string>
-    <string name="list_fab_add_contentdesc">"Új elem hozzáadása"</string>
-    <string name="list_progress">"Előrehaladás"</string>
     <string name="list_expand">"Kibontás"</string>
     <string name="list_dialog_delete_selected_title">Törli a kijelölt bejegyzéseket?</string>
     <!-- fragment_ical_view -->
-    <string name="view_recurrence_go_to_original_button">"Ugrás az eredetire"</string>
     <string name="view_fragment_audio_permission">"Engedélyek"</string>
-    <string name="view_comment_playbutton_content_desc">"Hangmelléklet lejátszása"</string>
     <string name="view_add_audio_note">"Hang hozzáadása"</string>
-    <string name="view_fab_edit_entry_contentDesc">"Bejegyzés szerkesztése"</string>
-    <string name="view_subtasks_header">"Alfeladatok"</string>
-    <string name="view_progress_label">"Előrehaladás"</string>
-    <string name="view_dialog_sure_to_delete_message">"Biztosan törölni szeretné a következőt: \"%1$s\"?"</string>
-    <string name="view_toast_deleted_successfully">"\"%1$s\" sikeresen törölve"</string>
     <string name="view_created_text">"Létrehozva: %1$s"</string>
     <string name="view_last_modified_text">"Utoljára módosítva: %1$s"</string>
     <string name="view_due">"Határidő"</string>
     <string name="view_completed">"Befejezett"</string>
     <string name="view_started">"Elkezd(ett)"</string>
     <!-- fragment_ical_edit -->
-    <string name="edit_add_category_helper">"Kategória hozzáadása"</string>
-    <string name="edit_attendees_hint">"bela@akarmi.hu"</string>
-    <string name="edit_comment_hint">"Hozzászólásod…"</string>
     <string name="edit_comment_helper">"Megjegyzés hozzáadása"</string>
     <string name="edit_attachment_button_text">"Melléklet hozzáadása"</string>
     <string name="edit_take_picture_button_text">"Fotó készítése"</string>
     <string name="edit_add_link_button_text">"Csatolmány hivatkozás hozzáadása"</string>
-    <string name="edit_location_helper">"Helyszín hozzáadása a bejegyzéshez"</string>
-    <string name="edit_comment_add_dialog_hint">"Hozzászólásod"</string>
-    <string name="edit_subtasks_add_hint">"Alfeladataim"</string>
     <string name="edit_subtasks_add_helper">"Alfeladat hozzáadása"</string>
-    <string name="edit_attachment_delete_attachment">"Melléklet törlése"</string>
     <string name="edit_attachment_add_link_dialog">"Csatolmány hivatkozás hozzáadása"</string>
-    <string name="edit_recur_all_occurrences">"Összes előfordulás"</string>
     <string name="edit_recur_repeat_every_x">"Ismétlődik minden"</string>
     <string name="edit_recur_x_day_of_the_month">"hónap napja"</string>
     <string name="edit_datepicker_dialog_select_date">"Dátum kiválasztása"</string>
-    <string name="edit_datepicker_dialog_select_time">"Időpont kiválasztása"</string>
     <string name="edit_datepicker_dialog_add_time">"Idő hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_time">"Idő módosítása"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Időzóna hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Időzóna módosítása"</string>
-    <string name="edit_task_started_add">"Kezdési időpont kiválasztása"</string>
-    <string name="edit_task_due_add">"Határidő kiválasztása"</string>
-    <string name="edit_task_completed_add">"Befejezési időpont kiválasztása"</string>
     <string name="edit_dialog_sure_to_delete_title">"%1$s törlése?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Bejegyzés elvetése?"</string>
     <string name="edit_dialog_sure_to_delete_message">"Biztosan törölni szeretné a következőt: \"%1$s\"?"</string>
@@ -112,7 +87,6 @@ Global Strings -->
     <string name="menu_list_quick_journal">"Gyors napló"</string>
     <string name="menu_list_quick_note">"Gyorsjegyzet"</string>
     <string name="menu_list_quick_todo">"Gyors teendő"</string>
-    <string name="menu_list_syncnow">"Szinkronizálás indítása"</string>
     <string name="menu_view_copy_as_journal">"Másolás naplóként"</string>
     <string name="menu_view_copy_as_todo">"Másolás teendőként"</string>
     <string name="menu_view_copy_as_note">"Másolás jegyzetként"</string>
@@ -124,7 +98,6 @@ Global Strings -->
     <string name="shortcut_addNote_longLabel">"Új jegyzet"</string>
     <string name="shortcut_addTodo_longLabel">"Teendő hozzáadása"</string>
     <!-- Settings fragment -->
-    <string name="settings_show_subtasks_in_list">"Alfeladatok megjelenítése a feladatok listáján"</string>
     <string name="settings_show_progress_for_subtasks">Alfeladatok állapotának megjelenítése</string>
     <string name="settings_show_progress_for_maintasks">Feladatok állapotának megjelenítése</string>
     <string name="settings_app">"Alkalmazás beállításai"</string>
@@ -140,9 +113,7 @@ Global Strings -->
     <string name="apply">"Alkalmaz"</string>
     <string name="not_available_abbreviation">"n/a"</string>
     <string name="collection">"Gyűjtemény"</string>
-    <string name="toolbar_text_collections">"Gyűjtemények"</string>
     <string name="navigation_drawer_collections">"Gyűjtemények"</string>
-    <string name="edit_dialog_set_attendee_role">"Résztvevő rangja"</string>
     <!-- alarms -->
     <string name="alarms_onstart">"Indításnál"</string>
     <string name="alarms_before_start">"Kezdet előtt"</string>
@@ -153,9 +124,6 @@ Global Strings -->
     <string name="alarms_hours">"Óra"</string>
     <string name="alarms_days">"Nap(ok)"</string>
     <!-- fragment_collections -->
-    <string name="collections_local_collections">"Helyi Gyűjtemények"</string>
-    <!-- Fuzzy -->
-    <!-- Fuzzy -->
     <!-- Fuzzy -->
     <string name="collections_tasks_num">"Feladatok: %1$s"</string>
     <string name="collections_collection_menu">"Gyűjtemény Menü"</string>
@@ -182,7 +150,6 @@ Global Strings -->
     <string name="due">"Határidő"</string>
     <string name="completed">"Befejezett"</string>
     <string name="subtasks">"Alfeladatok"</string>
-    <string name="adinfo_adfree_success_thankyou">"Köszönjük!"</string>
     <string name="filter_desc">"Csökkenő"</string>
     <string name="filter_created">"Létrehozva"</string>
     <string name="filter_last_modified">"Utoljára módosítva"</string>

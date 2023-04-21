@@ -10,7 +10,6 @@ Global Strings -->
     <string name="ok">"باشه"</string>
     <string name="delete">"حذف"</string>
     <string name="discard">"ول کن"</string>
-    <string name="gotit">"فهمیدم"</string>
     <string name="cont">"ادامه"</string>
     <string name="website">"وب سایت"</string>
     <string name="toolbar_text_add_journal">"افزودن واقعه روزانه"</string>
@@ -32,10 +31,8 @@ Global Strings -->
     <string name="navigation_drawer_open">"بازکردن کشوی ناوبری"</string>
     <string name="navigation_drawer_close">"بستن کشوی ناوبری"</string>
     <string name="navigation_drawer_board">"تابلو"</string>
-    <string name="navigation_drawer_sync">"همگام سازی با DAVx⁵"</string>
     <string name="navigation_drawer_about">"درباره / مجوز"</string>
     <string name="navigation_drawer_subtitle">"وقایع روزانه، یادداشت ها و &amp; کارها"</string>
-    <string name="navigation_drawer_beta_feedback">"بازخورد آزمایشی"</string>
     <string name="navigation_drawer_settings">"تنظیمات"</string>
     <string name="navigation_drawer_news_updates">"اخبار &amp; بروزرسانی ها"</string>
     <string name="navigation_drawer_external_links">"پیوندهای خارجی"</string>
@@ -48,53 +45,31 @@ Global Strings -->
     <string name="list_start_today">"برنانه ریزی شده برای آغاز در امروز"</string>
     <string name="list_start_tomorrow">"شروع در فردا"</string>
     <string name="list_start_inXhours">"برنامه‌ریزی شروع در %d ساعت"</string>
-    <string name="list_start_inXdays">"برنامه‌ریزی شروع در %d روز"</string>
     <string name="list_tabitem_notes">"یادداشت ها"</string>
-    <string name="list_fab_add_contentdesc">"افزودن مورد جدید"</string>
-    <string name="list_progress">"پیش رفت"</string>
     <string name="list_expand">"گشودن"</string>
     <string name="list_dialog_delete_selected_title">ورودی های انتخابی حذف شوند؟</string>
     <string name="list_quickadd_dialog_summary_description_hint">"خلاصه/توضیحات"</string>
-    <string name="list_item_upload_pending">"در صف بارگذاری"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"مجوز برنامه"</string>
-    <string name="view_comment_playbutton_content_desc">"پخش نظر صوتی"</string>
     <string name="view_feedback_linked_notes">"بازخورد / یادداشت پیوندخورده"</string>
-    <string name="view_add_note">"افزودن یادداشت"</string>
     <string name="view_add_audio_note">"افزودن صدا"</string>
-    <string name="view_subtasks_header">"کارهای فرعی"</string>
-    <string name="view_progress_label">"پیشرفت"</string>
-    <string name="view_dialog_sure_to_delete_title">"\"%1$s\" حذف شود؟"</string>
-    <string name="view_dialog_sure_to_delete_message">"مطمئنی می خوای \"%1$s\" رو حذف کنی؟"</string>
-    <string name="view_toast_deleted_successfully">"\"%1$s\" با موفقیت حذف شد"</string>
-    <string name="view_dialog_add_note">"افزودن یادداشت"</string>
-    <string name="view_dialog_add_note_dialog_hint">"یادداشت خود را اینجا بنویسید"</string>
     <string name="view_created_text">"ایجاد شد: %1$s"</string>
     <string name="view_last_modified_text">"آخرین اصلاح: %1$s"</string>
     <string name="view_due">"موعد"</string>
     <string name="view_completed">"تکمیل‌شده"</string>
     <string name="view_started">"آغاز (شده)"</string>
     <!-- fragment_ical_edit -->
-    <string name="edit_add_category_hint">"#دسته_بندی_من"</string>
-    <string name="edit_add_category_helper">"افزودن یک دسته"</string>
-    <string name="edit_attendees_hint">"johanna@example.com"</string>
-    <string name="edit_comment_hint">"نظر شما …"</string>
     <string name="edit_comment_helper">"افزودن یک نظر"</string>
     <string name="edit_attachment_button_text">"افزودن پیوست"</string>
     <string name="edit_take_picture_button_text">"گرفتن عکس"</string>
     <string name="edit_add_link_button_text">"افزودن پیوست پیوند"</string>
-    <string name="edit_attachment_add_dialog_hint">"پیوند پیوستی شما (https://…)"</string>
-    <string name="edit_comment_add_dialog_hint">"نظر شما"</string>
-    <string name="edit_subtasks_add_hint">"کارفرعی شما"</string>
     <string name="edit_subtasks_add_helper">"افزودن کارفرعی"</string>
-    <string name="edit_attachment_delete_attachment">"حذف پیوست"</string>
     <string name="edit_recur_repeat_every_x">"تکرار شود هر"</string>
     <string name="edit_recur_on_weekday">"در"</string>
     <string name="edit_recur_on_the_x_day_of_month">"در"</string>
     <string name="edit_recur_x_day_of_the_month">"روز از ماه"</string>
     <string name="edit_recur_x_times">"بار"</string>
     <string name="edit_datepicker_dialog_select_date">"انتخاب تاریخ"</string>
-    <string name="edit_datepicker_dialog_select_time">"انتخاب زمان"</string>
     <string name="edit_datepicker_dialog_add_time">"افزودن زمان"</string>
     <string name="edit_datepicker_dialog_edit_time">"ویرایش زمان"</string>
     <string name="edit_datepicker_dialog_add_timezone">"افزودن منطقه زمانی"</string>
@@ -114,7 +89,6 @@ Global Strings -->
     <!-- menus -->
     <string name="menu_list_gotodate">"برو به تاریخ"</string>
     <string name="menu_list_quick_note">"یادداشت فوری"</string>
-    <string name="menu_list_syncnow">"اکنون همگام‌سازی شود"</string>
     <string name="menu_view_share_ics">"اشتراک گذاری با پسوند ics"</string>
     <string name="menu_view_copy_as_note">"رونوشت به عنوان یادداشت"</string>
     <string name="menu_view_copy_item">"ایجاد رونوشت"</string>
@@ -122,25 +96,11 @@ Global Strings -->
     <!-- Shortcuts -->
     <string name="shortcut_addNote_longLabel">"افزودن یادداشت"</string>
     <!-- Settings fragment -->
-    <string name="settings_enforce_dark_theme">"اجبار نمایه تیره"</string>
-    <string name="settings_show_subtasks_in_list">"نمایش کارهای فارعی در فهرست"</string>
-    <string name="settings_show_attachments_in_list">"نمایش پیوست ها در فهرست"</string>
     <string name="settings_show_progress_for_subtasks">نمایش پیش رفت برای کارهای فرعی</string>
     <string name="settings_show_progress_for_maintasks">نمایش پیش رفت برای کارهای قبلی</string>
     <string name="settings_app">"تنظیمات برنامه"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"همگام سازی با DAVx⁵ (آزمایشی)"</string>
     <string name="sync_congratulations">"تبریک! :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"ما DAVx⁵ را روی دستگاهتان شناسایی کردیم. اگر هنوز حسابی تنظیم نکردید، لطفا دستورالعمل آن را در سایت ما پی بگیرید:"</string>
-    <string name="sync_davx5_installed_with_collections_found">"ما DAVx⁵ را روی دستگاهتان شناسایی کردیم. اگر در این مسئله مشکل یا شکی دارید، لطفا نگاهی به سایتمان بیاندازید:"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"این حساب‌ها (تقویم‌ها) اکنون همگام‌سازی شده‌اند:"</string>
-    <string name="sync_check_out_davx5">"DAVx⁵ را بررسی کنید!"</string>
-    <string name="sync_davx5_not_found">"ما DAVx⁵ را روی دستگاهتان شناسایی نکردیم.
-برای اظلاعات بیشتر در مورد همگام‌سازی لطفا نگاهی بیاندازید به:"</string>
-    <string name="sync_davx5_get_davx5_on">"یا DAVx⁵ را بگیرید از"</string>
-    <string name="sync_furhter_info_davx5">"برای اطلاعات بیشتر درباره DAVx⁵ لطفا بررسی کنید"</string>
-    <string name="sync_button_add_account_in_davx5">"افزودن حساب در DAVx⁵"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"خطا در بازکردن DAVx⁵، لطفا برنامه را خودتان باز کنید."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"سلام، من پاتریک هستم، توسعه‌دهنده‌ی jtx Board. من وقت و تلاش زیادی رو روی این برنامه گداشتم که اون رو رایگان بهتون پیشنهاد دادم. اگر این برنامه رو دوست دارید، لطفا کمی عشق بفرستید و یه هدیه کوچولو بدید!"</string>
     <string name="donate_thank_you">"ممنون از شما!"</string>
@@ -156,10 +116,6 @@ Global Strings -->
     <string name="save_and_edit">"ذخیره &amp; ویرایش"</string>
     <string name="save_and_new">"ذخیره &amp; جدید"</string>
     <string name="save_and_close">"ذخیره &amp; بستن"</string>
-    <string name="list_quickadd_dialog_sr_endicon_contentdesc">"استفاده از گفتار به متن"</string>
-    <string name="list_quickadd_dialog_sr_start_listening">"موتور گفتار به متن در حال گوش دادن است."</string>
-    <string name="list_quickadd_dialog_sr_stop_listening">"موتور گرفتار به متن گوش کردن را متوقف کرده."</string>
-    <string name="list_quickadd_dialog_sr_error">"متاسفیم، موتور گفتار به متن با خطایی مواجه شده است. (%1$s)"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"مجوز خواندن مخاطبین داده شد"</string>
     <string name="permission_read_contacts_denied">"مجوز خواندن مخاطبین رد شد"</string>
@@ -171,23 +127,17 @@ Global Strings -->
     <string name="apply">"اعمال"</string>
     <string name="not_available_abbreviation">"n/a"</string>
     <string name="collection">"مجموعه"</string>
-    <string name="toolbar_text_collections">"مجموعه ها"</string>
     <string name="navigation_drawer_collections">"مجموعه ها"</string>
     <!-- alarms -->
     <string name="alarms_onstart">"در هنگام شروع"</string>
-    <string name="alarms_custom">"سفارشی"</string>
     <string name="alarms_before_start">"قبل از شروع"</string>
     <string name="alarms_after_start">"پس از شروع"</string>
     <string name="alarms_minutes">"دقیقه"</string>
     <string name="alarms_hours">"ساعت"</string>
     <string name="alarms_days">"روز"</string>
     <!-- fragment_collections -->
-    <string name="collections_local_collections">"مجموعه های محلی"</string>
-    <!-- Fuzzy -->
     <!-- Fuzzy -->
     <string name="collections_notes_num">"یادداشت ها: %1$s"</string>
-    <!-- Fuzzy -->
-    <string name="collections_local_nolocalcollections">"مجموعه ای محلی یافت نشد"</string>
     <string name="collections_collection_menu">"منوی مجموعه"</string>
     <string name="collections_dialog_add_local_collection_title">"افزودن مجموعه محلی"</string>
     <string name="collections_dialog_edit_local_collection_title">"ویرایش مجموعه محلی"</string>
@@ -195,7 +145,6 @@ Global Strings -->
     <string name="menu_collections_add_local">"افزودن مجموعه محلی"</string>
     <string name="navigation_drawer_website_news">"اخبار &amp; یادداشت های انتشار"</string>
     <string name="edit_recur_year">"سال"</string>
-    <string name="menu_collection_popup_show_in_davx5">"نمایش در DAVx⁵"</string>
     <string name="menu_collection_popup_export_as_ics">"خروجی به صورت ics."</string>
     <string name="note">"یادداشت"</string>
     <string name="account">"حساب"</string>
@@ -226,7 +175,6 @@ Global Strings -->
     <string name="completed">"تکمیل‌شده"</string>
     <string name="started">"آغاز (شده)"</string>
     <string name="add_time_switch">"افزودن زمان"</string>
-    <string name="add_timezone_switch">"افزودن منطقه زمانی"</string>
     <string name="progress">"پیش رفت"</string>
     <string name="categories">"دسته‌ها"</string>
     <string name="subtasks">"کارهای فرعی"</string>
@@ -236,9 +184,6 @@ Global Strings -->
     <string name="view_share_repeats">"این ورودی تکرار می شود هر"</string>
     <string name="collections_dialog_move_title">"تمام ورودی ها از \"%1$s\" انتقال یابد به"</string>
     <string name="menu_collections_popup_move_entries">"انتقال ورودی ها"</string>
-    <string name="adinfo_adfree_success_thankyou">"متشکریم!"</string>
-    <string name="adinfo_adfree_purchase_date">"خریداری شده در %1$s"</string>
-    <string name="adinfo_adfree_order_id">"شناسه سفارش: %1$s"</string>
     <string name="list_no_dates_set">"تاریخی تنظفم نشد"</string>
     <string name="filter_order_by">"ترتیب بر اساس"</string>
     <string name="filter_asc">"صعودی"</string>
@@ -258,7 +203,6 @@ Global Strings -->
     <string name="collections_toast_export_all_ics_error">"یک خطا زمان صادرکردن تمام مجموعه‌ها رخ داد."</string>
     <string name="menu_collections_export_all">"صادرکردن همه"</string>
     <string name="more">"بیشتر"</string>
-    <string name="toolbar_text_buypro">"خرید نسخه حرفه‌ای"</string>
     <string name="navigation_drawer_buypro">"خرید نسخه حرفه‌ای"</string>
     <string name="settings_select_theme">"انتخاب پوسته"</string>
     <string name="settings_select_theme_dark">"تاریک"</string>
@@ -275,7 +219,6 @@ Global Strings -->
     <string name="audio_pause">"مکث"</string>
     <string name="audio_error_toast">"متأسفیم، نمی‌توان پخش را شروع کرد."</string>
     <string name="sync_in_progress">"همگام‌سازی در حال انجام"</string>
-    <string name="saving">"درحال ذخیره…"</string>
     <string name="invalid_timezone_message">"لطفاً یک منطقه‌زمانی معتبر را انتخاب کنید!"</string>
     <string name="invalid_url_message">"لطفا یک نشانی معتبر وارد کنید!"</string>
     <string name="list_quickadd_dialog_sr_start">"شروع تشخیص گفتار"</string>
