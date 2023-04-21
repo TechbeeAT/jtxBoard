@@ -11,7 +11,6 @@ Global Strings -->
     <string name="ok">"OK"</string>
     <string name="delete">"Eliminar"</string>
     <string name="discard">"Descartar"</string>
-    <string name="gotit">"D'acord"</string>
     <string name="cont">"Continuar"</string>
     <string name="website">"Lloc web"</string>
     <string name="latitude">"Latitud"</string>
@@ -44,7 +43,6 @@ Global Strings -->
     <string name="navigation_drawer_board">"Panell"</string>
     <string name="navigation_drawer_about">"A sobre de / Llicència"</string>
     <string name="navigation_drawer_subtitle">"diaris, notes i tasques"</string>
-    <string name="navigation_drawer_beta_feedback">"Comentaris beta"</string>
     <string name="navigation_drawer_settings">"Configuració"</string>
     <string name="navigation_drawer_news_updates">"Notícies i actualitzacions"</string>
     <string name="navigation_drawer_external_links">"Enllaços externs"</string>
@@ -56,79 +54,43 @@ Global Strings -->
     <string name="list_due_overdue">"Vençut"</string>
     <string name="list_due_today">"Venç hui"</string>
     <string name="list_due_tomorrow">"Venç demà"</string>
-    <string name="list_due_inXdays">"Venç en %d dies"</string>
     <string name="list_due_inXhours">"Venç en %d hores"</string>
     <string name="list_due_on_weekday">"Venç el %s"</string>
     <string name="list_start_past">"S'inicia en el passat"</string>
     <string name="list_start_today">"Inici planejat hui"</string>
     <string name="list_start_tomorrow">"S'inicia demà"</string>
     <string name="list_start_inXhours">"Inici planejat en %d hores"</string>
-    <string name="list_start_inXdays">"Inici planejat en %d dies"</string>
     <string name="list_start_on_weekday">"Inici planejat per al %s"</string>
     <string name="list_tabitem_journals">"Diaris"</string>
     <string name="list_tabitem_notes">"Notes"</string>
     <string name="list_tabitem_todos">"Tasques"</string>
-    <string name="list_fab_add_contentdesc">"Afegir un nou element"</string>
-    <string name="list_progress">"Progrés"</string>
     <string name="list_expand">"Expandir"</string>
     <string name="list_dialog_delete_selected_title">Eliminar les entrades seleccionades?</string>
     <string name="list_dialog_delete_selected_message">Aquesta acció elimina totes les entrades seleccionades (%1$d). Segur que vols seguir? Aquesta operació no es pot desfer!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Sumari/Descripció"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línia s'interpreta com a sumari, la resta com a la descripció. Els coixinets s'interpreten com a categories (ex #categoria)."</string>
-    <string name="list_item_upload_pending">"Pujada pendent"</string>
     <string name="list_item_recurring">"Entrada recurrent"</string>
     <string name="list_item_edited_recurring">"Entrada recurrent editada"</string>
     <!-- fragment_ical_view -->
-    <string name="view_recurrence_go_to_original_button">"Ves a l'original"</string>
-    <string name="view_recurrence_note_to_original_dialog_header">"Instància d'una recurrència"</string>
-    <string name="view_recurrence_note_to_original">"Aquesta entrada forma part d'una sèrie. Editar-la la desenllaçarà, continuarà existint com un esdeveniment a part, al qual no li afectaran els canvis de l'esdeveniment original. "</string>
     <string name="view_fragment_audio_permission">"Permís d'App"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board necessita permís per a gravar àudio o fer ús de les funcions de parla a text. Per favor, accepta la sol·licitud per a fer ús d'aquesta funció."</string>
-    <string name="view_comment_playbutton_content_desc">"Reproduïr comentari d'àudio"</string>
     <string name="view_reccurrence_note_is_exception">"Aquest element és una excepció a una entrada recurrent."</string>
     <string name="view_feedback_linked_notes">"Comentaris / Notes enllaçades"</string>
     <string name="view_subtask_of">"Sub-tasca de"</string>
     <string name="view_linked_note_of">"Nota enllaçada de"</string>
-    <string name="view_add_note">"Afegir nota"</string>
     <string name="view_add_audio_note">"Afegir àudio"</string>
-    <string name="view_fab_edit_entry_contentDesc">"Editar entrada"</string>
-    <string name="view_subtasks_header">"Sub-tasques"</string>
-    <string name="view_progress_label">"Progrés"</string>
-    <string name="view_dialog_sure_to_delete_title">"Eliminar \"%1$s\"?"</string>
-    <string name="view_dialog_sure_to_delete_message">"Segur que vols eliminar \"%1$s\"?"</string>
-    <string name="view_toast_deleted_successfully">"S'ha eliminat \"%1$s\" correctament"</string>
-    <string name="view_dialog_add_note">"Afegir nota"</string>
-    <string name="view_dialog_add_note_dialog_hint">"Escriu ací la teua nota"</string>
-    <string name="view_toast_entry_does_not_exist_anymore">"L'entrada sol·licitada ja no existeix."</string>
     <string name="view_created_text">"Creació: %1$s"</string>
     <string name="view_last_modified_text">"Última modificació: %1$s"</string>
     <string name="view_due">"Venciment"</string>
     <string name="view_completed">"Completat"</string>
     <string name="view_started">"Iniciat"</string>
     <!-- fragment_ical_edit -->
-    <string name="edit_add_category_hint">"#categoria"</string>
-    <string name="edit_add_category_helper">"Afegir una categoria"</string>
-    <string name="edit_attendees_hint">"joana@example.com"</string>
-    <string name="edit_attendees_helper">"Afegeix un assistent (adreça electrònica). Atenció: els servidors poden processar assistents automàticament, per exemple, enviant missatges iMIP."</string>
-    <string name="edit_resources_hint">"Projector"</string>
-    <string name="edit_resources_helper">"Afegeix un recurs"</string>
-    <string name="edit_contact_hint">"Pep Carbonell, +34 987 34 76 81"</string>
-    <string name="edit_contact_helper">"Informació de contacte del responsable d'aquest esdeveniment"</string>
-    <string name="edit_comment_hint">"El teu comentari…"</string>
     <string name="edit_comment_helper">"Afegir un comentari"</string>
     <string name="edit_attachment_button_text">"Afegir un adjunt"</string>
     <string name="edit_take_picture_button_text">"Prendre una foto"</string>
     <string name="edit_add_link_button_text">"Afegir enllaç d'adjunt"</string>
-    <string name="edit_url_helper">"URL relacionada a l'entrada"</string>
-    <string name="edit_location_helper">"Afegir ubicació per a aquesta entrada"</string>
-    <string name="edit_attachment_add_dialog_hint">"La teua url adjunta (https://…)"</string>
-    <string name="edit_comment_add_dialog_hint">"El teu comentari"</string>
-    <string name="edit_subtasks_add_hint">"La teua sub-tasca"</string>
     <string name="edit_subtasks_add_helper">"Afegir una sub-tasca"</string>
-    <string name="edit_attachment_delete_attachment">"Eliminar adjunt"</string>
     <string name="edit_attachment_add_link_dialog">"Afegir enllaç adjunt"</string>
-    <string name="edit_recur_last_occurrence">"Última ocurrència"</string>
-    <string name="edit_recur_all_occurrences">"Totes les ocurrències"</string>
     <string name="edit_recur_repeat_every_x">"Repeteix cada"</string>
     <string name="edit_recur_on_weekday">"els"</string>
     <string name="edit_recur_on_the_x_day_of_month">"el"</string>
@@ -136,14 +98,10 @@ Global Strings -->
     <string name="edit_recur_x_times">"vegades"</string>
     <string name="edit_recur_toast_requires_start_date">"Cal establir una data d'inici a la recurrència!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleccionar data"</string>
-    <string name="edit_datepicker_dialog_select_time">"Seleccionar hora"</string>
     <string name="edit_datepicker_dialog_add_time">"Afegir temps"</string>
     <string name="edit_datepicker_dialog_edit_time">"Editar temps"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Afegir fus horari"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Editar fus horari"</string>
-    <string name="edit_task_started_add">"Tria una data/hora d'inici"</string>
-    <string name="edit_task_due_add">"Tria una data/hora d'expiració"</string>
-    <string name="edit_task_completed_add">"Tria una data/hora de compleció"</string>
     <string name="edit_dialog_sure_to_delete_title">"Eliminar \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Descartar l'entrada?"</string>
     <string name="dialog_delete_done_title">"Eliminar totes les tasques completades?"</string>
@@ -153,10 +111,6 @@ Global Strings -->
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La data d'expiració no pot ser abans de la d'inici."</string>
     <string name="edit_fragment_app_permission">"Permís d'aplicació"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board pot sugerir dades d'assistents basant-se en els teus contactes. És necessari que dones permisos de lectura a l'aplicació per a que aquesta funció s'habilite."</string>
-    <string name="edit_fragment_recur_unknown_rrule_dialog_title">"S'ha detectat una norma de recurrència no suportada!"</string>
-    <string name="edit_fragment_recur_unknown_rrule_dialog_message">"S'ha detectat una norma de recurrència desconeguda o no suportada. Si vols desar aquesta entrada, la norma serà eliminada."</string>
-    <string name="edit_fragment_recur_unsupported_duration_dialog_title">"S'ha detectat un valor no suportat (Duració)!"</string>
-    <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Una duració ha sigut detectada per a aquesta entrada en segon pla. Actualment jtx Board no suporta l'administració de duracions. Per favor, utilitza les dates d'inici, venciment i final. Si deses aquesta entrada, s'eliminarà la duració prèvia."</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Traduccions"</string>
     <string name="about_tabitem_libraries">"Llibreries"</string>
@@ -171,8 +125,6 @@ Global Strings -->
     <string name="menu_list_quick_journal">"Entrada ràpida"</string>
     <string name="menu_list_quick_note">"Nota ràpida"</string>
     <string name="menu_list_quick_todo">"Tasca ràpida"</string>
-    <string name="menu_list_delete_visible">"Elimina els visibles"</string>
-    <string name="menu_list_syncnow">"Sincronitza ara"</string>
     <string name="menu_view_share_ics">"Comparteix com a .ics"</string>
     <string name="menu_view_copy_as_journal">"Copia com a Entrada de Diari"</string>
     <string name="menu_view_copy_as_todo">"Copia com a Tasca"</string>
@@ -186,16 +138,9 @@ Global Strings -->
     <string name="shortcut_addNote_longLabel">"Afegir Nota"</string>
     <string name="shortcut_addTodo_longLabel">"Afegir Tasca"</string>
     <!-- Settings fragment -->
-    <string name="settings_enforce_dark_theme">"Força el tema oscur"</string>
     <string name="settings_list">"Configuració per als elements de llista"</string>
-    <string name="settings_show_subtasks_in_list">"Mostra les sub-tasques en una llista"</string>
-    <string name="settings_show_attachments_in_list">"Mostra els adjunts en una llista"</string>
     <string name="settings_show_progress_for_subtasks">Mostra el progrés de les subtasques</string>
     <string name="settings_show_progress_for_maintasks">Mostra el progrés de les tasques principals</string>
-    <string name="settings_group_settings_for_subentries">"Configuració per a sub-tasques, sub-notes i sub-diaris"</string>
-    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Mostra sub-tasques de Diaris i Notes en la llista de tasques"</string>
-    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Mostra les sub-notes de Diaris i Tasques en la llista de notes"</string>
-    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"Mostra les sub-entrades de diari de Notes i Tasques en la llista de diaris"</string>
     <string name="settings_app">"Configuració de l'App"</string>
     <string name="settings_select_mimetype_for_audio">"Selecciona el tipus MIME per a notes d'àudio"</string>
     <!-- Sync fragment -->
@@ -211,7 +156,6 @@ Global Strings -->
     <string name="toast_done_tasks_deleted">"S'han eliminat les tasques completades (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Gràcies a"</string>
-    <string name="about_translations_for_contributions_in">"per les contribucions en"</string>
     <string name="about_translations_basic_info">"jtx Board és una aplicació de codi obert que aprecia la participació i contribució de la comunitat. En aquesta pàgina ens agradaria donar tribut als esforços de la comunitat per a les traduccions."</string>
     <string name="about_translations_contribution_info">"Si t'agradaria afegir o editar traduccions d'aquesta aplicació, et pots unir al projecte de jtx Board a Crowdin:"</string>
     <string name="about_translations_contribution_button">"Uneix-te a Crowdin.com"</string>
@@ -226,10 +170,6 @@ Global Strings -->
     <string name="save_and_edit">"Desa i edita"</string>
     <string name="save_and_new">"Desa i nou"</string>
     <string name="save_and_close">"Desa i tanca"</string>
-    <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Fes servir parla-a-text"</string>
-    <string name="list_quickadd_dialog_sr_start_listening">"El motor de parla a text està escoltant."</string>
-    <string name="list_quickadd_dialog_sr_stop_listening">"El motor de parla a text ha parat d'escoltar."</string>
-    <string name="list_quickadd_dialog_sr_error">"Disculpa, el motor de parla a text ha trobat un error. (%1$s)"</string>
     <string name="list_quickadd_add_audio_attachment">"Grava un àudio adjunt"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"S'ha donat accés per a llegir els contactes"</string>
@@ -245,16 +185,13 @@ Global Strings -->
     <string name="collection">"Col·lecció"</string>
     <string name="collection_owner_displayname">"Propietari: %1$s"</string>
     <string name="link_to_parent">"Enllaçar a un superior"</string>
-    <string name="toolbar_text_collections">"Col·leccions"</string>
     <string name="navigation_drawer_collections">"Col·leccions"</string>
     <string name="navigation_drawer_presets">"Predefinits"</string>
-    <string name="edit_dialog_set_attendee_role">"Estableix el sol de l'assistent"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Data/Hora"</string>
     <string name="alarms_duration">"Duració"</string>
     <string name="alarms_onstart">"Al començament"</string>
     <string name="alarms_ondue">"En véncer"</string>
-    <string name="alarms_custom">"Personalitzat"</string>
     <string name="alarms_before_start">"abans de l'inici"</string>
     <string name="alarms_after_start">"després de l'inici"</string>
     <string name="alarms_before_due">"abans de vèncer"</string>
@@ -263,16 +200,10 @@ Global Strings -->
     <string name="alarms_hours">"Hora(es)"</string>
     <string name="alarms_days">"Dia(es)"</string>
     <!-- fragment_collections -->
-    <string name="collections_local_collections">"Col·leccions Locals"</string>
-    <string name="collections_remote_collections">"Col·leccions Remotes"</string>
-    <!-- Fuzzy -->
     <string name="collections_journals_num">"Diaris: %1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Notes: %1$s"</string>
-    <!-- Fuzzy -->
     <string name="collections_tasks_num">"Tasques: %1$s"</string>
-    <string name="collections_local_nolocalcollections">"No s'ha trobat cap col·lecció local"</string>
-    <string name="collections_local_noremotecollections">"No s'ha trobat cap col·lecció remota"</string>
     <string name="collections_collection_menu">"Menú de col·leccions"</string>
     <string name="collections_dialog_add_local_collection_title">"Afegeix una col·lecció local"</string>
     <string name="collections_dialog_edit_local_collection_title">"Edita la col·lecció local"</string>
@@ -280,10 +211,7 @@ Global Strings -->
     <string name="collections_dialog_delete_local_message">"Eliminar una col·lecció també eliminarà tots els diaris, notes i tasques de dins d'ella. Açò no es pot desfer. Segur que vols continuar?"</string>
     <string name="menu_collections_add_local">"Afegeix una col·lecció local"</string>
     <string name="navigation_drawer_website_news">"Notícies i Notes de Versió"</string>
-    <string name="list_quickadd_toast_no_summary_description">"No es pot crear una entrada sense resum/descripció."</string>
-    <string name="view_dialog_addnote_toast_no_summary_description">"No es pot crear una nota sense text."</string>
     <string name="color">"Color"</string>
-    <string name="edit_attendees_error">"Per favor, introdueix una direcció de correu vàlida"</string>
     <string name="priority_0_no_priority">"Sense prioritat"</string>
     <string name="priority_1_highest">"1 - La més alta"</string>
     <string name="priority_2_higher">"2 - Més Alta"</string>
@@ -295,7 +223,6 @@ Global Strings -->
     <string name="edit_recur_week">"setmana(es)"</string>
     <string name="edit_recur_month">"mes(os)"</string>
     <string name="edit_recur_year">"any(s)"</string>
-    <string name="edit_validation_errors_start_due_timezone_check">"Per favor, tria un fus horari per a tant l'inici com per al final, o desactiva els fusos horaris."</string>
     <string name="collections_toast_export_ics_success">"L'exportació de la col·lecció s'ha completat satisfactòriament."</string>
     <string name="collections_toast_export_ics_error">"Ha hagut un error en exportar la col·lecció seleccionada."</string>
     <string name="attachment_export_saved_successfully">"S'ha desat correctament"</string>
@@ -338,7 +265,6 @@ Global Strings -->
     <string name="completed">"Completat"</string>
     <string name="started">"Inici(at)"</string>
     <string name="add_time_switch">"Afegeix temps"</string>
-    <string name="add_timezone_switch">"Afegir fus horari"</string>
     <string name="progress">"Progrés"</string>
     <string name="categories">"Categories"</string>
     <string name="subtasks">"Sub-tasques"</string>
@@ -351,9 +277,6 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Moure totes les entrades des de \"%1$s\" a"</string>
     <string name="collection_dialog_move_info">"Tingues en compte: Sols les col·leccions amb accés d'escriptura, i les que tinguen suport per als mateixos components (Diaris, Notes i Tasques) poden ser seleccionades."</string>
     <string name="menu_collections_popup_move_entries">"Moure entrades"</string>
-    <string name="adinfo_adfree_success_thankyou">"Gràcies!"</string>
-    <string name="adinfo_adfree_purchase_date">"Comprat el %1$s"</string>
-    <string name="adinfo_adfree_order_id">"ID de comanda: %1$s"</string>
     <string name="list_no_dates_set">"Cap data establerta"</string>
     <string name="list_without_start_date">"Sense data d'inici"</string>
     <string name="list_without_due_date">"Sense data de venciment"</string>
@@ -382,7 +305,6 @@ Global Strings -->
     <string name="collections_toast_export_all_ics_error">"Ha hagut un error en exportar les col·leccions."</string>
     <string name="menu_collections_export_all">"Exporta-ho tot"</string>
     <string name="more">"Més"</string>
-    <string name="toolbar_text_buypro">"Comprar Pro"</string>
     <string name="navigation_drawer_buypro">"Comprar Pro"</string>
     <string name="settings_select_theme">"Escollir tema"</string>
     <string name="settings_select_theme_dark">"Fosc"</string>
@@ -400,8 +322,6 @@ Gràcies!"</string>
     <string name="buypro_text">"El desenvolupament d'una aplicació és un tema complex, i tant el manteniment com el mateix desenvolupament és un treball dur. Si t'agrada l'aplicació, i t'agradaria que no es detingués el desenvolupament, per favor, considera la donació següent:"</string>
     <string name="buypro_purchase_header">"Millora a jtx Board Pro"</string>
     <string name="buypro_purchase_description">"Gràcies per considerar jtx Board Pro. Aquesta millora habilita funcions d'edició per a col·leccions remotes, entrades ràpides, edició ràpida fent un toc llarg, i colors dinàmics (disponible a partir d'Android 12)."</string>
-    <string name="buypro_purchase_header_thankyou">"Gràcies per comprar jtx Board Pro"</string>
-    <string name="buypro_purchase_description_thankyou">"Aquesta millora habilita funcions d'edició per a col·leccions remotes, entrades ràpides, edició ràpida fent un toc llarg, i colors dinàmics (disponible a partir d'Android 12)."</string>
     <string name="buypro_purchase_date">"Comprat el %1$s"</string>
     <string name="buypro_order_id">"ID de comanda: %1$s"</string>
     <string name="buypro_success_header">"Gràcies per comprar jtx Board Pro!"</string>
@@ -438,8 +358,6 @@ Gràcies!"</string>
     <string name="audio_pause">"Pausa"</string>
     <string name="audio_error_toast">"Disculpa, no s'ha pogut reproduïr."</string>
     <string name="sync_in_progress">"Sincronitzant"</string>
-    <string name="saving">"Guardant …"</string>
-    <string name="saving_pending">"Desada pendent …"</string>
     <string name="invalid_timezone_message">"Escull un fus horari vàlid!"</string>
     <string name="invalid_url_message">"Si us plau, introdueix un URL vàlida!"</string>
     <string name="list_quickadd_dialog_sr_start">"Inicia el reconeixement de veu"</string>
@@ -483,8 +401,6 @@ Gràcies!"</string>
     <string name="collections_account_not_found_info">"Aquest compte no s'ha pogut trobar al administrador de comptes. Per favor, elimina'l si està obsolet."</string>
     <string name="collections_account_delete_dialog_title">"Eliminar \"%1$s\"?"</string>
     <string name="collections_account_delete_dialog_message">"Segur que vols eliminar aquest compte de jtx Board? Totes les col·leccions en aquest compte s'eliminara. Aquesta operació no es pot desfer."</string>
-    <string name="dialog_move_item_to_collection_title">"Moure aquesta entrada a \"%1$s\"?"</string>
-    <string name="dialog_move_item_to_collection_text">"Tingues en compte que els canvis es desen immediatament."</string>
     <string name="dialog_unsaved_changes_title">"Desa els canvis?"</string>
     <string name="dialog_unsaved_changes_text">"S'han detectat canvis sense desar. Vols desar-los o descartar-los?"</string>
     <string name="dialog_error_on_update_message">"Hi ha hagut un error a l'insertar/actualitzar aquesta entrada. Pot ser que l'entrada o col·lecció ja no existeixi."</string>
@@ -507,8 +423,6 @@ Gràcies!"</string>
     <string name="dialog_add_audio_entry_title">"Afegeix una entrada d'àudio"</string>
     <string name="menu_list_viewmode_compact">"Vista compacta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
-    <string name="settings_details">"Configuració per als detalls d'elements"</string>
-    <string name="settings_details_autosave_while_editing">"Desa automàticament a l'editar"</string>
     <string name="settings_tasks">"Configuració de tasques"</string>
     <string name="settings_default_start_date">"Estableix una data d'inici per defecte"</string>
     <string name="settings_default_due_date">"Estableix una data de venciment per defecte"</string>
@@ -545,7 +459,6 @@ Gràcies!"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Copiat"</string>
     <string name="settings_select_language">"Selecciona l'idioma"</string>
     <string name="settings_select_language_system">"Predeterminat del sistema"</string>
-    <string name="settings_details_enable_markdown">"Habilita el format Markdown"</string>
     <string name="filter_special">"Filtres especials"</string>
     <string name="filter_presets">"Filtres predefinits"</string>
     <!-- fragment_ical_list -->
@@ -565,7 +478,6 @@ Gràcies!"</string>
     <string name="list_biometric_protected_entries_unlocked">Entrades protegides per biometria desbloquejades</string>
     <string name="settings_auto_alarm">"Alarma automàtica"</string>
     <string name="alarms_always_ondue">"Sempre en vèncer"</string>
-    <string name="settings_show_one_recur_entry_in_future">"Mostra sols una entrada recurrent al futur"</string>
     <string name="settings_auto_alarm_sub">"Activa-ho per a crear alarmes automàticament. Tria \"Sempre en vèncer\" per a no crear una alarma, però ser notificat quan una tasca venci."</string>
     <string name="settings_protect_biometric">"Protegeix entrades amb biometria"</string>
     <string name="settings_protect_biometric_sub">"Aquesta funció amaga les entrades seleccionades fins a que es desbloquegen amb biometria, però no encripta/desencripta les dades en segon pla."</string>
@@ -577,7 +489,6 @@ Gràcies!"</string>
     <string name="list_date_without">"Sense data"</string>
     <string name="list_start_without">"Sense data d'inici"</string>
     <string name="list_due_without">"Sense data de venciment"</string>
-    <string name="list_dialog_delete_visible_message2">"Atenció: Les instàncies d'entrades recurrents s'exclouen!"</string>
     <string name="list_snackbar_no_collection">"Per favor afegeix una col·lecció local o sincronitza una remota que suporte aquest mòdul."</string>
     <string name="filter_second_order_by">"Després ordena per"</string>
     <string name="filter_group_by">"Agrupa per"</string>
