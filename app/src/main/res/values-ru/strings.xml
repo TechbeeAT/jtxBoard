@@ -41,6 +41,7 @@ Global Strings -->
     <string name="navigation_drawer_open">"Открыть панель навигации"</string>
     <string name="navigation_drawer_close">"Закрыть панель навигации"</string>
     <string name="navigation_drawer_board">"Доска"</string>
+    <string name="navigation_drawer_synchronization">"Синхронизация"</string>
     <string name="navigation_drawer_about">"О приложении / Лицензия"</string>
     <string name="navigation_drawer_subtitle">"журналы, заметки и задачи"</string>
     <string name="navigation_drawer_settings">"Настройки"</string>
@@ -144,7 +145,17 @@ Global Strings -->
     <string name="settings_app">"Настройки приложения"</string>
     <string name="settings_select_mimetype_for_audio">"Выберите Mimetype для аудиозаметок"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"Синхронизировать с %1$s"</string>
+    <string name="sync_basic_info">"jtx Board сам по себе не поддерживает синхронизацию с сервером, но может использовать для этих целей функционал DAVx⁵. Данный метод позволяет вам использовать любой совместимый CalDAV-сервер для хранения, резервного копирования и синхронизации ваших данных."</string>
+    <string name="sync_ksync_basic_info">"kSync – это приложение, основанное на DAVx5, разработанное Infomaniak специально для их сервисов. В то время как DAVx5 позволяет использовать любой совместимый CalDAV-сервер, kSync поддерживает синхронизацию только с аккаунтами Infomaniak."</string>
     <string name="sync_congratulations">"Поздравляем! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"Мы обнаружили %1$s на вашем телефоне."</string>
+    <string name="sync_setup_instructions">"Инструкция по установке"</string>
+    <string name="sync_check_out_sync_app">"Попробуйте %1$s!"</string>
+    <string name="sync_sync_app_not_found">"Мы не обнаружили %1$s на вашем телефоне."</string>
+    <string name="sync_more_information_about_sync_app">"Подробнее о %1$s"</string>
+    <string name="sync_download_sync_app">"Установить %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Добавить аккаунт в %1$s"</string>
     <string name="sync_toast_intent_open_sync_app_failed">"Не удалось открыть %1$s, пожалуйста, откройте приложение вручную."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Привет, я Патрик, разработчик jtx Board. Я уделяю много времени и усилий этому приложению и распространяю его бесплатно. Если вам нравится мое приложение, вы можете отправить мне сердечек и небольшое пожертвование!"</string>
@@ -204,6 +215,7 @@ Global Strings -->
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Заметки: %1$s"</string>
     <string name="collections_tasks_num">"Задачи: %1$s"</string>
+    <string name="collections_info">"Коллекции — это скопление записей наподобие папок с файлами. Используйте меню, чтобы создать локальную коллекцию или настроить синхронизацию с внешней коллекцией через DAVx⁵ или подобные приложения."</string>
     <string name="collections_collection_menu">"Меню"</string>
     <string name="collections_dialog_add_local_collection_title">"Меню коллекции"</string>
     <string name="collections_dialog_edit_local_collection_title">"Редактировать локальную коллекцию"</string>
