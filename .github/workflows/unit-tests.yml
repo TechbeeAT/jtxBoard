@@ -3,7 +3,7 @@ on: push
 jobs:
   test:
     name: Tests without emulator
-runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
