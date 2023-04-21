@@ -41,6 +41,7 @@ Global Strings -->
     <string name="navigation_drawer_open">"Abrir cajón de navegación"</string>
     <string name="navigation_drawer_close">"Cerrar cajón de navegación"</string>
     <string name="navigation_drawer_board">"Panel"</string>
+    <string name="navigation_drawer_synchronization">"Sincronizar"</string>
     <string name="navigation_drawer_about">"Acerca de / Licencia"</string>
     <string name="navigation_drawer_subtitle">"Diarios, notas y tareas"</string>
     <string name="navigation_drawer_settings">"Ajustes"</string>
@@ -55,10 +56,12 @@ Global Strings -->
     <string name="list_due_today">"Vence hoy"</string>
     <string name="list_due_tomorrow">"Vence mañana"</string>
     <string name="list_due_inXhours">"Vence en %d horas"</string>
+    <string name="list_due_on_weekday">"Vence en %s"</string>
     <string name="list_start_past">"Empezar en el pasado"</string>
     <string name="list_start_today">"Planeadas para empezar hoy"</string>
     <string name="list_start_tomorrow">"Empezar mañana"</string>
     <string name="list_start_inXhours">"Planeadas para empezar en %d horas"</string>
+    <string name="list_start_on_weekday">"Inicio planeado en %s"</string>
     <string name="list_tabitem_journals">"Diarios"</string>
     <string name="list_tabitem_notes">"Notas"</string>
     <string name="list_tabitem_todos">"Tareas"</string>
@@ -102,6 +105,7 @@ Global Strings -->
     <string name="edit_datepicker_dialog_edit_timezone">"Editar zona horaria"</string>
     <string name="edit_dialog_sure_to_delete_title">"¿Eliminar \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_title">"¿Descartar esta entrada?"</string>
+    <string name="dialog_delete_done_title">"¿Borrar todas las tareas terminadas?"</string>
     <string name="edit_dialog_sure_to_delete_message">"¿Está seguro de que quiere eliminar \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"¿Está seguro de que quiere descartar esta entrada? No será guardada."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La fecha de vencimiento no puede ser anterior a la fecha de inicio."</string>
@@ -140,7 +144,12 @@ Global Strings -->
     <string name="settings_app">"Ajustes de la aplicación"</string>
     <string name="settings_select_mimetype_for_audio">"Seleccionar Mimetype para las notas de audio"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"Sincronizar con %1$s"</string>
+    <string name="sync_basic_info">"jtx Board no proporciona sincronización de servidor por sí mismo, pero soporta la sincronización a través de DAVx⁵. Este método le permitirá usar un servidor CalDAV compatible de su elección para almacenar, respaldar y sincronizar sus datos."</string>
     <string name="sync_congratulations">"¡Felicidades! :-)"</string>
+    <string name="sync_setup_instructions">"Instrucciones de configuración"</string>
+    <string name="sync_check_out_sync_app">"¡Eche un vistazo a %1$s!"</string>
+    <string name="sync_download_sync_app">"Descargar %1$s"</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Hola, soy Patrick, el desarrollador de jtx Board. Estoy poniendo mucho tiempo y esfuerzo en esta aplicación que te estoy ofreciendo gratis. Si te gusta mi aplicación, ¡por favor envía un poco de amor y haz una pequeña donación!"</string>
     <string name="donate_thank_you">"¡Gracias!"</string>
@@ -178,6 +187,7 @@ Global Strings -->
     <string name="collection">"Colección"</string>
     <string name="link_to_parent">"Vincular al nivel superior"</string>
     <string name="navigation_drawer_collections">"Colecciones"</string>
+    <string name="navigation_drawer_presets">"Ajustes por defecto"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Fecha/Hora"</string>
     <string name="alarms_duration">"Duración"</string>
@@ -397,6 +407,7 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="dialog_revert_changes_message2">"Atención: Las subtareas y las subnotas son entradas separadas y no se pueden revertir."</string>
     <string name="dialog_select_module_txt_dialog_title">"Importar %1$d archivo(s) como"</string>
     <string name="dialog_detach_from_series_button">"Desvincular de las series"</string>
+    <string name="dialog_save_current_filter_my_filter">"Mi Filtro"</string>
     <string name="menu_list_viewmode_compact">"Vista compacta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
     <string name="settings_tasks">"Ajustes de Tareas"</string>
@@ -445,6 +456,7 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="list_start_date_future">"Empezar en el futuro"</string>
     <string name="list_hide_completed_tasks">"Ocultar tareas completadas"</string>
     <string name="list_biometric_protected_entries_locked">Entradas biométricas protegidas bloqueadas</string>
+    <string name="list_delete_done">"Eliminación realizada"</string>
     <string name="collections_biometric_protected_entries_locked_title">Entradas biométricas protegidas bloqueadas</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Por favor, autentifíquese y vuelva a intentarlo</string>
     <string name="list_biometric_protected_entries_unlocked">Entradas biométricas protegidas desbloqueadas</string>
