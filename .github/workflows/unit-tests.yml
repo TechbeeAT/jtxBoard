@@ -3,24 +3,23 @@ on: push
 jobs:
   test:
     name: Tests without emulator
-    runs-on: ubuntu-latest
+runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
           submodules: true
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v2
         with:
-          distribution: zulu
+          distribution: temurin
           java-version: 11
-          cache: gradle
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: gradle/gradle-build-action@v2
 
       - name: Run lint and unit tests
-        run: ./gradlew app:lintOseDebug app:testGplayDebugUnitTest
+        run: ./gradlew --no-daemon app:lintOseDebug app:testGplayDebugUnitTest
       - name: Archive results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
-          name: test-results2
+          name: test-results
           path: |
             app/build/outputs/lint*
             app/build/reports
