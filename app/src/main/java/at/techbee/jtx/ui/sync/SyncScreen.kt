@@ -25,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,7 +43,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
@@ -60,7 +60,6 @@ import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.theme.Typography
-import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
 
@@ -74,16 +73,15 @@ fun SyncScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     val remoteCollections by ICalDatabase.getInstance(context).iCalDatabaseDao.getAllRemoteCollectionsLive().observeAsState(emptyList())
-    val isDAVx5available = if (LocalInspectionMode.current) true else SyncUtil.availableSyncApps(context).contains(SyncApp.DAVX5)
-    val isAnySyncAppAvailable = if (LocalInspectionMode.current) true else SyncUtil.availableSyncApps(context).isNotEmpty()
+    val availableSyncApps = if (LocalInspectionMode.current) emptyList() else SyncUtil.availableSyncApps(context)
 
     Scaffold(
         topBar = {
             JtxTopAppBar(
                 drawerState = drawerState,
-                title = stringResource(id = R.string.navigation_drawer_sync),
+                title = stringResource(id = R.string.navigation_drawer_synchronization),
                 actions = {
-                    if (isAnySyncAppAvailable) {
+                    if (availableSyncApps.isNotEmpty()) {
                         IconButton(onClick = { SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet()) }) {
                             Icon(Icons.Outlined.Sync, stringResource(id = R.string.sync_now))
                         }
@@ -97,7 +95,7 @@ fun SyncScreen(
                 mainContent = {
                     SyncScreenContent(
                         remoteCollections = remoteCollections,
-                        isDAVx5available = isDAVx5available,
+                        availableSyncApps = availableSyncApps,
                         isSyncInProgress = isSyncInProgress,
                         goToCollections = { navController.navigate(NavigationDrawerDestination.COLLECTIONS.name) })
                 },
@@ -112,7 +110,7 @@ fun SyncScreen(
 @Composable
 fun SyncScreenContent(
     remoteCollections: List<ICalCollection>,
-    isDAVx5available: Boolean,
+    availableSyncApps: List<SyncApp>,
     isSyncInProgress: State<Boolean>,
     goToCollections: () -> Unit,
     modifier: Modifier = Modifier
@@ -130,184 +128,117 @@ fun SyncScreenContent(
             modifier = modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(8.dp),
-            verticalArrangement = Arrangement.Top,
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            SyncApp.values().forEach { syncApp ->
 
-            Image(
-                painter = painterResource(id = R.drawable.ic_davx5_icon_green_bg_without_shadow),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(150.dp)
-                    .padding(top = 24.dp, bottom = 8.dp)
-            )
-            Text(
-                text = stringResource(id = R.string.sync_with_davx5_heading),
-                style = Typography.titleLarge,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = stringResource(id = R.string.sync_basic_info),
-                modifier = Modifier.padding(top = 16.dp),
-                style = Typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-
-
-            if (isDAVx5available) {
+                Image(
+                    painter = when(syncApp) {
+                        SyncApp.DAVX5 -> painterResource(id = R.drawable.ic_davx5_icon_green_bg_without_shadow)
+                        SyncApp.KSYNC -> painterResource(id = R.drawable.logo_ksync)
+                    },
+                    contentDescription = null,
+                    modifier = Modifier.size(150.dp)
+                )
                 Text(
-                    text = stringResource(id = R.string.sync_congratulations),
-                    style = Typography.titleMedium,
+                    text = stringResource(id = R.string.sync_with_sync_app_heading, syncApp.appName),
+                    style = Typography.titleLarge,
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 16.dp)
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = when(syncApp) {
+                        SyncApp.DAVX5 -> stringResource(id = R.string.sync_basic_info)
+                        SyncApp.KSYNC -> stringResource(id = R.string.sync_ksync_basic_info)
+                    },
+                    style = Typography.bodyLarge,
+                    textAlign = TextAlign.Center
                 )
 
-                if (remoteCollections.isEmpty()) {
+                // Sync App is available
+                if (availableSyncApps.contains(syncApp)) {
                     Text(
-                        text = stringResource(id = R.string.sync_davx5_installed_but_no_collections_found),
-                        modifier = Modifier.padding(top = 16.dp),
+                        text = stringResource(id = R.string.sync_congratulations),
+                        style = Typography.titleMedium,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = stringResource(id = R.string.sync_sync_app_installed_but_no_collections_found, syncApp.appName),
                         style = Typography.bodyLarge,
                         textAlign = TextAlign.Center
                     )
+                    if (remoteCollections.none { it.accountType == syncApp.accountType } && syncApp != SyncApp.KSYNC) {
+                        Button(
+                            onClick = { SyncUtil.openSyncAppLoginActivity(syncApp, context) },
+                        ) {
+                            Text(stringResource(R.string.sync_button_add_account_in_sync_app, syncApp.appName))
+                        }
+                    } else {
+                        Button(
+                            onClick = { goToCollections() },
+                        ) {
+                            Text(stringResource(id = R.string.sync_button_go_to_collections))
+                        }
+                    }
                     TextButton(
                         content = {
                             Text(
-                                text = stringResource(id = R.string.link_jtx_sync),
+                                text = stringResource(id = R.string.sync_setup_instructions),
                                 style = Typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center
                             )
                         },
-                        modifier = Modifier.padding(top = 8.dp),
                         onClick = {
                             context.startActivity(
                                 Intent(
                                     Intent.ACTION_VIEW,
-                                    Uri.parse(context.getString(R.string.link_jtx_sync))
+                                    Uri.parse(syncApp.setupURL)
                                 )
                             )
                         }
                     )
-                } else {     // collections found
+                } else {       // Sync App is NOT available
                     Text(
-                        text = stringResource(id = R.string.sync_davx5_installed_with_collections_found),
-                        modifier = Modifier.padding(top = 16.dp),
+                        text = stringResource(id = R.string.sync_sync_app_not_found, syncApp.appName),
                         style = Typography.bodyLarge,
                         textAlign = TextAlign.Center
                     )
-                    TextButton(
-                        content = {
-                            Text(
-                                text = stringResource(id = R.string.link_jtx_sync),
-                                style = Typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
-                            )
-                        },
-                        modifier = Modifier.padding(top = 8.dp),
-                        onClick = {
-                            context.startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse(context.getString(R.string.link_jtx_sync))
-                                )
-                            )
-                        }
+                    Text(
+                        text = stringResource(id = R.string.sync_check_out_sync_app, syncApp.appName),
+                        style = Typography.titleMedium,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
                     )
                     Button(
-                        onClick = { goToCollections() },
-                        modifier = Modifier.padding(top = 8.dp)
+                        onClick = { SyncUtil.openSyncAppInStore(syncApp, context) },
                     ) {
-                        Text(stringResource(id = R.string.sync_button_go_to_collections))
+                        Text(stringResource(R.string.sync_download_sync_app, syncApp.appName))
                     }
 
-                }
-
-                Button(
-                    onClick = { SyncUtil.openSyncAppLoginActivity(SyncApp.DAVX5, context) },
-                    modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    Text(stringResource(id = R.string.sync_button_add_account_in_davx5))
-                }
-            } else {       // DAVx5 was not found
-                Text(
-                    text = stringResource(id = R.string.sync_check_out_davx5),
-                    style = Typography.titleMedium,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-                Text(
-                    text = stringResource(id = R.string.sync_davx5_not_found),
-                    modifier = Modifier.padding(top = 16.dp),
-                    style = Typography.bodyLarge,
-                    textAlign = TextAlign.Center
-                )
-                TextButton(
-                    content = {
-                        Text(
-                            text = stringResource(id = R.string.link_jtx_sync),
-                            style = Typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
-                        )
-                    },
-                    modifier = Modifier.padding(top = 8.dp),
-                    onClick = {
-                        context.startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(context.getString(R.string.link_jtx_sync))
+                    TextButton(
+                        content = {
+                            Text(
+                                text = stringResource(id = R.string.sync_more_information_about_sync_app, syncApp.appName),
+                                style = Typography.titleMedium,
+                                fontWeight = FontWeight.Bold
                             )
-                        )
-                    }
-                )
-                Text(
-                    text = stringResource(id = R.string.sync_davx5_get_davx5_on),
-                    modifier = Modifier.padding(top = 16.dp),
-                    style = Typography.bodyLarge,
-                    textAlign = TextAlign.Center
-                )
-                TextButton(onClick = { SyncUtil.openSyncAppInPlayStore(SyncApp.DAVX5, context) }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_google_play),
-                        contentDescription = "Google Play",
-                        modifier = Modifier
-                            .padding(vertical = 16.dp)
-                            .size(200.dp, 70.dp)
-                            .clip(jtxCardCornerShape)
+                        },
+                        onClick = {
+                            context.startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(syncApp.websiteURL)
+                                )
+                            )
+                        }
                     )
                 }
-
-                Text(
-                    text = stringResource(id = R.string.sync_furhter_info_davx5),
-                    modifier = Modifier.padding(top = 16.dp),
-                    style = Typography.bodyLarge,
-                    textAlign = TextAlign.Center
-                )
-                TextButton(
-                    content = {
-                        Text(
-                            text = stringResource(id = R.string.link_davx5),
-                            style = Typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    modifier = Modifier.padding(top = 8.dp),
-                    onClick = {
-                        context.startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(context.getString(R.string.link_davx5))
-                            )
-                        )
-                    }
-                )
-
+                Divider()
             }
         }
     }
@@ -330,7 +261,7 @@ fun SyncScreen_Preview_no_DAVX5() {
 fun SyncScreenContent_Preview_no_DAVX5() {
     MaterialTheme {
         SyncScreenContent(
-            isDAVx5available = false,
+            availableSyncApps = emptyList(),
             isSyncInProgress = remember { mutableStateOf(false) },
             remoteCollections = emptyList(),
             goToCollections = { },
@@ -344,7 +275,7 @@ fun SyncScreenContent_Preview_no_DAVX5() {
 fun SyncScreenContent_Preview_DAVx5_no_collections() {
     MaterialTheme {
         SyncScreenContent(
-            isDAVx5available = true,
+            availableSyncApps = SyncApp.values().toList(),
             isSyncInProgress = remember { mutableStateOf(false) },
             remoteCollections = emptyList(),
             goToCollections = { },
@@ -358,7 +289,7 @@ fun SyncScreenContent_Preview_DAVx5_no_collections() {
 fun SyncScreenContent_Preview_DAVx5_with_collections() {
     MaterialTheme {
         SyncScreenContent(
-            isDAVx5available = true,
+            availableSyncApps = SyncApp.values().toList(),
             isSyncInProgress = remember { mutableStateOf(true) },
             remoteCollections =
                 listOf(
