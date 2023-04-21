@@ -10,7 +10,6 @@ Global Strings -->
     <string name="cancel">"Batal"</string>
     <string name="delete">"Hapus"</string>
     <string name="discard">"Buang"</string>
-    <string name="gotit">"Mengerti"</string>
     <string name="cont">"Lanjut"</string>
     <string name="toolbar_text_add_journal">"Tambah Jurnal"</string>
     <string name="toolbar_text_add_note">"Tambah Catatan"</string>
@@ -41,8 +40,6 @@ Global Strings -->
     <!-- Permissions -->
     <!-- alarms -->
     <!-- fragment_collections -->
-    <!-- Fuzzy -->
-    <!-- Fuzzy -->
     <!-- Fuzzy -->
     <!-- Buy Pro fragment -->
     <!-- alarms -->
