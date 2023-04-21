@@ -148,6 +148,7 @@ Global Strings -->
     <string name="sync_with_sync_app_heading">"Синхронизировать с %1$s"</string>
     <string name="sync_basic_info">"jtx Board сам по себе не поддерживает синхронизацию с сервером, но может использовать для этих целей функционал DAVx⁵. Данный метод позволяет вам использовать любой совместимый CalDAV-сервер для хранения, резервного копирования и синхронизации ваших данных."</string>
     <string name="sync_ksync_basic_info">"kSync – это приложение, основанное на DAVx5, разработанное Infomaniak специально для их сервисов. В то время как DAVx5 позволяет использовать любой совместимый CalDAV-сервер, kSync поддерживает синхронизацию только с аккаунтами Infomaniak."</string>
+    <string name="sync_manageddavx5_basic_info">"Managed DAVx⁵ делает функциональность DAVx⁵ доступной для организаций и поставляется с дополнительными корпоративными функциями, такими как массовое развертывание, брендинг компании и предварительно настроенные параметры."</string>
     <string name="sync_congratulations">"Поздравляем! :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"Мы обнаружили %1$s на вашем телефоне."</string>
     <string name="sync_setup_instructions">"Инструкция по установке"</string>
