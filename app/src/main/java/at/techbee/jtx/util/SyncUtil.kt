@@ -20,6 +20,8 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
 import at.techbee.jtx.SYNC_PROVIDER_AUTHORITY
@@ -172,6 +174,8 @@ class SyncUtil {
 
 enum class SyncApp(
     val appName: String,
+    @DrawableRes val logoRes:  Int,
+    @StringRes val infoText: Int,
     val packageName: String,
     val accountType: String,
     val activityBaseClass: String,
@@ -182,6 +186,8 @@ enum class SyncApp(
 ) {
     DAVX5(
         "DAVx⁵",
+        R.drawable.logo_davx5,
+        R.string.sync_basic_info,
         "at.bitfire.davdroid",
         "bitfire.at.davdroid",
         "at.bitfire.davdroid",
@@ -192,6 +198,8 @@ enum class SyncApp(
     ),
     KSYNC(
         "kSync",
+        R.drawable.logo_ksync,
+        R.string.sync_ksync_basic_info,
         "com.infomaniak.sync",
         "infomaniak.com.sync",
         "at.bitfire.davdroid",
@@ -199,7 +207,32 @@ enum class SyncApp(
         "4.3.1",
         "https://www.infomaniak.com/goto/en/home?utm_term=643c252cecbd9",
         "https://www.infomaniak.com/en/support/faq/2302/quickstart-guide-ksync-for-android"
-    );
+    ),
+    MANAGEDDAVX5(
+        "Managed DAVx⁵",
+        R.drawable.logo_manageddavx5,
+        R.string.sync_manageddavx5_basic_info,
+        "com.davdroid.managed",
+        "com.davdroid",
+        "at.bitfire.davdroid",
+        403010000L,
+        "4.3.1",
+        "https://www.davx5.com/organizations/managed-davx5",
+        "https://www.davx5.com/organizations/deployment"
+    ),
+    /*
+    CLOUDSYNC(
+        "MultiSync for Cloud",
+        R.drawable.logo_multisync,
+        T0D0,
+    "at.bitfire.cloudsync",
+    "at.bitfire.cloudsync",
+        "at.bitfire.davdroid",
+        403010000L,
+        "4.3.1",
+        "https://multisync.cloud/",
+        "https://multisync.cloud/configuration/"
+    )*/;
 
     companion object {
         fun fromAccountType(accountType: String?): SyncApp? {

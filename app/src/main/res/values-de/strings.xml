@@ -154,7 +154,7 @@ Global Strings -->
     <string name="sync_setup_instructions">"Einrichtungsanleitung"</string>
     <string name="sync_check_out_sync_app">"Erkunden Sie %1$s!"</string>
     <string name="sync_sync_app_not_found">"Wir haben %1$s auf Ihrem Telefon nicht erkannt."</string>
-    <string name="sync_more_information_about_sync_app">"Weitere Informationen über %1$s"</string>
+    <string name="sync_more_about_sync_app">"Mehr über %1$s"</string>
     <string name="sync_download_sync_app">"%1$s herunterladen"</string>
     <string name="sync_button_add_account_in_sync_app">"Konto in %1$s hinzufügen"</string>
     <string name="sync_toast_intent_open_sync_app_failed">"Fehler beim Öffnen von %1$s, bitte öffnen Sie die App manuell."</string>
