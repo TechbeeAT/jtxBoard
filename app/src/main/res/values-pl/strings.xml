@@ -10,7 +10,6 @@ Global Strings -->
     <string name="cancel">"Anuluj"</string>
     <string name="delete">"Usuń"</string>
     <string name="discard">"Odrzuć"</string>
-    <string name="gotit">"Rozumiem"</string>
     <string name="cont">"Kontynuuj"</string>
     <string name="toolbar_text_add_journal">"Dodaj Dziennik"</string>
     <string name="toolbar_text_add_note">"Dodaj Notatkę"</string>
@@ -43,37 +42,18 @@ Global Strings -->
     <string name="list_tabitem_notes">"Notatki"</string>
     <string name="list_tabitem_todos">"Zadania"</string>
     <!-- fragment_ical_view -->
-    <string name="view_add_note">"Dodaj notatkę"</string>
     <string name="view_add_audio_note">"Dodaj audio"</string>
-    <string name="view_fab_edit_entry_contentDesc">"Edytuj wpis"</string>
-    <string name="view_subtasks_header">"Podzadania"</string>
-    <string name="view_dialog_sure_to_delete_message">"Czy jesteś pewny, że chcesz usunąć \"%1$s\"?"</string>
-    <string name="view_dialog_add_note">"Dodaj notatkę"</string>
-    <string name="view_dialog_add_note_dialog_hint">"Dodaj swoją notatkę tutaj"</string>
     <string name="view_last_modified_text">"Ostatnio zmodyfikowano: %1$s"</string>
     <!-- fragment_ical_edit -->
-    <string name="edit_add_category_helper">"Dodaj kategorię"</string>
-    <string name="edit_attendees_helper">"Dodaj uczestnika (adres e-mail). Uwaga: Serwery mogą automatycznie przetwarzać uczestników np. poprzez wysłanie wiadomości iMIP."</string>
-    <string name="edit_contact_hint">"Jan Kowalski, +48 919 555 123"</string>
-    <string name="edit_comment_hint">"Twój komentarz…"</string>
     <string name="edit_comment_helper">"Dodaj komentarz"</string>
     <string name="edit_attachment_button_text">"Dodaj załącznik"</string>
     <string name="edit_take_picture_button_text">"Zrób zdjęcie"</string>
     <string name="edit_add_link_button_text">"Dodaj link załącznika"</string>
-    <string name="edit_url_helper">"URL związany z tym wpisem"</string>
-    <string name="edit_location_helper">"Dodaj lokalizację do tego wpisu"</string>
-    <string name="edit_attachment_add_dialog_hint">"Twój załącznik URL (https://…)"</string>
-    <string name="edit_comment_add_dialog_hint">"Twój komentarz"</string>
-    <string name="edit_subtasks_add_hint">"Twoje podzadanie"</string>
     <string name="edit_subtasks_add_helper">"Dodaj podzadanie"</string>
-    <string name="edit_attachment_delete_attachment">"Usuń załącznik"</string>
     <string name="edit_attachment_add_link_dialog">"Dodaj link załącznika"</string>
-    <string name="edit_recur_last_occurrence">"Ostatnie wystąpienie"</string>
-    <string name="edit_recur_all_occurrences">"Wszystkie wystąpenia"</string>
     <string name="edit_recur_repeat_every_x">"Powtarzaj każdego"</string>
     <string name="edit_recur_x_times">"razy"</string>
     <string name="edit_datepicker_dialog_select_date">"Wybierz datę"</string>
-    <string name="edit_datepicker_dialog_select_time">"Wybierz czas"</string>
     <string name="edit_dialog_sure_to_delete_title">"Usunąć \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Porzucić ten wpis?"</string>
     <string name="edit_fragment_app_permission">"Uprawnienia aplikacji"</string>
@@ -96,7 +76,6 @@ Global Strings -->
     <string name="donate_thank_you">"Dziękujemy!"</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Podziękowania dla"</string>
-    <string name="about_translations_for_contributions_in">"za uczestnictwo w"</string>
     <string name="about_translations_contribution_button">"Dołącz do POEditor.com"</string>
     <string name="list_welcome_entry_journal_summary">"Gratulacje, to Twój pierwszy wpis dziennika :-)"</string>
     <string name="list_welcome_entry_note_summary">"Gratulacje, to Twoja pierwsza notatka :-)"</string>
@@ -109,18 +88,14 @@ Global Strings -->
     <string name="apply">"Zastosuj"</string>
     <string name="not_available_abbreviation">"niedostępny"</string>
     <string name="collection">"Kolekcja"</string>
-    <string name="toolbar_text_collections">"Kolekcje"</string>
     <string name="navigation_drawer_collections">"Kolekcje"</string>
-    <string name="edit_dialog_set_attendee_role">"Nadaj role uczestnika"</string>
     <!-- alarms -->
     <string name="alarms_hours">"Godzina(-ny)"</string>
     <string name="alarms_days">"Dzień/Dni"</string>
     <!-- fragment_collections -->
-    <!-- Fuzzy -->
     <string name="collections_journals_num">"Dzienniki: %1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Notatki: %1$s"</string>
-    <!-- Fuzzy -->
     <string name="collections_tasks_num">"Zadania: %1$s"</string>
     <string name="collections_dialog_add_local_collection_title">"Dodaj lokalną Kolekcję"</string>
     <string name="collections_dialog_edit_local_collection_title">"Edytuj lokalną Kolekcję"</string>
@@ -166,13 +141,10 @@ Global Strings -->
     <string name="priority_8_lower">"Niższy"</string>
     <string name="priority_9_lowest">"Najniższy"</string>
     <string name="menu_collections_popup_move_entries">"Przenieść wpisy"</string>
-    <string name="adinfo_adfree_success_thankyou">"Dziękujemy!"</string>
-    <string name="adinfo_adfree_purchase_date">"Zakupiono dnia %1$s"</string>
     <string name="filter_created">"Utworzono"</string>
     <string name="filter_last_modified">"Ostatnio zmodyfikowano"</string>
     <string name="menu_collection_popup_import_from_ics">"Importuj z .ics"</string>
     <string name="more">"Więcej"</string>
-    <string name="toolbar_text_buypro">"Kup Pro"</string>
     <string name="navigation_drawer_buypro">"Kup Pro"</string>
     <string name="settings_select_theme">"Wybierz motyw"</string>
     <string name="settings_select_theme_dark">"Ciemny"</string>
@@ -181,7 +153,6 @@ Global Strings -->
     <string name="donate_dialog_title">"Lubisz jtx Board?"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_purchase_header">"Ulepsz do jtx Board Pro"</string>
-    <string name="buypro_purchase_header_thankyou">"Dziękujemy za zakup jtx Board Pro"</string>
     <string name="buypro_purchase_date">"Kupiono dnia %1$s"</string>
     <string name="buypro_order_id">"Numer zamówienia: %1$s"</string>
     <string name="buypro_success_header">"Dziękujemy za zakup jtx Board Pro!"</string>
@@ -191,8 +162,6 @@ Global Strings -->
     <string name="details">"Szczegóły"</string>
     <string name="audio_play">"Odtwórz"</string>
     <string name="audio_record">"Nagraj"</string>
-    <string name="saving">"Zapisywanie…"</string>
-    <string name="saving_pending">"Trwa zapisywanie…"</string>
     <string name="invalid_timezone_message">"Wybierz poprawną strefę czasową!"</string>
     <string name="invalid_url_message">"Wprowadź poprawny adres URL!"</string>
     <string name="list_quickadd_dialog_sr_start">"Rozpocznij rozpoznawanie mowy"</string>
