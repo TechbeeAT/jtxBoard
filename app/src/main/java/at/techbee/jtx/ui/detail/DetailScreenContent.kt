@@ -645,12 +645,14 @@ fun DetailScreenContent(
             )
         }
 
-            AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
+        AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
             DetailsCardParents(
-                module = icalObject.value.getModuleFromString(),parents = parents.value,
+                module = icalObject.value.getModuleFromString(),
+                parents = parents.value,
                 isEditMode = isEditMode,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgressForSubTasks,
+                blockProgressUpdates = linkProgressToSubtasks,
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
                 },
@@ -658,19 +660,6 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
-                DetailsCardParents(
-                    module = icalObject.value.getModuleFromString(),
-                    parents = parents.value,
-                    isEditMode = isEditMode,
-                    sliderIncrement = sliderIncrement,
-                    showSlider = showProgressForSubTasks,
-                    onProgressChanged = { itemId, newPercent ->
-                        onProgressChanged(itemId, newPercent)
-                    },
-                    goToDetail = goToDetail
-                )
-            }
         AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
             DetailsCardSubtasks(
                 subtasks = subtasks.value,

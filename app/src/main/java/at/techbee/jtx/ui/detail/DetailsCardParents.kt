@@ -45,6 +45,7 @@ fun DetailsCardParents(
     isEditMode: MutableState<Boolean>,
     sliderIncrement: Int,
     showSlider: Boolean,
+    blockProgressUpdates: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     modifier: Modifier = Modifier
@@ -104,6 +105,7 @@ fun DetailsCardParents(
                                 showProgress = showSlider,
                                 sliderIncrement = sliderIncrement,
                                 onProgressChanged = onProgressChanged,
+                                blockProgressUpdates = blockProgressUpdates,
                                 onDeleteClicked = { },
                                 onUnlinkClicked = { },
                                 modifier = Modifier
@@ -141,6 +143,7 @@ fun DetailsCardParents_Preview_Journal() {
             isEditMode = remember { mutableStateOf(false) },
             sliderIncrement = 10,
             showSlider = true,
+            blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
         )
@@ -164,6 +167,7 @@ fun DetailsCardParents_Preview_tasksedit() {
             isEditMode = remember { mutableStateOf(false) },
             sliderIncrement = 10,
             showSlider = true,
+            blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
         )

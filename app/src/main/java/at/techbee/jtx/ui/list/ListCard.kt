@@ -95,7 +95,7 @@ fun ListCard(
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
     progressIncrement: Int,
-    progressUpdateDisabled: Boolean,
+    linkProgressToSubtasks: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -197,7 +197,7 @@ fun ListCard(
                         if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
                             Checkbox(
                                 checked = iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status,
-                                enabled = !iCalObject.isReadOnly,
+                                enabled = !iCalObject.isReadOnly && !(linkProgressToSubtasks && subtasks.isNotEmpty()),
                                 onCheckedChange = {
                                     onProgressChanged(
                                         iCalObject.id,
@@ -216,6 +216,18 @@ fun ListCard(
                 }
             }
 
+            if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks) {
+                ProgressElement(
+                    label = null,
+                    iCalObjectId = iCalObject.id,
+                    progress = iCalObject.percent,
+                    status = iCalObject.status,
+                    isReadOnly = iCalObject.isReadOnly || (linkProgressToSubtasks && subtasks.isNotEmpty()),
+                    sliderIncrement = progressIncrement,
+                    onProgressChanged = onProgressChanged,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
             if (iCalObject.numAttachments > 0 || subtasks.isNotEmpty() || subnotes.isNotEmpty() || parents.isNotEmpty()) {
                 Row(
@@ -384,18 +396,6 @@ fun ListCard(
                 }
             }
 
-            if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
-                ProgressElement(
-                    label = null,
-                    iCalObjectId = iCalObject.id,
-                    progress = iCalObject.percent,
-                    status = iCalObject.status,isReadOnly = iCalObject.isReadOnly || progressUpdateDisabled,
-                    sliderIncrement = progressIncrement,
-                    onProgressChanged = onProgressChanged,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-
             AnimatedVisibility(visible = isSubtasksExpanded) {
                 Column(modifier = Modifier.padding(top = 4.dp)) {
                     subtasks.forEach { subtask ->
@@ -460,6 +460,7 @@ fun ListCard(
                                 onDeleteClicked = { },   // no edit possible here
                                 onUnlinkClicked = { },
                                 sliderIncrement = progressIncrement,
+                                blockProgressUpdates = linkProgressToSubtasks,
                                 modifier = Modifier
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
@@ -526,7 +527,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
-            progressUpdateDisabled = false,
+            linkProgressToSubtasks = false,
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             onProgressChanged = { _, _ -> },
@@ -567,7 +568,7 @@ fun ICalObjectListCardPreview_NOTE() {
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
-            progressUpdateDisabled = false,
+            linkProgressToSubtasks = false,
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             onProgressChanged = { _, _ -> },
@@ -616,7 +617,7 @@ fun ICalObjectListCardPreview_TODO() {
             onLongClick = { _, _ -> },
             settingShowProgressMaintasks = true,
             progressIncrement = 1,
-            progressUpdateDisabled = false,
+            linkProgressToSubtasks = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null
@@ -661,7 +662,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             onLongClick = { _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
-            progressUpdateDisabled = false,
+            linkProgressToSubtasks = false,
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
@@ -710,7 +711,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
-            progressUpdateDisabled = false,
+            linkProgressToSubtasks = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null
@@ -759,7 +760,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             attachments = listOf(),
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
-            progressUpdateDisabled = false,
+            linkProgressToSubtasks = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null

@@ -204,7 +204,7 @@ fun ListScreenList(
                             settingShowProgressMaintasks = settingShowProgressMaintasks.value,
                             settingShowProgressSubtasks = settingShowProgressSubtasks.value,
                             progressIncrement = settingProgressIncrement.value.getProgressStepKeyAsInt(),
-                            progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                            linkProgressToSubtasks = settingLinkProgressToSubtasks,
                             onClick = onClick,
                             onLongClick = onLongClick,
                             onProgressChanged = onProgressChanged,
