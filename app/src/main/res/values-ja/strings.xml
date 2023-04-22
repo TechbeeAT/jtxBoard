@@ -151,7 +151,13 @@ Global Strings -->
     <string name="sync_manageddavx5_basic_info">"Managed DAVx⁵ は大規模展開、企業ブランディング、事前設定などのエンタープライズ機能が追加された、組織で DAVx⁵ の機能を利用するためのアプリです。"</string>
     <string name="sync_congratulations">"おめでとうございます！ :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"お使いの端末で %1$s を検出しました。"</string>
+    <string name="sync_setup_instructions">"設定方法"</string>
+    <string name="sync_check_out_sync_app">"%1$s を確認してください！"</string>
     <string name="sync_sync_app_not_found">"お使いの端末で %1$s が検出できませんでした。"</string>
+    <string name="sync_more_about_sync_app">"%1$s について"</string>
+    <string name="sync_download_sync_app">"%1$s をダウンロード"</string>
+    <string name="sync_button_add_account_in_sync_app">"%1$s でアカウントを追加"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"%1$s を開けませんでした。ご自身でアプリを開いてください。"</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"こんにちは。jtx Board 開発者のパトリックです。このアプリは皆さんに無料で提供していますが、開発には多くの時間と労力を要します。もし私のアプリを気に入っていただけましたら、愛を込めて少額の寄付をお願いします。"</string>
     <string name="donate_thank_you">"ありがとうございます！"</string>
@@ -159,6 +165,7 @@ Global Strings -->
     <string name="donate_other_donation_methods">"その他の寄付方法は、私たちのウェブサイトからご確認ください:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"この ファイル/URL を開けるアプリが見つかりませんでした。"</string>
     <string name="toast_item_is_now_recu_exception">"繰り返しのあるアイテムが例外になりました。"</string>
+    <string name="toast_done_tasks_deleted">"完了したタスクが削除されました (%d)。"</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Thanks to"</string>
     <string name="about_translations_basic_info">"jtx Board は、オープンソースコミュニティへの参加と貢献を評価するオープンソースアプリです。このページではコミュニティメンバーの翻訳への取り組みを紹介します。"</string>
