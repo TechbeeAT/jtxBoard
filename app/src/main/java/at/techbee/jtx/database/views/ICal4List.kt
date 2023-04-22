@@ -40,6 +40,8 @@ import at.techbee.jtx.database.COLUMN_DTSTART_TIMEZONE
 import at.techbee.jtx.database.COLUMN_DUE
 import at.techbee.jtx.database.COLUMN_DUE_TIMEZONE
 import at.techbee.jtx.database.COLUMN_DURATION
+import at.techbee.jtx.database.COLUMN_GEO_LAT
+import at.techbee.jtx.database.COLUMN_GEO_LONG
 import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.COLUMN_LAST_MODIFIED
@@ -108,6 +110,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_SUMMARY, " +
             "main_icalobject.$COLUMN_DESCRIPTION, " +
             "main_icalobject.$COLUMN_LOCATION, " +
+            "main_icalobject.$COLUMN_GEO_LAT, " +
+            "main_icalobject.$COLUMN_GEO_LONG, " +
             "main_icalobject.$COLUMN_URL, " +
             "main_icalobject.$COLUMN_CONTACT, " +
             "main_icalobject.$COLUMN_DTSTART, " +
@@ -171,6 +175,8 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_SUMMARY) var summary: String?,
     @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String?,
     @ColumnInfo(name = COLUMN_LOCATION) var location: String?,
+    @ColumnInfo(name = COLUMN_GEO_LAT) var geoLat: Double?,
+    @ColumnInfo(name = COLUMN_GEO_LONG) var geoLong: Double?,
     @ColumnInfo(name = COLUMN_URL) var url: String?,
     @ColumnInfo(name = COLUMN_CONTACT) var contact: String?,
 
@@ -244,6 +250,8 @@ data class ICal4List(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tellus risus, tristique ac elit vitae, mollis feugiat quam. Duis aliquet arcu at purus porttitor ultricies. Vivamus sagittis feugiat ex eu efficitur. Aliquam nec cursus ante, a varius nisi. In a malesuada urna, in rhoncus est. Maecenas auctor molestie quam, quis lobortis tortor sollicitudin sagittis. Curabitur sit amet est varius urna mattis interdum.\n" +
                         "\n" +
                         "Phasellus id quam vel enim semper ullamcorper in ac velit. Aliquam eleifend dignissim lacinia. Donec elementum ex et dui iaculis, eget vehicula leo bibendum. Nam turpis erat, luctus ut vehicula quis, congue non ex. In eget risus consequat, luctus ipsum nec, venenatis elit. In in tellus vel mauris rhoncus bibendum. Pellentesque sit amet quam elementum, pharetra nisl id, vehicula turpis. ",
+                null,
+                null,
                 null,
                 null,
                 null,
