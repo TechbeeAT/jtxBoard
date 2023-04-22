@@ -8,20 +8,31 @@
 
 package at.techbee.jtx.flavored
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Criteria
+import android.location.LocationListener
+import android.location.LocationManager
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.app.ActivityCompat
 import at.techbee.jtx.BuildConfig
 import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.ItemizedIconOverlay
+import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.OverlayItem
 
 
@@ -37,29 +48,69 @@ fun MapComposable(
     modifier: Modifier = Modifier
 ) {
 
+    val context = LocalContext.current
+    var presetGeoLat by remember { mutableStateOf(initialGeoLat) }
+    var presetGeoLong by remember { mutableStateOf(initialGeoLong) }
+
+    if (initialGeoLat == null && initialGeoLong == null && enableCurrentLocation
+        && (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+    ) {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val bestProvider = locationManager.getBestProvider(Criteria(), false)
+        val locListener = LocationListener { }
+        if(bestProvider != null) {
+            locationManager.requestLocationUpdates(bestProvider, 0, 0f, locListener)
+            locationManager.getLastKnownLocation(bestProvider)?.let { lastKnownLocation ->
+                presetGeoLat = lastKnownLocation.latitude
+                presetGeoLong = lastKnownLocation.longitude
+                onLocationUpdated(null, presetGeoLat, presetGeoLong)
+            }
+        }
+    }
+
     Card(modifier = modifier) {
         AndroidView(
             factory = { context ->
                 Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID
                 val map = MapView(context)
-                map.controller.setZoom(15.0)
 
-                val overlayItems = ArrayList<OverlayItem>()
-                if (initialGeoLat != null && initialGeoLong != null) {
-                    map.controller.setCenter(GeoPoint(initialGeoLat, initialGeoLong))
-                    overlayItems.add(OverlayItem("", "", GeoPoint(initialGeoLat, initialGeoLong)))
+                var pinOverlay: Overlay? = null
+
+                if (presetGeoLat != null && presetGeoLong != null) {
+                    map.controller.setZoom(15.0)
+                    map.controller.setCenter(GeoPoint(presetGeoLat!!, presetGeoLong!!))
+                    val overlayItem = OverlayItem("", "", GeoPoint(presetGeoLat!!, presetGeoLong!!))
+                    pinOverlay = ItemizedIconOverlay(context, arrayListOf(overlayItem), object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
+                        override fun onItemSingleTapUp(index: Int, item: OverlayItem?): Boolean { return true }
+                        override fun onItemLongPress(index: Int, item: OverlayItem?): Boolean { return false }
+                    })
+                    map.overlays.add(pinOverlay)
+                } else {
+                    map.controller.setZoom(2.5)
                 }
 
-                val overlay = ItemizedIconOverlay(context, overlayItems, object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
-                    override fun onItemSingleTapUp(index: Int, item: OverlayItem?): Boolean {
+
+                val tapOverlay = MapEventsOverlay(object: MapEventsReceiver {
+                    override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+                        if(isEditMode && p != null) {
+                            //Log.d("MapOverlay", "clicked on ${p.latitude?:0}, ${p.longitude?:0}")
+                            map.overlays.remove(pinOverlay)
+                            val overlayItem = OverlayItem("", "", p)
+                            pinOverlay = ItemizedIconOverlay(context, arrayListOf(overlayItem), object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
+                                override fun onItemSingleTapUp(index: Int, item: OverlayItem?): Boolean { return true }
+                                override fun onItemLongPress(index: Int, item: OverlayItem?): Boolean { return false }
+                            })
+                            map.overlays.add(pinOverlay)
+                            onLocationUpdated(initialLocation, p.latitude, p.longitude)
+                        }
                         return true
                     }
-
-                    override fun onItemLongPress(index: Int, item: OverlayItem?): Boolean {
-                        return false
+                    override fun longPressHelper(p: GeoPoint?): Boolean {
+                        return true
                     }
                 })
-                map.overlays.add(overlay)
+                map.overlays.add(tapOverlay)
                 map
             },
         )
