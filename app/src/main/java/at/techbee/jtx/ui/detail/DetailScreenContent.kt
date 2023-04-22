@@ -836,6 +836,10 @@ fun DetailScreenContent(
                 hasChildren = subtasks.value.isNotEmpty() || subnotes.value.isNotEmpty(),
                 onRecurUpdated = { updatedRRule ->
                     icalObject.value.rrule = updatedRRule?.toString()
+                    if(updatedRRule == null) {
+                        icalObject.value.rdate = null
+                        icalObject.value.exdate = null
+                    }
                     icalObject.value = icalObject.value
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
