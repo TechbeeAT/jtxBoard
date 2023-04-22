@@ -120,6 +120,7 @@ fun ListScreen(
                     groupedList = groupedList,
                     subtasksLive = listViewModel.allSubtasks,
                     subnotesLive = listViewModel.allSubnotes,
+                    parentsLive = listViewModel.allParents,
                     selectedEntries = listViewModel.selectedEntries,
                     attachmentsLive = listViewModel.allAttachmentsMap,
                     scrollOnceId = listViewModel.scrollOnceId,
@@ -139,11 +140,12 @@ fun ListScreen(
                     onProgressChanged = { itemId, newPercent ->
                         processOnProgressChanged(itemId, newPercent)
                     },
-                    onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean ->
+                    onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean ->
                         listViewModel.updateExpanded(
                             itemId,
                             isSubtasksExpanded,
                             isSubnotesExpanded,
+                            isParentsExpanded,
                             isAttachmentsExpanded
                         )
                     },

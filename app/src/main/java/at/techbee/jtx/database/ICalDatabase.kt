@@ -49,7 +49,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 25,
+    version = 26,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -74,6 +74,7 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 22, to = 23),  // view update
         AutoMigration (from = 23, to = 24),  // added ListSettingsStorage
         AutoMigration (from = 24, to = 25),  // added StoredCategory, StoredResource
+        AutoMigration (from = 25, to = 26),  // added column Parent Expanded
     ]
 )
 @TypeConverters(Converters::class)
