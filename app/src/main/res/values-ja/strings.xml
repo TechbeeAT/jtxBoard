@@ -150,6 +150,8 @@ Global Strings -->
     <string name="sync_ksync_basic_info">"kSync は DAVx⁵ をベースに Infomaniak が開発したアプリで。DAVx⁵ は互換性のある CalDAV サーバーに対して開かれていますが、kSync は Infomaniak アカウントにのみ同期を許可します。"</string>
     <string name="sync_manageddavx5_basic_info">"Managed DAVx⁵ は大規模展開、企業ブランディング、事前設定などのエンタープライズ機能が追加された、組織で DAVx⁵ の機能を利用するためのアプリです。"</string>
     <string name="sync_congratulations">"おめでとうございます！ :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"お使いの端末で %1$s を検出しました。"</string>
+    <string name="sync_sync_app_not_found">"お使いの端末で %1$s が検出できませんでした。"</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"こんにちは。jtx Board 開発者のパトリックです。このアプリは皆さんに無料で提供していますが、開発には多くの時間と労力を要します。もし私のアプリを気に入っていただけましたら、愛を込めて少額の寄付をお願いします。"</string>
     <string name="donate_thank_you">"ありがとうございます！"</string>
