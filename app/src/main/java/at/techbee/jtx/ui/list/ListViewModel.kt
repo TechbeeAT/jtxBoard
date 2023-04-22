@@ -18,17 +18,47 @@ import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.COLUMN_CLASSIFICATION
+import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_NAME
+import at.techbee.jtx.database.COLUMN_COLLECTION_DISPLAYNAME
+import at.techbee.jtx.database.COLUMN_COMPLETED
+import at.techbee.jtx.database.COLUMN_CREATED
+import at.techbee.jtx.database.COLUMN_DTSTART
+import at.techbee.jtx.database.COLUMN_DUE
+import at.techbee.jtx.database.COLUMN_ID
+import at.techbee.jtx.database.COLUMN_LAST_MODIFIED
+import at.techbee.jtx.database.COLUMN_PERCENT
+import at.techbee.jtx.database.COLUMN_PRIORITY
+import at.techbee.jtx.database.COLUMN_STATUS
+import at.techbee.jtx.database.COLUMN_SUMMARY
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Relatedto
+import at.techbee.jtx.database.properties.Reltype
+import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
@@ -66,6 +96,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
     private var allSubnotesQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var allSubnotes: LiveData<List<ICal4ListRel>> = allSubnotesQuery.switchMap { database.getSubEntries(it) }
+
+    var allParents: LiveData<List<ICal4ListRel>> = database.getAllParents()
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var selectFromAllList: LiveData<List<ICal4ListRel>> = selectFromAllListQuery.switchMap { database.getIcal4ListRel(it) }
@@ -472,9 +504,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
     /**
      * Updates the expanded status of subtasks, subnotes and attachments in the DB
      */
-    fun updateExpanded(icalObjectId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) {
+    fun updateExpanded(icalObjectId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            database.updateExpanded(icalObjectId, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)
+            database.updateExpanded(icalObjectId, isSubtasksExpanded, isSubnotesExpanded, isParentsExpanded, isAttachmentsExpanded)
         }
     }
 

@@ -10,14 +10,35 @@ package at.techbee.jtx.ui.list
 
 import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material.icons.outlined.Forum
+import androidx.compose.material.icons.outlined.SubdirectoryArrowRight
 import androidx.compose.material.icons.outlined.TaskAlt
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ElevatedFilterChip
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,6 +81,7 @@ fun ListCard(
     resources: List<Resource>,
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
+    parents: List<ICal4List>,
     selected: List<Long>,
     attachments: List<Attachment>,
     storedCategories: List<StoredCategory>,
@@ -68,6 +90,7 @@ fun ListCard(
     player: MediaPlayer?,
     isSubtasksExpandedDefault: Boolean = true,
     isSubnotesExpandedDefault: Boolean = true,
+    isParentsExpandedDefault: Boolean = true,
     isAttachmentsExpandedDefault: Boolean = true,
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
@@ -76,7 +99,7 @@ fun ListCard(
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
+    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
     var isSubtasksExpanded by remember {
@@ -87,6 +110,11 @@ fun ListCard(
     var isSubnotesExpanded by remember {
         mutableStateOf(
             iCalObject.isSubnotesExpanded ?: isSubnotesExpandedDefault
+        )
+    }
+    var isParentsExpanded by remember {
+        mutableStateOf(
+            iCalObject.isParentsExpanded ?: isParentsExpandedDefault
         )
     }
     var isAttachmentsExpanded by remember {
@@ -189,7 +217,7 @@ fun ListCard(
             }
 
 
-            if (iCalObject.numAttachments > 0 || subtasks.isNotEmpty() || subnotes.isNotEmpty()) {
+            if (iCalObject.numAttachments > 0 || subtasks.isNotEmpty() || subnotes.isNotEmpty() || parents.isNotEmpty()) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
                     verticalAlignment = Alignment.CenterVertically
@@ -215,6 +243,7 @@ fun ListCard(
                                     iCalObject.id,
                                     isSubtasksExpanded,
                                     isSubnotesExpanded,
+                                    isParentsExpanded,
                                     isAttachmentsExpanded
                                 )
                             },
@@ -246,6 +275,7 @@ fun ListCard(
                                     iCalObject.id,
                                     isSubtasksExpanded,
                                     isSubnotesExpanded,
+                                    isParentsExpanded,
                                     isAttachmentsExpanded
                                 )
                             },
@@ -277,10 +307,43 @@ fun ListCard(
                                     iCalObject.id,
                                     isSubtasksExpanded,
                                     isSubnotesExpanded,
+                                    isParentsExpanded,
                                     isAttachmentsExpanded
                                 )
                             },
                             selected = isSubnotesExpanded,
+                            //border = null,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    if (parents.isNotEmpty())
+                        ElevatedFilterChip(
+                            label = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Icon(
+                                        Icons.Outlined.SubdirectoryArrowRight,
+                                        stringResource(R.string.view_subtask_of),
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Text(
+                                        parents.size.toString(),
+                                        modifier = Modifier.padding(start = 4.dp)
+                                    )
+                                }
+                            },
+                            onClick = {
+                                isParentsExpanded = !isParentsExpanded
+                                onExpandedChanged(
+                                    iCalObject.id,
+                                    isSubtasksExpanded,
+                                    isSubnotesExpanded,
+                                    isParentsExpanded,
+                                    isAttachmentsExpanded
+                                )
+                            },
+                            selected = isParentsExpanded,
                             //border = null,
                             modifier = Modifier.padding(end = 4.dp)
                         )
@@ -383,6 +446,52 @@ fun ListCard(
                     }
                 }
             }
+
+            AnimatedVisibility(visible = isParentsExpanded) {
+                Column(modifier = Modifier.padding(top = 4.dp)) {
+                    parents.forEach { parent ->
+
+                        if(parent.module == Module.TODO.name) {
+                            SubtaskCard(
+                                subtask = parent,
+                                selected = selected.contains(parent.id),
+                                showProgress = settingShowProgressSubtasks,
+                                onProgressChanged = onProgressChanged,
+                                onDeleteClicked = { },   // no edit possible here
+                                onUnlinkClicked = { },
+                                sliderIncrement = progressIncrement,
+                                modifier = Modifier
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = { onClick(parent.id, parents) },
+                                        onLongClick = {
+                                            if (!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                                onLongClick(parent.id, parents)
+                                        }
+                                    )
+                            )
+                        } else {
+                            SubnoteCard(
+                                subnote = parent,
+                                selected = selected.contains(parent.id),
+                                player = player,
+                                modifier = Modifier
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = { onClick(parent.id, parents) },
+                                        onLongClick = {
+                                            if (!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                                onLongClick(parent.id, parents)
+                                        },
+                                    ),
+                                isEditMode = false, //no editing here
+                                onDeleteClicked = { }, //no editing here
+                                onUnlinkClicked = { }, //no editing here
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -408,6 +517,10 @@ fun ICalObjectListCardPreview_JOURNAL() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            parents = listOf(ICal4List.getSample().apply {
+                this.component = Component.VJOURNAL.name
+                this.module = Module.NOTE.name
+            }),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
@@ -417,7 +530,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             onProgressChanged = { _, _ -> },
-            onExpandedChanged = { _, _, _, _ -> },
+            onExpandedChanged = { _, _, _, _, _ -> },
             player = null
         )
     }
@@ -448,6 +561,7 @@ fun ICalObjectListCardPreview_NOTE() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            parents = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
@@ -457,7 +571,7 @@ fun ICalObjectListCardPreview_NOTE() {
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             onProgressChanged = { _, _ -> },
-            onExpandedChanged = { _, _, _, _ -> },
+            onExpandedChanged = { _, _, _, _, _ -> },
             player = null
         )
     }
@@ -493,6 +607,7 @@ fun ICalObjectListCardPreview_TODO() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            parents = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
@@ -503,7 +618,7 @@ fun ICalObjectListCardPreview_TODO() {
             progressIncrement = 1,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> },
-            onExpandedChanged = { _, _, _, _ -> },
+            onExpandedChanged = { _, _, _, _, _ -> },
             player = null
         )
     }
@@ -538,6 +653,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            parents = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
@@ -548,7 +664,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             progressUpdateDisabled = false,
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _ -> },
-            onExpandedChanged = { _, _, _, _ -> },
+            onExpandedChanged = { _, _, _, _, _ -> },
             player = null
         )
     }
@@ -585,6 +701,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
+            parents = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
@@ -595,7 +712,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             progressIncrement = 1,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> },
-            onExpandedChanged = { _, _, _, _ -> },
+            onExpandedChanged = { _, _, _, _, _ -> },
             player = null
         )
     }
@@ -633,6 +750,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             resources = emptyList(),
             subtasks = emptyList(),
             subnotes = emptyList(),
+            parents = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
@@ -643,7 +761,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             progressIncrement = 1,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> },
-            onExpandedChanged = { _, _, _, _ -> },
+            onExpandedChanged = { _, _, _, _, _ -> },
             player = null
         )
     }

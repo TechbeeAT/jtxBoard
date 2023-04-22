@@ -76,6 +76,7 @@ fun ListScreenList(
     groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
     subnotesLive: LiveData<List<ICal4ListRel>>,
+    parentsLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     storedResourcesLive: LiveData<List<StoredResource>>,
     selectedEntries: SnapshotStateList<Long>,
@@ -93,13 +94,14 @@ fun ListScreenList(
     onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
+    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
     onSyncRequested: () -> Unit
 ) {
 
     val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
     val subnotes by subnotesLive.observeAsState(emptyList())
+    val parents by parentsLive.observeAsState(emptyList())
     val attachments by attachmentsLive.observeAsState(emptyMap())
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
     val storedResources by storedResourcesLive.observeAsState(emptyList())
@@ -171,6 +173,7 @@ fun ListScreenList(
                         val currentSubnotes =
                             subnotes.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
                                 .map { it.iCal4List }
+                        val currentParents = parents.filter { iCal4ListRel -> iCal4ListRelObject.relatedto.any { related -> related.text == iCal4ListRel.iCal4List.uid } }.map { it.iCal4List }
                         val currentAttachments = attachments[iCal4ListRelObject.iCal4List.id]
 
                         if (scrollId != null) {
@@ -190,6 +193,7 @@ fun ListScreenList(
                             resources = iCal4ListRelObject.resources,
                             subtasks = currentSubtasks,
                             subnotes = currentSubnotes,
+                            parents = currentParents,
                             storedCategories = storedCategories,
                             storedResources = storedResources,
                             selected = selectedEntries,
@@ -212,10 +216,20 @@ fun ListScreenList(
                                 .clip(jtxCardCornerShape)
                                 .animateItemPlacement()
                                 .combinedClickable(
-                                    onClick = { onClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List }) },
+                                    onClick = {
+                                        onClick(
+                                            iCal4ListRelObject.iCal4List.id,
+                                            groupedList
+                                                .flatMap { it.value }
+                                                .map { it.iCal4List })
+                                    },
                                     onLongClick = {
                                         if (!iCal4ListRelObject.iCal4List.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            onLongClick(iCal4ListRelObject.iCal4List.id, groupedList.flatMap { it.value }.map { it.iCal4List })
+                                            onLongClick(
+                                                iCal4ListRelObject.iCal4List.id,
+                                                groupedList
+                                                    .flatMap { it.value }
+                                                    .map { it.iCal4List })
                                     }
                                 )
                                 .testTag("benchmark:ListCard")
@@ -281,6 +295,7 @@ fun ListScreenList_TODO() {
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             subnotesLive = MutableLiveData(emptyList()),
+            parentsLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
@@ -298,7 +313,7 @@ fun ListScreenList_TODO() {
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             listSettings = listSettings,
-            onExpandedChanged = { _, _, _, _ -> },
+            onExpandedChanged = { _, _, _, _, _ -> },
             onSyncRequested = { }
         )
     }
@@ -354,6 +369,7 @@ fun ListScreenList_JOURNAL() {
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             subnotesLive = MutableLiveData(emptyList()),
+            parentsLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
@@ -371,7 +387,7 @@ fun ListScreenList_JOURNAL() {
             onClick = { _, _ -> },
             onLongClick = { _, _ -> },
             listSettings = listSettings,
-            onExpandedChanged = { _, _, _, _ -> },
+            onExpandedChanged = { _, _, _, _, _ -> },
             onSyncRequested = { }
         )
     }
