@@ -79,7 +79,7 @@ Global Strings -->
     <string name="view_feedback_linked_notes">"フィードバック / リンクされたメモ"</string>
     <string name="view_subtask_of">"このエントリーのサブタスク"</string>
     <string name="view_linked_note_of">"メモのリンク先:"</string>
-    <string name="view_add_audio_note">"音声を追加"</string>
+    <string name="view_add_audio_note">"音声メモを追加"</string>
     <string name="view_created_text">"作成日時: %1$s"</string>
     <string name="view_last_modified_text">"最終更新日時: %1$s"</string>
     <string name="view_due">"締切日時"</string>
@@ -182,6 +182,7 @@ Global Strings -->
     <string name="save_and_edit">"保存して編集"</string>
     <string name="save_and_new">"保存して新規作成"</string>
     <string name="save_and_close">"保存して閉じる"</string>
+    <string name="list_quickadd_add_audio_attachment">"添付する音声メモを録音"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"連絡先の読み取り権限が付与されました"</string>
     <string name="permission_read_contacts_denied">"連絡先の読み取り権限が拒否されました"</string>
@@ -194,8 +195,10 @@ Global Strings -->
     <string name="apply">"適用"</string>
     <string name="not_available_abbreviation">"利用不可"</string>
     <string name="collection">"コレクション"</string>
+    <string name="collection_owner_displayname">"所有者: %1$s"</string>
     <string name="link_to_parent">"親にリンク"</string>
     <string name="navigation_drawer_collections">"コレクション"</string>
+    <string name="navigation_drawer_presets">"プリセット"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"日付/時刻"</string>
     <string name="alarms_duration">"期間"</string>
@@ -213,6 +216,7 @@ Global Strings -->
     <!-- Fuzzy -->
     <string name="collections_notes_num">"メモ: %1$s"</string>
     <string name="collections_tasks_num">"タスク: %1$s"</string>
+    <string name="collections_info">"コレクションは、ファイルのあるフォルダーのようなエントリーの集積です。メニューから新しいローカルのコレクションを作成できます。DAVx⁵ などの同期アプリをインストールして、新しいリモートのコレクションを設定し、同期することもできます。"</string>
     <string name="collections_collection_menu">"コレクション メニュー"</string>
     <string name="collections_dialog_add_local_collection_title">"ローカルのコレクションを追加"</string>
     <string name="collections_dialog_edit_local_collection_title">"ローカルのコレクションを編集"</string>
@@ -236,6 +240,8 @@ Global Strings -->
     <string name="collections_toast_export_ics_error">"選択したコレクションのエクスポート中にエラーが発生しました。"</string>
     <string name="attachment_export_saved_successfully">"保存しました"</string>
     <string name="attachment_export_error_error_occurred">"選択したファイルの保存中にエラーが発生しました！"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"リモートのコレクションを追加 (%1$s)"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"%1$s で表示"</string>
     <string name="menu_collection_popup_export_as_ics">".ics ファイルでエクスポート"</string>
     <string name="journal">"ジャーナル"</string>
     <string name="note">"メモ"</string>
@@ -420,6 +426,13 @@ Global Strings -->
     <string name="dialog_detach_from_series_text_single">"この要素を切り離すと、独立したサブタスクやリンクされたメモを設定できるようになります。しかし、元の系列へのリンクは無くなります。続行しますか？"</string>
     <string name="dialog_detach_from_series_text_attention">"注意: この操作は元に戻せません！"</string>
     <string name="dialog_detach_from_series_button">"系列から切り離す"</string>
+    <string name="dialog_sync_app_outdated_title">"同期アプリのバージョンが古すぎます"</string>
+    <string name="dialog_sync_app_outdated_message">"使用中のバージョンの %1$s はこのバージョンの jtx Board に対応していません。%1$s を %2$s 以降にアップデートしてください！ 現在、%1$s の同期は停止しています。"</string>
+    <string name="dialog_save_current_filter_config">"現在のフィルター設定を保存"</string>
+    <string name="dialog_save_current_filter_my_filter">"マイフィルター"</string>
+    <string name="dialog_edit_stored_category_title">"カテゴリーのプリセットを追加/編集"</string>
+    <string name="dialog_edit_stored_resource_title">"必要なもののプリセットを追加/編集"</string>
+    <string name="dialog_add_audio_entry_title">"音声エントリーを追加"</string>
     <string name="menu_list_viewmode_compact">"コンパクト表示"</string>
     <string name="menu_list_viewmode_kanban">"カンバン表示"</string>
     <string name="settings_tasks">"タスクの設定"</string>
@@ -446,6 +459,8 @@ Global Strings -->
     <string name="settings_keep_status_progress_completed_in_sync">"同期でステータス、進捗状況、完了を維持"</string>
     <string name="settings_attention_experimental_feature">"注意: これは試験運用中の機能です"</string>
     <string name="settings_create_with_current_location">"新規作成するエントリーに現在の位置情報を設定"</string>
+    <string name="settings_sticky_alarms">"固定アラーム"</string>
+    <string name="settings_sticky_alarms_sub">"完了または延期されるまで通知を維持します"</string>
     <string name="sync_button_go_to_collections">"コレクションに移動"</string>
     <string name="buypro_snackbar_please_purchase_pro">"この機能を有効にするにはプロ版を購入してください。"</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -457,6 +472,7 @@ Global Strings -->
     <string name="settings_select_language">"言語を選択"</string>
     <string name="settings_select_language_system">"システムのデフォルト"</string>
     <string name="filter_special">"特別なフィルター"</string>
+    <string name="filter_presets">"プリセットのフィルター"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"過去の日付"</string>
     <string name="list_date_today">"今日"</string>
@@ -468,6 +484,7 @@ Global Strings -->
     <string name="list_start_date_future">"今後に着手"</string>
     <string name="list_hide_completed_tasks">"完了したタスクを非表示"</string>
     <string name="list_biometric_protected_entries_locked">生体認証で保護されたエントリーはロックされています</string>
+    <string name="list_delete_done">"完了したものを削除"</string>
     <string name="collections_biometric_protected_entries_locked_title">生体認証で保護されたエントリーはロックされています</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">認証してもう一度お試しください</string>
     <string name="list_biometric_protected_entries_unlocked">生体認証で保護されたエントリーはロック解除されています</string>
@@ -488,6 +505,7 @@ Global Strings -->
     <string name="filter_second_order_by">"次に…で並べ替え"</string>
     <string name="filter_group_by">"…でグループ化"</string>
     <string name="filter_group_by_info">"リスト表示とコンパクト表示のみグループ化に対応しています"</string>
+    <string name="filter_save_as_preset">"プリセットとして保存"</string>
     <string name="menu_list_flat_view">"フラット表示"</string>
     <string name="menu_list_flat_view_sub">"リストの最上位に子エントリーを常に表示"</string>
     <string name="menu_list_limit_recur_entries">"繰り返しを制限"</string>
@@ -512,6 +530,8 @@ Global Strings -->
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"注意: 現在、ウィジェットでサポートされている階層は 1 つだけです。下位のエントリーを見るには、フラット表示を使用してください。"</string>
     <string name="widget_list_maximum_entries_reached">"ウィジェットのエントリーの最大数に到達しました (%1$d)。"</string>
     <string name="widget_list_compat_updating_widget_notification">"ウィジェットの更新中"</string>
+    <string name="widget_list_opacity_warning">"注意: これは試験運用中の機能です！ テーマカラーの不透明度の変更が、すぐに反映されない場合があります！"</string>
+    <string name="widget_list_color_warning">"注意: これは試験運用中の機能です！ テーマカラーの変更がすぐに反映されない場合があります！ 色なしを選択すると、システムのデフォルトに戻ります。"</string>
     <string name="opacity">"不透明度"</string>
     <string name="general">"一般"</string>
     <string name="list_collapse">"閉じる"</string>
@@ -545,4 +565,7 @@ Global Strings -->
     <string name="markdown_horizontal_ruler">"水平線"</string>
     <string name="markdown_unordered_list">"リスト"</string>
     <string name="markdown_code">"コード"</string>
+    <string name="preset_categories">"カテゴリーのプリセット"</string>
+    <string name="preset_resources">"必要なもののプリセット"</string>
+    <string name="active_filters">有効なフィルター:</string>
 </resources>

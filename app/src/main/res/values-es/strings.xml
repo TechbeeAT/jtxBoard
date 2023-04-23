@@ -106,6 +106,7 @@ Global Strings -->
     <string name="edit_dialog_sure_to_delete_title">"¿Eliminar \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_title">"¿Descartar esta entrada?"</string>
     <string name="dialog_delete_done_title">"¿Borrar todas las tareas terminadas?"</string>
+    <string name="dialog_delete_done_message">"Atención: Las Subtareas serán borradas una vez que la tarea primaria sea marcada como Completada. ¡Esta operación no podrá deshacerse!"</string>
     <string name="edit_dialog_sure_to_delete_message">"¿Está seguro de que quiere eliminar \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"¿Está seguro de que quiere descartar esta entrada? No será guardada."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La fecha de vencimiento no puede ser anterior a la fecha de inicio."</string>
