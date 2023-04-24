@@ -86,7 +86,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     val settingsStateHolder = SettingsStateHolder(_application)
 
     val mediaPlayer = MediaPlayer()
-    val isProcessing = mutableStateOf(false)
+
+    private var _isAuthenticated = false
 
     companion object {
         const val PREFS_DETAIL_JOURNALS = "prefsDetailJournals"
@@ -95,6 +96,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun load(icalObjectId: Long, isAuthenticated: Boolean) {
+        _isAuthenticated = isAuthenticated
         viewModelScope.launch {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
             icalEntity = database.get(icalObjectId)
@@ -110,7 +112,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         ICal4List.getQueryForAllSubentriesForParentUID(
                             parentUid = parentUid,
                             component = Component.VTODO,
-                            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
+                            hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
                             orderBy = detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED,
                             sortOrder = detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC
                         )
@@ -123,7 +125,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         ICal4List.getQueryForAllSubentriesForParentUID(
                             parentUid = parentUid,
                             component = Component.VJOURNAL,
-                            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
+                            hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
                             orderBy = detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED,
                             sortOrder = detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC
                         )
@@ -142,11 +144,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun updateSelectFromAllListQuery(searchText: String, isAuthenticated: Boolean) {
+    fun updateSelectFromAllListQuery(searchText: String) {
         selectFromAllListQuery.postValue(ICal4List.constructQuery(
             modules = listOf(Module.JOURNAL, Module.NOTE, Module.TODO),
             searchText = searchText,
-            hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
+            hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
         ))
     }
 
@@ -275,12 +277,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
         try {
             val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, database, _application)
+            newId?.let { load(it, _isAuthenticated) }
             // once the newId is there, the local entries can be deleted (or marked as deleted)
             ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
             if (icalObject.rrule != null)
                 icalObject.recreateRecurring(_application)
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-            navigateToId.value = newId
         } catch (e: SQLiteConstraintException) {
             Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
             Log.d("SQLConstraint", e.stackTraceToString())
@@ -316,7 +318,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
 
         try {
-            if (icalEntity.value?.categories != categories) {
+            if (icalEntity.value?.categories != categories || icalEntity.value?.property?.id != icalObject.id) {
                 icalObject.makeDirty()
                 database.deleteCategories(icalObject.id)
                 categories.forEach { changedCategory ->
@@ -325,7 +327,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
 
-            if (icalEntity.value?.comments != comments) {
+            if (icalEntity.value?.comments != comments || icalEntity.value?.property?.id != icalObject.id) {
                 icalObject.makeDirty()
                 database.deleteComments(icalObject.id)
                 comments.forEach { changedComment ->
@@ -334,7 +336,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
 
-            if (icalEntity.value?.attendees != attendees) {
+            if (icalEntity.value?.attendees != attendees || icalEntity.value?.property?.id != icalObject.id) {
                 icalObject.makeDirty()
                 database.deleteAttendees(icalObject.id)
                 attendees.forEach { changedAttendee ->
@@ -343,7 +345,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
 
-            if (icalEntity.value?.resources != resources) {
+            if (icalEntity.value?.resources != resources || icalEntity.value?.property?.id != icalObject.id) {
                 icalObject.makeDirty()
                 database.deleteResources(icalObject.id)
                 resources.forEach { changedResource ->
@@ -352,7 +354,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
 
-            if (icalEntity.value?.attachments != attachments) {
+            if (icalEntity.value?.attachments != attachments || icalEntity.value?.property?.id != icalObject.id) {
                 icalObject.makeDirty()
                 database.deleteAttachments(icalObject.id)
                 attachments.forEach { changedAttachment ->
@@ -362,7 +364,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Attachment.scheduleCleanupJob(getApplication())
             }
 
-            if (icalEntity.value?.alarms != alarms) {
+            if (icalEntity.value?.alarms != alarms || icalEntity.value?.property?.id != icalObject.id) {
                 icalObject.makeDirty()
                 database.deleteAlarms(icalObject.id)
                 alarms.forEach { changedAlarm ->
@@ -441,8 +443,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * Deletes the current entry with its children
      */
     fun delete() {
-        changeState.value = DetailChangeState.DELETING
         viewModelScope.launch(Dispatchers.IO) {
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.DELETING }
             try {
                 if(icalEntity.value?.property?.recurid != null) {
                     ICalObject.unlinkFromSeries(icalEntity.value?.property!!, database)
@@ -581,8 +583,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * Creates a share intent to share the current entry as .ics file
      */
     fun shareAsICS(context: Context) {
-        isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO)  {
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
             val iCalEntity = icalEntity.value ?: return@launch
             val icsContentUri = createContentUri(iCalEntity) ?: return@launch
 
@@ -595,7 +597,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.i("ActivityNotFound", "No activity found to open file.")
                 toastMessage.value = "No app found to open this file."
             } finally {
-                isProcessing.value = false
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
             }
         }
     }
@@ -606,10 +608,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * text (the contents as a text representation) and attachments
      */
     fun shareAsText(context: Context) {
-
-        isProcessing.value = true
         viewModelScope.launch(Dispatchers.IO)  {
             val iCalEntity = icalEntity.value ?: return@launch
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
 
             val shareText = iCalEntity.getShareText(context)
             val subject = iCalEntity.property.summary
@@ -662,7 +663,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.i("ActivityNotFound", "No activity found to send this entry.")
                 toastMessage.value = _application.getString(R.string.error_no_app_found_to_open_entry)
             } finally {
-                isProcessing.value = false
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
             }
         }
     }

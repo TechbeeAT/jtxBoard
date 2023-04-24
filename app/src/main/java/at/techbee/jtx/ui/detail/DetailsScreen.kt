@@ -36,7 +36,6 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
@@ -52,7 +51,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
-    globalStateHolder: GlobalStateHolder,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
     returnToLauncher: Boolean = false,
@@ -401,7 +399,6 @@ fun DetailsScreen(
                     detailViewModel.updateProgress(itemId, newPercent)
                 },
                 onMoveToNewCollection = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms, newCollection ->
-                    navController.popBackStack()
                     detailViewModel.moveToNewCollection(
                         changedICalObject,
                         changedCategories,
@@ -428,7 +425,7 @@ fun DetailsScreen(
                 },
                 onUnlinkSubEntry = { icalObjectId -> detailViewModel.unlinkFromParent(icalObjectId) },
                 onLinkSubEntries = { newSubEntries -> detailViewModel.linkNewSubentries(newSubEntries) },
-                onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText, globalStateHolder.isAuthenticated.value) },
+                onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },
@@ -454,11 +451,6 @@ fun DetailsScreen(
                 isProActionAvailable = isProActionAvailable,
                 changeState = detailViewModel.changeState,
                 detailsBottomSheetState = detailsBottomSheetState,
-                isProcessing = detailViewModel.isProcessing.value
-                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.LOADING
-                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED
-                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING
-                        || detailViewModel.changeState.value == DetailViewModel.DetailChangeState.DELETING,
                 onDeleteClicked = { showDeleteDialog = true },
                 onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) },
                 onRevertClicked = { showRevertDialog = true }

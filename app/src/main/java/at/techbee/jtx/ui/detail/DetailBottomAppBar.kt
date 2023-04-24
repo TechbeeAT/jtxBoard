@@ -58,7 +58,6 @@ fun DetailBottomAppBar(
     isProActionAvailable: Boolean,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     detailsBottomSheetState: SheetState,
-    isProcessing: Boolean,
     onDeleteClicked: () -> Unit,
     onCopyRequested: (Module) -> Unit,
     onRevertClicked: () -> Unit,
@@ -328,12 +327,6 @@ fun DetailBottomAppBar(
                     }
                 }
             }
-
-            AnimatedVisibility(!isEditMode.value && isProcessing) {
-                IconButton(onClick = { /* no action, icon button just to keep the same style */  }) {
-                    CircularProgressIndicator(modifier = Modifier.alpha(0.3f).size(24.dp))
-                }
-            }
         },
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
@@ -386,7 +379,6 @@ fun DetailBottomAppBar_Preview_View() {
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
-            isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -415,7 +407,6 @@ fun DetailBottomAppBar_Preview_edit() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
-            isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -443,7 +434,6 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
             markdownState = remember { mutableStateOf(MarkdownState.OBSERVING) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
-            isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -471,7 +461,6 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
-            isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -499,7 +488,6 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
             isProActionAvailable = false,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
-            isProcessing = false,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }
@@ -530,7 +518,6 @@ fun DetailBottomAppBar_Preview_View_local() {
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
-            isProcessing = true,
             onDeleteClicked = { },
             onCopyRequested = { },
             onRevertClicked = { }

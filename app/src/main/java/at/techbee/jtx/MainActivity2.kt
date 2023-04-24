@@ -363,7 +363,6 @@ fun MainNavHost(
 
             DetailsScreen(
                 navController = navController,
-                globalStateHolder = globalStateHolder,
                 detailViewModel = detailViewModel,
                 editImmediately = editImmediately,
                 returnToLauncher = returnToLauncher,
