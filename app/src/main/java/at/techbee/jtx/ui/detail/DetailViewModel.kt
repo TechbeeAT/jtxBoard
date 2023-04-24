@@ -95,8 +95,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun load(icalObjectId: Long, isAuthenticated: Boolean) {
-        changeState.value = DetailChangeState.LOADING
         viewModelScope.launch {
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
             icalEntity = database.get(icalObjectId)
 
             relatedParents = icalEntity.switchMap {
@@ -134,7 +134,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             seriesInstances = icalEntity.switchMap { database.getSeriesInstancesICalObjectsByUID(it?.property?.uid) }
             isChild = database.isChild(icalObjectId)
 
-            changeState.value = DetailChangeState.UNCHANGED
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
         }
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -153,7 +153,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     fun updateProgress(id: Long, newPercent: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            changeState.value = DetailChangeState.CHANGESAVING
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
             val item = database.getICalObjectById(id) ?: return@launch
             try {
                 item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
@@ -166,37 +166,37 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
                 SyncUtil.notifyContentObservers(getApplication())
                 NotificationPublisher.scheduleNextNotifications(_application)
-                changeState.value = DetailChangeState.CHANGESAVED
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $id")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                changeState.value = DetailChangeState.SQLERROR
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             }
         }
     }
 
     fun updateSummary(icalObjectId: Long, newSummary: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            changeState.value = DetailChangeState.CHANGESAVING
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
             val icalObject = database.getICalObjectById(icalObjectId) ?: return@launch
             icalObject.summary = newSummary
             icalObject.makeDirty()
             icalObject.makeSeriesDirty(database)
             try {
                 database.update(icalObject)
-                changeState.value = DetailChangeState.CHANGESAVED
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                changeState.value = DetailChangeState.SQLERROR
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             }
         }
     }
 
     fun unlinkFromSeries(instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) {
-        changeState.value = DetailChangeState.CHANGESAVING
         viewModelScope.launch(Dispatchers.IO) {
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
 
             instances.forEach { instance ->
                 val children = database.getRelatedChildren(instance.id)
@@ -211,10 +211,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             if(deleteAfterUnlink) {
                 series?.id?.let {
                     deleteById(it)
-                    changeState.value = DetailChangeState.DELETED
+                    withContext (Dispatchers.Main) { changeState.value = DetailChangeState.DELETED }
                 }
             } else {
-                changeState.value = DetailChangeState.CHANGESAVED
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             }
             NotificationPublisher.scheduleNextNotifications(_application)
             SyncUtil.notifyContentObservers(getApplication())
@@ -271,19 +271,20 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
 
     private suspend fun move(icalObject: ICalObject, newCollectionId: Long) {
-        changeState.value = DetailChangeState.CHANGESAVING
+        withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+
         try {
             val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, database, _application)
             // once the newId is there, the local entries can be deleted (or marked as deleted)
             ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
             if (icalObject.rrule != null)
                 icalObject.recreateRecurring(_application)
-            changeState.value = DetailChangeState.CHANGESAVED
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             navigateToId.value = newId
         } catch (e: SQLiteConstraintException) {
             Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
             Log.d("SQLConstraint", e.stackTraceToString())
-            changeState.value = DetailChangeState.SQLERROR
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
         }
         NotificationPublisher.scheduleNextNotifications(_application)
     }
@@ -312,7 +313,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
              attachments: List<Attachment>,
              alarms: List<Alarm>
     ) {
-        changeState.value = DetailChangeState.CHANGESAVING
+        withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
 
         try {
             if (icalEntity.value?.categories != categories) {
@@ -376,11 +377,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             icalObject.recreateRecurring(_application)
             NotificationPublisher.scheduleNextNotifications(_application)
             SyncUtil.notifyContentObservers(_application)
-            changeState.value = DetailChangeState.CHANGESAVED
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         } catch (e: SQLiteConstraintException) {
             Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
             Log.d("SQLConstraint", e.stackTraceToString())
-            changeState.value = DetailChangeState.SQLERROR
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
         }
     }
 
@@ -410,7 +411,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     fun addSubEntry(subEntry: ICalObject, attachment: Attachment?) {
         viewModelScope.launch(Dispatchers.IO) {
-            changeState.value = DetailChangeState.CHANGESAVING
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
             subEntry.collectionId = icalEntity.value?.property?.collectionId!!
 
             try {
@@ -426,11 +427,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         text = icalEntity.value?.property?.uid!!
                     )
                 )
-                changeState.value = DetailChangeState.CHANGESAVED
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", e.stackTraceToString())
-                changeState.value = DetailChangeState.SQLERROR
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             }
         }
     }
@@ -450,13 +451,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 icalEntity.value?.property?.id?.let { id ->
                     ICalObject.deleteItemWithChildren(id, database)
                     SyncUtil.notifyContentObservers(getApplication())
-                    changeState.value = DetailChangeState.DELETED
+                    withContext (Dispatchers.Main) { changeState.value = DetailChangeState.DELETED }
                     toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
                 }
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: ${icalEntity.value?.property?.id}")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                changeState.value = DetailChangeState.SQLERROR
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             }
             NotificationPublisher.scheduleNextNotifications(_application)
         }
@@ -467,31 +468,31 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * @param [icalObjectId] of the subtask/subnote to be deleted
      */
     fun deleteById(icalObjectId: Long) {
-        changeState.value = DetailChangeState.CHANGESAVING
         viewModelScope.launch(Dispatchers.IO) {
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
             try {
                 ICalObject.deleteItemWithChildren(icalObjectId, database)
-                changeState.value = DetailChangeState.CHANGESAVED
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
                 toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                changeState.value = DetailChangeState.SQLERROR
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             }
             NotificationPublisher.scheduleNextNotifications(_application)
         }
     }
 
     fun unlinkFromParent(icalObjectId: Long) {
-        changeState.value = DetailChangeState.CHANGESAVING
         viewModelScope.launch(Dispatchers.IO) {
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
             database.deleteRelatedto(icalObjectId, icalEntity.value?.property?.uid?:"")
             database.getICalObjectByIdSync(icalObjectId)?.let {
                 it.makeDirty()
                 database.update(it)
             }
-            changeState.value = DetailChangeState.CHANGESAVED
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }
     }
 
@@ -500,9 +501,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun createCopy(icalEntityToCopy: ICalEntity, newModule: Module, newParentUID: String? = null) {
-        changeState.value = DetailChangeState.CHANGESAVING
-
         viewModelScope.launch(Dispatchers.IO) {
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
             val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
             try {
                 val newId = database.insertICalObject(newEntity.property)
@@ -569,10 +569,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                     navigateToId.value = newId
 
-                changeState.value = DetailChangeState.CHANGESAVED
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", e.stackTraceToString())
-                changeState.value = DetailChangeState.SQLERROR
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             }
         }
     }

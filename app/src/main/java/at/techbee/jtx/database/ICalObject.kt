@@ -738,8 +738,8 @@ data class ICalObject(
                     NotificationPublisher.scheduleNextNotifications(context)
                     return newId
                 }
-                return null
-            }
+            return null
+        }
 
         suspend fun unlinkFromSeries(item: ICalObject, database: ICalDatabaseDao): ICalObject {
             database.getRecurSeriesElement(item.uid)?.let { series ->
