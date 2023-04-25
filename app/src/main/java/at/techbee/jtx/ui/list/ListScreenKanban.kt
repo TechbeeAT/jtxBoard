@@ -170,7 +170,6 @@ fun ListScreenKanban(
                                             onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
                                     }
                                 )
-                                .height(150.dp)
                                 .fillMaxWidth()
                                 .offset { IntOffset(offsetX.roundToInt(), 0) }
                                 .draggable(
