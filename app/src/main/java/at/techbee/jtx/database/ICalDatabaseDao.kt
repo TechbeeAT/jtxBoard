@@ -583,13 +583,18 @@ DELETEs by Object
     suspend fun updateSetDirty(id: Long, lastModified: Long)
 
     @Transaction
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SUBTASKS_EXPANDED = :isSubtasksExpanded, $COLUMN_SUBNOTES_EXPANDED = :isSubnotesExpanded, $COLUMN_ATTACHMENTS_EXPANDED = :isAttachmentsExpanded WHERE $COLUMN_ID = :id")
-    suspend fun updateExpanded(id: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean)
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SUBTASKS_EXPANDED = :isSubtasksExpanded, $COLUMN_SUBNOTES_EXPANDED = :isSubnotesExpanded, $COLUMN_ATTACHMENTS_EXPANDED = :isAttachmentsExpanded, $COLUMN_PARENTS_EXPANDED = :isParentsExpanded WHERE $COLUMN_ID = :id")
+    suspend fun updateExpanded(id: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean)
 
     @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SORT_INDEX = :index WHERE $COLUMN_ID = :id")
     suspend fun updateOrder(id: Long, index: Int?)
 
+
+
+    @Transaction
+    @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_UID in (SELECT $COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $COLUMN_DELETED = 0)")
+    fun getAllParents(): LiveData<List<ICal4ListRel>>
 
 
     @Transaction

@@ -205,14 +205,12 @@ fun ListTopFlowRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        /*
-        AnimatedVisibility(ical4List.geoLat != null) {
+        AnimatedVisibility(ical4List.geoLat != null || ical4List.geoLong != null) {
             ListBadge(
                 icon = Icons.Outlined.Map,
                 iconDesc = stringResource(id = R.string.location),
             )
         }
-         */
         AnimatedVisibility(!ical4List.contact.isNullOrEmpty()) {
             ListBadge(
                 icon = Icons.Outlined.ContactMail,

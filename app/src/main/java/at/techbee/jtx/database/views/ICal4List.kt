@@ -15,9 +15,78 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.sqlite.db.SimpleSQLiteQuery
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.COLUMN_ATTACHMENTS_EXPANDED
+import at.techbee.jtx.database.COLUMN_CLASSIFICATION
+import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_NAME
+import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_TYPE
+import at.techbee.jtx.database.COLUMN_COLLECTION_COLOR
+import at.techbee.jtx.database.COLUMN_COLLECTION_DISPLAYNAME
+import at.techbee.jtx.database.COLUMN_COLLECTION_ID
+import at.techbee.jtx.database.COLUMN_COLLECTION_READONLY
+import at.techbee.jtx.database.COLUMN_COLOR
+import at.techbee.jtx.database.COLUMN_COMPLETED
+import at.techbee.jtx.database.COLUMN_COMPLETED_TIMEZONE
+import at.techbee.jtx.database.COLUMN_COMPONENT
+import at.techbee.jtx.database.COLUMN_CONTACT
+import at.techbee.jtx.database.COLUMN_CREATED
+import at.techbee.jtx.database.COLUMN_DELETED
+import at.techbee.jtx.database.COLUMN_DESCRIPTION
+import at.techbee.jtx.database.COLUMN_DIRTY
+import at.techbee.jtx.database.COLUMN_DTEND
+import at.techbee.jtx.database.COLUMN_DTEND_TIMEZONE
+import at.techbee.jtx.database.COLUMN_DTSTAMP
+import at.techbee.jtx.database.COLUMN_DTSTART
+import at.techbee.jtx.database.COLUMN_DTSTART_TIMEZONE
+import at.techbee.jtx.database.COLUMN_DUE
+import at.techbee.jtx.database.COLUMN_DUE_TIMEZONE
+import at.techbee.jtx.database.COLUMN_DURATION
+import at.techbee.jtx.database.COLUMN_GEO_LAT
+import at.techbee.jtx.database.COLUMN_GEO_LONG
+import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
+import at.techbee.jtx.database.COLUMN_ID
+import at.techbee.jtx.database.COLUMN_LAST_MODIFIED
+import at.techbee.jtx.database.COLUMN_LOCATION
+import at.techbee.jtx.database.COLUMN_MODULE
+import at.techbee.jtx.database.COLUMN_PARENTS_EXPANDED
+import at.techbee.jtx.database.COLUMN_PERCENT
+import at.techbee.jtx.database.COLUMN_PRIORITY
+import at.techbee.jtx.database.COLUMN_RECURID
+import at.techbee.jtx.database.COLUMN_RRULE
+import at.techbee.jtx.database.COLUMN_SEQUENCE
+import at.techbee.jtx.database.COLUMN_SORT_INDEX
+import at.techbee.jtx.database.COLUMN_STATUS
+import at.techbee.jtx.database.COLUMN_SUBNOTES_EXPANDED
+import at.techbee.jtx.database.COLUMN_SUBTASKS_EXPANDED
+import at.techbee.jtx.database.COLUMN_SUMMARY
+import at.techbee.jtx.database.COLUMN_UID
+import at.techbee.jtx.database.COLUMN_URL
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.TABLE_NAME_COLLECTION
+import at.techbee.jtx.database.TABLE_NAME_ICALOBJECT
+import at.techbee.jtx.database.properties.COLUMN_ALARM_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_FMTTYPE
+import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_URI
+import at.techbee.jtx.database.properties.COLUMN_ATTENDEE_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_CATEGORY_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_CATEGORY_TEXT
+import at.techbee.jtx.database.properties.COLUMN_COMMENT_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_RELTYPE
+import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_TEXT
+import at.techbee.jtx.database.properties.COLUMN_RESOURCE_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_RESOURCE_TEXT
+import at.techbee.jtx.database.properties.TABLE_NAME_ALARM
+import at.techbee.jtx.database.properties.TABLE_NAME_ATTACHMENT
+import at.techbee.jtx.database.properties.TABLE_NAME_ATTENDEE
+import at.techbee.jtx.database.properties.TABLE_NAME_CATEGORY
+import at.techbee.jtx.database.properties.TABLE_NAME_COMMENT
+import at.techbee.jtx.database.properties.TABLE_NAME_RELATEDTO
+import at.techbee.jtx.database.properties.TABLE_NAME_RESOURCE
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.DateTimeUtils
@@ -41,6 +110,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_SUMMARY, " +
             "main_icalobject.$COLUMN_DESCRIPTION, " +
             "main_icalobject.$COLUMN_LOCATION, " +
+            "main_icalobject.$COLUMN_GEO_LAT, " +
+            "main_icalobject.$COLUMN_GEO_LONG, " +
             "main_icalobject.$COLUMN_URL, " +
             "main_icalobject.$COLUMN_CONTACT, " +
             "main_icalobject.$COLUMN_DTSTART, " +
@@ -86,6 +157,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "collection.$COLUMN_COLLECTION_READONLY as isReadOnly, " +
             "main_icalobject.$COLUMN_SUBTASKS_EXPANDED, " +
             "main_icalobject.$COLUMN_SUBNOTES_EXPANDED, " +
+            "main_icalobject.$COLUMN_PARENTS_EXPANDED, " +
             "main_icalobject.$COLUMN_ATTACHMENTS_EXPANDED, " +
             "main_icalobject.$COLUMN_SORT_INDEX " +
             "FROM $TABLE_NAME_ICALOBJECT main_icalobject " +
@@ -103,6 +175,8 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_SUMMARY) var summary: String?,
     @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String?,
     @ColumnInfo(name = COLUMN_LOCATION) var location: String?,
+    @ColumnInfo(name = COLUMN_GEO_LAT) var geoLat: Double?,
+    @ColumnInfo(name = COLUMN_GEO_LONG) var geoLong: Double?,
     @ColumnInfo(name = COLUMN_URL) var url: String?,
     @ColumnInfo(name = COLUMN_CONTACT) var contact: String?,
 
@@ -161,6 +235,7 @@ data class ICal4List(
 
     @ColumnInfo(name = COLUMN_SUBTASKS_EXPANDED) var isSubtasksExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_SUBNOTES_EXPANDED) var isSubnotesExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_PARENTS_EXPANDED) var isParentsExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null,
 ) {
@@ -175,6 +250,8 @@ data class ICal4List(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tellus risus, tristique ac elit vitae, mollis feugiat quam. Duis aliquet arcu at purus porttitor ultricies. Vivamus sagittis feugiat ex eu efficitur. Aliquam nec cursus ante, a varius nisi. In a malesuada urna, in rhoncus est. Maecenas auctor molestie quam, quis lobortis tortor sollicitudin sagittis. Curabitur sit amet est varius urna mattis interdum.\n" +
                         "\n" +
                         "Phasellus id quam vel enim semper ullamcorper in ac velit. Aliquam eleifend dignissim lacinia. Donec elementum ex et dui iaculis, eget vehicula leo bibendum. Nam turpis erat, luctus ut vehicula quis, congue non ex. In eget risus consequat, luctus ipsum nec, venenatis elit. In in tellus vel mauris rhoncus bibendum. Pellentesque sit amet quam elementum, pharetra nisl id, vehicula turpis. ",
+                null,
+                null,
                 null,
                 null,
                 null,

@@ -102,7 +102,7 @@ fun DetailsCardRecur(
                 interval(interval ?: 1)
                 if (until != null)
                     until(until)
-                else
+                else if((count?:-1) > 0)
                     count(count ?: -1)
                 frequency(frequency ?: Frequency.DAILY)
 

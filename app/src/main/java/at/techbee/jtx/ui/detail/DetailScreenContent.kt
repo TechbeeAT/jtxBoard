@@ -185,10 +185,10 @@ fun DetailScreenContent(
     }
 
     // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
-    iCalEntity.value?.property?.eTag?.let { icalObject.value.eTag = it }
-    iCalEntity.value?.property?.flags?.let { icalObject.value.flags = it }
-    iCalEntity.value?.property?.scheduleTag?.let { icalObject.value.scheduleTag = it }
-    iCalEntity.value?.property?.fileName?.let { icalObject.value.fileName = it }
+    iCalEntity.value?.property?.eTag.let { icalObject.value.eTag = it }
+    iCalEntity.value?.property?.flags.let { icalObject.value.flags = it }
+    iCalEntity.value?.property?.scheduleTag.let { icalObject.value.scheduleTag = it }
+    iCalEntity.value?.property?.fileName.let { icalObject.value.fileName = it }
     if ((iCalEntity.value?.property?.sequence ?: 0) > icalObject.value.sequence) {
         icalObject.value.status = iCalEntity.value?.property?.status
         icalObject.value.percent = iCalEntity.value?.property?.percent
@@ -199,6 +199,9 @@ fun DetailScreenContent(
         icalObject.value.uid = iCalEntity.value?.property?.uid!!
         icalObject.value = icalObject.value
     }
+    iCalEntity.value?.property?.id?.let { icalObject.value.id = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
+    iCalEntity.value?.property?.uid?.let { icalObject.value.uid = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
+    iCalEntity.value?.property?.collectionId?.let { icalObject.value.collectionId = it }   //  the collectionId might also have changed (when moving the entry to a new collection)!
 
 
     val categories = rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
@@ -645,12 +648,14 @@ fun DetailScreenContent(
             )
         }
 
-            AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
+        AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
             DetailsCardParents(
-                module = icalObject.value.getModuleFromString(),parents = parents.value,
+                module = icalObject.value.getModuleFromString(),
+                parents = parents.value,
                 isEditMode = isEditMode,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgressForSubTasks,
+                blockProgressUpdates = linkProgressToSubtasks,
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
                 },
@@ -658,19 +663,6 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
-                DetailsCardParents(
-                    module = icalObject.value.getModuleFromString(),
-                    parents = parents.value,
-                    isEditMode = isEditMode,
-                    sliderIncrement = sliderIncrement,
-                    showSlider = showProgressForSubTasks,
-                    onProgressChanged = { itemId, newPercent ->
-                        onProgressChanged(itemId, newPercent)
-                    },
-                    goToDetail = goToDetail
-                )
-            }
         AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
             DetailsCardSubtasks(
                 subtasks = subtasks.value,
@@ -847,6 +839,10 @@ fun DetailScreenContent(
                 hasChildren = subtasks.value.isNotEmpty() || subnotes.value.isNotEmpty(),
                 onRecurUpdated = { updatedRRule ->
                     icalObject.value.rrule = updatedRRule?.toString()
+                    if(updatedRRule == null) {
+                        icalObject.value.rdate = null
+                        icalObject.value.exdate = null
+                    }
                     icalObject.value = icalObject.value
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },

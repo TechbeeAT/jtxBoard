@@ -10,7 +10,6 @@ Global Strings -->
     <string name="ok">"ЯРАЙ"</string>
     <string name="delete">"Юйырға"</string>
     <string name="discard">"Ташларға"</string>
-    <string name="gotit">"Аңлашылды"</string>
     <string name="cont">"Дауам итергә"</string>
     <string name="toolbar_text_add_journal">"Көндәлекте Ҡушырға"</string>
     <string name="toolbar_text_add_note">"Яҙманы Ҡушырға"</string>
@@ -36,10 +35,8 @@ Global Strings -->
     <string name="navigation_drawer_open">"Навигация панелен асырға"</string>
     <string name="navigation_drawer_close">"Навигация панелен ябырға"</string>
     <string name="navigation_drawer_board">"Таҡта"</string>
-    <string name="navigation_drawer_sync">"DAVx⁵ менән синхронизация"</string>
     <string name="navigation_drawer_about">"Тураһында / Лицензия"</string>
     <string name="navigation_drawer_subtitle">"көндәлектәр, яҙмалар &amp; мәсьәләләр"</string>
-    <string name="navigation_drawer_beta_feedback">"Бета версия тураһында баһа бирергә"</string>
     <string name="navigation_drawer_settings">"Көйләүҙәр"</string>
     <string name="navigation_drawer_news_updates">"Яңылыҡтар &amp; яңыртыуҙар"</string>
     <string name="navigation_drawer_external_links">"Тышҡы һылтанмалар"</string>
@@ -51,37 +48,21 @@ Global Strings -->
     <string name="list_due_overdue">"Иҫкергән"</string>
     <string name="list_due_today">"Бөгөнгә"</string>
     <string name="list_due_tomorrow">"Иртәгәгә"</string>
-    <string name="list_due_inXdays">"%d көндәрҙән"</string>
     <string name="list_due_inXhours">"%d сәғәттәрҙән"</string>
     <string name="list_start_past">"Үткәндә башлау"</string>
     <string name="list_start_tomorrow">"Иртәгә башларға"</string>
     <string name="list_start_inXhours">"%d сәғәттәрҙән планлаштырылған башланғыс"</string>
-    <string name="list_start_inXdays">"%d көндәрҙән планлаштырылған башланғыс"</string>
     <string name="list_tabitem_journals">"Көндәлектәр"</string>
     <string name="list_tabitem_notes">"Яҙмалар"</string>
     <string name="list_tabitem_todos">"Мәсьәләләр"</string>
-    <string name="list_fab_add_contentdesc">"Яңы пунктты ҡушырға"</string>
-    <string name="list_progress">"Прогресс"</string>
     <string name="list_expand">"Киңәйтергә"</string>
     <string name="list_dialog_delete_selected_title">Һайланған яҙмаларҙы юйырға?</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Резюме/Тасуирлама"</string>
-    <string name="list_item_upload_pending">"Көтөлгән йөкләү"</string>
     <string name="list_item_recurring">"Ҡабатланған яҙма"</string>
     <!-- fragment_ical_view -->
-    <string name="view_recurrence_go_to_original_button">"Оригиналға кисергә"</string>
-    <string name="view_recurrence_note_to_original_dialog_header">"Ҡабатланған экземпляр"</string>
     <string name="view_fragment_audio_permission">"Ҡушымтаның Рөхсәте"</string>
-    <string name="view_comment_playbutton_content_desc">"Аудио комментарийҙы уйнатырға"</string>
     <string name="view_feedback_linked_notes">"Кире бәйләнеш / Бәйләнелгән Яҙмалар"</string>
-    <string name="view_add_note">"Яҙманы ҡушырға"</string>
     <string name="view_add_audio_note">"Аудионы ҡушырға"</string>
-    <string name="view_fab_edit_entry_contentDesc">"Яҙманы үҙгәртергә"</string>
-    <string name="view_progress_label">"Прогресс"</string>
-    <string name="view_dialog_sure_to_delete_title">"%1$s юйырға?"</string>
-    <string name="view_dialog_sure_to_delete_message">"Һеҙ ысынлап та %1$s-ты юйғы килә ме?"</string>
-    <string name="view_toast_deleted_successfully">"%1$s уңыштап юйылды"</string>
-    <string name="view_dialog_add_note">"Яҙманы ҡушырға"</string>
-    <string name="view_dialog_add_note_dialog_hint">"Үҙ яҙманы мында ҡушығыҙ"</string>
     <string name="view_created_text">"Эшләнгән: %1$s"</string>
     <string name="view_last_modified_text">"Һуңғы модификация: %1$s"</string>
     <!-- fragment_ical_edit -->
@@ -96,8 +77,6 @@ Global Strings -->
     <!-- Permissions -->
     <!-- alarms -->
     <!-- fragment_collections -->
-    <!-- Fuzzy -->
-    <!-- Fuzzy -->
     <!-- Fuzzy -->
     <!-- Buy Pro fragment -->
     <!-- alarms -->

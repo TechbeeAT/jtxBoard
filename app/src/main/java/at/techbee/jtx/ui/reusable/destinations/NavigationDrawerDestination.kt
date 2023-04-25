@@ -37,7 +37,7 @@ enum class NavigationDrawerDestination (
         navigationAction = { navHost, _ -> navHost.navigate(COLLECTIONS.name)}
     ),
     SYNC(
-        titleResource = R.string.navigation_drawer_sync,
+        titleResource = R.string.navigation_drawer_synchronization,
         iconRes = R.drawable.ic_sync,
         navigationAction = { navHost, _ -> navHost.navigate(SYNC.name)}
     ),

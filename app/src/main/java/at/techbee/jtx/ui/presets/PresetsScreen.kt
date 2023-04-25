@@ -144,7 +144,7 @@ fun PresetsScreenContent(
         modifier = modifier
     ) {
 
-        HeadlineWithIcon(icon = Icons.Outlined.Label, iconDesc = null, text = "Preset categories")
+        HeadlineWithIcon(icon = Icons.Outlined.Label, iconDesc = null, text = stringResource(R.string.preset_categories))
 
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(3.dp)
@@ -182,7 +182,7 @@ fun PresetsScreenContent(
         HeadlineWithIcon(
             icon = Icons.Outlined.WorkOutline,
             iconDesc = null,
-            text = "Preset resources",
+            text = stringResource(R.string.preset_resources),
             modifier = Modifier.padding(top = 8.dp)
         )
 

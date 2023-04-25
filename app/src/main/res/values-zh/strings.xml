@@ -11,7 +11,6 @@ Global Strings -->
     <string name="ok">"确定"</string>
     <string name="delete">"删除"</string>
     <string name="discard">"丢弃"</string>
-    <string name="gotit">"明白"</string>
     <string name="cont">"继续"</string>
     <string name="website">"网站"</string>
     <string name="latitude">"纬度"</string>
@@ -42,10 +41,8 @@ Global Strings -->
     <string name="navigation_drawer_open">"打开导航抽屉"</string>
     <string name="navigation_drawer_close">"关闭导航抽屉"</string>
     <string name="navigation_drawer_board">"白板"</string>
-    <string name="navigation_drawer_sync">"使用 DAVx⁵ 同步"</string>
     <string name="navigation_drawer_about">"关于/许可协议"</string>
     <string name="navigation_drawer_subtitle">"日记、笔记和任务"</string>
-    <string name="navigation_drawer_beta_feedback">"测试反馈"</string>
     <string name="navigation_drawer_settings">"设置"</string>
     <string name="navigation_drawer_news_updates">"新闻与更新"</string>
     <string name="navigation_drawer_external_links">"其它链接"</string>
@@ -57,80 +54,43 @@ Global Strings -->
     <string name="list_due_overdue">"超期"</string>
     <string name="list_due_today">"今天到期"</string>
     <string name="list_due_tomorrow">"明天到期"</string>
-    <string name="list_due_inXdays">"%d 天到期"</string>
     <string name="list_due_inXhours">"%d 小时到期"</string>
     <string name="list_due_on_weekday">"到期时间：%s"</string>
     <string name="list_start_past">"已开始"</string>
     <string name="list_start_today">"计划从今天开始"</string>
     <string name="list_start_tomorrow">"明天开始"</string>
     <string name="list_start_inXhours">"计划 %d 小时后开始"</string>
-    <string name="list_start_inXdays">"计划 %d 天后开始"</string>
     <string name="list_start_on_weekday">"计划开始时间：%s"</string>
     <string name="list_tabitem_journals">"日记"</string>
     <string name="list_tabitem_notes">"笔记"</string>
     <string name="list_tabitem_todos">"任务"</string>
-    <string name="list_fab_add_contentdesc">"添加新项目"</string>
-    <string name="list_progress">"进展"</string>
     <string name="list_expand">"扩展"</string>
     <string name="list_dialog_delete_selected_title">删除选定的条目？</string>
     <string name="list_dialog_delete_selected_message">此操作将删除所有选定条目（%1$d）。是否继续？此操作不能撤消！</string>
     <string name="list_quickadd_dialog_summary_description_hint">"摘要/详情"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"第一行提取为摘要，其余是详情。标签解释为类别（例如#category）。"</string>
-    <string name="list_item_upload_pending">"上传挂起"</string>
     <string name="list_item_recurring">"常用条目"</string>
     <string name="list_item_edited_recurring">"编辑重复项目"</string>
     <!-- fragment_ical_view -->
-    <string name="view_recurrence_go_to_original_button">"转到原始"</string>
-    <string name="view_recurrence_note_to_original_dialog_header">"常用实例"</string>
-    <string name="view_recurrence_note_to_original">"此条目是一系列条目的一部分。编辑此条目将使其与系列断开链接，它将继续作为独立条目存在，而对原始条目的修改将不再影响它。"</string>
     <string name="view_fragment_audio_permission">"应用权限"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board 需要获得权限才能录制音频或使用语音转文本的功能。请授予使用此功能的权限。"</string>
-    <string name="view_comment_playbutton_content_desc">"播放音频评论"</string>
     <string name="view_reccurrence_note_is_exception">"相对于常见条目，此项目比较少见。"</string>
     <string name="view_feedback_linked_notes">"反馈/链接笔记"</string>
     <string name="view_subtask_of">"父任务为"</string>
     <string name="view_linked_note_of">"关联的笔记为"</string>
-    <string name="view_add_note">"添加笔记"</string>
     <string name="view_add_audio_note">"添加音频"</string>
-    <string name="view_fab_edit_entry_contentDesc">"编辑条目"</string>
-    <string name="view_subtasks_header">"子任务"</string>
-    <string name="view_progress_label">"进展"</string>
-    <string name="view_dialog_sure_to_delete_title">"删除“%1$s”？"</string>
-    <string name="view_dialog_sure_to_delete_message">"确定要删除“%1$s”？"</string>
-    <string name="view_toast_deleted_successfully">"已成功删除“%1$s”"</string>
-    <string name="view_dialog_add_note">"添加笔记"</string>
-    <string name="view_dialog_add_note_dialog_hint">"在此处添加您的笔记"</string>
-    <string name="view_toast_entry_does_not_exist_anymore">"请求的篇目不存在（不再）。"</string>
     <string name="view_created_text">"创建于：%1$s"</string>
     <string name="view_last_modified_text">"上次修改：%1$s"</string>
     <string name="view_due">"到期"</string>
     <string name="view_completed">"完成"</string>
     <string name="view_started">"开始"</string>
     <!-- fragment_ical_edit -->
-    <string name="edit_add_category_hint">"#我的分类"</string>
-    <string name="edit_add_category_helper">"添加分类"</string>
-    <string name="edit_attendees_hint">"用户名@example.com"</string>
-    <string name="edit_attendees_helper">"添加参与者（邮件地址）。注意：服务器可能会自动联系参与者，例如通过发送iMIP消息。"</string>
-    <string name="edit_resources_hint">"投影仪"</string>
-    <string name="edit_resources_helper">"添加资源"</string>
-    <string name="edit_contact_hint">"张三，19876543210"</string>
-    <string name="edit_contact_helper">"此条目负责人或所有者的联系信息"</string>
-    <string name="edit_comment_hint">"你的评论…"</string>
     <string name="edit_comment_helper">"添加评论"</string>
     <string name="edit_attachment_button_text">"添加附件"</string>
     <string name="edit_take_picture_button_text">"拍照"</string>
     <string name="edit_add_link_button_text">"添加附件链接"</string>
-    <string name="edit_url_helper">"与此条目相关的URL"</string>
-    <string name="edit_location_helper">"为此条目添加位置"</string>
-    <string name="edit_attachment_add_dialog_hint">"您的附件网址（https://…）"</string>
-    <string name="edit_comment_add_dialog_hint">"您的评论"</string>
-    <string name="edit_attachment_beta_info">"* 请注意，附件被认为是一种实验性功能。目前，只有小型附件（最大100KB）可以导出为 .ics 并通过 DAVx⁵ 同步。如遇问题，请通过支持论坛或网站上的支持请求告知我们！"</string>
-    <string name="edit_subtasks_add_hint">"您的子任务"</string>
     <string name="edit_subtasks_add_helper">"添加子任务"</string>
-    <string name="edit_attachment_delete_attachment">"删除附件"</string>
     <string name="edit_attachment_add_link_dialog">"添加附件连接"</string>
-    <string name="edit_recur_last_occurrence">"最近出现"</string>
-    <string name="edit_recur_all_occurrences">"所有出现"</string>
     <string name="edit_recur_repeat_every_x">"回复每个"</string>
     <string name="edit_recur_on_weekday">"在"</string>
     <string name="edit_recur_on_the_x_day_of_month">"在"</string>
@@ -138,14 +98,10 @@ Global Strings -->
     <string name="edit_recur_x_times">"次数"</string>
     <string name="edit_recur_toast_requires_start_date">"重复出现需要设置开始日期！"</string>
     <string name="edit_datepicker_dialog_select_date">"选择日期"</string>
-    <string name="edit_datepicker_dialog_select_time">"选择时间"</string>
     <string name="edit_datepicker_dialog_add_time">"添加时间"</string>
     <string name="edit_datepicker_dialog_edit_time">"修改时间"</string>
     <string name="edit_datepicker_dialog_add_timezone">"添加时区"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"修改时区"</string>
-    <string name="edit_task_started_add">"选择开始日期/时间"</string>
-    <string name="edit_task_due_add">"选择截止日期/时间"</string>
-    <string name="edit_task_completed_add">"选择完成日期/时间"</string>
     <string name="edit_dialog_sure_to_delete_title">"删除“%1$s”？"</string>
     <string name="edit_dialog_sure_to_discard_title">"舍弃此条目？"</string>
     <string name="dialog_delete_done_title">"删除所有已完成的任务？"</string>
@@ -154,10 +110,6 @@ Global Strings -->
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"截止日期不能早于开始日期。"</string>
     <string name="edit_fragment_app_permission">"应用权限"</string>
     <string name="edit_fragment_app_permission_message">"在输入参与者时，jtx Board可以根据您的联系人给出建议值。启用此功能，需要授予其读取联系人的权限。"</string>
-    <string name="edit_fragment_recur_unknown_rrule_dialog_title">"检测到不支持的重复规则！"</string>
-    <string name="edit_fragment_recur_unknown_rrule_dialog_message">"检测到未知的或不支持的重复规则！如保存此条目，已有的重复规则将被删除或覆写。"</string>
-    <string name="edit_fragment_recur_unsupported_duration_dialog_title">"检测到不支持的值（持续时间）！"</string>
-    <string name="edit_fragment_recur_unsupported_duration_dialog_message">"在后台检测到此条目的持续时间。jtx Board目前不支持处理持续时间。请使用开始日期、截止日期和结束日期代替。如果保存此条目，已有的持续时间将被删除。"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"翻译"</string>
     <string name="about_tabitem_libraries">"库"</string>
@@ -171,8 +123,6 @@ Global Strings -->
     <string name="menu_list_quick_journal">"快速日记"</string>
     <string name="menu_list_quick_note">"快速笔记"</string>
     <string name="menu_list_quick_todo">"快速任务"</string>
-    <string name="menu_list_delete_visible">"删除可见"</string>
-    <string name="menu_list_syncnow">"立即同步"</string>
     <string name="menu_view_share_ics">"共享为.ics"</string>
     <string name="menu_view_copy_as_journal">"复制为日记"</string>
     <string name="menu_view_copy_as_todo">"复制为任务"</string>
@@ -186,33 +136,13 @@ Global Strings -->
     <string name="shortcut_addNote_longLabel">"添加笔记"</string>
     <string name="shortcut_addTodo_longLabel">"添加任务"</string>
     <!-- Settings fragment -->
-    <string name="settings_enforce_dark_theme">"强化黑暗主题"</string>
     <string name="settings_list">"项目列表设置"</string>
-    <string name="settings_show_subtasks_in_list">"在列表中显示子任务"</string>
-    <string name="settings_show_attachments_in_list">"在列表中显示附件"</string>
     <string name="settings_show_progress_for_subtasks">显示子任务进度</string>
     <string name="settings_show_progress_for_maintasks">显示主任务进度</string>
-    <string name="settings_group_settings_for_subentries">"子任务、子笔记和子日记设置"</string>
-    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"在任务列表中显示日记和笔记的子任务"</string>
-    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"在笔记列表中显示日记和任务的子笔记"</string>
-    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"在日记列表中显示笔记和任务的子日记"</string>
     <string name="settings_app">"应用设置"</string>
     <string name="settings_select_mimetype_for_audio">"选择音频笔记的Mimetype"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_davx5_heading">"使用 DAVx⁵ 同步（测试）*"</string>
-    <string name="sync_basic_info">"jtx Board 本身不提供服务器同步，但将支持通过 DAVx⁵ 同步。此方法允许您选择一个兼容的 CalDAV 服务器来存储、备份和同步您的数据。* 请注意，此功能仍被视为测试版。虽然此功能已经过测试，但仍可能出现问题。如遇到任何问题，请反馈，感谢！"</string>
     <string name="sync_congratulations">"恭喜！ :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"在手机上检测到 DAVx⁵。如未建立任何账户，请按照网站上的说明进行操作："</string>
-    <string name="sync_davx5_installed_with_collections_found">"在手机上检测到 DAVx⁵。如有任何问题，请先查看网站："</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"当前同步以下账号（日历）："</string>
-    <string name="sync_check_out_davx5">"查看 DAVx⁵！"</string>
-    <string name="sync_davx5_not_found">"未在手机上检测到 DAVx⁵。
-了解更多有关同步的信息，请查看："</string>
-    <string name="sync_davx5_get_davx5_on">"或获取 DAVx⁵"</string>
-    <string name="sync_furhter_info_davx5">"了解更多 DAVx⁵ 信息，请查看"</string>
-    <string name="sync_button_add_account_in_davx5">"在 DAVx⁵ 中添加账号"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"打开 DAVx⁵ 失败，请手动打开应用软件。"</string>
-    <string name="sync_toast_intent_start_davx5_sync">"在 DAVx⁵ 中触发同步失败，请在 DAVx⁵ 中检查。"</string>
     <!-- Donate fragment -->
     <string name="donate_thank_you">"感谢您！"</string>
     <string name="donate_donate_with">"使用PayPal捐赠"</string>
@@ -220,9 +150,7 @@ Global Strings -->
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"找不到可打开此文件或网址的应用程序。"</string>
     <string name="toast_item_is_now_recu_exception">"定期项目现在是例外。"</string>
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"jtx很难同步。请关闭DAVx⁵ 然后再次启动同步。"</string>
     <string name="about_translations_thanks_to">"感谢"</string>
-    <string name="about_translations_for_contributions_in">"贡献"</string>
     <string name="about_translations_basic_info">"jtx Board是一款开源应用程序，感谢开源社区的参与和贡献。在此，我们想展示社区成员在翻译方面所做的努力。"</string>
     <string name="about_translations_contribution_info">"想要为此应用程序编辑/添加翻译，随时可在 Crowdin 翻译平台上加入 jtx Board 项目："</string>
     <string name="about_translations_contribution_button">"在 Crowdin.com 上加入"</string>
@@ -237,10 +165,6 @@ Global Strings -->
     <string name="save_and_edit">"保存并编辑"</string>
     <string name="save_and_new">"保存并新建下一个"</string>
     <string name="save_and_close">"保存并关闭"</string>
-    <string name="list_quickadd_dialog_sr_endicon_contentdesc">"使用语音转文本"</string>
-    <string name="list_quickadd_dialog_sr_start_listening">"语音转文本引擎正在侦听。"</string>
-    <string name="list_quickadd_dialog_sr_stop_listening">"语音转文本引擎停止了侦听。"</string>
-    <string name="list_quickadd_dialog_sr_error">"抱歉，语音转文本引擎出错。（%1$s）"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"已授予读取联系人权限"</string>
     <string name="permission_read_contacts_denied">"已禁止读取联系人权限"</string>
@@ -253,15 +177,12 @@ Global Strings -->
     <string name="apply">"应用"</string>
     <string name="collection">"合集"</string>
     <string name="link_to_parent">"关联到父级"</string>
-    <string name="toolbar_text_collections">"合集"</string>
     <string name="navigation_drawer_collections">"合集"</string>
-    <string name="edit_dialog_set_attendee_role">"设置参与者角色"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"日期/时间"</string>
     <string name="alarms_duration">"持续时间"</string>
     <string name="alarms_onstart">"开始"</string>
     <string name="alarms_ondue">"到期"</string>
-    <string name="alarms_custom">"自定义"</string>
     <string name="alarms_before_start">"此前开始"</string>
     <string name="alarms_after_start">"此后开始"</string>
     <string name="alarms_before_due">"此前到期"</string>
@@ -270,17 +191,10 @@ Global Strings -->
     <string name="alarms_hours">"小时"</string>
     <string name="alarms_days">"天"</string>
     <!-- fragment_collections -->
-    <string name="collections_local_collections">"本地合集"</string>
-    <string name="collections_remote_collections">"远程合集"</string>
-    <!-- Fuzzy -->
     <string name="collections_journals_num">"日记：%1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_notes_num">"笔记：%1$s"</string>
-    <!-- Fuzzy -->
     <string name="collections_tasks_num">"任务：%1$s"</string>
-    <string name="collections_local_nolocalcollections">"未发现本地合集"</string>
-    <string name="collections_local_noremotecollections">"未发现远程合集"</string>
-    <string name="collections_info">"合集是条目的累积，类似内有文件的文件夹。您可通过菜单新建本地合集，也可设置新的远程合集并使用 DAVx⁵ 进行同步。"</string>
     <string name="collections_collection_menu">"合集菜单"</string>
     <string name="collections_dialog_add_local_collection_title">"添加本地合集"</string>
     <string name="collections_dialog_edit_local_collection_title">"编辑本地合集"</string>
@@ -288,10 +202,7 @@ Global Strings -->
     <string name="collections_dialog_delete_local_message">"删除合集将删除其中包含的日记、笔记和任务。此操作不能撤销。确定继续吗？"</string>
     <string name="menu_collections_add_local">"添加本地合集"</string>
     <string name="navigation_drawer_website_news">"新闻和发行说明"</string>
-    <string name="list_quickadd_toast_no_summary_description">"无法创建没有摘要/详情的条目。"</string>
-    <string name="view_dialog_addnote_toast_no_summary_description">"无法创建没有文字的笔记。"</string>
     <string name="color">"颜色"</string>
-    <string name="edit_attendees_error">"请输入一个有效的邮件地址"</string>
     <string name="priority_0_no_priority">"无优先级"</string>
     <string name="priority_1_highest">"1 - 最高级"</string>
     <string name="priority_2_higher">"2 - 较高级"</string>
@@ -303,13 +214,10 @@ Global Strings -->
     <string name="edit_recur_week">"周"</string>
     <string name="edit_recur_month">"月"</string>
     <string name="edit_recur_year">"年"</string>
-    <string name="edit_validation_errors_start_due_timezone_check">"请为“开始”和“到期”选择时区，或者停用时区。"</string>
     <string name="collections_toast_export_ics_success">"导出合集成功完成。"</string>
     <string name="collections_toast_export_ics_error">"导出选定的合集时出错。"</string>
     <string name="attachment_export_saved_successfully">"保存成功"</string>
     <string name="attachment_export_error_error_occurred">"保存所选文件时出错！"</string>
-    <string name="menu_collections_add_remote">"添加远程合集（DAVx⁵）"</string>
-    <string name="menu_collection_popup_show_in_davx5">"在 DAVx⁵ 中显示"</string>
     <string name="menu_collection_popup_export_as_ics">"导出为.ics"</string>
     <string name="journal">"日记"</string>
     <string name="note">"笔记"</string>
@@ -346,7 +254,6 @@ Global Strings -->
     <string name="completed">"完成"</string>
     <string name="started">"开始"</string>
     <string name="add_time_switch">"添加时间"</string>
-    <string name="add_timezone_switch">"添加时区"</string>
     <string name="progress">"进度"</string>
     <string name="categories">"类别"</string>
     <string name="subtasks">"子任务"</string>
@@ -359,9 +266,6 @@ Global Strings -->
     <string name="collections_dialog_move_title">"从“%1$s”移动所有条目到"</string>
     <string name="collection_dialog_move_info">"请注意：只能选择可写合集和支持相同组件（日记、笔记、任务）的集合。"</string>
     <string name="menu_collections_popup_move_entries">"移动条目"</string>
-    <string name="adinfo_adfree_success_thankyou">"感谢！"</string>
-    <string name="adinfo_adfree_purchase_date">"已在%1$s购买"</string>
-    <string name="adinfo_adfree_order_id">"原ID：%1$s"</string>
     <string name="list_no_dates_set">"未设置日期"</string>
     <string name="list_without_start_date">"没有开始日期"</string>
     <string name="list_without_due_date">"没有截止日期"</string>
@@ -390,7 +294,6 @@ Global Strings -->
     <string name="collections_toast_export_all_ics_error">"导出合集时出错。"</string>
     <string name="menu_collections_export_all">"全部导出"</string>
     <string name="more">"更多"</string>
-    <string name="toolbar_text_buypro">"购买Pro版"</string>
     <string name="navigation_drawer_buypro">"购买Pro版"</string>
     <string name="settings_select_theme">"选择主题"</string>
     <string name="settings_select_theme_dark">"暗黑"</string>
@@ -404,8 +307,6 @@ Global Strings -->
     <string name="buypro_text">"应用程序的开发是一个复杂的主题，开发、维护和提供支持是一项艰巨的工作。如您想使用高级功能，或想支持我们的项目，请考虑以下应用内购买："</string>
     <string name="buypro_purchase_header">"升级到jtx Board Pro版"</string>
     <string name="buypro_purchase_description">"感谢您考虑jtx Board Pro版。此升级将启用以下功能：远程合集、快速输入、长按快速编辑和动态颜色（Android 12以上有效）。"</string>
-    <string name="buypro_purchase_header_thankyou">"感谢您购买jtx Board Pro版"</string>
-    <string name="buypro_purchase_description_thankyou">"此升级将启用以下功能：远程合集、快速输入、长按快速编辑和动态颜色（Android 12以上有效）。"</string>
     <string name="buypro_purchase_date">"已在%1$s购买"</string>
     <string name="buypro_order_id">"原ID：%1$s"</string>
     <string name="buypro_success_header">"感谢您购买jtx Board Pro版！"</string>
@@ -435,7 +336,6 @@ Global Strings -->
     <string name="audio_pause">"暂停"</string>
     <string name="audio_error_toast">"抱歉，无法开始播放。"</string>
     <string name="sync_in_progress">"正在同步"</string>
-    <string name="saving">"正在保存……"</string>
     <string name="invalid_timezone_message">"请选择有效的时区！"</string>
     <string name="invalid_url_message">"请输入有效的URL！"</string>
     <string name="list_quickadd_dialog_sr_start">"开始语音识别"</string>
@@ -468,8 +368,6 @@ Global Strings -->
     <string name="collections_account_not_found_info">"在账号管理器中找不到此账号。如已过期，请删除。"</string>
     <string name="collections_account_delete_dialog_title">"删除“%1$s”？"</string>
     <string name="collections_account_delete_dialog_message">"确定要从 jtx Board 中删除此账号？此账号中的所有收藏将被删除。 此操作不能撤消。"</string>
-    <string name="dialog_move_item_to_collection_title">"移动此条目到“%1$s”？"</string>
-    <string name="dialog_move_item_to_collection_text">"请注意，所有更改会立即保存。"</string>
     <string name="dialog_unsaved_changes_title">"保存更改？"</string>
     <string name="dialog_unsaved_changes_text">"检测到未保存的更改。想要保存还是放弃更改？"</string>
     <string name="dialog_error_on_update_message">"插入/更新此条目时出错。该条目或集合可能不再存在。"</string>
@@ -478,11 +376,8 @@ Global Strings -->
     <string name="dialog_revert_changes_message2">"注意：子任务和子笔记是单独的条目，不能重做。"</string>
     <string name="dialog_collection_new_entries_title">"新条目的合集"</string>
     <string name="dialog_detach_from_series_text_attention">"注意：此操作不能撤消！"</string>
-    <string name="dialog_davx5_outdated_title">"DAVx⁵ 过旧"</string>
-    <string name="dialog_davx5_outdated_message">"当前 DAVx⁵ 版本与 jtx Board 不兼容。 请升级 DAVx⁵ 到 4.3.1 (403010000+) 或更新版本！同步已暂停。"</string>
     <string name="menu_list_viewmode_compact">"紧凑视图"</string>
     <string name="menu_list_viewmode_kanban">"看板视图"</string>
-    <string name="settings_details_autosave_while_editing">"编辑时自动保存"</string>
     <string name="settings_tasks">"任务设置"</string>
     <string name="settings_default_start_date">"设置任务的默认开始日期"</string>
     <string name="settings_default_due_date">"设置任务的默认到期日期"</string>
@@ -513,7 +408,6 @@ Global Strings -->
     <string name="menu_view_copy_to_clipboard_copied">"已复制"</string>
     <string name="settings_select_language">"选择语言"</string>
     <string name="settings_select_language_system">"系统默认"</string>
-    <string name="settings_details_enable_markdown">"启用 markdown 格式"</string>
     <string name="filter_special">"特殊过滤器"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"往日"</string>
