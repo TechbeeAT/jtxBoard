@@ -176,7 +176,7 @@ data class Alarm (
 
     @ColumnInfo(index = true, name = COLUMN_ALARM_ICALOBJECT_ID)var icalObjectId: Long = 0L,
     @ColumnInfo(name = COLUMN_ALARM_ACTION) var action: String? = null,
-    @ColumnInfo(name = COLUMN_ALARM_DESCRIPTION) var description: String? = null,
+    @ColumnInfo(name = COLUMN_ALARM_DESCRIPTION) var description: String? = "",
     @ColumnInfo(name = COLUMN_ALARM_SUMMARY) var summary: String? = null,
     @ColumnInfo(name = COLUMN_ALARM_ATTENDEE)var attendee: String? = null,
     @ColumnInfo(name = COLUMN_ALARM_DURATION) var duration: String? = null,
