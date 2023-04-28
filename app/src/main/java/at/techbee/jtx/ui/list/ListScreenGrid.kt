@@ -66,7 +66,7 @@ fun ListScreenGrid(
     settingLinkProgressToSubtasks: Boolean,
     player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onSyncRequested: () -> Unit
 ) {
@@ -127,7 +127,7 @@ fun ListScreenGrid(
                         .clip(jtxCardCornerShape)
                         //.animateItemPlacement()
                         .combinedClickable(
-                            onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }) },
+                            onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
                             onLongClick = {
                                 if (!iCal4ListRelObject.iCal4List.isReadOnly)
                                     onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
@@ -194,7 +194,7 @@ fun ListScreenGrid_TODO() {
             settingLinkProgressToSubtasks = false,
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { }
         )
@@ -248,7 +248,7 @@ fun ListScreenGrid_JOURNAL() {
             settingLinkProgressToSubtasks = false,
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { }
         )
