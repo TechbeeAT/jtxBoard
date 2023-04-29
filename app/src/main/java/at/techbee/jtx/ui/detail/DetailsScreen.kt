@@ -39,6 +39,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
+import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
@@ -131,6 +132,9 @@ fun DetailsScreen(
                     && icalEntity.value?.attachments?.isEmpty() == true
                 ) {
                     showDeleteDialog = true
+                } else if(!detailViewModel.mutableICalObject?.rrule.isNullOrEmpty())  {
+                    navController.popBackStack(NavigationDrawerDestination.BOARD.name, false)
+                    navigateUp = false
                 } else {
                     navController.navigateUp()
                     navigateUp = false
