@@ -340,6 +340,52 @@ fun DetailsScreen(
                             },
                             isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] ?: true,
                         )
+
+                        Divider()
+
+                        if(icalEntity.value?.ICalCollection?.readonly == false && icalEntity.value?.ICalCollection?.supportsVJOURNAL == true) {
+                            if (icalEntity.value?.property?.module != Module.JOURNAL.name) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.menu_view_convert_to_journal)) },
+                                    onClick = { TODO() },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.EventNote,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                )
+                            }
+                            if (icalEntity.value?.property?.module != Module.NOTE.name) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.menu_view_convert_to_note)) },
+                                    onClick = { TODO() },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Note,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                        if(icalEntity.value?.ICalCollection?.readonly == false && icalEntity.value?.ICalCollection?.supportsVTODO == true) {
+                            if(icalEntity.value?.property?.module != Module.TODO.name) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.menu_view_convert_to_task)) },
+                                    onClick = { TODO() },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.TaskAlt,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             )
