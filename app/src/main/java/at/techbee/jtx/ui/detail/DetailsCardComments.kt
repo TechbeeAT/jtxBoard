@@ -19,9 +19,20 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddComment
 import androidx.compose.material.icons.outlined.Comment
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -38,14 +49,13 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 
 @Composable
 fun DetailsCardComments(
-    initialComments: List<Comment>,
+    comments: SnapshotStateList<Comment>,
     isEditMode: Boolean,
-    onCommentsUpdated: (List<Comment>) -> Unit,
+    onCommentsUpdated: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val headline = stringResource(id = R.string.comments)
-    var comments by remember { mutableStateOf(initialComments) }
     var newComment by rememberSaveable { mutableStateOf("") }
 
 
@@ -69,13 +79,12 @@ fun DetailsCardComments(
                             comment = comment,
                             isEditMode = isEditMode,
                             onCommentDeleted = {
-                                comments = comments.minus(comment)
-                                onCommentsUpdated(comments)
+                                comments.remove(comment)
+                                onCommentsUpdated()
                                                },
                             onCommentUpdated = { updatedComment ->
                                 comment.text = updatedComment.text
-                                //comments = comments
-                                onCommentsUpdated(comments)
+                                onCommentsUpdated()
                             }
                         )
                     }
@@ -88,8 +97,8 @@ fun DetailsCardComments(
                     trailingIcon = {
                         AnimatedVisibility(newComment.isNotEmpty()) {
                             IconButton(onClick = {
-                                comments = comments.plus(Comment(text = newComment))
-                                onCommentsUpdated(comments)
+                                comments.add(Comment(text = newComment))
+                                onCommentsUpdated()
                                 newComment = ""
                             }) {
                                 Icon(
@@ -107,8 +116,8 @@ fun DetailsCardComments(
                         .border(0.dp, Color.Transparent),
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
-                        comments = comments.plus(Comment(text = newComment))
-                        onCommentsUpdated(comments)
+                        comments.add(Comment(text = newComment))
+                        onCommentsUpdated()
                         newComment = ""
                     })
                 )
@@ -123,10 +132,10 @@ fun DetailsCardComments_Preview() {
     MaterialTheme {
 
         DetailsCardComments(
-            initialComments = listOf(
+            comments = remember { mutableStateListOf(
                 Comment(text = "First comment"),
                 Comment(text = "Second comment\nthat's a bit longer. Here's also a bit more text to see how it reacts when there should be a line break.")
-            ),
+            ) },
             isEditMode = false,
             onCommentsUpdated = {  }
         )
@@ -139,10 +148,10 @@ fun DetailsCardComments_Preview() {
 fun DetailsCardComments_Preview_edit() {
     MaterialTheme {
         DetailsCardComments(
-            initialComments = listOf(
+            comments = remember { mutableStateListOf(
                 Comment(text = "First comment"),
                 Comment(text = "Second comment\nthat's a bit longer. Here's also a bit more text to see how it reacts when there should be a line break.")
-            ),
+            ) },
             isEditMode = true,
             onCommentsUpdated = {  }
         )

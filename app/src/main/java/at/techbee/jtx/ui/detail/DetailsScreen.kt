@@ -95,6 +95,21 @@ fun DetailsScreen(
         detailViewModel.detailSettings.load(it, context)
     }
 
+    // load objects into states for editing
+    var statesLoaded by remember { mutableStateOf(false) }  //don't load them again once done
+    LaunchedEffect(detailViewModel.icalEntity.isInitialized) {
+        if(detailViewModel.icalEntity.isInitialized && !statesLoaded) {
+            detailViewModel.mutableICalObject = icalEntity.value?.property
+            detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
+            detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
+            detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
+            detailViewModel.mutableComments.addAll(icalEntity.value?.comments ?: emptyList())
+            detailViewModel.mutableAttachments.addAll(icalEntity.value?.attachments ?: emptyList())
+            detailViewModel.mutableAlarms.addAll(icalEntity.value?.alarms ?: emptyList())
+            statesLoaded = true
+        }
+    }
+
 
     BackHandler {
         navigateUp = true
@@ -347,7 +362,7 @@ fun DetailsScreen(
                             if (icalEntity.value?.property?.module != Module.JOURNAL.name) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_journal)) },
-                                    onClick = { TODO() },
+                                    onClick = { detailViewModel.convertTo(Module.JOURNAL) },
                                     leadingIcon = {
                                         Icon(
                                             imageVector = Icons.Outlined.EventNote,
@@ -360,7 +375,7 @@ fun DetailsScreen(
                             if (icalEntity.value?.property?.module != Module.NOTE.name) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_note)) },
-                                    onClick = { TODO() },
+                                    onClick = { detailViewModel.convertTo(Module.NOTE) },
                                     leadingIcon = {
                                         Icon(
                                             imageVector = Icons.Outlined.Note,
@@ -375,7 +390,7 @@ fun DetailsScreen(
                             if(icalEntity.value?.property?.module != Module.TODO.name) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_task)) },
-                                    onClick = { TODO() },
+                                    onClick = { detailViewModel.convertTo(Module.TODO) },
                                     leadingIcon = {
                                         Icon(
                                             imageVector = Icons.Outlined.TaskAlt,
@@ -393,7 +408,14 @@ fun DetailsScreen(
         content = { paddingValues ->
 
             DetailScreenContent(
-                iCalEntity = icalEntity,
+                originalICalEntity = icalEntity,
+                iCalObject = detailViewModel.mutableICalObject,
+                categories = detailViewModel.mutableCategories,
+                resources = detailViewModel.mutableResources,
+                attendees = detailViewModel.mutableAttendees,
+                comments = detailViewModel.mutableComments,
+                attachments = detailViewModel.mutableAttachments,
+                alarms = detailViewModel.mutableAlarms,
                 isEditMode = isEditMode,
                 changeState = detailViewModel.changeState,
                 parents = parents,
@@ -429,46 +451,15 @@ fun DetailsScreen(
                             }
                     } else false,
                 markdownState = markdownState,
-                saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
-                    detailViewModel.saveEntry(
-                        changedICalObject,
-                        changedCategories,
-                        changedComments,
-                        changedAttendees,
-                        changedResources,
-                        changedAttachments,
-                        changedAlarms
-                    )
-                    onLastUsedCollectionChanged(icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
+                saveEntry = {
+                    detailViewModel.saveEntry()
+                    onLastUsedCollectionChanged(detailViewModel.mutableICalObject!!.getModuleFromString(), detailViewModel.mutableICalObject!!.collectionId)
                 },
-                onProgressChanged = { itemId, newPercent ->
-                    detailViewModel.updateProgress(itemId, newPercent)
-                },
-                onMoveToNewCollection = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms, newCollection ->
-                    detailViewModel.moveToNewCollection(
-                        changedICalObject,
-                        changedCategories,
-                        changedComments,
-                        changedAttendees,
-                        changedResources,
-                        changedAttachments,
-                        changedAlarms,
-                        newCollection.collectionId
-                    )
-                },
-                onSubEntryAdded = { icalObject, attachment ->
-                    detailViewModel.addSubEntry(
-                        icalObject,
-                        attachment
-                    )
-                },
+                onProgressChanged = { itemId, newPercent -> detailViewModel.updateProgress(itemId, newPercent) },
+                onMoveToNewCollection = { newCollection -> detailViewModel.moveToNewCollection(newCollection.collectionId) },
+                onSubEntryAdded = { icalObject, attachment -> detailViewModel.addSubEntry(icalObject, attachment) },
                 onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
-                onSubEntryUpdated = { icalObjectId, newText ->
-                    detailViewModel.updateSummary(
-                        icalObjectId,
-                        newText
-                    )
-                },
+                onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                 onUnlinkSubEntry = { icalObjectId -> detailViewModel.unlinkFromParent(icalObjectId) },
                 onLinkSubEntries = { newSubEntries -> detailViewModel.linkNewSubentries(newSubEntries) },
                 onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },

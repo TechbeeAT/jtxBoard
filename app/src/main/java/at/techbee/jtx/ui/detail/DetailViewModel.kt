@@ -15,7 +15,10 @@ import android.database.sqlite.SQLiteConstraintException
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.AndroidViewModel
@@ -32,6 +35,7 @@ import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Attendee
@@ -47,6 +51,7 @@ import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
@@ -69,6 +74,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var seriesInstances: LiveData<List<ICalObject>> = MutableLiveData(emptyList())
     var isChild: LiveData<Boolean> = MutableLiveData(false)
     private var originalEntry: ICalEntity? = null
+
+    var mutableICalObject by mutableStateOf<ICalObject?>(null)
+    val mutableCategories = mutableStateListOf<Category>()
+    val mutableResources = mutableStateListOf<Resource>()
+    val mutableAttendees = mutableStateListOf<Attendee>()
+    val mutableComments = mutableStateListOf<Comment>()
+    val mutableAttachments = mutableStateListOf<Attachment>()
+    val mutableAlarms = mutableStateListOf<Alarm>()
 
     var allCategories = database.getAllCategoriesAsText()
     var allResources = database.getAllResourcesAsText()
@@ -255,19 +268,51 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun moveToNewCollection(
-        icalObject: ICalObject,
-        categories: List<Category>,
-        comments: List<Comment>,
-        attendees: List<Attendee>,
-        resources: List<Resource>,
-        attachments: List<Attachment>,
-        alarms: List<Alarm>,
-        newCollectionId: Long
-    ) {
+    fun moveToNewCollection(newCollectionId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            save(icalObject, categories, comments, attendees, resources, attachments, alarms)
-            move(icalObject, newCollectionId)
+            mutableICalObject?.let {
+                save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
+                move(it, newCollectionId)
+            }
+        }
+    }
+
+    fun convertTo(module: Module) {
+        viewModelScope.launch(Dispatchers.IO) {
+            mutableICalObject?.let {
+                it.module = module.name
+                if (module == Module.JOURNAL || module == Module.NOTE) {
+                    it.component = Component.VJOURNAL.name
+                    if (module == Module.JOURNAL && it.dtstart == null) {
+                        it.dtstart = DateTimeUtils.getTodayAsLong()
+                        it.dtstartTimezone = ICalObject.TZ_ALLDAY
+                    }
+                    if(module == Module.NOTE) {
+                        it.dtstart = null
+                        it.dtstartTimezone = null
+                        it.rrule = null
+                        mutableAlarms.clear()
+                    }
+                    mutableResources.clear()
+                    it.due = null
+                    it.dueTimezone = null
+                    it.completed = null
+                    it.completedTimezone = null
+                    it.duration = null
+                    it.priority = null
+                    it.percent = null
+
+                    if(Status.valuesFor(Module.JOURNAL).none { status -> status.status == it.status })
+                        it.status = Status.FINAL.status
+
+                } else if (module == Module.TODO) {
+                    it.component = Component.VTODO.name
+                    if(Status.valuesFor(Module.TODO).none { status -> status.status == it.status })
+                        it.status = Status.NEEDS_ACTION.status
+                }
+                it.makeDirty()
+                save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
+            }
         }
     }
 
@@ -293,16 +338,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
 
 
-    fun saveEntry(icalObject: ICalObject,
-                  categories: List<Category>,
-                  comments: List<Comment>,
-                  attendees: List<Attendee>,
-                  resources: List<Resource>,
-                  attachments: List<Attachment>,
-                  alarms: List<Alarm>
-    ) {
+    fun saveEntry() {
         viewModelScope.launch(Dispatchers.IO) {
-            save(icalObject, categories, comments, attendees, resources, attachments, alarms)
+            mutableICalObject?.let {
+                save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
+            }
         }
     }
 
