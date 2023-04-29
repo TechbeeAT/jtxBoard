@@ -291,6 +291,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         it.dtstart = null
                         it.dtstartTimezone = null
                         it.rrule = null
+                        it.rdate = null
+                        it.exdate = null
                         mutableAlarms.clear()
                     }
                     mutableResources.clear()

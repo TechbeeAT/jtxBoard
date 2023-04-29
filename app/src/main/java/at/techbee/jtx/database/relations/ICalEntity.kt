@@ -131,8 +131,6 @@ data class ICalEntity(
             property.lastModified = System.currentTimeMillis()
             property.dtend = null
             property.dtendTimezone = null
-            property.exdate = null
-            property.rdate = null
             property.uid = ICalObject.generateNewUID()
             property.dirty = true
 
@@ -153,6 +151,8 @@ data class ICalEntity(
                     property.dtstart = null
                     property.dtstartTimezone = null
                     property.rrule = null
+                    property.rdate = null
+                    property.exdate = null
                 }
                 property.due = null
                 property.dueTimezone = null
