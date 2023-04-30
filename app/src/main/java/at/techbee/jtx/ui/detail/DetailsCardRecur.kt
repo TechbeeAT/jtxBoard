@@ -99,11 +99,10 @@ fun DetailsCardRecur(
             return null
         else {
             val updatedRRule = Recur.Builder().apply {
-                interval(interval ?: 1)
-                if (until != null)
-                    until(until)
-                else
-                    count(count ?: -1)
+                if(interval != null && interval!! > 1)
+                    interval(interval!!)
+                until?.let { until(it) }
+                count?.let { count(it) }
                 frequency(frequency ?: Frequency.DAILY)
 
                 if(frequency == Frequency.WEEKLY || dayList.isNotEmpty()) {    // there might be a dayList also for DAILY recurrences coming from Thunderbird!
@@ -248,7 +247,7 @@ fun DetailsCardRecur(
                             onClick = { intervalExpanded = true },
                             label = {
                                 Text(
-                                    if((interval ?: -1) < 1)
+                                    if(interval == null || interval!! < 1)
                                         "1"
                                     else
                                         interval?.toString() ?: "1"
@@ -448,7 +447,7 @@ fun DetailsCardRecur(
 
                                 Text(
                                     when {
-                                        (count ?: -1) > 0 -> stringResource(id = R.string.edit_recur_ends_after)
+                                        count != null -> stringResource(id = R.string.edit_recur_ends_after)
                                         until != null -> stringResource(id = R.string.edit_recur_ends_on)
                                         else -> stringResource(id = R.string.edit_recur_ends_never)
                                     }
@@ -489,7 +488,7 @@ fun DetailsCardRecur(
                             }
                         )
 
-                        AnimatedVisibility((count ?: -1) > 0) {
+                        AnimatedVisibility(count != null) {
                             AssistChip(
                                 onClick = { endAfterExpaneded = true },
                                 label = {
@@ -516,7 +515,7 @@ fun DetailsCardRecur(
                             )
                         }
 
-                        AnimatedVisibility((count ?: -1) > 0) {
+                        AnimatedVisibility(count != null) {
                             Text(stringResource(R.string.edit_recur_x_times))
                         }
 

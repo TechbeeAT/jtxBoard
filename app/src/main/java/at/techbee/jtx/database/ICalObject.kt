@@ -400,6 +400,12 @@ const val COLUMN_ATTACHMENTS_EXPANDED = "attachmentsExpanded"
  */
 const val COLUMN_SORT_INDEX = "sortIndex"
 
+/**
+ * Purpose:  defines if the parents for this entry are expanded
+ * Type: [Boolean?]
+ */
+const val COLUMN_PARENTS_EXPANDED = "parentsExpanded"
+
 @Parcelize
 @Entity(
     tableName = TABLE_NAME_ICALOBJECT,
@@ -481,6 +487,7 @@ data class ICalObject(
 
     @ColumnInfo(name = COLUMN_SUBTASKS_EXPANDED) var isSubtasksExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_SUBNOTES_EXPANDED) var isSubnotesExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_PARENTS_EXPANDED) var isParentsExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null
 
@@ -731,8 +738,8 @@ data class ICalObject(
                     NotificationPublisher.scheduleNextNotifications(context)
                     return newId
                 }
-                return null
-            }
+            return null
+        }
 
         suspend fun unlinkFromSeries(item: ICalObject, database: ICalDatabaseDao): ICalObject {
             database.getRecurSeriesElement(item.uid)?.let { series ->

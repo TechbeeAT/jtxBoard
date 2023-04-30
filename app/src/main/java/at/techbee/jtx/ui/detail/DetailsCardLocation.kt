@@ -37,7 +37,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.BuildConfig
-import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.flavored.MapComposable
@@ -136,7 +135,6 @@ fun DetailsCardLocation(
                 locationPermissionState?.launchMultiplePermissionRequest()
                 locationUpdateState = LocationUpdateState.LOCATION_REQUESTED
             }
-
         }
     }
 
@@ -186,11 +184,8 @@ fun DetailsCardLocation(
                             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                             modifier = Modifier.weight(1f)
                         )
-
-                        if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_AMAZON) {
-                            IconButton(onClick = { showLocationPickerDialog = true }) {
-                                Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
-                            }
+                        IconButton(onClick = { showLocationPickerDialog = true }) {
+                            Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
                         }
                     }
                 }
