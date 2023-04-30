@@ -25,6 +25,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -73,7 +74,14 @@ import kotlin.time.Duration.Companion.seconds
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreenContent(
-    iCalEntity: State<ICalEntity?>,
+    originalICalEntity: State<ICalEntity?>,
+    iCalObject: ICalObject?,
+    categories: SnapshotStateList<Category>,
+    resources: SnapshotStateList<Resource>,
+    attendees: SnapshotStateList<Attendee>,
+    comments: SnapshotStateList<Comment>,
+    attachments: SnapshotStateList<Attachment>,
+    alarms: SnapshotStateList<Alarm>,
     isEditMode: MutableState<Boolean>,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     subtasks: State<List<ICal4List>>,
@@ -99,9 +107,9 @@ fun DetailScreenContent(
     markdownState: MutableState<MarkdownState>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
-    saveICalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
+    saveEntry: () -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onMoveToNewCollection: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>, newCollection: ICalCollection) -> Unit,
+    onMoveToNewCollection: (newCollection: ICalCollection) -> Unit,
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
@@ -114,6 +122,8 @@ fun DetailScreenContent(
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit
 
 ) {
+    if(iCalObject == null)
+        return
 
     val context = LocalContext.current
     val localInspectionMode = LocalInspectionMode.current
@@ -126,15 +136,15 @@ fun DetailScreenContent(
     }
 
     var timeout by remember { mutableStateOf(false) }
-    LaunchedEffect(timeout, iCalEntity.value) {
-        if (iCalEntity.value == null && !timeout) {
+    LaunchedEffect(timeout, originalICalEntity.value) {
+        if (originalICalEntity.value == null && !timeout) {
             delay((1).seconds)
             timeout = true
         }
     }
 
     // item was not loaded yet or was deleted in the background
-    if (iCalEntity.value == null && timeout) {
+    if (originalICalEntity.value == null && timeout) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -149,7 +159,7 @@ fun DetailScreenContent(
             }
         }
         return
-    } else if (iCalEntity.value == null && !timeout) {
+    } else if (originalICalEntity.value == null && !timeout) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -162,10 +172,10 @@ fun DetailScreenContent(
         return
     }
 
-    var color by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.color) }
-    var summary by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
+    var color by rememberSaveable { mutableStateOf(originalICalEntity.value?.property?.color) }
+    var summary by rememberSaveable { mutableStateOf(originalICalEntity.value?.property?.summary ?: "") }
     var description by remember {
-        mutableStateOf(TextFieldValue(iCalEntity.value?.property?.description ?: ""))
+        mutableStateOf(TextFieldValue(originalICalEntity.value?.property?.description ?: ""))
     }
     // Apply Markdown on recomposition if applicable, then set back to OBSERVING
     if (markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
@@ -178,55 +188,32 @@ fun DetailScreenContent(
         it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value            // filter remote collections if pro was not purchased
     }
 
-    val icalObject = rememberSaveable {
-        mutableStateOf(
-            iCalEntity.value?.property ?: ICalObject()
-        )
-    }
-
     // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
-    iCalEntity.value?.property?.eTag.let { icalObject.value.eTag = it }
-    iCalEntity.value?.property?.flags.let { icalObject.value.flags = it }
-    iCalEntity.value?.property?.scheduleTag.let { icalObject.value.scheduleTag = it }
-    iCalEntity.value?.property?.fileName.let { icalObject.value.fileName = it }
-    if ((iCalEntity.value?.property?.sequence ?: 0) > icalObject.value.sequence) {
-        icalObject.value.status = iCalEntity.value?.property?.status
-        icalObject.value.percent = iCalEntity.value?.property?.percent
-        icalObject.value.completed = iCalEntity.value?.property?.completed
-        icalObject.value.completedTimezone = iCalEntity.value?.property?.completedTimezone
-        icalObject.value.sequence = iCalEntity.value?.property?.sequence ?: 0
-        icalObject.value.recurid = iCalEntity.value?.property?.recurid
-        icalObject.value.uid = iCalEntity.value?.property?.uid!!
-        icalObject.value = icalObject.value
+    originalICalEntity.value?.property?.eTag.let { iCalObject.eTag = it }
+    originalICalEntity.value?.property?.flags.let { iCalObject.flags = it }
+    originalICalEntity.value?.property?.scheduleTag.let { iCalObject.scheduleTag = it }
+    originalICalEntity.value?.property?.fileName.let { iCalObject.fileName = it }
+    if ((originalICalEntity.value?.property?.sequence ?: 0) > iCalObject.sequence) {
+        iCalObject.status = originalICalEntity.value?.property?.status
+        iCalObject.percent = originalICalEntity.value?.property?.percent
+        iCalObject.completed = originalICalEntity.value?.property?.completed
+        iCalObject.completedTimezone = originalICalEntity.value?.property?.completedTimezone
+        iCalObject.sequence = originalICalEntity.value?.property?.sequence ?: 0
+        iCalObject.recurid = originalICalEntity.value?.property?.recurid
+        iCalObject.uid = originalICalEntity.value?.property?.uid!!
     }
-    iCalEntity.value?.property?.id?.let { icalObject.value.id = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
-    iCalEntity.value?.property?.uid?.let { icalObject.value.uid = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
-    iCalEntity.value?.property?.collectionId?.let { icalObject.value.collectionId = it }   //  the collectionId might also have changed (when moving the entry to a new collection)!
+    originalICalEntity.value?.property?.id?.let { iCalObject.id = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
+    originalICalEntity.value?.property?.uid?.let { iCalObject.uid = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
+    originalICalEntity.value?.property?.collectionId?.let { iCalObject.collectionId = it }   //  the collectionId might also have changed (when moving the entry to a new collection)!
 
-
-    val categories = rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
-    val resources = rememberSaveable { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
-    val attendees = rememberSaveable { mutableStateOf(iCalEntity.value?.attendees ?: emptyList()) }
-    val comments = rememberSaveable { mutableStateOf(iCalEntity.value?.comments ?: emptyList()) }
-    val attachments = rememberSaveable { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
-    val alarms = rememberSaveable { mutableStateOf(iCalEntity.value?.alarms ?: emptyList()) }
 
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
     var showAllOptions by rememberSaveable { mutableStateOf(false) }
 
 
     val previousIsEditModeState = rememberSaveable { mutableStateOf(isEditMode.value) }
-    if (previousIsEditModeState.value && !isEditMode.value) {  //changed from edit to view mode
-        saveICalObject(
-            icalObject.value,
-            categories.value,
-            comments.value,
-            attendees.value,
-            resources.value,
-            attachments.value,
-            alarms.value
-        )
-    }
+    if (previousIsEditModeState.value && !isEditMode.value)  //changed from edit to view mode
+        saveEntry()
     previousIsEditModeState.value = isEditMode.value
 
 
@@ -234,15 +221,7 @@ fun DetailScreenContent(
     if (changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] != false) {
         LaunchedEffect(changeState) {
             delay((10).seconds.inWholeMilliseconds)
-            saveICalObject(
-                icalObject.value,
-                categories.value,
-                comments.value,
-                attendees.value,
-                resources.value,
-                attachments.value,
-                alarms.value
-            )
+            saveEntry()
         }
     }
 
@@ -250,7 +229,7 @@ fun DetailScreenContent(
      * Updates the alarms when the dates get changed
      */
     fun updateAlarms() {
-        alarms.value.forEach { alarm ->
+        alarms.forEach { alarm ->
             if (alarm.triggerRelativeDuration.isNullOrEmpty())
                 return@forEach
 
@@ -260,33 +239,33 @@ fun DetailScreenContent(
                 return@forEach
             }
             if (alarm.triggerRelativeTo == AlarmRelativeTo.END.name) {
-                icalObject.value.due?.let { alarm.triggerTime = it + dur.inWholeMilliseconds }
-                alarm.triggerTimezone = icalObject.value.dueTimezone
+                iCalObject.due?.let { alarm.triggerTime = it + dur.inWholeMilliseconds }
+                alarm.triggerTimezone = iCalObject.dueTimezone
             } else {
-                icalObject.value.dtstart?.let { alarm.triggerTime = it + dur.inWholeMilliseconds }
-                alarm.triggerTimezone = icalObject.value.dtstartTimezone
+                iCalObject.dtstart?.let { alarm.triggerTime = it + dur.inWholeMilliseconds }
+                alarm.triggerTimezone = iCalObject.dtstartTimezone
             }
         }
 
         //handle autoAlarm
-        val autoAlarm = if (autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ON_DUE && icalObject.value.due != null) {
+        val autoAlarm = if (autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ON_DUE && iCalObject.due != null) {
             Alarm.createDisplayAlarm(
                 dur = (0).minutes,
                 alarmRelativeTo = AlarmRelativeTo.END,
-                referenceDate = icalObject.value.due!!,
-                referenceTimezone = icalObject.value.dueTimezone
+                referenceDate = iCalObject.due!!,
+                referenceTimezone = iCalObject.dueTimezone
             )
-        } else if (autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ON_START && icalObject.value.dtstart != null) {
+        } else if (autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ON_START && iCalObject.dtstart != null) {
             Alarm.createDisplayAlarm(
                 dur = (0).minutes,
                 alarmRelativeTo = null,
-                referenceDate = icalObject.value.dtstart!!,
-                referenceTimezone = icalObject.value.dtstartTimezone
+                referenceDate = iCalObject.dtstart!!,
+                referenceTimezone = iCalObject.dtstartTimezone
             )
         } else null
 
-        if (autoAlarm != null && alarms.value.none { alarm -> alarm.triggerRelativeDuration == autoAlarm.triggerRelativeDuration && alarm.triggerRelativeTo == autoAlarm.triggerRelativeTo })
-            alarms.value = alarms.value.plus(autoAlarm)
+        if (autoAlarm != null && alarms.none { alarm -> alarm.triggerRelativeDuration == autoAlarm.triggerRelativeDuration && alarm.triggerRelativeTo == autoAlarm.triggerRelativeTo })
+            alarms.add(autoAlarm)
     }
 
     if (showColorPicker) {
@@ -294,8 +273,7 @@ fun DetailScreenContent(
             initialColor = color,
             onColorChanged = { newColor ->
                 color = newColor
-                icalObject.value.color = newColor
-                icalObject.value = icalObject.value
+                iCalObject.color = newColor
                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
             },
             onDismiss = {
@@ -305,15 +283,7 @@ fun DetailScreenContent(
     }
 
     if (changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED) {
-        saveICalObject(
-            icalObject.value,
-            categories.value,
-            comments.value,
-            attendees.value,
-            resources.value,
-            attachments.value,
-            alarms.value
-        )
+        saveEntry()
     }
 
     Column(
@@ -345,9 +315,9 @@ fun DetailScreenContent(
                         ListBadge(
                             icon = Icons.Outlined.FolderOpen,
                             iconDesc = stringResource(id = R.string.collection),
-                            containerColor = iCalEntity.value?.ICalCollection?.color?.let {Color(it) } ?: MaterialTheme.colorScheme.primaryContainer
+                            containerColor = originalICalEntity.value?.ICalCollection?.color?.let {Color(it) } ?: MaterialTheme.colorScheme.primaryContainer
                         )
-                        Text(iCalEntity.value?.ICalCollection?.displayName + iCalEntity.value?.ICalCollection?.accountName?.let { " ($it)" })
+                        Text(originalICalEntity.value?.ICalCollection?.displayName + originalICalEntity.value?.ICalCollection?.accountName?.let { " ($it)" })
                     }
                 }
             }
@@ -370,25 +340,16 @@ fun DetailScreenContent(
 
                     CollectionsSpinner(
                         collections = allPossibleCollections,
-                        preselected = iCalEntity.value?.ICalCollection ?: allPossibleCollections.first(),
+                        preselected = originalICalEntity.value?.ICalCollection ?: allPossibleCollections.first(),
                         includeReadOnly = false,
-                        includeVJOURNAL = if (iCalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
-                        includeVTODO = if (iCalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
+                        includeVJOURNAL = if (originalICalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
+                        includeVTODO = if (originalICalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
                         onSelectionChanged = { newCollection ->
-                            if (icalObject.value.collectionId != newCollection.collectionId) {
-                                onMoveToNewCollection(
-                                    icalObject.value,
-                                    categories.value,
-                                    comments.value,
-                                    attendees.value,
-                                    resources.value,
-                                    attachments.value,
-                                    alarms.value,
-                                    newCollection
-                                )
+                            if (iCalObject.collectionId != newCollection.collectionId) {
+                                onMoveToNewCollection(newCollection)
                             }
                         },
-                        enabled = icalObject.value.recurid.isNullOrEmpty(),
+                        enabled = iCalObject.recurid.isNullOrEmpty(),
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp)
@@ -401,36 +362,33 @@ fun DetailScreenContent(
         }
 
         DetailsDatesCards(
-            icalObject = icalObject.value,
+            icalObject = iCalObject,
             isEditMode = isEditMode.value,
-            enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] ?: true || icalObject.value.getModuleFromString() == Module.JOURNAL,
+            enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] ?: true || iCalObject.getModuleFromString() == Module.JOURNAL,
             enableDue = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] ?: true,
             enableCompleted = detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] ?: true,
             allowCompletedChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
             onDtstartChanged = { datetime, timezone ->
-                icalObject.value.dtstart = datetime
-                icalObject.value.dtstartTimezone = timezone
+                iCalObject.dtstart = datetime
+                iCalObject.dtstartTimezone = timezone
                 updateAlarms()
-                icalObject.value = icalObject.value
                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
             },
             onDueChanged = { datetime, timezone ->
-                icalObject.value.due = datetime
-                icalObject.value.dueTimezone = timezone
+                iCalObject.due = datetime
+                iCalObject.dueTimezone = timezone
                 updateAlarms()
-                icalObject.value = icalObject.value
                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
             },
             onCompletedChanged = { datetime, timezone ->
-                icalObject.value.completed = datetime
-                icalObject.value.completedTimezone = timezone
+                iCalObject.completed = datetime
+                iCalObject.completedTimezone = timezone
                 if (keepStatusProgressCompletedInSync) {
                     if (datetime == null)
-                        icalObject.value.setUpdatedProgress(null, true)
+                        iCalObject.setUpdatedProgress(null, true)
                     else
-                        icalObject.value.setUpdatedProgress(100, true)
+                        iCalObject.setUpdatedProgress(100, true)
                 }
-                icalObject.value = icalObject.value
                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
             }
         )
@@ -439,7 +397,7 @@ fun DetailScreenContent(
             SelectionContainer {
                 ElevatedCard(
                     onClick = {
-                        if (iCalEntity.value?.ICalCollection?.readonly == false)
+                        if (originalICalEntity.value?.ICalCollection?.readonly == false)
                             isEditMode.value = true
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -464,7 +422,7 @@ fun DetailScreenContent(
                                     .padding(8.dp),
                                 style = TextStyle(textDirection = TextDirection.Content),
                                 onClick = {
-                                    if (iCalEntity.value?.ICalCollection?.readonly == false)
+                                    if (originalICalEntity.value?.ICalCollection?.readonly == false)
                                         isEditMode.value = true
                                 }
                             )
@@ -491,8 +449,7 @@ fun DetailScreenContent(
                         value = summary,
                         onValueChange = {
                             summary = it
-                            icalObject.value.summary = it.ifEmpty { null }
-                            icalObject.value = icalObject.value
+                            iCalObject.summary = it.ifEmpty { null }
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         label = { Text(stringResource(id = R.string.summary)) },
@@ -542,8 +499,7 @@ fun DetailScreenContent(
                                 it
                             // END Create bulletpoint if previous line started with a bulletpoint
 
-                            icalObject.value.description = it.text.ifEmpty { null }
-                            icalObject.value = icalObject.value
+                            iCalObject.description = it.text.ifEmpty { null }
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         label = { Text(stringResource(id = R.string.description)) },
@@ -571,18 +527,17 @@ fun DetailScreenContent(
             }
         }
 
-        if (icalObject.value.module == Module.TODO.name) {
+        if (iCalObject.module == Module.TODO.name) {
             ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                 ProgressElement(
                     label = null,
-                    iCalObjectId = icalObject.value.id,
-                    progress = icalObject.value.percent,
-                    status = icalObject.value.status,isReadOnly = iCalEntity.value?.ICalCollection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
+                    iCalObjectId = iCalObject.id,
+                    progress = iCalObject.percent,
+                    status = iCalObject.status,isReadOnly = originalICalEntity.value?.ICalCollection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
                     sliderIncrement = sliderIncrement,
                     onProgressChanged = { itemId, newPercent ->
-                        icalObject.value.setUpdatedProgress(newPercent, keepStatusProgressCompletedInSync)
+                        iCalObject.setUpdatedProgress(newPercent, keepStatusProgressCompletedInSync)
                         onProgressChanged(itemId, newPercent)
-                        icalObject.value = icalObject.value
                         changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
                     showSlider = showProgressForMainTasks,
@@ -592,57 +547,51 @@ fun DetailScreenContent(
         }
 
         AnimatedVisibility(
-            (!isEditMode.value && (!icalObject.value.status.isNullOrEmpty() || !icalObject.value.classification.isNullOrEmpty() || icalObject.value.priority in 1..9))
+            (!isEditMode.value && (!iCalObject.status.isNullOrEmpty() || !iCalObject.classification.isNullOrEmpty() || iCalObject.priority in 1..9))
                     || (isEditMode.value
                     && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] ?: true
                     || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true
-                    || (icalObject.value.getModuleFromString() == Module.TODO && detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true)
+                    || (iCalObject.getModuleFromString() == Module.TODO && detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true)
                     || showAllOptions)
                     )
         ) {
             DetailsCardStatusClassificationPriority(
-                icalObject = icalObject.value,
+                icalObject = iCalObject,
                 isEditMode = isEditMode.value,
                 enableStatus = detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] ?: true || showAllOptions,
                 enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true || showAllOptions,
                 enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true || showAllOptions,
                 allowStatusChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
                 onStatusChanged = { newStatus ->
-                    icalObject.value.status = newStatus
-                    if (keepStatusProgressCompletedInSync && icalObject.value.getModuleFromString() == Module.TODO) {
+                    iCalObject.status = newStatus
+                    if (keepStatusProgressCompletedInSync && iCalObject.getModuleFromString() == Module.TODO) {
                         when (newStatus) {
-                            Status.NO_STATUS.status -> icalObject.value.setUpdatedProgress(null, true)
-                            Status.NEEDS_ACTION.status -> icalObject.value.setUpdatedProgress(null, true)
-                            Status.IN_PROCESS.status -> icalObject.value.setUpdatedProgress(if (icalObject.value.percent !in 1..99) 1 else icalObject.value.percent, true)
-                            Status.COMPLETED.status -> icalObject.value.setUpdatedProgress(100, true)
+                            Status.NO_STATUS.status -> iCalObject.setUpdatedProgress(null, true)
+                            Status.NEEDS_ACTION.status -> iCalObject.setUpdatedProgress(null, true)
+                            Status.IN_PROCESS.status -> iCalObject.setUpdatedProgress(if (iCalObject.percent !in 1..99) 1 else iCalObject.percent, true)
+                            Status.COMPLETED.status -> iCalObject.setUpdatedProgress(100, true)
                         }
                     }
-                    icalObject.value = icalObject.value
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onClassificationChanged = { newClassification ->
-                    icalObject.value.classification = newClassification
-                    icalObject.value = icalObject.value
+                    iCalObject.classification = newClassification
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onPriorityChanged = { newPriority ->
-                    icalObject.value.priority = newPriority
-                    icalObject.value = icalObject.value
+                    iCalObject.priority = newPriority
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 modifier = Modifier.fillMaxWidth()
             )
         }
 
-        AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] ?: true || showAllOptions))) {
+        AnimatedVisibility(categories.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] ?: true || showAllOptions))) {
             DetailsCardCategories(
-                initialCategories = categories.value,
+                categories = categories,
                 storedCategories = storedCategories,
                 isEditMode = isEditMode.value,
-                onCategoriesUpdated = { newCategories ->
-                    categories.value = newCategories
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
+                onCategoriesUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED },
                 allCategories = allCategories,
                 onGoToFilteredList = goToFilteredList
             )
@@ -650,7 +599,7 @@ fun DetailScreenContent(
 
         AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
             DetailsCardParents(
-                module = icalObject.value.getModuleFromString(),
+                module = iCalObject.getModuleFromString(),
                 parents = parents.value,
                 isEditMode = isEditMode,
                 sliderIncrement = sliderIncrement,
@@ -663,7 +612,7 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
+        AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
             DetailsCardSubtasks(
                 subtasks = subtasks.value,
                 isEditMode = isEditMode,
@@ -691,7 +640,7 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] ?: false || showAllOptions))) {
+        AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] ?: false || showAllOptions))) {
             DetailsCardSubnotes(
                 subnotes = subnotes.value,
                 isEditMode = isEditMode,
@@ -719,131 +668,112 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && icalObject.value.getModuleFromString() == Module.TODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] ?: false || showAllOptions))) {
+        AnimatedVisibility(resources.isNotEmpty() || (isEditMode.value && iCalObject.getModuleFromString() == Module.TODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] ?: false || showAllOptions))) {
             DetailsCardResources(
-                initialResources = resources.value,
+                resources = resources,
                 storedResources = storedResources,
                 isEditMode = isEditMode.value,
-                onResourcesUpdated = { newResources ->
-                    resources.value = newResources
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
+                onResourcesUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED },
                 onGoToFilteredList = goToFilteredList,
                 allResources = allResources,
             )
         }
 
-        AnimatedVisibility(attendees.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] ?: false || showAllOptions))) {
+        AnimatedVisibility(attendees.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] ?: false || showAllOptions))) {
             DetailsCardAttendees(
-                initialAttendees = attendees.value,
+                attendees = attendees,
                 isEditMode = isEditMode.value,
-                onAttendeesUpdated = { newAttendees ->
-                    attendees.value = newAttendees
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                }
+                onAttendeesUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED }
             )
         }
 
-        AnimatedVisibility(icalObject.value.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] ?: false || showAllOptions))) {
+        AnimatedVisibility(iCalObject.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] ?: false || showAllOptions))) {
             DetailsCardContact(
-                initialContact = icalObject.value.contact ?: "",
+                initialContact = iCalObject.contact ?: "",
                 isEditMode = isEditMode.value,
                 onContactUpdated = { newContact ->
-                    icalObject.value.contact = newContact.ifEmpty { null }
-                    icalObject.value = icalObject.value
+                    iCalObject.contact = newContact.ifEmpty { null }
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
             )
         }
 
-        AnimatedVisibility(icalObject.value.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] ?: false || showAllOptions))) {
+        AnimatedVisibility(iCalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] ?: false || showAllOptions))) {
             DetailsCardUrl(
-                initialUrl = icalObject.value.url ?: "",
+                initialUrl = iCalObject.url ?: "",
                 isEditMode = isEditMode.value,
                 onUrlUpdated = { newUrl ->
-                    icalObject.value.url = newUrl.ifEmpty { null }
-                    icalObject.value = icalObject.value
+                    iCalObject.url = newUrl.ifEmpty { null }
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
             )
         }
 
-        AnimatedVisibility((icalObject.value.location?.isNotEmpty() == true || (icalObject.value.geoLat != null && icalObject.value.geoLong != null)) || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] ?: false || showAllOptions))) {
+        AnimatedVisibility((iCalObject.location?.isNotEmpty() == true || (iCalObject.geoLat != null && iCalObject.geoLong != null)) || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] ?: false || showAllOptions))) {
             DetailsCardLocation(
-                initialLocation = icalObject.value.location,
-                initialGeoLat = icalObject.value.geoLat,
-                initialGeoLong = icalObject.value.geoLong,
+                initialLocation = iCalObject.location,
+                initialGeoLat = iCalObject.geoLat,
+                initialGeoLong = iCalObject.geoLong,
                 isEditMode = isEditMode.value,
                 setCurrentLocation = setCurrentLocation,
                 onLocationUpdated = { newLocation, newGeoLat, newGeoLong ->
                     if (newGeoLat != null && newGeoLong != null) {
-                        icalObject.value.geoLat = newGeoLat
-                        icalObject.value.geoLong = newGeoLong
+                        iCalObject.geoLat = newGeoLat
+                        iCalObject.geoLong = newGeoLong
                     } else {
-                        icalObject.value.geoLat = null
-                        icalObject.value.geoLong = null
+                        iCalObject.geoLat = null
+                        iCalObject.geoLong = null
                     }
-                    icalObject.value.location = newLocation.ifEmpty { null }
-                    icalObject.value = icalObject.value
+                    iCalObject.location = newLocation.ifEmpty { null }
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
             )
         }
 
-        AnimatedVisibility(comments.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] ?: false || showAllOptions))) {
+        AnimatedVisibility(comments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] ?: false || showAllOptions))) {
             DetailsCardComments(
-                initialComments = comments.value,
+                comments = comments,
                 isEditMode = isEditMode.value,
-                onCommentsUpdated = { newComments ->
-                    comments.value = newComments
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                }
+                onCommentsUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED }
             )
         }
 
-        AnimatedVisibility(attachments.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] ?: false || showAllOptions))) {
+        AnimatedVisibility(attachments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] ?: false || showAllOptions))) {
             DetailsCardAttachments(
-                initialAttachments = attachments.value,
+                attachments = attachments,
                 isEditMode = isEditMode.value,
-                isRemoteCollection = iCalEntity.value?.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE,
+                isRemoteCollection = originalICalEntity.value?.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE,
                 player = player,
-                onAttachmentsUpdated = { newAttachments ->
-                    attachments.value = newAttachments
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                }
+                onAttachmentsUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED }
             )
         }
 
-        AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && icalObject.value.module == Module.TODO.name && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] ?: false || showAllOptions))) {
+        AnimatedVisibility(alarms.isNotEmpty() || (isEditMode.value && iCalObject.module == Module.TODO.name && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] ?: false || showAllOptions))) {
             DetailsCardAlarms(
                 alarms = alarms,
-                icalObject = icalObject.value,
+                icalObject = iCalObject,
                 isEditMode = isEditMode.value,
-                onAlarmsUpdated = { newAlarms ->
-                    alarms.value = newAlarms
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                }
+                onAlarmsUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED }
             )
         }
 
         AnimatedVisibility(
-            icalObject.value.rrule != null
-                    || icalObject.value.recurid != null
-                    || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] ?: false || (showAllOptions && icalObject.value.module != Module.NOTE.name)))
+            iCalObject.rrule != null
+                    || iCalObject.recurid != null
+                    || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] ?: false || (showAllOptions && iCalObject.module != Module.NOTE.name)))
         ) {   // only Todos have recur!
             DetailsCardRecur(
-                icalObject = icalObject.value,
+                icalObject = iCalObject,
                 seriesInstances = seriesInstances,
                 seriesElement = seriesElement,
                 isEditMode = isEditMode.value,
                 hasChildren = subtasks.value.isNotEmpty() || subnotes.value.isNotEmpty(),
                 onRecurUpdated = { updatedRRule ->
-                    icalObject.value.rrule = updatedRRule?.toString()
+                    iCalObject.rrule = updatedRRule?.toString()
                     if(updatedRRule == null) {
-                        icalObject.value.rdate = null
-                        icalObject.value.exdate = null
+                        iCalObject.rdate = null
+                        iCalObject.exdate = null
                     }
-                    icalObject.value = icalObject.value
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 goToDetail = goToDetail,
@@ -868,12 +798,12 @@ fun DetailScreenContent(
                     .padding(top = 16.dp)
             ) {
                 Text(
-                    stringResource(id = R.string.view_created_text, DateTimeUtils.convertLongToFullDateTimeString(icalObject.value.created, null)),
+                    stringResource(id = R.string.view_created_text, DateTimeUtils.convertLongToFullDateTimeString(iCalObject.created, null)),
                     style = MaterialTheme.typography.bodySmall,
                     fontStyle = FontStyle.Italic
                 )
                 Text(
-                    stringResource(id = R.string.view_last_modified_text, DateTimeUtils.convertLongToFullDateTimeString(icalObject.value.lastModified, null)),
+                    stringResource(id = R.string.view_last_modified_text, DateTimeUtils.convertLongToFullDateTimeString(iCalObject.lastModified, null)),
                     style = MaterialTheme.typography.bodySmall,
                     fontStyle = FontStyle.Italic
                 )
@@ -881,7 +811,7 @@ fun DetailScreenContent(
         }
 
         AnimatedVisibility(!isEditMode.value) {
-            val curIndex = icalObjectIdList.indexOf(iCalEntity.value?.property?.id ?: 0)
+            val curIndex = icalObjectIdList.indexOf(originalICalEntity.value?.property?.id ?: 0)
             if (icalObjectIdList.size > 1 && curIndex >= 0) {
                 Row(
                     modifier = Modifier
@@ -904,7 +834,7 @@ fun DetailScreenContent(
                     } else {
                         Spacer(modifier = Modifier.size(48.dp))
                     }
-                    Text(text = "${icalObjectIdList.indexOf(iCalEntity.value?.property?.id ?: 0) + 1}/${icalObjectIdList.size}")
+                    Text(text = "${icalObjectIdList.indexOf(originalICalEntity.value?.property?.id ?: 0) + 1}/${icalObjectIdList.size}")
                     if (curIndex != icalObjectIdList.lastIndex) {
                         IconButton(onClick = {
                             goToDetail(
@@ -942,7 +872,14 @@ fun DetailScreenContent_JOURNAL() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            iCalEntity = remember { mutableStateOf(entity) },
+            originalICalEntity = remember { mutableStateOf(entity) },
+            iCalObject = entity.property,
+            categories = remember { mutableStateListOf<Category>().apply { this.addAll(entity.categories ?: emptyList()) } },
+            resources = remember { mutableStateListOf() },
+            attendees = remember { mutableStateListOf() },
+            comments = remember { mutableStateListOf() },
+            attachments = remember { mutableStateListOf() },
+            alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(false) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             parents = remember { mutableStateOf(emptyList()) },
@@ -967,9 +904,9 @@ fun DetailScreenContent_JOURNAL() {
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
-            saveICalObject = { _, _, _, _, _, _, _ -> },
+            saveEntry = { },
             onProgressChanged = { _, _ -> },
-            onMoveToNewCollection = { _, _, _, _, _, _, _, _ -> },
+            onMoveToNewCollection = { },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
@@ -998,7 +935,14 @@ fun DetailScreenContent_TODO_editInitially() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            iCalEntity = remember { mutableStateOf(entity) },
+            originalICalEntity = remember { mutableStateOf(entity) },
+            iCalObject = entity.property,
+            categories = remember { mutableStateListOf() },
+            resources = remember { mutableStateListOf() },
+            attendees = remember { mutableStateListOf() },
+            comments = remember { mutableStateListOf() },
+            attachments = remember { mutableStateListOf() },
+            alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             parents = remember { mutableStateOf(emptyList()) },
@@ -1023,9 +967,9 @@ fun DetailScreenContent_TODO_editInitially() {
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
-            saveICalObject = { _, _, _, _, _, _, _ -> },
+            saveEntry = { },
             onProgressChanged = { _, _ -> },
-            onMoveToNewCollection = { _, _, _, _, _, _, _, _ -> },
+            onMoveToNewCollection = { },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
@@ -1054,7 +998,14 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            iCalEntity = remember { mutableStateOf(entity) },
+            originalICalEntity = remember { mutableStateOf(entity) },
+            iCalObject = entity.property,
+            categories = remember { mutableStateListOf() },
+            resources = remember { mutableStateListOf() },
+            attendees = remember { mutableStateListOf() },
+            comments = remember { mutableStateListOf() },
+            attachments = remember { mutableStateListOf() },
+            alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             parents = remember { mutableStateOf(emptyList()) },
@@ -1079,9 +1030,9 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
-            saveICalObject = { _, _, _, _, _, _, _ -> },
+            saveEntry = { },
             onProgressChanged = { _, _ -> },
-            onMoveToNewCollection = { _, _, _, _, _, _, _, _ -> },
+            onMoveToNewCollection = { },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
@@ -1104,7 +1055,14 @@ fun DetailScreenContent_failedLoading() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            iCalEntity = remember { mutableStateOf(null) },
+            originalICalEntity = remember { mutableStateOf(null) },
+            iCalObject = ICalObject.createJournal(),
+            categories = remember { mutableStateListOf() },
+            resources = remember { mutableStateListOf() },
+            attendees = remember { mutableStateListOf() },
+            comments = remember { mutableStateListOf() },
+            attachments = remember { mutableStateListOf() },
+            alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             parents = remember { mutableStateOf(emptyList()) },
@@ -1129,9 +1087,9 @@ fun DetailScreenContent_failedLoading() {
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
-            saveICalObject = { _, _, _, _, _, _, _ -> },
+            saveEntry = { },
             onProgressChanged = { _, _ -> },
-            onMoveToNewCollection = { _, _, _, _, _, _, _, _ -> },
+            onMoveToNewCollection = { },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },

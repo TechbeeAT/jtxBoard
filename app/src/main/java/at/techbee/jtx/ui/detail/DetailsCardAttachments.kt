@@ -15,15 +15,30 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddLink
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Upload
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,22 +55,20 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 
 @Composable
 fun DetailsCardAttachments(
-    initialAttachments: List<Attachment>,
+    attachments: SnapshotStateList<Attachment>,
     isEditMode: Boolean,
     isRemoteCollection: Boolean,
     player: MediaPlayer?,
-    onAttachmentsUpdated: (List<Attachment>) -> Unit,
+    onAttachmentsUpdated: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val context = LocalContext.current
-    var attachments by remember { mutableStateOf(initialAttachments) }
-
     val pickFileLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             Attachment.getNewAttachmentFromUri(uri, context)?.let { newAttachment ->
-                attachments = attachments.plus(newAttachment)
-                onAttachmentsUpdated(attachments)
+                attachments.add(newAttachment)
+                onAttachmentsUpdated()
             }
         }
     }
@@ -64,9 +77,9 @@ fun DetailsCardAttachments(
         if(taken) {
             newPictureUri.value?.let {
                 Attachment.getNewAttachmentFromUri(it, context)?.let { newAttachment ->
-                    attachments = attachments.plus(newAttachment)
+                    attachments.add(newAttachment)
                     newPictureUri.value = null
-                    onAttachmentsUpdated(attachments)
+                    onAttachmentsUpdated()
                 }
             }
         }
@@ -78,8 +91,8 @@ fun DetailsCardAttachments(
         AddAttachmentLinkDialog(
             onConfirm = { attachmentLink ->
                 val newAttachment = Attachment(uri = attachmentLink)
-                attachments = attachments.plus(newAttachment)
-                onAttachmentsUpdated(attachments)
+                attachments.add(newAttachment)
+                onAttachmentsUpdated()
             },
             onDismiss = { showAddLinkAttachmentDialog = false }
         )
@@ -114,8 +127,8 @@ fun DetailsCardAttachments(
                                     isRemoteCollection = isRemoteCollection,
                                     player = player,
                                     onAttachmentDeleted = {
-                                        attachments = attachments.minus(attachment)
-                                        onAttachmentsUpdated(attachments)
+                                        attachments.add(attachment)
+                                        onAttachmentsUpdated()
                                     },
                                     modifier = Modifier.size(100.dp, 140.dp)
                                 )
@@ -129,8 +142,8 @@ fun DetailsCardAttachments(
                             isRemoteCollection = isRemoteCollection,
                             player = player,
                             onAttachmentDeleted = {
-                                attachments = attachments.minus(attachment)
-                                onAttachmentsUpdated(attachments)
+                                attachments.remove(attachment)
+                                onAttachmentsUpdated()
                             }
                         )
                     }
@@ -189,7 +202,7 @@ fun DetailsCardAttachments_Preview() {
     MaterialTheme {
 
         DetailsCardAttachments(
-            initialAttachments = listOf(Attachment(filename = "test.pdf")),
+            attachments = remember { mutableStateListOf(Attachment(filename = "test.pdf")) },
             isEditMode = false,
             isRemoteCollection = true,
             player = null,
@@ -204,7 +217,7 @@ fun DetailsCardAttachments_Preview_Images() {
     MaterialTheme {
 
         DetailsCardAttachments(
-            initialAttachments = listOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")),
+            attachments = remember { mutableStateListOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")) },
             isEditMode = false,
             isRemoteCollection = true,
             player = null,
@@ -219,7 +232,7 @@ fun DetailsCardAttachments_Preview_Images() {
 fun DetailsCardAttachments_Preview_edit() {
     MaterialTheme {
         DetailsCardAttachments(
-            initialAttachments = listOf(Attachment(filename = "test.pdf")),
+            attachments = remember { mutableStateListOf(Attachment(filename = "test.pdf")) },
             isEditMode = true,
             isRemoteCollection = true,
             player = null,
@@ -235,7 +248,7 @@ fun DetailsCardAttachments_Preview_Images_edit() {
     MaterialTheme {
 
         DetailsCardAttachments(
-            initialAttachments = listOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")),
+            attachments = remember { mutableStateListOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")) },
             isEditMode = true,
             isRemoteCollection = true,
             player = null,

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.outlined.AlarmAdd
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -48,10 +49,10 @@ import kotlin.time.Duration.Companion.minutes
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun DetailsCardAlarms(
-    alarms: MutableState<List<Alarm>>,   // can't be stateless as recomposition is needed when the dates change!
+    alarms: SnapshotStateList<Alarm>,
     icalObject: ICalObject,
     isEditMode: Boolean,
-    onAlarmsUpdated: (List<Alarm>) -> Unit,
+    onAlarmsUpdated: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -72,8 +73,8 @@ fun DetailsCardAlarms(
             minDate = DateTimeUtils.getTodayAsLong(),
             onConfirm = { newDateTime, newTimeZone ->
                 val newAlarm = Alarm.createDisplayAlarm(newDateTime!!, newTimeZone)
-                alarms.value = alarms.value.plus(newAlarm)
-                onAlarmsUpdated(alarms.value) },
+                alarms.add(newAlarm)
+                onAlarmsUpdated() },
             onDismiss = { showDateTimePicker = false }
         )
     }
@@ -88,14 +89,14 @@ fun DetailsCardAlarms(
             ),
             icalObject = icalObject,
             onConfirm = { newAlarm ->
-                if(alarms.value.none { alarm ->
+                if(alarms.none { alarm ->
                         alarm.triggerRelativeDuration == newAlarm.triggerRelativeDuration
                                 && alarm.triggerRelativeTo == newAlarm.triggerRelativeTo
                                 && alarm.triggerTime == newAlarm.triggerTime
                                 && alarm.triggerTimezone == newAlarm.triggerTimezone
                 }) {
-                    alarms.value = alarms.value.plus(newAlarm)
-                    onAlarmsUpdated(alarms.value)
+                    alarms.add(newAlarm)
+                    onAlarmsUpdated()
                 }
             },
             onDismiss = { showDurationPicker = false }
@@ -111,27 +112,27 @@ fun DetailsCardAlarms(
 
             HeadlineWithIcon(icon = Icons.Outlined.Alarm, iconDesc = headline, text = headline)
 
-            AnimatedVisibility(alarms.value.isNotEmpty()) {
+            AnimatedVisibility(alarms.isNotEmpty()) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    alarms.value.forEach { alarm ->
+                    alarms.forEach { alarm ->
 
                         AlarmCard(
                             alarm = alarm,
                             icalObject = icalObject,
                             isEditMode = isEditMode,
                             onAlarmDeleted = {
-                                alarms.value = alarms.value.minus(alarm)
-                                onAlarmsUpdated(alarms.value)
+                                alarms.remove(alarm)
+                                onAlarmsUpdated()
                                              },
                             onAlarmChanged = { changedAlarm ->
                                 changedAlarm.alarmId = 0L
-                                alarms.value = alarms.value.minus(alarm)
-                                alarms.value = alarms.value.plus(changedAlarm)
-                                onAlarmsUpdated(alarms.value)
+                                alarms.remove(alarm)
+                                alarms.add(changedAlarm)
+                                onAlarmsUpdated()
                             }
                         )
                     }
@@ -162,10 +163,10 @@ fun DetailsCardAlarms(
                     }
 
                     val alarmOnStart = Alarm.createDisplayAlarm((0).minutes, AlarmRelativeTo.START, icalObject.dtstart ?: System.currentTimeMillis(), icalObject.dtstartTimezone)
-                    AnimatedVisibility(icalObject.dtstart != null && !alarms.value.contains(alarmOnStart)) {
+                    AnimatedVisibility(icalObject.dtstart != null && alarms.none { it.triggerTime == alarmOnStart.triggerTime }) {
                         TextButton(onClick = {
-                            alarms.value = alarms.value.plus(Alarm.createDisplayAlarm((0).minutes, AlarmRelativeTo.START, icalObject.dtstart!!, icalObject.dtstartTimezone))
-                            onAlarmsUpdated(alarms.value)
+                            alarms.add(Alarm.createDisplayAlarm((0).minutes, AlarmRelativeTo.START, icalObject.dtstart!!, icalObject.dtstartTimezone))
+                            onAlarmsUpdated()
                         }) {
                             Icon(Icons.Outlined.AlarmAdd, null, modifier = Modifier.padding(end = 8.dp))
                             Text(stringResource(id = R.string.alarms_onstart))
@@ -173,10 +174,10 @@ fun DetailsCardAlarms(
                     }
 
                     val alarmOnDue = Alarm.createDisplayAlarm((0).minutes, AlarmRelativeTo.END, icalObject.due ?: System.currentTimeMillis(), icalObject.dueTimezone)
-                    AnimatedVisibility(icalObject.due != null && !alarms.value.contains(alarmOnDue)) {
+                    AnimatedVisibility(icalObject.due != null && alarms.none { it.triggerTime == alarmOnDue.triggerTime }) {
                         TextButton(onClick = {
-                            alarms.value = alarms.value.plus(Alarm.createDisplayAlarm((0).minutes, AlarmRelativeTo.END, icalObject.due!!, icalObject.dueTimezone))
-                            onAlarmsUpdated(alarms.value)
+                            alarms.add(Alarm.createDisplayAlarm((0).minutes, AlarmRelativeTo.END, icalObject.due!!, icalObject.dueTimezone))
+                            onAlarmsUpdated()
                         }) {
                             Icon(Icons.Outlined.AlarmAdd, null, modifier = Modifier.padding(end = 8.dp))
                             Text(stringResource(id = R.string.alarms_ondue))
@@ -202,11 +203,10 @@ fun DetailsCardAlarms_Preview() {
     MaterialTheme {
 
         DetailsCardAlarms(
-            alarms = remember { mutableStateOf(mutableListOf(
+            alarms = remember { mutableStateListOf(
                         Alarm.createDisplayAlarm(System.currentTimeMillis(), null),
                         Alarm.createDisplayAlarm((0).days, AlarmRelativeTo.START, System.currentTimeMillis(), null)
-                )
-            )},
+                ) },
             icalObject = ICalObject.createTodo().apply {
                 dtstart = System.currentTimeMillis()
                 dtstartTimezone = null
@@ -225,10 +225,10 @@ fun DetailsCardAlarms_Preview() {
 fun DetailsCardAlarms_Preview_edit() {
     MaterialTheme {
         DetailsCardAlarms(
-            alarms = remember { mutableStateOf(listOf(
+            alarms = remember { mutableStateListOf(
                         Alarm.createDisplayAlarm(System.currentTimeMillis(), null),
                         Alarm.createDisplayAlarm((1).days, AlarmRelativeTo.START, System.currentTimeMillis(), null)
-            ))},
+            )},
             icalObject = ICalObject.createTodo().apply {
                 dtstart = System.currentTimeMillis()
                 dtstartTimezone = null
