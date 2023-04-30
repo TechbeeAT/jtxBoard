@@ -12,7 +12,7 @@ apply plugin: "kotlin-android"
 apply plugin: "kotlin-parcelize"
 apply plugin: "kotlin-kapt"
 apply plugin: "kotlinx-serialization"
-apply plugin: "com.huawei.agconnect"
+//apply plugin: "com.huawei.agconnect"
 
 
 def localPropertiesFile = rootProject.file('local.properties')
@@ -35,10 +35,6 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        // see https://developer.android.com/studio/write/java8-support
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
         testOptions {
             unitTests.includeAndroidResources = true
             unitTests.returnDefaultValues = true
@@ -92,6 +88,7 @@ android {
 
     // Enables data binding.
     buildFeatures {
+        buildConfig = true
         compose true
     }
     composeOptions {
@@ -134,14 +131,11 @@ android {
         // https://developer.android.com/studio/write/java8-support#library-desugaring
         // also good for ical4android
         coreLibraryDesugaringEnabled = true
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     lint {
         disable 'MissingTranslation', 'ExtraTranslation'
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
     }
     sourceSets {
         main {
@@ -261,7 +255,7 @@ dependencies {
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
 
     // Huawei billing
-    huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
+    //huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
 
     // Google Maps
     gplayImplementation "com.google.maps.android:maps-compose:2.11.4"
@@ -288,7 +282,7 @@ dependencies {
     androidTestImplementation "androidx.test:rules:1.5.0"
 
     // Testing-only dependencies
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version_kotlin"
     androidTestImplementation "androidx.test:core-ktx:1.5.0"
 
     // Testing
