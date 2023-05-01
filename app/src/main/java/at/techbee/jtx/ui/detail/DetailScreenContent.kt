@@ -624,6 +624,7 @@ fun DetailScreenContent(
                 showSlider = showProgressForSubTasks,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
+                storedStatuses = storedStatuses,
                 player = player,
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
@@ -650,6 +651,7 @@ fun DetailScreenContent(
                 selectFromAllListLive = selectFromAllListLive,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
+                storedStatuses = storedStatuses,
                 onSubnoteAdded = { subnote, attachment ->
                     onSubEntryAdded(
                         subnote,

@@ -10,8 +10,17 @@ package at.techbee.jtx.ui.list
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +37,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
@@ -41,6 +51,7 @@ fun ListCardGrid(
     resources: List<Resource>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    storedStatuses: List<StoredStatus>,
     selected: Boolean,
     progressUpdateDisabled: Boolean,
     player: MediaPlayer?,
@@ -66,6 +77,7 @@ fun ListCardGrid(
                 resources = resources,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
+                storedStatuses = storedStatuses,
                 includeJournalDate = true
             )
 
@@ -139,6 +151,7 @@ fun ListCardGrid_JOURNAL() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
             player = null,
@@ -166,6 +179,7 @@ fun ListCardGrid_NOTE() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Color.Green.toArgb())),
             selected = true,
             progressUpdateDisabled = false,
             onProgressChanged = { _, _ -> },
@@ -202,6 +216,7 @@ fun ListCardGrid_TODO() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
             player = null,
@@ -239,6 +254,7 @@ fun ListCardGrid_TODO_short() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
             player = null,

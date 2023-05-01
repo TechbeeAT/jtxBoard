@@ -19,9 +19,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,6 +44,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
@@ -43,6 +55,7 @@ fun LinkExistingSubentryDialog(
     allEntriesLive: LiveData<List<ICal4ListRel>>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    storedStatuses: List<StoredStatus>,
     player: MediaPlayer?,
     onAllEntriesSearchTextUpdated: (String) -> Unit,
     onNewSubentriesConfirmed: (newSubentries: List<ICal4List>) -> Unit,
@@ -108,6 +121,7 @@ fun LinkExistingSubentryDialog(
                                 resources = entry.resources,
                                 storedCategories = storedCategories,
                                 storedResources = storedResources,
+                                storedStatuses = storedStatuses,
                                 selected = selectedEntries.contains(entry.iCal4List),
                                 progressUpdateDisabled = true,
                                 onProgressChanged = { _, _ -> },
@@ -169,6 +183,7 @@ fun LinkExistingSubentryDialog_Preview() {
             ),
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            storedStatuses = emptyList(),
             player = null,
             onAllEntriesSearchTextUpdated = { },
             onNewSubentriesConfirmed = { },

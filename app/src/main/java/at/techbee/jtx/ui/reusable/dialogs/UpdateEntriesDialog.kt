@@ -13,14 +13,40 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.LabelOff
+import androidx.compose.material.icons.outlined.NewLabel
+import androidx.compose.material.icons.outlined.WorkOff
+import androidx.compose.material.icons.outlined.WorkOutline
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -41,6 +67,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
@@ -66,6 +93,7 @@ fun UpdateEntriesDialog(
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     storedResourcesLive: LiveData<List<StoredResource>>,
+    storedStatusesLive: LiveData<List<StoredStatus>>,
     player: MediaPlayer?,
     onSelectFromAllListSearchTextUpdated: (String) -> Unit,
     //currentCategories: List<String>,
@@ -74,7 +102,7 @@ fun UpdateEntriesDialog(
     //onCollectionChanged: (ICalCollection) -> Unit,
     onCategoriesChanged: (addedCategories: List<String>, removedCategories: List<String>) -> Unit,
     onResourcesChanged: (addedResources: List<String>, removedResources: List<String>) -> Unit,
-    onStatusChanged: (Status) -> Unit,
+    onStatusChanged: (String) -> Unit,
     onClassificationChanged: (Classification) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     onCollectionChanged: (ICalCollection) -> Unit,
@@ -88,12 +116,13 @@ fun UpdateEntriesDialog(
     val selectFromAllList by selectFromAllListLive.observeAsState(emptyList())
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
     val storedResources by storedResourcesLive.observeAsState(emptyList())
+    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
 
     val addedCategories = remember { mutableStateListOf<String>() }
     val removedCategories = remember { mutableStateListOf<String>() }
     val addedResources = remember { mutableStateListOf<String>() }
     val removedResources = remember { mutableStateListOf<String>() }
-    var newStatus by remember { mutableStateOf<Status?>(null) }
+    var newStatus by remember { mutableStateOf<String?>(null) }
     var newClassification by remember { mutableStateOf<Classification?>(null) }
     var newPriority by remember { mutableStateOf<Int?>(null) }
     var newCollection by remember { mutableStateOf<ICalCollection?>(null) }
@@ -229,11 +258,21 @@ fun UpdateEntriesDialog(
 
                         Status.valuesFor(module).forEach { status ->
                             InputChip(
-                                onClick = { newStatus = status },
+                                onClick = { newStatus = status.status?:status.name },
                                 label = { Text(stringResource(id = status.stringResource)) },
-                                selected = status == newStatus,
+                                selected = newStatus == status.status || newStatus ==status.name,
                             )
                         }
+                        storedStatuses
+                            .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.status } }
+                            .filter { it.module == module.name }
+                            .forEach { storedStatus ->
+                                InputChip(
+                                    onClick = { newStatus = storedStatus.status },
+                                    label = { Text(storedStatus.status) },
+                                    selected = newStatus == storedStatus.status,
+                                )
+                            }
                     }
                 }
 
@@ -341,6 +380,7 @@ fun UpdateEntriesDialog(
                                 resources = entry.resources,
                                 storedCategories = storedCategories,
                                 storedResources = storedResources,
+                                storedStatuses = storedStatuses,
                                 selected = entry.iCal4List == selectFromAllListSelectedEntry,
                                 progressUpdateDisabled = true,
                                 player = player,
@@ -415,6 +455,7 @@ fun UpdateEntriesDialog_Preview() {
             selectFromAllListLive = MutableLiveData(listOf()),
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedResourcesLive = MutableLiveData(listOf(StoredResource("1234", Color.Green.toArgb()))),
+            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL.name, Color.Green.toArgb()))),
             player = null,
             onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },

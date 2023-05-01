@@ -50,6 +50,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -67,6 +68,7 @@ fun ListScreenKanban(
     subtasksLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     storedResourcesLive: LiveData<List<StoredResource>>,
+    storedStatusesLive: LiveData<List<StoredStatus>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
@@ -84,6 +86,8 @@ fun ListScreenKanban(
     val subtasks by subtasksLive.observeAsState(emptyList())
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
     val storedResources by storedResourcesLive.observeAsState(emptyList())
+    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
+
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
@@ -158,6 +162,7 @@ fun ListScreenKanban(
                             resources = iCal4ListRelObject.resources,
                             storedCategories = storedCategories,
                             storedResources = storedResources,
+                            storedStatuses = storedStatuses,
                             selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                             player = player,
                             modifier = Modifier
@@ -291,6 +296,7 @@ fun ListScreenKanban_TODO() {
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
@@ -347,6 +353,7 @@ fun ListScreenKanban_JOURNAL() {
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,

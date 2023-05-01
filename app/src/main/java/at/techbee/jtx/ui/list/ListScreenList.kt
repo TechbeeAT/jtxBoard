@@ -60,6 +60,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
@@ -79,6 +80,7 @@ fun ListScreenList(
     parentsLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     storedResourcesLive: LiveData<List<StoredResource>>,
+    storedStatusesLive: LiveData<List<StoredStatus>>,
     selectedEntries: SnapshotStateList<Long>,
     attachmentsLive: LiveData<Map<Long, List<Attachment>>>,
     scrollOnceId: MutableLiveData<Long?>,
@@ -105,6 +107,7 @@ fun ListScreenList(
     val attachments by attachmentsLive.observeAsState(emptyMap())
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
     val storedResources by storedResourcesLive.observeAsState(emptyList())
+    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
 
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
@@ -196,6 +199,7 @@ fun ListScreenList(
                             parents = currentParents,
                             storedCategories = storedCategories,
                             storedResources = storedResources,
+                            storedStatuses = storedStatuses,
                             selected = selectedEntries,
                             attachments = currentAttachments ?: emptyList(),
                             isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
@@ -300,6 +304,7 @@ fun ListScreenList_TODO() {
             parentsLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
@@ -374,6 +379,7 @@ fun ListScreenList_JOURNAL() {
             parentsLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),

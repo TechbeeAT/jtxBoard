@@ -24,6 +24,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
@@ -38,6 +39,7 @@ fun ListTopFlowRow(
     resources: List<Resource>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    storedStatuses: List<StoredStatus>,
     modifier: Modifier = Modifier,
     includeJournalDate: Boolean = false
 ) {
@@ -121,11 +123,12 @@ fun ListTopFlowRow(
             )
         }
 
-        AnimatedVisibility(ical4List.status in listOf(Status.CANCELLED.status, Status.DRAFT.status, Status.CANCELLED.status)) {
+        AnimatedVisibility(ical4List.status !in listOf(Status.FINAL.status, Status.NO_STATUS.status)) {
             ListBadge(
                 icon = Icons.Outlined.PublishedWithChanges,
                 iconDesc = stringResource(R.string.status),
                 text = Status.getStatusFromString(ical4List.status)?.stringResource?.let { stringResource(id = it) } ?: ical4List.status,
+                containerColor = StoredStatus.getColorForStatus(Status.getStatusFromString(ical4List.status)?.stringResource?.let { stringResource(id = it) }?: ical4List.status, storedStatuses, Module.values().find { it.name == ical4List.module }?:Module.NOTE) ?: MaterialTheme.colorScheme.primaryContainer,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -275,7 +278,9 @@ fun ListTopFlowRow_Preview() {
             categories = listOf(Category(text = "Category"), Category(text = "Test"), Category(text = "Another")),
             resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb()))
-        )
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Color.Green.toArgb()))
+
+            )
     }
 }
