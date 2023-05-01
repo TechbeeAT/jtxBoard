@@ -51,6 +51,7 @@ import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
@@ -93,6 +94,7 @@ fun DetailScreenContent(
     allResources: List<String>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    storedStatuses: List<StoredStatus>,
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
@@ -562,6 +564,7 @@ fun DetailScreenContent(
                 enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true || showAllOptions,
                 enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true || showAllOptions,
                 allowStatusChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
+                storedStatuses = storedStatuses,
                 onStatusChanged = { newStatus ->
                     iCalObject.status = newStatus
                     if (keepStatusProgressCompletedInSync && iCalObject.getModuleFromString() == Module.TODO) {
@@ -901,6 +904,7 @@ fun DetailScreenContent_JOURNAL() {
             allResources = emptyList(),
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            storedStatuses = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
@@ -957,6 +961,7 @@ fun DetailScreenContent_TODO_editInitially() {
             allResources = emptyList(),
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            storedStatuses = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
@@ -1020,6 +1025,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             allResources = emptyList(),
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            storedStatuses = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
@@ -1077,6 +1083,7 @@ fun DetailScreenContent_failedLoading() {
             allResources = emptyList(),
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            storedStatuses = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),

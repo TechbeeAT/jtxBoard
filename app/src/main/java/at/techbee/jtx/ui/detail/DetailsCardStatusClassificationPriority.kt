@@ -16,8 +16,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AssignmentLate
 import androidx.compose.material.icons.outlined.GppMaybe
 import androidx.compose.material.icons.outlined.PublishedWithChanges
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedAssistChip
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
@@ -30,6 +41,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.StoredStatus
 
 
 @Composable
@@ -40,6 +52,7 @@ fun DetailsCardStatusClassificationPriority(
     enableClassification: Boolean,
     enablePriority: Boolean,
     allowStatusChange: Boolean,
+    storedStatuses: List<StoredStatus>,
     onStatusChanged: (String?) -> Unit,
     onClassificationChanged: (String?) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
@@ -98,6 +111,19 @@ fun DetailsCardStatusClassificationPriority(
                                     }
                                 )
                             }
+                            storedStatuses
+                                .filter { Status.valuesFor(icalObject.getModuleFromString()).none { default -> stringResource(id = default.stringResource) == it.status } }
+                                .filter { it.module == icalObject.module }
+                                .forEach { storedStatus ->
+                                    DropdownMenuItem(
+                                        text = { Text(storedStatus.status) },
+                                        onClick = {
+                                            icalObject.status = storedStatus.status
+                                            statusMenuExpanded = false
+                                            onStatusChanged(storedStatus.status)
+                                        }
+                                    )
+                                }
                         }
                     },
                     leadingIcon = {
@@ -241,6 +267,7 @@ fun DetailsCardStatusClassificationPriority_Journal_Preview() {
             enableClassification = false,
             enablePriority = false,
             allowStatusChange = true,
+            storedStatuses = emptyList(),
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -259,6 +286,7 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview() {
             enableClassification = true,
             enablePriority = true,
             allowStatusChange = true,
+            storedStatuses = emptyList(),
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -277,6 +305,7 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview2() {
             enableClassification = false,
             enablePriority = false,
             allowStatusChange = false,
+            storedStatuses = emptyList(),
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
