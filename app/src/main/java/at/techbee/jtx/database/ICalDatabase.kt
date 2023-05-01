@@ -20,6 +20,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.database.views.ICal4List
@@ -45,11 +46,12 @@ import at.techbee.jtx.database.views.ICal4List
         Attachment::class,
         StoredListSetting::class,
         StoredCategory::class,
-        StoredResource::class],
+        StoredResource::class,
+        StoredStatus::class],
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 27,
+    version = 28,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -76,6 +78,7 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 24, to = 25),  // added StoredCategory, StoredResource
         AutoMigration (from = 25, to = 26),  // added column Parent Expanded
         AutoMigration (from = 26, to = 27),  // added geoLat and geoLong to ical4list view
+        AutoMigration (from = 27, to = 28),  // added StoredCategory, StoredResource
     ]
 )
 @TypeConverters(Converters::class)

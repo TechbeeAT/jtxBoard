@@ -751,12 +751,13 @@ DELETEs by Object
     @Query("SELECT * FROM $TABLE_NAME_STORED_CATEGORIES")
     fun getStoredCategories(): LiveData<List<StoredCategory>>
 
+
     @Delete
     fun deleteStoredCategory(storedCategory: StoredCategory)
 
 
     /**
-     * StoredResourceCategory
+     * StoredResource
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertStoredResource(storedResource: StoredResource)
@@ -768,5 +769,19 @@ DELETEs by Object
     @Delete
     fun deleteStoredResource(storedResource: StoredResource)
 
+
+    /**
+     * StoredStatus
+     */
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_STORED_STATUS")
+    fun getStoredStatuses(): LiveData<List<StoredStatus>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertStoredStatus(storedStatus: StoredStatus)
+
+    @Delete
+    fun deleteStoredStatus(storedStatus: StoredStatus)
 
 }

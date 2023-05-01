@@ -445,6 +445,7 @@ Thank you!"</string>
     <string name="dialog_save_current_filter_my_filter">"My filter"</string>
     <string name="dialog_edit_stored_category_title">"Add/edit category preset"</string>
     <string name="dialog_edit_stored_resource_title">"Add/edit resource preset"</string>
+    <string name="dialog_edit_stored_status_title">"Add/edit status preset"</string>
     <string name="dialog_add_audio_entry_title">"Add audio entry"</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
@@ -588,5 +589,8 @@ Thank you!"</string>
     <string name="markdown_code">"Code"</string>
     <string name="preset_categories">"Preset categories"</string>
     <string name="preset_resources">"Preset resources"</string>
+    <string name="custom_status_journals">"Custom statuses (journals)"</string>
+    <string name="custom_status_notes">"Custom statuses (notes)"</string>
+    <string name="custom_status_tasks">"Custom statuses (tasks)"</string>
     <string name="active_filters">Active filters:</string>
 </resources>

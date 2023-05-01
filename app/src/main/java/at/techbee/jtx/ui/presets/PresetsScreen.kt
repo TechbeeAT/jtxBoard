@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Label
+import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -29,8 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
@@ -51,6 +55,7 @@ fun PresetsScreen(
     val storedCategories by database.getStoredCategories().observeAsState(emptyList())
     val allResources by database.getAllResourcesAsText().observeAsState(emptyList())
     val storedResources by database.getStoredResources().observeAsState(emptyList())
+    val storedStatuses by database.getStoredStatuses().observeAsState(emptyList())
 
 
     Scaffold(
@@ -78,6 +83,7 @@ fun PresetsScreen(
                             storedCategories = storedCategories,
                             allResources = allResources,
                             storedResources = storedResources,
+                            storedStatuses = storedStatuses,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -98,11 +104,13 @@ fun PresetsScreenContent(
     storedCategories: List<StoredCategory>,
     allResources: List<String>,
     storedResources: List<StoredResource>,
+    storedStatuses: List<StoredStatus>,
     modifier: Modifier = Modifier
 ) {
 
     var editCategory by remember { mutableStateOf<StoredCategory?>(null) }
     var editResource by remember { mutableStateOf<StoredResource?>(null) }
+    var editStatus by remember { mutableStateOf<StoredStatus?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -137,6 +145,24 @@ fun PresetsScreenContent(
                 }
             },
             onDismiss = { editResource = null }
+        )
+    }
+
+    if(editStatus != null) {
+        EditStoredStatusDialog(
+            storedStatus = editStatus!!,
+            isDefaultStatus = Status.valuesFor(Module.values().find { it.name == editStatus?.module }?:Module.NOTE).any { stringResource(id = it.stringResource) == editStatus?.status },
+            onStoredStatusChanged = {
+                scope.launch(Dispatchers.IO) {
+                    ICalDatabase.getInstance(context).iCalDatabaseDao.upsertStoredStatus(it)
+                }
+            },
+            onDeleteStoredStatus = {
+                scope.launch(Dispatchers.IO) {
+                    ICalDatabase.getInstance(context).iCalDatabaseDao.deleteStoredStatus(it)
+                }
+            },
+            onDismiss = { editStatus = null }
         )
     }
     
@@ -216,8 +242,60 @@ fun PresetsScreenContent(
                 colors = AssistChipDefaults.elevatedAssistChipColors()
             )
         }
-    }
 
+
+        Module.values().forEach { module ->
+            HeadlineWithIcon(
+                icon = Icons.Outlined.PublishedWithChanges,
+                iconDesc = null,
+                text = when(module) {
+                    Module.JOURNAL -> stringResource(R.string.custom_status_journals)
+                    Module.NOTE -> stringResource(R.string.custom_status_notes)
+                    Module.TODO -> stringResource(R.string.custom_status_tasks)
+                },
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(3.dp)
+            ) {
+                Status.valuesFor(module).forEach { defaultStatus ->
+                    ElevatedAssistChip(
+                        onClick = { editStatus = StoredStatus(context.getString(defaultStatus.stringResource), module.name, StoredStatus.getColorForStatus(context.getString(defaultStatus.stringResource), storedStatuses, module)?.toArgb()) },
+                        label = { Text(stringResource(id = defaultStatus.stringResource)) },
+                        colors = StoredStatus.getColorForStatus(context.getString(defaultStatus.stringResource), storedStatuses, module)?.let {
+                            AssistChipDefaults.assistChipColors(
+                                containerColor = it,
+                                labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(it)
+                            )
+                        } ?: AssistChipDefaults.elevatedAssistChipColors()
+                    )
+                }
+
+                storedStatuses
+                    .filter { it.module == module.name }
+                    .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.status } }
+                    .forEach { storedStatus ->
+                    ElevatedAssistChip(
+                        onClick = { editStatus = storedStatus },
+                        label = { Text(storedStatus.status) },
+                        colors = storedStatus.color?.let {
+                            AssistChipDefaults.assistChipColors(
+                                containerColor = Color(it),
+                                labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(it))
+                            )
+                        } ?: AssistChipDefaults.elevatedAssistChipColors()
+                    )
+                }
+
+                ElevatedAssistChip(
+                    onClick = { editStatus = StoredStatus("", module.name, null) },
+                    label = { Text("+") },
+                    colors = AssistChipDefaults.elevatedAssistChipColors()
+                )
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -229,6 +307,7 @@ fun PresetsScreen_Preview() {
             storedCategories = listOf(StoredCategory("red", Color.Magenta.toArgb()), StoredCategory("ohne Farbe", null)),
             allResources = listOf("existing resource"),
             storedResources = listOf(StoredResource("blue", Color.Blue.toArgb()), StoredResource("ohne Farbe", null)),
+            storedStatuses = listOf(StoredStatus("Final", Module.JOURNAL.name, Color.Blue.toArgb()), StoredStatus("individual", Module.JOURNAL.name, Color.Green.toArgb()))
         )
     }
 }
