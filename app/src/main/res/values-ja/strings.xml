@@ -469,6 +469,9 @@ Global Strings -->
     <string name="menu_view_share_mail">"メールで共有"</string>
     <string name="menu_view_copy_to_clipboard">"クリップボードにコピー"</string>
     <string name="menu_view_copy_to_clipboard_copied">"コピーしました"</string>
+    <string name="menu_view_convert_to_journal">"ジャーナルに変換"</string>
+    <string name="menu_view_convert_to_note">"メモに変換"</string>
+    <string name="menu_view_convert_to_task">"タスクに変換"</string>
     <string name="settings_select_language">"言語を選択"</string>
     <string name="settings_select_language_system">"システムのデフォルト"</string>
     <string name="filter_special">"特別なフィルター"</string>
