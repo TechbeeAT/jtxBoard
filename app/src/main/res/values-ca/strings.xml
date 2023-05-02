@@ -147,6 +147,7 @@ Global Strings -->
     <!-- Sync fragment -->
     <string name="sync_with_sync_app_heading">"Sincronitza amb %1$s"</string>
     <string name="sync_basic_info">"jtx Board no proporciona cap funció de sincronització integrada, però suporta sincronitzar amb DAVx⁵. Aquest mètode et permet fer servir qualsevol servidor CalDAV de la teua elecció per a guardar i sincronitzar les teues dades."</string>
+    <string name="sync_ksync_basic_info">"kSync és una aplicació basada en DAVx⁵ desenvolupada per Infomaniak especialment per als seus serveis. Mentre que DAVx⁵ és oberta a qualsevol servidor compatible amb CalDAV, kSync sols permet sincronitzar amb comptes d'Infomaniak."</string>
     <string name="sync_congratulations">"Felicitats! :-)"</string>
     <string name="sync_toast_intent_open_sync_app_failed">"No s'ha pogut obrir %1$s, per favor, obri l'aplicació manualment."</string>
     <!-- Donate fragment -->
