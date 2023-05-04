@@ -84,7 +84,7 @@ fun ListOptionsKanban(
                 }
                 storedStatuses
                     .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.status } }
-                    .filter { it.module == module.name }
+                    .filter { it.module == module }
                     .forEach { storedStatus ->
                         FilterChip(
                             selected = listSettings.kanbanColumns.contains(storedStatus.status),
@@ -126,7 +126,7 @@ fun ListOptionsKanban_Preview() {
         ListOptionsKanban(
             module = Module.TODO,
             listSettings = listSettings,
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.TODO.name, Status.FINAL, null))),
+            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.TODO, Status.FINAL, null))),
             onListSettingsChanged = { },
         )
     }

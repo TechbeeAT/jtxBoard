@@ -265,7 +265,7 @@ fun UpdateEntriesDialog(
                         }
                         storedStatuses
                             .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.status } }
-                            .filter { it.module == module.name }
+                            .filter { it.module == module }
                             .forEach { storedStatus ->
                                 InputChip(
                                     onClick = { newStatus = storedStatus.status },
@@ -455,7 +455,7 @@ fun UpdateEntriesDialog_Preview() {
             selectFromAllListLive = MutableLiveData(listOf()),
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedResourcesLive = MutableLiveData(listOf(StoredResource("1234", Color.Green.toArgb()))),
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL.name, Status.NO_STATUS, Color.Green.toArgb()))),
+            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))),
             player = null,
             onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },

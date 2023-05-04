@@ -553,7 +553,7 @@ fun ListOptionsFilter_Preview_TODO() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL.name, Status.FINAL, null))),
+            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },
@@ -595,7 +595,7 @@ fun ListOptionsFilter_Preview_JOURNAL() {
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL.name, Status.FINAL, null))),
+            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },
             onDeleteStoredListSetting = { }

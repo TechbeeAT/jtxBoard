@@ -101,29 +101,31 @@ fun DetailsCardStatusClassificationPriority(
                             onDismissRequest = { statusMenuExpanded = false }
                         ) {
 
-                            Status.valuesFor(icalObject.getModuleFromString()).forEach { status ->
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(id = status.stringResource)) },
-                                    onClick = {
-                                        icalObject.status = status.status
-                                        statusMenuExpanded = false
-                                        onStatusChanged(status.status)
-                                    }
-                                )
-                            }
-                            storedStatuses
-                                .filter { Status.valuesFor(icalObject.getModuleFromString()).none { default -> stringResource(id = default.stringResource) == it.status } }
-                                .filter { it.module == icalObject.module }
-                                .forEach { storedStatus ->
+                            if(storedStatuses.none { it.module == icalObject.getModuleFromString() }) {
+                                Status.valuesFor(icalObject.getModuleFromString()).forEach { status ->
                                     DropdownMenuItem(
-                                        text = { Text(storedStatus.status) },
+                                        text = { Text(stringResource(id = status.stringResource)) },
                                         onClick = {
-                                            icalObject.status = storedStatus.status
+                                            icalObject.status = status.status
                                             statusMenuExpanded = false
-                                            onStatusChanged(storedStatus.status)
+                                            onStatusChanged(status.status)
                                         }
                                     )
                                 }
+                            } else {
+                                storedStatuses
+                                    .filter { it.module == icalObject.getModuleFromString() }
+                                    .forEach { storedStatus ->
+                                        DropdownMenuItem(
+                                            text = { Text(storedStatus.status) },
+                                            onClick = {
+                                                icalObject.status = storedStatus.status
+                                                statusMenuExpanded = false
+                                                onStatusChanged(storedStatus.status)
+                                            }
+                                        )
+                                    }
+                            }
                         }
                     },
                     leadingIcon = {

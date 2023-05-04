@@ -30,14 +30,14 @@ const val COLUMN_STORED_STATUS_MODULE = "module"
 data class StoredStatus (
 
     @ColumnInfo(index = true, name = COLUMN_STORED_STATUS_NAME)    var status: String,
-    @ColumnInfo(name = COLUMN_STORED_STATUS_MODULE)                var module: String,
+    @ColumnInfo(name = COLUMN_STORED_STATUS_MODULE)                var module: Module,
     @ColumnInfo(name = COLUMN_STORED_STATUS_RFCSTATUS)             var rfcStatus: Status,
     @ColumnInfo(name = COLUMN_STORED_STATUS_COLOR)                 var color: Int?
 ): Parcelable{
 
     companion object {
         fun getColorForStatus(status: String?, storedStatuses: List<StoredStatus>, module: Module): Color? {
-            return storedStatuses.find { it.status == status && it.module == module.name }?.color?.let { Color(it) }
+            return storedStatuses.find { it.status == status && it.module == module }?.color?.let { Color(it) }
         }
     }
 }

@@ -21,4 +21,7 @@ class Converters {
 
     @TypeConverter fun stringToStatus(value: String) = Status.values().find { it.name == value } ?: Status.NO_STATUS
     @TypeConverter fun statusToString(value: Status?) = value?.name
+
+    @TypeConverter fun stringToModule(value: String) = Module.values().find { it.name == value } ?: Module.NOTE
+    @TypeConverter fun moduleToString(value: Module?) = value?.name
 }

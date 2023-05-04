@@ -8,13 +8,30 @@
 
 package at.techbee.jtx.ui.presets
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -23,6 +40,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -35,11 +53,10 @@ import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EditStoredStatusDialog(
     storedStatus: StoredStatus,
-    isDefaultStatus: Boolean,
     onStoredStatusChanged: (StoredStatus) -> Unit,
     onDeleteStoredStatus: (StoredStatus) -> Unit,
     onDismiss: () -> Unit
@@ -47,6 +64,7 @@ fun EditStoredStatusDialog(
 
     val keyboardController = LocalSoftwareKeyboardController.current
     var storedStatusName by remember { mutableStateOf(storedStatus.status) }
+    var storedStatusRfcStatus by remember { mutableStateOf(storedStatus.rfcStatus) }
     var storedStatusColor by remember { mutableStateOf(storedStatus.color?.let { Color(it) }) }
 
 
@@ -71,7 +89,6 @@ fun EditStoredStatusDialog(
                         value = storedStatusName,
                         onValueChange = { storedStatusName = it },
                         label = { Text(stringResource(R.string.status)) },
-                        enabled = !isDefaultStatus,
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(
@@ -83,6 +100,29 @@ fun EditStoredStatusDialog(
                         isError = storedStatusName.isEmpty()
                     )
                 }
+
+                Text(
+                    text = "maps to",
+                    modifier = Modifier.padding(8.dp)
+                )
+
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
+                    Status.valuesFor(storedStatus.module).forEach { status ->
+                        FilterChip(
+                            selected = storedStatusRfcStatus == status,
+                            onClick = { storedStatusRfcStatus = status },
+                            label = { Text(stringResource(id = status.stringResource)) }
+                        )
+                    }
+                }
+
+                Text(
+                    text = "Custom statuses are only visible in jtx Board but are mapped to a standard status of your choice for interoperability with other applications.",
+                    style = MaterialTheme.typography.labelSmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(8.dp)
+                )
+
 
                 ColorSelectorRow(
                     selectedColor = storedStatusColor,
@@ -108,7 +148,7 @@ fun EditStoredStatusDialog(
                     Text(stringResource(id = R.string.cancel))
                 }
 
-                if(storedStatus.status.isNotEmpty() && !isDefaultStatus) {
+                if(storedStatus.status.isNotEmpty()) {
                     TextButton(onClick = {
                         onDeleteStoredStatus(storedStatus)
                         onDismiss()
@@ -119,7 +159,7 @@ fun EditStoredStatusDialog(
 
                 TextButton(
                     onClick = {
-                        onStoredStatusChanged(StoredStatus(storedStatusName, storedStatus.module, storedStatus.rfcStatus, storedStatusColor?.toArgb()))
+                        onStoredStatusChanged(StoredStatus(storedStatusName, storedStatus.module, storedStatusRfcStatus, storedStatusColor?.toArgb()))
                         onDismiss()
                     },
                     enabled = storedStatusName.isNotEmpty()
@@ -137,8 +177,7 @@ fun EditStoredStatusDialogPreview_canEdit() {
     MaterialTheme {
 
         EditStoredStatusDialog(
-            storedStatus = StoredStatus("test", Module.JOURNAL.name, Status.FINAL, Color.Magenta.toArgb()),
-            isDefaultStatus = false,
+            storedStatus = StoredStatus("test", Module.JOURNAL, Status.NO_STATUS, Color.Magenta.toArgb()),
             onStoredStatusChanged = { },
             onDeleteStoredStatus = { },
             onDismiss = { }
@@ -152,8 +191,7 @@ fun EditStoredStatusDialogPreview_canNOTEdit() {
     MaterialTheme {
 
         EditStoredStatusDialog(
-            storedStatus = StoredStatus("test", Module.JOURNAL.name, Status.FINAL, Color.Magenta.toArgb()),
-            isDefaultStatus = true,
+            storedStatus = StoredStatus("test", Module.JOURNAL, Status.NO_STATUS, Color.Magenta.toArgb()),
             onStoredStatusChanged = { },
             onDeleteStoredStatus = { },
             onDismiss = { }
@@ -168,8 +206,7 @@ fun EditStoredStatusDialogPreview_new() {
     MaterialTheme {
 
         EditStoredStatusDialog(
-            storedStatus = StoredStatus("",  Module.JOURNAL.name, Status.FINAL, null),
-            isDefaultStatus = false,
+            storedStatus = StoredStatus("",  Module.JOURNAL, Status.NO_STATUS, null),
             onStoredStatusChanged = { },
             onDeleteStoredStatus = { },
             onDismiss = { }

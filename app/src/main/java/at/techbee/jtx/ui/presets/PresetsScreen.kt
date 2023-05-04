@@ -56,6 +56,7 @@ fun PresetsScreen(
     val allResources by database.getAllResourcesAsText().observeAsState(emptyList())
     val storedResources by database.getStoredResources().observeAsState(emptyList())
     val storedStatuses by database.getStoredStatuses().observeAsState(emptyList())
+    //val allCustomStatuses by database.getAllCustomStatuses().observeAsState(emptyList())  TODO
 
 
     Scaffold(
@@ -151,7 +152,6 @@ fun PresetsScreenContent(
     if(editStatus != null) {
         EditStoredStatusDialog(
             storedStatus = editStatus!!,
-            isDefaultStatus = Status.valuesFor(Module.values().find { it.name == editStatus?.module }?:Module.NOTE).any { stringResource(id = it.stringResource) == editStatus?.status },
             onStoredStatusChanged = {
                 scope.launch(Dispatchers.IO) {
                     ICalDatabase.getInstance(context).iCalDatabaseDao.upsertStoredStatus(it)
@@ -256,40 +256,41 @@ fun PresetsScreenContent(
                 modifier = Modifier.padding(top = 8.dp)
             )
 
+            Text(
+                text = "Adding a custom status will replace the selection of the default statuses!",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.error
+            )
+
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(3.dp)
             ) {
-                Status.valuesFor(module).forEach { defaultStatus ->
-                    ElevatedAssistChip(
-                        onClick = { editStatus = StoredStatus(context.getString(defaultStatus.stringResource), module.name, Status.NO_STATUS, StoredStatus.getColorForStatus(context.getString(defaultStatus.stringResource), storedStatuses, module)?.toArgb()) },
-                        label = { Text(stringResource(id = defaultStatus.stringResource)) },
-                        colors = StoredStatus.getColorForStatus(context.getString(defaultStatus.stringResource), storedStatuses, module)?.let {
-                            AssistChipDefaults.assistChipColors(
-                                containerColor = it,
-                                labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(it)
+                if(storedStatuses.none { it.module == module }) {
+                    Status.valuesFor(module).forEach { defaultStatus ->
+                        ElevatedAssistChip(
+                            onClick = { },
+                            label = { Text(stringResource(id = defaultStatus.stringResource)) }
+                        )
+                    }
+                } else {
+                    storedStatuses
+                        .filter { it.module == module }
+                        .forEach { storedStatus ->
+                            ElevatedAssistChip(
+                                onClick = { editStatus = storedStatus },
+                                label = { Text(storedStatus.status) },
+                                colors = storedStatus.color?.let {
+                                    AssistChipDefaults.assistChipColors(
+                                        containerColor = Color(it),
+                                        labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(it))
+                                    )
+                                } ?: AssistChipDefaults.elevatedAssistChipColors()
                             )
-                        } ?: AssistChipDefaults.elevatedAssistChipColors()
-                    )
-                }
-
-                storedStatuses
-                    .filter { it.module == module.name }
-                    .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.status } }
-                    .forEach { storedStatus ->
-                    ElevatedAssistChip(
-                        onClick = { editStatus = storedStatus },
-                        label = { Text(storedStatus.status) },
-                        colors = storedStatus.color?.let {
-                            AssistChipDefaults.assistChipColors(
-                                containerColor = Color(it),
-                                labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(it))
-                            )
-                        } ?: AssistChipDefaults.elevatedAssistChipColors()
-                    )
+                        }
                 }
 
                 ElevatedAssistChip(
-                    onClick = { editStatus = StoredStatus("", module.name, Status.NO_STATUS, null) },
+                    onClick = { editStatus = StoredStatus("", module, Status.NO_STATUS, null) },
                     label = { Text("+") },
                     colors = AssistChipDefaults.elevatedAssistChipColors()
                 )
@@ -307,7 +308,7 @@ fun PresetsScreen_Preview() {
             storedCategories = listOf(StoredCategory("red", Color.Magenta.toArgb()), StoredCategory("ohne Farbe", null)),
             allResources = listOf("existing resource"),
             storedResources = listOf(StoredResource("blue", Color.Blue.toArgb()), StoredResource("ohne Farbe", null)),
-            storedStatuses = listOf(StoredStatus("Final", Module.JOURNAL.name, Status.NO_STATUS, Color.Blue.toArgb()), StoredStatus("individual", Module.JOURNAL.name, Status.NO_STATUS, Color.Green.toArgb()))
+            storedStatuses = listOf(StoredStatus("Final", Module.JOURNAL, Status.NO_STATUS, Color.Blue.toArgb()), StoredStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))
         )
     }
 }
