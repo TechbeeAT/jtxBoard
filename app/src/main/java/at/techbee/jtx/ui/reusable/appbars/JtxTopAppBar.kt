@@ -1,5 +1,6 @@
 package at.techbee.jtx.ui.reusable.appbars
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
@@ -62,6 +63,7 @@ fun JtxTopAppBar(
 }
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview(showBackground = true)
 @Composable
 fun JtxTopAppBar_Preview() {
@@ -84,6 +86,7 @@ fun JtxTopAppBar_Preview() {
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview(showBackground = true)
 @Composable
 fun JtxTopAppBar_Preview_withSubtitle() {
@@ -101,7 +104,7 @@ fun JtxTopAppBar_Preview_withSubtitle() {
                     }
                 }
             ) },
-            content = {}
+            content = {  }
         )
     }
 }
