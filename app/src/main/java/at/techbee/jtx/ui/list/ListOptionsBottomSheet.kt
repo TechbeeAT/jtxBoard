@@ -42,6 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ListOptionsBottomSheet(
     module: Module,
+    initialTab: ListOptionsBottomSheetTabs,
     listSettings: ListSettings,
     allCollectionsLive: LiveData<List<ICalCollection>>,
     allCategoriesLive: LiveData<List<String>>,
@@ -56,45 +57,47 @@ fun ListOptionsBottomSheet(
 
     val scope = rememberCoroutineScope()
 
-    val tabIndexFilter = 0
-    val tabIndexGroupSort = 1
+    val listOptionTabs = if(listSettings.viewMode.value == ViewMode.KANBAN)
+        listOf(ListOptionsBottomSheetTabs.FILTER, ListOptionsBottomSheetTabs.GROUP_SORT, ListOptionsBottomSheetTabs.KANBAN_SETTINGS )
+    else
+        listOf(ListOptionsBottomSheetTabs.FILTER, ListOptionsBottomSheetTabs.GROUP_SORT)
 
-    val pagerState = rememberPagerState(initialPage = tabIndexFilter)
+    val pagerState = rememberPagerState(initialPage = listOptionTabs.indexOf(initialTab))
 
     Column(
         modifier = modifier
     ) {
 
         TabRow(selectedTabIndex = pagerState.currentPage) {
-            Tab(
-                selected = false,
-                onClick = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(tabIndexFilter)
-                    }
-                },
-                content = { Text(stringResource(id = R.string.filter)) },
-                modifier = Modifier.height(50.dp)
-            )
-            Tab(
-                selected = false,
-                onClick = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(tabIndexGroupSort)
-                    }
-                },
-                content = { Text(stringResource(id = R.string.filter_group_sort)) },
-                modifier = Modifier.height(50.dp)
-            )
+            listOptionTabs.forEach { tab ->
+                Tab(
+                    selected = pagerState.currentPage == listOptionTabs.indexOf(tab),
+                    onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(listOptionTabs.indexOf(tab))
+                        }
+                    },
+                    content = {
+                        Text(
+                            stringResource(id = when(tab) {
+                                ListOptionsBottomSheetTabs.FILTER -> R.string.filter
+                                ListOptionsBottomSheetTabs.GROUP_SORT -> R.string.filter_group_sort
+                                ListOptionsBottomSheetTabs.KANBAN_SETTINGS -> R.string.kanban_settings
+                            } )
+                        )
+                    },
+                    modifier = Modifier.height(50.dp)
+                )
+            }
         }
 
         HorizontalPager(
             state = pagerState,
-            pageCount = 2,
+            pageCount = listOptionTabs.size,
             verticalAlignment = Alignment.Top
         ) { page ->
-            when (page) {
-                tabIndexFilter -> {
+            when (listOptionTabs[page]) {
+                ListOptionsBottomSheetTabs.FILTER -> {
                     ListOptionsFilter(
                         module = module,
                         listSettings = listSettings,
@@ -112,10 +115,23 @@ fun ListOptionsBottomSheet(
                             .padding(8.dp),
                     )
                 }
-                tabIndexGroupSort -> {
+                ListOptionsBottomSheetTabs.GROUP_SORT -> {
                     ListOptionsGroupSort(
                         module = module,
                         listSettings = listSettings,
+                        onListSettingsChanged = onListSettingsChanged,
+                        modifier = modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(8.dp),
+                    )
+                }
+                ListOptionsBottomSheetTabs.KANBAN_SETTINGS -> {
+                    ListOptionsKanban(
+                        module = module,
+                        listSettings = listSettings,
+                        //allCategoriesLive = allCategoriesLive,
+                        storedStatusesLive = storedStatusesLive,
                         onListSettingsChanged = onListSettingsChanged,
                         modifier = modifier
                             .fillMaxSize()
@@ -143,6 +159,7 @@ fun ListOptionsBottomSheet_Preview_TODO() {
 
         ListOptionsBottomSheet(
             module = Module.TODO,
+            initialTab = ListOptionsBottomSheetTabs.FILTER,
             listSettings = listSettings,
             allCollectionsLive = MutableLiveData(
                 listOf(
@@ -185,6 +202,7 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
 
         ListOptionsBottomSheet(
             module = Module.JOURNAL,
+            initialTab = ListOptionsBottomSheetTabs.FILTER,
             listSettings = listSettings,
             allCollectionsLive = MutableLiveData(
                 listOf(
@@ -210,3 +228,5 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
         )
     }
 }
+
+enum class ListOptionsBottomSheetTabs { FILTER, GROUP_SORT, KANBAN_SETTINGS }

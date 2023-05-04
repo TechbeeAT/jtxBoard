@@ -201,6 +201,7 @@ fun ListScreen(
                     storedResourcesLive = listViewModel.storedResources,
                     storedStatusesLive = listViewModel.storedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
+                    kanbanColumns = listViewModel.listSettings.kanbanColumns,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     player = listViewModel.mediaPlayer,

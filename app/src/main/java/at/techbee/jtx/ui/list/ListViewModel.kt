@@ -237,16 +237,16 @@ open class ListViewModel(application: Application, val module: Module) : Android
         }
     }
 
-    fun updateStatus(itemId: Long, newStatus: Status, scrollOnce: Boolean = false) {
+    fun updateStatus(itemId: Long, newStatus: String?, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
-            currentItem.status = newStatus.status
+            currentItem.status = newStatus
             if(settingsStateHolder.settingKeepStatusProgressCompletedInSync.value) {
                 when(newStatus) {
-                    Status.NEEDS_ACTION -> currentItem.setUpdatedProgress(0, true)
-                    Status.IN_PROCESS -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
-                    Status.COMPLETED -> currentItem.setUpdatedProgress(100, true)
+                    Status.NEEDS_ACTION.status -> currentItem.setUpdatedProgress(0, true)
+                    Status.IN_PROCESS.status -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
+                    Status.COMPLETED.status -> currentItem.setUpdatedProgress(100, true)
                     else -> { }
                 }
             }

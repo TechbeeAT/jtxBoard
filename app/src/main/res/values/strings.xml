@@ -593,4 +593,6 @@ Thank you!"</string>
     <string name="custom_status_notes">"Custom statuses (notes)"</string>
     <string name="custom_status_tasks">"Custom statuses (tasks)"</string>
     <string name="active_filters">Active filters:</string>
+    <string name="kanban_settings">"Kanban"</string>
+    <string name="kanban_columns">"Kanban-Columns"</string>
 </resources>

@@ -197,6 +197,7 @@ fun ListScreenTabContainer(
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val filterSheetState = rememberModalBottomSheetState()
+    var filterSheetInitialTab by remember { mutableStateOf(ListOptionsBottomSheetTabs.FILTER)}
 
     var showSearch by remember { mutableStateOf(false) }
     val showQuickAdd = remember { mutableStateOf(false) }
@@ -307,6 +308,7 @@ fun ListScreenTabContainer(
         ModalBottomSheet(sheetState = filterSheetState, onDismissRequest = { }) {
             ListOptionsBottomSheet(
                 module = listViewModel.module,
+                initialTab = filterSheetInitialTab,
                 listSettings = listViewModel.listSettings,
                 allCollectionsLive = listViewModel.allCollections,
                 allCategoriesLive = listViewModel.allCategories,
@@ -324,7 +326,6 @@ fun ListScreenTabContainer(
             )
         }
     }
-
 
     Scaffold(
         topBar = {
@@ -438,6 +439,7 @@ fun ListScreenTabContainer(
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
                                 isSelected = getActiveViewModel().listSettings.viewMode.value == viewMode,
+                                hasSettings = viewMode == ViewMode.KANBAN,
                                 onClick = {
                                     if ((!isProPurchased.value)) {
                                         Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
@@ -446,6 +448,13 @@ fun ListScreenTabContainer(
                                         getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                                     }
                                     topBarMenuExpanded = false
+                                },
+                                onSettingsClicked = {
+                                    if(viewMode ==ViewMode.KANBAN) {
+                                        filterSheetInitialTab = ListOptionsBottomSheetTabs.KANBAN_SETTINGS
+                                        scope.launch { filterSheetState.show() }
+                                        topBarMenuExpanded = false
+                                    }
                                 }
                             )
                         }
@@ -514,10 +523,12 @@ fun ListScreenTabContainer(
                     isBiometricsUnlocked = globalStateHolder.isAuthenticated.value,
                     onFilterIconClicked = {
                         scope.launch {
-                            if (filterSheetState.isVisible)
+                            if (filterSheetState.isVisible) {
                                 filterSheetState.hide()
-                            else
+                            } else {
+                                filterSheetInitialTab = ListOptionsBottomSheetTabs.FILTER
                                 filterSheetState.show()
+                            }
                         }
                     },
                     onGoToDateSelected = { id -> getActiveViewModel().scrollOnceId.postValue(id) },
