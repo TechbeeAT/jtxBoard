@@ -455,7 +455,7 @@ fun UpdateEntriesDialog_Preview() {
             selectFromAllListLive = MutableLiveData(listOf()),
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedResourcesLive = MutableLiveData(listOf(StoredResource("1234", Color.Green.toArgb()))),
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL.name, Color.Green.toArgb()))),
+            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL.name, Status.NO_STATUS, Color.Green.toArgb()))),
             player = null,
             onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },

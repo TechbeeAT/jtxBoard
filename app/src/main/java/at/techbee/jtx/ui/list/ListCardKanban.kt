@@ -121,7 +121,7 @@ fun ListCardKanban_JOURNAL() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Color.Green.toArgb())),
+            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             player = null,
             modifier = Modifier
@@ -149,7 +149,7 @@ fun ListCardKanban_NOTE() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Color.Green.toArgb())),
+            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Status.FINAL, Color.Green.toArgb())),
             selected = true,
             player = null,
             modifier = Modifier
@@ -185,7 +185,7 @@ fun ListCardKanban_TODO() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Color.Green.toArgb())),
+            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             player = null,
         )

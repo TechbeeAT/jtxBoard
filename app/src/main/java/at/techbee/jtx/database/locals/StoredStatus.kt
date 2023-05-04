@@ -13,12 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import kotlinx.parcelize.Parcelize
 
 
 /** The name of the the table for statuses that are stored only locally. */
 const val TABLE_NAME_STORED_STATUS = "stored_status"
 const val COLUMN_STORED_STATUS_NAME = "status"
+const val COLUMN_STORED_STATUS_RFCSTATUS = "rfcstatus"
 const val COLUMN_STORED_STATUS_COLOR = "color"
 const val COLUMN_STORED_STATUS_MODULE = "module"
 
@@ -29,6 +31,7 @@ data class StoredStatus (
 
     @ColumnInfo(index = true, name = COLUMN_STORED_STATUS_NAME)    var status: String,
     @ColumnInfo(name = COLUMN_STORED_STATUS_MODULE)                var module: String,
+    @ColumnInfo(name = COLUMN_STORED_STATUS_RFCSTATUS)             var rfcStatus: Status,
     @ColumnInfo(name = COLUMN_STORED_STATUS_COLOR)                 var color: Int?
 ): Parcelable{
 

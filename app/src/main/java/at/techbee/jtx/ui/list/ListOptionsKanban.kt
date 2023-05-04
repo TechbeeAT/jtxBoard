@@ -126,7 +126,7 @@ fun ListOptionsKanban_Preview() {
         ListOptionsKanban(
             module = Module.TODO,
             listSettings = listSettings,
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.TODO.name, null))),
+            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.TODO.name, Status.FINAL, null))),
             onListSettingsChanged = { },
         )
     }

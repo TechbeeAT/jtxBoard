@@ -279,7 +279,7 @@ fun ListTopFlowRow_Preview() {
             resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Color.Green.toArgb()))
+            storedStatuses = listOf(StoredStatus("Individual", Module.JOURNAL.name, Status.FINAL, Color.Green.toArgb()))
 
             )
     }

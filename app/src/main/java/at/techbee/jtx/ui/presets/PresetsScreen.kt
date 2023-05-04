@@ -261,7 +261,7 @@ fun PresetsScreenContent(
             ) {
                 Status.valuesFor(module).forEach { defaultStatus ->
                     ElevatedAssistChip(
-                        onClick = { editStatus = StoredStatus(context.getString(defaultStatus.stringResource), module.name, StoredStatus.getColorForStatus(context.getString(defaultStatus.stringResource), storedStatuses, module)?.toArgb()) },
+                        onClick = { editStatus = StoredStatus(context.getString(defaultStatus.stringResource), module.name, Status.NO_STATUS, StoredStatus.getColorForStatus(context.getString(defaultStatus.stringResource), storedStatuses, module)?.toArgb()) },
                         label = { Text(stringResource(id = defaultStatus.stringResource)) },
                         colors = StoredStatus.getColorForStatus(context.getString(defaultStatus.stringResource), storedStatuses, module)?.let {
                             AssistChipDefaults.assistChipColors(
@@ -289,7 +289,7 @@ fun PresetsScreenContent(
                 }
 
                 ElevatedAssistChip(
-                    onClick = { editStatus = StoredStatus("", module.name, null) },
+                    onClick = { editStatus = StoredStatus("", module.name, Status.NO_STATUS, null) },
                     label = { Text("+") },
                     colors = AssistChipDefaults.elevatedAssistChipColors()
                 )
@@ -307,7 +307,7 @@ fun PresetsScreen_Preview() {
             storedCategories = listOf(StoredCategory("red", Color.Magenta.toArgb()), StoredCategory("ohne Farbe", null)),
             allResources = listOf("existing resource"),
             storedResources = listOf(StoredResource("blue", Color.Blue.toArgb()), StoredResource("ohne Farbe", null)),
-            storedStatuses = listOf(StoredStatus("Final", Module.JOURNAL.name, Color.Blue.toArgb()), StoredStatus("individual", Module.JOURNAL.name, Color.Green.toArgb()))
+            storedStatuses = listOf(StoredStatus("Final", Module.JOURNAL.name, Status.NO_STATUS, Color.Blue.toArgb()), StoredStatus("individual", Module.JOURNAL.name, Status.NO_STATUS, Color.Green.toArgb()))
         )
     }
 }

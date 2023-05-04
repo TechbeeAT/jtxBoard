@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
 import com.godaddy.android.colorpicker.HsvColor
@@ -118,7 +119,7 @@ fun EditStoredStatusDialog(
 
                 TextButton(
                     onClick = {
-                        onStoredStatusChanged(StoredStatus(storedStatusName, storedStatus.module, storedStatusColor?.toArgb()))
+                        onStoredStatusChanged(StoredStatus(storedStatusName, storedStatus.module, storedStatus.rfcStatus, storedStatusColor?.toArgb()))
                         onDismiss()
                     },
                     enabled = storedStatusName.isNotEmpty()
@@ -136,7 +137,7 @@ fun EditStoredStatusDialogPreview_canEdit() {
     MaterialTheme {
 
         EditStoredStatusDialog(
-            storedStatus = StoredStatus("test", Module.JOURNAL.name, Color.Magenta.toArgb()),
+            storedStatus = StoredStatus("test", Module.JOURNAL.name, Status.FINAL, Color.Magenta.toArgb()),
             isDefaultStatus = false,
             onStoredStatusChanged = { },
             onDeleteStoredStatus = { },
@@ -151,7 +152,7 @@ fun EditStoredStatusDialogPreview_canNOTEdit() {
     MaterialTheme {
 
         EditStoredStatusDialog(
-            storedStatus = StoredStatus("test", Module.JOURNAL.name, Color.Magenta.toArgb()),
+            storedStatus = StoredStatus("test", Module.JOURNAL.name, Status.FINAL, Color.Magenta.toArgb()),
             isDefaultStatus = true,
             onStoredStatusChanged = { },
             onDeleteStoredStatus = { },
@@ -167,7 +168,7 @@ fun EditStoredStatusDialogPreview_new() {
     MaterialTheme {
 
         EditStoredStatusDialog(
-            storedStatus = StoredStatus("",  Module.JOURNAL.name, null),
+            storedStatus = StoredStatus("",  Module.JOURNAL.name, Status.FINAL, null),
             isDefaultStatus = false,
             onStoredStatusChanged = { },
             onDeleteStoredStatus = { },

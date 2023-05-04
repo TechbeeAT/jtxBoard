@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 28,
-    "identityHash": "c083b5831ceb3def96b7da233a4e758f",
+    "identityHash": "dacd622815846c46cfa6eaba6a8cd342",
     "entities": [
       {
         "tableName": "attendee",
@@ -1458,7 +1458,7 @@
       },
       {
         "tableName": "stored_status",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`status` TEXT NOT NULL, `module` TEXT NOT NULL, `color` INTEGER, PRIMARY KEY(`status`, `module`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`status` TEXT NOT NULL, `module` TEXT NOT NULL, `rfcstatus` TEXT NOT NULL, `color` INTEGER, PRIMARY KEY(`status`, `module`))",
         "fields": [
           {
             "fieldPath": "status",
@@ -1469,6 +1469,12 @@
           {
             "fieldPath": "module",
             "columnName": "module",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rfcStatus",
+            "columnName": "rfcstatus",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -1512,7 +1518,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c083b5831ceb3def96b7da233a4e758f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dacd622815846c46cfa6eaba6a8cd342')"
     ]
   }
 }
