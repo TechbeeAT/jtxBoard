@@ -79,7 +79,7 @@ fun ListScreenCompact(
     settingLinkProgressToSubtasks: Boolean,
     player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onSyncRequested: () -> Unit
 ) {
@@ -187,7 +187,9 @@ fun ListScreenCompact(
                                             iCal4ListRelObject.iCal4List.id,
                                             groupedList
                                                 .flatMap { it.value }
-                                                .map { it.iCal4List })
+                                                .map { it.iCal4List },
+                                            iCal4ListRelObject.iCal4List.isReadOnly,
+                                        )
                                     },
                                     onLongClick = {
                                         if (!iCal4ListRelObject.iCal4List.isReadOnly)
@@ -277,7 +279,7 @@ fun ListScreenCompact_TODO() {
             settingLinkProgressToSubtasks = false,
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { }
         )
@@ -339,7 +341,7 @@ fun ListScreenCompact_JOURNAL() {
             settingLinkProgressToSubtasks = false,
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { }
         )

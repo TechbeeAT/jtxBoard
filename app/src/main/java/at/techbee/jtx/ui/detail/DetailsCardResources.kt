@@ -10,7 +10,13 @@ package at.techbee.jtx.ui.detail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,8 +25,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.NewLabel
 import androidx.compose.material.icons.outlined.WorkOutline
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.ElevatedAssistChip
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -39,20 +61,19 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun DetailsCardResources(
-    initialResources: List<Resource>,
+    resources: SnapshotStateList<Resource>,
     isEditMode: Boolean,
     allResources: List<String>,
     storedResources: List<StoredResource>,
-    onResourcesUpdated: (List<Resource>) -> Unit,
+    onResourcesUpdated: () -> Unit,
     onGoToFilteredList: (StoredListSettingData) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val headline = stringResource(id = R.string.resources)
-    var resources by remember { mutableStateOf(initialResources) }
     var newResource by remember { mutableStateOf("") }
 
     val mergedResources = mutableListOf<StoredResource>()
@@ -70,12 +91,8 @@ fun DetailsCardResources(
             HeadlineWithIcon(icon = Icons.Outlined.WorkOutline, iconDesc = headline, text = headline)
 
             AnimatedVisibility(resources.isNotEmpty()) {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-
-                    items(resources.asReversed()) { resource ->
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    resources.forEach { resource ->
                         if(!isEditMode) {
                             ElevatedAssistChip(
                                 onClick = { onGoToFilteredList(StoredListSettingData(searchResources = listOf(resource.text?:""))) },
@@ -92,8 +109,8 @@ fun DetailsCardResources(
                                 trailingIcon = {
                                     IconButton(
                                         onClick = {
-                                            resources = resources.filter { it != resource }
-                                            onResourcesUpdated(resources)
+                                            resources.remove(resource)
+                                            onResourcesUpdated()
                                         },
                                         content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
                                         modifier = Modifier.size(24.dp)
@@ -123,8 +140,8 @@ fun DetailsCardResources(
                     items(resourcesToSelectFiltered) { resource ->
                         InputChip(
                             onClick = {
-                                resources = resources.plus(Resource(text = resource.resource))
-                                onResourcesUpdated(resources)
+                                resources.add(Resource(text = resource.resource))
+                                onResourcesUpdated()
                                 newResource = ""
                             },
                             label = { Text(resource.resource) },
@@ -155,8 +172,8 @@ fun DetailsCardResources(
                         trailingIcon = {
                             if (newResource.isNotEmpty()) {
                                 IconButton(onClick = {
-                                    resources = resources.plus(Resource(text = newResource))
-                                    onResourcesUpdated(resources)
+                                    resources.add(Resource(text = newResource))
+                                    onResourcesUpdated()
                                     newResource = ""
                                 }) {
                                     Icon(
@@ -176,7 +193,7 @@ fun DetailsCardResources(
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             if(newResource.isNotEmpty() && resources.none { existing -> existing.text == newResource } ) {
-                                resources = resources.plus(Resource(text = newResource))
+                                resources.add(Resource(text = newResource))
                             }
                             newResource = ""
                         })
@@ -192,7 +209,7 @@ fun DetailsCardResources(
 fun DetailsCardResources_Preview() {
     MaterialTheme {
         DetailsCardResources(
-            initialResources = listOf(Resource(text = "asdf")),
+            resources = remember { mutableStateListOf(Resource(text = "asdf")) },
             isEditMode = false,
             allResources = listOf("projector", "overhead-thingy", "Whatever"),
             storedResources = listOf(StoredResource("projector", Color.Green.toArgb())),
@@ -208,7 +225,7 @@ fun DetailsCardResources_Preview() {
 fun DetailsCardResources_Preview_edit() {
     MaterialTheme {
         DetailsCardResources(
-            initialResources = listOf(Resource(text = "asdf")),
+            resources = remember { mutableStateListOf(Resource(text = "asdf")) },
             isEditMode = true,
             allResources = listOf("projector", "overhead-thingy", "Whatever"),
             storedResources = listOf(StoredResource("projector", Color.Green.toArgb())),

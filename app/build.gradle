@@ -29,8 +29,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 204000009
-        versionName "2.04.00-beta09"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 204010002
+        versionName "2.04.01-beta02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love is the answer\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -95,7 +95,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.4.6"
+        kotlinCompilerExtensionVersion "1.4.7"
     }
 
     packagingOptions {
@@ -314,8 +314,8 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.10.0'
     implementation "androidx.compose.ui:ui:$version_compose"
     implementation "androidx.compose.material3:material3:1.1.0-rc01"
-    implementation "androidx.compose.material:material-icons-extended:1.4.2"
-    implementation "androidx.compose.material:material:1.4.2"
+    implementation "androidx.compose.material:material-icons-extended:1.4.3"
+    implementation "androidx.compose.material:material:1.4.3"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
@@ -334,7 +334,7 @@ dependencies {
 
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
     
-    implementation "androidx.profileinstaller:profileinstaller:1.3.0"
+    implementation "androidx.profileinstaller:profileinstaller:1.3.1"
 
 
 }

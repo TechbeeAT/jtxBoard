@@ -14,7 +14,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.relocation.BringIntoViewRequester
@@ -26,8 +33,25 @@ import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Groups
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedAssistChip
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -55,13 +79,13 @@ import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalPermissionsApi::class
+    ExperimentalPermissionsApi::class, ExperimentalLayoutApi::class
 )
 @Composable
 fun DetailsCardAttendees(
-    initialAttendees: List<Attendee>,
+    attendees: SnapshotStateList<Attendee>,
     isEditMode: Boolean,
-    onAttendeesUpdated: (List<Attendee>) -> Unit,
+    onAttendeesUpdated: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -69,7 +93,6 @@ fun DetailsCardAttendees(
     // preview would break if rememberPermissionState is used for preview, so we set it to null only for preview!
     val contactsPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.READ_CONTACTS) else null
 
-    var attendees by remember { mutableStateOf(initialAttendees) }
     var searchAttendees = emptyList<Attendee>()
 
     val headline = stringResource(id = R.string.attendees)
@@ -88,9 +111,8 @@ fun DetailsCardAttendees(
             HeadlineWithIcon(icon = Icons.Outlined.Groups, iconDesc = headline, text = headline)
 
             AnimatedVisibility(attendees.isNotEmpty()) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    attendees.asReversed().forEach { attendee ->
-
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    attendees.forEach { attendee ->
                         val overflowMenuExpanded = remember { mutableStateOf(false) }
 
                         if(!isEditMode) {
@@ -127,8 +149,8 @@ fun DetailsCardAttendees(
                                 trailingIcon = {
                                     IconButton(
                                         onClick = {
-                                            attendees = attendees.filter { it != attendee }
-                                            onAttendeesUpdated(attendees)
+                                            attendees.remove(attendee)
+                                            onAttendeesUpdated()
                                         },
                                         content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
                                         modifier = Modifier.size(24.dp)
@@ -156,8 +178,7 @@ fun DetailsCardAttendees(
                                     },
                                     onClick = {
                                         attendee.role = role.name
-                                        //attendees = attendees  //notify
-                                        onAttendeesUpdated(attendees)
+                                        onAttendeesUpdated()
                                         overflowMenuExpanded.value = false
                                     })
                             }
@@ -182,8 +203,8 @@ fun DetailsCardAttendees(
                     items(possibleAttendeesToSelect) { attendee ->
                         InputChip(
                             onClick = {
-                                attendees = attendees.plus(attendee)
-                                onAttendeesUpdated(attendees)
+                                attendees.add(attendee)
+                                onAttendeesUpdated()
                                 newAttendee = ""
                                 coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
                             },
@@ -215,8 +236,8 @@ fun DetailsCardAttendees(
                                         Attendee(caladdress = "mailto:$newAttendee")
                                     else
                                         Attendee(cn = newAttendee)
-                                    attendees = attendees.plus(newAttendeeObject)
-                                    onAttendeesUpdated(attendees)
+                                    attendees.add(newAttendeeObject)
+                                    onAttendeesUpdated()
                                     newAttendee = ""
                                 }) {
                                     Icon(
@@ -251,8 +272,8 @@ fun DetailsCardAttendees(
                                 Attendee(caladdress = "mailto:$newAttendee")
                             else
                                 Attendee(cn = newAttendee)
-                            attendees = attendees.plus(newAttendeeObject)
-                            onAttendeesUpdated(attendees)
+                            attendees.add(newAttendeeObject)
+                            onAttendeesUpdated()
                             newAttendee = ""
                             coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
                         })
@@ -286,7 +307,7 @@ fun DetailsCardAttendees_Preview() {
     MaterialTheme {
 
         DetailsCardAttendees(
-            initialAttendees = listOf(Attendee(caladdress = "mailto:patrick@techbee.at", cn = "Patrick"), Attendee(caladdress = "mailto:info@techbee.at", cn = "Info")),
+            attendees = remember { mutableStateListOf(Attendee(caladdress = "mailto:patrick@techbee.at", cn = "Patrick"), Attendee(caladdress = "mailto:info@techbee.at", cn = "Info")) },
             isEditMode = false,
             onAttendeesUpdated = { }
         )
@@ -299,7 +320,7 @@ fun DetailsCardAttendees_Preview() {
 fun DetailsCardAttendees_Preview_edit() {
     MaterialTheme {
         DetailsCardAttendees(
-            initialAttendees = listOf(Attendee(caladdress = "mailto:patrick@techbee.at", cn = "Patrick")),
+            attendees = remember { mutableStateListOf(Attendee(caladdress = "mailto:patrick@techbee.at", cn = "Patrick")) },
             isEditMode = true,
             onAttendeesUpdated = { }
         )

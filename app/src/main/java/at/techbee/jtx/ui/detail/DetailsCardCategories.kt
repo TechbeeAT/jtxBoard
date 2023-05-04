@@ -10,7 +10,13 @@ package at.techbee.jtx.ui.detail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,8 +25,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.NewLabel
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.ElevatedAssistChip
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -39,21 +61,20 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun DetailsCardCategories(
-    initialCategories: List<Category>,
+    categories: SnapshotStateList<Category>,
     isEditMode: Boolean,
     allCategories: List<String>,
     storedCategories: List<StoredCategory>,
-    onCategoriesUpdated: (List<Category>) -> Unit,
+    onCategoriesUpdated: () -> Unit,
     onGoToFilteredList: (StoredListSettingData) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val headline = stringResource(id = R.string.categories)
     var newCategory by remember { mutableStateOf("") }
-    var categories by remember { mutableStateOf(initialCategories) }
 
     val mergedCategories = mutableListOf<StoredCategory>()
     mergedCategories.addAll(storedCategories)
@@ -70,11 +91,8 @@ fun DetailsCardCategories(
             HeadlineWithIcon(icon = Icons.Outlined.Label, iconDesc = headline, text = headline)
 
             AnimatedVisibility(categories.isNotEmpty()) {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    items(categories.asReversed()) { category ->
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    categories.forEach { category ->
                         if(!isEditMode) {
                             ElevatedAssistChip(
                                 onClick = { onGoToFilteredList(StoredListSettingData(searchCategories = listOf(category.text))) },
@@ -91,8 +109,8 @@ fun DetailsCardCategories(
                                 trailingIcon = {
                                     IconButton(
                                         onClick = {
-                                            categories = categories.filter { it != category }
-                                            onCategoriesUpdated(categories)
+                                            categories.remove(category)
+                                            onCategoriesUpdated()
                                         },
                                         content = {
                                             Icon(
@@ -127,8 +145,8 @@ fun DetailsCardCategories(
                     items(categoriesToSelectFiltered) { category ->
                         InputChip(
                             onClick = {
-                                categories = categories.plus(Category(text = category.category))
-                                onCategoriesUpdated(categories)
+                                categories.add(Category(text = category.category))
+                                onCategoriesUpdated()
                                 newCategory = ""
                             },
                             label = { Text(category.category) },
@@ -158,8 +176,8 @@ fun DetailsCardCategories(
                         trailingIcon = {
                             if (newCategory.isNotEmpty()) {
                                 IconButton(onClick = {
-                                    categories = categories.plus(Category(text = newCategory))
-                                    onCategoriesUpdated(categories)
+                                    categories.add(Category(text = newCategory))
+                                    onCategoriesUpdated()
                                     newCategory = ""
                                 }) {
                                     Icon(
@@ -171,10 +189,7 @@ fun DetailsCardCategories(
                         },
                         singleLine = true,
                         label = { Text(headline) },
-                        onValueChange = { newCategoryName ->
-                            newCategory = newCategoryName
-                            onCategoriesUpdated(categories)
-                        },
+                        onValueChange = { newCategoryName -> newCategory = newCategoryName },
                         modifier = Modifier.fillMaxWidth(),
                         isError = newCategory.isNotEmpty(),
                         keyboardOptions = KeyboardOptions(
@@ -184,9 +199,8 @@ fun DetailsCardCategories(
                         ),
                         keyboardActions = KeyboardActions(onDone = {
                             if (newCategory.isNotEmpty() && categories.none { existing -> existing.text == newCategory })
-                                categories = categories.plus(Category(text = newCategory))
+                                categories.add(Category(text = newCategory))
                             newCategory = ""
-                            onCategoriesUpdated(categories)
                         })
                     )
                 }
@@ -200,7 +214,7 @@ fun DetailsCardCategories(
 fun DetailsCardCategories_Preview() {
     MaterialTheme {
         DetailsCardCategories(
-            initialCategories = listOf(Category(text = "asdf")),
+            categories = remember { mutableStateListOf(Category(text = "asdf")) },
             isEditMode = false,
             allCategories = listOf("category1", "category2", "Whatever"),
             storedCategories = listOf(StoredCategory("category1", Color.Green.toArgb())),
@@ -216,7 +230,7 @@ fun DetailsCardCategories_Preview() {
 fun DetailsCardCategories_Preview_edit() {
     MaterialTheme {
         DetailsCardCategories(
-            initialCategories = listOf(Category(text = "asdf")),
+            categories = remember { mutableStateListOf(Category(text = "asdf")) },
             isEditMode = true,
             allCategories = listOf("category1", "category2", "Whatever"),
             storedCategories = listOf(StoredCategory("category1", Color.Green.toArgb())),

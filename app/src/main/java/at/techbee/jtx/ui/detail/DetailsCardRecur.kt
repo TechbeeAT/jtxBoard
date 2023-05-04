@@ -99,7 +99,8 @@ fun DetailsCardRecur(
             return null
         else {
             val updatedRRule = Recur.Builder().apply {
-                interval?.let { interval(it) }
+                if(interval != null && interval!! > 1)
+                    interval(interval!!)
                 until?.let { until(it) }
                 count?.let { count(it) }
                 frequency(frequency ?: Frequency.DAILY)

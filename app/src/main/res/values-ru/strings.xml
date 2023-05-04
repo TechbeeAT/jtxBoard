@@ -469,6 +469,9 @@ Global Strings -->
     <string name="menu_view_share_mail">"Отправить по E-Mail"</string>
     <string name="menu_view_copy_to_clipboard">"Скопировать в буфер"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Скопировано"</string>
+    <string name="menu_view_convert_to_journal">"Конвертировать в журнал"</string>
+    <string name="menu_view_convert_to_note">"Конвертировать в заметку"</string>
+    <string name="menu_view_convert_to_task">"Конвертировать в задачу"</string>
     <string name="settings_select_language">"Выбрать язык"</string>
     <string name="settings_select_language_system">"Системный"</string>
     <string name="filter_special">"Специальные фильтры"</string>

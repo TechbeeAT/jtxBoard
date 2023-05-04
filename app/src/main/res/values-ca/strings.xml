@@ -41,6 +41,7 @@ Global Strings -->
     <string name="navigation_drawer_open">"Obri el calaix de navegació"</string>
     <string name="navigation_drawer_close">"Tanca el calaix de navegació"</string>
     <string name="navigation_drawer_board">"Panell"</string>
+    <string name="navigation_drawer_synchronization">"Sincronització"</string>
     <string name="navigation_drawer_about">"A sobre de / Llicència"</string>
     <string name="navigation_drawer_subtitle">"diaris, notes i tasques"</string>
     <string name="navigation_drawer_settings">"Configuració"</string>
@@ -144,7 +145,18 @@ Global Strings -->
     <string name="settings_app">"Configuració de l'App"</string>
     <string name="settings_select_mimetype_for_audio">"Selecciona el tipus MIME per a notes d'àudio"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"Sincronitza amb %1$s"</string>
+    <string name="sync_basic_info">"jtx Board no proporciona cap funció de sincronització integrada, però suporta sincronitzar amb DAVx⁵. Aquest mètode et permet fer servir qualsevol servidor CalDAV de la teua elecció per a guardar i sincronitzar les teues dades."</string>
+    <string name="sync_ksync_basic_info">"kSync és una aplicació basada en DAVx⁵ desenvolupada per Infomaniak especialment per als seus serveis. Mentre que DAVx⁵ és oberta a qualsevol servidor compatible amb CalDAV, kSync sols permet sincronitzar amb comptes d'Infomaniak."</string>
+    <string name="sync_manageddavx5_basic_info">"El DAVx⁵ administrat fa que les funcions de DAVx⁵ estigues disponibles per a organitzacions, i ve amb funcions per a empreses avançades tals com desplegaments massius, marques de l'empresa, i configuració preestablerta."</string>
     <string name="sync_congratulations">"Felicitats! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"Hem detectat %1$s al teu dispositiu."</string>
+    <string name="sync_setup_instructions">"Instruccions per a la configuració"</string>
+    <string name="sync_check_out_sync_app">"Dóna un cop d'ull a %1$s!"</string>
+    <string name="sync_sync_app_not_found">"No hem detectat %1$s al teu dispositiu."</string>
+    <string name="sync_more_about_sync_app">"Més sobre %1$s"</string>
+    <string name="sync_download_sync_app">"Baixa %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Afegir compte en %1$s"</string>
     <string name="sync_toast_intent_open_sync_app_failed">"No s'ha pogut obrir %1$s, per favor, obri l'aplicació manualment."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Hola, sóc Patrick, el desenvolupador de jtx Board. Estic invertint molt de temps i esforços en aquesta aplicació que t'oferisc sense cap cost. No obstant, si t'agrada l'aplicació, pots donar suport al desenvolupament fent una xicoteta donació!"</string>
@@ -204,6 +216,7 @@ Global Strings -->
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Notes: %1$s"</string>
     <string name="collections_tasks_num">"Tasques: %1$s"</string>
+    <string name="collections_info">"Les col·leccions són acumulacions d'entrades com les carpetes amb arxius. Pots crear col·leccions locals amb el menú, o pots configurar col·leccions remotes per a sincronitzar si tens una aplicació de sincronització instal·lada (com DAVx⁵)."</string>
     <string name="collections_collection_menu">"Menú de col·leccions"</string>
     <string name="collections_dialog_add_local_collection_title">"Afegeix una col·lecció local"</string>
     <string name="collections_dialog_edit_local_collection_title">"Edita la col·lecció local"</string>
@@ -457,6 +470,9 @@ Gràcies!"</string>
     <string name="menu_view_share_mail">"Comparteix com a correu"</string>
     <string name="menu_view_copy_to_clipboard">"Copia al porta-retalls"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Copiat"</string>
+    <string name="menu_view_convert_to_journal">"Converteix a entrada de diari"</string>
+    <string name="menu_view_convert_to_note">"Convertir a nota"</string>
+    <string name="menu_view_convert_to_task">"Convertir a tasca"</string>
     <string name="settings_select_language">"Selecciona l'idioma"</string>
     <string name="settings_select_language_system">"Predeterminat del sistema"</string>
     <string name="filter_special">"Filtres especials"</string>

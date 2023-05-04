@@ -93,8 +93,10 @@ fun ListScreen(
         }
     }
 
-    fun processOnClick(itemId: Long, ical4list: List<ICal4List>) {
-        if (listViewModel.multiselectEnabled.value)
+    fun processOnClick(itemId: Long, ical4list: List<ICal4List>, isReadOnly: Boolean) {
+        if (listViewModel.multiselectEnabled.value && isReadOnly)
+            return
+        else if (listViewModel.multiselectEnabled.value)
             if (listViewModel.selectedEntries.contains(itemId)) listViewModel.selectedEntries.remove(itemId) else listViewModel.selectedEntries.add(itemId)
         else
             navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, false))
@@ -135,7 +137,7 @@ fun ListScreen(
                     settingProgressIncrement = settingsStateHolder.settingStepForProgress,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     player = listViewModel.mediaPlayer,
-                    onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
+                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent ->
                         processOnProgressChanged(itemId, newPercent)
@@ -162,7 +164,7 @@ fun ListScreen(
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     player = listViewModel.mediaPlayer,
-                    onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
+                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent ->
                         processOnProgressChanged(itemId, newPercent)
@@ -181,7 +183,7 @@ fun ListScreen(
                     listSettings = listViewModel.listSettings,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     player = listViewModel.mediaPlayer,
-                    onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
+                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent -> processOnProgressChanged(itemId, newPercent) },
                     onSyncRequested = { listViewModel.syncAccounts() }
@@ -198,7 +200,7 @@ fun ListScreen(
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     player = listViewModel.mediaPlayer,
-                    onClick = { itemId, ical4list -> processOnClick(itemId, ical4list) },
+                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent, scrollOnce ->
                         processOnProgressChanged(itemId, newPercent, scrollOnce)
