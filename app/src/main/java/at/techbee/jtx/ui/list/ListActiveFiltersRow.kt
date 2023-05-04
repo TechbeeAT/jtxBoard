@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.ui.reusable.elements.ListBadge
@@ -94,7 +93,7 @@ fun ListActiveFiltersRow(
             ListBadge(
                 icon = Icons.Outlined.PublishedWithChanges,
                 iconDesc = stringResource(R.string.status),
-                text = Status.values().find { it.status == status || it.name == status }?.stringResource?.let { stringResource(it) } ?: status,
+                text = stringResource(status.stringResource),
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }

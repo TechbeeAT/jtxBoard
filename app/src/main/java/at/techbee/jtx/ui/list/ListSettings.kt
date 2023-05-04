@@ -15,6 +15,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.widgets.ListWidgetConfig
@@ -25,7 +26,7 @@ class ListSettings {
     var searchCategories = mutableStateListOf<String>()
     var searchResources = mutableStateListOf<String>()
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
-    var searchStatus = mutableStateListOf<String>()
+    var searchStatus = mutableStateListOf<Status>()
     var searchClassification = mutableStateListOf<Classification>()
     var searchCollection = mutableStateListOf<String>()
     var searchAccount = mutableStateListOf<String>()
@@ -146,7 +147,7 @@ class ListSettings {
             //searchOrganizers =
             searchCategories.addAll(prefs.getStringSet(PREFS_CATEGORIES, emptySet())?.toList() ?: emptyList())
             searchResources.addAll(prefs.getStringSet(PREFS_RESOURCES, emptySet())?.toList() ?: emptyList())
-            searchStatus.addAll(prefs.getStringSet(PREFS_STATUS, emptySet())?.toList() ?: emptyList())
+            searchStatus.addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
             searchClassification.addAll(Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null)))
             searchCollection.addAll(prefs.getStringSet(PREFS_COLLECTION, emptySet())?.toList() ?: emptyList())
             searchAccount.addAll(prefs.getStringSet(PREFS_ACCOUNT, emptySet())?.toList() ?: emptyList())
@@ -255,7 +256,7 @@ class ListSettings {
 
             putStringSet(PREFS_CATEGORIES, searchCategories.toSet())
             putStringSet(PREFS_RESOURCES, searchResources.toSet())
-            putStringSet(PREFS_STATUS, searchStatus.toSet())
+            putStringSet(PREFS_STATUS, Status.getStringSetFromList(searchStatus))
             putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(searchClassification))
             putStringSet(PREFS_COLLECTION, searchCollection.toSet())
             putStringSet(PREFS_ACCOUNT, searchAccount.toSet())

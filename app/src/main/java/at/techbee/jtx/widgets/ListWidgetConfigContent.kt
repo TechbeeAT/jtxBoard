@@ -274,7 +274,7 @@ data class ListWidgetConfig(
     var module: Module = Module.NOTE,
     var searchCategories: List<String> = emptyList(),
     var searchResources: List<String> = emptyList(),
-    var searchStatus: List<String> = emptyList(),
+    var searchStatus: List<Status> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
     var searchCollection: List<String> = emptyList(),
     var searchAccount: List<String> = emptyList(),

@@ -50,7 +50,6 @@ fun ListOptionsFilter(
     modifier: Modifier = Modifier,
     isWidgetConfig: Boolean = false
 ) {
-    val context = LocalContext.current
     val allCollectionsState = allCollectionsLive.observeAsState(emptyList())
     val allCategories by allCategoriesLive.observeAsState(emptyList())
     val allResources by allResourcesLive.observeAsState(emptyList())
@@ -400,46 +399,25 @@ fun ListOptionsFilter(
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    val missingDefault = Status.valuesFor(module).filter { status -> !listSettings.searchStatus.contains(status.status?:status.name) }.map { it.status?:it.name }
-                    val missingStored = storedStatuses
-                        .filter { Status.valuesFor(module).none { default -> context.getString(default.stringResource) == it.status } }
-                        .filter { it.module == module.name }
-                        .map { it.status }
+                    val missing = Status.valuesFor(module).filter { status -> !listSettings.searchStatus.contains(status)}
                     listSettings.searchStatus.clear()
-                    listSettings.searchStatus.addAll(missingDefault)
-                    listSettings.searchStatus.addAll(missingStored)
+                    listSettings.searchStatus.addAll(missing)
                     onListSettingsChanged()
                 })
             {
                 Status.valuesFor(module).forEach { status ->
                     FilterChip(
-                        selected = listSettings.searchStatus.contains(status.status?:status.name),
+                        selected = listSettings.searchStatus.contains(status),
                         onClick = {
-                                if (listSettings.searchStatus.contains(status.status?:status.name))
-                                    listSettings.searchStatus.remove(status.status?:status.name)
+                                if (listSettings.searchStatus.contains(status))
+                                    listSettings.searchStatus.remove(status)
                                 else
-                                    listSettings.searchStatus.add(status.status?:status.name)
+                                    listSettings.searchStatus.add(status)
                             onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = status.stringResource)) }
                     )
                 }
-                storedStatuses
-                    .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.status } }
-                    .filter { it.module == module.name }
-                    .forEach { storedStatus ->
-                        FilterChip(
-                            selected = listSettings.searchStatus.contains(storedStatus.status),
-                            onClick = {
-                                    if (listSettings.searchStatus.contains(storedStatus.status))
-                                        listSettings.searchStatus.remove(storedStatus.status)
-                                    else
-                                        listSettings.searchStatus.add(storedStatus.status)
-                                onListSettingsChanged()
-                            },
-                            label = { Text(storedStatus.status) }
-                        )
-                    }
             }
 
 

@@ -15,6 +15,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
@@ -56,7 +57,7 @@ data class StoredListSetting (
 data class StoredListSettingData(
     var searchCategories: List<String> = emptyList(),
     var searchResources: List<String> = emptyList(),
-    var searchStatus: List<String> = emptyList(),
+    var searchStatus: List<Status> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
     var searchCollection: List<String> = emptyList(),
     var searchAccount: List<String> = emptyList(),
