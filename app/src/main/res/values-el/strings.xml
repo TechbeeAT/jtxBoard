@@ -470,6 +470,9 @@ Global Strings -->
     <string name="menu_view_share_mail">"Διαμοιρασμός ως E-mail"</string>
     <string name="menu_view_copy_to_clipboard">"Αντιγραφή στο πρόχειρο"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Αντιγράφηκε"</string>
+    <string name="menu_view_convert_to_journal">"Μετατροπή σε ημερολόγιο"</string>
+    <string name="menu_view_convert_to_note">"Μετατροπή σε σημείωση"</string>
+    <string name="menu_view_convert_to_task">"Μετατροπή σε εργασία"</string>
     <string name="settings_select_language">"Επιλογή γλώσσας"</string>
     <string name="settings_select_language_system">"Προεπιλογή συστήματος"</string>
     <string name="filter_special">"Ειδικά φίλτρα"</string>
