@@ -48,10 +48,10 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
@@ -94,7 +94,7 @@ fun DetailScreenContent(
     allResources: List<String>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
-    storedStatuses: List<StoredStatus>,
+    storedStatuses: List<ExtendedStatus>,
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,

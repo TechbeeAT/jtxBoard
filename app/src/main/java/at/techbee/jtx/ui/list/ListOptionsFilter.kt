@@ -27,9 +27,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
-import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.ui.reusable.dialogs.SaveListSettingsPresetDialog
 import at.techbee.jtx.ui.reusable.elements.FilterSection
 
@@ -43,7 +43,7 @@ fun ListOptionsFilter(
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
     storedListSettingLive: LiveData<List<StoredListSetting>>,
-    storedStatusesLive: LiveData<List<StoredStatus>>,
+    storedStatusesLive: LiveData<List<ExtendedStatus>>,
     onListSettingsChanged: () -> Unit,
     onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
     onDeleteStoredListSetting: (StoredListSetting) -> Unit,
@@ -553,7 +553,7 @@ fun ListOptionsFilter_Preview_TODO() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL, Status.FINAL, null))),
+            storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },
@@ -595,7 +595,7 @@ fun ListOptionsFilter_Preview_JOURNAL() {
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL, Status.FINAL, null))),
+            storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },
             onDeleteStoredListSetting = { }

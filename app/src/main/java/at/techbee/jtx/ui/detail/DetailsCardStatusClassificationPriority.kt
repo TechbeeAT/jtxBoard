@@ -41,7 +41,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Status
-import at.techbee.jtx.database.locals.StoredStatus
+import at.techbee.jtx.database.locals.ExtendedStatus
 
 
 @Composable
@@ -52,7 +52,7 @@ fun DetailsCardStatusClassificationPriority(
     enableClassification: Boolean,
     enablePriority: Boolean,
     allowStatusChange: Boolean,
-    storedStatuses: List<StoredStatus>,
+    storedStatuses: List<ExtendedStatus>,
     onStatusChanged: (String?) -> Unit,
     onClassificationChanged: (String?) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
@@ -117,11 +117,11 @@ fun DetailsCardStatusClassificationPriority(
                                     .filter { it.module == icalObject.getModuleFromString() }
                                     .forEach { storedStatus ->
                                         DropdownMenuItem(
-                                            text = { Text(storedStatus.status) },
+                                            text = { Text(storedStatus.xstatus) },
                                             onClick = {
-                                                icalObject.status = storedStatus.status
+                                                icalObject.status = storedStatus.xstatus
                                                 statusMenuExpanded = false
-                                                onStatusChanged(storedStatus.status)
+                                                onStatusChanged(storedStatus.xstatus)
                                             }
                                         )
                                     }

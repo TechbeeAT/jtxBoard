@@ -590,9 +590,9 @@ Thank you!"</string>
     <string name="markdown_code">"Code"</string>
     <string name="preset_categories">"Preset categories"</string>
     <string name="preset_resources">"Preset resources"</string>
-    <string name="custom_status_journals">"Custom statuses (journals)"</string>
-    <string name="custom_status_notes">"Custom statuses (notes)"</string>
-    <string name="custom_status_tasks">"Custom statuses (tasks)"</string>
+    <string name="extended_statuses_journals">"Extended statuses for journals"</string>
+    <string name="extended_statuses_notes">"Extended statuses for notes"</string>
+    <string name="extended_statuses_tasks">"Extended statuses for tasks"</string>
     <string name="active_filters">Active filters:</string>
     <string name="kanban_settings">"Kanban"</string>
     <string name="kanban_columns">"Kanban-Columns"</string>

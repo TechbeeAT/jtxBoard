@@ -180,7 +180,7 @@ fun ListScreen(
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
                     storedResourcesLive = listViewModel.storedResources,
-                    storedStatusesLive = listViewModel.storedStatuses,
+                    extendedStatusesLive = listViewModel.storedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,

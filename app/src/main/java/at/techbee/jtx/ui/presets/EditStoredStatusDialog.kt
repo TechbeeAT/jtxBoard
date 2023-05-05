@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
-import at.techbee.jtx.database.locals.StoredStatus
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
 import com.godaddy.android.colorpicker.HsvColor
 import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
@@ -56,14 +56,14 @@ import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EditStoredStatusDialog(
-    storedStatus: StoredStatus,
-    onStoredStatusChanged: (StoredStatus) -> Unit,
-    onDeleteStoredStatus: (StoredStatus) -> Unit,
+    storedStatus: ExtendedStatus,
+    onStoredStatusChanged: (ExtendedStatus) -> Unit,
+    onDeleteStoredStatus: (ExtendedStatus) -> Unit,
     onDismiss: () -> Unit
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
-    var storedStatusName by remember { mutableStateOf(storedStatus.status) }
+    var storedStatusName by remember { mutableStateOf(storedStatus.xstatus) }
     var storedStatusRfcStatus by remember { mutableStateOf(storedStatus.rfcStatus) }
     var storedStatusColor by remember { mutableStateOf(storedStatus.color?.let { Color(it) }) }
 
@@ -148,7 +148,7 @@ fun EditStoredStatusDialog(
                     Text(stringResource(id = R.string.cancel))
                 }
 
-                if(storedStatus.status.isNotEmpty()) {
+                if(storedStatus.xstatus.isNotEmpty()) {
                     TextButton(onClick = {
                         onDeleteStoredStatus(storedStatus)
                         onDismiss()
@@ -159,7 +159,7 @@ fun EditStoredStatusDialog(
 
                 TextButton(
                     onClick = {
-                        onStoredStatusChanged(StoredStatus(storedStatusName, storedStatus.module, storedStatusRfcStatus, storedStatusColor?.toArgb()))
+                        onStoredStatusChanged(ExtendedStatus(storedStatusName, storedStatus.module, storedStatusRfcStatus, storedStatusColor?.toArgb()))
                         onDismiss()
                     },
                     enabled = storedStatusName.isNotEmpty()
@@ -177,7 +177,7 @@ fun EditStoredStatusDialogPreview_canEdit() {
     MaterialTheme {
 
         EditStoredStatusDialog(
-            storedStatus = StoredStatus("test", Module.JOURNAL, Status.NO_STATUS, Color.Magenta.toArgb()),
+            storedStatus = ExtendedStatus("test", Module.JOURNAL, Status.NO_STATUS, Color.Magenta.toArgb()),
             onStoredStatusChanged = { },
             onDeleteStoredStatus = { },
             onDismiss = { }
@@ -191,7 +191,7 @@ fun EditStoredStatusDialogPreview_canNOTEdit() {
     MaterialTheme {
 
         EditStoredStatusDialog(
-            storedStatus = StoredStatus("test", Module.JOURNAL, Status.NO_STATUS, Color.Magenta.toArgb()),
+            storedStatus = ExtendedStatus("test", Module.JOURNAL, Status.NO_STATUS, Color.Magenta.toArgb()),
             onStoredStatusChanged = { },
             onDeleteStoredStatus = { },
             onDismiss = { }
@@ -206,7 +206,7 @@ fun EditStoredStatusDialogPreview_new() {
     MaterialTheme {
 
         EditStoredStatusDialog(
-            storedStatus = StoredStatus("",  Module.JOURNAL, Status.NO_STATUS, null),
+            storedStatus = ExtendedStatus("",  Module.JOURNAL, Status.NO_STATUS, null),
             onStoredStatusChanged = { },
             onDeleteStoredStatus = { },
             onDismiss = { }

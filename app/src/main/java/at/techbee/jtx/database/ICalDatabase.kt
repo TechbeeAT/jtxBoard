@@ -17,10 +17,10 @@ import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import at.techbee.jtx.R
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.database.views.ICal4List
@@ -47,7 +47,7 @@ import at.techbee.jtx.database.views.ICal4List
         StoredListSetting::class,
         StoredCategory::class,
         StoredResource::class,
-        StoredStatus::class],
+        ExtendedStatus::class],
     views = [
         ICal4List::class,
         CollectionsView::class],
@@ -77,8 +77,8 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 23, to = 24),  // added ListSettingsStorage
         AutoMigration (from = 24, to = 25),  // added StoredCategory, StoredResource
         AutoMigration (from = 25, to = 26),  // added column Parent Expanded
-        AutoMigration (from = 26, to = 27),  // added geoLat and geoLong to ical4list view
-        AutoMigration (from = 27, to = 28),  // added StoredCategory, StoredResource
+        AutoMigration (from = 26, to = 27),  // added geoLat and geoLong to ical4list view, added StoredCategory, StoredResource
+        AutoMigration (from = 27, to = 28),  // added Extended Status
     ]
 )
 @TypeConverters(Converters::class)

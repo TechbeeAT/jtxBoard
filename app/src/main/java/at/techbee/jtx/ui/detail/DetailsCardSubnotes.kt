@@ -37,9 +37,9 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -61,7 +61,7 @@ fun DetailsCardSubnotes(
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
-    storedStatuses: List<StoredStatus>,
+    storedStatuses: List<ExtendedStatus>,
     onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
@@ -91,7 +91,7 @@ fun DetailsCardSubnotes(
             allEntriesLive = selectFromAllListLive,
             storedCategories = storedCategories,
             storedResources = storedResources,
-            storedStatuses = storedStatuses,
+            extendedStatuses = storedStatuses,
             player = player,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
             onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },

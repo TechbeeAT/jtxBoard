@@ -33,9 +33,9 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
-import at.techbee.jtx.database.locals.StoredStatus
 import kotlinx.coroutines.launch
 
 
@@ -48,7 +48,7 @@ fun ListOptionsBottomSheet(
     allCollectionsLive: LiveData<List<ICalCollection>>,
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
-    storedStatusesLive: LiveData<List<StoredStatus>>,
+    storedStatusesLive: LiveData<List<ExtendedStatus>>,
     storedListSettingLive: LiveData<List<StoredListSetting>>,
     onListSettingsChanged: () -> Unit,
     onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
@@ -178,7 +178,7 @@ fun ListOptionsBottomSheet_Preview_TODO() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL, Status.FINAL, null))),
+            storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },
@@ -221,7 +221,7 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL, Status.FINAL, null))),
+            storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },

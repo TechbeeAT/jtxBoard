@@ -33,7 +33,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
-import at.techbee.jtx.database.locals.StoredStatus
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.ui.reusable.elements.FilterSection
 
 
@@ -42,7 +42,7 @@ import at.techbee.jtx.ui.reusable.elements.FilterSection
 fun ListOptionsKanban(
     module: Module,
     listSettings: ListSettings,
-    storedStatusesLive: LiveData<List<StoredStatus>>,
+    storedStatusesLive: LiveData<List<ExtendedStatus>>,
     onListSettingsChanged: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -83,22 +83,22 @@ fun ListOptionsKanban(
                     )
                 }
                 storedStatuses
-                    .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.status } }
+                    .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.xstatus } }
                     .filter { it.module == module }
                     .forEach { storedStatus ->
                         FilterChip(
-                            selected = listSettings.kanbanColumns.contains(storedStatus.status),
+                            selected = listSettings.kanbanColumns.contains(storedStatus.xstatus),
                             onClick = {
-                                if (listSettings.kanbanColumns.contains(storedStatus.status))
-                                    listSettings.kanbanColumns.remove(storedStatus.status)
+                                if (listSettings.kanbanColumns.contains(storedStatus.xstatus))
+                                    listSettings.kanbanColumns.remove(storedStatus.xstatus)
                                 else
-                                    listSettings.kanbanColumns.add(storedStatus.status)
+                                    listSettings.kanbanColumns.add(storedStatus.xstatus)
                                 onListSettingsChanged()
                             },
-                            label = { Text(storedStatus.status) },
+                            label = { Text(storedStatus.xstatus) },
                             leadingIcon = {
-                                if (listSettings.kanbanColumns.contains(storedStatus.status))
-                                    Text(text = "(${listSettings.kanbanColumns.indexOf(storedStatus.status) + 1})")
+                                if (listSettings.kanbanColumns.contains(storedStatus.xstatus))
+                                    Text(text = "(${listSettings.kanbanColumns.indexOf(storedStatus.xstatus) + 1})")
                             }
                         )
                     }
@@ -126,7 +126,7 @@ fun ListOptionsKanban_Preview() {
         ListOptionsKanban(
             module = Module.TODO,
             listSettings = listSettings,
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.TODO, Status.FINAL, null))),
+            storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.TODO, Status.FINAL, null))),
             onListSettingsChanged = { },
         )
     }

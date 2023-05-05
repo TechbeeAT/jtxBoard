@@ -38,9 +38,9 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
@@ -62,7 +62,7 @@ fun DetailsCardSubtasks(
     showSlider: Boolean,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
-    storedStatuses: List<StoredStatus>,
+    storedStatuses: List<ExtendedStatus>,
     player: MediaPlayer?,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -84,7 +84,7 @@ fun DetailsCardSubtasks(
             allEntriesLive = selectFromAllListLive,
             storedCategories = storedCategories,
             storedResources = storedResources,
-            storedStatuses = storedStatuses,
+            extendedStatuses = storedStatuses,
             player = player,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
             onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },

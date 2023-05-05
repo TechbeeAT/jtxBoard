@@ -40,6 +40,7 @@ import at.techbee.jtx.database.COLUMN_DTSTART_TIMEZONE
 import at.techbee.jtx.database.COLUMN_DUE
 import at.techbee.jtx.database.COLUMN_DUE_TIMEZONE
 import at.techbee.jtx.database.COLUMN_DURATION
+import at.techbee.jtx.database.COLUMN_EXTENDED_STATUS
 import at.techbee.jtx.database.COLUMN_GEO_LAT
 import at.techbee.jtx.database.COLUMN_GEO_LONG
 import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
@@ -119,6 +120,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_DTEND, " +
             "main_icalobject.$COLUMN_DTEND_TIMEZONE, " +
             "main_icalobject.$COLUMN_STATUS, " +
+            "main_icalobject.$COLUMN_EXTENDED_STATUS, " +
             "main_icalobject.$COLUMN_CLASSIFICATION, " +
             "main_icalobject.$COLUMN_PERCENT, " +
             "main_icalobject.$COLUMN_PRIORITY, " +
@@ -187,6 +189,7 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String?,
 
     @ColumnInfo(name = COLUMN_STATUS) var status: String?,
+    @ColumnInfo(name = COLUMN_EXTENDED_STATUS) var xstatus: String?,
     @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String?,
 
     @ColumnInfo(name = COLUMN_PERCENT) var percent: Int?,
@@ -260,6 +263,7 @@ data class ICal4List(
                 null,
                 null,
                 status = Status.DRAFT.status,
+                xstatus = null,
                 classification = Classification.CONFIDENTIAL.classification,
                 null,
                 null,

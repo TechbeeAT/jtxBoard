@@ -65,9 +65,9 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
@@ -93,7 +93,7 @@ fun UpdateEntriesDialog(
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     storedResourcesLive: LiveData<List<StoredResource>>,
-    storedStatusesLive: LiveData<List<StoredStatus>>,
+    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
     player: MediaPlayer?,
     onSelectFromAllListSearchTextUpdated: (String) -> Unit,
     //currentCategories: List<String>,
@@ -116,7 +116,7 @@ fun UpdateEntriesDialog(
     val selectFromAllList by selectFromAllListLive.observeAsState(emptyList())
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
     val storedResources by storedResourcesLive.observeAsState(emptyList())
-    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
+    val storedStatuses by extendedStatusesLive.observeAsState(emptyList())
 
     val addedCategories = remember { mutableStateListOf<String>() }
     val removedCategories = remember { mutableStateListOf<String>() }
@@ -264,13 +264,13 @@ fun UpdateEntriesDialog(
                             )
                         }
                         storedStatuses
-                            .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.status } }
+                            .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.xstatus } }
                             .filter { it.module == module }
                             .forEach { storedStatus ->
                                 InputChip(
-                                    onClick = { newStatus = storedStatus.status },
-                                    label = { Text(storedStatus.status) },
-                                    selected = newStatus == storedStatus.status,
+                                    onClick = { newStatus = storedStatus.xstatus },
+                                    label = { Text(storedStatus.xstatus) },
+                                    selected = newStatus == storedStatus.xstatus,
                                 )
                             }
                     }
@@ -455,7 +455,7 @@ fun UpdateEntriesDialog_Preview() {
             selectFromAllListLive = MutableLiveData(listOf()),
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedResourcesLive = MutableLiveData(listOf(StoredResource("1234", Color.Green.toArgb()))),
-            storedStatusesLive = MutableLiveData(listOf(StoredStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))),
+            extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))),
             player = null,
             onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },

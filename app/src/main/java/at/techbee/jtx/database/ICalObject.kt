@@ -406,6 +406,13 @@ const val COLUMN_SORT_INDEX = "sortIndex"
  */
 const val COLUMN_PARENTS_EXPANDED = "parentsExpanded"
 
+/**
+ * Purpose:  Defines an extended status to the RFC-status for more flexibility
+ * This is put into an extended property in the iCalendar-file
+ * Type: [String]
+ */
+const val COLUMN_EXTENDED_STATUS = "xstatus"
+
 @Parcelize
 @Entity(
     tableName = TABLE_NAME_ICALOBJECT,
@@ -434,6 +441,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String? = null,
 
     @ColumnInfo(name = COLUMN_STATUS) var status: String? = null,
+    @ColumnInfo(name = COLUMN_EXTENDED_STATUS) var xstatus: String? = null,
     @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String? = null,
 
     @ColumnInfo(name = COLUMN_URL) var url: String? = null,

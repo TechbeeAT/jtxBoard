@@ -775,13 +775,13 @@ DELETEs by Object
      */
 
     @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_STORED_STATUS")
-    fun getStoredStatuses(): LiveData<List<StoredStatus>>
+    @Query("SELECT * FROM $TABLE_NAME_EXTENDED_STATUS")
+    fun getStoredStatuses(): LiveData<List<ExtendedStatus>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertStoredStatus(storedStatus: StoredStatus)
+    suspend fun upsertStoredStatus(storedStatus: ExtendedStatus)
 
     @Delete
-    fun deleteStoredStatus(storedStatus: StoredStatus)
+    fun deleteStoredStatus(storedStatus: ExtendedStatus)
 
 }

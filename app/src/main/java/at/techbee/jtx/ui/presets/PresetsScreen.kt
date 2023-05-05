@@ -32,9 +32,9 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
@@ -55,7 +55,7 @@ fun PresetsScreen(
     val storedCategories by database.getStoredCategories().observeAsState(emptyList())
     val allResources by database.getAllResourcesAsText().observeAsState(emptyList())
     val storedResources by database.getStoredResources().observeAsState(emptyList())
-    val storedStatuses by database.getStoredStatuses().observeAsState(emptyList())
+    val extendedStatuses by database.getStoredStatuses().observeAsState(emptyList())
     //val allCustomStatuses by database.getAllCustomStatuses().observeAsState(emptyList())  TODO
 
 
@@ -84,7 +84,7 @@ fun PresetsScreen(
                             storedCategories = storedCategories,
                             allResources = allResources,
                             storedResources = storedResources,
-                            storedStatuses = storedStatuses,
+                            extendedStatuses = extendedStatuses,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -105,13 +105,13 @@ fun PresetsScreenContent(
     storedCategories: List<StoredCategory>,
     allResources: List<String>,
     storedResources: List<StoredResource>,
-    storedStatuses: List<StoredStatus>,
+    extendedStatuses: List<ExtendedStatus>,
     modifier: Modifier = Modifier
 ) {
 
     var editCategory by remember { mutableStateOf<StoredCategory?>(null) }
     var editResource by remember { mutableStateOf<StoredResource?>(null) }
-    var editStatus by remember { mutableStateOf<StoredStatus?>(null) }
+    var editStatus by remember { mutableStateOf<ExtendedStatus?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -249,48 +249,33 @@ fun PresetsScreenContent(
                 icon = Icons.Outlined.PublishedWithChanges,
                 iconDesc = null,
                 text = when(module) {
-                    Module.JOURNAL -> stringResource(R.string.custom_status_journals)
-                    Module.NOTE -> stringResource(R.string.custom_status_notes)
-                    Module.TODO -> stringResource(R.string.custom_status_tasks)
+                    Module.JOURNAL -> stringResource(R.string.extended_statuses_journals)
+                    Module.NOTE -> stringResource(R.string.extended_statuses_notes)
+                    Module.TODO -> stringResource(R.string.extended_statuses_tasks)
                 },
                 modifier = Modifier.padding(top = 8.dp)
-            )
-
-            Text(
-                text = "Adding a custom status will replace the selection of the default statuses!",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.error
             )
 
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(3.dp)
             ) {
-                if(storedStatuses.none { it.module == module }) {
-                    Status.valuesFor(module).forEach { defaultStatus ->
+                extendedStatuses
+                    .filter { it.module == module }
+                    .forEach { storedStatus ->
                         ElevatedAssistChip(
-                            onClick = { },
-                            label = { Text(stringResource(id = defaultStatus.stringResource)) }
+                            onClick = { editStatus = storedStatus },
+                            label = { Text(storedStatus.xstatus) },
+                            colors = storedStatus.color?.let {
+                                AssistChipDefaults.assistChipColors(
+                                    containerColor = Color(it),
+                                    labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(it))
+                                )
+                            } ?: AssistChipDefaults.elevatedAssistChipColors()
                         )
                     }
-                } else {
-                    storedStatuses
-                        .filter { it.module == module }
-                        .forEach { storedStatus ->
-                            ElevatedAssistChip(
-                                onClick = { editStatus = storedStatus },
-                                label = { Text(storedStatus.status) },
-                                colors = storedStatus.color?.let {
-                                    AssistChipDefaults.assistChipColors(
-                                        containerColor = Color(it),
-                                        labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(it))
-                                    )
-                                } ?: AssistChipDefaults.elevatedAssistChipColors()
-                            )
-                        }
-                }
 
                 ElevatedAssistChip(
-                    onClick = { editStatus = StoredStatus("", module, Status.NO_STATUS, null) },
+                    onClick = { editStatus = ExtendedStatus("", module, Status.NO_STATUS, null) },
                     label = { Text("+") },
                     colors = AssistChipDefaults.elevatedAssistChipColors()
                 )
@@ -308,7 +293,7 @@ fun PresetsScreen_Preview() {
             storedCategories = listOf(StoredCategory("red", Color.Magenta.toArgb()), StoredCategory("ohne Farbe", null)),
             allResources = listOf("existing resource"),
             storedResources = listOf(StoredResource("blue", Color.Blue.toArgb()), StoredResource("ohne Farbe", null)),
-            storedStatuses = listOf(StoredStatus("Final", Module.JOURNAL, Status.NO_STATUS, Color.Blue.toArgb()), StoredStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))
+            extendedStatuses = listOf(ExtendedStatus("Final", Module.JOURNAL, Status.NO_STATUS, Color.Blue.toArgb()), ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))
         )
     }
 }

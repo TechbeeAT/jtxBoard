@@ -42,9 +42,9 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.locals.StoredStatus
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
@@ -55,7 +55,7 @@ fun LinkExistingSubentryDialog(
     allEntriesLive: LiveData<List<ICal4ListRel>>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
-    storedStatuses: List<StoredStatus>,
+    extendedStatuses: List<ExtendedStatus>,
     player: MediaPlayer?,
     onAllEntriesSearchTextUpdated: (String) -> Unit,
     onNewSubentriesConfirmed: (newSubentries: List<ICal4List>) -> Unit,
@@ -121,7 +121,7 @@ fun LinkExistingSubentryDialog(
                                 resources = entry.resources,
                                 storedCategories = storedCategories,
                                 storedResources = storedResources,
-                                storedStatuses = storedStatuses,
+                                storedStatuses = extendedStatuses,
                                 selected = selectedEntries.contains(entry.iCal4List),
                                 progressUpdateDisabled = true,
                                 onProgressChanged = { _, _ -> },
@@ -183,7 +183,7 @@ fun LinkExistingSubentryDialog_Preview() {
             ),
             storedCategories = emptyList(),
             storedResources = emptyList(),
-            storedStatuses = emptyList(),
+            extendedStatuses = emptyList(),
             player = null,
             onAllEntriesSearchTextUpdated = { },
             onNewSubentriesConfirmed = { },
