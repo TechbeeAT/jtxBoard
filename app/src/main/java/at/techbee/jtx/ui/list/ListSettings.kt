@@ -27,6 +27,7 @@ class ListSettings {
     var searchResources = mutableStateListOf<String>()
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
     var searchStatus = mutableStateListOf<Status>()
+    var searchXStatus = mutableStateListOf<String>()
     var searchClassification = mutableStateListOf<Classification>()
     var searchCollection = mutableStateListOf<String>()
     var searchAccount = mutableStateListOf<String>()
@@ -81,6 +82,7 @@ class ListSettings {
         private const val PREFS_RESOURCES = "prefsResources"
         private const val PREFS_CLASSIFICATION = "prefsClassification"
         private const val PREFS_STATUS = "prefsStatus"
+        private const val PREFS_EXTENDED_STATUS = "prefsXStatus"
         private const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
         private const val PREFS_ORDERBY = "prefsOrderBy"
         private const val PREFS_SORTORDER = "prefsSortOrder"
@@ -148,6 +150,8 @@ class ListSettings {
             searchCategories.addAll(prefs.getStringSet(PREFS_CATEGORIES, emptySet())?.toList() ?: emptyList())
             searchResources.addAll(prefs.getStringSet(PREFS_RESOURCES, emptySet())?.toList() ?: emptyList())
             searchStatus.addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
+            searchXStatus.addAll(prefs.getStringSet(PREFS_EXTENDED_STATUS, emptySet())?.toList() ?: emptyList())
+
             searchClassification.addAll(Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null)))
             searchCollection.addAll(prefs.getStringSet(PREFS_COLLECTION, emptySet())?.toList() ?: emptyList())
             searchAccount.addAll(prefs.getStringSet(PREFS_ACCOUNT, emptySet())?.toList() ?: emptyList())
@@ -194,6 +198,7 @@ class ListSettings {
             searchCategories.addAll(listWidgetConfig.searchCategories)
             searchResources.addAll(listWidgetConfig.searchResources)
             searchStatus.addAll(listWidgetConfig.searchStatus)
+            searchXStatus.addAll(listWidgetConfig.searchXStatus)
             searchClassification.addAll(listWidgetConfig.searchClassification)
             searchCollection.addAll(listWidgetConfig.searchCollection)
             searchAccount.addAll(listWidgetConfig.searchAccount)
@@ -257,6 +262,7 @@ class ListSettings {
             putStringSet(PREFS_CATEGORIES, searchCategories.toSet())
             putStringSet(PREFS_RESOURCES, searchResources.toSet())
             putStringSet(PREFS_STATUS, Status.getStringSetFromList(searchStatus))
+            putStringSet(PREFS_EXTENDED_STATUS, searchXStatus.toSet())
             putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(searchClassification))
             putStringSet(PREFS_COLLECTION, searchCollection.toSet())
             putStringSet(PREFS_ACCOUNT, searchAccount.toSet())
@@ -277,6 +283,7 @@ class ListSettings {
         searchResources.clear()
         //searchOrganizer = emptyList()
         searchStatus.clear()
+        searchXStatus.clear()
         searchClassification.clear()
         searchCollection.clear()
         searchAccount.clear()
@@ -305,6 +312,7 @@ class ListSettings {
                 || searchResources.isNotEmpty()
                 //|| searchOrganizers.value.isNotEmpty()
                 || searchStatus.isNotEmpty()
+                || searchXStatus.isNotEmpty()
                 || searchClassification.isNotEmpty()
                 || searchCollection.isNotEmpty()
                 || searchAccount.isNotEmpty()

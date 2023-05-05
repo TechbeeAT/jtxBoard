@@ -43,7 +43,7 @@ fun ListOptionsFilter(
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
     storedListSettingLive: LiveData<List<StoredListSetting>>,
-    storedStatusesLive: LiveData<List<ExtendedStatus>>,
+    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
     onListSettingsChanged: () -> Unit,
     onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
     onDeleteStoredListSetting: (StoredListSetting) -> Unit,
@@ -56,7 +56,7 @@ fun ListOptionsFilter(
     val allCollections by remember { derivedStateOf { allCollectionsState.value.map { it.displayName ?: "" }.sortedBy { it.lowercase() } } }
     val allAccounts by remember { derivedStateOf { allCollectionsState.value.map { it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } } }
     val storedListSettings by storedListSettingLive.observeAsState(emptyList())
-    val storedStatuses by storedStatusesLive.observeAsState(initial = emptyList())
+    val extendedStatuses by extendedStatusesLive.observeAsState(initial = emptyList())
     var showSaveListSettingsPresetDialog by remember { mutableStateOf(false) }
 
     if(showSaveListSettingsPresetDialog) {
@@ -420,6 +420,37 @@ fun ListOptionsFilter(
                 }
             }
 
+            if(extendedStatuses.any { it.module == module }) {
+                FilterSection(
+                    icon = Icons.Outlined.PublishedWithChanges,
+                    headline = stringResource(id = R.string.extended_status),
+                    onResetSelection = {
+                        listSettings.searchXStatus.clear()
+                        onListSettingsChanged()
+                    },
+                    onInvertSelection = {
+                        val missing = extendedStatuses.filter { xstatus -> !listSettings.searchXStatus.contains(xstatus.xstatus) }
+                        listSettings.searchXStatus.clear()
+                        listSettings.searchXStatus.addAll(missing.map { it.xstatus })
+                        onListSettingsChanged()
+                    })
+                {
+                    extendedStatuses.filter { it.module == module }.forEach { xstatus ->
+                        FilterChip(
+                            selected = listSettings.searchXStatus.contains(xstatus.xstatus),
+                            onClick = {
+                                if (listSettings.searchXStatus.contains(xstatus.xstatus))
+                                    listSettings.searchXStatus.remove(xstatus.xstatus)
+                                else
+                                    listSettings.searchXStatus.add(xstatus.xstatus)
+                                onListSettingsChanged()
+                            },
+                            label = { Text(xstatus.xstatus) }
+                        )
+                    }
+                }
+            }
+
 
             ////// CLASSIFICATION
             FilterSection(
@@ -553,7 +584,7 @@ fun ListOptionsFilter_Preview_TODO() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
+            extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },
@@ -595,7 +626,7 @@ fun ListOptionsFilter_Preview_JOURNAL() {
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
-            storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
+            extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },
             onDeleteStoredListSetting = { }

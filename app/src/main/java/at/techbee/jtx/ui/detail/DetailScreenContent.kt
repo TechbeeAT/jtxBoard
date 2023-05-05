@@ -94,7 +94,7 @@ fun DetailScreenContent(
     allResources: List<String>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
-    storedStatuses: List<ExtendedStatus>,
+    extendedStatuses: List<ExtendedStatus>,
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
@@ -549,7 +549,7 @@ fun DetailScreenContent(
         }
 
         AnimatedVisibility(
-            (!isEditMode.value && (!iCalObject.status.isNullOrEmpty() || !iCalObject.classification.isNullOrEmpty() || iCalObject.priority in 1..9))
+            (!isEditMode.value && (!iCalObject.status.isNullOrEmpty() || !iCalObject.xstatus.isNullOrEmpty() || !iCalObject.classification.isNullOrEmpty() || iCalObject.priority in 1..9))
                     || (isEditMode.value
                     && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] ?: true
                     || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true
@@ -564,21 +564,22 @@ fun DetailScreenContent(
                 enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true || showAllOptions,
                 enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true || showAllOptions,
                 allowStatusChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
-                storedStatuses = storedStatuses,
+                extendedStatuses = extendedStatuses,
                 onStatusChanged = { newStatus ->
-                    iCalObject.status = newStatus
+                    //iCalObject.status = newStatus
                     if (keepStatusProgressCompletedInSync && iCalObject.getModuleFromString() == Module.TODO) {
                         when (newStatus) {
-                            Status.NO_STATUS.status -> iCalObject.setUpdatedProgress(null, true)
-                            Status.NEEDS_ACTION.status -> iCalObject.setUpdatedProgress(null, true)
-                            Status.IN_PROCESS.status -> iCalObject.setUpdatedProgress(if (iCalObject.percent !in 1..99) 1 else iCalObject.percent, true)
-                            Status.COMPLETED.status -> iCalObject.setUpdatedProgress(100, true)
+                            Status.NO_STATUS -> iCalObject.setUpdatedProgress(null, true)
+                            Status.NEEDS_ACTION -> iCalObject.setUpdatedProgress(null, true)
+                            Status.IN_PROCESS -> iCalObject.setUpdatedProgress(if (iCalObject.percent !in 1..99) 1 else iCalObject.percent, true)
+                            Status.COMPLETED -> iCalObject.setUpdatedProgress(100, true)
+                            else -> {}
                         }
                     }
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onClassificationChanged = { newClassification ->
-                    iCalObject.classification = newClassification
+                    iCalObject.classification = newClassification.classification
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onPriorityChanged = { newPriority ->
@@ -624,7 +625,7 @@ fun DetailScreenContent(
                 showSlider = showProgressForSubTasks,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
-                storedStatuses = storedStatuses,
+                storedStatuses = extendedStatuses,
                 player = player,
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
@@ -651,7 +652,7 @@ fun DetailScreenContent(
                 selectFromAllListLive = selectFromAllListLive,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
-                storedStatuses = storedStatuses,
+                storedStatuses = extendedStatuses,
                 onSubnoteAdded = { subnote, attachment ->
                     onSubEntryAdded(
                         subnote,
@@ -906,7 +907,7 @@ fun DetailScreenContent_JOURNAL() {
             allResources = emptyList(),
             storedCategories = emptyList(),
             storedResources = emptyList(),
-            storedStatuses = emptyList(),
+            extendedStatuses = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
@@ -963,7 +964,7 @@ fun DetailScreenContent_TODO_editInitially() {
             allResources = emptyList(),
             storedCategories = emptyList(),
             storedResources = emptyList(),
-            storedStatuses = emptyList(),
+            extendedStatuses = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
@@ -1027,7 +1028,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             allResources = emptyList(),
             storedCategories = emptyList(),
             storedResources = emptyList(),
-            storedStatuses = emptyList(),
+            extendedStatuses = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
@@ -1085,7 +1086,7 @@ fun DetailScreenContent_failedLoading() {
             allResources = emptyList(),
             storedCategories = emptyList(),
             storedResources = emptyList(),
-            storedStatuses = emptyList(),
+            extendedStatuses = emptyList(),
             selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),

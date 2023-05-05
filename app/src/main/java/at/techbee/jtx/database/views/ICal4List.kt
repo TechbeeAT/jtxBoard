@@ -307,6 +307,7 @@ data class ICal4List(
             searchCategories: List<String> = emptyList(),
             searchResources: List<String> = emptyList(),
             searchStatus: List<Status> = emptyList(),
+            searchXStatus: List<String> = emptyList(),
             searchClassification: List<Classification> = emptyList(),
             searchCollection: List<String> = emptyList(),
             searchAccount: List<String> = emptyList(),
@@ -409,6 +410,13 @@ data class ICal4List(
 
                 if (searchStatus.contains(Status.NO_STATUS))
                     queryString += "OR $COLUMN_STATUS IS NULL"
+                queryString += ") "
+            }
+
+            if (searchXStatus.isNotEmpty()) {
+                queryString += "AND ("
+                queryString += searchXStatus.joinToString(separator = "OR ", transform = { "$COLUMN_EXTENDED_STATUS = ? " })
+                args.addAll(searchXStatus.map { it })
                 queryString += ") "
             }
 

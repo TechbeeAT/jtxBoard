@@ -144,7 +144,7 @@ fun ListCard(
                 resources = resources,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
-                storedStatuses = storedStatuses
+                extendedStatuses = storedStatuses
             )
 
             Row(

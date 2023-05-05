@@ -56,7 +56,6 @@ fun PresetsScreen(
     val allResources by database.getAllResourcesAsText().observeAsState(emptyList())
     val storedResources by database.getStoredResources().observeAsState(emptyList())
     val extendedStatuses by database.getStoredStatuses().observeAsState(emptyList())
-    //val allCustomStatuses by database.getAllCustomStatuses().observeAsState(emptyList())  TODO
 
 
     Scaffold(

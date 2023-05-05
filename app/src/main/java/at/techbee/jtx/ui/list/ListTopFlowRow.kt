@@ -39,7 +39,7 @@ fun ListTopFlowRow(
     resources: List<Resource>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
-    storedStatuses: List<ExtendedStatus>,
+    extendedStatuses: List<ExtendedStatus>,
     modifier: Modifier = Modifier,
     includeJournalDate: Boolean = false
 ) {
@@ -123,12 +123,20 @@ fun ListTopFlowRow(
             )
         }
 
-        AnimatedVisibility(ical4List.status !in listOf(Status.FINAL.status, Status.NO_STATUS.status)) {
+        AnimatedVisibility(ical4List.xstatus.isNullOrEmpty() && ical4List.status !in listOf(Status.FINAL.status, Status.NO_STATUS.status)) {
             ListBadge(
                 icon = Icons.Outlined.PublishedWithChanges,
                 iconDesc = stringResource(R.string.status),
                 text = Status.getStatusFromString(ical4List.status)?.stringResource?.let { stringResource(id = it) } ?: ical4List.status,
-                containerColor = ExtendedStatus.getColorForStatus(Status.getStatusFromString(ical4List.status)?.stringResource?.let { stringResource(id = it) }?: ical4List.status, storedStatuses, Module.values().find { it.name == ical4List.module }?:Module.NOTE) ?: MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        }
+        AnimatedVisibility(!ical4List.xstatus.isNullOrEmpty()) {
+            ListBadge(
+                icon = Icons.Outlined.PublishedWithChanges,
+                iconDesc = stringResource(R.string.status),
+                text = ical4List.xstatus?:"",
+                containerColor = ExtendedStatus.getColorForStatus(ical4List.xstatus, extendedStatuses, ical4List.module) ?: MaterialTheme.colorScheme.primaryContainer,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -279,7 +287,7 @@ fun ListTopFlowRow_Preview() {
             resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb()))
+            extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb()))
         )
     }
 }

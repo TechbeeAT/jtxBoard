@@ -52,17 +52,12 @@ fun DetailsCardStatusClassificationPriority(
     enableClassification: Boolean,
     enablePriority: Boolean,
     allowStatusChange: Boolean,
-    storedStatuses: List<ExtendedStatus>,
-    onStatusChanged: (String?) -> Unit,
-    onClassificationChanged: (String?) -> Unit,
+    extendedStatuses: List<ExtendedStatus>,
+    onStatusChanged: (Status) -> Unit,
+    onClassificationChanged: (Classification) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    // we don't show the block in view mode if all three values are null
-    if(!isEditMode && icalObject.status == null && icalObject.classification == null && icalObject.priority == null)
-        return
-
 
     ElevatedCard(modifier = modifier) {
         Row(
@@ -76,10 +71,17 @@ fun DetailsCardStatusClassificationPriority(
             var classificationMenuExpanded by remember { mutableStateOf(false) }
             var priorityMenuExpanded by remember { mutableStateOf(false) }
 
-            if(!isEditMode && !icalObject.status.isNullOrEmpty()) {
+            if(!isEditMode && (icalObject.status?.isNotEmpty() == true || icalObject.xstatus?.isNotEmpty() == true)) {
                 ElevatedAssistChip(
                     label = {
-                        Text(Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        if(icalObject.xstatus?.isNotEmpty() == true)
+                            Text(icalObject.xstatus!!)
+                        else
+                            Text(
+                                text = Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
                     },
                     leadingIcon = {
                         Icon(
@@ -90,42 +92,44 @@ fun DetailsCardStatusClassificationPriority(
                     onClick = { },
                     modifier = Modifier.weight(0.33f)
                 )
-            } else if(isEditMode && (enableStatus || !icalObject.status.isNullOrEmpty())) {
+            } else if(isEditMode && (enableStatus || !icalObject.status.isNullOrEmpty() || !icalObject.xstatus.isNullOrEmpty())) {
                 AssistChip(
                     enabled = allowStatusChange,
                     label = {
-                        Text(Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "")
+                        if(!icalObject.xstatus.isNullOrEmpty())
+                            Text(icalObject.xstatus!!)
+                        else
+                            Text(Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "")
 
                         DropdownMenu(
                             expanded = statusMenuExpanded,
                             onDismissRequest = { statusMenuExpanded = false }
                         ) {
 
-                            if(storedStatuses.none { it.module == icalObject.getModuleFromString() }) {
-                                Status.valuesFor(icalObject.getModuleFromString()).forEach { status ->
+                            Status.valuesFor(icalObject.getModuleFromString()).forEach { status ->
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(id = status.stringResource)) },
+                                    onClick = {
+                                        icalObject.status = status.status
+                                        icalObject.xstatus = null
+                                        statusMenuExpanded = false
+                                        onStatusChanged(status)
+                                    }
+                                )
+                            }
+                            extendedStatuses
+                                .filter { it.module == icalObject.getModuleFromString() }
+                                .forEach { storedStatus ->
                                     DropdownMenuItem(
-                                        text = { Text(stringResource(id = status.stringResource)) },
+                                        text = { Text(storedStatus.xstatus) },
                                         onClick = {
-                                            icalObject.status = status.status
+                                            icalObject.xstatus = storedStatus.xstatus
+                                            icalObject.status = storedStatus.rfcStatus.status
                                             statusMenuExpanded = false
-                                            onStatusChanged(status.status)
+                                            onStatusChanged(storedStatus.rfcStatus)
                                         }
                                     )
                                 }
-                            } else {
-                                storedStatuses
-                                    .filter { it.module == icalObject.getModuleFromString() }
-                                    .forEach { storedStatus ->
-                                        DropdownMenuItem(
-                                            text = { Text(storedStatus.xstatus) },
-                                            onClick = {
-                                                icalObject.status = storedStatus.xstatus
-                                                statusMenuExpanded = false
-                                                onStatusChanged(storedStatus.xstatus)
-                                            }
-                                        )
-                                    }
-                            }
                         }
                     },
                     leadingIcon = {
@@ -174,7 +178,7 @@ fun DetailsCardStatusClassificationPriority(
                                     onClick = {
                                         icalObject.classification = clazzification.classification
                                         classificationMenuExpanded = false
-                                        onClassificationChanged(clazzification.classification)
+                                        onClassificationChanged(clazzification)
                                     }
                                 )
                             }
@@ -269,7 +273,7 @@ fun DetailsCardStatusClassificationPriority_Journal_Preview() {
             enableClassification = false,
             enablePriority = false,
             allowStatusChange = true,
-            storedStatuses = emptyList(),
+            extendedStatuses = emptyList(),
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -288,7 +292,7 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview() {
             enableClassification = true,
             enablePriority = true,
             allowStatusChange = true,
-            storedStatuses = emptyList(),
+            extendedStatuses = emptyList(),
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -307,7 +311,7 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview2() {
             enableClassification = false,
             enablePriority = false,
             allowStatusChange = false,
-            storedStatuses = emptyList(),
+            extendedStatuses = emptyList(),
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }

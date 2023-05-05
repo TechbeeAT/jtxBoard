@@ -112,6 +112,7 @@ class ListWidgetUpdateWorker(
                             searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
                             searchResources = listWidgetConfig?.searchResources ?: emptyList(),
                             searchStatus = listWidgetConfig?.searchStatus?: emptyList(),
+                            searchXStatus = listWidgetConfig?.searchXStatus?: emptyList(),
                             searchClassification = listWidgetConfig?.searchClassification?: emptyList(),
                             searchCollection = listWidgetConfig?.searchCollection ?: emptyList(),
                             searchAccount = listWidgetConfig?.searchAccount ?: emptyList(),

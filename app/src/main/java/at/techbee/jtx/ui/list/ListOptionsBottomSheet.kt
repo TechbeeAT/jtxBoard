@@ -105,7 +105,7 @@ fun ListOptionsBottomSheet(
                         allCollectionsLive = allCollectionsLive,
                         allCategoriesLive = allCategoriesLive,
                         allResourcesLive = allResourcesLive,
-                        storedStatusesLive = storedStatusesLive,
+                        extendedStatusesLive = storedStatusesLive,
                         storedListSettingLive = storedListSettingLive,
                         onListSettingsChanged = onListSettingsChanged,
                         onSaveStoredListSetting = onSaveStoredListSetting,

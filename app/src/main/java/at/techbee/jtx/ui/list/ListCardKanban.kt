@@ -74,7 +74,7 @@ fun ListCardKanban(
                 resources = resources,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
-                storedStatuses = storedStatuses,
+                extendedStatuses = storedStatuses,
                 includeJournalDate = true
             )
 

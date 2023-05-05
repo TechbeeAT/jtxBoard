@@ -432,7 +432,7 @@ fun DetailsScreen(
                 allResources = allResources.value,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
-                storedStatuses = storedStatuses,
+                extendedStatuses = storedStatuses,
                 selectFromAllListLive = detailViewModel.selectFromAllList,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,

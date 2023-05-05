@@ -36,8 +36,8 @@ data class ExtendedStatus (
 ): Parcelable{
 
     companion object {
-        fun getColorForStatus(status: String?, extendedStatuses: List<ExtendedStatus>, module: Module): Color? {
-            return extendedStatuses.find { it.xstatus == status && it.module == module }?.color?.let { Color(it) }
+        fun getColorForStatus(status: String?, extendedStatuses: List<ExtendedStatus>, module: String?): Color? {
+            return extendedStatuses.find { it.xstatus == status && it.module.name == module }?.color?.let { Color(it) }
         }
     }
 }

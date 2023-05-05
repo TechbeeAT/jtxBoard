@@ -593,6 +593,7 @@ Thank you!"</string>
     <string name="extended_statuses_journals">"Extended statuses for journals"</string>
     <string name="extended_statuses_notes">"Extended statuses for notes"</string>
     <string name="extended_statuses_tasks">"Extended statuses for tasks"</string>
+    <string name="extended_status">"Extended status</string>
     <string name="active_filters">Active filters:</string>
     <string name="kanban_settings">"Kanban"</string>
     <string name="kanban_columns">"Kanban-Columns"</string>
