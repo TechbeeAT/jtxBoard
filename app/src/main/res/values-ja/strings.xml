@@ -16,6 +16,7 @@ Global Strings -->
     <string name="latitude">"緯度"</string>
     <string name="longitude">"経度"</string>
     <string name="unlink">"リンク解除"</string>
+    <string name="off">"オフ"</string>
     <string name="current_location">"現在地"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
