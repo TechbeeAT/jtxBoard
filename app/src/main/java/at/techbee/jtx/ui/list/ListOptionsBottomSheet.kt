@@ -23,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +36,7 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
+import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
 import kotlinx.coroutines.launch
@@ -50,6 +53,7 @@ fun ListOptionsBottomSheet(
     allResourcesLive: LiveData<List<String>>,
     storedStatusesLive: LiveData<List<ExtendedStatus>>,
     storedListSettingLive: LiveData<List<StoredListSetting>>,
+    storedCategoriesLive: LiveData<List<StoredCategory>>,
     onListSettingsChanged: () -> Unit,
     onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
     onDeleteStoredListSetting: (StoredListSetting) -> Unit,
@@ -131,8 +135,8 @@ fun ListOptionsBottomSheet(
                     ListOptionsKanban(
                         module = module,
                         listSettings = listSettings,
-                        //allCategoriesLive = allCategoriesLive,
-                        storedStatusesLive = storedStatusesLive,
+                        extendedStatusesLive = storedStatusesLive,
+                        storedCategoriesLive = storedCategoriesLive,
                         onListSettingsChanged = onListSettingsChanged,
                         modifier = modifier
                             .fillMaxSize()
@@ -179,6 +183,7 @@ fun ListOptionsBottomSheet_Preview_TODO() {
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
+            storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },
@@ -222,6 +227,7 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
+            storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },

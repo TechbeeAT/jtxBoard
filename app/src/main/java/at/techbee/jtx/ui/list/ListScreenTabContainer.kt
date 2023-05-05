@@ -219,7 +219,7 @@ fun ListScreenTabContainer(
             selectFromAllListLive = getActiveViewModel().selectFromAllList,
             storedCategoriesLive = getActiveViewModel().storedCategories,
             storedResourcesLive = getActiveViewModel().storedResources,
-            extendedStatusesLive = getActiveViewModel().storedStatuses,
+            extendedStatusesLive = getActiveViewModel().extendedStatuses,
             player = getActiveViewModel().mediaPlayer,
             onSelectFromAllListSearchTextUpdated = { getActiveViewModel().updateSelectFromAllListQuery(searchText = it, isAuthenticated = globalStateHolder.isAuthenticated.value) },
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
@@ -313,7 +313,8 @@ fun ListScreenTabContainer(
                 allCollectionsLive = listViewModel.allCollections,
                 allCategoriesLive = listViewModel.allCategories,
                 allResourcesLive = listViewModel.allResources,
-                storedStatusesLive = listViewModel.storedStatuses,
+                storedStatusesLive = listViewModel.extendedStatuses,
+                storedCategoriesLive = listViewModel.storedCategories,
                 storedListSettingLive = listViewModel.storedListSettings,
                 onListSettingsChanged = {
                     listViewModel.updateSearch(
@@ -451,6 +452,7 @@ fun ListScreenTabContainer(
                                 },
                                 onSettingsClicked = {
                                     if(viewMode ==ViewMode.KANBAN) {
+                                        getActiveViewModel().listSettings.viewMode.value = viewMode
                                         filterSheetInitialTab = ListOptionsBottomSheetTabs.KANBAN_SETTINGS
                                         scope.launch { filterSheetState.show() }
                                         topBarMenuExpanded = false

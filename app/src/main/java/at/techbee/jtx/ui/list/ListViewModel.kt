@@ -51,6 +51,7 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.Alarm
@@ -114,7 +115,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val storedListSettings = database.getStoredListSettings(module = module.name)
     val storedCategories = database.getStoredCategories()
     val storedResources = database.getStoredResources()
-    val storedStatuses = database.getStoredStatuses()
+    val extendedStatuses = database.getStoredStatuses()
 
     var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)
@@ -238,16 +239,16 @@ open class ListViewModel(application: Application, val module: Module) : Android
         }
     }
 
-    fun updateStatus(itemId: Long, newStatus: String?, scrollOnce: Boolean = false) {
+    fun updateStatus(itemId: Long, newStatus: Status, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId) ?: return@launch
-            currentItem.status = newStatus
+            currentItem.status = newStatus.status
             if(settingsStateHolder.settingKeepStatusProgressCompletedInSync.value) {
                 when(newStatus) {
-                    Status.NEEDS_ACTION.status -> currentItem.setUpdatedProgress(0, true)
-                    Status.IN_PROCESS.status -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
-                    Status.COMPLETED.status -> currentItem.setUpdatedProgress(100, true)
+                    Status.NEEDS_ACTION -> currentItem.setUpdatedProgress(0, true)
+                    Status.IN_PROCESS -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
+                    Status.COMPLETED -> currentItem.setUpdatedProgress(100, true)
                     else -> { }
                 }
             }
@@ -258,6 +259,29 @@ open class ListViewModel(application: Application, val module: Module) : Android
             NotificationPublisher.scheduleNextNotifications(getApplication())
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
+        }
+    }
+
+    fun updateXStatus(itemId: Long, newXStatus: ExtendedStatus, scrollOnce: Boolean = false) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val currentItem = database.getICalObjectById(itemId) ?: return@launch
+            currentItem.xstatus = newXStatus.xstatus
+            database.update(currentItem)
+            updateStatus(itemId, newXStatus.rfcStatus, scrollOnce)
+        }
+    }
+
+    fun swapCategories(iCalObjectId: Long, oldCategory: String, newCategory: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.swapCategories(iCalObjectId, oldCategory, newCategory)
+
+            val currentItem = database.getICalObjectById(iCalObjectId) ?: return@launch
+            currentItem.makeDirty()
+            database.update(currentItem)
+            currentItem.makeSeriesDirty(database)
+            SyncUtil.notifyContentObservers(getApplication())
+            NotificationPublisher.scheduleNextNotifications(getApplication())
+            scrollOnceId.postValue(iCalObjectId)
         }
     }
 

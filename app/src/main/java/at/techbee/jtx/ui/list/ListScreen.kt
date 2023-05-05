@@ -129,7 +129,7 @@ fun ListScreen(
                     listSettings = listViewModel.listSettings,
                     storedCategoriesLive = listViewModel.storedCategories,
                     storedResourcesLive = listViewModel.storedResources,
-                    storedStatusesLive = listViewModel.storedStatuses,
+                    storedStatusesLive = listViewModel.extendedStatuses,
                     isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks,
                     isSubnotesExpandedDefault = settingsStateHolder.settingAutoExpandSubnotes,
                     isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments,
@@ -161,7 +161,7 @@ fun ListScreen(
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
                     storedResourcesLive = listViewModel.storedResources,
-                    storedStatusesLive = listViewModel.storedStatuses,
+                    storedStatusesLive = listViewModel.extendedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
@@ -180,7 +180,7 @@ fun ListScreen(
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
                     storedResourcesLive = listViewModel.storedResources,
-                    extendedStatusesLive = listViewModel.storedStatuses,
+                    extendedStatusesLive = listViewModel.extendedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
@@ -199,24 +199,19 @@ fun ListScreen(
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
                     storedResourcesLive = listViewModel.storedResources,
-                    storedStatusesLive = listViewModel.storedStatuses,
+                    extendedStatusesLive = listViewModel.extendedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
-                    kanbanColumns = listViewModel.listSettings.kanbanColumns,
+                    kanbanColumnsStatus = listViewModel.listSettings.kanbanColumnsStatus,
+                    kanbanColumnsXStatus = listViewModel.listSettings.kanbanColumnsXStatus,
+                    kanbanColumnsCategory = listViewModel.listSettings.kanbanColumnsCategory,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                     player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                    onProgressChanged = { itemId, newPercent, scrollOnce ->
-                        processOnProgressChanged(itemId, newPercent, scrollOnce)
-                    },
-                    onStatusChanged = { itemId, newStatus, scrollOnce ->
-                        listViewModel.updateStatus(
-                            itemId,
-                            newStatus,
-                            scrollOnce
-                        )
-                    },
+                    onStatusChanged = { itemId, newStatus, scrollOnce -> listViewModel.updateStatus(itemId, newStatus, scrollOnce) },
+                    onXStatusChanged = { itemId, newXStatus, scrollOnce -> listViewModel.updateXStatus(itemId, newXStatus, scrollOnce) },
+                    onSwapCategories = { itemId, oldCategory, newCategory -> listViewModel.swapCategories(itemId, oldCategory, newCategory) },
                     onSyncRequested = { listViewModel.syncAccounts() }
                 )
             }

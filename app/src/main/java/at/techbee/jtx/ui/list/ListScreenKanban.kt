@@ -68,14 +68,17 @@ fun ListScreenKanban(
     subtasksLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     storedResourcesLive: LiveData<List<StoredResource>>,
-    storedStatusesLive: LiveData<List<ExtendedStatus>>,
+    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
     selectedEntries: SnapshotStateList<Long>,
-    kanbanColumns: SnapshotStateList<String>,
+    kanbanColumnsStatus: SnapshotStateList<String>,
+    kanbanColumnsXStatus: SnapshotStateList<String>,
+    kanbanColumnsCategory: SnapshotStateList<String>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
     player: MediaPlayer?,
-    onProgressChanged: (itemId: Long, newPercent: Int, scrollOnce: Boolean) -> Unit,
-    onStatusChanged: (itemid: Long, status: String?, scrollOnce: Boolean) -> Unit,
+    onStatusChanged: (itemid: Long, status: Status, scrollOnce: Boolean) -> Unit,
+    onXStatusChanged: (itemid: Long, status: ExtendedStatus, scrollOnce: Boolean) -> Unit,
+    onSwapCategories: (itemid: Long, old: String, new: String) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onSyncRequested: () -> Unit
@@ -84,26 +87,41 @@ fun ListScreenKanban(
     val context = LocalContext.current
     val scrollId by scrollOnceId.observeAsState(null)
     val groupedList = list.groupBy {
-        if(it.iCal4List.status.isNullOrEmpty()) {
-            when {
-                it.iCal4List.component == Component.VJOURNAL.name -> Status.FINAL.status
-                it.iCal4List.component == Component.VTODO.name && it.iCal4List.percent == 100 -> Status.COMPLETED.status
-                it.iCal4List.component == Component.VTODO.name && it.iCal4List.percent in 1..99 ->  Status.IN_PROCESS.status
-                it.iCal4List.component == Component.VTODO.name -> Status.NEEDS_ACTION.status
-                else -> Status.CANCELLED // fallback, shouldn't happen
+        when {
+            kanbanColumnsXStatus.isNotEmpty() -> it.iCal4List.xstatus
+            kanbanColumnsCategory.isNotEmpty() -> it.categories.firstOrNull()?.text
+            else -> {   // this covers also kanbanColumnsStatus.isNotEmpty() and the fallback for default kanbanColumns based on the status
+                if (it.iCal4List.status.isNullOrEmpty()) {
+                    when {
+                        it.iCal4List.component == Component.VJOURNAL.name -> stringResource(id = Status.FINAL.stringResource)
+                        it.iCal4List.component == Component.VTODO.name && it.iCal4List.percent == 100 -> stringResource(id = Status.COMPLETED.stringResource)
+                        it.iCal4List.component == Component.VTODO.name && it.iCal4List.percent in 1..99 -> stringResource(id = Status.IN_PROCESS.stringResource)
+                        it.iCal4List.component == Component.VTODO.name -> stringResource(id = Status.NEEDS_ACTION.stringResource)
+                        else -> Status.CANCELLED.status // fallback, shouldn't happen
+                    }
+                } else {
+                    Status.getStatusFromString(it.iCal4List.status)?.let { status -> stringResource(id = status.stringResource) }?:it.iCal4List.status
+                }
             }
-        } else {
-            it.iCal4List.status
         }
     }
-    val statusColumns = if(kanbanColumns.isEmpty())
-        Status.valuesFor(module).filter { it != Status.CANCELLED && it != Status.NO_STATUS }.map { it.status ?: it.name }
-    else
-        kanbanColumns
     val subtasks by subtasksLive.observeAsState(emptyList())
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
     val storedResources by storedResourcesLive.observeAsState(emptyList())
-    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
+    val extendedStatuses by extendedStatusesLive.observeAsState(emptyList())
+
+    val columns = when {
+        kanbanColumnsStatus.isNotEmpty() -> kanbanColumnsStatus.map { Status.getStatusFromString(it)?.let { status -> context.getString(status.stringResource) } ?: context.getString(Status.NO_STATUS.stringResource)}
+        kanbanColumnsXStatus.isNotEmpty() -> kanbanColumnsXStatus
+        kanbanColumnsCategory.isNotEmpty() -> kanbanColumnsCategory
+        else -> {   // default columns as fallback
+            when(module) {
+                Module.JOURNAL -> listOf(stringResource(id = Status.DRAFT.stringResource), stringResource(id = Status.FINAL.stringResource))
+                Module.NOTE -> listOf(stringResource(id = Status.DRAFT.stringResource), stringResource(id = Status.FINAL.stringResource))
+                Module.TODO -> listOf(stringResource(id = Status.NEEDS_ACTION.stringResource), stringResource(id = Status.IN_PROCESS.stringResource), stringResource(id = Status.COMPLETED.stringResource))
+            }
+        }
+    }
 
 
     val pullRefreshState = rememberPullRefreshState(
@@ -117,15 +135,15 @@ fun ListScreenKanban(
 
         Row(modifier = Modifier.fillMaxWidth()) {
 
-            statusColumns.forEach { status ->
+            columns.forEachIndexed { index, column ->
 
                 val listState = rememberLazyListState()
 
                 if (scrollId != null) {
                     LaunchedEffect(list) {
-                        val index = groupedList[status]?.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId } ?: -1
-                        if (index > -1) {
-                            listState.animateScrollToItem(index)
+                        val itemIndex = groupedList[column]?.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId } ?: -1
+                        if (itemIndex > -1) {
+                            listState.animateScrollToItem(itemIndex)
                             scrollOnceId.postValue(null)
                         }
                     }
@@ -144,7 +162,7 @@ fun ListScreenKanban(
 
                     stickyHeader {
                         Text(
-                            text = Status.values().find { (it.status?:it.name) == status }?.stringResource?.let { stringResource(id = it)}?: status,
+                            text = column,
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
                                 .background(MaterialTheme.colorScheme.background)
@@ -155,7 +173,7 @@ fun ListScreenKanban(
                     }
 
                     items(
-                        items = groupedList[status]?: emptyList(),
+                        items = groupedList[column]?: emptyList(),
                         key = { item -> item.iCal4List.id }
                     )
                     { iCal4ListRelObject ->
@@ -173,7 +191,7 @@ fun ListScreenKanban(
                             resources = iCal4ListRelObject.resources,
                             storedCategories = storedCategories,
                             storedResources = storedResources,
-                            storedStatuses = storedStatuses,
+                            storedStatuses = extendedStatuses,
                             selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                             player = player,
                             modifier = Modifier
@@ -199,46 +217,34 @@ fun ListScreenKanban(
                                             offsetX += delta
                                     },
                                     onDragStopped = {
-                                        if (abs(offsetX) > maxOffset / 2) {
-                                            val previousStatus = statusColumns
-                                                .indexOf(Status.values().find { (it.status?:it.name) == status }?.status?: status)
-                                                .takeIf { it > 0 }
-                                                ?.let { indexOfCurrent -> return@let Status.values().find { context.getString(it.stringResource) == statusColumns[indexOfCurrent-1] }?.status?: statusColumns[indexOfCurrent-1] }
-                                            val nextStatus = statusColumns
-                                                .indexOf(Status.values().find { (it.status?:it.name) == status }?.status?: status)
-                                                .takeIf { it < statusColumns.lastIndex }
-                                                ?.let { indexOfCurrent -> return@let Status.values().find { context.getString(it.stringResource) == statusColumns[indexOfCurrent+1] }?.status?: statusColumns[indexOfCurrent+1] }
+                                        if (abs(offsetX) > maxOffset / 2 && !iCal4ListRelObject.iCal4List.isReadOnly) {
 
-
-                                            if (iCal4ListRelObject.iCal4List.component == Component.VTODO.name) {
-                                                when {
-                                                    (iCal4ListRelObject.iCal4List.percent ?: 0) == 0 && offsetX > 0f -> onProgressChanged(
-                                                        iCal4ListRelObject.iCal4List.id,
-                                                        1,
-                                                        true
-                                                    )   // positive change, from Needs Action to In Process
-                                                    (iCal4ListRelObject.iCal4List.percent ?: 0) in 1..99 && offsetX > 0f -> onProgressChanged(
-                                                        iCal4ListRelObject.iCal4List.id,
-                                                        100,
-                                                        true
-                                                    )   // positive change, from In Process to Completed
-                                                    (iCal4ListRelObject.iCal4List.percent ?: 0) == 100 && offsetX < 0f -> onProgressChanged(
-                                                        iCal4ListRelObject.iCal4List.id,
-                                                        99,
-                                                        true
-                                                    )   // negative change, from Completed to In Process
-                                                    (iCal4ListRelObject.iCal4List.percent ?: 0) in 1..99 && offsetX < 0f -> onProgressChanged(
-                                                        iCal4ListRelObject.iCal4List.id,
-                                                        0,
-                                                        true
-                                                    )   // negative change, from In Process to Needs Action
-                                                }
-                                            } else {   // VJOURNAL
-                                                when {
-                                                    offsetX < 0f -> previousStatus?.let { onStatusChanged(iCal4ListRelObject.iCal4List.id, it, true) }
-                                                    offsetX > 0f -> nextStatus?.let { onStatusChanged(iCal4ListRelObject.iCal4List.id, it, true) }
+                                            val draggedToColumn = when {
+                                                offsetX < 0f && index > 0 -> index - 1
+                                                offsetX > 0F && index < columns.lastIndex -> index + 1
+                                                else -> {
+                                                    offsetX = 0f
+                                                    return@draggable
                                                 }
                                             }
+
+                                            when {
+                                                kanbanColumnsXStatus.isNotEmpty() -> extendedStatuses
+                                                    .find { xstatus -> xstatus.module == module && xstatus.xstatus == columns[draggedToColumn] }
+                                                    ?.let { xstatus ->
+                                                        onXStatusChanged(iCal4ListRelObject.iCal4List.id, xstatus, true)
+                                                    }
+
+                                                kanbanColumnsCategory.isNotEmpty() -> onSwapCategories(iCal4ListRelObject.iCal4List.id, column, columns[draggedToColumn])
+
+                                                else -> Status     //this cover also kanbanColumnsStatus.isNotEmpty()
+                                                    .values()
+                                                    .find { status -> context.getString(status.stringResource) == columns[draggedToColumn] }
+                                                    ?.let { status ->
+                                                        onStatusChanged(iCal4ListRelObject.iCal4List.id, status, true)
+                                                    }
+                                            }
+
                                             // make a short vibration
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                                 val vibratorManager = context.getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -313,14 +319,17 @@ fun ListScreenKanban_TODO() {
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
-            storedStatusesLive = MutableLiveData(emptyList()),
+            extendedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
-            kanbanColumns = remember { mutableStateListOf() },
+            kanbanColumnsStatus = remember { mutableStateListOf() },
+            kanbanColumnsXStatus = remember { mutableStateListOf() },
+            kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
             player = null,
-            onProgressChanged = { _, _, _ -> },
             onStatusChanged = { _, _, _ -> },
+            onXStatusChanged = { _, _, _ -> },
+            onSwapCategories = { _, _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { }
@@ -371,14 +380,17 @@ fun ListScreenKanban_JOURNAL() {
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
-            storedStatusesLive = MutableLiveData(emptyList()),
+            extendedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
-            kanbanColumns = remember { mutableStateListOf(Status.FINAL.status?:"", "individual") },
+            kanbanColumnsStatus = remember { mutableStateListOf(Status.FINAL.status?: Status.FINAL.name)  },
+            kanbanColumnsXStatus = remember { mutableStateListOf() },
+            kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
             player = null,
-            onProgressChanged = { _, _, _ -> },
             onStatusChanged = { _, _, _ -> },
+            onXStatusChanged = { _, _, _ -> },
+            onSwapCategories = { _, _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { }

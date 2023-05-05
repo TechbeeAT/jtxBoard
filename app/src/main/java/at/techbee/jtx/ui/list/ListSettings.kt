@@ -63,7 +63,10 @@ class ListSettings {
 
     var topAppBarCollectionId: MutableState<Long> = mutableStateOf(0L)   // list view only
     var topAppBarMode: MutableState<ListTopAppBarMode> = mutableStateOf(ListTopAppBarMode.SEARCH)   // list view only
-    var kanbanColumns = mutableStateListOf<String>()
+    var kanbanColumnsStatus = mutableStateListOf<String>()
+    var kanbanColumnsXStatus = mutableStateListOf<String>()
+    var kanbanColumnsCategory = mutableStateListOf<String>()
+
 
     var widgetHeader: MutableState<String> = mutableStateOf("") //widgetOnly
     var checkboxPositionEnd: MutableState<Boolean> = mutableStateOf(false)  // widget only
@@ -114,7 +117,9 @@ class ListSettings {
 
         private const val PREFS_TOPAPPBAR_MODE = "topAppBarMode"
         private const val PREFS_TOPAPPBAR_COLLECTION_ID = "topAppBarCollectionId"
-        private const val PREFS_KANBAN_COLUMNS = "kanbanColumns"
+        private const val PREFS_KANBAN_COLUMNS_STATUS = "kanbanColumnsStatus"
+        private const val PREFS_KANBAN_COLUMNS_EXTENDED_STATUS = "kanbanColumnsXStatus"
+        private const val PREFS_KANBAN_COLUMNS_CATEGORY = "kanbanColumnsCategory"
 
         //private const val PREFS_CHECKBOX_POSITION_END = "prefsCheckboxPosition"
         //private const val PREFS_WIDGET_ALPHA = "prefsWidgetAlpha"
@@ -169,7 +174,9 @@ class ListSettings {
 
             viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
-            kanbanColumns.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS, emptySet())?.toList()?: emptyList())
+            kanbanColumnsStatus.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS_STATUS, emptySet())?.toList()?: emptyList())
+            kanbanColumnsXStatus.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS, emptySet())?.toList()?: emptyList())
+            kanbanColumnsCategory.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS_CATEGORY, emptySet())?.toList()?: emptyList())
 
             showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
 
@@ -269,7 +276,10 @@ class ListSettings {
 
             putString(PREFS_VIEWMODE, viewMode.value.name)
             putBoolean(PREFS_FLAT_VIEW, flatView.value)
-            putStringSet(PREFS_KANBAN_COLUMNS, kanbanColumns.toSet())
+            putStringSet(PREFS_KANBAN_COLUMNS_STATUS, kanbanColumnsStatus.toSet())
+            putStringSet(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS, kanbanColumnsXStatus.toSet())
+            putStringSet(PREFS_KANBAN_COLUMNS_CATEGORY, kanbanColumnsCategory.toSet())
+
 
             putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
 

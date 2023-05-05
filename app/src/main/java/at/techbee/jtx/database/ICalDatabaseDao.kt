@@ -495,6 +495,13 @@ DELETEs by Object
     fun deleteResourcesForICalObjects(resources: List<String>, iCalObjectIds: List<Long>)
 
 
+    /**
+     * Exchanges a category with another
+     */
+    @Query("UPDATE $TABLE_NAME_CATEGORY SET $COLUMN_CATEGORY_TEXT = :newCategory WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :icalObjectId AND $COLUMN_CATEGORY_TEXT = :oldCategory")
+    fun swapCategories(icalObjectId: Long, oldCategory: String, newCategory: String)
+
+
 
     /**
      * Delete entities through a RawQuery.

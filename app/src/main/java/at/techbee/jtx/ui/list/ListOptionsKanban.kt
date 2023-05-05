@@ -24,6 +24,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +36,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
+import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.ui.reusable.elements.FilterSection
 
 
@@ -42,11 +45,13 @@ import at.techbee.jtx.ui.reusable.elements.FilterSection
 fun ListOptionsKanban(
     module: Module,
     listSettings: ListSettings,
-    storedStatusesLive: LiveData<List<ExtendedStatus>>,
+    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
+    storedCategoriesLive: LiveData<List<StoredCategory>>,
     onListSettingsChanged: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val storedStatuses by storedStatusesLive.observeAsState(initial = emptyList())
+    val extendedStatuses by extendedStatusesLive.observeAsState(initial = emptyList())
+    val storedCategories by storedCategoriesLive.observeAsState(initial = emptyList())
 
     Column(
         modifier = modifier,
@@ -57,6 +62,7 @@ fun ListOptionsKanban(
         FilterSection(
             icon = Icons.Outlined.ViewColumn,
             headline = stringResource(id = R.string.kanban_columns),
+            subtitle = stringResource(R.string.kanban_columns_based_on_standard_status),
             onResetSelection = { },
             onInvertSelection = { },
             showMenu = false
@@ -67,41 +73,88 @@ fun ListOptionsKanban(
                         return@forEach
 
                     FilterChip(
-                        selected = listSettings.kanbanColumns.contains(status.status ?: status.name),
+                        selected = listSettings.kanbanColumnsStatus.contains(status.status ?: status.name),
+                        enabled = listSettings.kanbanColumnsCategory.isEmpty() && listSettings.kanbanColumnsXStatus.isEmpty(),
                         onClick = {
-                            if (listSettings.kanbanColumns.contains(status.status ?: status.name))
-                                listSettings.kanbanColumns.remove(status.status ?: status.name)
+                            if (listSettings.kanbanColumnsStatus.contains(status.status ?: status.name))
+                                listSettings.kanbanColumnsStatus.remove(status.status ?: status.name)
                             else
-                                listSettings.kanbanColumns.add(status.status ?: status.name)
+                                listSettings.kanbanColumnsStatus.add(status.status ?: status.name)
                             onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = status.stringResource)) },
                         leadingIcon = {
-                            if (listSettings.kanbanColumns.contains(status.status ?: status.name))
-                                Text(text = "(${listSettings.kanbanColumns.indexOf(status.status ?: status.name) + 1})")
+                            if (listSettings.kanbanColumnsStatus.contains(status.status ?: status.name))
+                                Text(text = "(${listSettings.kanbanColumnsStatus.indexOf(status.status ?: status.name) + 1})")
                         }
                     )
                 }
-                storedStatuses
-                    .filter { Status.valuesFor(module).none { default -> stringResource(id = default.stringResource) == it.xstatus } }
-                    .filter { it.module == module }
-                    .forEach { storedStatus ->
-                        FilterChip(
-                            selected = listSettings.kanbanColumns.contains(storedStatus.xstatus),
-                            onClick = {
-                                if (listSettings.kanbanColumns.contains(storedStatus.xstatus))
-                                    listSettings.kanbanColumns.remove(storedStatus.xstatus)
-                                else
-                                    listSettings.kanbanColumns.add(storedStatus.xstatus)
-                                onListSettingsChanged()
-                            },
-                            label = { Text(storedStatus.xstatus) },
-                            leadingIcon = {
-                                if (listSettings.kanbanColumns.contains(storedStatus.xstatus))
-                                    Text(text = "(${listSettings.kanbanColumns.indexOf(storedStatus.xstatus) + 1})")
-                            }
-                        )
-                    }
+            }
+        }
+
+        if(extendedStatuses.any { it.module == module }) {
+            FilterSection(
+                icon = Icons.Outlined.ViewColumn,
+                headline = stringResource(id = R.string.kanban_columns),
+                subtitle = stringResource(R.string.kanban_columns_based_on_extended_status),
+                onResetSelection = { },
+                onInvertSelection = { },
+                showMenu = false
+            ) {
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    extendedStatuses
+                        .filter { it.module == module }
+                        .forEach { storedStatus ->
+                            FilterChip(
+                                selected = listSettings.kanbanColumnsXStatus.contains(storedStatus.xstatus),
+                                enabled = listSettings.kanbanColumnsStatus.isEmpty() && listSettings.kanbanColumnsCategory.isEmpty(),
+                                onClick = {
+                                    if (listSettings.kanbanColumnsXStatus.contains(storedStatus.xstatus))
+                                        listSettings.kanbanColumnsXStatus.remove(storedStatus.xstatus)
+                                    else
+                                        listSettings.kanbanColumnsXStatus.add(storedStatus.xstatus)
+                                    onListSettingsChanged()
+                                },
+                                label = { Text(storedStatus.xstatus) },
+                                leadingIcon = {
+                                    if (listSettings.kanbanColumnsXStatus.contains(storedStatus.xstatus))
+                                        Text(text = "(${listSettings.kanbanColumnsXStatus.indexOf(storedStatus.xstatus) + 1})")
+                                }
+                            )
+                        }
+                }
+            }
+        }
+
+        if(storedCategories.isNotEmpty()) {
+            FilterSection(
+                icon = Icons.Outlined.ViewColumn,
+                headline = stringResource(id = R.string.kanban_columns),
+                subtitle = stringResource(R.string.kanban_columns_based_on_first_category),
+                onResetSelection = { },
+                onInvertSelection = { },
+                showMenu = false
+            ) {
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    storedCategories.forEach { storedCategory ->
+                            FilterChip(
+                                selected = listSettings.kanbanColumnsCategory.contains(storedCategory.category),
+                                enabled = listSettings.kanbanColumnsStatus.isEmpty() && listSettings.kanbanColumnsXStatus.isEmpty(),
+                                onClick = {
+                                    if (listSettings.kanbanColumnsCategory.contains(storedCategory.category))
+                                        listSettings.kanbanColumnsCategory.remove(storedCategory.category)
+                                    else
+                                        listSettings.kanbanColumnsCategory.add(storedCategory.category)
+                                    onListSettingsChanged()
+                                },
+                                label = { Text(storedCategory.category) },
+                                leadingIcon = {
+                                    if (listSettings.kanbanColumnsCategory.contains(storedCategory.category))
+                                        Text(text = "(${listSettings.kanbanColumnsCategory.indexOf(storedCategory.category) + 1})")
+                                }
+                            )
+                        }
+                }
             }
         }
     }
@@ -120,13 +173,13 @@ fun ListOptionsKanban_Preview() {
         )
 
         val listSettings = ListSettings.fromPrefs(prefs)
-        listSettings.kanbanColumns.add(Status.NEEDS_ACTION.status ?: Status.NEEDS_ACTION.name)
-        listSettings.kanbanColumns.add("individual")
+        listSettings.kanbanColumnsStatus.add(Status.NEEDS_ACTION.status ?: Status.NEEDS_ACTION.name)
 
         ListOptionsKanban(
             module = Module.TODO,
             listSettings = listSettings,
-            storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.TODO, Status.FINAL, null))),
+            extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.TODO, Status.FINAL, null))),
+            storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             onListSettingsChanged = { },
         )
     }

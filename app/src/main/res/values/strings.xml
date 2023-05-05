@@ -597,4 +597,7 @@ Thank you!"</string>
     <string name="active_filters">Active filters:</string>
     <string name="kanban_settings">"Kanban"</string>
     <string name="kanban_columns">"Kanban-Columns"</string>
+    <string name="kanban_columns_based_on_standard_status">"based on standard statuses</string>
+    <string name="kanban_columns_based_on_extended_status">"based on extended statuses</string>
+    <string name="kanban_columns_based_on_first_category">"based on first category</string>
 </resources>
