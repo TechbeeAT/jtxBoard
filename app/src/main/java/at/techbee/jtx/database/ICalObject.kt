@@ -19,8 +19,11 @@ import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.util.PatternsCompat
 import androidx.preference.PreferenceManager
-import androidx.room.*
-import at.bitfire.ical4android.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import at.techbee.jtx.JtxContract
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
@@ -36,21 +39,35 @@ import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import kotlinx.parcelize.Parcelize
-import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
+import net.fortuna.ical4j.model.DateList
+import net.fortuna.ical4j.model.DateTime
 import net.fortuna.ical4j.model.Period
+import net.fortuna.ical4j.model.PeriodList
+import net.fortuna.ical4j.model.Property
+import net.fortuna.ical4j.model.Recur
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import net.fortuna.ical4j.model.WeekDay
 import net.fortuna.ical4j.model.component.VJournal
 import net.fortuna.ical4j.model.component.VToDo
-import net.fortuna.ical4j.model.parameter.*
-import net.fortuna.ical4j.model.property.*
+import net.fortuna.ical4j.model.parameter.Value
 import net.fortuna.ical4j.model.property.DtStart
+import net.fortuna.ical4j.model.property.ExDate
+import net.fortuna.ical4j.model.property.RDate
+import net.fortuna.ical4j.model.property.RRule
+import net.fortuna.ical4j.model.property.RecurrenceId
 import java.net.URLDecoder
 import java.text.ParseException
-import java.time.*
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.Locale
 import java.util.TimeZone
+import java.util.UUID
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
@@ -128,7 +145,7 @@ const val COLUMN_DTEND_TIMEZONE = "dtendtimezone"
 
 /**
  * Purpose:  This property defines the overall status or confirmation for the calendar component.
- * The possible values of a status are defined in [StatusTodo] for To-Dos and in [StatusJournal] for Notes and Journals
+ * The possible values of a status are defined in [Status]
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.11]
  * Type: [String]
  */
@@ -942,6 +959,7 @@ data class ICalObject(
             this.dtendTimezone = getValidTimezoneOrNull(dtendTimezone)
         }
         values.getAsString(COLUMN_STATUS)?.let { status -> this.status = status }
+        values.getAsString(COLUMN_EXTENDED_STATUS)?.let { xstatus -> this.xstatus = xstatus }
         values.getAsString(COLUMN_CLASSIFICATION)
             ?.let { classification -> this.classification = classification }
         values.getAsString(COLUMN_URL)?.let { url -> this.url = url }
@@ -1537,34 +1555,6 @@ data class ICalObject(
         }
     }
 }
-
-
-/** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
- * The possible values differ for Todos and Journals/Notes
- * @param [stringResource] is a reference to the String Resource within JTX
- */
-@Parcelize
-@Deprecated("Use Status instead")
-enum class StatusJournal(@StringRes val stringResource: Int) : Parcelable {
-
-    DRAFT(R.string.journal_status_draft),
-    FINAL(R.string.journal_status_final),
-    CANCELLED(R.string.journal_status_cancelled);
-}
-
-/** This enum class defines the possible values for the attribute [ICalObject.status] for Todos
- * The possible values differ for Todos and Journals/Notes
- * @param [stringResource] is a reference to the String Resource within JTX
- */
-@Deprecated("Use Status instead")
-@Parcelize
-enum class StatusTodo(@StringRes val stringResource: Int) : Parcelable {
-    `NEEDS-ACTION`(R.string.todo_status_needsaction),
-    COMPLETED(R.string.todo_status_completed),
-    `IN-PROCESS`(R.string.todo_status_inprocess),
-    CANCELLED(R.string.todo_status_cancelled);
-}
-
 
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Journals, Notes and Todos
