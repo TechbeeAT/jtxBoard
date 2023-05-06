@@ -1,12 +1,29 @@
 package at.techbee.jtx.ui.list
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.AdminPanelSettings
+import androidx.compose.material.icons.outlined.Alarm
+import androidx.compose.material.icons.outlined.Attachment
+import androidx.compose.material.icons.outlined.CloudSync
+import androidx.compose.material.icons.outlined.Comment
+import androidx.compose.material.icons.outlined.ContactMail
+import androidx.compose.material.icons.outlined.EventRepeat
+import androidx.compose.material.icons.outlined.FolderOpen
+import androidx.compose.material.icons.outlined.Group
+import androidx.compose.material.icons.outlined.Label
+import androidx.compose.material.icons.outlined.Link
+import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Note
+import androidx.compose.material.icons.outlined.PinDrop
+import androidx.compose.material.icons.outlined.PublishedWithChanges
+import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,9 +47,8 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.ListBadge
 
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ListTopFlowRow(
+fun ListTopRow(
     ical4List: ICal4List,
     categories: List<Category>,
     resources: List<Resource>,
@@ -41,9 +57,9 @@ fun ListTopFlowRow(
     modifier: Modifier = Modifier,
     includeJournalDate: Boolean = false
 ) {
-    FlowRow(
+    Row(
         horizontalArrangement = Arrangement.spacedBy(3.dp),
-        modifier = modifier
+        modifier = modifier.horizontalScroll(rememberScrollState())
     ) {
         ListBadge(
             icon = Icons.Outlined.FolderOpen,
@@ -52,6 +68,31 @@ fun ListTopFlowRow(
             containerColor = ical4List.colorCollection?.let { Color(it) } ?: MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier.padding(vertical = 2.dp)
         )
+
+        if(ical4List.isReadOnly) {
+            ListBadge(
+                iconRes = R.drawable.ic_readonly,
+                iconDesc = stringResource(id = R.string.readyonly),
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        }
+
+        AnimatedVisibility(ical4List.uploadPending) {
+            ListBadge(
+                icon = Icons.Outlined.CloudSync,
+                iconDesc = stringResource(id = R.string.upload_pending),
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        }
+
+        AnimatedVisibility(ical4List.rrule != null || ical4List.recurid != null) {
+            ListBadge(
+                icon = if(ical4List.rrule != null || (ical4List.recurid != null && ical4List.sequence == 0L)) Icons.Outlined.EventRepeat else null,
+                iconRes = if(ical4List.recurid != null && ical4List.sequence > 0L) R.drawable.ic_recur_exception else null,
+                iconDesc = stringResource(id = R.string.list_item_recurring),
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        }
 
         if (includeJournalDate && ical4List.module == Module.JOURNAL.name && ical4List.dtstart != null) {
             ListBadge(
@@ -234,32 +275,6 @@ fun ListTopFlowRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-
-
-        AnimatedVisibility(ical4List.isReadOnly) {
-            ListBadge(
-                iconRes = R.drawable.ic_readonly,
-                iconDesc = stringResource(id = R.string.readyonly),
-                modifier = Modifier.padding(vertical = 2.dp)
-            )
-        }
-
-        AnimatedVisibility(ical4List.uploadPending) {
-            ListBadge(
-                icon = Icons.Outlined.CloudSync,
-                iconDesc = stringResource(id = R.string.upload_pending),
-                modifier = Modifier.padding(vertical = 2.dp)
-            )
-        }
-
-        AnimatedVisibility(ical4List.rrule != null || ical4List.recurid != null) {
-            ListBadge(
-                icon = if(ical4List.rrule != null || (ical4List.recurid != null && ical4List.sequence == 0L)) Icons.Outlined.EventRepeat else null,
-                iconRes = if(ical4List.recurid != null && ical4List.sequence > 0L) R.drawable.ic_recur_exception else null,
-                iconDesc = stringResource(id = R.string.list_item_recurring),
-                modifier = Modifier.padding(vertical = 2.dp)
-            )
-        }
     }
 }
 
@@ -268,9 +283,9 @@ fun ListTopFlowRow(
 
 @Preview(showBackground = true)
 @Composable
-fun ListTopFlowRow_Preview() {
+fun ListTopRow_Preview() {
     MaterialTheme {
-        ListTopFlowRow(
+        ListTopRow(
             ical4List = ICal4List.getSample(),
             categories = listOf(Category(text = "Category"), Category(text = "Test"), Category(text = "Another")),
             resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),

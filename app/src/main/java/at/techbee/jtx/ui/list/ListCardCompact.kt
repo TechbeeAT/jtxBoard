@@ -73,7 +73,7 @@ fun ListCardCompact(
                 .fillMaxWidth()
         ) {
 
-            ListTopFlowRow(
+            ListTopRow(
                 ical4List = iCalObject,
                 categories = categories,
                 resources = resources,
