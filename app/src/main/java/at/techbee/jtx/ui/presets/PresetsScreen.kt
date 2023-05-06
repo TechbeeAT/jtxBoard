@@ -242,20 +242,26 @@ fun PresetsScreenContent(
             )
         }
 
+        HeadlineWithIcon(
+            icon = Icons.Outlined.PublishedWithChanges,
+            iconDesc = null,
+            text = stringResource(id = R.string.extended_statuses),
+            modifier = Modifier.padding(top = 8.dp)
+        )
 
         Module.values().forEach { module ->
-            HeadlineWithIcon(
-                icon = Icons.Outlined.PublishedWithChanges,
-                iconDesc = null,
+
+            Text(
                 text = when(module) {
-                    Module.JOURNAL -> stringResource(R.string.extended_statuses_journals)
-                    Module.NOTE -> stringResource(R.string.extended_statuses_notes)
-                    Module.TODO -> stringResource(R.string.extended_statuses_tasks)
+                    Module.JOURNAL -> stringResource(id = R.string.extended_statuses_for_journals)
+                    Module.NOTE -> stringResource(id = R.string.extended_statuses_for_notes)
+                    Module.TODO -> stringResource(id = R.string.extended_statuses_for_tasks)
                 },
-                modifier = Modifier.padding(top = 8.dp)
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(8.dp)
             )
 
-            FlowRow(
+           FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(3.dp)
             ) {
                 extendedStatuses
