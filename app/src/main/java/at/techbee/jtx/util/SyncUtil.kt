@@ -88,6 +88,24 @@ class SyncUtil {
             }
         }
 
+
+        /**
+         * @return true if [syncApp] was found and the known minVersion is compatible to sync the Extended Status (XStatus)
+         */
+        fun isSyncAppCompatibleWithXStatus(syncApp: SyncApp, context: Context): Boolean {
+            try {
+                val syncAppInfo = context.packageManager?.getPackageInfoCompat(syncApp.packageName, 0) ?: return false
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    syncAppInfo.longVersionCode >= syncApp.minVersionCodeXStatus
+                } else {
+                    @Suppress("DEPRECATION")
+                    syncAppInfo.versionCode >= syncApp.minVersionCodeXStatus
+                }
+            } catch (e: PackageManager.NameNotFoundException) {
+                return false
+            }
+        }
+
         /**
          * Starts an intent to open DAVx5 Login Activity (to add a new account)
          */
@@ -181,6 +199,8 @@ enum class SyncApp(
     val activityBaseClass: String,
     val minVersionCode: Long,
     val minVersionName: String,
+    val minVersionCodeXStatus: Long,  // minVersion to synchronize XStatus
+    val minVersionNameXStatus: String,
     val websiteURL: String,
     val setupURL: String
 ) {
@@ -193,6 +213,8 @@ enum class SyncApp(
         "at.bitfire.davdroid",
         403010000L,
         "4.3.1",
+        403030000L,
+        "4.3.3",
     "https://www.davx5.com/",
         "https://jtx.techbee.at/sync-with-davx5"
     ),
@@ -205,6 +227,8 @@ enum class SyncApp(
         "at.bitfire.davdroid",
         403010000L,
         "4.3.1",
+        403030000L,
+        "4.3.3",
         "https://www.infomaniak.com/goto/en/home?utm_term=643c252cecbd9",
         "https://www.infomaniak.com/en/support/faq/2302/quickstart-guide-ksync-for-android"
     ),
@@ -217,6 +241,8 @@ enum class SyncApp(
         "at.bitfire.davdroid",
         403010000L,
         "4.3.1",
+        403030000L,
+        "4.3.3",
         "https://www.davx5.com/organizations/managed-davx5",
         "https://www.davx5.com/organizations/deployment"
     ),

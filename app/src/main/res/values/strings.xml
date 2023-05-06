@@ -594,6 +594,8 @@ Thank you!"</string>
     <string name="extended_statuses_for_journals">"… for journals"</string>
     <string name="extended_statuses_for_notes">"… for notes"</string>
     <string name="extended_statuses_for_tasks">"… for tasks"</string>
+    <string name="extended_status_attention">"Attention: Extended statuses are not compatible with other apps, but map to a standard status. Other applications will only show the standard status."</string>
+    <string name="extended_status_update_appname_to_appversion">"Please update %1$s to version %2$s in order to synchronize extended statuses."</string>
     <string name="extended_status">"Extended status</string>
     <string name="active_filters">Active filters:</string>
     <string name="kanban_settings">"Kanban"</string>

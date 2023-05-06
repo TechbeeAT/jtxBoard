@@ -24,7 +24,9 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -39,6 +41,8 @@ import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
+import at.techbee.jtx.util.SyncApp
+import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -248,6 +252,23 @@ fun PresetsScreenContent(
             text = stringResource(id = R.string.extended_statuses),
             modifier = Modifier.padding(top = 8.dp)
         )
+
+        Text(
+            text = stringResource(id = R.string.extended_status_attention),
+            style = MaterialTheme.typography.labelSmall,
+            fontStyle = FontStyle.Italic,
+            modifier = Modifier.padding(8.dp)
+        )
+
+        val incompatibleSyncApps = if(LocalInspectionMode.current) SyncApp.values().toList() else SyncUtil.availableSyncApps(context).filter { !SyncUtil.isSyncAppCompatibleWithXStatus(it, context) }
+        incompatibleSyncApps.forEach {syncApp ->
+            Text(
+                text = stringResource(R.string.extended_status_update_appname_to_appversion, syncApp.appName, syncApp.minVersionNameXStatus),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
 
         Module.values().forEach { module ->
 
