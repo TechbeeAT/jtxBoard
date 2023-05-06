@@ -54,6 +54,9 @@
 -dontwarn org.xmlpull.**
 -dontwarn sun.net.spi.nameservice.NameService
 -dontwarn sun.net.spi.nameservice.NameServiceDescriptor
+-dontwarn org.conscrypt.Conscrypt$Version
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
 
 
 # Great resource with explanations:
