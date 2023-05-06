@@ -42,7 +42,7 @@ object JtxContract {
     const val AUTHORITY = "at.techbee.jtx.provider"
 
     /** The version of this SyncContentProviderContract */
-    const val VERSION = 3
+    const val VERSION = 4
 
     /** Constructs an Uri for the Jtx Sync Adapter with the given Account
      * @param [account] The account that should be appended to the Base Uri
@@ -271,6 +271,13 @@ object JtxContract {
          * Type: [String]
          */
         const val STATUS = "status"
+
+        /**
+         * Purpose:  To specify the filename of the attachment.
+         * This is an X-PROPERTY that should be addressed as "X-LABEL"
+         * Type: [String]
+         */
+        const val EXTENDED_STATUS = "xstatus"
 
         /**
          * Purpose:  This property defines the access classification for a calendar component.
