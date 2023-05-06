@@ -71,7 +71,7 @@ fun ListCardGrid(
             modifier = Modifier.padding(8.dp)
         ) {
 
-            ListTopFlowRow(
+            ListTopRow(
                 ical4List = iCalObject,
                 categories = categories,
                 resources = resources,
