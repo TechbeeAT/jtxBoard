@@ -16,6 +16,7 @@ Global Strings -->
     <string name="latitude">"Широта"</string>
     <string name="longitude">"Долгота"</string>
     <string name="unlink">"Отвязать"</string>
+    <string name="off">"Из"</string>
     <string name="current_location">"Текущее местоположение"</string>
     <string name="toolbar_text_add_journal">"Добавить журнал"</string>
     <string name="toolbar_text_add_note">"Добавить заметку"</string>

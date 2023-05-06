@@ -16,6 +16,7 @@ Global Strings -->
     <string name="latitude">"Breitengrad"</string>
     <string name="longitude">"Längengrad"</string>
     <string name="unlink">"Verlinkung aufheben"</string>
+    <string name="off">"Aus"</string>
     <string name="current_location">"Aktueller Standort"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
     <string name="toolbar_text_add_note">"Notiz hinzufügen"</string>
