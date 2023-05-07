@@ -633,7 +633,8 @@ data class ICalObject(
                     deleteItemWithChildren(child.id, database, item.property.uid)    // call the function again to recursively delete all children, then delete the item
             }
 
-            database.deleteRecurringInstances(item.property.uid)  // recurring instances are always physically deleted
+            if(item.property.rrule != null)
+                database.deleteRecurringInstances(item.property.uid)  // recurring instances are always physically deleted
 
             // if the entry has multiple parents, we only delete the reference, but not the entry itself
             if((item.relatedto?.filter { it.reltype == Reltype.PARENT.name }?.size?:0) > 1) {
