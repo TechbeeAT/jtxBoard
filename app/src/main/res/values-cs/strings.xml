@@ -16,6 +16,7 @@ Global Strings -->
     <string name="latitude">"Zeměpisná šířka"</string>
     <string name="longitude">"Zeměpisná délka"</string>
     <string name="unlink">"Zrušit propojení"</string>
+    <string name="off">"Vypnuto"</string>
     <string name="current_location">"Současná poloha"</string>
     <string name="toolbar_text_add_journal">"Přidat Deník"</string>
     <string name="toolbar_text_add_note">"Přidat Poznámku"</string>
@@ -41,6 +42,7 @@ Global Strings -->
     <string name="navigation_drawer_open">"Otevřít navigační panel"</string>
     <string name="navigation_drawer_close">"Zavřít navigační panel"</string>
     <string name="navigation_drawer_board">"Deska"</string>
+    <string name="navigation_drawer_synchronization">"Synchronizace"</string>
     <string name="navigation_drawer_about">"O aplikaci / Licence"</string>
     <string name="navigation_drawer_subtitle">"deníky, poznámky a úkoly"</string>
     <string name="navigation_drawer_settings">"Nastavení"</string>
@@ -55,10 +57,12 @@ Global Strings -->
     <string name="list_due_today">"Termín dnes"</string>
     <string name="list_due_tomorrow">"Termín zítra"</string>
     <string name="list_due_inXhours">"Termín za %d hodin"</string>
+    <string name="list_due_on_weekday">"Splnit do %s"</string>
     <string name="list_start_past">"Začít v minulosti"</string>
     <string name="list_start_today">"Naplánováno začít dnes"</string>
     <string name="list_start_tomorrow">"Začít zítra"</string>
     <string name="list_start_inXhours">"Naplánováno začít za %d hodin"</string>
+    <string name="list_start_on_weekday">"Naplánováno začít %s"</string>
     <string name="list_tabitem_journals">"Deníky"</string>
     <string name="list_tabitem_notes">"Poznámky"</string>
     <string name="list_tabitem_todos">"Úkoly"</string>
@@ -102,6 +106,8 @@ Global Strings -->
     <string name="edit_datepicker_dialog_edit_timezone">"Upravit časové pásmo"</string>
     <string name="edit_dialog_sure_to_delete_title">"Odstranit \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Zahodit tento záznam?"</string>
+    <string name="dialog_delete_done_title">"Odstranit všechny dokončené úkoly?"</string>
+    <string name="dialog_delete_done_message">"Upozornění: Dílčí úkoly jsou odstraněny nezávisle na jejich stavu, pokud je jejich nadřízená položka označena jako dokončená. Tuto operaci nelze vrátit zpět!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Opravdu chcete odstranit \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Opravdu chcete zahodit tento záznam? Tento záznam nebude uložen."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Datum termínu nemůže být před datem zahájení."</string>
@@ -140,7 +146,19 @@ Global Strings -->
     <string name="settings_app">"Nastavení aplikace"</string>
     <string name="settings_select_mimetype_for_audio">"Vybrat Mimetype pro zvukové poznámky"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"Synchronizovat s %1$s"</string>
+    <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale podporuje synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožňuje používat vámi vybraný jakýkoliv server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat."</string>
+    <string name="sync_ksync_basic_info">"kSync je aplikace založená na DAVx5 vyvinutá Infomaniak zejména pro jejich služby. Zatímco DAVx5 je otevřen libovolnému kompatibilnímu serveru CalDAV, kSync umožňuje synchronizaci pouze pro účty Infomaniak."</string>
+    <string name="sync_manageddavx5_basic_info">"Spravované DAVx⁵ zpřístupňuje funkce DAVx⁵ organizacím a přichází s dalšími podnikovými funkcemi, jako je hromadné nasazení, firemní značka a přednastavitelné nastavení."</string>
     <string name="sync_congratulations">"Gratulujeme! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"Na vašem telefonu jsme rozpoznali %1$s."</string>
+    <string name="sync_setup_instructions">"Pokyny pro nastavení"</string>
+    <string name="sync_check_out_sync_app">"Zkontrolujte %1$s!"</string>
+    <string name="sync_sync_app_not_found">"Na vašem telefonu jsme nerozpoznali %1$s."</string>
+    <string name="sync_more_about_sync_app">"Více o %1$s"</string>
+    <string name="sync_download_sync_app">"Stáhnout %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Přidat účet v %1$s"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Nepodařilo se otevřít %1$s, otevřete aplikaci ručně."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Ahoj, jsem Patrick, vývojář jtx Board. Této aplikaci, kterou vám nabízím zdarma, věnuji spoustu času a úsilí. Pokud se vám moje aplikace líbí, pošlete mi prosím lásku a věnujte malý příspěvek!"</string>
     <string name="donate_thank_you">"Děkujeme!"</string>
@@ -148,6 +166,7 @@ Global Strings -->
     <string name="donate_other_donation_methods">"Pokud byste chtěli zvážit jiný způsob darování, podívejte se na naše webové stránky:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nebyla nalezena žádná aplikace pro otevření tohoto souboru nebo URL."</string>
     <string name="toast_item_is_now_recu_exception">"Opakující se položka je nyní výjimkou."</string>
+    <string name="toast_done_tasks_deleted">"Dokončené úkoly odstraněny (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Díky"</string>
     <string name="about_translations_basic_info">"jtx Board je aplikace s otevřeným zdrojovým kódem, která si cení účasti a příspěvků komunity open source. Na této stránce bychom rádi ocenili úsilí členů komunity v oblasti překladů."</string>
@@ -164,6 +183,7 @@ Global Strings -->
     <string name="save_and_edit">"Uložit a upravit"</string>
     <string name="save_and_new">"Uložit a nový"</string>
     <string name="save_and_close">"Uložit a zavřít"</string>
+    <string name="list_quickadd_add_audio_attachment">"Nahrát zvukovou přílohu"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Oprávnění ke čtení kontaktů uděleno"</string>
     <string name="permission_read_contacts_denied">"Oprávnění ke čtení kontaktů zamítnuto"</string>
@@ -176,8 +196,10 @@ Global Strings -->
     <string name="apply">"Použít"</string>
     <string name="not_available_abbreviation">"neuvedeno"</string>
     <string name="collection">"Sbírka"</string>
+    <string name="collection_owner_displayname">"Vlastník: %1$s"</string>
     <string name="link_to_parent">"Propojit s nadřazenou položkou"</string>
     <string name="navigation_drawer_collections">"Sbírky"</string>
+    <string name="navigation_drawer_presets">"Předvolby"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Datum a čas"</string>
     <string name="alarms_duration">"Trvání"</string>
@@ -195,6 +217,7 @@ Global Strings -->
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Poznámky: %1$s"</string>
     <string name="collections_tasks_num">"Úkoly: %1$s"</string>
+    <string name="collections_info">"Sbírky jsou nahromaděním položek podobně jako složky se soubory. Prostřednictvím nabídky můžete vytvářet nové místní sbírky nebo můžete nastavit nové vzdálené sbírky pro synchronizac, pokud máte nainstalovánu synchronizační aplikaci (např. DAVx⁵)."</string>
     <string name="collections_collection_menu">"Nabídka Sbírky"</string>
     <string name="collections_dialog_add_local_collection_title">"Přidat místní Sbírku"</string>
     <string name="collections_dialog_edit_local_collection_title">"Upravit místní Sbírku"</string>
@@ -218,6 +241,8 @@ Global Strings -->
     <string name="collections_toast_export_ics_error">"Během exportu vybrané sbírky došlo k chybě."</string>
     <string name="attachment_export_saved_successfully">"Úspěšně úloženo"</string>
     <string name="attachment_export_error_error_occurred">"Při ukládání vybraného souboru došlo k chybě!"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"Přidat vzdálenou Sbírku (%1$s)"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"Zobrazit v %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Exportovat jako .ics"</string>
     <string name="journal">"Deník"</string>
     <string name="note">"Poznámka"</string>
@@ -402,6 +427,13 @@ Děkujeme vám!"</string>
     <string name="dialog_detach_from_series_text_single">"Odpojení tohoto prvku od série vám umožní mít nezávislé dílčí úkoly nebo propojené poznámky, ale nebude již existovat žádný další odkaz na původní sérii. Chcete pokračovat?"</string>
     <string name="dialog_detach_from_series_text_attention">"Upozornění: Tuto operaci nelze vrátit zpět!"</string>
     <string name="dialog_detach_from_series_button">"Odpojit od série"</string>
+    <string name="dialog_sync_app_outdated_title">"Synchronizační aplikace je zastaralá"</string>
+    <string name="dialog_sync_app_outdated_message">"Vaše aktuální verze %1$s není kompatibilní s touto verzí jtx Board. Aktualizujte prosím %1$s na %2$s nebo novější! Synchronizace prostřednictvím %1$s je aktuálně pozastavena."</string>
+    <string name="dialog_save_current_filter_config">"Uložit aktuální konfiguraci filtru"</string>
+    <string name="dialog_save_current_filter_my_filter">"Můj filtr"</string>
+    <string name="dialog_edit_stored_category_title">"Přidat nebo upravit předvolbu kategorie"</string>
+    <string name="dialog_edit_stored_resource_title">"Přidat nebo upravit předvolbu zdroje"</string>
+    <string name="dialog_add_audio_entry_title">"Přidat zvukovou položku"</string>
     <string name="menu_list_viewmode_compact">"Kompaktní zobrazení"</string>
     <string name="menu_list_viewmode_kanban">"Zobrazení Kanban"</string>
     <string name="settings_tasks">"Nastavení Úkolů"</string>
@@ -428,6 +460,8 @@ Děkujeme vám!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Ponechat stav, průběh a dokončení při synchronizaci"</string>
     <string name="settings_attention_experimental_feature">"Pozor: Toto je experimentální funkce"</string>
     <string name="settings_create_with_current_location">"Vytvořit nové položky s aktuální polohou"</string>
+    <string name="settings_sticky_alarms">"Rychlé budíky"</string>
+    <string name="settings_sticky_alarms_sub">"Ponechat oznámení dokud není dokončeno nebo odloženo"</string>
     <string name="sync_button_go_to_collections">"Přejít na Sbírky"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Pro povolení této funkce si zakupte prosím balíček Pro."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -436,9 +470,13 @@ Děkujeme vám!"</string>
     <string name="menu_view_share_mail">"Sdílet jako e-mail"</string>
     <string name="menu_view_copy_to_clipboard">"Kopírovat do schránky"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Zkopírováno"</string>
+    <string name="menu_view_convert_to_journal">"Převést na deník"</string>
+    <string name="menu_view_convert_to_note">"Převést na poznámku"</string>
+    <string name="menu_view_convert_to_task">"Převést na úkol"</string>
     <string name="settings_select_language">"Vybrat jazyk"</string>
     <string name="settings_select_language_system">"Výchozí nastavení systému"</string>
     <string name="filter_special">"Speciální filtry"</string>
+    <string name="filter_presets">"Předvolby filtrů"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum v minulosti"</string>
     <string name="list_date_today">"Dnes"</string>
@@ -450,6 +488,7 @@ Děkujeme vám!"</string>
     <string name="list_start_date_future">"Začít v budoucnosti"</string>
     <string name="list_hide_completed_tasks">"Skrýt dokončené úkoly"</string>
     <string name="list_biometric_protected_entries_locked">Položky chráněné biometrikou uzamčeny</string>
+    <string name="list_delete_done">"Odstranit dokončené"</string>
     <string name="collections_biometric_protected_entries_locked_title">Položky chráněné biometrikou uzamčeny</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Ověřte se a zkuste to znovu</string>
     <string name="list_biometric_protected_entries_unlocked">Položky chráněné biometrikou odemčeny</string>
@@ -470,6 +509,7 @@ Děkujeme vám!"</string>
     <string name="filter_second_order_by">"Pak seřadit podle"</string>
     <string name="filter_group_by">"Seskupit podle"</string>
     <string name="filter_group_by_info">"Seskupování je dostupné pro seznam a kompaktní zobrazení"</string>
+    <string name="filter_save_as_preset">"Uložit jako předvolbu"</string>
     <string name="menu_list_flat_view">"Ploché zobrazení"</string>
     <string name="menu_list_flat_view_sub">"Vždy zobrazit podřízené položky na nejvyšší úrovni v seznamu"</string>
     <string name="menu_list_limit_recur_entries">"Omezit opakující se"</string>
@@ -494,6 +534,8 @@ Děkujeme vám!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Pozor: V současné době je ve widgetu podporována pouze jedna úroveň hierarchie. Pro zobrazení záznamů nižších úrovní použijte místo toho ploché zobrazení."</string>
     <string name="widget_list_maximum_entries_reached">"Dosažen maximální počet záznamů ve widgetu (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualizace widgetu"</string>
+    <string name="widget_list_opacity_warning">"Poznámka: Toto je experimentální funkce! Změny snížení průhlednosti v barevném motivu se nemusí projevit okamžitě!"</string>
+    <string name="widget_list_color_warning">"Poznámka: Toto je experimentální funkce! Změny v barevném motivu se neprojeví! Pro návrat k výchozímu nastavení systému, zvolte možnost bez barvy."</string>
     <string name="opacity">"Neprůhlednost"</string>
     <string name="general">"Obecné"</string>
     <string name="list_collapse">"Sbalit"</string>
@@ -527,4 +569,7 @@ Děkujeme vám!"</string>
     <string name="markdown_horizontal_ruler">"Vodorovné pravítko"</string>
     <string name="markdown_unordered_list">"Seznam"</string>
     <string name="markdown_code">"Kód"</string>
+    <string name="preset_categories">"Předvolba kategorií"</string>
+    <string name="preset_resources">"Předvolba zdrojů"</string>
+    <string name="active_filters">Aktivní filtry:</string>
 </resources>
