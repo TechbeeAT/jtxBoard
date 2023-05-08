@@ -246,7 +246,7 @@ fun ListTopRow(
             ListBadge(
                 icon = Icons.Outlined.Link,
                 iconDesc = stringResource(id = R.string.url),
-                text = ical4List.url,
+                //text = ical4List.url,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -261,6 +261,7 @@ fun ListTopRow(
             ListBadge(
                 icon = Icons.Outlined.Map,
                 iconDesc = stringResource(id = R.string.location),
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
         AnimatedVisibility(!ical4List.contact.isNullOrEmpty()) {
