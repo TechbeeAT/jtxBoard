@@ -59,6 +59,11 @@ fun PresetsScreen(
     val storedCategories by database.getStoredCategories().observeAsState(emptyList())
     val allResources by database.getAllResourcesAsText().observeAsState(emptyList())
     val storedResources by database.getStoredResources().observeAsState(emptyList())
+    val allXStatuses = mapOf(
+        Pair(Module.JOURNAL, database.getAllXStatusesFor(Module.JOURNAL.name).observeAsState(emptyList())),
+        Pair(Module.NOTE, database.getAllXStatusesFor(Module.NOTE.name).observeAsState(emptyList())),
+        Pair(Module.TODO, database.getAllXStatusesFor(Module.TODO.name).observeAsState(emptyList()))
+    )
     val extendedStatuses by database.getStoredStatuses().observeAsState(emptyList())
 
 
@@ -87,6 +92,7 @@ fun PresetsScreen(
                             storedCategories = storedCategories,
                             allResources = allResources,
                             storedResources = storedResources,
+                            allXStatuses = allXStatuses,
                             extendedStatuses = extendedStatuses,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -108,13 +114,14 @@ fun PresetsScreenContent(
     storedCategories: List<StoredCategory>,
     allResources: List<String>,
     storedResources: List<StoredResource>,
+    allXStatuses: Map<Module, State<List<XStatusStatusPair>>>,
     extendedStatuses: List<ExtendedStatus>,
     modifier: Modifier = Modifier
 ) {
 
     var editCategory by remember { mutableStateOf<StoredCategory?>(null) }
     var editResource by remember { mutableStateOf<StoredResource?>(null) }
-    var editStatus by remember { mutableStateOf<ExtendedStatus?>(null) }
+    var editXStatus by remember { mutableStateOf<ExtendedStatus?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -152,9 +159,9 @@ fun PresetsScreenContent(
         )
     }
 
-    if(editStatus != null) {
+    if(editXStatus != null) {
         EditStoredStatusDialog(
-            storedStatus = editStatus!!,
+            storedStatus = editXStatus!!,
             onStoredStatusChanged = {
                 scope.launch(Dispatchers.IO) {
                     ICalDatabase.getInstance(context).iCalDatabaseDao.upsertStoredStatus(it)
@@ -165,7 +172,7 @@ fun PresetsScreenContent(
                     ICalDatabase.getInstance(context).iCalDatabaseDao.deleteStoredStatus(it)
                 }
             },
-            onDismiss = { editStatus = null }
+            onDismiss = { editXStatus = null }
         )
     }
     
@@ -289,7 +296,7 @@ fun PresetsScreenContent(
                     .filter { it.module == module }
                     .forEach { storedStatus ->
                         ElevatedAssistChip(
-                            onClick = { editStatus = storedStatus },
+                            onClick = { editXStatus = storedStatus },
                             label = { Text(storedStatus.xstatus) },
                             colors = storedStatus.color?.let {
                                 AssistChipDefaults.assistChipColors(
@@ -300,8 +307,16 @@ fun PresetsScreenContent(
                         )
                     }
 
+               allXStatuses[module]?.value?.filter { extendedStatuses.none { statusPair -> statusPair.xstatus == it.xstatus } }?.forEach { statusPair ->
+                   ElevatedAssistChip(
+                       onClick = { editXStatus = ExtendedStatus(statusPair.xstatus, module, (Status.getStatusFromString(statusPair.status)?: Status.NO_STATUS), null) },
+                       label = { Text(statusPair.xstatus) },
+                       modifier = Modifier.alpha(0.5f)
+                   )
+               }
+
                 ElevatedAssistChip(
-                    onClick = { editStatus = ExtendedStatus("", module, Status.NO_STATUS, null) },
+                    onClick = { editXStatus = ExtendedStatus("", module, Status.NO_STATUS, null) },
                     label = { Text("+") },
                     colors = AssistChipDefaults.elevatedAssistChipColors()
                 )
@@ -319,7 +334,14 @@ fun PresetsScreen_Preview() {
             storedCategories = listOf(StoredCategory("red", Color.Magenta.toArgb()), StoredCategory("ohne Farbe", null)),
             allResources = listOf("existing resource"),
             storedResources = listOf(StoredResource("blue", Color.Blue.toArgb()), StoredResource("ohne Farbe", null)),
+            allXStatuses = emptyMap(),
             extendedStatuses = listOf(ExtendedStatus("Final", Module.JOURNAL, Status.NO_STATUS, Color.Blue.toArgb()), ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))
         )
     }
 }
+
+
+data class XStatusStatusPair(
+    val xstatus: String,
+    val status: String?
+)

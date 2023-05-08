@@ -18,6 +18,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.*
+import at.techbee.jtx.ui.presets.XStatusStatusPair
 
 
 /**
@@ -790,5 +791,14 @@ DELETEs by Object
 
     @Delete
     fun deleteStoredStatus(storedStatus: ExtendedStatus)
+
+    /**
+     * Gets all XStatuses for a specific module
+     * @param [module] for which the XStatuses should be retrieved
+     * @return a pair of XSTATUS and mapped STATUS
+     */
+    @Transaction
+    @Query("SELECT DISTINCT $COLUMN_EXTENDED_STATUS, $COLUMN_STATUS FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module AND $COLUMN_EXTENDED_STATUS IS NOT NULL")
+    fun getAllXStatusesFor(module: String): LiveData<List<XStatusStatusPair>>
 
 }
