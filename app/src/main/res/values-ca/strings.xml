@@ -16,6 +16,7 @@ Global Strings -->
     <string name="latitude">"Latitud"</string>
     <string name="longitude">"Longitud"</string>
     <string name="unlink">"Desvincular"</string>
+    <string name="off">"Desconnectat"</string>
     <string name="current_location">"Ubicació actual"</string>
     <string name="toolbar_text_add_journal">"Afegir Entrada"</string>
     <string name="toolbar_text_add_note">"Afegir Nota"</string>
