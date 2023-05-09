@@ -376,7 +376,7 @@ data class Alarm (
             }
         }
             .build()
-        notification.flags = notification.flags
+        //notification.flags = notification.flags
 
         // the notificationIntent that is an Intent of the NotificationPublisher Class
         val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
