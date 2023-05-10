@@ -10,8 +10,17 @@ package at.techbee.jtx.ui.list
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,7 +69,7 @@ fun ListCardGrid(
             modifier = Modifier.padding(8.dp)
         ) {
 
-            ListTopFlowRow(
+            ListTopRow(
                 ical4List = iCalObject,
                 categories = categories,
                 resources = resources,

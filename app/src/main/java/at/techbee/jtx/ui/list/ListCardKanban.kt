@@ -10,7 +10,11 @@ package at.techbee.jtx.ui.list
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -62,7 +66,7 @@ fun ListCardKanban(
             modifier = Modifier.padding(8.dp)
         ) {
 
-            ListTopFlowRow(
+            ListTopRow(
                 ical4List = iCalObject,
                 categories = categories,
                 resources = resources,
@@ -118,7 +122,6 @@ fun ListCardKanban_JOURNAL() {
             player = null,
             modifier = Modifier
                 .width(150.dp)
-                .height(150.dp)
         )
     }
 }
@@ -146,7 +149,6 @@ fun ListCardKanban_NOTE() {
             player = null,
             modifier = Modifier
                 .width(150.dp)
-                .height(150.dp)
         )
     }
 }

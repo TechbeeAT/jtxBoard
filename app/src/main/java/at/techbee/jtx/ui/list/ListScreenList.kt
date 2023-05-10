@@ -91,7 +91,7 @@ fun ListScreenList(
     settingProgressIncrement: MutableState<DropdownSettingOption>,
     settingLinkProgressToSubtasks: Boolean,
     player: MediaPlayer?,
-    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
@@ -221,7 +221,9 @@ fun ListScreenList(
                                             iCal4ListRelObject.iCal4List.id,
                                             groupedList
                                                 .flatMap { it.value }
-                                                .map { it.iCal4List })
+                                                .map { it.iCal4List },
+                                            iCal4ListRelObject.iCal4List.isReadOnly
+                                        )
                                     },
                                     onLongClick = {
                                         if (!iCal4ListRelObject.iCal4List.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
@@ -310,7 +312,7 @@ fun ListScreenList_TODO() {
             settingLinkProgressToSubtasks = false,
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
@@ -384,7 +386,7 @@ fun ListScreenList_JOURNAL() {
             settingLinkProgressToSubtasks = false,
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },

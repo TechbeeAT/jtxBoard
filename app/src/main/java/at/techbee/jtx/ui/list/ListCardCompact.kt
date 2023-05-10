@@ -54,7 +54,7 @@ fun ListCardCompact(
     player: MediaPlayer?,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
 
@@ -73,7 +73,7 @@ fun ListCardCompact(
                 .fillMaxWidth()
         ) {
 
-            ListTopFlowRow(
+            ListTopRow(
                 ical4List = iCalObject,
                 categories = categories,
                 resources = resources,
@@ -149,7 +149,7 @@ fun ListCardCompact(
                         modifier = Modifier
                             .clip(jtxCardCornerShape)
                             .combinedClickable(
-                                onClick = { onClick(subtask.id, subtasks) },
+                                onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
                                 onLongClick = {
                                     if (!subtask.isReadOnly)
                                         onLongClick(subtask.id, subtasks)
@@ -189,7 +189,7 @@ fun ListCardCompact_JOURNAL() {
             selected = emptyList(),
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> }
         )
     }
@@ -217,7 +217,7 @@ fun ListCardCompact_JOURNAL2() {
             selected = emptyList(),
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> }
         )
     }
@@ -246,7 +246,7 @@ fun ListCardCompact_NOTE() {
             selected = emptyList(),
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> }
         )
     }
@@ -279,7 +279,7 @@ fun ListCardCompact_TODO() {
             selected = emptyList(),
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> }
         )
     }
@@ -326,7 +326,7 @@ fun ListCardCompact_TODO_only_summary() {
             selected = emptyList(),
             player = null,
             onProgressChanged = { _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> }
         )
     }

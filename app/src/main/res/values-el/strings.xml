@@ -16,6 +16,7 @@ Global Strings -->
     <string name="latitude">"Γεωγραφικό πλάτος"</string>
     <string name="longitude">"Γεωγραφικό μήκος"</string>
     <string name="unlink">"Κατάργηση σύνδεσης"</string>
+    <string name="off">"Ανενεργό"</string>
     <string name="current_location">"Τρέχουσα τοποθεσία"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
     <string name="toolbar_text_add_note">"Προσθήκη σημείωσης"</string>
@@ -154,6 +155,7 @@ Global Strings -->
     <string name="sync_setup_instructions">"Οδηγίες εγκατάστασης"</string>
     <string name="sync_check_out_sync_app">"Ελέγξτε το %1$s!"</string>
     <string name="sync_sync_app_not_found">"Εντοπίσαμε το %1$s στο τηλέφωνό σας."</string>
+    <string name="sync_more_about_sync_app">"Περισσότερα σχετικά με το %1$s"</string>
     <string name="sync_download_sync_app">"Λήψη του %1$s"</string>
     <string name="sync_button_add_account_in_sync_app">"Προσθήκη λογαριασμού στο %1$s"</string>
     <string name="sync_toast_intent_open_sync_app_failed">"Αποτυχία ανοίγματος του %1$s, παρακαλώ ανοίξτε την εφαρμογή χειροκίνητα."</string>
@@ -469,6 +471,9 @@ Global Strings -->
     <string name="menu_view_share_mail">"Διαμοιρασμός ως E-mail"</string>
     <string name="menu_view_copy_to_clipboard">"Αντιγραφή στο πρόχειρο"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Αντιγράφηκε"</string>
+    <string name="menu_view_convert_to_journal">"Μετατροπή σε ημερολόγιο"</string>
+    <string name="menu_view_convert_to_note">"Μετατροπή σε σημείωση"</string>
+    <string name="menu_view_convert_to_task">"Μετατροπή σε εργασία"</string>
     <string name="settings_select_language">"Επιλογή γλώσσας"</string>
     <string name="settings_select_language_system">"Προεπιλογή συστήματος"</string>
     <string name="filter_special">"Ειδικά φίλτρα"</string>

@@ -16,6 +16,7 @@ Global Strings -->
     <string name="latitude">"Breitengrad"</string>
     <string name="longitude">"Längengrad"</string>
     <string name="unlink">"Verlinkung aufheben"</string>
+    <string name="off">"Aus"</string>
     <string name="current_location">"Aktueller Standort"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
     <string name="toolbar_text_add_note">"Notiz hinzufügen"</string>
@@ -470,6 +471,9 @@ Danke!"</string>
     <string name="menu_view_share_mail">"Als E-Mail teilen"</string>
     <string name="menu_view_copy_to_clipboard">"Zwischenablage"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Kopiert"</string>
+    <string name="menu_view_convert_to_journal">"In Journal umwandeln"</string>
+    <string name="menu_view_convert_to_note">"In Notiz umwandeln"</string>
+    <string name="menu_view_convert_to_task">"In Aufgabe umwandeln"</string>
     <string name="settings_select_language">"Sprachauswahl"</string>
     <string name="settings_select_language_system">"Systemstandard"</string>
     <string name="filter_special">"Spezialfilter"</string>

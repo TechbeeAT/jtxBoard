@@ -14,14 +14,35 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.COLUMN_COLLECTION_ID
+import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
+import at.techbee.jtx.database.COLUMN_ID
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.ICalObject.Companion.getLatLongString
 import at.techbee.jtx.database.ICalObject.Companion.getMapLink
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Attendee
+import at.techbee.jtx.database.properties.COLUMN_ALARM_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ATTENDEE_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_CATEGORY_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_COMMENT_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ORGANIZER_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_RESOURCE_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_UNKNOWN_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Comment
 import at.techbee.jtx.database.properties.Organizer
+import at.techbee.jtx.database.properties.Relatedto
+import at.techbee.jtx.database.properties.Resource
+import at.techbee.jtx.database.properties.Unknown
 import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.parcelize.Parcelize
 
@@ -89,9 +110,11 @@ data class ICalEntity(
         val newEntity = ICalEntity()
         newEntity.property = property.copy()
         newEntity.attendees = attendees?.toList()     // using toList() to create a copy of the list
-        newEntity.resources = resources?.toList()
         newEntity.categories = categories?.toList()
-        newEntity.alarms = alarms?.toList()
+        if(newModule == Module.TODO) {
+            newEntity.alarms = alarms?.toList()
+            newEntity.resources = resources?.toList()
+        }
         newEntity.attachments = attachments?.toList()
         newEntity.relatedto = relatedto?.toList()
         newEntity.ICalCollection = ICalCollection?.copy()
@@ -108,8 +131,6 @@ data class ICalEntity(
             property.lastModified = System.currentTimeMillis()
             property.dtend = null
             property.dtendTimezone = null
-            property.exdate = null
-            property.rdate = null
             property.uid = ICalObject.generateNewUID()
             property.dirty = true
 
@@ -130,6 +151,8 @@ data class ICalEntity(
                     property.dtstart = null
                     property.dtstartTimezone = null
                     property.rrule = null
+                    property.rdate = null
+                    property.exdate = null
                 }
                 property.due = null
                 property.dueTimezone = null

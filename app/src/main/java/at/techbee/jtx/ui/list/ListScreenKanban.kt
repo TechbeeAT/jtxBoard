@@ -73,7 +73,7 @@ fun ListScreenKanban(
     player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int, scrollOnce: Boolean) -> Unit,
     onStatusChanged: (itemid: Long, status: Status, scrollOnce: Boolean) -> Unit,
-    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onSyncRequested: () -> Unit
 ) {
@@ -164,13 +164,12 @@ fun ListScreenKanban(
                                 .animateItemPlacement()
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
-                                    onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }) },
+                                    onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
                                     onLongClick = {
                                         if (!iCal4ListRelObject.iCal4List.isReadOnly)
                                             onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
                                     }
                                 )
-                                .height(150.dp)
                                 .fillMaxWidth()
                                 .offset { IntOffset(offsetX.roundToInt(), 0) }
                                 .draggable(
@@ -298,7 +297,7 @@ fun ListScreenKanban_TODO() {
             player = null,
             onProgressChanged = { _, _, _ -> },
             onStatusChanged = { _, _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { }
         )
@@ -354,7 +353,7 @@ fun ListScreenKanban_JOURNAL() {
             player = null,
             onProgressChanged = { _, _, _ -> },
             onStatusChanged = { _, _, _ -> },
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { }
         )

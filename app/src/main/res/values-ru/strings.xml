@@ -16,6 +16,7 @@ Global Strings -->
     <string name="latitude">"Широта"</string>
     <string name="longitude">"Долгота"</string>
     <string name="unlink">"Отвязать"</string>
+    <string name="off">"Отключено"</string>
     <string name="current_location">"Текущее местоположение"</string>
     <string name="toolbar_text_add_journal">"Добавить журнал"</string>
     <string name="toolbar_text_add_note">"Добавить заметку"</string>
@@ -469,6 +470,9 @@ Global Strings -->
     <string name="menu_view_share_mail">"Отправить по E-Mail"</string>
     <string name="menu_view_copy_to_clipboard">"Скопировать в буфер"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Скопировано"</string>
+    <string name="menu_view_convert_to_journal">"Конвертировать в журнал"</string>
+    <string name="menu_view_convert_to_note">"Конвертировать в заметку"</string>
+    <string name="menu_view_convert_to_task">"Конвертировать в задачу"</string>
     <string name="settings_select_language">"Выбрать язык"</string>
     <string name="settings_select_language_system">"Системный"</string>
     <string name="filter_special">"Специальные фильтры"</string>

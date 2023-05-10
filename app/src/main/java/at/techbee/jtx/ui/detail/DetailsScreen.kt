@@ -39,6 +39,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
+import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
@@ -95,6 +96,21 @@ fun DetailsScreen(
         detailViewModel.detailSettings.load(it, context)
     }
 
+    // load objects into states for editing
+    var statesLoaded by remember { mutableStateOf(false) }  //don't load them again once done
+    LaunchedEffect(detailViewModel.icalEntity.isInitialized) {
+        if(detailViewModel.icalEntity.isInitialized && !statesLoaded) {
+            detailViewModel.mutableICalObject = icalEntity.value?.property
+            if(detailViewModel.mutableCategories.isEmpty()) detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
+            if(detailViewModel.mutableResources.isEmpty()) detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
+            if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
+            if(detailViewModel.mutableComments.isEmpty()) detailViewModel.mutableComments.addAll(icalEntity.value?.comments ?: emptyList())
+            if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttachments.addAll(icalEntity.value?.attachments ?: emptyList())
+            if(detailViewModel.mutableAlarms.isEmpty()) detailViewModel.mutableAlarms.addAll(icalEntity.value?.alarms ?: emptyList())
+            statesLoaded = true
+        }
+    }
+
 
     BackHandler {
         navigateUp = true
@@ -116,6 +132,9 @@ fun DetailsScreen(
                     && icalEntity.value?.attachments?.isEmpty() == true
                 ) {
                     showDeleteDialog = true
+                } else if(!detailViewModel.mutableICalObject?.rrule.isNullOrEmpty())  {
+                    navController.popBackStack(NavigationDrawerDestination.BOARD.name, false)
+                    navigateUp = false
                 } else {
                     navController.navigateUp()
                     navigateUp = false
@@ -340,6 +359,52 @@ fun DetailsScreen(
                             },
                             isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] ?: true,
                         )
+
+                        Divider()
+
+                        if(icalEntity.value?.ICalCollection?.readonly == false && icalEntity.value?.ICalCollection?.supportsVJOURNAL == true) {
+                            if (icalEntity.value?.property?.module != Module.JOURNAL.name) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.menu_view_convert_to_journal)) },
+                                    onClick = { detailViewModel.convertTo(Module.JOURNAL) },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.EventNote,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                )
+                            }
+                            if (icalEntity.value?.property?.module != Module.NOTE.name) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.menu_view_convert_to_note)) },
+                                    onClick = { detailViewModel.convertTo(Module.NOTE) },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Note,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                        if(icalEntity.value?.ICalCollection?.readonly == false && icalEntity.value?.ICalCollection?.supportsVTODO == true) {
+                            if(icalEntity.value?.property?.module != Module.TODO.name) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.menu_view_convert_to_task)) },
+                                    onClick = { detailViewModel.convertTo(Module.TODO) },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.TaskAlt,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             )
@@ -347,7 +412,14 @@ fun DetailsScreen(
         content = { paddingValues ->
 
             DetailScreenContent(
-                iCalEntity = icalEntity,
+                originalICalEntity = icalEntity,
+                iCalObject = detailViewModel.mutableICalObject,
+                categories = detailViewModel.mutableCategories,
+                resources = detailViewModel.mutableResources,
+                attendees = detailViewModel.mutableAttendees,
+                comments = detailViewModel.mutableComments,
+                attachments = detailViewModel.mutableAttachments,
+                alarms = detailViewModel.mutableAlarms,
                 isEditMode = isEditMode,
                 changeState = detailViewModel.changeState,
                 parents = parents,
@@ -383,46 +455,15 @@ fun DetailsScreen(
                             }
                     } else false,
                 markdownState = markdownState,
-                saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
-                    detailViewModel.saveEntry(
-                        changedICalObject,
-                        changedCategories,
-                        changedComments,
-                        changedAttendees,
-                        changedResources,
-                        changedAttachments,
-                        changedAlarms
-                    )
-                    onLastUsedCollectionChanged(icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE, changedICalObject.collectionId)
+                saveEntry = {
+                    detailViewModel.saveEntry()
+                    onLastUsedCollectionChanged(detailViewModel.mutableICalObject!!.getModuleFromString(), detailViewModel.mutableICalObject!!.collectionId)
                 },
-                onProgressChanged = { itemId, newPercent ->
-                    detailViewModel.updateProgress(itemId, newPercent)
-                },
-                onMoveToNewCollection = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms, newCollection ->
-                    detailViewModel.moveToNewCollection(
-                        changedICalObject,
-                        changedCategories,
-                        changedComments,
-                        changedAttendees,
-                        changedResources,
-                        changedAttachments,
-                        changedAlarms,
-                        newCollection.collectionId
-                    )
-                },
-                onSubEntryAdded = { icalObject, attachment ->
-                    detailViewModel.addSubEntry(
-                        icalObject,
-                        attachment
-                    )
-                },
+                onProgressChanged = { itemId, newPercent -> detailViewModel.updateProgress(itemId, newPercent) },
+                onMoveToNewCollection = { newCollection -> detailViewModel.moveToNewCollection(newCollection.collectionId) },
+                onSubEntryAdded = { icalObject, attachment -> detailViewModel.addSubEntry(icalObject, attachment) },
                 onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
-                onSubEntryUpdated = { icalObjectId, newText ->
-                    detailViewModel.updateSummary(
-                        icalObjectId,
-                        newText
-                    )
-                },
+                onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                 onUnlinkSubEntry = { icalObjectId -> detailViewModel.unlinkFromParent(icalObjectId) },
                 onLinkSubEntries = { newSubEntries -> detailViewModel.linkNewSubentries(newSubEntries) },
                 onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },

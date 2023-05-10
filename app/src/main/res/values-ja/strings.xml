@@ -16,6 +16,7 @@ Global Strings -->
     <string name="latitude">"緯度"</string>
     <string name="longitude">"経度"</string>
     <string name="unlink">"リンク解除"</string>
+    <string name="off">"オフ"</string>
     <string name="current_location">"現在地"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
@@ -469,6 +470,9 @@ Global Strings -->
     <string name="menu_view_share_mail">"メールで共有"</string>
     <string name="menu_view_copy_to_clipboard">"クリップボードにコピー"</string>
     <string name="menu_view_copy_to_clipboard_copied">"コピーしました"</string>
+    <string name="menu_view_convert_to_journal">"ジャーナルに変換"</string>
+    <string name="menu_view_convert_to_note">"メモに変換"</string>
+    <string name="menu_view_convert_to_task">"タスクに変換"</string>
     <string name="settings_select_language">"言語を選択"</string>
     <string name="settings_select_language_system">"システムのデフォルト"</string>
     <string name="filter_special">"特別なフィルター"</string>

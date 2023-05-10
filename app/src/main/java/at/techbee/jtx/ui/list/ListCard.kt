@@ -96,7 +96,7 @@ fun ListCard(
     settingShowProgressSubtasks: Boolean = true,
     progressIncrement: Int,
     linkProgressToSubtasks: Boolean,
-    onClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
@@ -136,7 +136,7 @@ fun ListCard(
             modifier = Modifier.padding(8.dp)
         ) {
 
-            ListTopFlowRow(
+            ListTopRow(
                 ical4List = iCalObject,
                 categories = categories,
                 resources = resources,
@@ -411,7 +411,7 @@ fun ListCard(
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
-                                    onClick = { onClick(subtask.id, subtasks) },
+                                    onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
                                     onLongClick = {
                                         if (!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                             onLongClick(subtask.id, subtasks)
@@ -433,7 +433,7 @@ fun ListCard(
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
-                                    onClick = { onClick(subnote.id, subnotes) },
+                                    onClick = { onClick(subnote.id, subnotes, subnote.isReadOnly) },
                                     onLongClick = {
                                         if (!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                             onLongClick(subnote.id, subnotes)
@@ -464,7 +464,7 @@ fun ListCard(
                                 modifier = Modifier
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
-                                        onClick = { onClick(parent.id, parents) },
+                                        onClick = { onClick(parent.id, parents, parent.isReadOnly) },
                                         onLongClick = {
                                             if (!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                                 onLongClick(parent.id, parents)
@@ -479,7 +479,7 @@ fun ListCard(
                                 modifier = Modifier
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
-                                        onClick = { onClick(parent.id, parents) },
+                                        onClick = { onClick(parent.id, parents, parent.isReadOnly) },
                                         onLongClick = {
                                             if (!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                                 onLongClick(parent.id, parents)
@@ -528,7 +528,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
             linkProgressToSubtasks = false,
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
@@ -569,7 +569,7 @@ fun ICalObjectListCardPreview_NOTE() {
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
             linkProgressToSubtasks = false,
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
@@ -613,7 +613,7 @@ fun ICalObjectListCardPreview_TODO() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             settingShowProgressMaintasks = true,
             progressIncrement = 1,
@@ -658,7 +658,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
@@ -706,7 +706,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             settingShowProgressMaintasks = false,
@@ -755,7 +755,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             selected = listOf(),
-            onClick = { _, _ -> },
+            onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             attachments = listOf(),
             settingShowProgressMaintasks = false,
