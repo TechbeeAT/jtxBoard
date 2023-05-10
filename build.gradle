@@ -26,7 +26,7 @@ buildscript {
         version_kotlin = "1.8.21"
         version_room = "2.5.1"
         version_work = "2.8.1"
-        version_billing = "5.2.0"
+        version_billing = "6.0.0"
         version_review = "2.0.1"
         version_compose = "1.4.3"
         version_about_libraries = "10.6.3"
