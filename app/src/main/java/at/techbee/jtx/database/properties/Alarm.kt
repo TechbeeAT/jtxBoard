@@ -9,6 +9,7 @@
 package at.techbee.jtx.database.properties
 
 import android.app.AlarmManager
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.ContentValues
 import android.content.Context
@@ -242,6 +243,69 @@ data class Alarm (
             triggerTime = time
             triggerTimezone = timezone
         }
+
+        fun createNotification(
+            iCalObjectId: Long,
+            alarmId: Long,
+            notificationSummary: String?,
+            notificationDescription: String?,
+            isReadOnly: Boolean,
+            context: Context
+        ): Notification {
+
+            val intent = Intent(context, MainActivity2::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                this.action = INTENT_ACTION_OPEN_ICALOBJECT
+                this.putExtra(INTENT_EXTRA_ITEM2SHOW, iCalObjectId)
+            }
+            val contentIntent: PendingIntent = PendingIntent.getActivity(context, iCalObjectId.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+            /* function to create intents for snooze and done */
+            fun createActionIntent(action: String): PendingIntent {
+                val actionIntent = Intent(context, NotificationPublisher::class.java).apply {
+                    this.action = action
+                    putExtra(NotificationPublisher.ALARM_ID, alarmId)
+                    putExtra(NotificationPublisher.ICALOBJECT_ID, iCalObjectId)
+                }
+                return PendingIntent.getBroadcast(context, alarmId.toInt(), actionIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            }
+
+            // this is the notification itself that will be put as an Extra into the notificationIntent
+            val notification = NotificationCompat.Builder(context, MainActivity2.CHANNEL_REMINDER_DUE).apply {
+                setSmallIcon(R.drawable.ic_notification)
+                notificationSummary?.let { setContentTitle(it) }
+                notificationDescription?.let { setContentText(it) }
+                setContentIntent(contentIntent)
+                priority = NotificationCompat.PRIORITY_MAX
+                setCategory(NotificationCompat.CATEGORY_REMINDER)     //  CATEGORY_REMINDER might also be an alternative
+                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default)) {
+                    setAutoCancel(false)
+                    setOngoing(true)
+                } else {
+                    setAutoCancel(true)
+                }
+                //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
+                if(!isReadOnly && alarmId != 0L) {    // no alarm for readonly entries and implicit alarms that come only from the due date
+                    addAction(
+                        R.drawable.ic_snooze,
+                        context.getString(R.string.notification_add_1h),
+                        createActionIntent(NotificationPublisher.ACTION_SNOOZE_1H)
+                    )
+                    addAction(
+                        R.drawable.ic_snooze,
+                        context.getString(R.string.notification_add_1d),
+                        createActionIntent(NotificationPublisher.ACTION_SNOOZE_1D)
+                    )
+                    addAction(
+                        R.drawable.ic_todo,
+                        context.getString(R.string.notification_done),
+                        createActionIntent(NotificationPublisher.ACTION_DONE)
+                    )
+                }
+            }.build()
+
+            return notification
+        }
     }
 
     fun applyContentValues(values: ContentValues): Alarm {
@@ -324,61 +388,8 @@ data class Alarm (
             return
         }
 
-        val intent = Intent(context, MainActivity2::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            this.action = INTENT_ACTION_OPEN_ICALOBJECT
-            this.putExtra(INTENT_EXTRA_ITEM2SHOW, icalObjectId)
-        }
-        val contentIntent: PendingIntent = PendingIntent.getActivity(context, icalObjectId.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        val notification = createNotification(icalObjectId, alarmId, notificationSummary, notificationDescription, isReadOnly, context)
 
-
-        /* function to create intents for snooze and done */
-        fun getActionIntent(action: String): PendingIntent {
-            val actionIntent = Intent(context, NotificationPublisher::class.java).apply {
-                this.action = action
-                putExtra(NotificationPublisher.ALARM_ID, alarmId)
-                putExtra(NotificationPublisher.ICALOBJECT_ID, icalObjectId)
-            }
-            return PendingIntent.getBroadcast(context, alarmId.toInt(), actionIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-        }
-
-        // this is the notification itself that will be put as an Extra into the notificationIntent
-        val notification = NotificationCompat.Builder(context, MainActivity2.CHANNEL_REMINDER_DUE).apply {
-            setSmallIcon(R.drawable.ic_notification)
-            notificationSummary?.let { setContentTitle(it) }
-            notificationDescription?.let { setContentText(it) }
-            setContentIntent(contentIntent)
-            priority = NotificationCompat.PRIORITY_MAX
-            setCategory(NotificationCompat.CATEGORY_REMINDER)     //  CATEGORY_REMINDER might also be an alternative
-            if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default)) {
-                setAutoCancel(false)
-                setOngoing(true)
-            } else {
-                setAutoCancel(true)
-            }
-            //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
-            if(!isReadOnly && alarmId != 0L) {    // no alarm for readonly entries and implicit alarms that come only from the due date
-                addAction(
-                    R.drawable.ic_snooze,
-                    context.getString(R.string.notification_add_1h),
-                    getActionIntent(NotificationPublisher.ACTION_SNOOZE_1H)
-                )
-                addAction(
-                    R.drawable.ic_snooze,
-                    context.getString(R.string.notification_add_1d),
-                    getActionIntent(NotificationPublisher.ACTION_SNOOZE_1D)
-                )
-                addAction(
-                    R.drawable.ic_todo,
-                    context.getString(R.string.notification_done),
-                    getActionIntent(NotificationPublisher.ACTION_DONE)
-                )
-            }
-        }
-            .build()
-        notification.flags = notification.flags
-
-        // the notificationIntent that is an Intent of the NotificationPublisher Class
         val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
             putExtra(NotificationPublisher.NOTIFICATION, notification)
             putExtra(NotificationPublisher.ALARM_ID, alarmId)
