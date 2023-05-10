@@ -430,6 +430,13 @@ const val COLUMN_PARENTS_EXPANDED = "parentsExpanded"
  */
 const val COLUMN_EXTENDED_STATUS = "xstatus"
 
+/**
+ * Purpose:  Defines the radius for a geofence in meters
+ * This is put into an extended property in the iCalendar-file
+ * Type: [String]
+ */
+const val COLUMN_GEOFENCE_RADIUS = "geofenceRadius"
+
 @Parcelize
 @Entity(
     tableName = TABLE_NAME_ICALOBJECT,
@@ -467,6 +474,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_GEO_LONG) var geoLong: Double? = null,
     @ColumnInfo(name = COLUMN_LOCATION) var location: String? = null,
     @ColumnInfo(name = COLUMN_LOCATION_ALTREP) var locationAltrep: String? = null,
+    @ColumnInfo(name = COLUMN_GEOFENCE_RADIUS) var geofenceRadius: Int? = null,
 
     @ColumnInfo(name = COLUMN_PERCENT) var percent: Int? = null,    // VTODO only!
     @ColumnInfo(name = COLUMN_PRIORITY) var priority: Int? = null,   // VTODO and VEVENT
@@ -969,6 +977,7 @@ data class ICalObject(
         values.getAsDouble(COLUMN_GEO_LONG)?.let { geoLong -> this.geoLong = geoLong }
         values.getAsString(COLUMN_LOCATION)?.let { location -> this.location = location }
         values.getAsString(COLUMN_LOCATION_ALTREP)?.let { locationAltrep -> this.locationAltrep = locationAltrep }
+        values.getAsInteger(COLUMN_GEOFENCE_RADIUS)?.let { geofenceRadius -> this.geofenceRadius = geofenceRadius }
         values.getAsInteger(COLUMN_PERCENT)?.let { percent ->
             if(percent in 1..100)
                 this.percent = percent

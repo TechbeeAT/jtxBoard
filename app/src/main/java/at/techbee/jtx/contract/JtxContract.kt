@@ -42,7 +42,7 @@ object JtxContract {
     const val AUTHORITY = "at.techbee.jtx.provider"
 
     /** The version of this SyncContentProviderContract */
-    const val VERSION = 4
+    const val VERSION = 5
 
     /** Constructs an Uri for the Jtx Sync Adapter with the given Account
      * @param [account] The account that should be appended to the Base Uri
@@ -278,6 +278,13 @@ object JtxContract {
          * Type: [String]
          */
         const val EXTENDED_STATUS = "xstatus"
+
+        /**
+         * Purpose:  Defines the radius for a geofence in meters
+         * This is put into an extended property in the iCalendar-file
+         * Type: [String]
+         */
+        const val GEOFENCE_RADIUS = "geofenceRadius"
 
         /**
          * Purpose:  This property defines the access classification for a calendar component.
