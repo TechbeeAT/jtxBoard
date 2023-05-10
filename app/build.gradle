@@ -324,7 +324,7 @@ dependencies {
     // permissions from accompanist
     implementation "com.google.accompanist:accompanist-permissions:$version_accompanist"
 
-    implementation "androidx.glance:glance-appwidget:1.0.0-alpha05"
+    implementation "androidx.glance:glance-appwidget:1.0.0-beta01"
 
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
     
