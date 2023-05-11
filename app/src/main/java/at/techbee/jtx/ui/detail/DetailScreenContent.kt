@@ -720,6 +720,7 @@ fun DetailScreenContent(
                 initialLocation = iCalObject.location,
                 initialGeoLat = iCalObject.geoLat,
                 initialGeoLong = iCalObject.geoLong,
+                initialGeofenceRadius = iCalObject.geofenceRadius,
                 isEditMode = isEditMode.value,
                 setCurrentLocation = setCurrentLocation,
                 onLocationUpdated = { newLocation, newGeoLat, newGeoLong ->
@@ -733,6 +734,7 @@ fun DetailScreenContent(
                     iCalObject.location = newLocation.ifEmpty { null }
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
+                onGeofenceRadiusUpdatd = { iCalObject.geofenceRadius = it }
             )
         }
 
