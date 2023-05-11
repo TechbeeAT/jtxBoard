@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.EventNote
 import androidx.compose.material.icons.outlined.FilterList
+import androidx.compose.material.icons.outlined.FilterListOff
 import androidx.compose.material.icons.outlined.LibraryAddCheck
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.NoteAdd
@@ -217,15 +218,27 @@ fun ListBottomAppBar(
                         }
                     }
 
-                    AnimatedVisibility(module == Module.TODO) {
+                    AnimatedVisibility(module == Module.TODO || listSettings.isFilterActive()) {
                         OverflowMenu(menuExpanded = showMoreActionsMenu) {
+
+                            if(module == Module.TODO) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(R.string.list_delete_done)) },
+                                    onClick = {
+                                        showDeleteDoneDialog = true
+                                        showMoreActionsMenu.value = false
+                                    },
+                                    leadingIcon = { Icon(Icons.Outlined.DeleteSweep, null) },
+                                )
+                            }
+
                             DropdownMenuItem(
-                                text = { Text(text = stringResource(R.string.list_delete_done)) },
+                                text = { Text(text = stringResource(R.string.clear_filters)) },
                                 onClick = {
-                                    showDeleteDoneDialog = true
+                                    listSettings.reset()
                                     showMoreActionsMenu.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.DeleteSweep, null) },
+                                leadingIcon = { Icon(Icons.Outlined.FilterListOff, null) }
                             )
                         }
                     }
