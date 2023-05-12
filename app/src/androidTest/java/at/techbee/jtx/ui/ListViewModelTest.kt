@@ -127,9 +127,9 @@ class ListViewModelTest {
         listViewModel.iCal4ListRel.observeForever {  }
 
         val id1 = database.insertICalObject(ICalObject.createTask("Task1"))
-        database.insertCategory(Category(icalObjectId = id1, text = "Test1"))
+        database.insertCategory(Category(icalObjectId = id1, text = "TestA"))
         val id2 = database.insertICalObject(ICalObject.createTask("Task2"))
-        database.insertCategory(Category(icalObjectId = id2, text = "Test1"))
+        database.insertCategory(Category(icalObjectId = id2, text = "TestA"))
         database.insertCategory(Category(icalObjectId = id2, text = "Whatever"))
         database.insertCategory(Category(icalObjectId = id2, text = "No matter"))
         val id3 = database.insertICalObject(ICalObject.createTask("Task3"))
@@ -138,7 +138,8 @@ class ListViewModelTest {
         database.insertICalObject(ICalObject.createTask("Task4"))  // val id4 = ...
         // no categories for id4
 
-        listViewModel.listSettings.searchCategories.add("Test1")
+        listViewModel.listSettings.searchCategories.add("TestA")
+        listViewModel.listSettings.isFilterNoCategorySet.value = false
         listViewModel.updateSearch(isAuthenticated = false)
         assertEquals(2, listViewModel.iCal4ListRel.value?.size)
 
@@ -186,15 +187,15 @@ class ListViewModelTest {
         database.insertICalObject(ICalObject(summary="Note3", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = Status.FINAL.status))
         database.insertICalObject(ICalObject(summary="Note4", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = Status.CANCELLED.status))
 
-        listViewModel.listSettings.searchStatus.add(Status.DRAFT.status?:Status.DRAFT.name)
+        listViewModel.listSettings.searchStatus.add(Status.DRAFT)
         listViewModel.updateSearch(isAuthenticated = false)
         assertEquals(1, listViewModel.iCal4ListRel.value?.size)
 
-        listViewModel.listSettings.searchStatus.add(Status.CANCELLED.status?:Status.CANCELLED.name)
+        listViewModel.listSettings.searchStatus.add(Status.CANCELLED)
         listViewModel.updateSearch(isAuthenticated = false)
         assertEquals(3, listViewModel.iCal4ListRel.value?.size)
 
-        listViewModel.listSettings.searchStatus.add(Status.FINAL.status?:Status.FINAL.name)
+        listViewModel.listSettings.searchStatus.add(Status.FINAL)
         listViewModel.updateSearch(isAuthenticated = false)
         assertEquals(4, listViewModel.iCal4ListRel.value?.size)
     }
@@ -211,15 +212,15 @@ class ListViewModelTest {
         database.insertICalObject(ICalObject(summary="Task3", module = Module.TODO.name, component = Component.VTODO.name,  status = Status.IN_PROCESS.status))
         database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  status = Status.COMPLETED.status))
 
-        listViewModel.listSettings.searchStatus.add(Status.NEEDS_ACTION.status?:Status.NEEDS_ACTION.name)
+        listViewModel.listSettings.searchStatus.add(Status.NEEDS_ACTION)
         listViewModel.updateSearch(isAuthenticated = false)
         assertEquals(1, listViewModel.iCal4ListRel.value?.size)
 
-        listViewModel.listSettings.searchStatus.add(Status.IN_PROCESS.status?:Status.IN_PROCESS.name)
+        listViewModel.listSettings.searchStatus.add(Status.IN_PROCESS)
         listViewModel.updateSearch(isAuthenticated = false)
         assertEquals(3, listViewModel.iCal4ListRel.value?.size)
 
-        listViewModel.listSettings.searchStatus.add(Status.COMPLETED.status?:Status.COMPLETED.name)
+        listViewModel.listSettings.searchStatus.add(Status.COMPLETED)
         listViewModel.updateSearch(isAuthenticated = false)
         assertEquals(4, listViewModel.iCal4ListRel.value?.size)
     }
