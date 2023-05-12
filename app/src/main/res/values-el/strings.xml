@@ -560,4 +560,5 @@ Global Strings -->
     <string name="markdown_horizontal_ruler">"Οριζόντιος χάρακας"</string>
     <string name="markdown_unordered_list">"Λίστα"</string>
     <string name="markdown_code">"Κώδικας"</string>
+    <string name="clear_filters">"Εκκαθάριση φίλτρων"</string>
 </resources>

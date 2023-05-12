@@ -375,7 +375,7 @@ Global Strings -->
     <string name="invalid_url_message">"有効な URL を入力してください！"</string>
     <string name="list_quickadd_dialog_sr_start">"音声認識を開始"</string>
     <string name="list_quickadd_dialog_sr_listening">"聞き取り中…"</string>
-    <string name="collections_dialog_buypro_info">"リモートコレクションの編集機能を有効にするには jtx Board Pro をご購入ください。"</string>
+    <string name="collections_dialog_buypro_info">"リモートのコレクションの編集機能を有効にするには jtx Board Pro をご購入ください。"</string>
     <string name="list_update_entries_dialog_title">"エントリーを更新"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意: 繰り返しのあるインスタンスは、別のコレクションに移動する前に系列から切り離す必要があるため、このプロセスでは無視されます。"</string>
     <string name="list_update_entries_dialog_new_parent_info">"選択したエントリーをサブタスク/メモとしてリンクする親を選択してください。"</string>
@@ -505,7 +505,7 @@ Global Strings -->
     <string name="list_date_without">"日付なし"</string>
     <string name="list_start_without">"着手日なし"</string>
     <string name="list_due_without">"締切日なし"</string>
-    <string name="list_snackbar_no_collection">"ローカルコレクションを追加するか、このモジュールをサポートするリモートコレクションと同期してください。"</string>
+    <string name="list_snackbar_no_collection">"ローカルのコレクションを追加するか、このモジュールに対応するリモートのコレクションと同期してください。"</string>
     <string name="filter_second_order_by">"次に…で並べ替え"</string>
     <string name="filter_group_by">"…でグループ化"</string>
     <string name="filter_group_by_info">"リスト表示とコンパクト表示のみグループ化に対応しています"</string>
@@ -572,4 +572,5 @@ Global Strings -->
     <string name="preset_categories">"カテゴリーのプリセット"</string>
     <string name="preset_resources">"必要なもののプリセット"</string>
     <string name="active_filters">有効なフィルター:</string>
+    <string name="clear_filters">"フィルターをクリア"</string>
 </resources>
