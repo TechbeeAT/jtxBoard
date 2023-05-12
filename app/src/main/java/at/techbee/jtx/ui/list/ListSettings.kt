@@ -63,7 +63,7 @@ class ListSettings {
 
     var topAppBarCollectionId: MutableState<Long> = mutableStateOf(0L)   // list view only
     var topAppBarMode: MutableState<ListTopAppBarMode> = mutableStateOf(ListTopAppBarMode.SEARCH)   // list view only
-    var kanbanColumnsStatus = mutableStateListOf<String>()
+    var kanbanColumnsStatus = mutableStateListOf<String?>()
     var kanbanColumnsXStatus = mutableStateListOf<String>()
     var kanbanColumnsCategory = mutableStateListOf<String>()
 

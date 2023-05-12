@@ -69,23 +69,21 @@ fun ListOptionsKanban(
         ) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Status.valuesFor(module).forEach { status ->
-                    if (status == Status.NO_STATUS)   // skip "no status" is it will be treated like "needs action"/"final"
-                        return@forEach
 
                     FilterChip(
-                        selected = listSettings.kanbanColumnsStatus.contains(status.status ?: status.name),
+                        selected = listSettings.kanbanColumnsStatus.contains(status.status),
                         enabled = listSettings.kanbanColumnsCategory.isEmpty() && listSettings.kanbanColumnsXStatus.isEmpty(),
                         onClick = {
-                            if (listSettings.kanbanColumnsStatus.contains(status.status ?: status.name))
-                                listSettings.kanbanColumnsStatus.remove(status.status ?: status.name)
+                            if (listSettings.kanbanColumnsStatus.contains(status.status))
+                                listSettings.kanbanColumnsStatus.remove(status.status)
                             else
-                                listSettings.kanbanColumnsStatus.add(status.status ?: status.name)
+                                listSettings.kanbanColumnsStatus.add(status.status)
                             onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = status.stringResource)) },
                         leadingIcon = {
-                            if (listSettings.kanbanColumnsStatus.contains(status.status ?: status.name))
-                                Text(text = "(${listSettings.kanbanColumnsStatus.indexOf(status.status ?: status.name) + 1})")
+                            if (listSettings.kanbanColumnsStatus.contains(status.status))
+                                Text(text = "(${listSettings.kanbanColumnsStatus.indexOf(status.status) + 1})")
                         }
                     )
                 }
@@ -173,7 +171,7 @@ fun ListOptionsKanban_Preview() {
         )
 
         val listSettings = ListSettings.fromPrefs(prefs)
-        listSettings.kanbanColumnsStatus.add(Status.NEEDS_ACTION.status ?: Status.NEEDS_ACTION.name)
+        listSettings.kanbanColumnsStatus.add(Status.NEEDS_ACTION.status)
 
         ListOptionsKanban(
             module = Module.TODO,

@@ -70,7 +70,7 @@ fun ListScreenKanban(
     storedResourcesLive: LiveData<List<StoredResource>>,
     extendedStatusesLive: LiveData<List<ExtendedStatus>>,
     selectedEntries: SnapshotStateList<Long>,
-    kanbanColumnsStatus: SnapshotStateList<String>,
+    kanbanColumnsStatus: SnapshotStateList<String?>,
     kanbanColumnsXStatus: SnapshotStateList<String>,
     kanbanColumnsCategory: SnapshotStateList<String>,
     scrollOnceId: MutableLiveData<Long?>,
@@ -93,11 +93,10 @@ fun ListScreenKanban(
             else -> {   // this covers also kanbanColumnsStatus.isNotEmpty() and the fallback for default kanbanColumns based on the status
                 if (it.iCal4List.status.isNullOrEmpty()) {
                     when {
-                        it.iCal4List.component == Component.VJOURNAL.name -> stringResource(id = Status.FINAL.stringResource)
                         it.iCal4List.component == Component.VTODO.name && it.iCal4List.percent == 100 -> stringResource(id = Status.COMPLETED.stringResource)
                         it.iCal4List.component == Component.VTODO.name && it.iCal4List.percent in 1..99 -> stringResource(id = Status.IN_PROCESS.stringResource)
-                        it.iCal4List.component == Component.VTODO.name -> stringResource(id = Status.NEEDS_ACTION.stringResource)
-                        else -> Status.CANCELLED.status // fallback, shouldn't happen
+                        //it.iCal4List.component == Component.VTODO.name -> stringResource(id = Status.NEEDS_ACTION.stringResource)
+                        else -> stringResource(Status.NO_STATUS.stringResource) // fallback, shouldn't happen
                     }
                 } else {
                     Status.getStatusFromString(it.iCal4List.status)?.let { status -> stringResource(id = status.stringResource) }?:it.iCal4List.status
