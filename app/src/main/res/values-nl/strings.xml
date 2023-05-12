@@ -1,26 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board synchoniseer Dagboeken, Notities &amp; Taken"</string>
+    <string name="app_permission_desc">"synchroniseer jtx Board-inhoud met andere applicaties zoals DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="save">"Opslaan"</string>
+    <string name="cancel">"Annuleren"</string>
+    <string name="ok">"OK"</string>
+    <string name="delete">"Verwijderen"</string>
+    <string name="discard">"Annuleren"</string>
+    <string name="cont">"Volgende"</string>
+    <string name="website">"Website"</string>
+    <string name="latitude">"Breedtegraad"</string>
+    <string name="longitude">"Lengtegraad"</string>
+    <string name="unlink">"Ontkoppel"</string>
+    <string name="off">"Uit"</string>
+    <string name="current_location">"Huidige locatie"</string>
+    <string name="toolbar_text_add_journal">"Dagboek toevoegen"</string>
+    <string name="toolbar_text_add_note">"Notitie toevoegen"</string>
+    <string name="toolbar_text_add_task">"Taak toevoegen"</string>
+    <string name="default_local_collection_name">"Lokaal"</string>
+    <string name="default_local_account_name">"Lokaal"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Concept"</string>
+    <string name="journal_status_final">"Definitief"</string>
+    <string name="journal_status_cancelled">"Geannuleerd"</string>
+    <string name="todo_status_needsaction">"Actie nodig"</string>
+    <string name="todo_status_completed">"Voltooid"</string>
+    <string name="todo_status_inprocess">"Bezig"</string>
+    <string name="todo_status_cancelled">"Geannuleerd"</string>
+    <string name="classification_public">"Openbaar"</string>
+    <string name="classification_private">"Besloten"</string>
+    <string name="classification_confidential">"Vertrouwelijk"</string>
+    <string name="attendee_role_chair">"Voorzitter"</string>
+    <string name="attendee_role_required_participant">"Vereiste deelnemer"</string>
+    <string name="attendee_role_optional_participant">"Optionele deelnemer"</string>
+    <string name="attendee_role_non_participant">"Niet-deelnemer / Ter informatie"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Navigatiemenu openen"</string>
+    <string name="navigation_drawer_close">"Navigatiemenu sluiten"</string>
+    <string name="navigation_drawer_board">"Board"</string>
+    <string name="navigation_drawer_synchronization">"Synchronisatie"</string>
+    <string name="navigation_drawer_about">"Over / Licentie"</string>
+    <string name="navigation_drawer_subtitle">"dagboek, notities &amp; taken"</string>
+    <string name="navigation_drawer_settings">"Instellingen"</string>
+    <string name="navigation_drawer_news_updates">"Nieuws &amp; updates"</string>
+    <string name="navigation_drawer_external_links">"Externe links"</string>
+    <string name="navigation_drawer_website">"Website"</string>
+    <string name="navigation_drawer_support">"Ondersteuning"</string>
+    <string name="navigation_drawer_donate">"Doneren"</string>
+    <string name="navigation_drawer_privacy_policy">"Privacybeleid"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"Achterstallig"</string>
+    <string name="list_due_today">"Vervalt vandaag"</string>
+    <string name="list_due_tomorrow">"Vervalt Morgen"</string>
+    <string name="list_due_inXhours">"Vervalt binnen %d uur"</string>
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
+    <string name="edit_dialog_sure_to_discard_message">"Weet je zeker dat je dit item wilt verwijderen? Dit item wordt niet opgeslagen."</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"De einddatum kan niet voor de begindatum liggen."</string>
+    <string name="edit_fragment_app_permission">"App-machtigingen"</string>
+    <string name="edit_fragment_app_permission_message">"jtx Board kan deelnemer-gegevens op basis van uw contacten voorstellen. Leesrechten op je contacten is nodig om deze functie in te schakelen."</string>
     <!-- fragment_about -->
+    <string name="about_tabitem_translations">"Vertalingen"</string>
+    <string name="about_tabitem_libraries">"Bibliotheken"</string>
+    <string name="about_tabitem_thanks">"Speciale dank aan"</string>
+    <string name="about_app_version">"Versie: %1$s (%2$d)"</string>
+    <string name="about_app_codename">"Codenaam: %1$s"</string>
+    <string name="about_app_build_date">"Gecompileerd op %s"</string>
+    <string name="about_app_terms">"Algemene voorwaarden"</string>
+    <string name="about_thanks_ffg">"Speciale dank aan FFG voor hun vertrouwen en financiële steun om dit project te realiseren."</string>
     <!-- menus -->
+    <string name="menu_list_gotodate">"Ga naar datum"</string>
+    <string name="menu_list_quick_journal">"Snel Dagboek"</string>
+    <string name="menu_list_quick_note">"Snelle notities"</string>
+    <string name="menu_list_quick_todo">"Snelle taak"</string>
+    <string name="menu_view_share_ics">"Delen als .ics"</string>
+    <string name="menu_view_copy_as_journal">"Kopiëren als Dagboek"</string>
+    <string name="menu_view_copy_as_todo">"Kopieer als Taak"</string>
+    <string name="menu_view_copy_as_note">"Kopieer als Notitie"</string>
+    <string name="menu_view_copy_item">"Kopie maken"</string>
     <!-- Notification channel for Reminders -->
+    <string name="notification_channel_reminder_name">"Taak verval-herinnering"</string>
+    <string name="notification_channel_reminder_description">"Melding voor vervallende taken"</string>
     <!-- Shortcuts -->
+    <string name="shortcut_addJournal_longLabel">"Dagboek toevoegen"</string>
+    <string name="shortcut_addNote_longLabel">"Notitie toevoegen"</string>
+    <string name="shortcut_addTodo_longLabel">"Taak toevoegen"</string>
     <!-- Settings fragment -->
+    <string name="settings_list">"Instellingen voor de itemlijst"</string>
+    <string name="settings_show_progress_for_subtasks">Voortgang voor subtaken weergeven</string>
+    <string name="settings_show_progress_for_maintasks">Voortgang voor subtaken weergeven</string>
+    <string name="settings_app">"App-instellingen"</string>
+    <string name="settings_select_mimetype_for_audio">"Mimetype voor audionotities selecteren"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"Synchroniseren met %1$s"</string>
+    <string name="sync_basic_info">"jtx Board biedt zelf geen server-synchronisatie, maar ondersteunt synchronisatie via DAVx5. Deze methode staat u toe om uw gegevens op te slaan, te back-uppen en te synchroniseren."</string>
+    <string name="sync_ksync_basic_info">"kSync is een app gebaseerd op DAVx5 ontwikkeld door Infomaniak speciaal voor hun diensten. Hoewel DAVx5 open is voor elke compatibele CalDAV-server, staat kSync alleen Infomaniak-accounts toe voor synchronisatie."</string>
+    <string name="sync_manageddavx5_basic_info">"Beheerde DAVx5 maakt de functionaliteit van DAVx5 beschikbaar voor organisaties en komt met aanvullende bedrijfsfuncties zoals beheerde uitrol, logografie en voor-configureerbare instellingen."</string>
+    <string name="sync_congratulations">"Gefeliciteerd! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"We hebben %1$s gedetecteerd op uw telefoon."</string>
+    <string name="sync_setup_instructions">"Installatie-instructies"</string>
+    <string name="sync_check_out_sync_app">"Bekijk %1$s!"</string>
+    <string name="sync_sync_app_not_found">"We hebben %1$s niet gedetecteerd op uw telefoon."</string>
+    <string name="sync_more_about_sync_app">"Meer over %1$s"</string>
+    <string name="sync_download_sync_app">"%1$s downloaden"</string>
+    <string name="sync_button_add_account_in_sync_app">"Account toevoegen in %1$s"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Het openen van %1$s is mislukt, open de app handmatig."</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"Hé, ik ben Patrick, de ontwikkelaar van jtx Board. Ik besteed veel tijd en moeite in deze app die ik u gratis aanbied. Als je mijn app leuk vindt, stuur dan alsjeblieft een beetje liefde en dioe een kleine donatie!"</string>
+    <string name="donate_thank_you">"Bedankt!"</string>
+    <string name="donate_donate_with">"Doneren met"</string>
+    <string name="donate_other_donation_methods">"Als u een andere donatiemethode wilt overwegen, bekijk dan onze website:"</string>
+    <string name="attachment_error_no_app_found_to_open_file_or_uri">"Geen app gevonden om dit bestand / deze link te openen."</string>
+    <string name="toast_item_is_now_recu_exception">"Terugkerend artikel is nu een uitzondering."</string>
     <!-- sync content provider -->
     <!-- Permissions -->
+    <string name="collection">"Verzameling"</string>
     <!-- alarms -->
     <!-- fragment_collections -->
     <!-- Fuzzy -->
+    <string name="collections_dialog_delete_local_title">"Verwijder \"%1$s\"?"</string>
+    <string name="collections_dialog_delete_local_message">"Het verwijderen van een verzameling zal ook alle dagboeken, notities en taken binnen deze verzameling verwijderen. Dit kan niet ongedaan worden gemaakt. Weet u zeker dat u wilt doorgaan?"</string>
+    <string name="menu_collections_add_local">"Verzameling toevoegen"</string>
+    <string name="navigation_drawer_website_news">"Nieuws &amp; Release opmerkingen"</string>
+    <string name="color">"Kleur"</string>
+    <string name="priority_0_no_priority">"Geen prioriteit"</string>
+    <string name="priority_1_highest">"1 - Hoogste"</string>
+    <string name="priority_2_higher">"2 - Hoger"</string>
+    <string name="priority_3_high">"3 - Hoog"</string>
+    <string name="priority_4_medium_high">"4 - Middel hoog"</string>
+    <string name="priority_5_medium">"5 - Gemiddeld"</string>
+    <string name="priority_6_medium_low">"6 - Gemiddeld laag"</string>
+    <string name="edit_recur_day">"dag(en)"</string>
+    <string name="edit_recur_week">"week(en)"</string>
+    <string name="edit_recur_month">"maand(en)"</string>
+    <string name="edit_recur_year">"ja(a)r(en)"</string>
+    <string name="collections_toast_export_ics_success">"Exporteren van collectie gelukt."</string>
+    <string name="collections_toast_export_ics_error">"Fout opgetreden tijdens het exporteren van de geselecteerde verzameling."</string>
+    <string name="attachment_export_saved_successfully">"Opslaan is gelukt"</string>
+    <string name="attachment_export_error_error_occurred">"Er is een fout opgetreden bij het opslaan van het bestand!"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"Externe verzameling toevoegen (%1$s)"</string>
     <!-- Buy Pro fragment -->
     <!-- alarms -->
     <!-- fragment_ical_list -->

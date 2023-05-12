@@ -572,4 +572,5 @@ Global Strings -->
     <string name="preset_categories">"Пресеты категорий"</string>
     <string name="preset_resources">"Пресеты ресурсов"</string>
     <string name="active_filters">Активные фильтры:</string>
+    <string name="clear_filters">"Сбросить фильтры"</string>
 </resources>
