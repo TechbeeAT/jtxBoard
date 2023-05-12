@@ -543,4 +543,5 @@ Grazie!"</string>
     <string name="markdown_unordered_list">"Lista"</string>
     <string name="markdown_code">"Codice"</string>
     <string name="active_filters">Filtri attivi:</string>
+    <string name="clear_filters">"Rimuovi filtri"</string>
 </resources>

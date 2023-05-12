@@ -29,8 +29,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 204020003
-        versionName "2.04.02-beta03"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 204020005
+        versionName "2.04.02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love is the answer\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -154,7 +154,7 @@ import groovy.xml.MarkupBuilder
  */
 def getLocales() {
     // Initialize the list English, since it's available by default
-    def list = ["en", "de", "cs", "el", "es", "fr", "it", "ru", "zh", "ca", "ja", "zh-rTW"]
+    def list = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW"]
 
     /*
     // deactivated script for now in order to have better control over available locales in the app
@@ -223,7 +223,7 @@ dependencies {
 
     // Android KTX
     implementation "androidx.core:core-ktx:$version_core"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1"
 
     // Android Annotations
     implementation "androidx.annotation:annotation:1.6.0"
@@ -305,7 +305,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$version_appcompat"
 
     // jetpack compose
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation "androidx.compose.ui:ui:$version_compose"
     implementation "androidx.compose.material3:material3:1.1.0-rc01"
     implementation "androidx.compose.material:material-icons-extended:1.4.3"
@@ -314,7 +314,7 @@ dependencies {
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    implementation "androidx.navigation:navigation-compose:2.6.0-beta01"
+    implementation "androidx.navigation:navigation-compose:2.6.0-rc01"
     implementation "com.arnyminerz.markdowntext:markdowntext:1.3.2"
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"

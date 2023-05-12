@@ -573,4 +573,5 @@ Danke!"</string>
     <string name="preset_categories">"Voreingestellte Kategorien"</string>
     <string name="preset_resources">"Voreingestellte Ressourcen"</string>
     <string name="active_filters">Aktive Filter:</string>
+    <string name="clear_filters">"Filter zurücksetzen"</string>
 </resources>
