@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ViewColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -59,6 +60,13 @@ fun ListOptionsKanban(
         horizontalAlignment = Alignment.Start
     ) {
 
+        Text(
+            text = stringResource(R.string.settings_attention_experimental_feature),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.error,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
         FilterSection(
             icon = Icons.Outlined.ViewColumn,
             headline = stringResource(id = R.string.kanban_columns),
@@ -67,6 +75,7 @@ fun ListOptionsKanban(
             onInvertSelection = { },
             showMenu = false
         ) {
+
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Status.valuesFor(module).forEach { status ->
 
