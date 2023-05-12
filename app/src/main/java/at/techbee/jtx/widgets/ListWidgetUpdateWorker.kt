@@ -25,7 +25,9 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
@@ -109,24 +111,9 @@ class ListWidgetUpdateWorker(
                             modules = listOf(listWidgetConfig?.module ?: Module.TODO),
                             searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
                             searchResources = listWidgetConfig?.searchResources ?: emptyList(),
-                            searchStatus = mutableListOf<Status>().apply {
-                                listWidgetConfig?.searchStatus?.let { addAll(it) }
-                                //Legacy, delete in future
-                                if(listWidgetConfig?.isFilterNoStatusSet == true)
-                                    add(Status.NO_STATUS)
-                                listWidgetConfig?.searchStatusJournal?.forEach { searchStatusJournal ->
-                                    Status.valuesFor(Module.JOURNAL).find { searchStatusJournal.name == it.status }?.let { add(it) }
-                                }
-                                listWidgetConfig?.searchStatusTodo?.forEach { searchStatusTodo ->
-                                    Status.valuesFor(Module.TODO).find { searchStatusTodo.name == it.status }?.let { add(it) }
-                                }
-                            },
-                            searchClassification = mutableListOf<Classification>().apply {
-                                listWidgetConfig?.searchClassification?.let { addAll(it) }
-                                //Legacy, delete in future
-                                if(listWidgetConfig?.isFilterNoClassificationSet == true)
-                                    add(Classification.NO_CLASSIFICATION)
-                            },
+                            searchStatus = listWidgetConfig?.searchStatus?: emptyList(),
+                            searchXStatus = listWidgetConfig?.searchXStatus?: emptyList(),
+                            searchClassification = listWidgetConfig?.searchClassification?: emptyList(),
                             searchCollection = listWidgetConfig?.searchCollection ?: emptyList(),
                             searchAccount = listWidgetConfig?.searchAccount ?: emptyList(),
                             orderBy = listWidgetConfig?.orderBy ?: OrderBy.CREATED,

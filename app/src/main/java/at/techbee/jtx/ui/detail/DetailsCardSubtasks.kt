@@ -38,6 +38,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.relations.ICal4ListRel
@@ -61,6 +62,7 @@ fun DetailsCardSubtasks(
     showSlider: Boolean,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    storedStatuses: List<ExtendedStatus>,
     player: MediaPlayer?,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -82,6 +84,7 @@ fun DetailsCardSubtasks(
             allEntriesLive = selectFromAllListLive,
             storedCategories = storedCategories,
             storedResources = storedResources,
+            extendedStatuses = storedStatuses,
             player = player,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
             onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
@@ -211,6 +214,7 @@ fun DetailsCardSubtasks_Preview() {
             showSlider = true,
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            storedStatuses = emptyList(),
             player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
@@ -243,6 +247,7 @@ fun DetailsCardSubtasks_Preview_edit() {
             showSlider = true,
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            storedStatuses = emptyList(),
             player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
@@ -275,6 +280,7 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
             showSlider = false,
             storedCategories = emptyList(),
             storedResources = emptyList(),
+            storedStatuses = emptyList(),
             player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },

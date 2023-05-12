@@ -43,7 +43,7 @@ fun ListActiveFiltersRow(
             text = stringResource(R.string.active_filters),
             style = MaterialTheme.typography.labelMedium
         )
-        listSettings.searchCategories.value.forEach { category ->
+        listSettings.searchCategories.forEach { category ->
             ListBadge(
                 icon = Icons.Outlined.Label,
                 iconDesc = stringResource(R.string.category),
@@ -58,7 +58,7 @@ fun ListActiveFiltersRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        listSettings.searchResources.value.forEach { resource ->
+        listSettings.searchResources.forEach { resource ->
             ListBadge(
                 icon = Icons.Outlined.WorkOutline,
                 iconDesc = stringResource(R.string.resources),
@@ -73,7 +73,7 @@ fun ListActiveFiltersRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        listSettings.searchAccount.value.forEach { account ->
+        listSettings.searchAccount.forEach { account ->
             ListBadge(
                 icon = Icons.Outlined.AccountBalance,
                 iconDesc = stringResource(R.string.account),
@@ -81,7 +81,7 @@ fun ListActiveFiltersRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        listSettings.searchCollection.value.forEach { collection ->
+        listSettings.searchCollection.forEach { collection ->
             ListBadge(
                 icon = Icons.Outlined.FolderOpen,
                 iconDesc = stringResource(R.string.collection),
@@ -89,7 +89,7 @@ fun ListActiveFiltersRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        listSettings.searchStatus.value.forEach { status ->
+        listSettings.searchStatus.forEach { status ->
             ListBadge(
                 icon = Icons.Outlined.PublishedWithChanges,
                 iconDesc = stringResource(R.string.status),
@@ -97,7 +97,7 @@ fun ListActiveFiltersRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        listSettings.searchClassification.value.forEach { classification ->
+        listSettings.searchClassification.forEach { classification ->
             ListBadge(
                 icon = Icons.Outlined.PrivacyTip,
                 iconDesc = stringResource(R.string.classification),
@@ -192,7 +192,7 @@ fun ListActiveFiltersRow_Preview() {
     MaterialTheme {
         val listSettings = ListSettings()
         listSettings.isFilterNoResourceSet.value = true
-        listSettings.searchCategories.value = listOf("Category1")
+        listSettings.searchCategories.add("Category1")
 
         ListActiveFiltersRow(
             module = Module.JOURNAL,

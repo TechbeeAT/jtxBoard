@@ -25,6 +25,7 @@ Global Strings -->
     <string name="longitude">"Longitude"</string>
     <string name="unlink">"Unlink"</string>
     <string name="off">"Off"</string>
+    <string name="permissions">"Permissions"</string>
     <string name="current_location">"Current location"</string>
     <string name="toolbar_text_add_journal">"Add Journal"</string>
     <string name="toolbar_text_add_note">"Add Note"</string>
@@ -446,6 +447,7 @@ Thank you!"</string>
     <string name="dialog_save_current_filter_my_filter">"My filter"</string>
     <string name="dialog_edit_stored_category_title">"Add/edit category preset"</string>
     <string name="dialog_edit_stored_resource_title">"Add/edit resource preset"</string>
+    <string name="dialog_edit_stored_status_title">"Add/edit status preset"</string>
     <string name="dialog_add_audio_entry_title">"Add audio entry"</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
@@ -589,6 +591,25 @@ Thank you!"</string>
     <string name="markdown_code">"Code"</string>
     <string name="preset_categories">"Preset categories"</string>
     <string name="preset_resources">"Preset resources"</string>
+    <string name="extended_statuses">"Extended statuses"</string>
+    <string name="extended_statuses_for_journals">"… for journals"</string>
+    <string name="extended_statuses_for_notes">"… for notes"</string>
+    <string name="extended_statuses_for_tasks">"… for tasks"</string>
+    <string name="extended_status_attention">"Attention: Extended statuses are not compatible with other apps, but map to a standard status. Other applications will only show the standard status."</string>
+    <string name="extended_status">"Extended status</string>
     <string name="active_filters">Active filters:</string>
+    <string name="kanban_settings">"Kanban"</string>
+    <string name="kanban_columns">"Kanban-Columns"</string>
+    <string name="kanban_columns_based_on_standard_status">"based on standard statuses</string>
+    <string name="kanban_columns_based_on_extended_status">"based on extended statuses</string>
+    <string name="kanban_columns_based_on_first_category">"based on first category</string>
     <string name="clear_filters">"Clear filters"</string>
+    <!--
+    <string name="geofence_radius_meter">"Radius %1$d m"</string>
+    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
+    <string name="geofence_selection">"Geofence: %1$s"</string>
+    <string name="geofence_options">"Geofence options"</string>
+    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
+        -->
 </resources>
