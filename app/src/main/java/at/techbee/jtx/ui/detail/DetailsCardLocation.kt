@@ -13,8 +13,6 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.icu.util.LocaleData
-import android.icu.util.ULocale
 import android.location.Criteria
 import android.location.LocationListener
 import android.location.LocationManager
@@ -34,14 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
@@ -52,7 +48,6 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import com.google.accompanist.permissions.*
 import java.net.URLEncoder
 import java.util.*
-import kotlin.math.roundToInt
 
 
 @SuppressLint("MissingPermission")
@@ -134,6 +129,7 @@ fun DetailsCardLocation(
         }
     }
 
+    /*
     if(showRequestGeofencePermissionsDialog) {
         RequestPermissionDialog(
             text = stringResource(id = R.string.geofence_request_permission_dialog_message),
@@ -146,6 +142,7 @@ fun DetailsCardLocation(
             }
         )
     }
+     */
 
     LaunchedEffect(locationUpdateState, locationPermissionState?.permissions?.any { it.status.isGranted }) {
         when (locationUpdateState) {
@@ -336,6 +333,7 @@ fun DetailsCardLocation(
                 }
             }
 
+            /*
             AnimatedVisibility(geoLat != null && geoLong != null) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -406,6 +404,7 @@ fun DetailsCardLocation(
                 }
             }
 
+
             AnimatedVisibility(geofenceRadius != null && (geofencePermissionState?.allPermissionsGranted != true || LocalInspectionMode.current)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -425,6 +424,7 @@ fun DetailsCardLocation(
                     }
                 }
             }
+            */
         }
     }
 }
