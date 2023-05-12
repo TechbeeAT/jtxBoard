@@ -11,14 +11,14 @@ package at.techbee.jtx.widgets
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
-import androidx.work.*
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
 private const val TAG = "ListWidgetRec"
@@ -28,11 +28,7 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = ListWidget()
 
     companion object {
-        val list = stringSetPreferencesKey("list")
-        val subtasks = stringSetPreferencesKey("subtasks")
-        val subnotes = stringSetPreferencesKey("subnotes")
-        val listExceedsLimits = booleanPreferencesKey("list_exceed_limits")
-        val filterConfig = stringPreferencesKey("filter_config")
+
 
         /**
          * Sets a worker to update the widget
@@ -54,19 +50,6 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
                     work
                 )
             Log.d(TAG, "Work enqueued")
-        }
-
-        /**
-         * Sets a periodic worker to update the widget every 10 minutes
-         * This is a workaround to make sure the widget gets updated regularly
-         * in order to catch color changes (e.g. day/night change)
-         */
-        fun setPeriodicWork(context: Context) {
-            val work: PeriodicWorkRequest = PeriodicWorkRequestBuilder<ListWidgetUpdateWorker>((10).minutes.toJavaDuration()).build()
-            WorkManager
-                .getInstance(context)
-                .enqueueUniquePeriodicWork("listWidgetPeriodicWorker", ExistingPeriodicWorkPolicy.KEEP, work)
-            Log.d(TAG, "Periodic work enqueued")
         }
     }
 }

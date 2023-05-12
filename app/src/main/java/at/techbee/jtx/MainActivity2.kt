@@ -69,7 +69,6 @@ import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
-import at.techbee.jtx.widgets.ListWidgetReceiver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
@@ -188,7 +187,6 @@ class MainActivity2 : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        ListWidgetReceiver.setPeriodicWork(this)
         lifecycleScope.launch(Dispatchers.IO) {
             val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
             SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
@@ -277,7 +275,6 @@ class MainActivity2 : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        ListWidgetReceiver.setOneTimeWork(this)
         globalStateHolder.authenticationTimeout = System.currentTimeMillis() + (10).minutes.inWholeMilliseconds
     }
 

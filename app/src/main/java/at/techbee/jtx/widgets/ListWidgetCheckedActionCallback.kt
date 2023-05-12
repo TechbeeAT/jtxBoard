@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
+import androidx.glance.appwidget.compose
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
@@ -40,6 +41,7 @@ class ListWidgetCheckedActionCallback: ActionCallback {
             }
         }
         NotificationPublisher.scheduleNextNotifications(context)
-        ListWidgetReceiver.setOneTimeWork(context, null)
+        ListWidget().update(context, glanceId)
+        ListWidget().compose(context, glanceId)
     }
 }

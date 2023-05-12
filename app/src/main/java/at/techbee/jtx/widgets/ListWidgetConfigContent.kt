@@ -10,7 +10,11 @@ package at.techbee.jtx.widgets
 
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -18,7 +22,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Done
-import androidx.compose.material3.*
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,8 +46,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
-import at.techbee.jtx.ui.list.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
+import at.techbee.jtx.ui.list.GroupBy
+import at.techbee.jtx.ui.list.ListOptionsFilter
+import at.techbee.jtx.ui.list.ListOptionsGroupSort
+import at.techbee.jtx.ui.list.ListSettings
+import at.techbee.jtx.ui.list.OrderBy
+import at.techbee.jtx.ui.list.SortOrder
+import at.techbee.jtx.ui.list.ViewMode
 import kotlinx.coroutines.launch
 
 
@@ -274,8 +298,6 @@ data class ListWidgetConfig(
     var searchCategories: List<String> = emptyList(),
     var searchResources: List<String> = emptyList(),
     var searchStatus: List<Status> = emptyList(),
-    @Deprecated("Removed, only for legacy widget configs") var searchStatusTodo: List<StatusTodo> = emptyList(),
-    @Deprecated("Removed, only for legacy widget configs") var searchStatusJournal: List<StatusJournal> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
     var searchCollection: List<String> = emptyList(),
     var searchAccount: List<String> = emptyList(),
@@ -301,8 +323,6 @@ data class ListWidgetConfig(
     var isFilterNoStartDateSet: Boolean = false,
     var isFilterNoDueDateSet: Boolean = false,
     var isFilterNoCompletedDateSet: Boolean = false,
-    @Deprecated("Removed, only for legacy widget configs") var isFilterNoStatusSet: Boolean = false,
-    @Deprecated("Removed, only for legacy widget configs") var isFilterNoClassificationSet: Boolean = false,
     var isFilterNoCategorySet: Boolean = false,
     var isFilterNoResourceSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!

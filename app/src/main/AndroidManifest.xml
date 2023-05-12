@@ -159,7 +159,6 @@
         <receiver android:name=".NotificationPublisher" />
         <receiver
             android:name=".widgets.ListWidgetReceiver"
-            android:enabled="@bool/list_widget_enabled"
             android:exported="false"> <!-- disabled widget for api levels < 28 as it causes error, check again in future if better support is given when glance goes release -->
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

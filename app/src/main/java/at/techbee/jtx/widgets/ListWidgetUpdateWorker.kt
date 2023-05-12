@@ -14,25 +14,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.glance.appwidget.GlanceAppWidgetManager
-import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.appwidget.updateAll
-import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
-import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.list.ListSettings
-import at.techbee.jtx.ui.list.OrderBy
-import at.techbee.jtx.ui.list.SortOrder
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 
 class ListWidgetUpdateWorker(
@@ -82,121 +70,6 @@ class ListWidgetUpdateWorker(
     }
 
     override suspend fun doWork(): Result {
-
-        GlanceAppWidgetManager(context).getGlanceIds(ListWidget::class.java).forEach { glanceId ->
-            Log.d("ListWidgetUpdateWorker", "GlanceId on updateWidgetState: $glanceId")
-
-            // need to purge first, otherwise the list is not updated if only the sort order changes
-            updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { pref ->
-                pref.toMutablePreferences().apply {
-                    this[ListWidgetReceiver.list] = emptySet()
-                    this[ListWidgetReceiver.subnotes] = emptySet()
-                    this[ListWidgetReceiver.subtasks] = emptySet()
-                }
-            }
-
-            updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { pref ->
-
-                val listWidgetConfig = pref[ListWidgetReceiver.filterConfig]?.let { filterConfig ->
-                    Json.decodeFromString<ListWidgetConfig>(filterConfig)
-                }
-                Log.d("ListWidgetUpdateWorker", "GlanceId $glanceId : filterConfig: $listWidgetConfig")
-                //Log.v(TAG, "Loading data ...")
-                val allEntries = ICalDatabase.getInstance(context)
-                    .iCalDatabaseDao
-                    .getIcal4ListSync(
-                        ICal4List.constructQuery(
-                            modules = listOf(listWidgetConfig?.module ?: Module.TODO),
-                            searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
-                            searchResources = listWidgetConfig?.searchResources ?: emptyList(),
-                            searchStatus = mutableListOf<Status>().apply {
-                                listWidgetConfig?.searchStatus?.let { addAll(it) }
-                                //Legacy, delete in future
-                                if(listWidgetConfig?.isFilterNoStatusSet == true)
-                                    add(Status.NO_STATUS)
-                                listWidgetConfig?.searchStatusJournal?.forEach { searchStatusJournal ->
-                                    Status.valuesFor(Module.JOURNAL).find { searchStatusJournal.name == it.status }?.let { add(it) }
-                                }
-                                listWidgetConfig?.searchStatusTodo?.forEach { searchStatusTodo ->
-                                    Status.valuesFor(Module.TODO).find { searchStatusTodo.name == it.status }?.let { add(it) }
-                                }
-                            },
-                            searchClassification = mutableListOf<Classification>().apply {
-                                listWidgetConfig?.searchClassification?.let { addAll(it) }
-                                //Legacy, delete in future
-                                if(listWidgetConfig?.isFilterNoClassificationSet == true)
-                                    add(Classification.NO_CLASSIFICATION)
-                            },
-                            searchCollection = listWidgetConfig?.searchCollection ?: emptyList(),
-                            searchAccount = listWidgetConfig?.searchAccount ?: emptyList(),
-                            orderBy = listWidgetConfig?.orderBy ?: OrderBy.CREATED,
-                            sortOrder = listWidgetConfig?.sortOrder ?: SortOrder.ASC,
-                            orderBy2 = listWidgetConfig?.orderBy2 ?: OrderBy.SUMMARY,
-                            sortOrder2 = listWidgetConfig?.sortOrder2 ?: SortOrder.ASC,
-                            isExcludeDone = listWidgetConfig?.isExcludeDone ?: false,
-                            isFilterOverdue = listWidgetConfig?.isFilterOverdue ?: false,
-                            isFilterDueToday = listWidgetConfig?.isFilterDueToday ?: false,
-                            isFilterDueTomorrow = listWidgetConfig?.isFilterDueTomorrow ?: false,
-                            isFilterDueFuture = listWidgetConfig?.isFilterDueFuture ?: false,
-                            isFilterStartInPast = listWidgetConfig?.isFilterStartInPast ?: false,
-                            isFilterStartToday = listWidgetConfig?.isFilterStartToday?: false,
-                            isFilterStartTomorrow = listWidgetConfig?.isFilterStartTomorrow ?: false,
-                            isFilterStartFuture = listWidgetConfig?.isFilterStartFuture ?: false,
-                            isFilterNoDatesSet =  listWidgetConfig?.isFilterNoDatesSet ?: false,
-                            isFilterNoStartDateSet = listWidgetConfig?.isFilterNoStartDateSet ?: false,
-                            isFilterNoDueDateSet = listWidgetConfig?.isFilterNoDueDateSet ?: false,
-                            isFilterNoCompletedDateSet = listWidgetConfig?.isFilterNoCompletedDateSet ?: false,
-                            isFilterNoCategorySet = listWidgetConfig?.isFilterNoCategorySet ?: false,
-                            isFilterNoResourceSet = listWidgetConfig?.isFilterNoResourceSet ?: false,
-                            flatView = listWidgetConfig?.flatView?: false,  // always true in Widget, we handle the flat view in the code
-                            searchSettingShowOneRecurEntryInFuture = listWidgetConfig?.showOneRecurEntryInFuture ?: false,
-                            hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context)  // protected entries are always hidden
-                        )
-                    )
-
-                val entries = if(allEntries.isEmpty()) emptyList() else if (allEntries.size > ListWidget.MAX_ENTRIES) allEntries.subList(0,ListWidget.MAX_ENTRIES) else allEntries
-
-                val subtasksQuery = ICal4List.getQueryForAllSubEntriesOfParents(
-                    component = Component.VTODO,
-                    hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
-                    parents = entries.map { it.uid ?:"" },
-                    orderBy = listWidgetConfig?.subtasksOrderBy ?: OrderBy.CREATED,
-                    sortOrder = listWidgetConfig?.subtasksSortOrder ?: SortOrder.ASC
-                )
-                val subnotesQuery = ICal4List.getQueryForAllSubEntriesOfParents(
-                    component = Component.VJOURNAL,
-                    hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
-                    parents = entries.map { it.uid ?:"" },
-                    orderBy = listWidgetConfig?.subnotesOrderBy ?: OrderBy.CREATED,
-                    sortOrder = listWidgetConfig?.subnotesSortOrder ?: SortOrder.ASC)
-                val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subtasksQuery)
-                val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subnotesQuery)
-
-                val subtasksList = mutableListOf<ICal4ListWidget>().apply {
-                    subtasks.forEach { subtask ->
-                        subtask.relatedto.forEach { relatedto ->
-                            relatedto.text?.let {this.add(ICal4ListWidget.fromICal4List(subtask.iCal4List, it)) }
-                        }
-                    }
-                }
-
-                val subnotesList = mutableListOf<ICal4ListWidget>().apply {
-                    subnotes.forEach { subnote ->
-                        subnote.relatedto.forEach { relatedto ->
-                            relatedto.text?.let {this.add(ICal4ListWidget.fromICal4List(subnote.iCal4List, it)) }
-                        }
-                    }
-                }
-
-                pref.toMutablePreferences().apply {
-                    this[ListWidgetReceiver.list] = entries.map { entry -> Json.encodeToString(ICal4ListWidget.fromICal4List(entry)) }.toSet()
-                    this[ListWidgetReceiver.subtasks] = subtasksList.map { entry -> Json.encodeToString(entry) }.toSet()
-                    this[ListWidgetReceiver.subnotes] = subnotesList.map { entry -> Json.encodeToString(entry) }.toSet()
-                    this[ListWidgetReceiver.listExceedsLimits] = allEntries.size > ListWidget.MAX_ENTRIES
-                    //Log.d("ListWidgetUpdateWorker", this[ListWidgetReceiver.list].toString())
-                }
-            }
-        }
         ListWidget().updateAll(context)
         return Result.success()
     }

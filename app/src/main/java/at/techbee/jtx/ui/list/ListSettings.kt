@@ -13,7 +13,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.widgets.ListWidgetConfig
@@ -78,8 +79,6 @@ class ListSettings {
         private const val PREFS_RESOURCES = "prefsResources"
         private const val PREFS_CLASSIFICATION = "prefsClassification"
         private const val PREFS_STATUS = "prefsStatus"
-        @Deprecated("Use PREFS_STATUS") private const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
-        @Deprecated("Use PREFS_STATUS") private const val PREFS_STATUS_TODO = "prefsStatusTodo"
         private const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
         private const val PREFS_ORDERBY = "prefsOrderBy"
         private const val PREFS_SORTORDER = "prefsSortOrder"
@@ -102,8 +101,6 @@ class ListSettings {
         private const val PREFS_FILTER_START_TODAY = "prefsFilterStartToday"
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
-        @Deprecated("Use PREFS_STATUS") private const val PREFS_FILTER_NO_STATUS_SET = "prefsFilterNoStatusSet"
-        @Deprecated("Use PREFS_CLASSIFICATION") private const val PREFS_FILTER_NO_CLASSIFICATION_SET = "prefsFilterNoClassificationSet"
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
         private const val PREFS_FLAT_VIEW = "prefsFlatView"
@@ -147,26 +144,8 @@ class ListSettings {
             //searchOrganizers =
             searchCategories.value = prefs.getStringSet(PREFS_CATEGORIES, null)?.toList() ?: emptyList()
             searchResources.value = prefs.getStringSet(PREFS_RESOURCES, null)?.toList() ?: emptyList()
-            searchStatus.value = mutableListOf<Status>().apply {
-                addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
-
-                //Legacy handling
-                prefs.getStringSet(PREFS_STATUS_JOURNAL, null)?.forEach { legacyStatusJournal ->
-                    Status.valuesFor(Module.JOURNAL).find { it.status == legacyStatusJournal }?.let { add(it) }
-                }
-                prefs.getStringSet(PREFS_STATUS_TODO, null)?.forEach { legacyStatusTodo ->
-                    Status.valuesFor(Module.TODO).find { it.status == legacyStatusTodo }?.let { add(it) }
-                }
-                if(prefs.getBoolean(PREFS_FILTER_NO_STATUS_SET, false))
-                    add(Status.NO_STATUS)
-            }
-
-            searchClassification.value = mutableListOf<Classification>().apply {
-                addAll(Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null)))
-                //Legacy handling
-                if(prefs.getBoolean(PREFS_FILTER_NO_CLASSIFICATION_SET, false))
-                    add(Classification.NO_CLASSIFICATION)
-            }
+            searchStatus.value = Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null))
+            searchClassification.value = Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null))
             searchCollection.value = prefs.getStringSet(PREFS_COLLECTION, null)?.toList() ?: emptyList()
             searchAccount.value = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
 
@@ -210,24 +189,8 @@ class ListSettings {
 
             searchCategories.value = listWidgetConfig.searchCategories
             searchResources.value = listWidgetConfig.searchResources
-            searchStatus.value = mutableListOf<Status>().apply {
-                addAll(listWidgetConfig.searchStatus)
-                //Legacy handling
-                listWidgetConfig.searchStatusJournal.forEach { legacyStatusJournal ->
-                    Status.valuesFor(Module.JOURNAL).find { it.status == legacyStatusJournal.name }?.let { add(it) }
-                }
-                listWidgetConfig.searchStatusTodo.forEach { legacyStatusTodo ->
-                    Status.valuesFor(Module.TODO).find { it.status == legacyStatusTodo.name }?.let { add(it) }
-                }
-                if(listWidgetConfig.isFilterNoStatusSet)
-                    add(Status.NO_STATUS)
-            }
-            searchClassification.value = mutableListOf<Classification>().apply {
-                addAll(listWidgetConfig.searchClassification)
-                //Legacy handling
-                if(listWidgetConfig.isFilterNoClassificationSet)
-                    add(Classification.NO_CLASSIFICATION)
-            }
+            searchStatus.value = listWidgetConfig.searchStatus
+            searchClassification.value = listWidgetConfig.searchClassification
             searchCollection.value = listWidgetConfig.searchCollection
             searchAccount.value = listWidgetConfig.searchAccount
 
@@ -301,13 +264,6 @@ class ListSettings {
 
             putLong(PREFS_TOPAPPBAR_COLLECTION_ID, topAppBarCollectionId.value)
             putString(PREFS_TOPAPPBAR_MODE, topAppBarMode.value.name)
-
-            //Legacy handling
-            remove(PREFS_STATUS_JOURNAL)
-            remove(PREFS_STATUS_TODO)
-            remove(PREFS_FILTER_NO_STATUS_SET)
-            remove(PREFS_FILTER_NO_CLASSIFICATION_SET)
-
         }.apply()
     }
 

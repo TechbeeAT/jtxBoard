@@ -12,14 +12,25 @@ import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.glance.*
+import androidx.glance.ColorFilter
+import androidx.glance.GlanceModifier
+import androidx.glance.Image
+import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.CheckBox
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
-import androidx.glance.layout.*
+import androidx.glance.background
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.Column
+import androidx.glance.layout.Row
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import androidx.glance.text.FontStyle
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
@@ -30,13 +41,13 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.DateTimeUtils
-import at.techbee.jtx.widgets.ICal4ListWidget
 import at.techbee.jtx.widgets.ListWidgetCheckedActionCallback
 
 @Composable
 fun ListEntry(
-    obj: ICal4ListWidget,
+    obj: ICal4List,
     entryColor: ColorProvider,
     textColor: ColorProvider,
     textColorOverdue: ColorProvider,
@@ -95,7 +106,8 @@ fun ListEntry(
                             Image(
                                 provider = ImageProvider(if (obj.module == Module.TODO.name) R.drawable.ic_widget_start else R.drawable.ic_start2),
                                 contentDescription = context.getString(R.string.started),
-                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
+                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                                colorFilter = ColorFilter.tint(textColor)
                             )
                             Text(
                                 text = DateTimeUtils.convertLongToMediumDateShortTimeString(
@@ -110,7 +122,8 @@ fun ListEntry(
                             Image(
                                 provider = ImageProvider(R.drawable.ic_widget_due),
                                 contentDescription = context.getString(R.string.due),
-                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
+                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                                colorFilter = ColorFilter.tint(textColor)
                             )
                             Text(
                                 text = DateTimeUtils.convertLongToMediumDateShortTimeString(
@@ -129,7 +142,6 @@ fun ListEntry(
                             text = obj.summary!!,
                             style = textStyleSummary,
                             modifier = GlanceModifier.fillMaxWidth()
-                                .clickable(onClick = actionStartActivity(intent))
                         )
                     if (!obj.description.isNullOrEmpty() && showDescription)
                         Text(
@@ -137,7 +149,6 @@ fun ListEntry(
                             maxLines = 2,
                             style = textStyleDescription,
                             modifier = GlanceModifier.fillMaxWidth()
-                                .clickable(onClick = actionStartActivity(intent))
                         )
                 }
             }

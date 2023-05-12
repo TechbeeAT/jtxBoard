@@ -18,6 +18,7 @@ import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -66,6 +67,7 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getPackageInfoCompat
+import at.techbee.jtx.widgets.ListWidget
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -230,8 +232,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 }
             }
 
-            SyncUtil.notifyContentObservers(getApplication())
-            NotificationPublisher.scheduleNextNotifications(getApplication())
+            onChangeDone()
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
         }
@@ -253,8 +254,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             currentItem.makeDirty()
             database.update(currentItem)
             currentItem.makeSeriesDirty(database)
-            SyncUtil.notifyContentObservers(getApplication())
-            NotificationPublisher.scheduleNextNotifications(getApplication())
+            onChangeDone()
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
         }
@@ -272,14 +272,14 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     .create()
             )
             selectedICal4List.forEach { entry ->
-                if(entry.isReadOnly)
+                if(entry.iCal4List.isReadOnly)
                     return@forEach
-                if(entry.recurid != null)
-                    database.getICalObjectByIdSync(entry.id)?.let { ICalObject.unlinkFromSeries(it, database) }
-                ICalObject.deleteItemWithChildren(entry.id, database)
+                if(entry.iCal4List.recurid != null)
+                    database.getICalObjectByIdSync(entry.iCal4List.id)?.let { ICalObject.unlinkFromSeries(it, database) }
+                ICalObject.deleteItemWithChildren(entry.iCal4List.id, database)
                 selectedEntries.clear()
             }
-            NotificationPublisher.scheduleNextNotifications(getApplication())
+            onChangeDone()
         }
     }
 
@@ -301,6 +301,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 }
             }
             makeSelectedDirty()
+            onChangeDone()
         }
     }
 
@@ -323,7 +324,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     //sqlConstraintException.value = true
                 }
             }
-            NotificationPublisher.scheduleNextNotifications(getApplication())
+            onChangeDone()
             selectedEntries.clear()
             selectedEntries.addAll(newEntries)
         }
@@ -347,6 +348,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 }
             }
             makeSelectedDirty()
+            onChangeDone()
         }
     }
 
@@ -373,6 +375,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     )
             }
             makeSelectedDirty()
+            onChangeDone()
         }
     }
 
@@ -407,7 +410,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     it.makeSeriesDirty(database)
                 }
             }
-            NotificationPublisher.scheduleNextNotifications(getApplication())
+            onChangeDone()
         }
     }
 
@@ -425,6 +428,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     it.makeSeriesDirty(database)
                 }
             }
+            onChangeDone()
         }
     }
 
@@ -442,6 +446,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                     it.makeSeriesDirty(database)
                 }
             }
+            onChangeDone()
         }
     }
 
@@ -479,7 +484,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
             }
-            NotificationPublisher.scheduleNextNotifications(getApplication())
+            onChangeDone()
         }
     }
 
@@ -521,6 +526,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 ICalObject.deleteItemWithChildren(doneTask.id, database)
             }
             toastMessage.value = _application.getString(R.string.toast_done_tasks_deleted, doneTasks.size)
+            onChangeDone()
         }
     }
 
@@ -533,6 +539,17 @@ open class ListViewModel(application: Application, val module: Module) : Android
             val collections = database.getAllRemoteCollections()
             SyncUtil.syncAccounts(collections.map { Account(it.accountName, it.accountType) }.toSet())
         }
+    }
+
+    /**
+     * Notifies the contentObservers
+     * schedules the notifications
+     * updates the widget
+     */
+    private suspend fun onChangeDone() {
+        SyncUtil.notifyContentObservers(getApplication())
+        ListWidget().updateAll(getApplication())
+        NotificationPublisher.scheduleNextNotifications(getApplication())
     }
 
     /**

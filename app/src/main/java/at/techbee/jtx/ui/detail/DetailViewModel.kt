@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
+import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -54,6 +55,7 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
+import at.techbee.jtx.widgets.ListWidget
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -179,8 +181,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                     }
                 }
-                SyncUtil.notifyContentObservers(getApplication())
-                NotificationPublisher.scheduleNextNotifications(_application)
+                onChangeDone()
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $id")
@@ -206,6 +207,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             }
+            onChangeDone()
         }
     }
 
@@ -231,8 +233,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             } else {
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             }
-            NotificationPublisher.scheduleNextNotifications(_application)
-            SyncUtil.notifyContentObservers(getApplication())
+            onChangeDone()
 
         }
     }
@@ -263,6 +264,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         it.makeDirty()
                         database.update(it)
                     }
+                    onChangeDone()
                 }
             }
         }
@@ -274,6 +276,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
                 move(it, newCollectionId)
             }
+            onChangeDone()
         }
     }
 
@@ -315,6 +318,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 it.makeDirty()
                 save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
             }
+            onChangeDone()
         }
     }
 
@@ -335,7 +339,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             Log.d("SQLConstraint", e.stackTraceToString())
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
         }
-        NotificationPublisher.scheduleNextNotifications(_application)
+        onChangeDone()
     }
 
 
@@ -345,6 +349,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             mutableICalObject?.let {
                 save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
             }
+            onChangeDone()
         }
     }
 
@@ -419,8 +424,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             database.update(icalObject)
             icalObject.makeSeriesDirty(database)
             icalObject.recreateRecurring(_application)
-            NotificationPublisher.scheduleNextNotifications(_application)
-            SyncUtil.notifyContentObservers(_application)
+            onChangeDone()
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         } catch (e: SQLiteConstraintException) {
             Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
@@ -449,6 +453,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 alarms = originalEntry?.alarms ?: emptyList()
             )
             navigateToId.value = icalEntity.value?.property?.id
+            onChangeDone()
         }
     }
 
@@ -472,7 +477,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     )
                 )
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-                SyncUtil.notifyContentObservers(getApplication())
+                onChangeDone()
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", e.stackTraceToString())
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
@@ -503,7 +508,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             }
-            NotificationPublisher.scheduleNextNotifications(_application)
+            onChangeDone()
         }
     }
 
@@ -524,7 +529,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             }
-            NotificationPublisher.scheduleNextNotifications(_application)
+            onChangeDone()
         }
     }
 
@@ -536,6 +541,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 it.makeDirty()
                 database.update(it)
             }
+            onChangeDone()
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }
     }
@@ -608,7 +614,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                NotificationPublisher.scheduleNextNotifications(getApplication())
+                onChangeDone()
 
                 if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                     navigateToId.value = newId
@@ -766,6 +772,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         val children = database.getRelatedChildren(parent)
         list.addAll(children.map { it.id })
         children.forEach { addChildrenOf(it.id, list) }
+    }
+
+    /**
+     * Notifies the contentObservers
+     * schedules the notifications
+     * updates the widget
+     */
+    private suspend fun onChangeDone() {
+        SyncUtil.notifyContentObservers(getApplication())
+        NotificationPublisher.scheduleNextNotifications(getApplication())
+        ListWidget().updateAll(getApplication())
     }
     
     enum class DetailChangeState { LOADING, UNCHANGED, CHANGEUNSAVED, SAVINGREQUESTED, CHANGESAVING, CHANGESAVED, DELETING, DELETED, SQLERROR }
