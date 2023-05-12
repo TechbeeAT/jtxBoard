@@ -590,4 +590,5 @@ Thank you!"</string>
     <string name="preset_categories">"Preset categories"</string>
     <string name="preset_resources">"Preset resources"</string>
     <string name="active_filters">Active filters:</string>
+    <string name="clear_filters">"Clear filters"</string>
 </resources>
