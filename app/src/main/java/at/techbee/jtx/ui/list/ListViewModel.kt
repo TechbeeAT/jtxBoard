@@ -18,6 +18,8 @@ import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.compose
 import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -574,6 +576,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
     private suspend fun onChangeDone() {
         SyncUtil.notifyContentObservers(getApplication())
         ListWidget().updateAll(getApplication())
+        /*
+        GlanceAppWidgetManager(_application).getGlanceIds(ListWidget::class.java).forEach { glanceId ->
+            //ListWidget().provideGlance(_application, glanceId)
+            //ListWidget().compose(_application, glanceId)
+        }
+         */
         NotificationPublisher.scheduleNextNotifications(getApplication())
     }
 
