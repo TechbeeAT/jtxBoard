@@ -548,4 +548,12 @@ Merci !"</string>
     <string name="markdown_code">"Code"</string>
     <string name="active_filters">Filtres actifs :</string>
     <string name="clear_filters">"Supprimer les filtres"</string>
+    <!--
+    <string name="geofence_radius_meter">"Radius %1$d m"</string>
+    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
+    <string name="geofence_selection">"Geofence: %1$s"</string>
+    <string name="geofence_options">"Geofence options"</string>
+    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
+        -->
 </resources>
