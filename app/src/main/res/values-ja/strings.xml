@@ -258,7 +258,7 @@ Global Strings -->
     <string name="url">"URL"</string>
     <string name="location">"場所"</string>
     <string name="attendees">"参加者"</string>
-    <string name="resources">"資料"</string>
+    <string name="resources">"必要なもの"</string>
     <string name="organizer">"主催者"</string>
     <string name="contact">"連絡先"</string>
     <string name="relatedto">"このエントリーと関連"</string>
@@ -302,7 +302,7 @@ Global Strings -->
     <string name="filter_created">"作成日時"</string>
     <string name="filter_last_modified">"最終更新日時"</string>
     <string name="filter_no_category">カテゴリーなし</string>
-    <string name="filter_no_resource">資料なし</string>
+    <string name="filter_no_resource">必要なものなし</string>
     <string name="filter_subtasks_order_by">サブタスクの並べ替え</string>
     <string name="filter_subnotes_order_by">リンクされたメモの並べ替え</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"エントリーを追加するコレクションをクリックしてください！"</string>
@@ -433,7 +433,7 @@ Global Strings -->
     <string name="dialog_save_current_filter_config">"現在のフィルター設定を保存"</string>
     <string name="dialog_save_current_filter_my_filter">"マイフィルター"</string>
     <string name="dialog_edit_stored_category_title">"カテゴリーのプリセットを追加/編集"</string>
-    <string name="dialog_edit_stored_resource_title">"資料のプリセットを追加/編集"</string>
+    <string name="dialog_edit_stored_resource_title">"必要なもののプリセットを追加/編集"</string>
     <string name="dialog_edit_stored_status_title">"ステータスのプリセットを追加/編集"</string>
     <string name="dialog_add_audio_entry_title">"音声エントリーを追加"</string>
     <string name="menu_list_viewmode_compact">"コンパクト表示"</string>
@@ -572,7 +572,7 @@ Global Strings -->
     <string name="markdown_unordered_list">"リスト"</string>
     <string name="markdown_code">"コード"</string>
     <string name="preset_categories">"カテゴリーのプリセット"</string>
-    <string name="preset_resources">"資料のプリセット"</string>
+    <string name="preset_resources">"必要なもののプリセット"</string>
     <string name="extended_statuses">"拡張ステータス"</string>
     <string name="extended_statuses_for_journals">"ジャーナル向けの…"</string>
     <string name="extended_statuses_for_notes">"メモ向けの…"</string>
