@@ -491,7 +491,7 @@ Danke!"</string>
     <string name="list_start_date_future">"Start in Zukunft"</string>
     <string name="list_hide_completed_tasks">"Fertiggestellte Aufgaben ausblenden"</string>
     <string name="list_biometric_protected_entries_locked">Biometrische geschützte Einträge gesperrt</string>
-    <string name="list_delete_done">"Löschen erledigt"</string>
+    <string name="list_delete_done">"Lösche Erledigte"</string>
     <string name="collections_biometric_protected_entries_locked_title">Biometrische geschützte Einträge gesperrt</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Bitte authentifizieren Sie sich und versuchen Sie es erneut</string>
     <string name="list_biometric_protected_entries_unlocked">Biometrische geschützte Einträge entsperrt</string>
