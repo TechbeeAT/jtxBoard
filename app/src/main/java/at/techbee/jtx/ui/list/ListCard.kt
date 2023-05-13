@@ -56,6 +56,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Attachment
@@ -86,6 +87,7 @@ fun ListCard(
     attachments: List<Attachment>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    storedStatuses: List<ExtendedStatus>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     isSubtasksExpandedDefault: Boolean = true,
@@ -142,6 +144,7 @@ fun ListCard(
                 resources = resources,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
+                extendedStatuses = storedStatuses
             )
 
             Row(
@@ -524,6 +527,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
             }),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
@@ -565,6 +569,7 @@ fun ICalObjectListCardPreview_NOTE() {
             parents = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
@@ -611,6 +616,7 @@ fun ICalObjectListCardPreview_TODO() {
             parents = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = listOf(),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             onClick = { _, _, _ -> },
@@ -657,6 +663,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             parents = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = listOf(),
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
@@ -705,6 +712,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             parents = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = listOf(),
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
@@ -754,6 +762,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             parents = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = listOf(),
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },

@@ -17,6 +17,8 @@ import android.location.Criteria
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
@@ -55,21 +57,26 @@ fun DetailsCardLocation(
     initialLocation: String?,
     initialGeoLat: Double?,
     initialGeoLong: Double?,
+    initialGeofenceRadius: Int?,
     isEditMode: Boolean,
     setCurrentLocation: Boolean,
     onLocationUpdated: (String, Double?, Double?) -> Unit,
+    onGeofenceRadiusUpdatd: (Int?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val context = LocalContext.current
     val headline = stringResource(id = R.string.location)
     var showLocationPickerDialog by rememberSaveable { mutableStateOf(false) }
+    var showRequestGeofencePermissionsDialog by rememberSaveable { mutableStateOf(false) }
+    val openPermissionsIntent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
 
     var location by remember { mutableStateOf(initialLocation ?: "") }
     var geoLat by remember { mutableStateOf(initialGeoLat) }
     var geoLong by remember { mutableStateOf(initialGeoLong) }
     var geoLatText by remember { mutableStateOf(initialGeoLat?.toString() ?: "") }
     var geoLongText by remember { mutableStateOf(initialGeoLong?.toString() ?: "") }
+    var geofenceRadius by remember { mutableStateOf(initialGeofenceRadius) }
 
     val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         permissions = listOf(
@@ -77,6 +84,15 @@ fun DetailsCardLocation(
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
     ) else null
+
+    val geofencePermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
+        permissions =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            else
+                listOf(Manifest.permission.ACCESS_FINE_LOCATION)
+    ) else null
+
     var locationUpdateState by remember { mutableStateOf(
         if(setCurrentLocation && locationPermissionState?.permissions?.any { it.status.isGranted } == true)
                 LocationUpdateState.LOCATION_REQUESTED
@@ -112,6 +128,21 @@ fun DetailsCardLocation(
             )
         }
     }
+
+    /*
+    if(showRequestGeofencePermissionsDialog) {
+        RequestPermissionDialog(
+            text = stringResource(id = R.string.geofence_request_permission_dialog_message),
+            onConfirm = {
+                if(geofencePermissionState?.shouldShowRationale == true)
+                    startActivity(context, openPermissionsIntent, null)
+                else
+                    geofencePermissionState?.launchMultiplePermissionRequest()
+                showRequestGeofencePermissionsDialog = false
+            }
+        )
+    }
+     */
 
     LaunchedEffect(locationUpdateState, locationPermissionState?.permissions?.any { it.status.isGranted }) {
         when (locationUpdateState) {
@@ -301,6 +332,99 @@ fun DetailsCardLocation(
                     }
                 }
             }
+
+            /*
+            AnimatedVisibility(geoLat != null && geoLong != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    var geofenceOptionsExpanded by remember { mutableStateOf(false) }
+                    val useFeet = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && LocaleData.getMeasurementSystem(ULocale.getDefault()) != LocaleData.MeasurementSystem.SI
+                    fun Int.metersInFeet() = (((this * 3.281)/50).roundToInt()*50)
+
+                    Icon(
+                        painter = painterResource(R.drawable.ic_geofence_radius),
+                        contentDescription = null,
+                        modifier = Modifier.padding(horizontal = if(isEditMode) 8.dp else 0.dp)
+                    )
+                    Text(
+                        stringResource(R.string.geofence_selection,
+                            when {
+                                geofenceRadius == null -> stringResource(R.string.off)
+                                useFeet -> stringResource(R.string.geofence_radius_feet, geofenceRadius!!.metersInFeet())
+                                else -> stringResource(R.string.geofence_radius_meter, geofenceRadius!!)
+                            }
+                        )
+                    )
+
+                    AnimatedVisibility(isEditMode) {
+                        IconButton(
+                            onClick = { geofenceOptionsExpanded = true },
+                        ) {
+
+                            DropdownMenu(
+                                expanded = geofenceOptionsExpanded,
+                                onDismissRequest = { geofenceOptionsExpanded = false }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.off)) },
+                                    onClick = {
+                                        geofenceRadius = null
+                                        onGeofenceRadiusUpdatd(null)
+                                        geofenceOptionsExpanded = false
+                                    }
+                                )
+
+                                listOf(50, 200, 500).forEach {
+                                    DropdownMenuItem(
+                                        text = {
+                                            val metersInFeet = (((it * 3.281)/50).roundToInt()*50)
+                                            if (useFeet)
+                                                Text(text = stringResource(R.string.geofence_radius_feet, metersInFeet))
+                                            else
+                                                Text(text = stringResource(R.string.geofence_radius_meter, it))
+                                        },
+                                        onClick = {
+                                            if (geofencePermissionState?.allPermissionsGranted != true)
+                                                showRequestGeofencePermissionsDialog = true
+                                            geofenceRadius = it
+                                            onGeofenceRadiusUpdatd(it)
+                                            geofenceOptionsExpanded = false
+                                        }
+                                    )
+                                }
+                            }
+
+                            Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.geofence_options))
+                        }
+                    }
+                }
+            }
+
+
+            AnimatedVisibility(geofenceRadius != null && (geofencePermissionState?.allPermissionsGranted != true || LocalInspectionMode.current)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.geofence_missing_permission_info),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.weight(1f)
+                    )
+                    TextButton(
+                        onClick = { startActivity(context, openPermissionsIntent, null) }
+                    ) {
+                            Text(stringResource(id = R.string.permissions))
+                    }
+                }
+            }
+            */
         }
     }
 }
@@ -315,9 +439,11 @@ fun DetailsCardLocation_Preview() {
             initialLocation = "Vienna, Stephansplatz",
             initialGeoLat = null,
             initialGeoLong = null,
+            initialGeofenceRadius = null,
             isEditMode = false,
             setCurrentLocation = false,
-            onLocationUpdated = { _, _, _ -> }
+            onLocationUpdated = { _, _, _ -> },
+            onGeofenceRadiusUpdatd = {}
         )
     }
 }
@@ -330,9 +456,11 @@ fun DetailsCardLocation_Preview_withGEo() {
             initialLocation = "Vienna, Stephansplatz",
             initialGeoLat = 23.447378,
             initialGeoLong = 73.272838,
+            initialGeofenceRadius = null,
             isEditMode = false,
             setCurrentLocation = false,
-            onLocationUpdated = { _, _, _ -> }
+            onLocationUpdated = { _, _, _ -> },
+            onGeofenceRadiusUpdatd = {}
         )
     }
 }
@@ -346,9 +474,29 @@ fun DetailsCardLocation_Preview_edit() {
             initialLocation = "Vienna, Stephansplatz",
             initialGeoLat = null,
             initialGeoLong = null,
+            initialGeofenceRadius = null,
             isEditMode = true,
             setCurrentLocation = false,
-            onLocationUpdated = { _, _, _ -> }
+            onLocationUpdated = { _, _, _ -> },
+            onGeofenceRadiusUpdatd = {}
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardLocation_Preview_edit_with_geo() {
+    MaterialTheme {
+        DetailsCardLocation(
+            initialLocation = "Vienna, Stephansplatz",
+            initialGeoLat = 23.447378,
+            initialGeoLong = 73.272838,
+            initialGeofenceRadius = null,
+            isEditMode = true,
+            setCurrentLocation = false,
+            onLocationUpdated = { _, _, _ -> },
+            onGeofenceRadiusUpdatd = {}
         )
     }
 }

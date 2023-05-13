@@ -39,6 +39,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
@@ -54,6 +55,7 @@ fun ListTopRow(
     resources: List<Resource>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    extendedStatuses: List<ExtendedStatus>,
     modifier: Modifier = Modifier,
     includeJournalDate: Boolean = false
 ) {
@@ -162,11 +164,20 @@ fun ListTopRow(
             )
         }
 
-        AnimatedVisibility(ical4List.status in listOf(Status.CANCELLED.status, Status.DRAFT.status, Status.CANCELLED.status)) {
+        AnimatedVisibility(ical4List.xstatus.isNullOrEmpty() && ical4List.status !in listOf(Status.FINAL.status, Status.NO_STATUS.status)) {
             ListBadge(
                 icon = Icons.Outlined.PublishedWithChanges,
                 iconDesc = stringResource(R.string.status),
                 text = Status.getStatusFromString(ical4List.status)?.stringResource?.let { stringResource(id = it) } ?: ical4List.status,
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        }
+        AnimatedVisibility(!ical4List.xstatus.isNullOrEmpty()) {
+            ListBadge(
+                icon = Icons.Outlined.PublishedWithChanges,
+                iconDesc = stringResource(R.string.status),
+                text = ical4List.xstatus?:"",
+                containerColor = ExtendedStatus.getColorForStatus(ical4List.xstatus, extendedStatuses, ical4List.module) ?: MaterialTheme.colorScheme.primaryContainer,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -291,7 +302,8 @@ fun ListTopRow_Preview() {
             categories = listOf(Category(text = "Category"), Category(text = "Test"), Category(text = "Another")),
             resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb()))
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb()))
         )
     }
 }
