@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board synchoniseer Logboeken, Notities &amp; Taken"</string>
+    <string name="app_permission_label">"jtx Board synchroniseert Logboeken, Notities &amp; Taken"</string>
     <string name="app_permission_desc">"synchroniseer jtx Board-inhoud met andere applicaties zoals DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
@@ -17,6 +17,7 @@ Global Strings -->
     <string name="longitude">"Lengtegraad"</string>
     <string name="unlink">"Ontkoppel"</string>
     <string name="off">"Uit"</string>
+    <string name="permissions">"Machtigingen"</string>
     <string name="current_location">"Huidige locatie"</string>
     <string name="toolbar_text_add_journal">"Logboek toevoegen"</string>
     <string name="toolbar_text_add_note">"Notitie toevoegen"</string>
@@ -433,6 +434,7 @@ Dank u!"</string>
     <string name="dialog_save_current_filter_my_filter">"Mijn filter"</string>
     <string name="dialog_edit_stored_category_title">"Categorie-standaard toevoegen/aanpassen"</string>
     <string name="dialog_edit_stored_resource_title">"Standaardhulpmiddelen toevoegen/aanpassen"</string>
+    <string name="dialog_edit_stored_status_title">"Statusvoorinstelling toevoegen/bewerken"</string>
     <string name="dialog_add_audio_entry_title">"Audio-item toevoegen"</string>
     <string name="menu_list_viewmode_compact">"Compacte weergave"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-weergave"</string>
@@ -571,7 +573,18 @@ Dank u!"</string>
     <string name="markdown_code">"Code"</string>
     <string name="preset_categories">"Categorie vooringesteld"</string>
     <string name="preset_resources">"Hulpmiddelen vooringesteld"</string>
+    <string name="extended_statuses">"Uitgebreide statussen"</string>
+    <string name="extended_statuses_for_journals">"… voor logboeken"</string>
+    <string name="extended_statuses_for_notes">"… voor notities"</string>
+    <string name="extended_statuses_for_tasks">"… voor taken"</string>
+    <string name="extended_status_attention">"Let op: Uitgebreide statussen zijn niet compatibel met andere apps, maar worden vertaald naar een standaard status. Andere applicaties tonen alleen de standaard status."</string>
+    <string name="extended_status">\"Uitgebreide status</string>
     <string name="active_filters">Actieve filters:</string>
+    <string name="kanban_settings">"Kanban"</string>
+    <string name="kanban_columns">"Kanban-kolommen"</string>
+    <string name="kanban_columns_based_on_standard_status">gebaseerd op standaardstatussen</string>
+    <string name="kanban_columns_based_on_extended_status">gebaseerd op uitgebreide statussen</string>
+    <string name="kanban_columns_based_on_first_category">gebaseerd op de eerste categorie</string>
     <string name="clear_filters">"Filters wissen"</string>
     <!--
     <string name="geofence_radius_meter">"Radius %1$d m"</string>
