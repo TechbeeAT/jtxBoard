@@ -31,7 +31,6 @@ import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 
