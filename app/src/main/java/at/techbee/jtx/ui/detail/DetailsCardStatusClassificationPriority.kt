@@ -16,8 +16,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AssignmentLate
 import androidx.compose.material.icons.outlined.GppMaybe
 import androidx.compose.material.icons.outlined.PublishedWithChanges
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedAssistChip
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
@@ -30,6 +41,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 
 
 @Composable
@@ -40,16 +52,12 @@ fun DetailsCardStatusClassificationPriority(
     enableClassification: Boolean,
     enablePriority: Boolean,
     allowStatusChange: Boolean,
-    onStatusChanged: (String?) -> Unit,
-    onClassificationChanged: (String?) -> Unit,
+    extendedStatuses: List<ExtendedStatus>,
+    onStatusChanged: (Status) -> Unit,
+    onClassificationChanged: (Classification) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    // we don't show the block in view mode if all three values are null
-    if(!isEditMode && icalObject.status == null && icalObject.classification == null && icalObject.priority == null)
-        return
-
 
     ElevatedCard(modifier = modifier) {
         Row(
@@ -63,10 +71,17 @@ fun DetailsCardStatusClassificationPriority(
             var classificationMenuExpanded by remember { mutableStateOf(false) }
             var priorityMenuExpanded by remember { mutableStateOf(false) }
 
-            if(!isEditMode && !icalObject.status.isNullOrEmpty()) {
+            if(!isEditMode && (icalObject.status?.isNotEmpty() == true || icalObject.xstatus?.isNotEmpty() == true)) {
                 ElevatedAssistChip(
                     label = {
-                        Text(Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        if(icalObject.xstatus?.isNotEmpty() == true)
+                            Text(icalObject.xstatus!!)
+                        else
+                            Text(
+                                text = Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
                     },
                     leadingIcon = {
                         Icon(
@@ -77,11 +92,14 @@ fun DetailsCardStatusClassificationPriority(
                     onClick = { },
                     modifier = Modifier.weight(0.33f)
                 )
-            } else if(isEditMode && (enableStatus || !icalObject.status.isNullOrEmpty())) {
+            } else if(isEditMode && (enableStatus || !icalObject.status.isNullOrEmpty() || !icalObject.xstatus.isNullOrEmpty())) {
                 AssistChip(
                     enabled = allowStatusChange,
                     label = {
-                        Text(Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "")
+                        if(!icalObject.xstatus.isNullOrEmpty())
+                            Text(icalObject.xstatus!!)
+                        else
+                            Text(Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "")
 
                         DropdownMenu(
                             expanded = statusMenuExpanded,
@@ -93,11 +111,25 @@ fun DetailsCardStatusClassificationPriority(
                                     text = { Text(stringResource(id = status.stringResource)) },
                                     onClick = {
                                         icalObject.status = status.status
+                                        icalObject.xstatus = null
                                         statusMenuExpanded = false
-                                        onStatusChanged(status.status)
+                                        onStatusChanged(status)
                                     }
                                 )
                             }
+                            extendedStatuses
+                                .filter { it.module == icalObject.getModuleFromString() }
+                                .forEach { storedStatus ->
+                                    DropdownMenuItem(
+                                        text = { Text(storedStatus.xstatus) },
+                                        onClick = {
+                                            icalObject.xstatus = storedStatus.xstatus
+                                            icalObject.status = storedStatus.rfcStatus.status
+                                            statusMenuExpanded = false
+                                            onStatusChanged(storedStatus.rfcStatus)
+                                        }
+                                    )
+                                }
                         }
                     },
                     leadingIcon = {
@@ -146,7 +178,7 @@ fun DetailsCardStatusClassificationPriority(
                                     onClick = {
                                         icalObject.classification = clazzification.classification
                                         classificationMenuExpanded = false
-                                        onClassificationChanged(clazzification.classification)
+                                        onClassificationChanged(clazzification)
                                     }
                                 )
                             }
@@ -241,6 +273,7 @@ fun DetailsCardStatusClassificationPriority_Journal_Preview() {
             enableClassification = false,
             enablePriority = false,
             allowStatusChange = true,
+            extendedStatuses = emptyList(),
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -259,6 +292,7 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview() {
             enableClassification = true,
             enablePriority = true,
             allowStatusChange = true,
+            extendedStatuses = emptyList(),
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }
@@ -277,6 +311,7 @@ fun DetailsCardStatusClassificationPriority_Todo_Preview2() {
             enableClassification = false,
             enablePriority = false,
             allowStatusChange = false,
+            extendedStatuses = emptyList(),
             onStatusChanged = { },
             onClassificationChanged = { },
             onPriorityChanged = { }

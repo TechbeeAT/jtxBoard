@@ -33,6 +33,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
@@ -48,6 +49,7 @@ fun ListCardKanban(
     resources: List<Resource>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    storedStatuses: List<ExtendedStatus>,
     selected: Boolean,
     player: MediaPlayer?,
     modifier: Modifier = Modifier
@@ -72,6 +74,7 @@ fun ListCardKanban(
                 resources = resources,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
+                extendedStatuses = storedStatuses,
                 includeJournalDate = true
             )
 
@@ -118,6 +121,7 @@ fun ListCardKanban_JOURNAL() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             player = null,
             modifier = Modifier
@@ -145,6 +149,7 @@ fun ListCardKanban_NOTE() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = true,
             player = null,
             modifier = Modifier
@@ -180,6 +185,7 @@ fun ListCardKanban_TODO() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             player = null,
         )

@@ -178,6 +178,7 @@ fun ListWidgetConfigContent(
                                 allCollectionsLive = database.getAllCollections(module = selectedModule.value.name),
                                 allCategoriesLive = database.getAllCategoriesAsText(),
                                 allResourcesLive = database.getAllResourcesAsText(),
+                                extendedStatusesLive = database.getStoredStatuses(),
                                 storedListSettingLive = database.getStoredListSettings(module = selectedModule.value.name),
                                 onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
                                 isWidgetConfig = true,
@@ -211,12 +212,13 @@ fun ListWidgetConfigContent(
                             onFinish(
                                 ListWidgetConfig().apply {
                                     module = selectedModule.value
-                                    searchCategories = listSettings.searchCategories.value
-                                    searchResources = listSettings.searchResources.value
-                                    searchStatus = listSettings.searchStatus.value
-                                    searchClassification = listSettings.searchClassification.value
-                                    searchCollection = listSettings.searchCollection.value
-                                    searchAccount = listSettings.searchAccount.value
+                                    searchCategories = listSettings.searchCategories
+                                    searchResources = listSettings.searchResources
+                                    searchStatus = listSettings.searchStatus
+                                    searchXStatus = listSettings.searchXStatus
+                                    searchClassification = listSettings.searchClassification
+                                    searchCollection = listSettings.searchCollection
+                                    searchAccount = listSettings.searchAccount
                                     orderBy = listSettings.orderBy.value
                                     sortOrder = listSettings.sortOrder.value
                                     orderBy2 = listSettings.orderBy2.value
@@ -298,6 +300,7 @@ data class ListWidgetConfig(
     var searchCategories: List<String> = emptyList(),
     var searchResources: List<String> = emptyList(),
     var searchStatus: List<Status> = emptyList(),
+    var searchXStatus: List<String> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
     var searchCollection: List<String> = emptyList(),
     var searchAccount: List<String> = emptyList(),

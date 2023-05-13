@@ -89,6 +89,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var allResources = database.getAllResourcesAsText()
     val storedCategories = database.getStoredCategories()
     val storedResources = database.getStoredResources()
+    val storedStatuses = database.getStoredStatuses()
     var allWriteableCollections = database.getAllWriteableCollections()
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
