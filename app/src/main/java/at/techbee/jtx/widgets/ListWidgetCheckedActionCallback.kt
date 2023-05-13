@@ -41,7 +41,7 @@ class ListWidgetCheckedActionCallback: ActionCallback {
             }
         }
         NotificationPublisher.scheduleNextNotifications(context)
-        ListWidget().update(context, glanceId)
+        //ListWidget().update(context, glanceId)
         ListWidget().compose(context, glanceId)
     }
 }
