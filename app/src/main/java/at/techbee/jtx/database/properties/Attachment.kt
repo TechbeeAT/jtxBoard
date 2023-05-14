@@ -365,7 +365,7 @@ data class Attachment (
                 intent.data = uri
                 context.startActivity(intent)
             } else if(uri.scheme == null) {
-                val uriWithHttps = Uri.parse("https://" + uri.toString())
+                val uriWithHttps = Uri.parse("https://$uri")
                 intent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.data = uriWithHttps
                 context.startActivity(intent)
