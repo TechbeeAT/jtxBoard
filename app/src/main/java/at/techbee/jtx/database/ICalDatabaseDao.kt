@@ -557,6 +557,22 @@ DELETEs by Object
     fun getNextAlarms(limit: Int, minDate: Long = System.currentTimeMillis()): List<Alarm>
 
     /**
+     * Gets ICalObjects with lat/long and geofence radius
+     * @param limit: The number of [ICalObject]s that should be returned
+     * @return a list of ICalObjects
+     */
+    @Transaction
+    @Query("SELECT $TABLE_NAME_ICALOBJECT.* " +
+            "FROM $TABLE_NAME_ICALOBJECT " +
+            "WHERE $COLUMN_DELETED = 0 " +
+            "AND $COLUMN_RRULE IS NULL " +
+            "AND $COLUMN_GEO_LAT IS NOT NULL " +
+            "AND $COLUMN_GEO_LONG IS NOT NULL " +
+            "AND $COLUMN_GEOFENCE_RADIUS IS NOT NULL " +
+            "LIMIT :limit")
+    fun getICalObjectsWithGeofence(limit: Int): List<ICalObject>
+
+    /**
      * Gets the next due [ICalObject]s after a certain date or after now.
      * Elements that define a series are excluded.
      * Sorting is ascending by trigger time.

@@ -158,6 +158,7 @@
         </activity>
 
         <receiver android:name=".NotificationPublisher" />
+        <receiver android:name=".GeofenceBroadcastReceiver"/>
         <receiver
             android:name=".widgets.ListWidgetReceiver"
             android:enabled="@bool/list_widget_enabled"

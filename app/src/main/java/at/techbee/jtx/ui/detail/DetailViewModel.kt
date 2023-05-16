@@ -28,6 +28,7 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
+import at.techbee.jtx.GeofenceBroadcastReceiver
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
@@ -422,6 +423,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             icalObject.recreateRecurring(_application)
             NotificationPublisher.scheduleNextNotifications(_application)
             SyncUtil.notifyContentObservers(_application)
+            GeofenceBroadcastReceiver.setGeofences(_application)
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         } catch (e: SQLiteConstraintException) {
             Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
