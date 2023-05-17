@@ -36,18 +36,16 @@ class GeofenceBroadcastReceiver: BroadcastReceiver() {
             val geofenceClient = GeofenceClient(context)
 
             // determine obsolete Request Codes
-            val activeGeofences = mutableListOf<Long>()
-            prefs.getStringSet(PREFS_ACTIVE_GEOFENCES, emptySet())
+            val activeGeofences = prefs.getStringSet(PREFS_ACTIVE_GEOFENCES, emptySet())
                 ?.map { try { it.toLong()} catch (e: NumberFormatException) { return } }
-                ?.let { activeGeofences.addAll(it) }
+                ?: emptyList()
 
 
-            geofenceClient.removeGeofence(activeGeofences.filter { supposedActive -> geofenceObjects.none { foundGeofence -> supposedActive == foundGeofence.id } })
-            geofenceObjects.filter { found -> activeGeofences.none { active -> found.id == active  } }.forEach { iCalObject ->
+            geofenceClient.removeGeofence(activeGeofences)
+            geofenceObjects.forEach { iCalObject ->
                 geofenceClient.addGeofence(iCalObject.geoLat!!, iCalObject.geoLong!!, iCalObject.geofenceRadius!!, iCalObject.id)
-                activeGeofences.add(iCalObject.id)
             }
-            prefs.edit().putStringSet(PREFS_ACTIVE_GEOFENCES, activeGeofences.map { it.toString() }.toSet()).apply()
+            prefs.edit().putStringSet(PREFS_ACTIVE_GEOFENCES, geofenceObjects.map { it.id.toString() }.toSet()).apply()
             Log.d("GeofenceBroadcastRec", "Geofence set for ${activeGeofences.joinToString(separator = ", ")}")
         }
     }
