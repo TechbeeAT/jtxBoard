@@ -19,6 +19,7 @@ import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.*
 import at.techbee.jtx.ui.presets.XStatusStatusPair
+import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -617,6 +618,12 @@ DELETEs by Object
     @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
     suspend fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4ListRel>
+
+
+    @Transaction
+    @RawQuery(observedEntities = [ICal4List::class])
+    fun getIcal4ListFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
+
 
     @Transaction
     @RawQuery(observedEntities = [ICal4ListRel::class])

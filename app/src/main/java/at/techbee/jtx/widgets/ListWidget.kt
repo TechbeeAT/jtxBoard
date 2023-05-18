@@ -11,6 +11,8 @@ package at.techbee.jtx.widgets
 import android.content.Context
 import android.util.Log
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -26,7 +28,6 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.unit.ColorProvider
-import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListSettings
@@ -51,7 +52,7 @@ class ListWidget : GlanceAppWidget() {
 
         val allEntries = ICalDatabase.getInstance(context)
             .iCalDatabaseDao
-            .getIcal4ListSync(
+            .getIcal4ListFlow(
                 ICal4List.constructQuery(
                     modules = listOf(listWidgetConfig.module),
                     searchCategories = listWidgetConfig.searchCategories,
@@ -85,6 +86,7 @@ class ListWidget : GlanceAppWidget() {
                 )
             )
 
+        /*
         val subtasksQuery = ICal4List.getQueryForAllSubEntriesOfParents(
             component = Component.VTODO,
             hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
@@ -101,6 +103,8 @@ class ListWidget : GlanceAppWidget() {
         )
         val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subtasksQuery)
         val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subnotesQuery)
+
+         */
 
         provideContent {
             //Log.d("ListWidget", "appWidgetId in ListWidget: ${GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)}")
@@ -132,12 +136,14 @@ class ListWidget : GlanceAppWidget() {
 
             val entryOverdueTextColor = GlanceTheme.colors.error
 
+            val list by allEntries.collectAsState(initial = emptyList())
+
             GlanceTheme {
                 ListWidgetContent(
                     listWidgetConfig,
-                    list = allEntries,
-                    subtasks = subtasks,
-                    subnotes = subnotes,
+                    list = list,
+                    subtasks = emptyList(), //subtasks,
+                    subnotes = emptyList(), // subnotes,
                     textColor = textColor,
                     entryColor = entryColor,
                     entryTextColor = entryTextColor,
