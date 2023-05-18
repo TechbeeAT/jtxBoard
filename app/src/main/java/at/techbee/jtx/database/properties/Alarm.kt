@@ -271,7 +271,7 @@ data class Alarm (
             }
 
             // this is the notification itself that will be put as an Extra into the notificationIntent
-            val notification = NotificationCompat.Builder(context, MainActivity2.CHANNEL_REMINDER_DUE).apply {
+            val notification = NotificationCompat.Builder(context, MainActivity2.NOTIFICATION_CHANNEL_ALARMS).apply {
                 setSmallIcon(R.drawable.ic_notification)
                 notificationSummary?.let { setContentTitle(it) }
                 notificationDescription?.let { setContentText(it) }
