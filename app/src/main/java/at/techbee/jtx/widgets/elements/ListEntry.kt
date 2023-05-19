@@ -17,10 +17,8 @@ import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
-import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.CheckBox
-import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
@@ -43,7 +41,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.DateTimeUtils
-import at.techbee.jtx.widgets.ListWidgetCheckedActionCallback
 
 @Composable
 fun ListEntry(
@@ -53,6 +50,7 @@ fun ListEntry(
     textColorOverdue: ColorProvider,
     checkboxEnd: Boolean,
     showDescription: Boolean,
+    onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
     modifier: GlanceModifier = GlanceModifier
 ) {
 
@@ -69,6 +67,7 @@ fun ListEntry(
     }
 
     val imageSize = 18.dp
+    val checked = obj.percent == 100 || obj.status == Status.COMPLETED.status
 
     Box(modifier = modifier) {
 
@@ -84,12 +83,8 @@ fun ListEntry(
 
             if (obj.module == Module.TODO.name && !checkboxEnd && !obj.isReadOnly){
                 CheckBox(
-                    checked = obj.percent == 100 || obj.status == Status.COMPLETED.status,
-                    onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
-                        parameters = actionParametersOf(
-                            ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
-                        )
-                    )
+                    checked = checked,
+                    onCheckedChange = { onCheckedChange(obj.id, checked) }
                 )
             }
 
@@ -155,12 +150,8 @@ fun ListEntry(
 
             if (obj.module == Module.TODO.name && checkboxEnd && !obj.isReadOnly) {
                 CheckBox(
-                    checked = obj.percent == 100 || obj.status == Status.COMPLETED.status,
-                    onCheckedChange = actionRunCallback<ListWidgetCheckedActionCallback>(
-                        parameters = actionParametersOf(
-                            ListWidgetCheckedActionCallback.actionWidgetIcalObjectId to obj.id,
-                        )
-                    )
+                    checked = checked,
+                    onCheckedChange = { onCheckedChange(obj.id, checked) }
                 )
             }
         }

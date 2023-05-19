@@ -631,7 +631,7 @@ DELETEs by Object
 
     @Transaction
     @RawQuery(observedEntities = [ICal4ListRel::class])
-    suspend fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4ListRel>
+    fun getSubEntriesFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
 
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")

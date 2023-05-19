@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.widgets
 
-import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,8 +18,6 @@ import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
-import androidx.glance.appwidget.action.actionRunCallback
-import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.layout.Alignment
@@ -35,12 +32,12 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.SortOrder
@@ -57,32 +54,14 @@ fun ListWidgetContent(
     entryColor: ColorProvider,
     entryTextColor: ColorProvider,
     entryOverdueTextColor: ColorProvider,
+    onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
+    onOpenWidgetConfig: () -> Unit,
+    onAddNew: () -> Unit,
+    onOpenModule: () -> Unit,
     modifier: GlanceModifier = GlanceModifier
 ) {
 
     val context = LocalContext.current
-
-    val addNewIntent = Intent(context, MainActivity2::class.java).apply {
-        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        action = when (listWidgetConfig.module) {
-            Module.JOURNAL -> MainActivity2.INTENT_ACTION_ADD_JOURNAL
-            Module.NOTE -> MainActivity2.INTENT_ACTION_ADD_NOTE
-            Module.TODO -> MainActivity2.INTENT_ACTION_ADD_TODO
-        }
-        listWidgetConfig.searchCollection.firstOrNull()?.let {
-            putExtra(MainActivity2.INTENT_EXTRA_COLLECTION2PRESELECT, it)
-        }
-    }
-
-    val openModuleIntent = Intent(context, MainActivity2::class.java).apply {
-        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        action = when (listWidgetConfig.module) {
-            Module.JOURNAL -> MainActivity2.INTENT_ACTION_OPEN_JOURNALS
-            Module.NOTE -> MainActivity2.INTENT_ACTION_OPEN_NOTES
-            Module.TODO -> MainActivity2.INTENT_ACTION_OPEN_TODOS
-        }
-    }
-
 
     // first apply a proper sort order, then group
     var sortedList = when (listWidgetConfig.groupBy) {
@@ -134,10 +113,6 @@ fun ListWidgetContent(
         }
     }
 
-    /*
-    val subtasksGrouped = subtasks.groupBy { it.iCal4List.parentUID }
-    val subnotesGrouped = subnotes.groupBy { it.iCal4List.parentUID }
-     */
 
     val imageSize = 36.dp
 
@@ -146,7 +121,8 @@ fun ListWidgetContent(
     ) {
         Row(
             modifier = GlanceModifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable { onOpenModule() },
             verticalAlignment = Alignment.CenterVertically,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -155,7 +131,6 @@ fun ListWidgetContent(
                 provider = ImageProvider(R.drawable.ic_widget_jtx),
                 contentDescription = context.getString(R.string.app_name),
                 modifier = GlanceModifier
-                    .clickable(actionStartActivity(openModuleIntent))
                     .padding(8.dp)
                     .size(imageSize),
                 colorFilter = ColorFilter.tint(textColor)
@@ -175,16 +150,14 @@ fun ListWidgetContent(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 ),
-                modifier = GlanceModifier
-                    .clickable(actionStartActivity(openModuleIntent))
-                    .defaultWeight()
+                modifier = GlanceModifier.defaultWeight()
             )
 
             Image(
                 provider = ImageProvider(R.drawable.ic_widget_settings),
                 contentDescription = context.getString(R.string.widget_list_configuration),
                 modifier = GlanceModifier
-                    .clickable(actionRunCallback<ListWidgetOpenConfigActionCallback>())
+                    .clickable { onOpenWidgetConfig() }
                     .padding(8.dp)
                     .size(imageSize),
                 colorFilter = ColorFilter.tint(textColor)
@@ -194,7 +167,7 @@ fun ListWidgetContent(
                 provider = ImageProvider(R.drawable.ic_widget_add),
                 contentDescription = context.getString(R.string.add),
                 modifier = GlanceModifier
-                    .clickable(actionStartActivity(addNewIntent))
+                    .clickable{ onAddNew() }
                     .padding(8.dp)
                     .size(imageSize),
                 colorFilter = ColorFilter.tint(textColor)
@@ -238,6 +211,7 @@ fun ListWidgetContent(
                                 textColorOverdue = entryOverdueTextColor,
                                 checkboxEnd = listWidgetConfig.checkboxPositionEnd,
                                 showDescription = listWidgetConfig.showDescription,
+                                onCheckedChange = onCheckedChange,
                                 modifier = GlanceModifier
                                     .fillMaxWidth()
                                     .padding(
@@ -247,23 +221,26 @@ fun ListWidgetContent(
                         }
 
                         if (!listWidgetConfig.flatView && listWidgetConfig.showSubtasks) {
-                            /*
-                            subtasksGrouped[entry.iCal4List.uid]?.forEach subtasks@{ subtask ->
 
-                                if (listWidgetConfig.isExcludeDone && (subtask.percent == 100 || subtask.status == Status.COMPLETED.status))
+                            subtasks
+                                .filter { it.relatedto.any { subtaskRel -> subtaskRel.text == entry.iCal4List.uid && subtaskRel.reltype == Reltype.PARENT.name } }
+                                .forEach subtasks@{ subtask ->
+
+                                if (listWidgetConfig.isExcludeDone && (subtask.iCal4List.percent == 100 || subtask.iCal4List.status == Status.COMPLETED.status))
                                     return@subtasks
 
-                                if (subtask.summary.isNullOrEmpty() && subtask.description.isNullOrEmpty())
+                                if (subtask.iCal4List.summary.isNullOrEmpty() && subtask.iCal4List.description.isNullOrEmpty())
                                     return@subtasks
 
                                 item {
                                     ListEntry(
-                                        obj = subtask,
+                                        obj = subtask.iCal4List,
                                         entryColor = entryColor,
                                         textColor = entryTextColor,
                                         textColorOverdue = entryOverdueTextColor,
                                         checkboxEnd = listWidgetConfig.checkboxPositionEnd,
                                         showDescription = listWidgetConfig.showDescription,
+                                        onCheckedChange = onCheckedChange,
                                         modifier = GlanceModifier
                                             .fillMaxWidth()
                                             .padding(
@@ -273,25 +250,25 @@ fun ListWidgetContent(
                                     )
                                 }
                             }
-
-                             */
                         }
 
                         if (!listWidgetConfig.flatView && listWidgetConfig.showSubnotes) {
-                            /*
-                            subnotesGrouped[entry.uid]?.forEach subnotes@{ subnote ->
+                            subnotes
+                                .filter { it.relatedto.any { subnoteRel -> subnoteRel.text == entry.iCal4List.uid && subnoteRel.reltype == Reltype.PARENT.name } }
+                                .forEach subnotes@{ subnote ->
 
-                                if (subnote.summary.isNullOrEmpty() && subnote.description.isNullOrEmpty())
+                                if (subnote.iCal4List.summary.isNullOrEmpty() && subnote.iCal4List.description.isNullOrEmpty())
                                     return@subnotes
 
                                 item {
                                     ListEntry(
-                                        obj = subnote,
+                                        obj = subnote.iCal4List,
                                         entryColor = entryColor,
                                         textColor = entryTextColor,
                                         textColorOverdue = entryOverdueTextColor,
                                         checkboxEnd = listWidgetConfig.checkboxPositionEnd,
                                         showDescription = listWidgetConfig.showDescription,
+                                        onCheckedChange = onCheckedChange,
                                         modifier = GlanceModifier
                                             .fillMaxWidth()
                                             .padding(
@@ -301,8 +278,6 @@ fun ListWidgetContent(
                                     )
                                 }
                             }
-
-                             */
                         }
                     }
                 }

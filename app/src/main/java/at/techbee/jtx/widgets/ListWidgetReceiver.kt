@@ -29,7 +29,6 @@ class ListWidgetReceiver : GlanceAppWidgetReceiver() {
 
     companion object {
 
-
         /**
          * Sets a worker to update the widget
          * @param delay: null updates immediately, otherwise updates after the given Kotlin Duration

@@ -8,11 +8,14 @@
 
 package at.techbee.jtx.widgets
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -20,18 +23,29 @@ import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.getAppWidgetState
+import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.unit.ColorProvider
+import at.techbee.jtx.ListWidgetConfigActivity
+import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.NotificationPublisher
+import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListSettings
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 
@@ -86,29 +100,27 @@ class ListWidget : GlanceAppWidget() {
                 )
             )
 
-        /*
-        val subtasksQuery = ICal4List.getQueryForAllSubEntriesOfParents(
+
+        val subtasksQuery = ICal4List.getQueryForAllSubEntries(
             component = Component.VTODO,
             hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
-            parents = allEntries.map { it.iCal4List.uid ?: "" },
             orderBy = listWidgetConfig.subtasksOrderBy,
             sortOrder = listWidgetConfig.subtasksSortOrder
         )
-        val subnotesQuery = ICal4List.getQueryForAllSubEntriesOfParents(
+        val subnotesQuery = ICal4List.getQueryForAllSubEntries(
             component = Component.VJOURNAL,
             hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
-            parents = allEntries.map { it.iCal4List.uid ?: "" },
             orderBy = listWidgetConfig.subnotesOrderBy,
             sortOrder = listWidgetConfig.subnotesSortOrder
         )
-        val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subtasksQuery)
-        val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subnotesQuery)
+        val allSubtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesFlow(subtasksQuery)
+        val allSubnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesFlow(subnotesQuery)
 
-         */
 
         provideContent {
             //Log.d("ListWidget", "appWidgetId in ListWidget: ${GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)}")
             //Log.d("ListWidget", "glanceId in ListWidget: ${LocalGlanceId.current}")
+            val scope = rememberCoroutineScope()
 
             val backgorundColor = if (listWidgetConfig.widgetAlpha == 1F && listWidgetConfig.widgetColor == null)
                 GlanceTheme.colors.primaryContainer
@@ -137,17 +149,69 @@ class ListWidget : GlanceAppWidget() {
             val entryOverdueTextColor = GlanceTheme.colors.error
 
             val list by allEntries.collectAsState(initial = emptyList())
+            val subtasks by allSubtasks.collectAsState(initial = emptyList())
+            val subnotes by allSubnotes.collectAsState(initial = emptyList())
+
 
             GlanceTheme {
                 ListWidgetContent(
                     listWidgetConfig,
                     list = list,
-                    subtasks = emptyList(), //subtasks,
-                    subnotes = emptyList(), // subnotes,
+                    subtasks = subtasks,
+                    subnotes = subnotes,
                     textColor = textColor,
                     entryColor = entryColor,
                     entryTextColor = entryTextColor,
                     entryOverdueTextColor = entryOverdueTextColor,
+                    onCheckedChange = { iCalObjectId, checked ->
+                        scope.launch(Dispatchers.IO) {
+                                val settingsStateHolder = SettingsStateHolder(context)
+                                val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+                                val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return@launch
+                                iCalObject.setUpdatedProgress(if(checked) null else 100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+                                database.update(iCalObject)
+                                if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
+                                    ICalObject.findTopParent(iCalObject.id, database)?.let {
+                                        ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+                                    }
+                                }
+                                NotificationPublisher.scheduleNextNotifications(context)
+                                ListWidget().updateAll(context)
+                                //ListWidget().compose(context, glanceId)
+                        }
+                    },
+                    onOpenWidgetConfig = {
+                        val intent = Intent(context, ListWidgetConfigActivity::class.java).apply {
+                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, GlanceAppWidgetManager(context).getAppWidgetId(id))
+                            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        }
+                        context.startActivity(intent)
+                    },
+                    onAddNew = {
+                        val addNewIntent = Intent(context, MainActivity2::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            action = when (listWidgetConfig.module) {
+                                Module.JOURNAL -> MainActivity2.INTENT_ACTION_ADD_JOURNAL
+                                Module.NOTE -> MainActivity2.INTENT_ACTION_ADD_NOTE
+                                Module.TODO -> MainActivity2.INTENT_ACTION_ADD_TODO
+                            }
+                            listWidgetConfig.searchCollection.firstOrNull()?.let {
+                                putExtra(MainActivity2.INTENT_EXTRA_COLLECTION2PRESELECT, it)
+                            }
+                        }
+                        context.startActivity(addNewIntent)
+                    },
+                    onOpenModule = {
+                        val openModuleIntent = Intent(context, MainActivity2::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            action = when (listWidgetConfig.module) {
+                                Module.JOURNAL -> MainActivity2.INTENT_ACTION_OPEN_JOURNALS
+                                Module.NOTE -> MainActivity2.INTENT_ACTION_OPEN_NOTES
+                                Module.TODO -> MainActivity2.INTENT_ACTION_OPEN_TODOS
+                            }
+                        }
+                        context.startActivity(openModuleIntent)
+                    },
                     modifier = GlanceModifier
                         .appWidgetBackground()
                         .fillMaxSize()
