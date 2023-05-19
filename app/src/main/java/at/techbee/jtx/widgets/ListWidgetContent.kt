@@ -41,7 +41,6 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.SortOrder
-import at.techbee.jtx.widgets.elements.ListEntry
 
 
 @Composable

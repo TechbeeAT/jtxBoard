@@ -41,7 +41,6 @@ import at.techbee.jtx.widgets.ListWidget
 import at.techbee.jtx.widgets.ListWidgetConfig
 import at.techbee.jtx.widgets.ListWidgetConfigContent
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -110,8 +109,6 @@ class ListWidgetConfigActivity : ComponentActivity() {
                                                 Json.encodeToString(listWidgetConfig)
                                         }
                                     }
-                                    //ListWidget().update(context, glanceId)
-                                    //ListWidget().compose(context, glanceId)
                                     ListWidget().updateAll(context)
                                     Log.d(TAG, "Widget update requested")
 

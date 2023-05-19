@@ -56,12 +56,12 @@ class ListWidget : GlanceAppWidget() {
     }
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        Log.d("ListWidgetUpdateWorker", "GlanceId on updateWidgetState: $id")
+        Log.d("provideGlance", "GlanceId on updateWidgetState: $id")
 
         val listWidgetConfig =
             getAppWidgetState(context, PreferencesGlanceStateDefinition, id)[filterConfig]?.let { filterConfig -> Json.decodeFromString<ListWidgetConfig>(filterConfig) }
                 ?: ListWidgetConfig()
-        Log.d("ListWidgetUpdateWorker", "GlanceId $id : filterConfig: $listWidgetConfig")
+        Log.d("provideGlance", "GlanceId $id : filterConfig: $listWidgetConfig")
         //Log.v(TAG, "Loading data ...")
 
         val allEntries = ICalDatabase.getInstance(context)

@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.widgets.elements
+package at.techbee.jtx.widgets
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
