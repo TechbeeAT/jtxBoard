@@ -12,6 +12,7 @@ import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.flavored.GeofenceClient
 import at.techbee.jtx.ui.settings.SwitchSetting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,6 +51,10 @@ class RestoreNotificationsAtBootReceiver: BroadcastReceiver() {
                         }
                     }
                 }
+            GeofenceClient(context).let {
+                if(it.isGeofenceAvailable)
+                    GeofenceClient(context).setGeofences()
+            }
         }
     }
 }

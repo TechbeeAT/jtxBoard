@@ -30,7 +30,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class GeofenceClient(val context: Context) : GeofenceClientDefinition {
+class GeofenceClient(context: Context) : GeofenceClientDefinition(context) {
+
+    override val isGeofenceAvailable = true
 
     private val geofenceClient = LocationServices.getGeofencingClient(context)
 
@@ -74,7 +76,7 @@ class GeofenceClient(val context: Context) : GeofenceClientDefinition {
         geofenceClient.removeGeofences(iCalObjectIds.map { it.toString() })
     }
 
-    override fun processOnReceive(context: Context, intent: Intent) {
+    override fun processOnReceive(intent: Intent) {
 
         val geofencingEvent = GeofencingEvent.fromIntent(intent) ?: return
         if (geofencingEvent.hasError()) {
