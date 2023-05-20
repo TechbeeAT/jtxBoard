@@ -17,6 +17,7 @@ Global Strings -->
     <string name="longitude">"Longitude"</string>
     <string name="unlink">"Dissocier"</string>
     <string name="off">"Désactivé"</string>
+    <string name="permissions">"Permissions"</string>
     <string name="current_location">"Localisation actuelle"</string>
     <string name="toolbar_text_add_journal">"Ajouter un journal"</string>
     <string name="toolbar_text_add_note">"Ajouter une note"</string>
@@ -27,7 +28,7 @@ Global Strings -->
     <string name="journal_status_draft">"Brouillon"</string>
     <string name="journal_status_final">"Définitif"</string>
     <string name="journal_status_cancelled">"Annulé"</string>
-    <string name="todo_status_needsaction">"À faire"</string>
+    <string name="todo_status_needsaction">"Nécessite une action"</string>
     <string name="todo_status_completed">"Terminé"</string>
     <string name="todo_status_inprocess">"En cours"</string>
     <string name="todo_status_cancelled">"Annulé"</string>
@@ -147,6 +148,8 @@ Global Strings -->
     <string name="settings_select_mimetype_for_audio">"Sélectionnez le Mimetype pour les notes audio"</string>
     <!-- Sync fragment -->
     <string name="sync_with_sync_app_heading">"Synchroniser avec %1$s"</string>
+    <string name="sync_basic_info">"jtx Board n'assure pas lui-même la synchronisation serveur, mais prend en charge la synchronisation via DAVx⁵. Cette méthode vous permettra d'utiliser un serveur CalDAV compatible de votre choix pour stocker, sauvegarder et synchroniser vos données."</string>
+    <string name="sync_ksync_basic_info">"kSync est une application basée sur DAVx5 développée par Infomaniak spécialement pour leurs services. Tandis que DAVx5 est ouvert à tout serveur CalDAV-compatible, kSync permet uniquement la synchronisation des comptes Infomaniak."</string>
     <string name="sync_congratulations">"Félicitations ! :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"Nous avons détecté %1$s sur votre appareil."</string>
     <string name="sync_setup_instructions">"Instructions de configuration"</string>
@@ -214,6 +217,7 @@ Global Strings -->
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Notes : %1$s"</string>
     <string name="collections_tasks_num">"Tâches : %1$s"</string>
+    <string name="collections_info">"Les collections sont une accumulation d'entrées comme des dossiers avec des fichiers. Vous pouvez créer des nouvelles collections locales via le menu ou vous pouvez configurer des nouvelles collections distantes à synchroniser (via DAVx⁵)."</string>
     <string name="collections_collection_menu">"Menu de la collection"</string>
     <string name="collections_dialog_add_local_collection_title">"Ajouter une collection locale"</string>
     <string name="collections_dialog_edit_local_collection_title">"Modifier la collection locale"</string>
@@ -374,6 +378,7 @@ Merci !"</string>
     <string name="collections_dialog_buypro_info">"Veuillez acheter jtx Board Pro pour activer les fonctions d'édition des collections à distance."</string>
     <string name="list_update_entries_dialog_title">"Mettre à jour les entrées"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Attention : les instances récurrentes doivent être dissociées de sa série avant d'être déplacées vers une autre collection et seront ignorées dans ce processus."</string>
+    <string name="list_update_entries_dialog_new_parent_info">"Choisir le parent auquel les entrées sélectionnées doivent être liées en tant que sous-tâches/notes liées."</string>
     <string name="details_link_existing_subentry_dialog_title">"Lier les sous-entrées"</string>
     <string name="details_link_existing_subentry_dialog_info">"Choisissez les sous-entrées qui doivent être liées."</string>
     <string name="details_app_bar_behaviour">"Comportement de la barre d'application"</string>
@@ -387,6 +392,7 @@ Merci !"</string>
     <string name="details_attachment_beta_info">"* La synchronisation des pièces jointes est une fonctionnalité expérimentale. Nous vous encourageons vivement à n'utiliser que des pièces jointes de petite taille (jusqu'à 100 Ko) car les pièces plus grandes pourraient entraîner des temps de synchronisation longs et un comportement inattendu."</string>
     <string name="details_unchanged_part_of_series">"Cette entrée fait partie d'une série. Cette entrée copiera toutes les modifications apportées à la série."</string>
     <string name="details_changed_part_of_series">"Cette entrée fait partie d'une série mais a été modifiée. Cette entrée ne sera pas affectée par les modifications de la série."</string>
+    <string name="details_series_attention_subentries">"Attention : Les éléments d'une série reflètent les sous-tâches et les notes liées de la série. Si vous souhaitez modifier les sous-tâches et les notes liées uniquement pour un élément de la série, veuillez d'abord le dissocier de la série."</string>
     <string name="details_go_to_series">"Aller à la série"</string>
     <string name="details_detach_from_series">"Détacher de la série"</string>
     <string name="details_detach_all_instances">"Détacher toutes les instances"</string>
@@ -417,12 +423,17 @@ Merci !"</string>
     <string name="dialog_select_module_txt_dialog_title">"Importer %1$d fichier(s) comme"</string>
     <string name="dialog_collection_new_entries_title">"Collection pour les nouvelles entrées"</string>
     <string name="dialog_detach_from_series_title">"Détacher de la série ?"</string>
+    <string name="dialog_detach_from_series_text_all">"Détacher tous les éléments supprimera la série et transformera les instances en entrées indépendantes qui peuvent avoir leurs propres sous-tâches ou notes liées. Mais il n'y aura plus de lien vers la série originale ou d'autres instances. Voulez-vous continuer?"</string>
+    <string name="dialog_detach_from_series_text_single">"Détacher cet élément de la série vous permettra d'avoir des sous-tâches indépendantes ou des notes liées, mais il n'y aura plus de lien vers la série originale. Voulez-vous continuer ?"</string>
     <string name="dialog_detach_from_series_text_attention">"Attention : Cette opération ne peut pas être annulée !"</string>
     <string name="dialog_detach_from_series_button">"Détacher de la série"</string>
     <string name="dialog_sync_app_outdated_title">"Application de synchronisation dépassée"</string>
     <string name="dialog_sync_app_outdated_message">"Votre version actuelle de %1$s n'est pas compatible avec cette version de jtx Board. Veuillez mettre à jour vers %1$s %2$s ou plus tard ! La synchronisation via %1$s est actuellement suspendue."</string>
     <string name="dialog_save_current_filter_config">"Enregistrer la configuration actuelle du filtre"</string>
     <string name="dialog_save_current_filter_my_filter">"Mon filtre"</string>
+    <string name="dialog_edit_stored_category_title">"Ajouter/éditer le préréglage de la catégorie"</string>
+    <string name="dialog_edit_stored_resource_title">"Ajouter/éditer le préréglage de la catégorie"</string>
+    <string name="dialog_edit_stored_status_title">"Ajouter/éditer le préréglage de l'état"</string>
     <string name="dialog_add_audio_entry_title">"Ajouter un enregistrement audio"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
@@ -446,8 +457,12 @@ Merci !"</string>
     <string name="settings_progress_step_50">"Incrémenter par 50 (2 étapes)"</string>
     <string name="settings_progress_step">"Définissez le pas pour le curseur de progression"</string>
     <string name="settings_disable_alarms_for_readonly">"Désactiver les alarmes pour les collections en lecture seule"</string>
+    <string name="settings_link_progress_to_subtasks">"Afficher la progression des sous-tâches"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Garder le statut, la progression &amp; terminée à la synchronisation"</string>
     <string name="settings_attention_experimental_feature">"Attention : Ceci est une fonctionnalité expérimentale"</string>
     <string name="settings_create_with_current_location">"Créer de nouvelles entrées avec l'emplacement actuel"</string>
+    <string name="settings_sticky_alarms">"Alarmes épinglées"</string>
+    <string name="settings_sticky_alarms_sub">"Garder les notifications jusqu'à la fin ou les reporter"</string>
     <string name="sync_button_go_to_collections">"Aller aux collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Veuillez acheter jtx Board Pro pour activer cette fonction."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -462,6 +477,7 @@ Merci !"</string>
     <string name="settings_select_language">"Sélectionnez la langue"</string>
     <string name="settings_select_language_system">"Système par défaut"</string>
     <string name="filter_special">"Filtres spéciaux"</string>
+    <string name="filter_presets">"Filtrer les préréglages"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date dans le passé"</string>
     <string name="list_date_today">"Aujourd'hui"</string>
@@ -472,6 +488,11 @@ Merci !"</string>
     <string name="list_start_date_tomorrow">"Début demain"</string>
     <string name="list_start_date_future">"Début dans le futur"</string>
     <string name="list_hide_completed_tasks">"Masquer les tâches terminées"</string>
+    <string name="list_biometric_protected_entries_locked">Entrées biométriques protégées verrouillées</string>
+    <string name="list_delete_done">"Suppression effectuée"</string>
+    <string name="collections_biometric_protected_entries_locked_title">Entrées biométriques protégées verrouillées</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">Veuillez vérifier et essayer de nouveau</string>
+    <string name="list_biometric_protected_entries_unlocked">Entrées biométriques protégées déverrouillées</string>
     <string name="settings_auto_alarm">"Alarme automatique"</string>
     <string name="alarms_always_ondue">"Toujours en échéance"</string>
     <string name="settings_auto_alarm_sub">"Activez cette option pour créer automatiquement des alarmes. Choisissez \"Toujours à échéance\" pour ne pas créer d'alarme mais pour être informé dans tous les cas lorsqu'une tâche est à échéance."</string>
@@ -489,6 +510,7 @@ Merci !"</string>
     <string name="filter_second_order_by">"Puis, trier par"</string>
     <string name="filter_group_by">"Grouper par"</string>
     <string name="filter_group_by_info">"Le groupement est disponible pour la vue en liste et la vue compacte"</string>
+    <string name="filter_save_as_preset">"Enregistrer en tant que préréglage"</string>
     <string name="menu_list_flat_view">"Vue à plat"</string>
     <string name="menu_list_flat_view_sub">"Toujours afficher les entrées enfants au niveau supérieur dans la liste"</string>
     <string name="menu_list_limit_recur_entries">"Réduire les occurences"</string>
@@ -513,6 +535,8 @@ Merci !"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attention : Actuellement, un seul niveau de hiérarchie est pris en charge dans le widget. Afin de voir les entrées de niveaux inférieurs, veuillez utiliser la vue à plat à la place."</string>
     <string name="widget_list_maximum_entries_reached">"Nombre maximum d'entrées dans le widget atteint(%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Mettre à jour le widget"</string>
+    <string name="widget_list_opacity_warning">"Note : Ceci est une fonctionnalité expérimentale! Des changements d'opacité réduits dans le thème de couleur peuvent ne pas être reflétés immédiatement!"</string>
+    <string name="widget_list_color_warning">"Note : Ceci est une fonctionnalité expérimentale ! Les changements dans le thème de couleur ne seront pas reflétés ! Ne choisissez aucune couleur pour revenir à la valeur par défaut du système."</string>
     <string name="opacity">"Opacité"</string>
     <string name="general">"Général"</string>
     <string name="list_collapse">"Fermer"</string>
@@ -546,7 +570,20 @@ Merci !"</string>
     <string name="markdown_horizontal_ruler">"Règle Horizontale"</string>
     <string name="markdown_unordered_list">"Liste"</string>
     <string name="markdown_code">"Code"</string>
+    <string name="preset_categories">"Catégories prédéfinies"</string>
+    <string name="preset_resources">"Ressources prédéfinies"</string>
+    <string name="extended_statuses">"Statuts étendus"</string>
+    <string name="extended_statuses_for_journals">"… pour les journaux"</string>
+    <string name="extended_statuses_for_notes">"… pour les notes"</string>
+    <string name="extended_statuses_for_tasks">"… pour les tâches"</string>
+    <string name="extended_status_attention">"Attention : Les statuts étendus ne sont pas compatibles avec les autres applications, mais correspondent à un statut standard. Les autres applications n'afficheront que le statut standard."</string>
+    <string name="extended_status">\"Statuts étendus</string>
     <string name="active_filters">Filtres actifs :</string>
+    <string name="kanban_settings">"Kanban"</string>
+    <string name="kanban_columns">"Kanban-Colonnes"</string>
+    <string name="kanban_columns_based_on_standard_status">basé sur les statuts standards</string>
+    <string name="kanban_columns_based_on_extended_status">basé sur les statuts étendus</string>
+    <string name="kanban_columns_based_on_first_category">basée sur la première catégorie</string>
     <string name="clear_filters">"Supprimer les filtres"</string>
     <!--
     <string name="geofence_radius_meter">"Radius %1$d m"</string>
