@@ -116,7 +116,7 @@ class NotificationPublisher : BroadcastReceiver() {
         const val ACTION_SNOOZE_1H = "actionSnooze1h"
         const val ACTION_DONE = "actionDone"
 
-        const val PREFS_SCHEDULED_NOTIFICATIONS = "prefsScheduledNotifications"  // ICalObjectIds as StringSet
+        const val PREFS_SCHEDULED_ALARMS = "prefsScheduledNotifications"  // ICalObjectIds as StringSet
 
         private const val MAX_ALARMS_SCHEDULED = 5
         private const val MAX_DUE_ALARMS_SCHEDULED = 5
@@ -147,7 +147,7 @@ class NotificationPublisher : BroadcastReceiver() {
 
             // determine obsolete Request Codes
             val stillActiveAlarms = mutableListOf<Int>()
-            prefs.getStringSet(PREFS_SCHEDULED_NOTIFICATIONS, null)
+            prefs.getStringSet(PREFS_SCHEDULED_ALARMS, null)
                 ?.map { try { it.toInt()} catch (e: NumberFormatException) { return } }
                 ?.toMutableList()
                 ?.apply { removeAll(alarms.map { it.icalObjectId.toInt() }) }
@@ -172,7 +172,7 @@ class NotificationPublisher : BroadcastReceiver() {
                 addAll(stillActiveAlarms.map { it.toString() })
                 addAll(alarms.map { it.icalObjectId.toInt().toString() })
             }
-            prefs.edit().putStringSet(PREFS_SCHEDULED_NOTIFICATIONS, scheduledAlarms).apply()
+            prefs.edit().putStringSet(PREFS_SCHEDULED_ALARMS, scheduledAlarms).apply()
         }
     }
 }

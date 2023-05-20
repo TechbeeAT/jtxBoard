@@ -281,21 +281,15 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     private fun createNotificationChannels() {
-
         val alarmChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_ALARMS, NotificationManagerCompat.IMPORTANCE_HIGH)
-            .setName(getString(R.string.notification_channel_reminder_name))
-            .setDescription(getString(R.string.notification_channel_reminder_description))
+            .setName(getString(R.string.notification_channel_alarms_name))
             .build()
-
         val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_HIGH)
-            //.setName() //TODO
-            //.setDescription()  //TODO
+            .setName(getString(R.string.notification_channel_geofences_name))
             .build()
-
         NotificationManagerCompat
             .from(this)
-            //.createNotificationChannelsCompat(listOf(alarmChannel, geofenceChannel))
-            .createNotificationChannelsCompat(listOf(alarmChannel))
+            .createNotificationChannelsCompat(listOf(alarmChannel, geofenceChannel))
     }
 }
 

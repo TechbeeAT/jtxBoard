@@ -17,5 +17,5 @@ interface GeofenceClientDefinition {
 
     fun removeGeofence(iCalObjectIds: List<Long>)
 
-    fun processOnReceive(context: Context?, intent: Intent?)
+    fun processOnReceive(context: Context, intent: Intent)
 }

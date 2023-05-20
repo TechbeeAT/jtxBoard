@@ -12,6 +12,7 @@ import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.ui.settings.SwitchSetting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +25,7 @@ class RestoreNotificationsAtBootReceiver: BroadcastReceiver() {
             val database = ICalDatabase.getInstance(context).iCalDatabaseDao
             val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
-            prefs.getStringSet(NotificationPublisher.PREFS_SCHEDULED_NOTIFICATIONS, null)
+            prefs.getStringSet(NotificationPublisher.PREFS_SCHEDULED_ALARMS, null)
                 ?.map { try { it.toLong()} catch (e: NumberFormatException) { return } }
                 ?.forEach { iCalObjectId ->
                     CoroutineScope(Dispatchers.IO).launch {
@@ -35,7 +36,16 @@ class RestoreNotificationsAtBootReceiver: BroadcastReceiver() {
                             && ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
                         ) {
 
-                            val notification = Alarm.createNotification(iCalObject.id, 0L, iCalObject.summary, iCalObject.description, true, context)
+                            val notification = Alarm.createNotification(
+                                iCalObject.id,
+                                0L,
+                                iCalObject.summary,
+                                iCalObject.description,
+                                true,
+                                MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
+                                PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default),
+                                context
+                            )
                             notificationManager.notify(iCalObjectId.toInt(), notification)
                         }
                     }

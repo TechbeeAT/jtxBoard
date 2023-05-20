@@ -250,6 +250,8 @@ data class Alarm (
             notificationSummary: String?,
             notificationDescription: String?,
             isReadOnly: Boolean,
+            notificationChannel: String,
+            isSticky: Boolean,
             context: Context
         ): Notification {
 
@@ -271,14 +273,14 @@ data class Alarm (
             }
 
             // this is the notification itself that will be put as an Extra into the notificationIntent
-            val notification = NotificationCompat.Builder(context, MainActivity2.NOTIFICATION_CHANNEL_ALARMS).apply {
+            val notification = NotificationCompat.Builder(context, notificationChannel).apply {
                 setSmallIcon(R.drawable.ic_notification)
                 notificationSummary?.let { setContentTitle(it) }
                 notificationDescription?.let { setContentText(it) }
                 setContentIntent(contentIntent)
                 priority = NotificationCompat.PRIORITY_MAX
                 setCategory(NotificationCompat.CATEGORY_REMINDER)     //  CATEGORY_REMINDER might also be an alternative
-                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default)) {
+                if(isSticky) {
                     setAutoCancel(false)
                     setOngoing(true)
                 } else {
@@ -388,7 +390,16 @@ data class Alarm (
             return
         }
 
-        val notification = createNotification(icalObjectId, alarmId, notificationSummary, notificationDescription, isReadOnly, context)
+        val notification = createNotification(
+            icalObjectId,
+            alarmId,
+            notificationSummary,
+            notificationDescription,
+            isReadOnly,
+            MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
+            PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default),
+            context
+        )
 
         val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
             putExtra(NotificationPublisher.NOTIFICATION, notification)

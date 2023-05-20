@@ -102,11 +102,12 @@ fun DetailsCardLocation(
     ) else null
 
     val geofencePermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
-        permissions =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-            else
-                listOf(Manifest.permission.ACCESS_FINE_LOCATION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            listOf(Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            listOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+        else
+            listOf(Manifest.permission.ACCESS_FINE_LOCATION)
     ) else null
 
     var locationUpdateState by remember { mutableStateOf(

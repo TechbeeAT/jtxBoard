@@ -15,10 +15,19 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import at.techbee.jtx.GeofenceBroadcastReceiver
+import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.properties.Alarm
 import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.GeofenceStatusCodes
+import com.google.android.gms.location.GeofencingEvent
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class GeofenceClient(val context: Context) : GeofenceClientDefinition {
@@ -44,10 +53,12 @@ class GeofenceClient(val context: Context) : GeofenceClientDefinition {
             .addGeofence(geofence)
             .build()
 
-        val geofencePendingIntent by lazy {
-            val intent = Intent(context, GeofenceBroadcastReceiver::class.java)
-            PendingIntent.getBroadcast(context, iCalObjectId.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-        }
+        val geofencePendingIntent = PendingIntent.getBroadcast(
+            context,
+            iCalObjectId.toInt(),
+            Intent(context, GeofenceBroadcastReceiver::class.java),
+            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         geofenceClient.addGeofences(geofencingRequest, geofencePendingIntent).run {
             addOnSuccessListener {
@@ -63,7 +74,47 @@ class GeofenceClient(val context: Context) : GeofenceClientDefinition {
         geofenceClient.removeGeofences(iCalObjectIds.map { it.toString() })
     }
 
-    override fun processOnReceive(context: Context?, intent: Intent?) {
-        TODO("Not yet implemented")
+    override fun processOnReceive(context: Context, intent: Intent) {
+
+        val geofencingEvent = GeofencingEvent.fromIntent(intent) ?: return
+        if (geofencingEvent.hasError()) {
+            val errorMessage = GeofenceStatusCodes.getStatusCodeString(geofencingEvent.errorCode)
+            Log.e("GeofenceClient", errorMessage)
+            return
+        }
+
+        // Get the transition type.
+        val geofenceTransition = geofencingEvent.geofenceTransition
+
+        // Get the geofences that were triggered. A single event can trigger multiple geofences.
+        val triggeringGeofences = geofencingEvent.triggeringGeofences ?: return
+        val notificationManager = NotificationManagerCompat.from(context)
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            triggeringGeofences.forEach { geofence ->
+                val iCalObjectId = geofence.requestId.toLongOrNull() ?: return@forEach
+                val iCalObject = ICalDatabase.getInstance(context).iCalDatabaseDao.getICalObjectById(iCalObjectId) ?: return@forEach
+                // Test that the reported transition was of interest.
+                when (geofenceTransition) {
+                    Geofence.GEOFENCE_TRANSITION_ENTER -> {
+                        val notification = Alarm.createNotification(
+                            iCalObjectId = iCalObject.id,
+                            alarmId = 0L,
+                            notificationSummary = "Geofence activated",
+                            notificationDescription = iCalObject.summary ?: iCalObject.description ?: "",
+                            isReadOnly = true,
+                            notificationChannel = MainActivity2.NOTIFICATION_CHANNEL_GEOFENCES,
+                            isSticky = true,
+                            context = context
+                        )
+                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                            notificationManager.notify(iCalObject.id.toInt(), notification)
+                        }
+                    }
+                    Geofence.GEOFENCE_TRANSITION_EXIT -> notificationManager.cancel(iCalObject.id.toInt())
+                }
+            }
+        }
     }
 }

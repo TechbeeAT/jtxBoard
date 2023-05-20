@@ -143,9 +143,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Copy as Todo"</string>
     <string name="menu_view_copy_as_note">"Copy as Note"</string>
     <string name="menu_view_copy_item">"Create copy"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Todo Due Reminder"</string>
-    <string name="notification_channel_reminder_description">"Notification for due todos"</string>
+    <string name="notification_channel_alarms_name">"Alarms"</string>
+    <string name="notification_channel_geofences_name">"Geofences"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Add Journal"</string>
     <string name="shortcut_addNote_longLabel">"Add Note"</string>
