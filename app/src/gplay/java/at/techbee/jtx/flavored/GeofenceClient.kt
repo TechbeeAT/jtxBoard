@@ -32,8 +32,6 @@ import kotlinx.coroutines.launch
 
 class GeofenceClient(context: Context) : GeofenceClientDefinition(context) {
 
-    override val isGeofenceAvailable = true
-
     private val geofenceClient = LocationServices.getGeofencingClient(context)
 
     override fun addGeofence(lat: Double, long: Double, radius: Int, iCalObjectId: Long) {

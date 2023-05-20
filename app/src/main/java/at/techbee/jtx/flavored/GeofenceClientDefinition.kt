@@ -46,9 +46,6 @@ abstract class GeofenceClientDefinition(val context: Context) {
         Log.d("GeofenceBroadcastRec", "Geofence set for ${activeGeofences.joinToString(separator = ", ")}")
     }
 
-
-    abstract val isGeofenceAvailable: Boolean
-
     /**
      * Adds a new geofence to the GeofenceClient
      */

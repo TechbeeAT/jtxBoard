@@ -14,8 +14,6 @@ import android.content.Intent
 
 class GeofenceClient(context: Context) : GeofenceClientDefinition(context) {
 
-    override val isGeofenceAvailable = false
-
     override fun addGeofence(lat: Double, long: Double, radius: Int, iCalObjectId: Long) {}
     override fun removeGeofence(iCalObjectIds: List<Long>) {}
     override fun processOnReceive(intent: Intent) {}
