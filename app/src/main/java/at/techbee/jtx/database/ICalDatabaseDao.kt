@@ -18,6 +18,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.*
+import at.techbee.jtx.ui.detail.LocationLatLng
 import at.techbee.jtx.ui.presets.XStatusStatusPair
 
 
@@ -816,5 +817,11 @@ DELETEs by Object
     @Transaction
     @Query("SELECT DISTINCT $COLUMN_EXTENDED_STATUS, $COLUMN_STATUS FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module AND $COLUMN_EXTENDED_STATUS IS NOT NULL")
     fun getAllXStatusesFor(module: String): LiveData<List<XStatusStatusPair>>
+
+    /**
+     * Gets all location als LocationLatLng object
+     */
+    @Query("SELECT DISTINCT $COLUMN_LOCATION, $COLUMN_GEO_LAT, $COLUMN_GEO_LONG FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_LOCATION IS NOT NULL ORDER BY $COLUMN_LAST_MODIFIED DESC")
+    fun getAllLocationsLatLng(): LiveData<List<LocationLatLng>>
 
 }

@@ -24,14 +24,18 @@ import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
@@ -42,8 +46,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
+import androidx.room.ColumnInfo
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
+import at.techbee.jtx.database.COLUMN_GEO_LAT
+import at.techbee.jtx.database.COLUMN_GEO_LONG
+import at.techbee.jtx.database.COLUMN_LOCATION
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.flavored.MapComposable
 import at.techbee.jtx.ui.reusable.dialogs.LocationPickerDialog
@@ -82,6 +91,8 @@ fun DetailsCardLocation(
     var geoLatText by remember { mutableStateOf(initialGeoLat?.toString() ?: "") }
     var geoLongText by remember { mutableStateOf(initialGeoLong?.toString() ?: "") }
     var geofenceRadius by remember { mutableStateOf(initialGeofenceRadius) }
+
+    val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao.getAllLocationsLatLng().observeAsState(emptyList())
 
     val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         permissions = listOf(
@@ -190,36 +201,71 @@ fun DetailsCardLocation(
                         )
                     }
                 } else {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = location,
-                            leadingIcon = { Icon(Icons.Outlined.EditLocation, headline) },
-                            trailingIcon = {
-                                IconButton(onClick = {
-                                    location = ""
-                                    onLocationUpdated(location, geoLat, geoLong)
-                                }) {
-                                    if (location.isNotEmpty())
-                                        Icon(
-                                            Icons.Outlined.Clear,
-                                            stringResource(id = R.string.delete)
+                    Column {
+                        if (allLocations.isNotEmpty()) {
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+
+                                items(allLocations) { locationLatLng ->
+                                    AssistChip(
+                                        onClick = {
+                                            location = locationLatLng.location ?: ""
+                                            geoLat = locationLatLng.geoLat
+                                            geoLong = locationLatLng.geoLong
+                                            geoLatText = geoLat?.let { String.format("%.5f", it) }?:""
+                                            geoLongText = geoLong?.let { String.format("%.5f", it) }?:""
+                                        },
+                                        label = {
+                                            val displayString =
+                                                if (locationLatLng.geoLat != null && locationLatLng.geoLong != null)
+                                                    "${locationLatLng.location} (${String.format("%.5f", locationLatLng.geoLat)},${String.format("%.5f", locationLatLng.geoLong)})"
+                                                else
+                                                    "${locationLatLng.location}"
+                                            Text(displayString)
+                                        },
+                                        leadingIcon = {
+                                            Icon(Icons.Outlined.EditLocation, null)
+                                        },
+                                        modifier = Modifier.alpha(
+                                            if(locationLatLng.location == location && locationLatLng.geoLat == geoLat && locationLatLng.geoLong == geoLong) 1f else 0.4f
                                         )
+                                    )
                                 }
-                            },
-                            singleLine = true,
-                            label = { Text(headline) },
-                            onValueChange = { newLocation ->
-                                location = newLocation
-                                onLocationUpdated(newLocation, geoLat, geoLong)
-                            },
-                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
-                            modifier = Modifier.weight(1f)
-                        )
-                        IconButton(onClick = { showLocationPickerDialog = true }) {
-                            Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            OutlinedTextField(
+                                value = location,
+                                leadingIcon = { Icon(Icons.Outlined.EditLocation, headline) },
+                                trailingIcon = {
+                                    IconButton(onClick = {
+                                        location = ""
+                                        onLocationUpdated(location, geoLat, geoLong)
+                                    }) {
+                                        if (location.isNotEmpty())
+                                            Icon(
+                                                Icons.Outlined.Clear,
+                                                stringResource(id = R.string.delete)
+                                            )
+                                    }
+                                },
+                                singleLine = true,
+                                label = { Text(headline) },
+                                onValueChange = { newLocation ->
+                                    location = newLocation
+                                    onLocationUpdated(newLocation, geoLat, geoLong)
+                                },
+                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                                modifier = Modifier.weight(1f)
+                            )
+                            IconButton(onClick = { showLocationPickerDialog = true }) {
+                                Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
+                            }
                         }
                     }
                 }
@@ -429,6 +475,12 @@ fun DetailsCardLocation(
         }
     }
 }
+
+data class LocationLatLng(
+    @ColumnInfo(name = COLUMN_LOCATION) val location: String?,
+    @ColumnInfo(name = COLUMN_GEO_LAT) val geoLat: Double?,
+    @ColumnInfo(name = COLUMN_GEO_LONG) val geoLong: Double?
+)
 
 enum class LocationUpdateState { IDLE, LOCATION_REQUESTED, PERMISSION_NEEDED }
 
