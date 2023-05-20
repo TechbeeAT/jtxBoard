@@ -32,23 +32,15 @@ abstract class GeofenceClientDefinition(val context: Context) {
         val database = ICalDatabase.getInstance(context).iCalDatabaseDao
         val geofenceObjects = database.getICalObjectsWithGeofence(MAX_GEOFENCES)
         val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val geofenceClient = GeofenceClient(context)
-
-        // determine obsolete Request Codes
         val activeGeofences = prefs.getStringSet(PREFS_ACTIVE_GEOFENCES, emptySet())
             ?.map {
-                try {
-                    it.toLong()
-                } catch (e: NumberFormatException) {
-                    return
-                }
-            }
-            ?: emptyList()
+                try { it.toLong() } catch (e: NumberFormatException) { return }
+            }?: emptyList()
 
 
-        geofenceClient.removeGeofence(activeGeofences)
+        removeGeofence(activeGeofences)
         geofenceObjects.forEach { iCalObject ->
-            geofenceClient.addGeofence(iCalObject.geoLat!!, iCalObject.geoLong!!, iCalObject.geofenceRadius!!, iCalObject.id)
+            addGeofence(iCalObject.geoLat!!, iCalObject.geoLong!!, iCalObject.geofenceRadius!!, iCalObject.id)
         }
         prefs.edit().putStringSet(PREFS_ACTIVE_GEOFENCES, geofenceObjects.map { it.id.toString() }.toSet()).apply()
         Log.d("GeofenceBroadcastRec", "Geofence set for ${activeGeofences.joinToString(separator = ", ")}")

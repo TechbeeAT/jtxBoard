@@ -51,10 +51,7 @@ class RestoreNotificationsAtBootReceiver: BroadcastReceiver() {
                         }
                     }
                 }
-            GeofenceClient(context).let {
-                if(it.isGeofenceAvailable)
-                    GeofenceClient(context).setGeofences()
-            }
+            GeofenceClient(context).setGeofences()
         }
     }
 }

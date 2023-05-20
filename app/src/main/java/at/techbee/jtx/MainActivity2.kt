@@ -287,9 +287,10 @@ class MainActivity2 : AppCompatActivity() {
         val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_HIGH)
             .setName(getString(R.string.notification_channel_geofences_name))
             .build()
-        NotificationManagerCompat
-            .from(this)
-            .createNotificationChannelsCompat(listOf(alarmChannel, geofenceChannel))
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
+            NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel, geofenceChannel))
+        else
+            NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel))
     }
 }
 

@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.room.ColumnInfo
 import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_GEO_LAT
 import at.techbee.jtx.database.COLUMN_GEO_LONG
@@ -203,7 +204,7 @@ fun DetailsCardLocation(
                     }
                 } else {
                     Column {
-                        if (allLocations.isNotEmpty()) {
+                        if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY && allLocations.isNotEmpty()) {
                             LazyRow(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.fillMaxWidth()
