@@ -191,8 +191,8 @@ fun DetailsCardLocation(
                 .padding(8.dp),
         ) {
 
-            Crossfade(isEditMode) {
-                if (!it) {
+            Crossfade(isEditMode) { editMode ->
+                if (!editMode) {
                     Column {
                         HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
                         Text(
@@ -453,7 +453,7 @@ fun DetailsCardLocation(
             }
 
 
-            AnimatedVisibility(geofenceRadius != null && (geofencePermissionState?.allPermissionsGranted != true || LocalInspectionMode.current)) {
+            AnimatedVisibility(geofenceRadius != null && (LocalInspectionMode.current || geofencePermissionState?.allPermissionsGranted != true)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
