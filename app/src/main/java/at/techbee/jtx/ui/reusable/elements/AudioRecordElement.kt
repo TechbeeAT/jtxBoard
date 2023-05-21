@@ -100,7 +100,6 @@ fun AudioRecordElement(
                     recording -> {   // recording - we stop here
                         recorder?.reset()
                         recording = false
-                        //onRecorded(cachedFilename)
                     }
                     else -> {    // not recording - we start recording
                         recorder?.apply {
@@ -186,8 +185,6 @@ enum class AudioFormat(
         format = MediaRecorder.OutputFormat.MPEG_4,
         encoder = MediaRecorder.AudioEncoder.AAC_ELD
     )
-
-
 }
 
 
@@ -195,7 +192,6 @@ enum class AudioFormat(
 @Preview(showBackground = true)
 @Composable
 fun AudioRecordElement_Preview() {
-
     MaterialTheme {
         AudioRecordElement(
             onRecorded = { },
@@ -203,4 +199,3 @@ fun AudioRecordElement_Preview() {
         )
     }
 }
-
