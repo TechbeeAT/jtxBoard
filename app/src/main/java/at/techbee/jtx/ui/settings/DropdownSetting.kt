@@ -9,8 +9,14 @@
 package at.techbee.jtx.ui.settings
 
 import android.content.Context
+import android.os.Build
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Alarm
+import androidx.compose.material.icons.outlined.EditCalendar
+import androidx.compose.material.icons.outlined.Fingerprint
+import androidx.compose.material.icons.outlined.FormatPaint
+import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
@@ -40,11 +46,14 @@ enum class DropdownSetting(
         key = "setting_audio_format",
         icon = Icons.Outlined.MusicNote,
         title = R.string.settings_select_mimetype_for_audio,
-        options = listOf(
-            DropdownSettingOption.AUDIO_FORMAT_3GPP,
-            DropdownSettingOption.AUDIO_FORMAT_AAC,
-            DropdownSettingOption.AUDIO_FORMAT_OGG
-        ),
+        options = mutableListOf<DropdownSettingOption>().apply {
+            add(DropdownSettingOption.AUDIO_FORMAT_3GPP)
+            add(DropdownSettingOption.AUDIO_FORMAT_AAC)
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                add(DropdownSettingOption.AUDIO_FORMAT_OGG)
+            add(DropdownSettingOption.AUDIO_FORMAT_MP4)
+
+        }.toList(),
         default = DropdownSettingOption.AUDIO_FORMAT_3GPP
     ),
 
