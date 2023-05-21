@@ -454,6 +454,7 @@ Thank you!"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>
     <string name="settings_audio_format_aac" translatable="false">"AAC (audio/aac)"</string>
     <string name="settings_audio_format_ogg" translatable="false">"OGG (audio/ogg)"</string>
+    <string name="settings_audio_format_mp4" translatable="false">"MP4 (audio/mp4)"</string>
     <string name="settings_tasks">"Tasks Settings"</string>
     <string name="settings_default_start_date">"Set a default start date for tasks"</string>
     <string name="settings_default_due_date">"Set a default due date for tasks"</string>
