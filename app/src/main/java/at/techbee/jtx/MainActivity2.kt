@@ -188,9 +188,12 @@ class MainActivity2 : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         ListWidgetReceiver.setPeriodicWork(this)
-        lifecycleScope.launch(Dispatchers.IO) {
-            val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
-            SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+
+        if(settingsStateHolder.settingSyncOnStart.value) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
+                SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+            }
         }
 
         //handle intents, but only if it wasn't already handled

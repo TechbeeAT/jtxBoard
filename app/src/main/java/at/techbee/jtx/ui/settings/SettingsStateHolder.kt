@@ -61,6 +61,9 @@ class SettingsStateHolder(val context: Context) {
 
     var settingStickyAlarms = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default))
 
+    var settingSyncOnStart = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SYNC_ON_START.key, SwitchSetting.SETTING_SYNC_ON_START.default))
+    var settingSyncOnPullRefresh = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH.key, SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH.default))
+
     //invisible settings
     var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))
         set(newValue) {
