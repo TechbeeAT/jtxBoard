@@ -51,7 +51,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 29,
+    version = 30,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -80,6 +80,7 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 26, to = 27),  // added geoLat and geoLong to ical4list view, added StoredCategory, StoredResource
         AutoMigration (from = 27, to = 28),  // added Extended Status
         AutoMigration (from = 28, to = 29),  // added Geofence Radius
+        AutoMigration (from = 29, to = 30),  // added isVisible flag for collections
     ]
 )
 @TypeConverters(Converters::class)

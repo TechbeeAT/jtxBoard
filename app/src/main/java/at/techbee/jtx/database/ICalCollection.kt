@@ -98,6 +98,11 @@ const val COLUMN_COLLECTION_SYNC_VERSION = "syncversion"
  * Type: [Boolean]
  */
 const val COLUMN_COLLECTION_READONLY = "readonly"
+/**
+ * Purpose:  This column/property defines if the entries of a collection are visible in jtx Board (this is set in jtx only!)
+ * Type: [Boolean]
+ */
+const val COLUMN_COLLECTION_ISVISIBLE = "isvisible"
 
 
 @Parcelize
@@ -127,15 +132,11 @@ data class ICalCollection(
 
         /** Account name */
         @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME)            var accountName: String? = null,
-
-        /** Webcal subscription source URL */
         @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_TYPE)            var accountType: String? = LOCAL_ACCOUNT_TYPE,
-
-        /** Webcal subscription source URL */
         @ColumnInfo(name = COLUMN_COLLECTION_SYNC_VERSION)            var syncversion: String? = null,
+        @ColumnInfo(name = COLUMN_COLLECTION_READONLY)                var readonly: Boolean = false,
+        @ColumnInfo(name = COLUMN_COLLECTION_ISVISIBLE)                var isVisible: Boolean = true
 
-        /** Webcal subscription source URL */
-        @ColumnInfo(name = COLUMN_COLLECTION_READONLY)            var readonly: Boolean = false
 
 
 ): Parcelable {
@@ -171,6 +172,7 @@ data class ICalCollection(
                         this.supportsVJOURNAL = true
                         this.supportsVTODO = true
                         this.readonly = false
+                        this.isVisible = true
                 }
         }
 

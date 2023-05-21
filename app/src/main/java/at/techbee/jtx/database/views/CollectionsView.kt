@@ -34,6 +34,7 @@ const val VIEW_NAME_COLLECTIONS_VIEW = "collectionsView"
                 "$COLUMN_COLLECTION_ACCOUNT_TYPE, " +
                 "$COLUMN_COLLECTION_SYNC_VERSION, " +
                 "$COLUMN_COLLECTION_READONLY, " +
+                "$COLUMN_COLLECTION_ISVISIBLE, " +
                 "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $COLUMN_MODULE = 'JOURNAL' AND $COLUMN_DELETED = 0) as numJournals, " +
                 "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $COLUMN_MODULE = 'NOTE' AND $COLUMN_DELETED = 0) as numNotes, " +
                 "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $COLUMN_MODULE = 'TODO' AND $COLUMN_DELETED = 0) as numTodos " +
@@ -55,6 +56,7 @@ data class CollectionsView (
     @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_TYPE)      var accountType: String? = ICalCollection.LOCAL_ACCOUNT_TYPE,
     @ColumnInfo(name = COLUMN_COLLECTION_SYNC_VERSION)      var syncversion: String? = null,
     @ColumnInfo(name = COLUMN_COLLECTION_READONLY)          var readonly: Boolean = false,
+    @ColumnInfo(name = COLUMN_COLLECTION_ISVISIBLE)         var isVisible: Boolean = true,
                                                             var numJournals: Int? = null,
                                                             var numNotes: Int? = null,
                                                             var numTodos: Int? = null
@@ -75,6 +77,7 @@ data class CollectionsView (
         icc.owner = this.owner
         icc.ownerDisplayName = this.ownerDisplayName
         icc.readonly = this.readonly
+        icc.isVisible = this.isVisible
         icc.supportsVEVENT = this.supportsVEVENT
         icc.supportsVJOURNAL = this.supportsVJOURNAL
         icc.supportsVTODO = this.supportsVTODO
