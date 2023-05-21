@@ -64,7 +64,6 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
-import at.techbee.jtx.util.SyncUtil
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -79,6 +78,7 @@ fun ListScreenCompact(
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
     settingLinkProgressToSubtasks: Boolean,
+    isPullRefreshEnabled: Boolean,
     player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
@@ -86,7 +86,6 @@ fun ListScreenCompact(
     onSyncRequested: () -> Unit
 ) {
 
-    val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
@@ -105,9 +104,7 @@ fun ListScreenCompact(
         contentAlignment = Alignment.TopCenter
     ) {
         LazyColumn(
-            modifier = Modifier
-                .padding(start = 2.dp, end = 2.dp)
-                .pullRefresh(pullRefreshState),
+            modifier = if(isPullRefreshEnabled) Modifier.padding(start = 2.dp, end = 2.dp).pullRefresh(pullRefreshState) else Modifier.padding(start = 2.dp, end = 2.dp),
             state = listState,
         ) {
 
@@ -220,12 +217,10 @@ fun ListScreenCompact(
             }
         }
 
-        if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
-            PullRefreshIndicator(
-                refreshing = false,
-                state = pullRefreshState
-            )
-        }
+        PullRefreshIndicator(
+            refreshing = false,
+            state = pullRefreshState
+        )
     }
 }
 
@@ -282,6 +277,7 @@ fun ListScreenCompact_TODO() {
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
+            isPullRefreshEnabled = true,
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
@@ -345,6 +341,7 @@ fun ListScreenCompact_JOURNAL() {
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
+            isPullRefreshEnabled = true,
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },

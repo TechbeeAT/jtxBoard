@@ -12,14 +12,31 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.Language
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,11 +54,34 @@ import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.DropdownSetting
 import at.techbee.jtx.ui.reusable.elements.SwitchSetting
-import at.techbee.jtx.ui.settings.DropdownSetting.*
-import at.techbee.jtx.ui.settings.SwitchSetting.*
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_AUDIO_FORMAT
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_AUTO_ALARM
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_DUE_DATE
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_START_DATE
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROGRESS_STEP
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROTECT_BIOMETRIC
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_THEME
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_SUBNOTES
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_SUBTASKS
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_ENABLE_JOURNALS
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_ENABLE_NOTES
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_ENABLE_TASKS
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_STICKY_ALARMS
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_SYNC_ON_START
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Locale
 
 
 @Composable
@@ -410,6 +450,29 @@ fun SettingsScreen(
                             onCheckedChanged = {
                                 settingsStateHolder.settingStickyAlarms.value = it
                                 SETTING_STICKY_ALARMS.save(it, context)
+                            }
+                        )
+                    }
+
+                    ExpandableSettingsSection(
+                        headerText = R.string.settings_sync,
+                        expandedDefault = false,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        SwitchSetting(
+                            setting = SETTING_SYNC_ON_START,
+                            initiallyChecked = settingsStateHolder.settingSyncOnStart.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingSyncOnStart.value = it
+                                SETTING_SYNC_ON_START.save(it, context)
+                            }
+                        )
+                        SwitchSetting(
+                            setting = SETTING_SYNC_ON_PULL_REFRESH,
+                            initiallyChecked = settingsStateHolder.settingSyncOnPullRefresh.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingSyncOnPullRefresh.value = it
+                                SETTING_SYNC_ON_PULL_REFRESH.save(it, context)
                             }
                         )
                     }
