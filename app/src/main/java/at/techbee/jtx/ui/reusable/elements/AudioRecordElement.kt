@@ -9,10 +9,10 @@
 package at.techbee.jtx.ui.reusable.elements
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -61,37 +61,15 @@ fun AudioRecordElement(
     var showAudioPermissionDialog by rememberSaveable { mutableStateOf(false) }
     var recording by remember { mutableStateOf(false) }
 
-    // set default audio format (might be overwritten by settings)
-    var audioFileExtension = "3gp"
-    var audioOutputFormat = MediaRecorder.OutputFormat.THREE_GPP
-    var audioEncoder = MediaRecorder.AudioEncoder.AMR_NB
-    val settings = SettingsStateHolder(context)
-    when (settings.settingAudioFormat.value) {
-        DropdownSettingOption.AUDIO_FORMAT_3GPP -> {
-            audioFileExtension = "3gp"
-            audioOutputFormat = MediaRecorder.OutputFormat.THREE_GPP
-            audioEncoder = MediaRecorder.AudioEncoder.AMR_NB
-        }
-        DropdownSettingOption.AUDIO_FORMAT_AAC -> {
-            audioFileExtension = "aac"
-            audioOutputFormat = MediaRecorder.OutputFormat.MPEG_4
-            audioEncoder = MediaRecorder.AudioEncoder.AAC
-        }
-        DropdownSettingOption.AUDIO_FORMAT_OGG -> {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                audioFileExtension = "ogg"
-                audioOutputFormat = MediaRecorder.OutputFormat.OGG
-                audioEncoder = MediaRecorder.AudioEncoder.OPUS
-            }
-        }
-        else -> {
-            audioFileExtension = "3gp"
-            audioOutputFormat = MediaRecorder.OutputFormat.THREE_GPP
-            audioEncoder = MediaRecorder.AudioEncoder.AMR_NB
-        }
+    val audioFormat = when (SettingsStateHolder(context).settingAudioFormat.value) {
+        DropdownSettingOption.AUDIO_FORMAT_3GPP -> AudioFormat.THREE_GPP
+        DropdownSettingOption.AUDIO_FORMAT_AAC -> AudioFormat.AAC
+        DropdownSettingOption.AUDIO_FORMAT_OGG -> AudioFormat.OGG
+        DropdownSettingOption.AUDIO_FORMAT_MP4 -> AudioFormat.MP4
+        else -> AudioFormat.THREE_GPP
     }
 
-    val cachedFilename = Uri.parse("${context.cacheDir}/recorded.$audioFileExtension")
+    val cachedFilename = Uri.parse("${context.cacheDir}/recorded.${audioFormat.extension}")
 
     var secondsRemaining by remember { mutableStateOf(maxRecordingDurationMillis/1000) }
     suspend fun updateTimer() {
@@ -128,8 +106,8 @@ fun AudioRecordElement(
                         recorder?.apply {
                             reset()
                             setAudioSource(MediaRecorder.AudioSource.MIC)
-                            setOutputFormat(audioOutputFormat)
-                            setAudioEncoder(audioEncoder)
+                            setOutputFormat(audioFormat.format)
+                            setAudioEncoder(audioFormat.encoder)
                             setOutputFile(cachedFilename.toString())
                             setMaxDuration(maxRecordingDurationMillis)
 
@@ -181,6 +159,37 @@ fun AudioRecordElement(
         )
     }
 }
+
+enum class AudioFormat(
+    val extension: String,
+    val format: Int,   //MediaRecorder.OutputFormat
+    val encoder: Int  //MediaRecorder.AudioEncoder
+) {
+    THREE_GPP(
+        extension = "3gp",
+        format = MediaRecorder.OutputFormat.THREE_GPP,
+        encoder = MediaRecorder.AudioEncoder.AMR_NB
+    ),
+    AAC(
+        extension = "aac",
+        format = MediaRecorder.OutputFormat.MPEG_4,
+        encoder = MediaRecorder.AudioEncoder.AAC
+    ),
+    @SuppressLint("InlinedApi")   // OGG is not offered in settings for api levels below 29
+    OGG(
+        extension = "ogg",
+        format = MediaRecorder.OutputFormat.OGG,
+        encoder = MediaRecorder.AudioEncoder.OPUS
+    ),
+    MP4(
+        extension = "mp4",
+        format = MediaRecorder.OutputFormat.MPEG_4,
+        encoder = MediaRecorder.AudioEncoder.AAC_ELD
+    )
+
+
+}
+
 
 
 @Preview(showBackground = true)
