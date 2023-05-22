@@ -438,6 +438,7 @@ Merci !"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
     <string name="settings_tasks">"Paramètres des tâches"</string>
+    <string name="settings_sync">"Paramètres de synchronisation"</string>
     <string name="settings_default_start_date">"Définir une date de début par défaut pour les tâches"</string>
     <string name="settings_default_due_date">"Définir une date d'échéance par défaut pour les tâches"</string>
     <string name="settings_default_date_none">"Aucun"</string>
@@ -463,6 +464,7 @@ Merci !"</string>
     <string name="settings_create_with_current_location">"Créer de nouvelles entrées avec l'emplacement actuel"</string>
     <string name="settings_sticky_alarms">"Alarmes épinglées"</string>
     <string name="settings_sticky_alarms_sub">"Garder les notifications jusqu'à la fin ou les reporter"</string>
+    <string name="settings_sync_on_start">"Synchroniser au démarrage de l'appli"</string>
     <string name="sync_button_go_to_collections">"Aller aux collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Veuillez acheter jtx Board Pro pour activer cette fonction."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>

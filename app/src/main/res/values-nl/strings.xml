@@ -439,6 +439,7 @@ Dank u!"</string>
     <string name="menu_list_viewmode_compact">"Compacte weergave"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-weergave"</string>
     <string name="settings_tasks">"Taakinstellingen"</string>
+    <string name="settings_sync">"Synchroniseerinstellingen"</string>
     <string name="settings_default_start_date">"Stel een standaard startdatum voor taken in"</string>
     <string name="settings_default_due_date">"Stel een standaard vervaldatum voor taken in"</string>
     <string name="settings_default_date_none">"Geen"</string>
@@ -464,6 +465,8 @@ Dank u!"</string>
     <string name="settings_create_with_current_location">"Nieuwe items maken met de huidige locatie"</string>
     <string name="settings_sticky_alarms">"Sticky alarmen"</string>
     <string name="settings_sticky_alarms_sub">"Behoud meldingen tot klaar of uitgesteld"</string>
+    <string name="settings_sync_on_start">"Synchroniseer bij starten app"</string>
+    <string name="settings_sync_on_pull_refresh">"Synchroniseren bij pull-down"</string>
     <string name="sync_button_go_to_collections">"Ga naar verzamelingen"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Koop het Pro-pakket om deze functie in te schakelen."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
