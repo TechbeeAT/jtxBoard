@@ -185,7 +185,8 @@ fun DatePickerDialog(
                     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                         DatePicker(
                             state = datePickerState,
-                            dateValidator = { date -> date >= (startOfMinDay?:Long.MIN_VALUE) && date <= (startOfMaxDay?:Long.MAX_VALUE) }, 
+                            dateValidator = { date -> date >= (startOfMinDay?:Long.MIN_VALUE) && date <= (startOfMaxDay?:Long.MAX_VALUE) },
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
@@ -298,7 +299,6 @@ fun DatePickerDialog_Preview_not_null() {
 @Composable
 fun DatePickerDialog_Preview_allowNull() {
     MaterialTheme {
-
         DatePickerDialog(
             datetime = 1660500481224,   // 14 Aug 2022  18:09
             timezone = TZ_ALLDAY,
@@ -314,7 +314,6 @@ fun DatePickerDialog_Preview_allowNull() {
 @Composable
 fun DatePickerDialog_Preview_allowNull_null() {
     MaterialTheme {
-
         DatePickerDialog(
             datetime = null,
             timezone = null,
@@ -329,7 +328,6 @@ fun DatePickerDialog_Preview_allowNull_null() {
 @Composable
 fun DatePickerDialog_Preview_dateonly() {
     MaterialTheme {
-
         DatePickerDialog(
             datetime = 1660500481224,   // 14 Aug 2022  18:09
             timezone = TZ_ALLDAY,
