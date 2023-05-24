@@ -42,7 +42,7 @@ object JtxContract {
     const val AUTHORITY = "at.techbee.jtx.provider"
 
     /** The version of this SyncContentProviderContract */
-    const val VERSION = 5
+    const val VERSION = 6
 
     /** Constructs an Uri for the Jtx Sync Adapter with the given Account
      * @param [account] The account that should be appended to the Base Uri
@@ -449,6 +449,17 @@ object JtxContract {
          * Type: [String]
          */
         const val RECURID = "recurid"
+
+        /**
+         * Purpose:  This property is used in conjunction with the "UID" and
+         * "SEQUENCE" properties to identify a specific instance of a
+         * recurring "VEVENT", "VTODO", or "VJOURNAL" calendar component.
+         * The property value is the original value of the "DTSTART" property
+         * of the recurrence instance, ie. a DATE or DATETIME value e.g. "20211101T160000".
+         * Must be null for non-recurring and original events from which recurring events are derived.
+         * Type: [String?]
+         */
+        const val RECURID_TIMEZONE = "recuridtimezone"
 
         /**
          * Stores the reference to the original event from which the recurring event was derived.
