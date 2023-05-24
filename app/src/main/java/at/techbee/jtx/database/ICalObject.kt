@@ -334,6 +334,15 @@ const val COLUMN_EXDATE = "exdate"
 const val COLUMN_RECURID = "recurid"
 
 /**
+ * Purpose:  This property is used in conjunction with the "UID" and
+ * "SEQUENCE" properties to identify a specific instance of a
+ * recurring "VEVENT", "VTODO", or "VJOURNAL" calendar component.
+ * The property value is the original value of the "DTSTART" property
+ * of the recurrence instance.
+ */
+const val COLUMN_RECURID_TIMEZONE = "recuridtimezone"
+
+/**
  * Purpose:  This property is used to return status code information
 related to the processing of an associated iCalendar object.  The
 value type for this property is TEXT.
@@ -501,6 +510,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_EXDATE) var exdate: String? = null,   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
     @ColumnInfo(name = COLUMN_RDATE)  var rdate: String? = null,     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
     @ColumnInfo(name = COLUMN_RECURID) var recurid: String? = null,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
+    @ColumnInfo(name = COLUMN_RECURID_TIMEZONE) var recuridTimezone: String? = null,
 
     @ColumnInfo(name = COLUMN_RSTATUS) var rstatus: String? = null,
 
@@ -941,12 +951,11 @@ data class ICalObject(
         }
 
         @VisibleForTesting
-        fun getAsRecurId(datetime: Long, timezone: String?): String = when {
-            timezone == TZ_ALLDAY -> DtStart(Date(datetime)).value
-            timezone.isNullOrEmpty() -> DtStart(DateTime(datetime)).value
-            else -> DtStart(DateTime(datetime)).apply {
-                timeZone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(timezone)
-            }.value
+        fun getAsRecurId(datetime: Long, recuridTimezone: String?) = when {
+                recuridTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> Date(datetime).toString()
+                recuridTimezone == TimeZone.getTimeZone("UTC").id -> DateTime(datetime).apply { this.isUtc = true }.toString()
+                recuridTimezone.isNullOrEmpty() -> DateTime(datetime).apply { this.isUtc = false }.toString()
+                else -> DateTime(datetime).apply { this.timeZone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(recuridTimezone) }.toString()
         }
     }
 
@@ -995,6 +1004,7 @@ data class ICalObject(
         values.getAsString(COLUMN_RDATE)?.let { rdate -> this.rdate = rdate }
         values.getAsString(COLUMN_EXDATE)?.let { exdate -> this.exdate = exdate }
         values.getAsString(COLUMN_RECURID)?.let { recurid -> this.recurid = recurid }
+        values.getAsString(COLUMN_RECURID_TIMEZONE)?.let { recuridTimezone -> this.recuridTimezone = recuridTimezone }
         values.getAsString(COLUMN_RSTATUS)?.let { rstatus -> this.rstatus = rstatus }
         values.getAsString(COLUMN_UID)?.let { uid -> this.uid = uid }
         values.getAsLong(COLUMN_CREATED)?.let { created -> this.created = created }
@@ -1023,6 +1033,9 @@ data class ICalObject(
             this.module = Module.TODO.name
         else
             throw IllegalArgumentException("Unsupported component: ${this.component}. Supported components: ${Component.values()}.")
+
+        if(recurid != null && sequence <= 0)
+            sequence = 1     // mark changed instances with a sequence if missing!
 
         return this
     }
@@ -1134,10 +1147,12 @@ data class ICalObject(
                 props += RRule(rrule)
             }
             recurid?.let { recurid ->
-                props += if (dtstartTimezone == JtxContract.JtxICalObject.TZ_ALLDAY)
-                    RecurrenceId(Date(recurid))
-                else
-                    RecurrenceId(DateTime(recurid))
+                props += when {
+                    recuridTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> RecurrenceId(Date(recurid))
+                    recuridTimezone == TimeZone.getTimeZone("UTC").id -> RecurrenceId(DateTime(recurid).apply { this.isUtc = true })
+                    recuridTimezone.isNullOrEmpty() -> RecurrenceId(DateTime(recurid).apply { this.isUtc = false })
+                    else -> RecurrenceId(DateTime(recurid, TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(recuridTimezone)))
+                }
             }
 
             rdate?.let { rdateString ->
@@ -1292,10 +1307,10 @@ data class ICalObject(
             val instance = original.copy()
 
             instance.property.dtstart = recurrenceDate
-            val recurid = getAsRecurId(recurrenceDate, instance.property.dtstartTimezone)
-            instance.property.recurid = recurid
+            instance.property.recurid = getAsRecurId(recurrenceDate, instance.property.dtstartTimezone)
+            instance.property.recuridTimezone = instance.property.dtstartTimezone
 
-            if(database.getRecurInstance(uid = uid, recurid = recurid) != null)
+            if(database.getRecurInstance(uid = uid, recurid = instance.property.recurid!!) != null)
                 return@forEach   // skip the entry if there is an existing linked entry that was changed (and therefore not deleted before)
 
             instance.property.id = 0L

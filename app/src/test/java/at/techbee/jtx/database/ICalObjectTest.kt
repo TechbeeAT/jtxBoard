@@ -12,9 +12,12 @@ import android.net.Uri
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import net.fortuna.ical4j.model.Recur
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.*
+import java.util.TimeZone
 
 
 class ICalObjectTest {
@@ -819,4 +822,8 @@ class ICalObjectTest {
 
     @Test fun getLatLongString1() = assertEquals("(1.11100,12345.12312)", ICalObject.getLatLongString(1.111, 12345.123123123))
     @Test fun getLatLongString_null() = assertNull(ICalObject.getLatLongString(null, 2.222))
+
+    @Test fun getAsRecurId_1() = assertEquals("20230101T000000", ICalObject.getAsRecurId(1672527600000L, "Europe/Vienna"))
+    @Test fun getAsRecurId_ALLDAY() = assertEquals("20230101", ICalObject.getAsRecurId(1672531200000, TZ_ALLDAY))
+
 }
