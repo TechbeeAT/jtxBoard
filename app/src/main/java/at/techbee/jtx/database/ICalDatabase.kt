@@ -51,7 +51,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 30,
+    version = 31,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -81,6 +81,7 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 27, to = 28),  // added Extended Status
         AutoMigration (from = 28, to = 29),  // added Geofence Radius
         AutoMigration (from = 29, to = 30),  // added recuridTimezone
+        // no AutoMigration from 30 to 31
     ]
 )
 @TypeConverters(Converters::class)
@@ -138,6 +139,13 @@ abstract class ICalDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_30_31 = object : Migration(30, 31) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("update icalobject set recurid = trim(recurid, 'Z') WHERE recurid like '%Z'")
+                database.execSQL("update icalobject set recuridtimezone = dtstarttimezone where recurid is not null")
+            }
+        }
+
         @Volatile
         private var INSTANCE: ICalDatabase? = null
 
@@ -174,7 +182,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19, MIGRATION_30_31)
 
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about
