@@ -186,7 +186,7 @@ fun DatePickerDialog(
                         DatePicker(
                             state = datePickerState,
                             dateValidator = { date -> date >= (startOfMinDay?:Long.MIN_VALUE) && date <= (startOfMaxDay?:Long.MAX_VALUE) },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.requiredWidth(360.dp)  // from DatePickerModalTokens.ContainerWidth
                         )
                     }
                 }
