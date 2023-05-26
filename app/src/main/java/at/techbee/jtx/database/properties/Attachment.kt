@@ -177,7 +177,7 @@ data class Attachment (
                         AUTHORITY_FILEPROVIDER,
                         newFile
                     ).toString(),
-                    filename = "${LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE)}.$fileExtension",
+                    filename = "${LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)}.$fileExtension",
                     extension = fileExtension,
                 )
             } catch (e: IOException) {

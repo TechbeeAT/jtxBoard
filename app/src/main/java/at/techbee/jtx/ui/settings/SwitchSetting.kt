@@ -11,7 +11,19 @@ package at.techbee.jtx.ui.settings
 import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.AddTask
+import androidx.compose.material.icons.outlined.Alarm
+import androidx.compose.material.icons.outlined.AlarmOff
+import androidx.compose.material.icons.outlined.Attachment
+import androidx.compose.material.icons.outlined.DoneAll
+import androidx.compose.material.icons.outlined.EventNote
+import androidx.compose.material.icons.outlined.MyLocation
+import androidx.compose.material.icons.outlined.Note
+import androidx.compose.material.icons.outlined.NoteAdd
+import androidx.compose.material.icons.outlined.PublishedWithChanges
+import androidx.compose.material.icons.outlined.RestartAlt
+import androidx.compose.material.icons.outlined.SwipeDown
+import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -127,6 +139,18 @@ enum class SwitchSetting(
         title = R.string.settings_sticky_alarms,
         subtitle = R.string.settings_sticky_alarms_sub,
         default = false
+    ),
+    SETTING_SYNC_ON_START(
+        key = "settings_sync_on_start",
+        icon = { Icon(Icons.Outlined.RestartAlt, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_sync_on_start,
+        default = true
+    ),
+    SETTING_SYNC_ON_PULL_REFRESH(
+        key = "settings_sync_on_pull_refresh",
+        icon = { Icon(Icons.Outlined.SwipeDown, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_sync_on_pull_refresh,
+        default = true
     );
     fun save(newSwitchValue: Boolean, context: Context) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, newSwitchValue).apply()

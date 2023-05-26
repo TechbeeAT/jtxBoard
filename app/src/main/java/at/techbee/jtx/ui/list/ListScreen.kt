@@ -28,6 +28,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import at.techbee.jtx.util.SyncUtil
 
 
 @Composable
@@ -37,6 +38,7 @@ fun ListScreen(
 ) {
     val context = LocalContext.current
     val settingsStateHolder = SettingsStateHolder(context)
+    val isPullRefreshEnabled = SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) } && settingsStateHolder.settingSyncOnPullRefresh.value
 
     listViewModel.toastMessage.value?.let {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -137,6 +139,7 @@ fun ListScreen(
                     settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
                     settingProgressIncrement = settingsStateHolder.settingStepForProgress,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    isPullRefreshEnabled = isPullRefreshEnabled,
                     player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
@@ -165,6 +168,7 @@ fun ListScreen(
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    isPullRefreshEnabled = isPullRefreshEnabled,
                     player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
@@ -185,6 +189,7 @@ fun ListScreen(
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    isPullRefreshEnabled = isPullRefreshEnabled,
                     player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
@@ -206,6 +211,7 @@ fun ListScreen(
                     kanbanColumnsCategory = listViewModel.listSettings.kanbanColumnsCategory,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    isPullRefreshEnabled = isPullRefreshEnabled,
                     player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
