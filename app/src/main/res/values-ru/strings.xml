@@ -439,6 +439,7 @@ Global Strings -->
     <string name="menu_list_viewmode_compact">"Компактно"</string>
     <string name="menu_list_viewmode_kanban">"Канбан"</string>
     <string name="settings_tasks">"Настройки задач"</string>
+    <string name="settings_sync">"Настройки синхронизации"</string>
     <string name="settings_default_start_date">"Установить дату начала задачи по умолчанию"</string>
     <string name="settings_default_due_date">"Установить дату завершения задачи по умолчанию"</string>
     <string name="settings_default_date_none">"Нет"</string>
@@ -464,6 +465,8 @@ Global Strings -->
     <string name="settings_create_with_current_location">"Создавать новые записи с текущим местоположением"</string>
     <string name="settings_sticky_alarms">"Закрепленные напоминания"</string>
     <string name="settings_sticky_alarms_sub">"Уведомление находится в шторке, пока не отмечено как выполненное или отложенное"</string>
+    <string name="settings_sync_on_start">"Синхронизировать при запуске"</string>
+    <string name="settings_sync_on_pull_refresh">"Синхронизировать при свайпе вниз"</string>
     <string name="sync_button_go_to_collections">"Перейти в Коллекции"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Пожалуйста, купите Pro-версию, чтобы активировать эту функцию."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>

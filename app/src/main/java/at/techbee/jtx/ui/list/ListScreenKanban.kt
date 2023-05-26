@@ -55,7 +55,6 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
-import at.techbee.jtx.util.SyncUtil
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -75,6 +74,7 @@ fun ListScreenKanban(
     kanbanColumnsCategory: SnapshotStateList<String>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
+    isPullRefreshEnabled: Boolean,
     player: MediaPlayer?,
     onStatusChanged: (itemid: Long, status: Status, scrollOnce: Boolean) -> Unit,
     onXStatusChanged: (itemid: Long, status: ExtendedStatus, scrollOnce: Boolean) -> Unit,
@@ -153,11 +153,8 @@ fun ListScreenKanban(
                     contentPadding = PaddingValues(4.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1F)
-                        .pullRefresh(pullRefreshState)
-                    ) {
+                    modifier = if(isPullRefreshEnabled) Modifier.fillMaxWidth().weight(1F).pullRefresh(pullRefreshState) else Modifier.fillMaxWidth().weight(1F)
+                ) {
 
                     stickyHeader {
                         Text(
@@ -266,7 +263,7 @@ fun ListScreenKanban(
             }
         }
 
-        if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
+        if(isPullRefreshEnabled) {
             PullRefreshIndicator(
                 refreshing = false,
                 state = pullRefreshState
@@ -325,6 +322,7 @@ fun ListScreenKanban_TODO() {
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            isPullRefreshEnabled = true,
             player = null,
             onStatusChanged = { _, _, _ -> },
             onXStatusChanged = { _, _, _ -> },
@@ -386,6 +384,7 @@ fun ListScreenKanban_JOURNAL() {
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            isPullRefreshEnabled = true,
             player = null,
             onStatusChanged = { _, _, _ -> },
             onXStatusChanged = { _, _, _ -> },
