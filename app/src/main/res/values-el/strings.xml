@@ -21,6 +21,7 @@ Global Strings -->
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
     <string name="toolbar_text_add_note">"Προσθήκη σημείωσης"</string>
     <string name="toolbar_text_add_task">"Προσθήκη εργασίας"</string>
+    <string name="toast_sync_requested">"Αιτήθηκε συγχρονισμός"</string>
     <string name="default_local_collection_name">"Τοπικές"</string>
     <string name="default_local_account_name">"Τοπικές"</string>
     <!-- Strings for values in properties of an ICalObject -->
