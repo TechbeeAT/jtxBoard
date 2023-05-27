@@ -207,8 +207,10 @@ fun DetailBottomAppBar(
             ) {
                 IconButton(
                     onClick = {
-                        if (!isSyncInProgress)
+                        if (!isSyncInProgress) {
                             collection.getAccount().let { SyncUtil.syncAccounts(setOf(it)) }
+                            SyncUtil.showSyncRequestedToast(context)
+                        }
                     },
                     enabled = seriesElement?.dirty ?: icalObject.dirty && !isSyncInProgress
                 ) {

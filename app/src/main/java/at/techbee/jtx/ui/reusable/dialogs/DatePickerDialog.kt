@@ -8,10 +8,6 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
-import android.os.Build
-import android.text.format.DateFormat
-import android.widget.DatePicker
-import android.widget.TimePicker
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -31,7 +27,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.DialogProperties
 import at.techbee.jtx.R
 import at.techbee.jtx.contract.JtxContract.JtxICalObject.TZ_ALLDAY
@@ -44,6 +39,7 @@ import java.util.*
 import kotlin.collections.contains
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerDialog(
     datetime: Long?,
@@ -62,25 +58,18 @@ fun DatePickerDialog(
     val tabIndexTimezone = 2
     var selectedTab by remember { mutableStateOf(0) }
 
-    var newDateTime by rememberSaveable {
-        mutableStateOf(
-            datetime?.let {
-                ZonedDateTime.ofInstant(
-                    Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)
-                )
-            }
-        )
-    }
-    var newTimezone by rememberSaveable {
-        mutableStateOf(
-            if(enforceTime && timezone == TZ_ALLDAY)
-                null
-            else
-                timezone
-        )
-    }
-    val defaultTimezone =
-        if (LocalInspectionMode.current) "Europe/Vienna" else TimeZone.getDefault().id
+    val startOfMinDay = minDate?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }?.toLocalDate()?.atStartOfDay(DateTimeUtils.requireTzId(timezone))?.toInstant()?.toEpochMilli()
+    val startOfMaxDay = maxDate?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }?.toLocalDate()?.atStartOfDay(DateTimeUtils.requireTzId(timezone))?.toInstant()?.toEpochMilli()
+
+    val initialZonedDateTime = datetime
+        ?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }
+        ?: minDate?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }
+
+    val datePickerState = rememberDatePickerState(initialZonedDateTime?.toInstant()?.toEpochMilli())
+    val timePickerState = rememberTimePickerState(initialZonedDateTime?.hour?:0, initialZonedDateTime?.minute?:0)
+
+    var newTimezone by rememberSaveable { mutableStateOf(if(enforceTime && timezone == TZ_ALLDAY) null else timezone) }
+    val defaultTimezone = if (LocalInspectionMode.current) "Europe/Vienna" else TimeZone.getDefault().id
     val defaultDateTime = ZonedDateTime.now()
 
     AlertDialog(
@@ -89,7 +78,10 @@ fun DatePickerDialog(
         title = { Text(stringResource(id = R.string.edit_datepicker_dialog_select_date)) },
         text = {
 
-            Column {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
                 if (!dateOnly || allowNull) {    // show the tabs if not date only
 
@@ -104,9 +96,9 @@ fun DatePickerDialog(
                                 ) {
                                     if (allowNull) {
                                         Checkbox(
-                                            checked = newDateTime != null,
+                                            checked = datePickerState.selectedDateMillis != null,
                                             onCheckedChange = {
-                                                newDateTime = if (it) defaultDateTime else null
+                                                datePickerState.setSelection(if (it) defaultDateTime.toInstant().toEpochMilli() else null)
                                                 newTimezone = if (it && !enforceTime) TZ_ALLDAY else null
                                                 selectedTab = tabIndexDate
                                             },
@@ -119,7 +111,8 @@ fun DatePickerDialog(
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
-                            })
+                            }
+                        )
 
                         Tab(selected = selectedTab == tabIndexTime,
                             onClick = { selectedTab = tabIndexTime },
@@ -131,8 +124,8 @@ fun DatePickerDialog(
                                     modifier = Modifier.align(Alignment.CenterHorizontally)
                                 ) {
                                     Checkbox(
-                                        checked = (newDateTime != null && newTimezone != TZ_ALLDAY) || enforceTime,
-                                        enabled = newDateTime != null && !dateOnly,
+                                        checked = (datePickerState.selectedDateMillis != null && newTimezone != TZ_ALLDAY) || enforceTime,
+                                        enabled = datePickerState.selectedDateMillis != null && !dateOnly,
                                         onCheckedChange = {
                                             newTimezone = if (it) null else TZ_ALLDAY
                                             selectedTab = if (it || enforceTime) tabIndexTime else tabIndexDate
@@ -145,11 +138,12 @@ fun DatePickerDialog(
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
-                            })
+                            }
+                        )
 
                         Tab(selected = selectedTab == tabIndexTimezone,
                             onClick = { selectedTab = tabIndexTimezone },
-                            enabled = newDateTime != null && newTimezone != TZ_ALLDAY && newTimezone != null,
+                            enabled = datePickerState.selectedDateMillis != null && newTimezone != TZ_ALLDAY && newTimezone != null,
                             text = {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -171,44 +165,12 @@ fun DatePickerDialog(
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
-                            })
-                    }
-                }
-
-
-                AnimatedVisibility(selectedTab == tabIndexDate && newDateTime != null) {
-                    Column(
-                        modifier = Modifier.verticalScroll(rememberScrollState())
-                    ) {
-                        AndroidView(
-                            //modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
-                            factory = { context ->
-                                // Creates custom view
-                                val datepicker = DatePicker(context)
-                                newDateTime?.let { dateTime ->
-                                    datepicker.init(
-                                        dateTime.year,
-                                        dateTime.monthValue - 1,
-                                        dateTime.dayOfMonth
-                                    ) { _, year, monthOfYear, dayOfMonth ->
-                                        newDateTime =
-                                            dateTime.withYear(year).withMonth(monthOfYear + 1)
-                                                .withDayOfMonth(dayOfMonth)
-                                    }
-                                    datepicker.updateDate(
-                                        dateTime.year,
-                                        dateTime.monthValue - 1,
-                                        dateTime.dayOfMonth
-                                    )
-                                    minDate?.let { datepicker.minDate = it }
-                                    maxDate?.let { datepicker.maxDate = it }
-                                }
-                                datepicker.rootView
                             }
                         )
                     }
                 }
-                AnimatedVisibility(selectedTab == tabIndexDate && newDateTime == null) {
+
+                AnimatedVisibility(selectedTab == tabIndexDate && datePickerState.selectedDateMillis == null) {
                     Text(
                         stringResource(id = R.string.not_set2),
                         fontStyle = FontStyle.Italic,
@@ -219,39 +181,23 @@ fun DatePickerDialog(
                     )
                 }
 
-                AnimatedVisibility(selectedTab == tabIndexTime) {
-                    Column(
-                        modifier = Modifier.verticalScroll(rememberScrollState())
-                    ) {
-                        newDateTime?.let { dateTime ->
-                            AndroidView(
-                                //modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
-                                factory = { context ->
-                                    // Creates custom view
-                                    val timepicker = TimePicker(context)
-                                    timepicker.setIs24HourView(DateFormat.is24HourFormat(context))
-                                    @Suppress("DEPRECATION")
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        timepicker.hour = dateTime.hour
-                                        timepicker.minute = dateTime.minute
-                                    } else {
-                                        timepicker.currentHour = dateTime.hour
-                                        timepicker.currentMinute = dateTime.minute
-                                    }
+                AnimatedVisibility(selectedTab == tabIndexDate && datePickerState.selectedDateMillis != null) {
+                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                        DatePicker(
+                            state = datePickerState,
+                            dateValidator = { date -> date >= (startOfMinDay?:Long.MIN_VALUE) && date <= (startOfMaxDay?:Long.MAX_VALUE) },
+                            modifier = Modifier.requiredWidth(360.dp)  // from DatePickerModalTokens.ContainerWidth
+                        )
+                    }
+                }
 
-                                    timepicker.setOnTimeChangedListener { _, hour, minute ->
-                                        newDateTime = dateTime.withHour(hour).withMinute(minute)
-                                    }
-                                    timepicker.rootView
-                                }
-                            )
-                        }
+                AnimatedVisibility(selectedTab == tabIndexTime) {
+                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                        TimePicker(state = timePickerState)
                     }
                 }
                 AnimatedVisibility(selectedTab == tabIndexTimezone) {
-                    Column(
-                        modifier = Modifier.verticalScroll(rememberScrollState())
-                    ) {
+                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                         TimezoneAutocompleteTextfield(
                             timezone = newTimezone,
                             onTimezoneChanged = { tz -> newTimezone = tz }
@@ -271,7 +217,7 @@ fun DatePickerDialog(
                             if(newTimezone == TZ_ALLDAY)
                                 newTimezone = null
                         },
-                        enabled = newDateTime != null && !dateOnly
+                        enabled = datePickerState.selectedDateMillis != null && !dateOnly
                     ) {
                         Text(stringResource(id = if(newTimezone == TZ_ALLDAY) R.string.edit_datepicker_dialog_add_time else R.string.edit_datepicker_dialog_edit_time))
                     }
@@ -284,7 +230,7 @@ fun DatePickerDialog(
                             if(newTimezone == null)
                                 newTimezone = defaultTimezone
                                   },
-                        enabled = newDateTime != null
+                        enabled = datePickerState.selectedDateMillis != null
                     ) {
                         Text(stringResource(id = if(newTimezone == null) R.string.edit_datepicker_dialog_add_timezone else R.string.edit_datepicker_dialog_edit_timezone))
                     }
@@ -303,15 +249,17 @@ fun DatePickerDialog(
                         if(enforceTime && newTimezone == TZ_ALLDAY)
                             newTimezone = null
 
-                        newDateTime?.let { dateTime ->
+
+                        val newZonedDateTime = datePickerState.selectedDateMillis?.let { dateTime ->
                             when (newTimezone) {
-                                TZ_ALLDAY -> newDateTime = dateTime.withHour(0).withMinute(0).withSecond(0).withNano(0).withZoneSameLocal(ZoneId.of("UTC"))
-                                in TimeZone.getAvailableIDs() -> newDateTime = dateTime.withZoneSameLocal(ZoneId.of(newTimezone)).withNano(0).withSecond(0)
-                                null -> newDateTime = dateTime.withZoneSameLocal(ZoneId.systemDefault()).withNano(0).withSecond(0)
+                                TZ_ALLDAY -> Instant.ofEpochMilli(dateTime).atZone(ZoneId.of("UTC")).withHour(0).withMinute(0).withSecond(0).withNano(0)
+                                in TimeZone.getAvailableIDs() -> Instant.ofEpochMilli(dateTime).atZone(ZoneId.of(newTimezone)).withHour(timePickerState.hour).withMinute(timePickerState.minute).withSecond(0).withNano(0)
+                                null -> Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).withHour(timePickerState.hour).withMinute(timePickerState.minute).withNano(0).withSecond(0)
+                                else -> null
                             }
                         }
 
-                        onConfirm(newDateTime?.toInstant()?.toEpochMilli(), newTimezone)
+                        onConfirm(newZonedDateTime?.toInstant()?.toEpochMilli(), newTimezone)
                         onDismiss()
                     }
                 ) {
@@ -351,7 +299,6 @@ fun DatePickerDialog_Preview_not_null() {
 @Composable
 fun DatePickerDialog_Preview_allowNull() {
     MaterialTheme {
-
         DatePickerDialog(
             datetime = 1660500481224,   // 14 Aug 2022  18:09
             timezone = TZ_ALLDAY,
@@ -367,7 +314,6 @@ fun DatePickerDialog_Preview_allowNull() {
 @Composable
 fun DatePickerDialog_Preview_allowNull_null() {
     MaterialTheme {
-
         DatePickerDialog(
             datetime = null,
             timezone = null,
@@ -382,7 +328,6 @@ fun DatePickerDialog_Preview_allowNull_null() {
 @Composable
 fun DatePickerDialog_Preview_dateonly() {
     MaterialTheme {
-
         DatePickerDialog(
             datetime = 1660500481224,   // 14 Aug 2022  18:09
             timezone = TZ_ALLDAY,

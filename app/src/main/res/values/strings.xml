@@ -30,6 +30,7 @@ Global Strings -->
     <string name="toolbar_text_add_journal">"Add Journal"</string>
     <string name="toolbar_text_add_note">"Add Note"</string>
     <string name="toolbar_text_add_task">"Add Task"</string>
+    <string name="toast_sync_requested">"Synchronization requested"</string>
     <string name="default_local_collection_name">"Local"</string>
     <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
