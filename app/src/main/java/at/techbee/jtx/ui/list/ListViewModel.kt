@@ -566,6 +566,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             val collections = database.getAllRemoteCollections()
             SyncUtil.syncAccounts(collections.map { Account(it.accountName, it.accountType) }.toSet())
         }
+        SyncUtil.showSyncRequestedToast(_application)
     }
 
     /**

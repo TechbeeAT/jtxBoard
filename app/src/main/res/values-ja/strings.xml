@@ -439,6 +439,7 @@ Global Strings -->
     <string name="menu_list_viewmode_compact">"コンパクト表示"</string>
     <string name="menu_list_viewmode_kanban">"カンバン表示"</string>
     <string name="settings_tasks">"タスクの設定"</string>
+    <string name="settings_sync">"同期設定"</string>
     <string name="settings_default_start_date">"タスクのデフォルトの着手日"</string>
     <string name="settings_default_due_date">"タスクのデフォルトの締切日"</string>
     <string name="settings_default_date_none">"なし"</string>
@@ -464,6 +465,8 @@ Global Strings -->
     <string name="settings_create_with_current_location">"新規作成するエントリーに現在の位置情報を設定"</string>
     <string name="settings_sticky_alarms">"固定アラーム"</string>
     <string name="settings_sticky_alarms_sub">"完了または延期されるまで通知を維持します"</string>
+    <string name="settings_sync_on_start">"アプリを起動したときに同期"</string>
+    <string name="settings_sync_on_pull_refresh">"プルダウンで同期"</string>
     <string name="sync_button_go_to_collections">"コレクションに移動"</string>
     <string name="buypro_snackbar_please_purchase_pro">"この機能を有効にするにはプロ版を購入してください。"</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>

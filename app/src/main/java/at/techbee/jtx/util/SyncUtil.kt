@@ -54,6 +54,8 @@ class SyncUtil {
             }
         }
 
+        fun showSyncRequestedToast(context: Context) = Toast.makeText(context, context.getString(R.string.toast_sync_requested), Toast.LENGTH_SHORT).show()
+
         /**
          * @return true if a known sync app found
          */

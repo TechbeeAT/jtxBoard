@@ -440,6 +440,7 @@ Gràcies!"</string>
     <string name="menu_list_viewmode_compact">"Vista compacta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
     <string name="settings_tasks">"Configuració de tasques"</string>
+    <string name="settings_sync">"Ajusts de Sincronització"</string>
     <string name="settings_default_start_date">"Estableix una data d'inici per defecte"</string>
     <string name="settings_default_due_date">"Estableix una data de venciment per defecte"</string>
     <string name="settings_default_date_none">"Cap"</string>
@@ -465,6 +466,8 @@ Gràcies!"</string>
     <string name="settings_create_with_current_location">"Crea noves entrades amb la ubicació actual"</string>
     <string name="settings_sticky_alarms">"Alarmes fixades"</string>
     <string name="settings_sticky_alarms_sub">"Manté les notificacions fins que es marquen com a completades o es posposen"</string>
+    <string name="settings_sync_on_start">"Sincronitza en iniciar l'aplicació"</string>
+    <string name="settings_sync_on_pull_refresh">"Sincronitza en lliscar cap avall"</string>
     <string name="sync_button_go_to_collections">"Ves a les Col·leccions"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Per favor, compra el paquet Pro per a habilitar aquesta funció."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>

@@ -127,7 +127,7 @@ fun DetailsCardAttachments(
                                     isRemoteCollection = isRemoteCollection,
                                     player = player,
                                     onAttachmentDeleted = {
-                                        attachments.add(attachment)
+                                        attachments.remove(attachment)
                                         onAttachmentsUpdated()
                                     },
                                     modifier = Modifier.size(100.dp, 140.dp)
