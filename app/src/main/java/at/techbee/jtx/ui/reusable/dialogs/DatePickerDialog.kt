@@ -57,9 +57,6 @@ fun DatePickerDialog(
     val tabIndexTimezone = 2
     var selectedTab by remember { mutableStateOf(0) }
 
-    val startOfMinDay = minDate?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }?.toLocalDate()?.atStartOfDay(DateTimeUtils.requireTzId(timezone))?.toInstant()?.toEpochMilli()
-    val startOfMaxDay = maxDate?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }?.toLocalDate()?.atStartOfDay(DateTimeUtils.requireTzId(timezone))?.toInstant()?.toEpochMilli()
-
     val initialZonedDateTime = datetime
         ?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }
         ?: minDate?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }
@@ -122,7 +119,7 @@ fun DatePickerDialog(
                                     modifier = Modifier.align(Alignment.CenterHorizontally)
                                 ) {
                                     Checkbox(
-                                        checked = datePickerState.selectedDateMillis != null && newTimezone != TZ_ALLDAY,
+                                        checked = newTimezone != TZ_ALLDAY,
                                         enabled = datePickerState.selectedDateMillis != null && !dateOnly,
                                         onCheckedChange = {
                                             newTimezone = if (it) null else TZ_ALLDAY
@@ -183,7 +180,7 @@ fun DatePickerDialog(
                     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                         DatePicker(
                             state = datePickerState,
-                            dateValidator = { date -> date >= (startOfMinDay?:Long.MIN_VALUE) && date <= (startOfMaxDay?:Long.MAX_VALUE) },
+                            dateValidator = { date -> date >= (minDate?:Long.MIN_VALUE) && date <= (maxDate?:Long.MAX_VALUE) },
                             modifier = Modifier.requiredWidth(360.dp)  // from DatePickerModalTokens.ContainerWidth
                         )
                     }

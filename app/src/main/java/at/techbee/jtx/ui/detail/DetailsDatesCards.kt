@@ -17,6 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -50,41 +54,50 @@ fun DetailsDatesCards(
     if(icalObject.module == Module.NOTE.name)
         return
 
+    var dtstart by remember { mutableStateOf(icalObject.dtstart) }
+    var dtstartTimezone by remember { mutableStateOf(icalObject.dtstartTimezone) }
+    var due by remember { mutableStateOf(icalObject.due) }
+    var dueTimezone by remember { mutableStateOf(icalObject.dueTimezone) }
+    var completed by remember { mutableStateOf(icalObject.completed) }
+    var completedTimezone by remember { mutableStateOf(icalObject.completedTimezone) }
+
     ElevatedCard(modifier = modifier) {
         Column(
             modifier = Modifier.fillMaxWidth().padding(if(isEditMode) 4.dp else 0.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if((icalObject.module == Module.JOURNAL.name || icalObject.module == Module.TODO.name)
-                && (icalObject.dtstart != null || (isEditMode && (enableDtstart || icalObject.getModuleFromString() == Module.JOURNAL)))) {
+                && (dtstart != null || (isEditMode && (enableDtstart || icalObject.getModuleFromString() == Module.JOURNAL)))) {
                 HorizontalDateCard(
-                    datetime = icalObject.dtstart,
-                    timezone = if((icalObject.due != null && icalObject.dueTimezone == TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone == TZ_ALLDAY)) TZ_ALLDAY else icalObject.dtstartTimezone,
+                    datetime = dtstart,
+                    timezone = if(dtstart == null && due != null) dueTimezone else dtstartTimezone,
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
-                        if((icalObject.due ?: Long.MAX_VALUE) <= (datetime ?: Long.MIN_VALUE)) {
+                        if((due ?: Long.MAX_VALUE) <= (datetime ?: Long.MIN_VALUE)) {
                             Toast.makeText(
                                 context,
                                 context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart),
                                 Toast.LENGTH_LONG
                             ).show()
                         } else {
-                            icalObject.dtstart = datetime
-                            icalObject.dtstartTimezone = timezone
+                            dtstart = datetime
+                            dtstartTimezone = timezone
                             onDtstartChanged(datetime, timezone)
 
-                            if(icalObject.due != null && (icalObject.dueTimezone == TZ_ALLDAY && icalObject.dtstartTimezone != TZ_ALLDAY)) {
-                                icalObject.due = DateTimeUtils.getDateWithoutTime(icalObject.due, timezone)
-                                icalObject.dueTimezone = timezone
+                            if(due != null && (dueTimezone == TZ_ALLDAY && dtstartTimezone != TZ_ALLDAY)) {
+                                due = DateTimeUtils.getDateWithoutTime(due, timezone)
+                                dueTimezone = timezone
+                                onDueChanged(due, dueTimezone)
                             }
 
-                            if(icalObject.due != null && (icalObject.dueTimezone != TZ_ALLDAY && icalObject.dtstartTimezone == TZ_ALLDAY)) {
-                                icalObject.dueTimezone = timezone
+                            if(due != null && (dueTimezone != TZ_ALLDAY && dtstartTimezone == TZ_ALLDAY)) {
+                                dueTimezone = timezone
+                                onDueChanged(due, dueTimezone)
                             }
                         }
                     },
-                    pickerMaxDate = DateTimeUtils.getDateWithoutTime(icalObject.due, icalObject.dueTimezone)?.let {
-                        if(icalObject.dueTimezone == TZ_ALLDAY)
+                    pickerMaxDate = DateTimeUtils.getDateWithoutTime(due, dueTimezone)?.let {
+                        if(dueTimezone == TZ_ALLDAY)
                             it - (1).days.inWholeMilliseconds
                         else
                             it
@@ -99,35 +112,37 @@ fun DetailsDatesCards(
             }
 
             AnimatedVisibility (icalObject.module == Module.TODO.name
-                && (icalObject.due != null || (isEditMode && enableDue))) {
+                && (due != null || (isEditMode && enableDue))) {
                 HorizontalDateCard(
-                    datetime = icalObject.due,
-                    timezone = if((icalObject.dtstart != null && icalObject.dtstartTimezone == TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone == TZ_ALLDAY)) TZ_ALLDAY else icalObject.dueTimezone,
+                    datetime = due,
+                    timezone = if(due == null && dtstart != null) dtstartTimezone else dueTimezone,
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
-                        if((datetime ?: Long.MAX_VALUE) <= (icalObject.dtstart ?: Long.MIN_VALUE)) {
+                        if((datetime ?: Long.MAX_VALUE) <= (dtstart ?: Long.MIN_VALUE)) {
                             Toast.makeText(
                                 context,
                                 context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart),
                                 Toast.LENGTH_LONG
                             ).show()
                         } else {
-                            icalObject.due = datetime
-                            icalObject.dueTimezone = timezone
+                            due = datetime
+                            dueTimezone = timezone
                             onDueChanged(datetime, timezone)
                         }
 
-                        if(icalObject.dtstart != null && (icalObject.dtstartTimezone == TZ_ALLDAY && icalObject.dueTimezone != TZ_ALLDAY)) {
-                            icalObject.dtstart = DateTimeUtils.getDateWithoutTime(icalObject.dtstart, timezone)
-                            icalObject.dtstartTimezone = timezone
+                        if(dtstart != null && (dtstartTimezone == TZ_ALLDAY && dueTimezone != TZ_ALLDAY)) {
+                            dtstart = DateTimeUtils.getDateWithoutTime(dtstart, timezone)
+                            dtstartTimezone = timezone
+                            onDtstartChanged(dtstart, dtstartTimezone)
                         }
 
-                        if(icalObject.dtstart != null && (icalObject.dtstartTimezone != TZ_ALLDAY && icalObject.dueTimezone == TZ_ALLDAY)) {
-                            icalObject.dtstartTimezone = timezone
+                        if(dtstart != null && (dtstartTimezone != TZ_ALLDAY && dueTimezone == TZ_ALLDAY)) {
+                            dtstartTimezone = timezone
+                            onDtstartChanged(dtstart, dtstartTimezone)
                         }
                     },
-                    pickerMinDate = DateTimeUtils.getDateWithoutTime(icalObject.dtstart, icalObject.dtstartTimezone)?.let {
-                        if(icalObject.dtstartTimezone == TZ_ALLDAY)
+                    pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone)?.let {
+                        if(dtstartTimezone == TZ_ALLDAY)
                             it + (1).days.inWholeMilliseconds
                         else
                             it
@@ -138,17 +153,17 @@ fun DetailsDatesCards(
                 )
             }
             AnimatedVisibility (icalObject.module == Module.TODO.name
-                && (icalObject.completed != null || (isEditMode && enableCompleted))) {
+                && (completed != null || (isEditMode && enableCompleted))) {
                 HorizontalDateCard(
-                    datetime = icalObject.completed,
-                    timezone = if((icalObject.dtstart != null && icalObject.dtstartTimezone == TZ_ALLDAY) || (icalObject.due != null && icalObject.dueTimezone == TZ_ALLDAY)) TZ_ALLDAY else icalObject.completedTimezone,
+                    datetime = completed,
+                    timezone = if((dtstart != null && dtstartTimezone == TZ_ALLDAY) || (due != null && dueTimezone == TZ_ALLDAY)) TZ_ALLDAY else completedTimezone,
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
-                        icalObject.completed = datetime
-                        icalObject.completedTimezone = timezone
+                        completed = datetime
+                        completedTimezone = timezone
                         onCompletedChanged(datetime, timezone)
                     },
-                    pickerMinDate = DateTimeUtils.getDateWithoutTime(icalObject.dtstart, icalObject.dtstartTimezone),
+                    pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone),
                     labelTop = stringResource(id = R.string.completed),
                     allowNull = icalObject.module == Module.TODO.name,
                     dateOnly = false,
