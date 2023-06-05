@@ -72,6 +72,15 @@ fun DetailsDatesCards(
                             icalObject.dtstart = datetime
                             icalObject.dtstartTimezone = timezone
                             onDtstartChanged(datetime, timezone)
+
+                            if(icalObject.due != null && (icalObject.dueTimezone == TZ_ALLDAY && icalObject.dtstartTimezone != TZ_ALLDAY)) {
+                                icalObject.due = DateTimeUtils.getDateWithoutTime(icalObject.due, timezone)
+                                icalObject.dueTimezone = timezone
+                            }
+
+                            if(icalObject.due != null && (icalObject.dueTimezone != TZ_ALLDAY && icalObject.dtstartTimezone == TZ_ALLDAY)) {
+                                icalObject.dueTimezone = timezone
+                            }
                         }
                     },
                     pickerMaxDate = DateTimeUtils.getDateWithoutTime(icalObject.due, icalObject.dueTimezone)?.let {
@@ -85,8 +94,7 @@ fun DetailsDatesCards(
                     else
                         null,
                     allowNull = icalObject.module == Module.TODO.name,
-                    dateOnly = (icalObject.due != null && icalObject.dueTimezone == TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone == TZ_ALLDAY),
-                    enforceTime = (icalObject.due != null && icalObject.dueTimezone != TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone != TZ_ALLDAY)
+                    dateOnly = false
                 )
             }
 
@@ -108,6 +116,15 @@ fun DetailsDatesCards(
                             icalObject.dueTimezone = timezone
                             onDueChanged(datetime, timezone)
                         }
+
+                        if(icalObject.dtstart != null && (icalObject.dtstartTimezone == TZ_ALLDAY && icalObject.dueTimezone != TZ_ALLDAY)) {
+                            icalObject.dtstart = DateTimeUtils.getDateWithoutTime(icalObject.dtstart, timezone)
+                            icalObject.dtstartTimezone = timezone
+                        }
+
+                        if(icalObject.dtstart != null && (icalObject.dtstartTimezone != TZ_ALLDAY && icalObject.dueTimezone == TZ_ALLDAY)) {
+                            icalObject.dtstartTimezone = timezone
+                        }
                     },
                     pickerMinDate = DateTimeUtils.getDateWithoutTime(icalObject.dtstart, icalObject.dtstartTimezone)?.let {
                         if(icalObject.dtstartTimezone == TZ_ALLDAY)
@@ -117,8 +134,7 @@ fun DetailsDatesCards(
                     },
                     labelTop = stringResource(id = R.string.due),
                     allowNull = icalObject.module == Module.TODO.name,
-                    dateOnly = (icalObject.dtstart != null && icalObject.dtstartTimezone == TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone == TZ_ALLDAY),
-                    enforceTime = (icalObject.dtstart != null && icalObject.dtstartTimezone != TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone != TZ_ALLDAY)
+                    dateOnly = false,
                 )
             }
             AnimatedVisibility (icalObject.module == Module.TODO.name
@@ -135,8 +151,7 @@ fun DetailsDatesCards(
                     pickerMinDate = DateTimeUtils.getDateWithoutTime(icalObject.dtstart, icalObject.dtstartTimezone),
                     labelTop = stringResource(id = R.string.completed),
                     allowNull = icalObject.module == Module.TODO.name,
-                    dateOnly = (icalObject.dtstart != null && icalObject.dtstartTimezone == TZ_ALLDAY) || (icalObject.due != null && icalObject.dueTimezone == TZ_ALLDAY),
-                    enforceTime = (icalObject.dtstart != null && icalObject.dtstartTimezone != TZ_ALLDAY) || (icalObject.due != null && icalObject.dueTimezone != TZ_ALLDAY),
+                    dateOnly = false,
                     enabled = allowCompletedChange
                 )
             }

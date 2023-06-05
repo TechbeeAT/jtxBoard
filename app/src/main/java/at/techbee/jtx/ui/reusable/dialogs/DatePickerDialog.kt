@@ -46,7 +46,6 @@ fun DatePickerDialog(
     timezone: String?,
     allowNull: Boolean,
     dateOnly: Boolean = false,
-    enforceTime: Boolean = false,
     minDate: Long? = null,
     maxDate: Long? = null,
     onConfirm: (newDateTime: Long?, newTimezone: String?) -> Unit,
@@ -68,7 +67,7 @@ fun DatePickerDialog(
     val datePickerState = rememberDatePickerState(initialZonedDateTime?.toInstant()?.toEpochMilli())
     val timePickerState = rememberTimePickerState(initialZonedDateTime?.hour?:0, initialZonedDateTime?.minute?:0)
 
-    var newTimezone by rememberSaveable { mutableStateOf(if(enforceTime && timezone == TZ_ALLDAY) null else timezone) }
+    var newTimezone by rememberSaveable { mutableStateOf(timezone) }
     val defaultTimezone = if (LocalInspectionMode.current) "Europe/Vienna" else TimeZone.getDefault().id
     val defaultDateTime = ZonedDateTime.now()
 
@@ -99,7 +98,7 @@ fun DatePickerDialog(
                                             checked = datePickerState.selectedDateMillis != null,
                                             onCheckedChange = {
                                                 datePickerState.setSelection(if (it) defaultDateTime.toInstant().toEpochMilli() else null)
-                                                newTimezone = if (it && !enforceTime) TZ_ALLDAY else null
+                                                newTimezone = if (it) TZ_ALLDAY else null
                                                 selectedTab = tabIndexDate
                                             },
                                             modifier = Modifier.size(24.dp)
@@ -116,7 +115,6 @@ fun DatePickerDialog(
 
                         Tab(selected = selectedTab == tabIndexTime,
                             onClick = { selectedTab = tabIndexTime },
-                            enabled = newTimezone != TZ_ALLDAY,
                             text = {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -124,11 +122,11 @@ fun DatePickerDialog(
                                     modifier = Modifier.align(Alignment.CenterHorizontally)
                                 ) {
                                     Checkbox(
-                                        checked = (datePickerState.selectedDateMillis != null && newTimezone != TZ_ALLDAY) || enforceTime,
+                                        checked = datePickerState.selectedDateMillis != null && newTimezone != TZ_ALLDAY,
                                         enabled = datePickerState.selectedDateMillis != null && !dateOnly,
                                         onCheckedChange = {
                                             newTimezone = if (it) null else TZ_ALLDAY
-                                            selectedTab = if (it || enforceTime) tabIndexTime else tabIndexDate
+                                            selectedTab = if (it) tabIndexTime else tabIndexDate
                                         },
                                         modifier = Modifier.size(24.dp)
                                     )
@@ -245,10 +243,6 @@ fun DatePickerDialog(
                             selectedTab = tabIndexTimezone
                             return@TextButton
                         }
-
-                        if(enforceTime && newTimezone == TZ_ALLDAY)
-                            newTimezone = null
-
 
                         val newZonedDateTime = datePickerState.selectedDateMillis?.let { dateTime ->
                             when (newTimezone) {
