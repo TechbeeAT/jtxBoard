@@ -51,7 +51,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 31,
+    version = 32,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -82,6 +82,7 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 28, to = 29),  // added Geofence Radius
         AutoMigration (from = 29, to = 30),  // added recuridTimezone
         // no AutoMigration from 30 to 31
+        AutoMigration (from = 31, to = 32),  // view update
     ]
 )
 @TypeConverters(Converters::class)
