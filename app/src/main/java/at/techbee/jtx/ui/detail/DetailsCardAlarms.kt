@@ -37,11 +37,11 @@ import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.DurationPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
-import at.techbee.jtx.util.DateTimeUtils
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import java.time.ZonedDateTime
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
 
@@ -70,7 +70,7 @@ fun DetailsCardAlarms(
             datetime = initialDateTime,
             timezone = initialTimeZone,
             allowNull = false,
-            minDate = DateTimeUtils.getTodayAsLong(),
+            minDate = ZonedDateTime.now().minusDays(1),
             onConfirm = { newDateTime, newTimeZone ->
                 val newAlarm = Alarm.createDisplayAlarm(newDateTime!!, newTimeZone)
                 alarms.add(newAlarm)

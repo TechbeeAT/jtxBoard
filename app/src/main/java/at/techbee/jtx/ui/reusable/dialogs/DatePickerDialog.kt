@@ -46,8 +46,8 @@ fun DatePickerDialog(
     timezone: String?,
     allowNull: Boolean,
     dateOnly: Boolean = false,
-    minDate: Long? = null,
-    maxDate: Long? = null,
+    minDate: ZonedDateTime? = null,
+    maxDate: ZonedDateTime? = null,
     onConfirm: (newDateTime: Long?, newTimezone: String?) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -59,14 +59,24 @@ fun DatePickerDialog(
 
     val initialZonedDateTime = datetime
         ?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }
-        ?: minDate?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }
+        ?: minDate
 
-    val datePickerState = rememberDatePickerState(initialZonedDateTime?.toInstant()?.toEpochMilli())
+    val datePickerState = rememberDatePickerState(initialZonedDateTime?.toInstant()?.toEpochMilli()?.plus(initialZonedDateTime.offset.totalSeconds*1000))
     val timePickerState = rememberTimePickerState(initialZonedDateTime?.hour?:0, initialZonedDateTime?.minute?:0)
 
     var newTimezone by rememberSaveable { mutableStateOf(timezone) }
     val defaultTimezone = if (LocalInspectionMode.current) "Europe/Vienna" else TimeZone.getDefault().id
     val defaultDateTime = ZonedDateTime.now()
+
+    fun isValidDate(date: Long): Boolean {
+        val zonedDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), DateTimeUtils.requireTzId(timezone))
+        return if(timezone == TZ_ALLDAY)
+            zonedDate.year >= (minDate?.year ?:-1) && zonedDate.monthValue >= (minDate?.monthValue ?:-1) && zonedDate.dayOfMonth > (minDate?.dayOfMonth ?:-1)
+                    && zonedDate.year <= (maxDate?.year ?:3000) && zonedDate.monthValue <= (maxDate?.monthValue ?:13) && zonedDate.dayOfMonth < (maxDate?.dayOfMonth ?: 367)
+        else
+            zonedDate.year >= (minDate?.year ?:-1) && zonedDate.monthValue >= (minDate?.monthValue ?:-1) && zonedDate.dayOfMonth >= (minDate?.dayOfMonth ?:-1)
+                    && zonedDate.year <= (maxDate?.year ?:3000) && zonedDate.monthValue <= (maxDate?.monthValue ?:13) && zonedDate.dayOfMonth <= (maxDate?.dayOfMonth ?: 367)
+    }
 
     AlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
@@ -94,7 +104,7 @@ fun DatePickerDialog(
                                         Checkbox(
                                             checked = datePickerState.selectedDateMillis != null,
                                             onCheckedChange = {
-                                                datePickerState.setSelection(if (it) defaultDateTime.toInstant().toEpochMilli() else null)
+                                                datePickerState.setSelection(if (it) defaultDateTime.withZoneSameLocal(ZoneId.of("UTC")).toInstant().toEpochMilli() else null)
                                                 newTimezone = if (it) TZ_ALLDAY else null
                                                 selectedTab = tabIndexDate
                                             },
@@ -180,7 +190,7 @@ fun DatePickerDialog(
                     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                         DatePicker(
                             state = datePickerState,
-                            dateValidator = { date -> date >= (minDate?:Long.MIN_VALUE) && date <= (maxDate?:Long.MAX_VALUE) },
+                            dateValidator = { date -> isValidDate(date) },
                             modifier = Modifier.requiredWidth(360.dp)  // from DatePickerModalTokens.ContainerWidth
                         )
                     }
@@ -233,6 +243,7 @@ fun DatePickerDialog(
 
 
                 TextButton(
+                    enabled = datePickerState.selectedDateMillis?.let { isValidDate(it) } ?: true,
                     onClick = {
                         if (newTimezone != null && newTimezone != TZ_ALLDAY && !TimeZone.getAvailableIDs()
                                 .contains(newTimezone)

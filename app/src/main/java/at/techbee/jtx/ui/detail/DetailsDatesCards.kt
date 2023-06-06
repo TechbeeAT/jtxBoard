@@ -32,7 +32,8 @@ import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.reusable.cards.HorizontalDateCard
 import at.techbee.jtx.util.DateTimeUtils
-import kotlin.time.Duration.Companion.days
+import java.time.Instant
+import java.time.ZonedDateTime
 
 
 @Composable
@@ -70,7 +71,7 @@ fun DetailsDatesCards(
                 && (dtstart != null || (isEditMode && (enableDtstart || icalObject.getModuleFromString() == Module.JOURNAL)))) {
                 HorizontalDateCard(
                     datetime = dtstart,
-                    timezone = if(dtstart == null && due != null) dueTimezone else dtstartTimezone,
+                    timezone = dtstartTimezone,
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
                         if((due ?: Long.MAX_VALUE) <= (datetime ?: Long.MIN_VALUE)) {
@@ -84,24 +85,17 @@ fun DetailsDatesCards(
                             dtstartTimezone = timezone
                             onDtstartChanged(datetime, timezone)
 
-                            if(due != null && (dueTimezone == TZ_ALLDAY && dtstartTimezone != TZ_ALLDAY)) {
-                                due = DateTimeUtils.getDateWithoutTime(due, timezone)
-                                dueTimezone = timezone
-                                onDueChanged(due, dueTimezone)
-                            }
-
-                            if(due != null && (dueTimezone != TZ_ALLDAY && dtstartTimezone == TZ_ALLDAY)) {
-                                dueTimezone = timezone
-                                onDueChanged(due, dueTimezone)
+                            due?.let {
+                                if((dueTimezone == TZ_ALLDAY && dtstartTimezone != TZ_ALLDAY) || (dueTimezone != TZ_ALLDAY && dtstartTimezone == TZ_ALLDAY)) {
+                                    val dueZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(dueTimezone))
+                                    due = dueZoned.withHour(0).withMinute(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone)).toInstant().toEpochMilli()
+                                    dueTimezone = timezone
+                                    onDueChanged(due, dueTimezone)
+                                }
                             }
                         }
                     },
-                    pickerMaxDate = DateTimeUtils.getDateWithoutTime(due, dueTimezone)?.let {
-                        if(dueTimezone == TZ_ALLDAY)
-                            it - (1).days.inWholeMilliseconds
-                        else
-                            it
-                        },
+                    pickerMaxDate = due?.let { Instant.ofEpochMilli(it).atZone(DateTimeUtils.requireTzId(dueTimezone)) },
                     labelTop = if(icalObject.module == Module.TODO.name)
                         stringResource(id = R.string.started)
                     else
@@ -115,7 +109,7 @@ fun DetailsDatesCards(
                 && (due != null || (isEditMode && enableDue))) {
                 HorizontalDateCard(
                     datetime = due,
-                    timezone = if(due == null && dtstart != null) dtstartTimezone else dueTimezone,
+                    timezone = dueTimezone,
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
                         if((datetime ?: Long.MAX_VALUE) <= (dtstart ?: Long.MIN_VALUE)) {
@@ -130,23 +124,16 @@ fun DetailsDatesCards(
                             onDueChanged(datetime, timezone)
                         }
 
-                        if(dtstart != null && (dtstartTimezone == TZ_ALLDAY && dueTimezone != TZ_ALLDAY)) {
-                            dtstart = DateTimeUtils.getDateWithoutTime(dtstart, timezone)
-                            dtstartTimezone = timezone
-                            onDtstartChanged(dtstart, dtstartTimezone)
-                        }
-
-                        if(dtstart != null && (dtstartTimezone != TZ_ALLDAY && dueTimezone == TZ_ALLDAY)) {
-                            dtstartTimezone = timezone
-                            onDtstartChanged(dtstart, dtstartTimezone)
+                        dtstart?.let {
+                            if((dtstartTimezone == TZ_ALLDAY && dueTimezone != TZ_ALLDAY) || (dtstartTimezone != TZ_ALLDAY && dueTimezone == TZ_ALLDAY)) {
+                                val dtstartZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(dtstartTimezone))
+                                dtstart = dtstartZoned.withHour(0).withMinute(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone)).toInstant().toEpochMilli()
+                                dtstartTimezone = timezone
+                                onDtstartChanged(dtstart, dtstartTimezone)
+                            }
                         }
                     },
-                    pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone)?.let {
-                        if(dtstartTimezone == TZ_ALLDAY)
-                            it + (1).days.inWholeMilliseconds
-                        else
-                            it
-                    },
+                    pickerMinDate = dtstart?.let { Instant.ofEpochMilli(it).atZone(DateTimeUtils.requireTzId(dtstartTimezone)) },
                     labelTop = stringResource(id = R.string.due),
                     allowNull = icalObject.module == Module.TODO.name,
                     dateOnly = false,
@@ -156,14 +143,14 @@ fun DetailsDatesCards(
                 && (completed != null || (isEditMode && enableCompleted))) {
                 HorizontalDateCard(
                     datetime = completed,
-                    timezone = if((dtstart != null && dtstartTimezone == TZ_ALLDAY) || (due != null && dueTimezone == TZ_ALLDAY)) TZ_ALLDAY else completedTimezone,
+                    timezone = completedTimezone,
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
                         completed = datetime
                         completedTimezone = timezone
                         onCompletedChanged(datetime, timezone)
                     },
-                    pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone),
+                    pickerMinDate = dtstart?.let { Instant.ofEpochMilli(it).atZone(DateTimeUtils.requireTzId(dtstartTimezone)) },
                     labelTop = stringResource(id = R.string.completed),
                     allowNull = icalObject.module == Module.TODO.name,
                     dateOnly = false,

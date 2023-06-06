@@ -31,6 +31,7 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.util.DateTimeUtils
 import java.time.ZoneId
+import java.time.ZonedDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,8 +44,8 @@ fun HorizontalDateCard(
     dateOnly: Boolean,
     modifier: Modifier = Modifier,
     labelTop: String? = null,
-    pickerMinDate: Long? = null,
-    pickerMaxDate: Long? = null,
+    pickerMinDate: ZonedDateTime? = null,
+    pickerMaxDate: ZonedDateTime? = null,
     enabled: Boolean = true,
     onDateTimeChanged: (Long?, String?) -> Unit
 ) {
