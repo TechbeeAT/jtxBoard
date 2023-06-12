@@ -12,8 +12,10 @@ package at.techbee.jtx.ui.list
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.widgets.ListWidgetConfig
@@ -21,13 +23,14 @@ import at.techbee.jtx.widgets.ListWidgetConfig
 
 class ListSettings {
 
-    var searchCategories: MutableState<List<String>> = mutableStateOf(emptyList())
-    var searchResources: MutableState<List<String>> = mutableStateOf(emptyList())
+    var searchCategories = mutableStateListOf<String>()
+    var searchResources = mutableStateListOf<String>()
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
-    var searchStatus: MutableState<List<Status>> = mutableStateOf(emptyList())
-    var searchClassification: MutableState<List<Classification>> = mutableStateOf(emptyList())
-    var searchCollection: MutableState<List<String>> = mutableStateOf(emptyList())
-    var searchAccount: MutableState<List<String>> = mutableStateOf(emptyList())
+    var searchStatus = mutableStateListOf<Status>()
+    var searchXStatus = mutableStateListOf<String>()
+    var searchClassification = mutableStateListOf<Classification>()
+    var searchCollection = mutableStateListOf<String>()
+    var searchAccount = mutableStateListOf<String>()
     var orderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
     var sortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var orderBy2: MutableState<OrderBy> = mutableStateOf(OrderBy.SUMMARY)
@@ -60,6 +63,10 @@ class ListSettings {
 
     var topAppBarCollectionId: MutableState<Long> = mutableStateOf(0L)   // list view only
     var topAppBarMode: MutableState<ListTopAppBarMode> = mutableStateOf(ListTopAppBarMode.SEARCH)   // list view only
+    var kanbanColumnsStatus = mutableStateListOf<String?>()
+    var kanbanColumnsXStatus = mutableStateListOf<String>()
+    var kanbanColumnsCategory = mutableStateListOf<String>()
+
 
     var widgetHeader: MutableState<String> = mutableStateOf("") //widgetOnly
     var checkboxPositionEnd: MutableState<Boolean> = mutableStateOf(false)  // widget only
@@ -78,8 +85,7 @@ class ListSettings {
         private const val PREFS_RESOURCES = "prefsResources"
         private const val PREFS_CLASSIFICATION = "prefsClassification"
         private const val PREFS_STATUS = "prefsStatus"
-        @Deprecated("Use PREFS_STATUS") private const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
-        @Deprecated("Use PREFS_STATUS") private const val PREFS_STATUS_TODO = "prefsStatusTodo"
+        private const val PREFS_EXTENDED_STATUS = "prefsXStatus"
         private const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
         private const val PREFS_ORDERBY = "prefsOrderBy"
         private const val PREFS_SORTORDER = "prefsSortOrder"
@@ -102,8 +108,6 @@ class ListSettings {
         private const val PREFS_FILTER_START_TODAY = "prefsFilterStartToday"
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
-        @Deprecated("Use PREFS_STATUS") private const val PREFS_FILTER_NO_STATUS_SET = "prefsFilterNoStatusSet"
-        @Deprecated("Use PREFS_CLASSIFICATION") private const val PREFS_FILTER_NO_CLASSIFICATION_SET = "prefsFilterNoClassificationSet"
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
         private const val PREFS_FLAT_VIEW = "prefsFlatView"
@@ -113,6 +117,9 @@ class ListSettings {
 
         private const val PREFS_TOPAPPBAR_MODE = "topAppBarMode"
         private const val PREFS_TOPAPPBAR_COLLECTION_ID = "topAppBarCollectionId"
+        private const val PREFS_KANBAN_COLUMNS_STATUS = "kanbanColumnsStatus"
+        private const val PREFS_KANBAN_COLUMNS_EXTENDED_STATUS = "kanbanColumnsXStatus"
+        private const val PREFS_KANBAN_COLUMNS_CATEGORY = "kanbanColumnsCategory"
 
         //private const val PREFS_CHECKBOX_POSITION_END = "prefsCheckboxPosition"
         //private const val PREFS_WIDGET_ALPHA = "prefsWidgetAlpha"
@@ -145,30 +152,14 @@ class ListSettings {
             isFilterNoResourceSet.value = prefs.getBoolean(PREFS_FILTER_NO_RESOURCE_SET, false)
 
             //searchOrganizers =
-            searchCategories.value = prefs.getStringSet(PREFS_CATEGORIES, null)?.toList() ?: emptyList()
-            searchResources.value = prefs.getStringSet(PREFS_RESOURCES, null)?.toList() ?: emptyList()
-            searchStatus.value = mutableListOf<Status>().apply {
-                addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
+            searchCategories.addAll(prefs.getStringSet(PREFS_CATEGORIES, emptySet())?.toList() ?: emptyList())
+            searchResources.addAll(prefs.getStringSet(PREFS_RESOURCES, emptySet())?.toList() ?: emptyList())
+            searchStatus.addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
+            searchXStatus.addAll(prefs.getStringSet(PREFS_EXTENDED_STATUS, emptySet())?.toList() ?: emptyList())
 
-                //Legacy handling
-                prefs.getStringSet(PREFS_STATUS_JOURNAL, null)?.forEach { legacyStatusJournal ->
-                    Status.valuesFor(Module.JOURNAL).find { it.status == legacyStatusJournal }?.let { add(it) }
-                }
-                prefs.getStringSet(PREFS_STATUS_TODO, null)?.forEach { legacyStatusTodo ->
-                    Status.valuesFor(Module.TODO).find { it.status == legacyStatusTodo }?.let { add(it) }
-                }
-                if(prefs.getBoolean(PREFS_FILTER_NO_STATUS_SET, false))
-                    add(Status.NO_STATUS)
-            }
-
-            searchClassification.value = mutableListOf<Classification>().apply {
-                addAll(Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null)))
-                //Legacy handling
-                if(prefs.getBoolean(PREFS_FILTER_NO_CLASSIFICATION_SET, false))
-                    add(Classification.NO_CLASSIFICATION)
-            }
-            searchCollection.value = prefs.getStringSet(PREFS_COLLECTION, null)?.toList() ?: emptyList()
-            searchAccount.value = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
+            searchClassification.addAll(Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null)))
+            searchCollection.addAll(prefs.getStringSet(PREFS_COLLECTION, emptySet())?.toList() ?: emptyList())
+            searchAccount.addAll(prefs.getStringSet(PREFS_ACCOUNT, emptySet())?.toList() ?: emptyList())
 
             orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
             sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
@@ -183,6 +174,9 @@ class ListSettings {
 
             viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
+            kanbanColumnsStatus.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS_STATUS, emptySet())?.toList()?: emptyList())
+            kanbanColumnsXStatus.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS, emptySet())?.toList()?: emptyList())
+            kanbanColumnsCategory.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS_CATEGORY, emptySet())?.toList()?: emptyList())
 
             showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
 
@@ -208,28 +202,13 @@ class ListSettings {
             isFilterNoCategorySet.value = listWidgetConfig.isFilterNoCategorySet
             isFilterNoResourceSet.value = listWidgetConfig.isFilterNoResourceSet
 
-            searchCategories.value = listWidgetConfig.searchCategories
-            searchResources.value = listWidgetConfig.searchResources
-            searchStatus.value = mutableListOf<Status>().apply {
-                addAll(listWidgetConfig.searchStatus)
-                //Legacy handling
-                listWidgetConfig.searchStatusJournal.forEach { legacyStatusJournal ->
-                    Status.valuesFor(Module.JOURNAL).find { it.status == legacyStatusJournal.name }?.let { add(it) }
-                }
-                listWidgetConfig.searchStatusTodo.forEach { legacyStatusTodo ->
-                    Status.valuesFor(Module.TODO).find { it.status == legacyStatusTodo.name }?.let { add(it) }
-                }
-                if(listWidgetConfig.isFilterNoStatusSet)
-                    add(Status.NO_STATUS)
-            }
-            searchClassification.value = mutableListOf<Classification>().apply {
-                addAll(listWidgetConfig.searchClassification)
-                //Legacy handling
-                if(listWidgetConfig.isFilterNoClassificationSet)
-                    add(Classification.NO_CLASSIFICATION)
-            }
-            searchCollection.value = listWidgetConfig.searchCollection
-            searchAccount.value = listWidgetConfig.searchAccount
+            searchCategories.addAll(listWidgetConfig.searchCategories)
+            searchResources.addAll(listWidgetConfig.searchResources)
+            searchStatus.addAll(listWidgetConfig.searchStatus)
+            searchXStatus.addAll(listWidgetConfig.searchXStatus)
+            searchClassification.addAll(listWidgetConfig.searchClassification)
+            searchCollection.addAll(listWidgetConfig.searchCollection)
+            searchAccount.addAll(listWidgetConfig.searchAccount)
 
             orderBy.value = listWidgetConfig.orderBy
             sortOrder.value = listWidgetConfig.sortOrder
@@ -287,38 +266,37 @@ class ListSettings {
 
             putBoolean(PREFS_EXCLUDE_DONE, isExcludeDone.value)
 
-            putStringSet(PREFS_CATEGORIES, searchCategories.value.toSet())
-            putStringSet(PREFS_RESOURCES, searchResources.value.toSet())
-            putStringSet(PREFS_STATUS, Status.getStringSetFromList(searchStatus.value))
-            putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(searchClassification.value))
-            putStringSet(PREFS_COLLECTION, searchCollection.value.toSet())
-            putStringSet(PREFS_ACCOUNT, searchAccount.value.toSet())
+            putStringSet(PREFS_CATEGORIES, searchCategories.toSet())
+            putStringSet(PREFS_RESOURCES, searchResources.toSet())
+            putStringSet(PREFS_STATUS, Status.getStringSetFromList(searchStatus))
+            putStringSet(PREFS_EXTENDED_STATUS, searchXStatus.toSet())
+            putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(searchClassification))
+            putStringSet(PREFS_COLLECTION, searchCollection.toSet())
+            putStringSet(PREFS_ACCOUNT, searchAccount.toSet())
 
             putString(PREFS_VIEWMODE, viewMode.value.name)
             putBoolean(PREFS_FLAT_VIEW, flatView.value)
+            putStringSet(PREFS_KANBAN_COLUMNS_STATUS, kanbanColumnsStatus.toSet())
+            putStringSet(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS, kanbanColumnsXStatus.toSet())
+            putStringSet(PREFS_KANBAN_COLUMNS_CATEGORY, kanbanColumnsCategory.toSet())
+
 
             putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
 
             putLong(PREFS_TOPAPPBAR_COLLECTION_ID, topAppBarCollectionId.value)
             putString(PREFS_TOPAPPBAR_MODE, topAppBarMode.value.name)
-
-            //Legacy handling
-            remove(PREFS_STATUS_JOURNAL)
-            remove(PREFS_STATUS_TODO)
-            remove(PREFS_FILTER_NO_STATUS_SET)
-            remove(PREFS_FILTER_NO_CLASSIFICATION_SET)
-
         }.apply()
     }
 
     fun reset() {
-        searchCategories.value = emptyList()
-        searchResources.value = emptyList()
+        searchCategories.clear()
+        searchResources.clear()
         //searchOrganizer = emptyList()
-        searchStatus.value = emptyList()
-        searchClassification.value = emptyList()
-        searchCollection.value = emptyList()
-        searchAccount.value = emptyList()
+        searchStatus.clear()
+        searchXStatus.clear()
+        searchClassification.clear()
+        searchCollection.clear()
+        searchAccount.clear()
         isExcludeDone.value = false
         isFilterStartInPast.value = false
         isFilterStartToday.value = false
@@ -340,13 +318,14 @@ class ListSettings {
     fun saveLastUsedCollectionId(prefs: SharedPreferences, collectionId: Long) = prefs.edit()?.putLong(PREFS_LAST_COLLECTION, collectionId)?.apply()
 
     fun isFilterActive() =
-        searchCategories.value.isNotEmpty()
-                || searchResources.value.isNotEmpty()
+        searchCategories.isNotEmpty()
+                || searchResources.isNotEmpty()
                 //|| searchOrganizers.value.isNotEmpty()
-                || searchStatus.value.isNotEmpty()
-                || searchClassification.value.isNotEmpty()
-                || searchCollection.value.isNotEmpty()
-                || searchAccount.value.isNotEmpty()
+                || searchStatus.isNotEmpty()
+                || searchXStatus.isNotEmpty()
+                || searchClassification.isNotEmpty()
+                || searchCollection.isNotEmpty()
+                || searchAccount.isNotEmpty()
                 || isExcludeDone.value
                 || isFilterStartInPast.value
                 || isFilterStartToday.value

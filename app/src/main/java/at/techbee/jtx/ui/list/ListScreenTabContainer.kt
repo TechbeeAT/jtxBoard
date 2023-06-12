@@ -187,16 +187,19 @@ fun ListScreenTabContainer(
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = icalObjectId, icalObjectIdList = getActiveViewModel().iCal4ListRel.value?.map { it.iCal4List.id } ?: emptyList(), isEditMode = true))
     }
 
-    if(storedListSettingData != null) {
-        storedListSettingData.applyToListSettings(icalListViewModelJournals.listSettings)
-        storedListSettingData.applyToListSettings(icalListViewModelNotes.listSettings)
-        storedListSettingData.applyToListSettings(icalListViewModelTodos.listSettings)
-        getActiveViewModel().updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
+    LaunchedEffect(storedListSettingData) {
+        if (storedListSettingData != null) {
+            storedListSettingData.applyToListSettings(icalListViewModelJournals.listSettings)
+            storedListSettingData.applyToListSettings(icalListViewModelNotes.listSettings)
+            storedListSettingData.applyToListSettings(icalListViewModelTodos.listSettings)
+            getActiveViewModel().updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
+        }
     }
 
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val filterSheetState = rememberModalBottomSheetState()
+    var filterSheetInitialTab by remember { mutableStateOf(ListOptionsBottomSheetTabs.FILTER)}
 
     var showSearch by remember { mutableStateOf(false) }
     val showQuickAdd = remember { mutableStateOf(false) }
@@ -218,6 +221,7 @@ fun ListScreenTabContainer(
             selectFromAllListLive = getActiveViewModel().selectFromAllList,
             storedCategoriesLive = getActiveViewModel().storedCategories,
             storedResourcesLive = getActiveViewModel().storedResources,
+            extendedStatusesLive = getActiveViewModel().extendedStatuses,
             player = getActiveViewModel().mediaPlayer,
             onSelectFromAllListSearchTextUpdated = { getActiveViewModel().updateSelectFromAllListQuery(searchText = it, isAuthenticated = globalStateHolder.isAuthenticated.value) },
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
@@ -306,10 +310,13 @@ fun ListScreenTabContainer(
         ModalBottomSheet(sheetState = filterSheetState, onDismissRequest = { }) {
             ListOptionsBottomSheet(
                 module = listViewModel.module,
+                initialTab = filterSheetInitialTab,
                 listSettings = listViewModel.listSettings,
                 allCollectionsLive = listViewModel.allCollections,
                 allCategoriesLive = listViewModel.allCategories,
                 allResourcesLive = listViewModel.allResources,
+                storedStatusesLive = listViewModel.extendedStatuses,
+                storedCategoriesLive = listViewModel.storedCategories,
                 storedListSettingLive = listViewModel.storedListSettings,
                 onListSettingsChanged = {
                     listViewModel.updateSearch(
@@ -322,7 +329,6 @@ fun ListScreenTabContainer(
             )
         }
     }
-
 
     Scaffold(
         topBar = {
@@ -436,6 +442,7 @@ fun ListScreenTabContainer(
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
                                 isSelected = getActiveViewModel().listSettings.viewMode.value == viewMode,
+                                hasSettings = viewMode == ViewMode.KANBAN,
                                 onClick = {
                                     if ((!isProPurchased.value)) {
                                         Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
@@ -444,6 +451,14 @@ fun ListScreenTabContainer(
                                         getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                                     }
                                     topBarMenuExpanded = false
+                                },
+                                onSettingsClicked = {
+                                    if(viewMode ==ViewMode.KANBAN) {
+                                        getActiveViewModel().listSettings.viewMode.value = viewMode
+                                        filterSheetInitialTab = ListOptionsBottomSheetTabs.KANBAN_SETTINGS
+                                        scope.launch { filterSheetState.show() }
+                                        topBarMenuExpanded = false
+                                    }
                                 }
                             )
                         }
@@ -512,10 +527,12 @@ fun ListScreenTabContainer(
                     isBiometricsUnlocked = globalStateHolder.isAuthenticated.value,
                     onFilterIconClicked = {
                         scope.launch {
-                            if (filterSheetState.isVisible)
+                            if (filterSheetState.isVisible) {
                                 filterSheetState.hide()
-                            else
+                            } else {
+                                filterSheetInitialTab = ListOptionsBottomSheetTabs.FILTER
                                 filterSheetState.show()
+                            }
                         }
                     },
                     onGoToDateSelected = { id -> getActiveViewModel().scrollOnceId.postValue(id) },

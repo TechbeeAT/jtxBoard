@@ -83,7 +83,10 @@ fun SyncScreen(
                 title = stringResource(id = R.string.navigation_drawer_synchronization),
                 actions = {
                     if (availableSyncApps.isNotEmpty()) {
-                        IconButton(onClick = { SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet()) }) {
+                        IconButton(onClick = {
+                            SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+                            SyncUtil.showSyncRequestedToast(context)
+                        }) {
                             Icon(Icons.Outlined.Sync, stringResource(id = R.string.sync_now))
                         }
                     }

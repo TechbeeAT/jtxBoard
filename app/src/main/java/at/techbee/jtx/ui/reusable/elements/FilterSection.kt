@@ -35,6 +35,7 @@ fun FilterSection(
     onInvertSelection: () -> Unit,
     modifier: Modifier = Modifier,
     showMenu: Boolean = true,
+    subtitle: String? = null,
     content: @Composable () -> Unit,
     ) {
 
@@ -51,12 +52,21 @@ fun FilterSection(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            HeadlineWithIcon(
-                icon = icon,
-                iconDesc = headline,
-                text = headline,
-                modifier = Modifier.weight(1f)
-            )
+
+            Column(modifier = Modifier.weight(1f)) {
+                HeadlineWithIcon(
+                    icon = icon,
+                    iconDesc = headline,
+                    text = headline
+                )
+                subtitle?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
             if(showMenu) {
                 Row {
                 IconButton(onClick = { expanded = !expanded }) {
@@ -103,6 +113,7 @@ fun FilterSection_Preview() {
         FilterSection(
             icon = Icons.Outlined.Folder,
             headline = stringResource(id = R.string.collection),
+            subtitle = "Here comes the subtitle",
             content = {
                 Row(
                     modifier = Modifier

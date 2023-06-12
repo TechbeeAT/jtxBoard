@@ -27,6 +27,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.ui.reusable.dialogs.SaveListSettingsPresetDialog
@@ -42,6 +43,7 @@ fun ListOptionsFilter(
     allCategoriesLive: LiveData<List<String>>,
     allResourcesLive: LiveData<List<String>>,
     storedListSettingLive: LiveData<List<StoredListSetting>>,
+    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
     onListSettingsChanged: () -> Unit,
     onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
     onDeleteStoredListSetting: (StoredListSetting) -> Unit,
@@ -54,6 +56,7 @@ fun ListOptionsFilter(
     val allCollections by remember { derivedStateOf { allCollectionsState.value.map { it.displayName ?: "" }.sortedBy { it.lowercase() } } }
     val allAccounts by remember { derivedStateOf { allCollectionsState.value.map { it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } } }
     val storedListSettings by storedListSettingLive.observeAsState(emptyList())
+    val extendedStatuses by extendedStatusesLive.observeAsState(initial = emptyList())
     var showSaveListSettingsPresetDialog by remember { mutableStateOf(false) }
 
     if(showSaveListSettingsPresetDialog) {
@@ -293,15 +296,14 @@ fun ListOptionsFilter(
             headline = stringResource(id = R.string.category),
             onResetSelection = {
                 listSettings.isFilterNoCategorySet.value = false
-                listSettings.searchCategories.value = emptyList()
+                listSettings.searchCategories.clear()
                 onListSettingsChanged()
             },
             onInvertSelection = {
                 listSettings.isFilterNoCategorySet.value = !listSettings.isFilterNoCategorySet.value
-                listSettings.searchCategories.value =
-                    allCategories.filter { category ->
-                        !listSettings.searchCategories.value.contains(category)
-                    }
+                val missing = allCategories.filter { category -> !listSettings.searchCategories.contains(category) }
+                listSettings.searchCategories.clear()
+                listSettings.searchCategories.addAll(missing)
                 onListSettingsChanged()
             })
         {
@@ -316,13 +318,12 @@ fun ListOptionsFilter(
 
             allCategories.forEach { category ->
                 FilterChip(
-                    selected = listSettings.searchCategories.value.contains(category),
+                    selected = listSettings.searchCategories.contains(category),
                     onClick = {
-                        listSettings.searchCategories.value =
-                            if (listSettings.searchCategories.value.contains(category))
-                                listSettings.searchCategories.value.minus(category)
-                            else
-                                listSettings.searchCategories.value.plus(category)
+                        if (listSettings.searchCategories.contains(category))
+                            listSettings.searchCategories.remove(category)
+                        else
+                            listSettings.searchCategories.add(category)
                         onListSettingsChanged()
                     },
                     label = { Text(category) }
@@ -334,23 +335,24 @@ fun ListOptionsFilter(
                 icon = Icons.Outlined.AccountBalance,
                 headline = stringResource(id = R.string.account),
                 onResetSelection = {
-                    listSettings.searchAccount.value = emptyList()
+                    listSettings.searchAccount.clear()
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    listSettings.searchAccount.value = allAccounts.toMutableList().apply { removeAll(listSettings.searchAccount.value) }
+                    val missing = allAccounts.toMutableList().apply { removeAll(listSettings.searchAccount) }
+                    listSettings.searchAccount.clear()
+                    listSettings.searchAccount.addAll(missing)
                     onListSettingsChanged()
                 })
             {
                 allAccounts.forEach { account ->
                     FilterChip(
-                        selected = listSettings.searchAccount.value.contains(account),
+                        selected = listSettings.searchAccount.contains(account),
                         onClick = {
-                            listSettings.searchAccount.value =
-                                if (listSettings.searchAccount.value.contains(account))
-                                    listSettings.searchAccount.value.minus(account)
-                                else
-                                    listSettings.searchAccount.value.plus(account)
+                            if (listSettings.searchAccount.contains(account))
+                                listSettings.searchAccount.remove(account)
+                            else
+                                listSettings.searchAccount.add(account)
                             onListSettingsChanged()
                         },
                         label = { Text(account) }
@@ -363,28 +365,24 @@ fun ListOptionsFilter(
                 icon = Icons.Outlined.FolderOpen,
                 headline = stringResource(id = R.string.collection),
                 onResetSelection = {
-                    listSettings.searchCollection.value = emptyList()
+                    listSettings.searchCollection.clear()
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    listSettings.searchCollection.value =
-                        allCollections
-                            .toMutableList()
-                            .apply { removeAll(listSettings.searchCollection.value) }
+                    val missing = allCollections.toMutableList().apply { removeAll(listSettings.searchCollection) }
+                    listSettings.searchCollection.clear()
+                    listSettings.searchCollection.addAll(missing)
                     onListSettingsChanged()
                 })
             {
                 allCollections.forEach { collection ->
                     FilterChip(
-                        selected = listSettings.searchCollection.value.contains(
-                            collection
-                        ),
+                        selected = listSettings.searchCollection.contains(collection),
                         onClick = {
-                            listSettings.searchCollection.value =
-                                if (listSettings.searchCollection.value.contains(collection))
-                                    listSettings.searchCollection.value.minus(collection)
-                                else
-                                    listSettings.searchCollection.value.plus(collection)
+                            if (listSettings.searchCollection.contains(collection))
+                                listSettings.searchCollection.remove(collection)
+                            else
+                                listSettings.searchCollection.add(collection)
                             onListSettingsChanged()
                         },
                         label = { Text(collection) }
@@ -397,28 +395,59 @@ fun ListOptionsFilter(
                 icon = Icons.Outlined.PublishedWithChanges,
                 headline = stringResource(id = R.string.status),
                 onResetSelection = {
-                    listSettings.searchStatus.value = emptyList()
+                    listSettings.searchStatus.clear()
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                        listSettings.searchStatus.value = Status.valuesFor(module)
-                            .filter { status -> !listSettings.searchStatus.value.contains(status) }
+                    val missing = Status.valuesFor(module).filter { status -> !listSettings.searchStatus.contains(status)}
+                    listSettings.searchStatus.clear()
+                    listSettings.searchStatus.addAll(missing)
                     onListSettingsChanged()
                 })
             {
                 Status.valuesFor(module).forEach { status ->
                     FilterChip(
-                        selected = listSettings.searchStatus.value.contains(status),
+                        selected = listSettings.searchStatus.contains(status),
                         onClick = {
-                            listSettings.searchStatus.value =
-                                if (listSettings.searchStatus.value.contains(status))
-                                    listSettings.searchStatus.value.minus(status)
+                                if (listSettings.searchStatus.contains(status))
+                                    listSettings.searchStatus.remove(status)
                                 else
-                                    listSettings.searchStatus.value.plus(status)
+                                    listSettings.searchStatus.add(status)
                             onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = status.stringResource)) }
                     )
+                }
+            }
+
+            if(extendedStatuses.any { it.module == module }) {
+                FilterSection(
+                    icon = Icons.Outlined.PublishedWithChanges,
+                    headline = stringResource(id = R.string.extended_status),
+                    onResetSelection = {
+                        listSettings.searchXStatus.clear()
+                        onListSettingsChanged()
+                    },
+                    onInvertSelection = {
+                        val missing = extendedStatuses.filter { xstatus -> !listSettings.searchXStatus.contains(xstatus.xstatus) }
+                        listSettings.searchXStatus.clear()
+                        listSettings.searchXStatus.addAll(missing.map { it.xstatus })
+                        onListSettingsChanged()
+                    })
+                {
+                    extendedStatuses.filter { it.module == module }.forEach { xstatus ->
+                        FilterChip(
+                            selected = listSettings.searchXStatus.contains(xstatus.xstatus),
+                            onClick = {
+                                if (listSettings.searchXStatus.contains(xstatus.xstatus))
+                                    listSettings.searchXStatus.remove(xstatus.xstatus)
+                                else
+                                    listSettings.searchXStatus.add(xstatus.xstatus)
+                                onListSettingsChanged()
+                            },
+                            label = { Text(xstatus.xstatus) }
+                        )
+                    }
                 }
             }
 
@@ -428,23 +457,24 @@ fun ListOptionsFilter(
                 icon = Icons.Outlined.PrivacyTip,
                 headline = stringResource(id = R.string.classification),
                 onResetSelection = {
-                    listSettings.searchClassification.value = emptyList()
+                    listSettings.searchClassification.clear()
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    listSettings.searchClassification.value = Classification.values()
-                        .filter { classification -> !listSettings.searchClassification.value.contains(classification) }
+                    val missing = Classification.values().filter { classification -> !listSettings.searchClassification.contains(classification) }
+                    listSettings.searchClassification.clear()
+                    listSettings.searchClassification.addAll(missing)
                     onListSettingsChanged()
                 })
             {
                 Classification.values().forEach { classification ->
                     FilterChip(
-                        selected = listSettings.searchClassification.value.contains(classification),
+                        selected = listSettings.searchClassification.contains(classification),
                         onClick = {
-                            listSettings.searchClassification.value = if (listSettings.searchClassification.value.contains(classification))
-                                    listSettings.searchClassification.value.minus(classification)
+                            if (listSettings.searchClassification.contains(classification))
+                                    listSettings.searchClassification.remove(classification)
                                 else
-                                    listSettings.searchClassification.value.plus(classification)
+                                    listSettings.searchClassification.add(classification)
                             onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = classification.stringResource)) }
@@ -460,15 +490,14 @@ fun ListOptionsFilter(
                     headline = stringResource(id = R.string.resources),
                     onResetSelection = {
                         listSettings.isFilterNoResourceSet.value = false
-                        listSettings.searchResources.value = emptyList()
+                        listSettings.searchResources.clear()
                         onListSettingsChanged()
                     },
                     onInvertSelection = {
                         listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
-                        listSettings.searchResources.value =
-                            allResources.filter { resource ->
-                                !listSettings.searchResources.value.contains(resource)
-                            }
+                        val missing = allResources.filter { resource -> !listSettings.searchResources.contains(resource) }
+                        listSettings.searchResources.clear()
+                        listSettings.searchResources.addAll(missing)
                         onListSettingsChanged()
                     })
                 {
@@ -483,13 +512,12 @@ fun ListOptionsFilter(
 
                     allResources.forEach { resource ->
                         FilterChip(
-                            selected = listSettings.searchResources.value.contains(resource),
+                            selected = listSettings.searchResources.contains(resource),
                             onClick = {
-                                listSettings.searchResources.value =
-                                    if (listSettings.searchResources.value.contains(resource))
-                                        listSettings.searchResources.value.minus(resource)
-                                    else
-                                        listSettings.searchResources.value.plus(resource)
+                                if (listSettings.searchResources.contains(resource))
+                                    listSettings.searchResources.remove(resource)
+                                else
+                                    listSettings.searchResources.add(resource)
                                 onListSettingsChanged()
                             },
                             label = { Text(resource) }
@@ -556,6 +584,7 @@ fun ListOptionsFilter_Preview_TODO() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
+            extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },
@@ -597,6 +626,7 @@ fun ListOptionsFilter_Preview_JOURNAL() {
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
+            extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { _, _ -> },
             onDeleteStoredListSetting = { }

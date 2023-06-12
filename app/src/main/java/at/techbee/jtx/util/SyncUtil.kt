@@ -54,6 +54,8 @@ class SyncUtil {
             }
         }
 
+        fun showSyncRequestedToast(context: Context) = Toast.makeText(context, context.getString(R.string.toast_sync_requested), Toast.LENGTH_SHORT).show()
+
         /**
          * @return true if a known sync app found
          */
@@ -87,6 +89,7 @@ class SyncUtil {
                 return false
             }
         }
+
 
         /**
          * Starts an intent to open DAVx5 Login Activity (to add a new account)
@@ -191,8 +194,8 @@ enum class SyncApp(
         "at.bitfire.davdroid",
         "bitfire.at.davdroid",
         "at.bitfire.davdroid",
-        403010000L,
-        "4.3.1",
+        403030000L,
+        "4.3.3",
     "https://www.davx5.com/",
         "https://jtx.techbee.at/sync-with-davx5"
     ),
@@ -203,8 +206,8 @@ enum class SyncApp(
         "com.infomaniak.sync",
         "infomaniak.com.sync",
         "at.bitfire.davdroid",
-        403010000L,
-        "4.3.1",
+        403030000L,
+        "4.3.3",
         "https://www.infomaniak.com/goto/en/home?utm_term=643c252cecbd9",
         "https://www.infomaniak.com/en/support/faq/2302/quickstart-guide-ksync-for-android"
     ),
@@ -215,8 +218,8 @@ enum class SyncApp(
         "com.davdroid.managed",
         "com.davdroid",
         "at.bitfire.davdroid",
-        403010000L,
-        "4.3.1",
+        403030000L,
+        "4.3.3",
         "https://www.davx5.com/organizations/managed-davx5",
         "https://www.davx5.com/organizations/deployment"
     ),

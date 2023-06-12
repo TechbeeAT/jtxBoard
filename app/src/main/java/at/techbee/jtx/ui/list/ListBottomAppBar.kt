@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.EventNote
 import androidx.compose.material.icons.outlined.FilterList
+import androidx.compose.material.icons.outlined.FilterListOff
 import androidx.compose.material.icons.outlined.LibraryAddCheck
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.NoteAdd
@@ -65,6 +66,8 @@ import at.techbee.jtx.ui.reusable.dialogs.DeleteDoneDialog
 import at.techbee.jtx.ui.reusable.dialogs.SyncAppIncompatibleDialog
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncApp
+import java.time.Instant
+import java.time.ZoneId
 import java.util.TimeZone
 
 @Composable
@@ -119,8 +122,8 @@ fun ListBottomAppBar(
             },
             onDismiss = { showGoToDatePicker = false },
             dateOnly = true,
-            minDate = dates.minOf { it },
-            maxDate =  dates.maxOf { it }
+            minDate = Instant.ofEpochMilli(dates.minOf { it }).atZone(ZoneId.systemDefault()),
+            maxDate = Instant.ofEpochMilli(dates.maxOf { it }).atZone(ZoneId.systemDefault())
         )
     }
 
@@ -217,15 +220,27 @@ fun ListBottomAppBar(
                         }
                     }
 
-                    AnimatedVisibility(module == Module.TODO) {
+                    AnimatedVisibility(module == Module.TODO || listSettings.isFilterActive()) {
                         OverflowMenu(menuExpanded = showMoreActionsMenu) {
+
+                            if(module == Module.TODO) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(R.string.list_delete_done)) },
+                                    onClick = {
+                                        showDeleteDoneDialog = true
+                                        showMoreActionsMenu.value = false
+                                    },
+                                    leadingIcon = { Icon(Icons.Outlined.DeleteSweep, null) },
+                                )
+                            }
+
                             DropdownMenuItem(
-                                text = { Text(text = stringResource(R.string.list_delete_done)) },
+                                text = { Text(text = stringResource(R.string.clear_filters)) },
                                 onClick = {
-                                    showDeleteDoneDialog = true
+                                    listSettings.reset()
                                     showMoreActionsMenu.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.DeleteSweep, null) },
+                                leadingIcon = { Icon(Icons.Outlined.FilterListOff, null) }
                             )
                         }
                     }

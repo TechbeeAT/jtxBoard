@@ -18,6 +18,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.*
+import at.techbee.jtx.ui.presets.XStatusStatusPair
 
 
 /**
@@ -495,6 +496,13 @@ DELETEs by Object
     fun deleteResourcesForICalObjects(resources: List<String>, iCalObjectIds: List<Long>)
 
 
+    /**
+     * Exchanges a category with another
+     */
+    @Query("UPDATE $TABLE_NAME_CATEGORY SET $COLUMN_CATEGORY_TEXT = :newCategory WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :icalObjectId AND $COLUMN_CATEGORY_TEXT = :oldCategory")
+    fun swapCategories(icalObjectId: Long, oldCategory: String, newCategory: String)
+
+
 
     /**
      * Delete entities through a RawQuery.
@@ -751,12 +759,13 @@ DELETEs by Object
     @Query("SELECT * FROM $TABLE_NAME_STORED_CATEGORIES")
     fun getStoredCategories(): LiveData<List<StoredCategory>>
 
+
     @Delete
     fun deleteStoredCategory(storedCategory: StoredCategory)
 
 
     /**
-     * StoredResourceCategory
+     * StoredResource
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertStoredResource(storedResource: StoredResource)
@@ -768,5 +777,28 @@ DELETEs by Object
     @Delete
     fun deleteStoredResource(storedResource: StoredResource)
 
+
+    /**
+     * StoredStatus
+     */
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_EXTENDED_STATUS")
+    fun getStoredStatuses(): LiveData<List<ExtendedStatus>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertStoredStatus(storedStatus: ExtendedStatus)
+
+    @Delete
+    fun deleteStoredStatus(storedStatus: ExtendedStatus)
+
+    /**
+     * Gets all XStatuses for a specific module
+     * @param [module] for which the XStatuses should be retrieved
+     * @return a pair of XSTATUS and mapped STATUS
+     */
+    @Transaction
+    @Query("SELECT DISTINCT $COLUMN_EXTENDED_STATUS, $COLUMN_STATUS FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module AND $COLUMN_EXTENDED_STATUS IS NOT NULL")
+    fun getAllXStatusesFor(module: String): LiveData<List<XStatusStatusPair>>
 
 }

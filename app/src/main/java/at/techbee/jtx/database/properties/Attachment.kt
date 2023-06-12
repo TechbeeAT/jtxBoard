@@ -30,7 +30,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.FileCleanupJob
 import at.techbee.jtx.R
@@ -40,6 +44,8 @@ import kotlinx.parcelize.Parcelize
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 /** The name of the the table for Attachments that are linked to an ICalObject.
@@ -160,8 +166,7 @@ data class Attachment (
             try {
                 val cachedFile = File(cachedRecordingUri.toString())
                 val fileExtension = MimeTypeMap.getFileExtensionFromUrl(cachedRecordingUri.toString())
-                val newFilename = "${System.currentTimeMillis()}.$fileExtension"
-                val newFile = File(getAttachmentDirectory(context), newFilename)
+                val newFile = File(getAttachmentDirectory(context), "${System.currentTimeMillis()}.$fileExtension")
                 newFile.createNewFile()
                 newFile.writeBytes(cachedFile.readBytes())
 
@@ -172,7 +177,7 @@ data class Attachment (
                         AUTHORITY_FILEPROVIDER,
                         newFile
                     ).toString(),
-                    filename = newFilename,
+                    filename = "${LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)}.$fileExtension",
                     extension = fileExtension,
                 )
             } catch (e: IOException) {
@@ -360,7 +365,7 @@ data class Attachment (
                 intent.data = uri
                 context.startActivity(intent)
             } else if(uri.scheme == null) {
-                val uriWithHttps = Uri.parse("https://" + uri.toString())
+                val uriWithHttps = Uri.parse("https://$uri")
                 intent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.data = uriWithHttps
                 context.startActivity(intent)

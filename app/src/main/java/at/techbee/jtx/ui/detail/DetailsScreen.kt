@@ -87,6 +87,7 @@ fun DetailsScreen(
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val storedCategories by detailViewModel.storedCategories.observeAsState(emptyList())
     val storedResources by detailViewModel.storedResources.observeAsState(emptyList())
+    val storedStatuses by detailViewModel.storedStatuses.observeAsState(emptyList())
     val allWriteableCollections = detailViewModel.allWriteableCollections.observeAsState(emptyList())
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
@@ -431,6 +432,7 @@ fun DetailsScreen(
                 allResources = allResources.value,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
+                extendedStatuses = storedStatuses,
                 selectFromAllListLive = detailViewModel.selectFromAllList,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,

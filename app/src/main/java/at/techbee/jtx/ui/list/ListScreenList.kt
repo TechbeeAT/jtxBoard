@@ -58,6 +58,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Attachment
@@ -67,7 +68,6 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
-import at.techbee.jtx.util.SyncUtil
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -79,6 +79,7 @@ fun ListScreenList(
     parentsLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     storedResourcesLive: LiveData<List<StoredResource>>,
+    storedStatusesLive: LiveData<List<ExtendedStatus>>,
     selectedEntries: SnapshotStateList<Long>,
     attachmentsLive: LiveData<Map<Long, List<Attachment>>>,
     scrollOnceId: MutableLiveData<Long?>,
@@ -90,6 +91,7 @@ fun ListScreenList(
     settingShowProgressSubtasks: MutableState<Boolean>,
     settingProgressIncrement: MutableState<DropdownSettingOption>,
     settingLinkProgressToSubtasks: Boolean,
+    isPullRefreshEnabled: Boolean,
     player: MediaPlayer?,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
@@ -98,13 +100,13 @@ fun ListScreenList(
     onSyncRequested: () -> Unit
 ) {
 
-    val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
     val subnotes by subnotesLive.observeAsState(emptyList())
     val parents by parentsLive.observeAsState(emptyList())
     val attachments by attachmentsLive.observeAsState(emptyMap())
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
     val storedResources by storedResourcesLive.observeAsState(emptyList())
+    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
 
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
@@ -118,9 +120,10 @@ fun ListScreenList(
         contentAlignment = Alignment.TopCenter
     ) {
         LazyColumn(
-            modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 4.dp)
-                .pullRefresh(pullRefreshState),
+            modifier = if(isPullRefreshEnabled)
+                    Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp).pullRefresh(pullRefreshState)
+                else
+                    Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
             state = listState,
         ) {
             groupedList.forEach { (groupName, group) ->
@@ -196,6 +199,7 @@ fun ListScreenList(
                             parents = currentParents,
                             storedCategories = storedCategories,
                             storedResources = storedResources,
+                            storedStatuses = storedStatuses,
                             selected = selectedEntries,
                             attachments = currentAttachments ?: emptyList(),
                             isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
@@ -241,12 +245,10 @@ fun ListScreenList(
             }
         }
 
-        if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
-            PullRefreshIndicator(
-                refreshing = false,
-                state = pullRefreshState
-            )
-        }
+        PullRefreshIndicator(
+            refreshing = false,
+            state = pullRefreshState
+        )
     }
 }
 
@@ -300,6 +302,7 @@ fun ListScreenList_TODO() {
             parentsLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
@@ -310,6 +313,7 @@ fun ListScreenList_TODO() {
             settingShowProgressSubtasks = remember { mutableStateOf(true) },
             settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             settingLinkProgressToSubtasks = false,
+            isPullRefreshEnabled = true,
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
@@ -374,6 +378,7 @@ fun ListScreenList_JOURNAL() {
             parentsLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
@@ -384,6 +389,7 @@ fun ListScreenList_JOURNAL() {
             settingShowProgressSubtasks = remember { mutableStateOf(false) },
             settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             settingLinkProgressToSubtasks = false,
+            isPullRefreshEnabled = true,
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
