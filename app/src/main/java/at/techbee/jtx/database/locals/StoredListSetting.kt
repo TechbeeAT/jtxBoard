@@ -129,6 +129,7 @@ data class StoredListSettingData(
     }
 
     fun applyToListSettings(listSettings: ListSettings) {
+        listSettings.reset()
         listSettings.searchCategories.addAll(searchCategories)
         listSettings.searchResources.addAll(searchResources)
         listSettings.searchStatus.addAll(searchStatus)

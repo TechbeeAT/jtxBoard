@@ -187,11 +187,13 @@ fun ListScreenTabContainer(
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = icalObjectId, icalObjectIdList = getActiveViewModel().iCal4ListRel.value?.map { it.iCal4List.id } ?: emptyList(), isEditMode = true))
     }
 
-    if(storedListSettingData != null) {
-        storedListSettingData.applyToListSettings(icalListViewModelJournals.listSettings)
-        storedListSettingData.applyToListSettings(icalListViewModelNotes.listSettings)
-        storedListSettingData.applyToListSettings(icalListViewModelTodos.listSettings)
-        getActiveViewModel().updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
+    LaunchedEffect(storedListSettingData) {
+        if (storedListSettingData != null) {
+            storedListSettingData.applyToListSettings(icalListViewModelJournals.listSettings)
+            storedListSettingData.applyToListSettings(icalListViewModelNotes.listSettings)
+            storedListSettingData.applyToListSettings(icalListViewModelTodos.listSettings)
+            getActiveViewModel().updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
+        }
     }
 
 

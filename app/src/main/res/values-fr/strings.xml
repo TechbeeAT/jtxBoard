@@ -22,6 +22,7 @@ Global Strings -->
     <string name="toolbar_text_add_journal">"Ajouter un journal"</string>
     <string name="toolbar_text_add_note">"Ajouter une note"</string>
     <string name="toolbar_text_add_task">"Ajouter une tâche"</string>
+    <string name="toast_sync_requested">"Synchronisation terminée"</string>
     <string name="default_local_collection_name">"Local"</string>
     <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
