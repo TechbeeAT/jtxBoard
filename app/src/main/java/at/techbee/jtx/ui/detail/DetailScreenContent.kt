@@ -565,11 +565,10 @@ fun DetailScreenContent(
                 allowStatusChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
                 extendedStatuses = extendedStatuses,
                 onStatusChanged = { newStatus ->
-                    //iCalObject.status = newStatus
                     if (keepStatusProgressCompletedInSync && iCalObject.getModuleFromString() == Module.TODO) {
                         when (newStatus) {
                             Status.NO_STATUS -> iCalObject.setUpdatedProgress(null, true)
-                            Status.NEEDS_ACTION -> iCalObject.setUpdatedProgress(null, true)
+                            //Status.NEEDS_ACTION -> iCalObject.setUpdatedProgress(null, true)
                             Status.IN_PROCESS -> iCalObject.setUpdatedProgress(if (iCalObject.percent !in 1..99) 1 else iCalObject.percent, true)
                             Status.COMPLETED -> iCalObject.setUpdatedProgress(100, true)
                             else -> {}
