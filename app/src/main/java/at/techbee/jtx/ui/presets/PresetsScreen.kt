@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Label
+import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -24,11 +25,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
@@ -51,6 +56,12 @@ fun PresetsScreen(
     val storedCategories by database.getStoredCategories().observeAsState(emptyList())
     val allResources by database.getAllResourcesAsText().observeAsState(emptyList())
     val storedResources by database.getStoredResources().observeAsState(emptyList())
+    val allXStatuses = mapOf(
+        Pair(Module.JOURNAL, database.getAllXStatusesFor(Module.JOURNAL.name).observeAsState(emptyList())),
+        Pair(Module.NOTE, database.getAllXStatusesFor(Module.NOTE.name).observeAsState(emptyList())),
+        Pair(Module.TODO, database.getAllXStatusesFor(Module.TODO.name).observeAsState(emptyList()))
+    )
+    val extendedStatuses by database.getStoredStatuses().observeAsState(emptyList())
 
 
     Scaffold(
@@ -78,6 +89,8 @@ fun PresetsScreen(
                             storedCategories = storedCategories,
                             allResources = allResources,
                             storedResources = storedResources,
+                            allXStatuses = allXStatuses,
+                            extendedStatuses = extendedStatuses,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -98,11 +111,14 @@ fun PresetsScreenContent(
     storedCategories: List<StoredCategory>,
     allResources: List<String>,
     storedResources: List<StoredResource>,
+    allXStatuses: Map<Module, State<List<XStatusStatusPair>>>,
+    extendedStatuses: List<ExtendedStatus>,
     modifier: Modifier = Modifier
 ) {
 
     var editCategory by remember { mutableStateOf<StoredCategory?>(null) }
     var editResource by remember { mutableStateOf<StoredResource?>(null) }
+    var editXStatus by remember { mutableStateOf<ExtendedStatus?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -137,6 +153,23 @@ fun PresetsScreenContent(
                 }
             },
             onDismiss = { editResource = null }
+        )
+    }
+
+    if(editXStatus != null) {
+        EditStoredStatusDialog(
+            storedStatus = editXStatus!!,
+            onStoredStatusChanged = {
+                scope.launch(Dispatchers.IO) {
+                    ICalDatabase.getInstance(context).iCalDatabaseDao.upsertStoredStatus(it)
+                }
+            },
+            onDeleteStoredStatus = {
+                scope.launch(Dispatchers.IO) {
+                    ICalDatabase.getInstance(context).iCalDatabaseDao.deleteStoredStatus(it)
+                }
+            },
+            onDismiss = { editXStatus = null }
         )
     }
     
@@ -216,8 +249,67 @@ fun PresetsScreenContent(
                 colors = AssistChipDefaults.elevatedAssistChipColors()
             )
         }
-    }
 
+        HeadlineWithIcon(
+            icon = Icons.Outlined.PublishedWithChanges,
+            iconDesc = null,
+            text = stringResource(id = R.string.extended_statuses),
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
+        Text(
+            text = stringResource(id = R.string.extended_status_attention),
+            style = MaterialTheme.typography.labelSmall,
+            fontStyle = FontStyle.Italic,
+            modifier = Modifier.padding(8.dp)
+        )
+
+        Module.values().forEach { module ->
+
+            Text(
+                text = when(module) {
+                    Module.JOURNAL -> stringResource(id = R.string.extended_statuses_for_journals)
+                    Module.NOTE -> stringResource(id = R.string.extended_statuses_for_notes)
+                    Module.TODO -> stringResource(id = R.string.extended_statuses_for_tasks)
+                },
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(8.dp)
+            )
+
+           FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(3.dp)
+            ) {
+                extendedStatuses
+                    .filter { it.module == module }
+                    .forEach { storedStatus ->
+                        ElevatedAssistChip(
+                            onClick = { editXStatus = storedStatus },
+                            label = { Text(storedStatus.xstatus) },
+                            colors = storedStatus.color?.let {
+                                AssistChipDefaults.assistChipColors(
+                                    containerColor = Color(it),
+                                    labelColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(it))
+                                )
+                            } ?: AssistChipDefaults.elevatedAssistChipColors()
+                        )
+                    }
+
+               allXStatuses[module]?.value?.filter { extendedStatuses.none { statusPair -> statusPair.xstatus == it.xstatus } }?.forEach { statusPair ->
+                   ElevatedAssistChip(
+                       onClick = { editXStatus = ExtendedStatus(statusPair.xstatus, module, (Status.getStatusFromString(statusPair.status)?: Status.NO_STATUS), null) },
+                       label = { Text(statusPair.xstatus) },
+                       modifier = Modifier.alpha(0.5f)
+                   )
+               }
+
+                ElevatedAssistChip(
+                    onClick = { editXStatus = ExtendedStatus("", module, Status.NO_STATUS, null) },
+                    label = { Text("+") },
+                    colors = AssistChipDefaults.elevatedAssistChipColors()
+                )
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -229,6 +321,14 @@ fun PresetsScreen_Preview() {
             storedCategories = listOf(StoredCategory("red", Color.Magenta.toArgb()), StoredCategory("ohne Farbe", null)),
             allResources = listOf("existing resource"),
             storedResources = listOf(StoredResource("blue", Color.Blue.toArgb()), StoredResource("ohne Farbe", null)),
+            allXStatuses = emptyMap(),
+            extendedStatuses = listOf(ExtendedStatus("Final", Module.JOURNAL, Status.NO_STATUS, Color.Blue.toArgb()), ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))
         )
     }
 }
+
+
+data class XStatusStatusPair(
+    val xstatus: String,
+    val status: String?
+)

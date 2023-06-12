@@ -42,7 +42,7 @@ object JtxContract {
     const val AUTHORITY = "at.techbee.jtx.provider"
 
     /** The version of this SyncContentProviderContract */
-    const val VERSION = 3
+    const val VERSION = 6
 
     /** Constructs an Uri for the Jtx Sync Adapter with the given Account
      * @param [account] The account that should be appended to the Base Uri
@@ -273,6 +273,20 @@ object JtxContract {
         const val STATUS = "status"
 
         /**
+         * Purpose:  To specify the filename of the attachment.
+         * This is an X-PROPERTY that should be addressed as "X-LABEL"
+         * Type: [String]
+         */
+        const val EXTENDED_STATUS = "xstatus"
+
+        /**
+         * Purpose:  Defines the radius for a geofence in meters
+         * This is put into an extended property in the iCalendar-file
+         * Type: [String]
+         */
+        const val GEOFENCE_RADIUS = "geofenceRadius"
+
+        /**
          * Purpose:  This property defines the access classification for a calendar component.
          * The possible values of a status are defined in the enum [Classification].
          * Use e.g. Classification.PUBLIC.name to put a correct String value in this field.
@@ -435,6 +449,17 @@ object JtxContract {
          * Type: [String]
          */
         const val RECURID = "recurid"
+
+        /**
+         * Purpose:  This property is used in conjunction with the "UID" and
+         * "SEQUENCE" properties to identify a specific instance of a
+         * recurring "VEVENT", "VTODO", or "VJOURNAL" calendar component.
+         * The property value is the original value of the "DTSTART" property
+         * of the recurrence instance, ie. a DATE or DATETIME value e.g. "20211101T160000".
+         * Must be null for non-recurring and original events from which recurring events are derived.
+         * Type: [String?]
+         */
+        const val RECURID_TIMEZONE = "recuridtimezone"
 
         /**
          * Stores the reference to the original event from which the recurring event was derived.

@@ -116,7 +116,7 @@ class NotificationPublisher : BroadcastReceiver() {
         const val ACTION_SNOOZE_1H = "actionSnooze1h"
         const val ACTION_DONE = "actionDone"
 
-        private const val PREFS_SCHEDULED_NOTIFICATIONS = "prefsScheduledNotifications"  // ICalObjectIds as StringSet
+        const val PREFS_SCHEDULED_NOTIFICATIONS = "prefsScheduledNotifications"  // ICalObjectIds as StringSet
 
         private const val MAX_ALARMS_SCHEDULED = 5
         private const val MAX_DUE_ALARMS_SCHEDULED = 5

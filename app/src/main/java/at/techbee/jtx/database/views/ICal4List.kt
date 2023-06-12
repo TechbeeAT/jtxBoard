@@ -40,6 +40,7 @@ import at.techbee.jtx.database.COLUMN_DTSTART_TIMEZONE
 import at.techbee.jtx.database.COLUMN_DUE
 import at.techbee.jtx.database.COLUMN_DUE_TIMEZONE
 import at.techbee.jtx.database.COLUMN_DURATION
+import at.techbee.jtx.database.COLUMN_EXTENDED_STATUS
 import at.techbee.jtx.database.COLUMN_GEO_LAT
 import at.techbee.jtx.database.COLUMN_GEO_LONG
 import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
@@ -119,6 +120,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_DTEND, " +
             "main_icalobject.$COLUMN_DTEND_TIMEZONE, " +
             "main_icalobject.$COLUMN_STATUS, " +
+            "main_icalobject.$COLUMN_EXTENDED_STATUS, " +
             "main_icalobject.$COLUMN_CLASSIFICATION, " +
             "main_icalobject.$COLUMN_PERCENT, " +
             "main_icalobject.$COLUMN_PRIORITY, " +
@@ -163,7 +165,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "FROM $TABLE_NAME_ICALOBJECT main_icalobject " +
             //"LEFT JOIN $TABLE_NAME_CATEGORY ON main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
             "INNER JOIN $TABLE_NAME_COLLECTION collection ON main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
-            "WHERE main_icalobject.$COLUMN_DELETED = 0 AND main_icalobject.$COLUMN_RRULE IS NULL"
+            "WHERE main_icalobject.$COLUMN_DELETED = 0 AND (main_icalobject.$COLUMN_RRULE IS NULL OR (main_icalobject.$COLUMN_DTSTART IS NULL AND main_icalobject.$COLUMN_RRULE IS NOT NULL))"
 )           // locally deleted entries are already excluded in the view, original recur entries are also excluded
 
 @kotlinx.serialization.Serializable
@@ -187,6 +189,7 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String?,
 
     @ColumnInfo(name = COLUMN_STATUS) var status: String?,
+    @ColumnInfo(name = COLUMN_EXTENDED_STATUS) var xstatus: String?,
     @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String?,
 
     @ColumnInfo(name = COLUMN_PERCENT) var percent: Int?,
@@ -250,16 +253,17 @@ data class ICal4List(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tellus risus, tristique ac elit vitae, mollis feugiat quam. Duis aliquet arcu at purus porttitor ultricies. Vivamus sagittis feugiat ex eu efficitur. Aliquam nec cursus ante, a varius nisi. In a malesuada urna, in rhoncus est. Maecenas auctor molestie quam, quis lobortis tortor sollicitudin sagittis. Curabitur sit amet est varius urna mattis interdum.\n" +
                         "\n" +
                         "Phasellus id quam vel enim semper ullamcorper in ac velit. Aliquam eleifend dignissim lacinia. Donec elementum ex et dui iaculis, eget vehicula leo bibendum. Nam turpis erat, luctus ut vehicula quis, congue non ex. In eget risus consequat, luctus ipsum nec, venenatis elit. In in tellus vel mauris rhoncus bibendum. Pellentesque sit amet quam elementum, pharetra nisl id, vehicula turpis. ",
-                null,
-                null,
-                null,
-                null,
+                "Vienna",
+                123.456,
+                321.654,
+                "https://jtx.techbee.at",
                 null,
                 System.currentTimeMillis(),
                 null,
                 null,
                 null,
                 status = Status.DRAFT.status,
+                xstatus = null,
                 classification = Classification.CONFIDENTIAL.classification,
                 null,
                 null,
@@ -303,6 +307,7 @@ data class ICal4List(
             searchCategories: List<String> = emptyList(),
             searchResources: List<String> = emptyList(),
             searchStatus: List<Status> = emptyList(),
+            searchXStatus: List<String> = emptyList(),
             searchClassification: List<Classification> = emptyList(),
             searchCollection: List<String> = emptyList(),
             searchAccount: List<String> = emptyList(),
@@ -405,6 +410,13 @@ data class ICal4List(
 
                 if (searchStatus.contains(Status.NO_STATUS))
                     queryString += "OR $COLUMN_STATUS IS NULL"
+                queryString += ") "
+            }
+
+            if (searchXStatus.isNotEmpty()) {
+                queryString += "AND ("
+                queryString += searchXStatus.joinToString(separator = "OR ", transform = { "$COLUMN_EXTENDED_STATUS = ? " })
+                args.addAll(searchXStatus.map { it })
                 queryString += ") "
             }
 

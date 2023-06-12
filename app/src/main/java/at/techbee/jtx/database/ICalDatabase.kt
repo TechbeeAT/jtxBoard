@@ -17,6 +17,7 @@ import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import at.techbee.jtx.R
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredResource
@@ -45,11 +46,12 @@ import at.techbee.jtx.database.views.ICal4List
         Attachment::class,
         StoredListSetting::class,
         StoredCategory::class,
-        StoredResource::class],
+        StoredResource::class,
+        ExtendedStatus::class],
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 27,
+    version = 32,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -75,7 +77,12 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 23, to = 24),  // added ListSettingsStorage
         AutoMigration (from = 24, to = 25),  // added StoredCategory, StoredResource
         AutoMigration (from = 25, to = 26),  // added column Parent Expanded
-        AutoMigration (from = 26, to = 27),  // added geoLat and geoLong to ical4list view
+        AutoMigration (from = 26, to = 27),  // added geoLat and geoLong to ical4list view, added StoredCategory, StoredResource
+        AutoMigration (from = 27, to = 28),  // added Extended Status
+        AutoMigration (from = 28, to = 29),  // added Geofence Radius
+        AutoMigration (from = 29, to = 30),  // added recuridTimezone
+        // no AutoMigration from 30 to 31
+        AutoMigration (from = 31, to = 32),  // view update
     ]
 )
 @TypeConverters(Converters::class)
@@ -133,6 +140,13 @@ abstract class ICalDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_30_31 = object : Migration(30, 31) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("update icalobject set recurid = trim(recurid, 'Z') WHERE recurid like '%Z'")
+                database.execSQL("update icalobject set recuridtimezone = dtstarttimezone where recurid is not null")
+            }
+        }
+
         @Volatile
         private var INSTANCE: ICalDatabase? = null
 
@@ -169,7 +183,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19, MIGRATION_30_31)
 
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about

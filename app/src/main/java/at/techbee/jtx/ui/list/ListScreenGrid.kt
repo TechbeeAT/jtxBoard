@@ -36,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -45,13 +44,13 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
-import at.techbee.jtx.util.SyncUtil
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -61,9 +60,11 @@ fun ListScreenGrid(
     subtasksLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     storedResourcesLive: LiveData<List<StoredResource>>,
+    storedStatusesLive: LiveData<List<ExtendedStatus>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
+    isPullRefreshEnabled: Boolean,
     player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
@@ -71,11 +72,11 @@ fun ListScreenGrid(
     onSyncRequested: () -> Unit
 ) {
 
-    val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
     val storedResources by storedResourcesLive.observeAsState(emptyList())
+    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
     val gridState = rememberLazyStaggeredGridState()
 
     if (scrollId != null) {
@@ -101,7 +102,7 @@ fun ListScreenGrid(
             contentPadding = PaddingValues(8.dp),
             verticalItemSpacing = 8.dp,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.pullRefresh(pullRefreshState),
+            modifier = if(isPullRefreshEnabled) Modifier.pullRefresh(pullRefreshState) else Modifier,
         ) {
             items(
                 items = list,
@@ -119,6 +120,7 @@ fun ListScreenGrid(
                     resources = iCal4ListRelObject.resources,
                     storedCategories = storedCategories,
                     storedResources = storedResources,
+                    storedStatuses = storedStatuses,
                     selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                     progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
                     player = player,
@@ -138,12 +140,10 @@ fun ListScreenGrid(
             }
         }
 
-        if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
-            PullRefreshIndicator(
-                refreshing = false,
-                state = pullRefreshState
-            )
-        }
+        PullRefreshIndicator(
+            refreshing = false,
+            state = pullRefreshState
+        )
     }
 }
 
@@ -189,9 +189,11 @@ fun ListScreenGrid_TODO() {
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            isPullRefreshEnabled = true,
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
@@ -243,9 +245,11 @@ fun ListScreenGrid_JOURNAL() {
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
             storedResourcesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            isPullRefreshEnabled = true,
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },

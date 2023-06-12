@@ -16,10 +16,13 @@ Global Strings -->
     <string name="latitude">"Breitengrad"</string>
     <string name="longitude">"Längengrad"</string>
     <string name="unlink">"Verlinkung aufheben"</string>
+    <string name="off">"Aus"</string>
+    <string name="permissions">"Berechtigungen"</string>
     <string name="current_location">"Aktueller Standort"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
     <string name="toolbar_text_add_note">"Notiz hinzufügen"</string>
     <string name="toolbar_text_add_task">"Aufgabe hinzufügen"</string>
+    <string name="toast_sync_requested">"Synchronisierung angefordert"</string>
     <string name="default_local_collection_name">"Lokal"</string>
     <string name="default_local_account_name">"Lokal"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -433,10 +436,12 @@ Danke!"</string>
     <string name="dialog_save_current_filter_my_filter">"Meine Filter"</string>
     <string name="dialog_edit_stored_category_title">"Kategorie-Vorlage hinzufügen/bearbeiten"</string>
     <string name="dialog_edit_stored_resource_title">"Ressourcen-Vorlage hinzufügen/bearbeiten"</string>
+    <string name="dialog_edit_stored_status_title">"Status-Vorlage hinzufügen/bearbeiten"</string>
     <string name="dialog_add_audio_entry_title">"Audio-Eintrag hinzufügen"</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
     <string name="settings_tasks">"Aufgaben-Einstellungen"</string>
+    <string name="settings_sync">"Sync-Einstellungen"</string>
     <string name="settings_default_start_date">"Standard-Startdatum für Aufgaben"</string>
     <string name="settings_default_due_date">"Standard-Fälligkeit für Aufgaben"</string>
     <string name="settings_default_date_none">"Keines"</string>
@@ -462,6 +467,8 @@ Danke!"</string>
     <string name="settings_create_with_current_location">"Neue Einträge mit aktuellem Standort erstellen"</string>
     <string name="settings_sticky_alarms">"Fixierte Alarme"</string>
     <string name="settings_sticky_alarms_sub">"Benachrichtigungen erhalten bis erledigt oder verschoben"</string>
+    <string name="settings_sync_on_start">"Synchronisieren beim Start der App"</string>
+    <string name="settings_sync_on_pull_refresh">"Synchronisieren beim Herunterziehen"</string>
     <string name="sync_button_go_to_collections">"Zu den Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Bitte kaufen Sie jtx Board Pro, um diese Funktion zu nutzen."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -470,6 +477,9 @@ Danke!"</string>
     <string name="menu_view_share_mail">"Als E-Mail teilen"</string>
     <string name="menu_view_copy_to_clipboard">"Zwischenablage"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Kopiert"</string>
+    <string name="menu_view_convert_to_journal">"In Journal umwandeln"</string>
+    <string name="menu_view_convert_to_note">"In Notiz umwandeln"</string>
+    <string name="menu_view_convert_to_task">"In Aufgabe umwandeln"</string>
     <string name="settings_select_language">"Sprachauswahl"</string>
     <string name="settings_select_language_system">"Systemstandard"</string>
     <string name="filter_special">"Spezialfilter"</string>
@@ -485,7 +495,7 @@ Danke!"</string>
     <string name="list_start_date_future">"Start in Zukunft"</string>
     <string name="list_hide_completed_tasks">"Fertiggestellte Aufgaben ausblenden"</string>
     <string name="list_biometric_protected_entries_locked">Biometrische geschützte Einträge gesperrt</string>
-    <string name="list_delete_done">"Löschen erledigt"</string>
+    <string name="list_delete_done">"Lösche Erledigte"</string>
     <string name="collections_biometric_protected_entries_locked_title">Biometrische geschützte Einträge gesperrt</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Bitte authentifizieren Sie sich und versuchen Sie es erneut</string>
     <string name="list_biometric_protected_entries_unlocked">Biometrische geschützte Einträge entsperrt</string>
@@ -568,5 +578,25 @@ Danke!"</string>
     <string name="markdown_code">"Code"</string>
     <string name="preset_categories">"Voreingestellte Kategorien"</string>
     <string name="preset_resources">"Voreingestellte Ressourcen"</string>
+    <string name="extended_statuses">"Erweiterte Status"</string>
+    <string name="extended_statuses_for_journals">"… für Journale"</string>
+    <string name="extended_statuses_for_notes">"… für Notizen"</string>
+    <string name="extended_statuses_for_tasks">"… für Aufgaben"</string>
+    <string name="extended_status_attention">"Achtung: Erweiterte Status sind nicht mit anderen Apps kompatibel, verwenden aber im Hintergrund einen Standardstatus. Andere Anwendungen werden nur den Standardstatus anzeigen."</string>
+    <string name="extended_status">Erweiterter Status</string>
     <string name="active_filters">Aktive Filter:</string>
+    <string name="kanban_settings">"Kanban"</string>
+    <string name="kanban_columns">"Kanban-Spalten"</string>
+    <string name="kanban_columns_based_on_standard_status">basierend auf Standardstatus</string>
+    <string name="kanban_columns_based_on_extended_status">basierend auf erweitertem Status</string>
+    <string name="kanban_columns_based_on_first_category">basierend auf der ersten Kategorie</string>
+    <string name="clear_filters">"Filter zurücksetzen"</string>
+    <!--
+    <string name="geofence_radius_meter">"Radius %1$d m"</string>
+    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
+    <string name="geofence_selection">"Geofence: %1$s"</string>
+    <string name="geofence_options">"Geofence options"</string>
+    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
+        -->
 </resources>

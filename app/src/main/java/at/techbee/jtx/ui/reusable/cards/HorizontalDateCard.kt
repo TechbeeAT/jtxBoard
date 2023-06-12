@@ -31,6 +31,7 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.util.DateTimeUtils
 import java.time.ZoneId
+import java.time.ZonedDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,13 +42,12 @@ fun HorizontalDateCard(
     isEditMode: Boolean,
     allowNull: Boolean,
     dateOnly: Boolean,
-    enforceTime: Boolean,
     modifier: Modifier = Modifier,
     labelTop: String? = null,
-    pickerMinDate: Long? = null,
-    pickerMaxDate: Long? = null,
+    pickerMinDate: ZonedDateTime? = null,
+    pickerMaxDate: ZonedDateTime? = null,
     enabled: Boolean = true,
-    onDateTimeChanged: (Long?, String?) -> Unit = { _, _ -> }
+    onDateTimeChanged: (Long?, String?) -> Unit
 ) {
 
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
@@ -107,7 +107,6 @@ fun HorizontalDateCard(
             minDate = pickerMinDate,
             maxDate = pickerMaxDate,
             dateOnly = dateOnly,
-            enforceTime = enforceTime,
             onConfirm = { time, tz ->
                 onDateTimeChanged(time, tz)
             },
@@ -126,7 +125,6 @@ fun HorizontalDateCard_Preview_Allday() {
             allowNull = true,
             isEditMode = false,
             dateOnly = false,
-            enforceTime = false,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -141,7 +139,6 @@ fun HorizontalDateCard_Preview_Allday_edit() {
             timezone = ICalObject.TZ_ALLDAY,
             allowNull = true,
             isEditMode = true,
-            enforceTime = false,
             dateOnly = false,
             onDateTimeChanged = { _, _ -> }
         )
@@ -158,7 +155,6 @@ fun HorizontalDateCard_Preview_WithTime() {
             isEditMode = false,
             allowNull = true,
             dateOnly = false,
-            enforceTime = false,
             onDateTimeChanged = { _, _ -> },
             labelTop = stringResource(id = R.string.completed)
 
@@ -176,7 +172,6 @@ fun HorizontalDateCard_Preview_WithTimezone() {
             isEditMode = false,
             allowNull = true,
             dateOnly = false,
-            enforceTime = false,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -192,7 +187,6 @@ fun HorizontalDateCard_Preview_WithTimezone2() {
             isEditMode = false,
             allowNull = true,
             dateOnly = false,
-            enforceTime = false,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -208,7 +202,6 @@ fun HorizontalDateCard_Preview_NotSet() {
             isEditMode = false,
             allowNull = true,
             dateOnly = false,
-            enforceTime = false,
             onDateTimeChanged = { _, _ -> },
             labelTop = stringResource(id = R.string.due)
         )
@@ -226,7 +219,6 @@ fun HorizontalDateCard_Preview_edit_NotSet() {
             isEditMode = true,
             allowNull = true,
             dateOnly = false,
-            enforceTime = false,
             onDateTimeChanged = { _, _ -> },
             labelTop = stringResource(id = R.string.due)
         )

@@ -87,6 +87,7 @@ fun DetailsScreen(
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val storedCategories by detailViewModel.storedCategories.observeAsState(emptyList())
     val storedResources by detailViewModel.storedResources.observeAsState(emptyList())
+    val storedStatuses by detailViewModel.storedStatuses.observeAsState(emptyList())
     val allWriteableCollections = detailViewModel.allWriteableCollections.observeAsState(emptyList())
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
@@ -101,12 +102,12 @@ fun DetailsScreen(
     LaunchedEffect(detailViewModel.icalEntity.isInitialized) {
         if(detailViewModel.icalEntity.isInitialized && !statesLoaded) {
             detailViewModel.mutableICalObject = icalEntity.value?.property
-            detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
-            detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
-            detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
-            detailViewModel.mutableComments.addAll(icalEntity.value?.comments ?: emptyList())
-            detailViewModel.mutableAttachments.addAll(icalEntity.value?.attachments ?: emptyList())
-            detailViewModel.mutableAlarms.addAll(icalEntity.value?.alarms ?: emptyList())
+            if(detailViewModel.mutableCategories.isEmpty()) detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
+            if(detailViewModel.mutableResources.isEmpty()) detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
+            if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
+            if(detailViewModel.mutableComments.isEmpty()) detailViewModel.mutableComments.addAll(icalEntity.value?.comments ?: emptyList())
+            if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttachments.addAll(icalEntity.value?.attachments ?: emptyList())
+            if(detailViewModel.mutableAlarms.isEmpty()) detailViewModel.mutableAlarms.addAll(icalEntity.value?.alarms ?: emptyList())
             statesLoaded = true
         }
     }
@@ -431,6 +432,7 @@ fun DetailsScreen(
                 allResources = allResources.value,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
+                extendedStatuses = storedStatuses,
                 selectFromAllListLive = detailViewModel.selectFromAllList,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,

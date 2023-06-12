@@ -16,7 +16,11 @@ import androidx.room.PrimaryKey
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
-import at.techbee.jtx.ui.list.*
+import at.techbee.jtx.ui.list.GroupBy
+import at.techbee.jtx.ui.list.ListSettings
+import at.techbee.jtx.ui.list.OrderBy
+import at.techbee.jtx.ui.list.SortOrder
+import at.techbee.jtx.ui.list.ViewMode
 import kotlinx.parcelize.Parcelize
 
 
@@ -90,12 +94,12 @@ data class StoredListSettingData(
     companion object {
         fun fromListSettings(listSettings: ListSettings): StoredListSettingData {
             return StoredListSettingData(
-                searchCategories = listSettings.searchCategories.value,
-                searchResources = listSettings.searchResources.value,
-                searchStatus = listSettings.searchStatus.value,
-                searchClassification = listSettings.searchClassification.value,
-                searchCollection = listSettings.searchCollection.value,
-                searchAccount = listSettings.searchAccount.value,
+                searchCategories = listSettings.searchCategories,
+                searchResources = listSettings.searchResources,
+                searchStatus = listSettings.searchStatus,
+                searchClassification = listSettings.searchClassification,
+                searchCollection = listSettings.searchCollection,
+                searchAccount = listSettings.searchAccount,
                 orderBy = listSettings.orderBy.value,
                 sortOrder = listSettings.sortOrder.value,
                 orderBy2 = listSettings.orderBy2.value,
@@ -125,12 +129,13 @@ data class StoredListSettingData(
     }
 
     fun applyToListSettings(listSettings: ListSettings) {
-        listSettings.searchCategories.value = searchCategories
-        listSettings.searchResources.value = searchResources
-        listSettings.searchStatus.value = searchStatus
-        listSettings.searchClassification.value = searchClassification
-        listSettings.searchCollection.value = searchCollection
-        listSettings.searchAccount.value = searchAccount
+        listSettings.reset()
+        listSettings.searchCategories.addAll(searchCategories)
+        listSettings.searchResources.addAll(searchResources)
+        listSettings.searchStatus.addAll(searchStatus)
+        listSettings.searchClassification.addAll(searchClassification)
+        listSettings.searchCollection.addAll(searchCollection)
+        listSettings.searchAccount.addAll(searchAccount)
         listSettings.orderBy.value = orderBy
         listSettings.sortOrder.value = sortOrder
         listSettings.orderBy2.value = orderBy2

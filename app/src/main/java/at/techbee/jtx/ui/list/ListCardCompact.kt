@@ -30,6 +30,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
@@ -49,6 +50,7 @@ fun ListCardCompact(
     subtasks: List<ICal4List>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
+    storedStatuses: List<ExtendedStatus>,
     progressUpdateDisabled: Boolean,
     selected: List<Long>,
     player: MediaPlayer?,
@@ -73,12 +75,13 @@ fun ListCardCompact(
                 .fillMaxWidth()
         ) {
 
-            ListTopFlowRow(
+            ListTopRow(
                 ical4List = iCalObject,
                 categories = categories,
                 resources = resources,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
+                extendedStatuses = storedStatuses,
                 includeJournalDate = true
             )
 
@@ -185,6 +188,7 @@ fun ListCardCompact_JOURNAL() {
             subtasks = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
             player = null,
@@ -213,6 +217,7 @@ fun ListCardCompact_JOURNAL2() {
             resources = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
             player = null,
@@ -242,6 +247,7 @@ fun ListCardCompact_NOTE() {
             subtasks = emptyList(),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
             player = null,
@@ -275,6 +281,7 @@ fun ListCardCompact_TODO() {
             subtasks = listOf(icalobject, icalobject),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
             player = null,
@@ -322,6 +329,7 @@ fun ListCardCompact_TODO_only_summary() {
             subtasks = listOf(icalobject, icalobject),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
             selected = emptyList(),
             player = null,

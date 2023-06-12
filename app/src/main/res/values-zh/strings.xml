@@ -41,6 +41,7 @@ Global Strings -->
     <string name="navigation_drawer_open">"打开导航抽屉"</string>
     <string name="navigation_drawer_close">"关闭导航抽屉"</string>
     <string name="navigation_drawer_board">"白板"</string>
+    <string name="navigation_drawer_synchronization">"同步"</string>
     <string name="navigation_drawer_about">"关于/许可协议"</string>
     <string name="navigation_drawer_subtitle">"日记、笔记和任务"</string>
     <string name="navigation_drawer_settings">"设置"</string>
@@ -142,13 +143,22 @@ Global Strings -->
     <string name="settings_app">"应用设置"</string>
     <string name="settings_select_mimetype_for_audio">"选择音频笔记的Mimetype"</string>
     <!-- Sync fragment -->
+    <string name="sync_basic_info">"jtx Board 本身不提供服务器同步，但支持通过 DAVx⁵ 进行同步。此方法允许选择任何兼容的 CalDAV 服务器来存储、备份和同步数据。"</string>
     <string name="sync_congratulations">"恭喜！ :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"已在手机上检测到 %1$s。"</string>
+    <string name="sync_setup_instructions">"设置指南"</string>
+    <string name="sync_sync_app_not_found">"没有在手机上检测到 %1$s。"</string>
+    <string name="sync_more_about_sync_app">"更多关于 %1$s 的信息"</string>
+    <string name="sync_download_sync_app">"下载 %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"在 %1$s 中添加账号"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"打开 %1$s 失败，请手动打开应用软件。"</string>
     <!-- Donate fragment -->
     <string name="donate_thank_you">"感谢您！"</string>
     <string name="donate_donate_with">"使用PayPal捐赠"</string>
     <string name="donate_other_donation_methods">"如您想使用其它捐赠方式，请访问我们的网站："</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"找不到可打开此文件或网址的应用程序。"</string>
     <string name="toast_item_is_now_recu_exception">"定期项目现在是例外。"</string>
+    <string name="toast_done_tasks_deleted">"已删除已完成任务（%d）。"</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"感谢"</string>
     <string name="about_translations_basic_info">"jtx Board是一款开源应用程序，感谢开源社区的参与和贡献。在此，我们想展示社区成员在翻译方面所做的努力。"</string>
@@ -165,6 +175,7 @@ Global Strings -->
     <string name="save_and_edit">"保存并编辑"</string>
     <string name="save_and_new">"保存并新建下一个"</string>
     <string name="save_and_close">"保存并关闭"</string>
+    <string name="list_quickadd_add_audio_attachment">"录制音频附件"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"已授予读取联系人权限"</string>
     <string name="permission_read_contacts_denied">"已禁止读取联系人权限"</string>
@@ -178,6 +189,7 @@ Global Strings -->
     <string name="collection">"合集"</string>
     <string name="link_to_parent">"关联到父级"</string>
     <string name="navigation_drawer_collections">"合集"</string>
+    <string name="navigation_drawer_presets">"预设"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"日期/时间"</string>
     <string name="alarms_duration">"持续时间"</string>
@@ -195,6 +207,7 @@ Global Strings -->
     <!-- Fuzzy -->
     <string name="collections_notes_num">"笔记：%1$s"</string>
     <string name="collections_tasks_num">"任务：%1$s"</string>
+    <string name="collections_info">"合集是条目的累积，类似内有文件的文件夹。可通过菜单新建本地合集，如果安装了同步应用程序（例如 DAVx⁵），也可设置新的远程合集进行同步。"</string>
     <string name="collections_collection_menu">"合集菜单"</string>
     <string name="collections_dialog_add_local_collection_title">"添加本地合集"</string>
     <string name="collections_dialog_edit_local_collection_title">"编辑本地合集"</string>
@@ -218,6 +231,8 @@ Global Strings -->
     <string name="collections_toast_export_ics_error">"导出选定的合集时出错。"</string>
     <string name="attachment_export_saved_successfully">"保存成功"</string>
     <string name="attachment_export_error_error_occurred">"保存所选文件时出错！"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"添加远程合集（%1$s）"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"在 %1$s 中显示"</string>
     <string name="menu_collection_popup_export_as_ics">"导出为.ics"</string>
     <string name="journal">"日记"</string>
     <string name="note">"笔记"</string>
@@ -325,9 +340,12 @@ Global Strings -->
     <string name="settings_default_expand_subtasks">"默认在列表中展开子任务"</string>
     <string name="settings_default_expand_subnotes">"默认在列表中展开子笔记"</string>
     <string name="settings_default_expand_attachments">"默认在列表中展开附件"</string>
+    <string name="permission_coarse_location_granted">"已授予大致位置权限"</string>
+    <string name="permission_coarse_location_denied">"大致位置权限被拒绝"</string>
     <string name="sorry">"抱歉"</string>
     <string name="date">"日期"</string>
     <string name="timezone">"时区"</string>
+    <string name="not_set2">"未设置"</string>
     <string name="invert_selection">"反选"</string>
     <string name="clear_selection">"清除选择"</string>
     <string name="audio_play">"播放"</string>
@@ -358,6 +376,7 @@ Global Strings -->
     <string name="edit_subtask">"修改子任务"</string>
     <string name="edit_subnote">"修改子笔记"</string>
     <string name="edit_fragment_app_notification_permission_message">"jtx Board 显示提醒通知。请授予通知权限以使用此功能。"</string>
+    <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board 可以在使用地图自动缩放到你的位置。如果要使用此功能，请授予大致位置权限。"</string>
     <!-- alarms -->
     <string name="alarms_alarm">"提醒"</string>
     <string name="alarms_before">"提前"</string>
@@ -376,6 +395,11 @@ Global Strings -->
     <string name="dialog_revert_changes_message2">"注意：子任务和子笔记是单独的条目，不能重做。"</string>
     <string name="dialog_collection_new_entries_title">"新条目的合集"</string>
     <string name="dialog_detach_from_series_text_attention">"注意：此操作不能撤消！"</string>
+    <string name="dialog_save_current_filter_config">"保存当前过滤设置"</string>
+    <string name="dialog_save_current_filter_my_filter">"我的过滤规则"</string>
+    <string name="dialog_edit_stored_category_title">"添加/修改预设类别"</string>
+    <string name="dialog_edit_stored_resource_title">"添加/修改预设资源"</string>
+    <string name="dialog_edit_stored_status_title">"添加/修改预设状态"</string>
     <string name="menu_list_viewmode_compact">"紧凑视图"</string>
     <string name="menu_list_viewmode_kanban">"看板视图"</string>
     <string name="settings_tasks">"任务设置"</string>
@@ -406,9 +430,13 @@ Global Strings -->
     <string name="menu_view_share_mail">"以电子邮件方式分享"</string>
     <string name="menu_view_copy_to_clipboard">"复制到剪贴板"</string>
     <string name="menu_view_copy_to_clipboard_copied">"已复制"</string>
+    <string name="menu_view_convert_to_journal">"转换为日记"</string>
+    <string name="menu_view_convert_to_note">"转换为笔记"</string>
+    <string name="menu_view_convert_to_task">"转换为任务"</string>
     <string name="settings_select_language">"选择语言"</string>
     <string name="settings_select_language_system">"系统默认"</string>
     <string name="filter_special">"特殊过滤器"</string>
+    <string name="filter_presets">"过滤预设"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"往日"</string>
     <string name="list_date_today">"今天"</string>
@@ -419,6 +447,7 @@ Global Strings -->
     <string name="list_start_date_tomorrow">"明天开始"</string>
     <string name="list_start_date_future">"未开始"</string>
     <string name="list_hide_completed_tasks">"隐藏已完成的任务"</string>
+    <string name="list_delete_done">"删除已完成条目"</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">请进行身份验证并重试</string>
     <string name="settings_auto_alarm">"自动提醒"</string>
     <string name="alarms_always_ondue">"总是到期"</string>
@@ -434,6 +463,7 @@ Global Strings -->
     <string name="filter_second_order_by">"然后按以下顺序排序"</string>
     <string name="filter_group_by">"分组方式"</string>
     <string name="filter_group_by_info">"可以对列表和紧凑视图进行分组"</string>
+    <string name="filter_save_as_preset">"保存为预设"</string>
     <string name="menu_list_flat_view">"平铺视图"</string>
     <string name="menu_list_flat_view_sub">"总是在列表的顶级显示子条目"</string>
     <string name="menu_view_markdown_formatting">"Markdown 格式"</string>
@@ -441,6 +471,7 @@ Global Strings -->
     <string name="x_selected">已选取 %1$d 个，共 %2$d 个</string>
     <string name="select_all">全选</string>
     <string name="select_none">不选</string>
+    <string name="widget_list_no_entries_found">"没有找到符合过滤条件的条目"</string>
     <string name="edit_recur_second">"秒"</string>
     <string name="edit_recur_minute">"分"</string>
     <string name="edit_recur_hour">"时"</string>
@@ -469,4 +500,17 @@ Global Strings -->
     <string name="markdown_horizontal_ruler">"水平线"</string>
     <string name="markdown_unordered_list">"列表"</string>
     <string name="markdown_code">"代码"</string>
+    <string name="preset_categories">"预设类别"</string>
+    <string name="preset_resources">"预设资源"</string>
+    <string name="active_filters">活动过滤器：</string>
+    <string name="kanban_columns_based_on_first_category">基于第一个类别</string>
+    <string name="clear_filters">"清除过滤规则"</string>
+    <!--
+    <string name="geofence_radius_meter">"Radius %1$d m"</string>
+    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
+    <string name="geofence_selection">"Geofence: %1$s"</string>
+    <string name="geofence_options">"Geofence options"</string>
+    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
+        -->
 </resources>

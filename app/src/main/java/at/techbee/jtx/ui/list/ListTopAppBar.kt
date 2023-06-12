@@ -1,5 +1,6 @@
 package at.techbee.jtx.ui.list
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -173,6 +174,7 @@ fun ListTopAppBar(
 }
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview(showBackground = true)
 @Composable
 fun ListTopAppBar_Preview() {
@@ -201,6 +203,7 @@ fun ListTopAppBar_Preview() {
 }
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview(showBackground = true)
 @Composable
 fun ListTopAppBar_Preview_add_entry() {

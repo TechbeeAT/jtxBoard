@@ -51,6 +51,7 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.Alarm
@@ -114,7 +115,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val storedListSettings = database.getStoredListSettings(module = module.name)
     val storedCategories = database.getStoredCategories()
     val storedResources = database.getStoredResources()
-
+    val extendedStatuses = database.getStoredStatuses()
 
     var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)
@@ -155,12 +156,13 @@ open class ListViewModel(application: Application, val module: Module) : Android
     fun updateSearch(saveListSettings: Boolean = false, isAuthenticated: Boolean) {
         val query = ICal4List.constructQuery(
             modules = listOf(module),
-            searchCategories = listSettings.searchCategories.value,
-            searchResources = listSettings.searchResources.value,
-            searchStatus = listSettings.searchStatus.value,
-            searchClassification = listSettings.searchClassification.value,
-            searchCollection = listSettings.searchCollection.value,
-            searchAccount = listSettings.searchAccount.value,
+            searchCategories = listSettings.searchCategories,
+            searchResources = listSettings.searchResources,
+            searchStatus = listSettings.searchStatus,
+            searchXStatus = listSettings.searchXStatus,
+            searchClassification = listSettings.searchClassification,
+            searchCollection = listSettings.searchCollection,
+            searchAccount = listSettings.searchAccount,
             orderBy = listSettings.orderBy.value,
             sortOrder = listSettings.sortOrder.value,
             orderBy2 = listSettings.orderBy2.value,
@@ -257,6 +259,29 @@ open class ListViewModel(application: Application, val module: Module) : Android
             NotificationPublisher.scheduleNextNotifications(getApplication())
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
+        }
+    }
+
+    fun updateXStatus(itemId: Long, newXStatus: ExtendedStatus, scrollOnce: Boolean = false) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val currentItem = database.getICalObjectById(itemId) ?: return@launch
+            currentItem.xstatus = newXStatus.xstatus
+            database.update(currentItem)
+            updateStatus(itemId, newXStatus.rfcStatus, scrollOnce)
+        }
+    }
+
+    fun swapCategories(iCalObjectId: Long, oldCategory: String, newCategory: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.swapCategories(iCalObjectId, oldCategory, newCategory)
+
+            val currentItem = database.getICalObjectById(iCalObjectId) ?: return@launch
+            currentItem.makeDirty()
+            database.update(currentItem)
+            currentItem.makeSeriesDirty(database)
+            SyncUtil.notifyContentObservers(getApplication())
+            NotificationPublisher.scheduleNextNotifications(getApplication())
+            scrollOnceId.postValue(iCalObjectId)
         }
     }
 
@@ -392,15 +417,15 @@ open class ListViewModel(application: Application, val module: Module) : Android
      * Updates the status of the selected entries
      * @param newStatus to be set
      */
-    fun updateStatusOfSelected(newStatus: Status) {
+    fun updateStatusOfSelected(newStatus: String) {
         viewModelScope.launch(Dispatchers.IO) {
             selectedEntries.forEach { iCalObjectId ->
                 database.getICalObjectByIdSync(iCalObjectId)?.let {
-                    it.status = newStatus.status
+                    it.status = newStatus
                     when {
-                        newStatus == Status.COMPLETED -> it.percent = 100
-                        newStatus == Status.NEEDS_ACTION -> it.percent = 0
-                        newStatus == Status.IN_PROCESS && it.percent !in 1..99 -> it.percent = 1
+                        newStatus == Status.COMPLETED.status -> it.percent = 100
+                        newStatus == Status.NEEDS_ACTION.status -> it.percent = 0
+                        newStatus == Status.IN_PROCESS.status && it.percent !in 1..99 -> it.percent = 1
                     }
                     it.makeDirty()
                     database.update(it)
@@ -533,6 +558,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             val collections = database.getAllRemoteCollections()
             SyncUtil.syncAccounts(collections.map { Account(it.accountName, it.accountType) }.toSet())
         }
+        SyncUtil.showSyncRequestedToast(_application)
     }
 
     /**

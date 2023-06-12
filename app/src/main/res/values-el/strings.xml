@@ -16,10 +16,12 @@ Global Strings -->
     <string name="latitude">"Γεωγραφικό πλάτος"</string>
     <string name="longitude">"Γεωγραφικό μήκος"</string>
     <string name="unlink">"Κατάργηση σύνδεσης"</string>
+    <string name="off">"Ανενεργό"</string>
     <string name="current_location">"Τρέχουσα τοποθεσία"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
     <string name="toolbar_text_add_note">"Προσθήκη σημείωσης"</string>
     <string name="toolbar_text_add_task">"Προσθήκη εργασίας"</string>
+    <string name="toast_sync_requested">"Αιτήθηκε συγχρονισμός"</string>
     <string name="default_local_collection_name">"Τοπικές"</string>
     <string name="default_local_account_name">"Τοπικές"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -437,6 +439,7 @@ Global Strings -->
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
     <string name="settings_tasks">"Ρυθμίσεις εργασιών"</string>
+    <string name="settings_sync">"Ρυθμίσεις συγχρονισμού"</string>
     <string name="settings_default_start_date">"Ορίστε μια προεπιλεγμένη ημερομηνία έναρξης για εργασίες"</string>
     <string name="settings_default_due_date">"Ορίστε μια προεπιλεγμένη ημερομηνία έναρξης για εργασίες"</string>
     <string name="settings_default_date_none">"Ορίστε μια προεπιλεγμένη ημερομηνία λήξης για εργασίες"</string>
@@ -462,6 +465,8 @@ Global Strings -->
     <string name="settings_create_with_current_location">"Δημιουργήστε νέες καταχωρήσεις με την τρέχουσα τοποθεσία"</string>
     <string name="settings_sticky_alarms">"Κολλημένες ειδοποιήσεις"</string>
     <string name="settings_sticky_alarms_sub">"Διατήρηση ειδοποιήσεων μέχρι να ολοκληρωθούν ή αναβληθούν"</string>
+    <string name="settings_sync_on_start">"Συγχρονισμός κατά την έναρξη"</string>
+    <string name="settings_sync_on_pull_refresh">"Συγχρονισμός κατά την έξοδο"</string>
     <string name="sync_button_go_to_collections">"Πήγαινε στις συλλογέ"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε αυτήν τη δυνατότητα."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -470,6 +475,9 @@ Global Strings -->
     <string name="menu_view_share_mail">"Διαμοιρασμός ως E-mail"</string>
     <string name="menu_view_copy_to_clipboard">"Αντιγραφή στο πρόχειρο"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Αντιγράφηκε"</string>
+    <string name="menu_view_convert_to_journal">"Μετατροπή σε ημερολόγιο"</string>
+    <string name="menu_view_convert_to_note">"Μετατροπή σε σημείωση"</string>
+    <string name="menu_view_convert_to_task">"Μετατροπή σε εργασία"</string>
     <string name="settings_select_language">"Επιλογή γλώσσας"</string>
     <string name="settings_select_language_system">"Προεπιλογή συστήματος"</string>
     <string name="filter_special">"Ειδικά φίλτρα"</string>
@@ -556,4 +564,13 @@ Global Strings -->
     <string name="markdown_horizontal_ruler">"Οριζόντιος χάρακας"</string>
     <string name="markdown_unordered_list">"Λίστα"</string>
     <string name="markdown_code">"Κώδικας"</string>
+    <string name="clear_filters">"Εκκαθάριση φίλτρων"</string>
+    <!--
+    <string name="geofence_radius_meter">"Radius %1$d m"</string>
+    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
+    <string name="geofence_selection">"Geofence: %1$s"</string>
+    <string name="geofence_options">"Geofence options"</string>
+    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
+        -->
 </resources>
