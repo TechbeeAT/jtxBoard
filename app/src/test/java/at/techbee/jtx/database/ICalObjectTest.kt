@@ -45,13 +45,13 @@ class ICalObjectTest {
 
         assertEquals("setUpdatedProgress_no_change", task.summary)
         assertNull(task.percent)
-        assertEquals(Status.NEEDS_ACTION.status, task.status)
+        assertNull(task.status)
         assertNotNull(task.lastModified)
         assertEquals(true, task.dirty)
     }
 
     @Test
-    fun setUpdatedProgress_needs_action() {
+    fun setUpdatedProgress_keep_in_process() {
         val task = ICalObject.createTask("setUpdatedProgress_needs_action_in_Progress")
         task.status = Status.NEEDS_ACTION.status
         task.setUpdatedProgress(1, true)
@@ -59,7 +59,7 @@ class ICalObjectTest {
 
         assertEquals("setUpdatedProgress_needs_action_in_Progress", task.summary)
         assertNull(task.percent)
-        assertEquals(Status.NEEDS_ACTION.status, task.status)
+        assertEquals(Status.IN_PROCESS.status, task.status)
         //assertNotNull(task.dtstart)
         //assertNull(task.completed)
         assertNotNull(task.lastModified)
