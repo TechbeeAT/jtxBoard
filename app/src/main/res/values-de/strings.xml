@@ -29,7 +29,7 @@ Global Strings -->
     <string name="journal_status_draft">"Entwurf"</string>
     <string name="journal_status_final">"Final"</string>
     <string name="journal_status_cancelled">"Annulliert"</string>
-    <string name="todo_status_needsaction">"Aktion ausständig"</string>
+    <string name="todo_status_needsaction">"Aktion erforderlich"</string>
     <string name="todo_status_completed">"Abgeschlossen"</string>
     <string name="todo_status_inprocess">"In Bearbeitung"</string>
     <string name="todo_status_cancelled">"Annulliert"</string>
