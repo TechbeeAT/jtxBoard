@@ -456,6 +456,7 @@ Thank you!"</string>
     <string name="settings_audio_format_ogg" translatable="false">"OGG (audio/ogg)"</string>
     <string name="settings_audio_format_mp4" translatable="false">"MP4 (audio/mp4)"</string>
     <string name="settings_tasks">"Tasks Settings"</string>
+    <string name="settings_tasks_status_progress">"Tasks Settings (status/progress)"</string>
     <string name="settings_sync">"Sync Settings"</string>
     <string name="settings_default_start_date">"Set a default start date for tasks"</string>
     <string name="settings_default_due_date">"Set a default due date for tasks"</string>
@@ -475,7 +476,7 @@ Thank you!"</string>
     <string name="settings_progress_step_25">"Increment by 25 (4 steps)"</string>
     <string name="settings_progress_step_50">"Increment by 50 (2 steps)"</string>
     <string name="settings_progress_step">"Set the step for the progress slider"</string>
-    <string name="settings_disable_alarms_for_readonly">"Disable alarms for readonly collections"</string>
+    <string name="settings_disable_alarms_for_readonly">"Disable alarms for read-only collections"</string>
     <string name="settings_link_progress_to_subtasks">"Link progress to subtasks"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Keep status, progress &amp; completed in sync"</string>
     <string name="settings_attention_experimental_feature">"Attention: This is an experimental feature"</string>
