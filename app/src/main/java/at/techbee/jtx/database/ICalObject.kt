@@ -1049,7 +1049,6 @@ data class ICalObject(
             when (newPercent) {
                 100 -> status = Status.COMPLETED.status
                 in 1..99 -> status = Status.IN_PROCESS.status
-                //else -> Status.NEEDS_ACTION.status
             }
 
             if (completed == null && percent == 100) {
