@@ -176,9 +176,8 @@ fun DetailScreenContent(
 
     var color by rememberSaveable { mutableStateOf(originalICalEntity.value?.property?.color) }
     var summary by rememberSaveable { mutableStateOf(originalICalEntity.value?.property?.summary ?: "") }
-    var description by remember {
-        mutableStateOf(TextFieldValue(originalICalEntity.value?.property?.description ?: ""))
-    }
+    var description by remember { mutableStateOf(TextFieldValue(originalICalEntity.value?.property?.description ?: "")) }
+
     // Apply Markdown on recomposition if applicable, then set back to OBSERVING
     if (markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
         description = markdownState.value.format(description)

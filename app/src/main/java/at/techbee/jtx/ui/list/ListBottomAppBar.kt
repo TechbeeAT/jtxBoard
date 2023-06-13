@@ -66,6 +66,8 @@ import at.techbee.jtx.ui.reusable.dialogs.DeleteDoneDialog
 import at.techbee.jtx.ui.reusable.dialogs.SyncAppIncompatibleDialog
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncApp
+import java.time.Instant
+import java.time.ZoneId
 import java.util.TimeZone
 
 @Composable
@@ -120,8 +122,8 @@ fun ListBottomAppBar(
             },
             onDismiss = { showGoToDatePicker = false },
             dateOnly = true,
-            minDate = dates.minOf { it },
-            maxDate =  dates.maxOf { it }
+            minDate = Instant.ofEpochMilli(dates.minOf { it }).atZone(ZoneId.systemDefault()),
+            maxDate = Instant.ofEpochMilli(dates.maxOf { it }).atZone(ZoneId.systemDefault())
         )
     }
 
