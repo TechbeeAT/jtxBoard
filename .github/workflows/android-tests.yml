@@ -1,32 +1,62 @@
 name: Android tests
-on: workflow_dispatch
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
 jobs:
   test_on_emulator:
     name: Tests with emulator
-    runs-on: privileged
-    container:
-      image: ghcr.io/bitfireat/docker-android-ci:main
-      options: --privileged
-      env:
-        ANDROID_HOME: /sdk
-        ANDROID_AVD_HOME: /root/.android/avd
+    runs-on: ubuntu-latest-4-cores
+    strategy:
+      matrix:
+        api-level: [ 31 ]
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: gradle/wrapper-validation-action@v1
-
-      - name: Cache gradle dependencies
-        uses: actions/cache@v3
+      - uses: actions/setup-java@v3
         with:
-          key: ${{ runner.os }}
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/gradle-build-action@v2
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Cache AVD and APKs
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
           path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-      - name: Start emulator
-        run: start-emulator.sh
-      - name: Run connected tests
-        run: ./gradlew app:connectedGplayDebugAndroidTest
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew app:connectedGplayDebugAndroidTest
+
       - name: Archive results
         if: always()
         uses: actions/upload-artifact@v3
