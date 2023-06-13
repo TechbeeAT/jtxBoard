@@ -1,5 +1,9 @@
 name: Android tests
-on: workflow_dispatch
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
 jobs:
   test_on_emulator:
     name: Tests with emulator
