@@ -460,7 +460,6 @@ Gràcies!"</string>
     <string name="settings_progress_step_25">"Incrementa per 25 (4 passes)"</string>
     <string name="settings_progress_step_50">"Incrementa per 50 (2 passes)"</string>
     <string name="settings_progress_step">"Estableix el pas del control lliscant"</string>
-    <string name="settings_disable_alarms_for_readonly">"Deshabilita alarmes per a col·leccions de només lectura"</string>
     <string name="settings_link_progress_to_subtasks">"Enllaça el progrés a les sub-tasques"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Mantè l'estat, progrés i completat en sincronització"</string>
     <string name="settings_attention_experimental_feature">"Atenció: Aquesta és una funció experimental"</string>

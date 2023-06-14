@@ -441,6 +441,7 @@ Danke!"</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
     <string name="settings_tasks">"Aufgaben-Einstellungen"</string>
+    <string name="settings_tasks_status_progress">"Aufgaben-Einstellungen (Status/Fortschritt)"</string>
     <string name="settings_sync">"Sync-Einstellungen"</string>
     <string name="settings_default_start_date">"Standard-Startdatum für Aufgaben"</string>
     <string name="settings_default_due_date">"Standard-Fälligkeit für Aufgaben"</string>

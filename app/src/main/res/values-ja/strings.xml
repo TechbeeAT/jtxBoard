@@ -458,7 +458,6 @@ Global Strings -->
     <string name="settings_progress_step_25">"25 ずつ増加 (4 段階)"</string>
     <string name="settings_progress_step_50">"50 ずつ増加 (2 段階)"</string>
     <string name="settings_progress_step">"進捗スライダーの段階"</string>
-    <string name="settings_disable_alarms_for_readonly">"読み取り専用コレクションのアラームを無効にする"</string>
     <string name="settings_link_progress_to_subtasks">"進捗状況をサブタスクにリンク"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"同期でステータス、進捗状況、完了を維持"</string>
     <string name="settings_attention_experimental_feature">"注意: これは試験運用中の機能です"</string>
