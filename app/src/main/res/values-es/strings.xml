@@ -430,7 +430,6 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="settings_progress_step_25">"Incrementar en 25 (4 pasos)"</string>
     <string name="settings_progress_step_50">"Incrementar en 50 (2 pasos)"</string>
     <string name="settings_progress_step">"Establecer el paso para el control deslizante de progreso"</string>
-    <string name="settings_disable_alarms_for_readonly">"Deshabilitar alarmas para colecciones de solo lectura"</string>
     <string name="settings_link_progress_to_subtasks">"Enlazar progreso a las subtareas"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Mantener estado, progreso y completado en sincronización"</string>
     <string name="settings_attention_experimental_feature">"Atención: Esta es una característica experimental"</string>
