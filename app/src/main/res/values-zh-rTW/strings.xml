@@ -248,7 +248,6 @@ Global Strings -->
     <string name="view_share_part_of_series">"此条目是系列的一部分。"</string>
     <string name="view_share_repeats">"此条目重复，每"</string>
     <string name="collections_dialog_move_title">"从“%1$s”移动所有条目到"</string>
-    <string name="collection_dialog_move_info">"请注意：只能选择可写合集和支持相同组件（日志、笔记、任务）的集合。"</string>
     <string name="menu_collections_popup_move_entries">"移动条目"</string>
     <string name="list_no_dates_set">"未设置日期"</string>
     <string name="filter_order_by">"排序"</string>
