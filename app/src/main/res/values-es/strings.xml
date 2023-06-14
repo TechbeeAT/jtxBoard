@@ -275,7 +275,6 @@ Global Strings -->
     <string name="view_share_part_of_series">"Esta entrada es parte de una serie."</string>
     <string name="view_share_repeats">"Esta entrada se repite cada"</string>
     <string name="collections_dialog_move_title">"Mover todas las entradas de \"%1$s\" a"</string>
-    <string name="collection_dialog_move_info">"Nota: Sólo se pueden seleccionar las colecciones con posibilidad de escritura y las colecciones con soporte para los mismos componentes (diarios, notas, tareas)."</string>
     <string name="menu_collections_popup_move_entries">"Mover entradas"</string>
     <string name="list_no_dates_set">"Sin fechas establecidas"</string>
     <string name="list_without_start_date">"Sin fecha de inicio"</string>
