@@ -439,6 +439,7 @@ Merci !"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
     <string name="settings_tasks">"Paramètres des tâches"</string>
+    <string name="settings_tasks_status_progress">"Paramètres des tâches (statut/progression)"</string>
     <string name="settings_sync">"Paramètres de synchronisation"</string>
     <string name="settings_default_start_date">"Définir une date de début par défaut pour les tâches"</string>
     <string name="settings_default_due_date">"Définir une date d'échéance par défaut pour les tâches"</string>
@@ -458,6 +459,7 @@ Merci !"</string>
     <string name="settings_progress_step_25">"Incrémenter par 25 (4 étapes)"</string>
     <string name="settings_progress_step_50">"Incrémenter par 50 (2 étapes)"</string>
     <string name="settings_progress_step">"Définissez le pas pour le curseur de progression"</string>
+    <string name="settings_disable_alarms_for_readonly">"Désactiver les alarmes pour les collections en lecture seule"</string>
     <string name="settings_link_progress_to_subtasks">"Afficher la progression des sous-tâches"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Garder le statut, la progression &amp; terminée à la synchronisation"</string>
     <string name="settings_attention_experimental_feature">"Attention : Ceci est une fonctionnalité expérimentale"</string>
