@@ -285,7 +285,6 @@ Global Strings -->
     <string name="view_share_part_of_series">"Questa voce fa parte di una serie."</string>
     <string name="view_share_repeats">"Questa voce si ripete ogni"</string>
     <string name="collections_dialog_move_title">"Sposta tutte le voci da \"%1$s\" a"</string>
-    <string name="collection_dialog_move_info">"Nota: solo le collezioni scrivibili e le collezioni con supporto per gli stessi componenti (Diari, Note, Compiti) possono essere selezionate."</string>
     <string name="menu_collections_popup_move_entries">"Spostare le voci"</string>
     <string name="list_no_dates_set">"Nessuna data fissata"</string>
     <string name="list_without_start_date">"Senza data di inizio"</string>
