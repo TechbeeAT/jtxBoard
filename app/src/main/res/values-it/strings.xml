@@ -443,7 +443,6 @@ Grazie!"</string>
     <string name="settings_progress_step_25">"Incremento di 25 (4 passi)"</string>
     <string name="settings_progress_step_50">"Incremento di 50 (2 passi)"</string>
     <string name="settings_progress_step">"Imposta il passo per il cursore di avanzamento"</string>
-    <string name="settings_disable_alarms_for_readonly">"Disattivare gli allarmi per le raccolte di sola lettura"</string>
     <string name="settings_attention_experimental_feature">"Attenzione: Questa è una funzione sperimentale"</string>
     <string name="settings_create_with_current_location">"Crea nuove voci con la posizione corrente"</string>
     <string name="sync_button_go_to_collections">"Vai alle Collezioni"</string>
