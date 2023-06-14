@@ -440,6 +440,7 @@ Global Strings -->
     <string name="menu_list_viewmode_compact">"Компактно"</string>
     <string name="menu_list_viewmode_kanban">"Канбан"</string>
     <string name="settings_tasks">"Настройки задач"</string>
+    <string name="settings_tasks_status_progress">"Настройки задач (статус/прогресс)"</string>
     <string name="settings_sync">"Настройки синхронизации"</string>
     <string name="settings_default_start_date">"Установить дату начала задачи по умолчанию"</string>
     <string name="settings_default_due_date">"Установить дату завершения задачи по умолчанию"</string>
@@ -459,6 +460,7 @@ Global Strings -->
     <string name="settings_progress_step_25">"Увеличивать на 25 (4 шага)"</string>
     <string name="settings_progress_step_50">"Увеличивать на 50 (2 шага)"</string>
     <string name="settings_progress_step">"Установить шаг для ползунка прогресса"</string>
+    <string name="settings_disable_alarms_for_readonly">"Отключить напоминания в коллекциях \"только для чтения\""</string>
     <string name="settings_link_progress_to_subtasks">"Привязать прогресс к подзадачам"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Синхронизировать статус, прогресс и дату выполнения"</string>
     <string name="settings_attention_experimental_feature">"Внимание: это экспериментальная функция"</string>
