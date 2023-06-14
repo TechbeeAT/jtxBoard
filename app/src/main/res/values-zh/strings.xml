@@ -421,7 +421,6 @@ Global Strings -->
     <string name="settings_progress_step_25">"递增25（4步）"</string>
     <string name="settings_progress_step_50">"递增50（2步）"</string>
     <string name="settings_progress_step">"设置进度条步长"</string>
-    <string name="settings_disable_alarms_for_readonly">"只读合集禁用提醒"</string>
     <string name="settings_link_progress_to_subtasks">"关联子任务进度"</string>
     <string name="settings_attention_experimental_feature">"注意：这是一个实验功能"</string>
     <string name="settings_create_with_current_location">"使用当前位置创建新条目"</string>
