@@ -459,6 +459,7 @@ Dank u!"</string>
     <string name="settings_progress_step_25">"Verhogen met 25 (4 stappen)"</string>
     <string name="settings_progress_step_50">"Verhogen met 50 (2 stappen)"</string>
     <string name="settings_progress_step">"Stel de stap voor de voortgangsslider in"</string>
+    <string name="settings_disable_alarms_for_readonly">"Schakel alarmen uit voor alleen-lezen verzamelingen"</string>
     <string name="settings_link_progress_to_subtasks">"Voortgang koppelen aan subtaken"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Hou status, voortgang &amp; voltooidstatus gesynchoniseerd"</string>
     <string name="settings_attention_experimental_feature">"Let op: Dit is een experimentele functie"</string>
