@@ -100,7 +100,7 @@ Global Strings -->
     <string name="notification_channel_reminder_name">"Feladat határidő emlékeztető"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Napló hozzáadása"</string>
-    <string name="shortcut_addNote_longLabel">"Új jegyzet"</string>
+    <string name="shortcut_addNote_longLabel">"Jegyzet hozzáadása"</string>
     <string name="shortcut_addTodo_longLabel">"Teendő hozzáadása"</string>
     <!-- Settings fragment -->
     <string name="settings_show_progress_for_subtasks">Alfeladatok állapotának megjelenítése</string>
@@ -117,6 +117,7 @@ Global Strings -->
     <!-- sync content provider -->
     <string name="list_welcome_entry_journal_summary">"Gratulálok, ez az első naplóbejegyzése :-)"</string>
     <string name="list_welcome_entry_journal_description">"A naplók adott időponthoz kötődő jegyzetek tárolására szolgálnak. Használja ezt a funkciót például feljegyzések, emlékeztetők, naplóbejegyzések készítéséhez. Ha szerkeszti ezt a bejegyzést, látni fogja, hogy van lehetőség hozzáadni kategóriákat, résztvevőket, mellékletek, … Ezt a bejegyzést bátran törölheti, ha már nincs rá szükséges!"</string>
+    <string name="list_welcome_entry_note_description">"A Jegyzetek hagyományos, nem dátumhoz kötődő jegyzetek tárolására szolgál. A naplókhoz hasonlóan a bejegyzés szerkesztésekor vagy hozzáadásakor mellékleteket, résztvevőket és egyebeket is hozzáadhat. Egyébként bármely bejegyzéshez hozzáadhat részfeladatokat is, függetlenül attól, hogy az napló, jegyzet vagy feladat!"</string>
     <string name="save_and_edit">"Mentés és szerkesztés"</string>
     <string name="save_and_close">"Mentés és bezárás"</string>
     <!-- Permissions -->
@@ -131,8 +132,8 @@ Global Strings -->
     <string name="navigation_drawer_collections">"Gyűjtemények"</string>
     <string name="navigation_drawer_presets">"Egyéni jellemzők"</string>
     <!-- alarms -->
-    <string name="alarms_onstart">"Indításnál"</string>
-    <string name="alarms_before_start">"Kezdet előtt"</string>
+    <string name="alarms_onstart">"Kezdéskor"</string>
+    <string name="alarms_before_start">"kezdés előtt"</string>
     <string name="alarms_after_start">"Kezdet után"</string>
     <string name="alarms_before_due">"határidő előtt"</string>
     <string name="alarms_after_due">"határidő után"</string>
@@ -142,6 +143,7 @@ Global Strings -->
     <!-- fragment_collections -->
     <string name="collections_journals_num">"Naplóbejegyzések: %1$s"</string>
     <!-- Fuzzy -->
+    <string name="collections_notes_num">"Jegyzetek: %1$s"</string>
     <string name="collections_tasks_num">"Feladatok: %1$s"</string>
     <string name="collections_info">"A gyűjtemények bejegyzések egy csoportja, ahogy a mappák a fájlok egy csoportja. A menüben létrehozhat új helyi gyűjteményeket, vagy, ha telepített szinkronizáló alkalmazást (pl. DAVx⁵), új távoli gyűjteményeket is, amelyek aztán szinkronizálva leszen."</string>
     <string name="collections_collection_menu">"Gyűjtemény Menü"</string>
@@ -166,25 +168,36 @@ Global Strings -->
     <string name="collections_toast_export_ics_error">"A kiválasztott gyűjtemény exportálása közben hiba lépett fel."</string>
     <string name="attachment_export_saved_successfully">"Sikeresen elmentve"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Távoli gyűjtemény hozzáadása (%1$s)"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"Megjelenítés a %1$s alkalmazásban"</string>
     <string name="menu_collection_popup_export_as_ics">"Mentés .ics formátumban"</string>
+    <string name="journal">"Naplóbejegyzés"</string>
     <string name="task">"Feladat"</string>
     <string name="account">"Fiók"</string>
     <string name="description">"Leírás"</string>
     <string name="search">"Keresés"</string>
+    <string name="search_journals">Naplóbejegyzések keresése</string>
     <string name="search_todos">Feladat keresése</string>
     <string name="due">"Határidő"</string>
     <string name="completed">"Befejezett"</string>
+    <string name="add_time_switch">"Idő hozzáadása"</string>
     <string name="subtasks">"Alfeladatok"</string>
+    <string name="collections_dialog_move_title">"Az össze bejegyzés áthelyezése másik gyűjtőbe:"</string>
     <string name="collection_dialog_move_info">"Megjegyzés: Csak írható gyűjtemények és az azonos komponenseket (Naplóbejegyzések, Jegyzetek, Feladatok) támogató gyűjtemények választhatók ki."</string>
+    <string name="menu_collections_popup_move_entries">"Bejegyzések áthelyezése"</string>
     <string name="filter_desc">"Csökkenő"</string>
     <string name="filter_created">"Létrehozva"</string>
     <string name="filter_last_modified">"Utoljára módosítva"</string>
     <string name="filter_subtasks_order_by">Alfeladatok rendezése</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Kérjük, válassza ki a gyűjteményt, amiben a bejegyzést vagy bejegyzéseket létre akarja hozni!"</string>
+    <string name="collections_snackbar_x_items_added">"%1$d hozzáadva, %2$d kihagyva. (Ismétlődő bejegyzések kivételes példányai.)"</string>
+    <string name="collections_toast_x_items_added">"%1$d hozzáadva!"</string>
+    <string name="menu_collection_popup_import_from_ics">"Beolvasás .ics fájlból"</string>
+    <string name="menu_collection_popup_import_from_textfile">"Szövegfájl importálása"</string>
     <string name="notification_add_1h">"+ 1 óra"</string>
     <string name="notification_add_1d">"+1 nap"</string>
     <string name="collections_toast_export_all_ics_success">"Az összes gyüjtemény szinkronizálása sikeresen befezeződött."</string>
     <string name="collections_toast_export_all_ics_error">"A gyűjtemények exportálása közben hiba lépett fel."</string>
+    <string name="menu_collections_export_all">"Az összes exportálása"</string>
     <string name="settings_select_theme_dark">"Sötét"</string>
     <string name="settings_select_theme_light">"Világos"</string>
     <string name="settings_select_theme_system">"Rendszer alapértelmezett"</string>
@@ -197,6 +210,9 @@ Global Strings -->
     <string name="buypro_purchase_description">"Köszönjük, hogy megfontolja jtx Board Pro verzójának megvásárlását. Ez a verzió lehetővé teszi a távoli gyűjteményekben lévő bejegyzések szerkesztését, a gyorsbejegyzés funkciót, a hosszú kattintással történő gyorsszerkesztés funkciót és a dinamikus színeket (Android 12 verziótól)."</string>
     <string name="buypro_success_description">"Mostantól lehetséges a távoli gyűjteményekben lévő bejegyzések szerkesztése, illetve elérhetők a gyorsbejegyzés funkció, a hosszú kattintással történő gyorsszerkesztés funkció és a dinamikus színek (Android 12 verziótól)."</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Kérjük, vásárolja meg a jtx Board Pro verzióját, ha szeretne távoli gyűjtökben lévő bejegyzéseket szerkeszteni."</string>
+    <string name="settings_modules">"Aktív modulok"</string>
+    <string name="settings_modules_enable_journals">"Napló"</string>
+    <string name="settings_modules_enable_notes">"Jegyzetek"</string>
     <string name="settings_modules_enable_tasks">"Feladatok"</string>
     <string name="back">"Vissza"</string>
     <string name="details">"Részletek"</string>
@@ -216,6 +232,7 @@ Global Strings -->
     <string name="dialog_unsaved_changes_title">"Változások mentése?"</string>
     <string name="dialog_unsaved_changes_text">"Vannak még el nem mentett változások. Szeretné a változásokat menteni vagy maradjon meg a korábbi állapot?"</string>
     <string name="dialog_error_on_update_message">"Hiba történt a bejegyzés létrehozása vagy frissítése során. A bejegyzés vagy a gyűjtemény esetleg már nem létezik."</string>
+    <string name="dialog_select_module_txt_dialog_title">"%1$d fájl importálása"</string>
     <string name="dialog_collection_new_entries_title">"Az új bejegyzés gyűjteménye"</string>
     <string name="dialog_save_current_filter_config">"A jelenlegi szűrőbeállítások mentése"</string>
     <string name="dialog_edit_stored_category_title">"Kategória hozzáadása vagy módosítása"</string>
@@ -225,7 +242,11 @@ Global Strings -->
     <string name="settings_tasks">"Feladat beállítások"</string>
     <string name="settings_default_due_date">"Feladatok alapértelemezett határidejének beállítása"</string>
     <string name="settings_disable_alarms_for_readonly">"Értesítések mellőzése csak olvasható gyűjteményeknél"</string>
+    <string name="settings_attention_experimental_feature">"Figyelem! Ez egy fejlesztés alatt álló funkció"</string>
     <string name="sync_button_go_to_collections">"Ugrás a Gyűjteményekhez"</string>
+    <string name="menu_view_convert_to_journal">"Átalakítás naplóbejegyzéssé"</string>
+    <string name="menu_view_convert_to_note">"Átalakítás jegyzetté"</string>
+    <string name="menu_view_convert_to_task">"Átalakítás feladattá"</string>
     <string name="filter_presets">"Mentett szűrőbeállítások"</string>
     <!-- fragment_ical_list -->
     <string name="list_hide_completed_tasks">"Befejezett feladatok elrejtése"</string>

@@ -291,7 +291,7 @@ Global Strings -->
     <string name="view_share_part_of_series">"Aquesta entrada forma part d'una sèrie."</string>
     <string name="view_share_repeats">"Aquesta entrada es repeteix cada"</string>
     <string name="collections_dialog_move_title">"Moure totes les entrades des de \"%1$s\" a"</string>
-    <string name="collection_dialog_move_info">"Tingues en compte: Sols les col·leccions amb accés d'escriptura, i les que tinguen suport per als mateixos components (Diaris, Notes i Tasques) poden ser seleccionades."</string>
+    <string name="collection_dialog_move_info">"Tingues en compte: Sols les col·leccions amb accés d'escriptura, i les que tinguin suport per als mateixos components (Diaris, Notes i Tasques) poden ser seleccionades."</string>
     <string name="menu_collections_popup_move_entries">"Moure entrades"</string>
     <string name="list_no_dates_set">"Cap data establerta"</string>
     <string name="list_without_start_date">"Sense data d'inici"</string>
