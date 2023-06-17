@@ -79,7 +79,7 @@ fun ListWidgetConfigContent(
     val tabIndexFilter = 1
     val tabIndexGroupSort = 2
 
-    val pagerState = rememberPagerState(initialPage = tabIndexGeneral)
+    val pagerState = rememberPagerState(initialPage = tabIndexGeneral, pageCount = { if (isPurchased) 3 else 1 })
     val scope = rememberCoroutineScope()
 
     val buyProToast = Toast.makeText(context, R.string.widget_list_configuration_pro_info, Toast.LENGTH_LONG)
@@ -109,7 +109,9 @@ fun ListWidgetConfigContent(
         content = { paddingValues ->
 
             Column(
-                modifier = Modifier.padding(paddingValues).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.Top
             ) {
                 TabRow(
@@ -160,8 +162,10 @@ fun ListWidgetConfigContent(
 
                 HorizontalPager(
                     state = pagerState,
-                    pageCount = if(isPurchased) 3 else 1,
-                    modifier = Modifier.weight(1f).padding(8.dp).verticalScroll(rememberScrollState()),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp)
+                        .verticalScroll(rememberScrollState()),
                     verticalAlignment = Alignment.Top
                 ) { page ->
                     when (page) {

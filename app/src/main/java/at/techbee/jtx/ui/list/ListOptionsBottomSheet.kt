@@ -67,7 +67,7 @@ fun ListOptionsBottomSheet(
     else
         listOf(ListOptionsBottomSheetTabs.FILTER, ListOptionsBottomSheetTabs.GROUP_SORT)
 
-    val pagerState = rememberPagerState(initialPage = listOptionTabs.indexOf(initialTab))
+    val pagerState = rememberPagerState(initialPage = listOptionTabs.indexOf(initialTab), pageCount = { listOptionTabs.size })
 
     Column(
         modifier = modifier
@@ -98,7 +98,6 @@ fun ListOptionsBottomSheet(
 
         HorizontalPager(
             state = pagerState,
-            pageCount = listOptionTabs.size,
             verticalAlignment = Alignment.Top
         ) { page ->
             when (listOptionTabs[page]) {
