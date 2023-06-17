@@ -439,6 +439,7 @@ Merci !"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
     <string name="settings_tasks">"Paramètres des tâches"</string>
+    <string name="settings_tasks_status_progress">"Paramètres des tâches (statut/progression)"</string>
     <string name="settings_sync">"Paramètres de synchronisation"</string>
     <string name="settings_default_start_date">"Définir une date de début par défaut pour les tâches"</string>
     <string name="settings_default_due_date">"Définir une date d'échéance par défaut pour les tâches"</string>
