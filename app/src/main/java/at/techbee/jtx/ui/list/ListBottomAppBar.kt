@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.EventNote
@@ -68,6 +69,7 @@ import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncApp
 import java.time.Instant
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.TimeZone
 
 @Composable
@@ -98,32 +100,36 @@ fun ListBottomAppBar(
     val iCal4List by iCal4ListRelLive.observeAsState(emptyList())
 
     if(showGoToDatePicker) {
-        var dates = iCal4List.map { it.iCal4List.dtstart ?: System.currentTimeMillis() }.toList()
-        if (dates.isEmpty())
-            dates = listOf(System.currentTimeMillis())
-
-        // finds the closes number in a list of long
-        fun List<Long>.findClosest(input: Long) = fold(null) { acc: Long?, num ->
-            val closest = if (num <= input && (acc == null || num > acc)) num else acc
-            if (closest == input) return@findClosest closest else return@fold closest
-        }
+        //var dates = iCal4List.map { it.iCal4List.dtstart ?: System.currentTimeMillis() }.toList()
+        //if (dates.isEmpty())
+        //    dates = listOf(System.currentTimeMillis())
 
         DatePickerDialog(
             datetime = DateTimeUtils.getTodayAsLong(),
             timezone = TimeZone.getDefault().id,
             allowNull = false,
             onConfirm = { selectedDate, _ ->
-                selectedDate?.let { selected ->
-                    val closestDate = dates.findClosest(selected)
-                    iCal4List.find { it.iCal4List.dtstart == closestDate }?.let { foundEntry ->
-                        onGoToDateSelected(foundEntry.iCal4List.id)
-                    }
+                val selectedZoned = selectedDate?.let {ZonedDateTime.ofInstant(Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault()) } ?: return@DatePickerDialog
+
+                var match = iCal4List.firstOrNull {
+                    val dtstartZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.iCal4List.dtstart!!), DateTimeUtils.requireTzId(it.iCal4List.dtstartTimezone))
+                    if(listSettings.sortOrder.value == SortOrder.ASC)
+                        dtstartZoned.year >= selectedZoned.year && dtstartZoned.monthValue >= selectedZoned.monthValue && dtstartZoned.dayOfMonth >= selectedZoned.dayOfMonth
+                    else
+                        dtstartZoned.year <= selectedZoned.year && dtstartZoned.monthValue <= selectedZoned.monthValue && dtstartZoned.dayOfMonth <= selectedZoned.dayOfMonth
                 }
+
+                if(match == null && listSettings.sortOrder.value == SortOrder.ASC) // no match found, sort order ascending, so the date must be after the last one!
+                    match = iCal4List.lastOrNull()
+                else if(match == null && listSettings.sortOrder.value == SortOrder.DESC) // no match found, sort order descending, so the date must be before the last one!
+                    match = iCal4List.lastOrNull()
+
+                match?.let { closest -> onGoToDateSelected(closest.iCal4List.id) }
             },
             onDismiss = { showGoToDatePicker = false },
             dateOnly = true,
-            minDate = Instant.ofEpochMilli(dates.minOf { it }).atZone(ZoneId.systemDefault()),
-            maxDate = Instant.ofEpochMilli(dates.maxOf { it }).atZone(ZoneId.systemDefault())
+            //minDate = Instant.ofEpochMilli(dates.minOf { it }).atZone(ZoneId.systemDefault()),
+            //maxDate = Instant.ofEpochMilli(dates.maxOf { it }).atZone(ZoneId.systemDefault())
         )
     }
 
@@ -180,8 +186,7 @@ fun ListBottomAppBar(
                         }
                     }
 
-                    /*
-                    AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null) {
+                    AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null && listSettings.orderBy.value == OrderBy.START_VJOURNAL) {
                         IconButton(onClick = { showGoToDatePicker = true }) {
                             Icon(
                                 Icons.Outlined.DateRange,
@@ -189,7 +194,7 @@ fun ListBottomAppBar(
                             )
                         }
                     }
-                     */
+
 
                     AnimatedVisibility(isBiometricsEnabled) {
                         IconButton(onClick = { onToggleBiometricAuthentication() }) {
