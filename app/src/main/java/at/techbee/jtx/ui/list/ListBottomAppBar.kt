@@ -70,7 +70,6 @@ import at.techbee.jtx.util.SyncApp
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.TimeZone
 
 @Composable
 fun ListBottomAppBar(
@@ -100,13 +99,9 @@ fun ListBottomAppBar(
     val iCal4List by iCal4ListRelLive.observeAsState(emptyList())
 
     if(showGoToDatePicker) {
-        //var dates = iCal4List.map { it.iCal4List.dtstart ?: System.currentTimeMillis() }.toList()
-        //if (dates.isEmpty())
-        //    dates = listOf(System.currentTimeMillis())
-
         DatePickerDialog(
             datetime = DateTimeUtils.getTodayAsLong(),
-            timezone = TimeZone.getDefault().id,
+            timezone = ZoneId.systemDefault().id,
             allowNull = false,
             onConfirm = { selectedDate, _ ->
                 val selectedZoned = selectedDate?.let {ZonedDateTime.ofInstant(Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault()) } ?: return@DatePickerDialog
@@ -128,8 +123,8 @@ fun ListBottomAppBar(
             },
             onDismiss = { showGoToDatePicker = false },
             dateOnly = true,
-            //minDate = Instant.ofEpochMilli(dates.minOf { it }).atZone(ZoneId.systemDefault()),
-            //maxDate = Instant.ofEpochMilli(dates.maxOf { it }).atZone(ZoneId.systemDefault())
+            minDate = iCal4List.minByOrNull { it.iCal4List.dtstart ?: Long.MAX_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC"))},
+            //maxDate = iCal4List.maxByOrNull { it.iCal4List.dtstart ?: Long.MIN_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())},
         )
     }
 
