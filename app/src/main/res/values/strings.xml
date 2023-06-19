@@ -519,7 +519,7 @@ Thank you!"</string>
     <string name="alarms_always_ondue">"Always on due"</string>
     <string name="settings_auto_alarm_sub">"Turn on to automatically create alarms. Choose \"Always on due\" to not create an alarm but to get notified in any case when a task is due."</string>
     <string name="settings_protect_biometric">"Protect entries with biometrics"</string>
-    <string name="settings_protect_biometric_sub">"This function hides the selected entries until they are unlockd with biometrics, but does not encrypt/decrypt data in the background."</string>
+    <string name="settings_protect_biometric_sub">"This function hides the selected entries until they are unlocked with biometrics, but does not encrypt/decrypt data in the background."</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"No status"</string>
     <string name="classification_no_classification">"No classification (public)"</string>

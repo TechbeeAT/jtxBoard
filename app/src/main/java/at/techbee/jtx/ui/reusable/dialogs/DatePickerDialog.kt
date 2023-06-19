@@ -55,28 +55,31 @@ fun DatePickerDialog(
     val tabIndexDate = 0
     val tabIndexTime = 1
     val tabIndexTimezone = 2
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by remember { mutableIntStateOf(0) }
+
+    fun isValidDate(date: Long): Boolean {
+        val zonedDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.of("UTC")).withHour(0).withMinute(0).withSecond(0).withNano(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
+        return if(timezone == TZ_ALLDAY)
+            minDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))?.let { it.year <= zonedDate.year && it.monthValue <= zonedDate.monthValue && it.dayOfMonth < zonedDate.dayOfMonth }?:true && maxDate?.let { it.year >= zonedDate.year && it.monthValue >= zonedDate.monthValue && it.dayOfMonth > zonedDate.dayOfMonth } ?: true
+        else
+            minDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))?.let { it.year <= zonedDate.year && it.monthValue <= zonedDate.monthValue && it.dayOfMonth <= zonedDate.dayOfMonth }?:true && maxDate?.let { it.year >= zonedDate.year && it.monthValue >= zonedDate.monthValue && it.dayOfMonth >= zonedDate.dayOfMonth } ?: true
+    }
 
     val initialZonedDateTime = datetime
         ?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }
         ?: minDate
 
-    val datePickerState = rememberDatePickerState(initialZonedDateTime?.toInstant()?.toEpochMilli()?.plus(initialZonedDateTime.offset.totalSeconds*1000))
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialZonedDateTime?.toInstant()?.toEpochMilli()?.plus(initialZonedDateTime.offset.totalSeconds*1000),
+        selectableDates = object: SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long) = isValidDate((utcTimeMillis))
+        }
+    )
     val timePickerState = rememberTimePickerState(initialZonedDateTime?.hour?:0, initialZonedDateTime?.minute?:0)
 
     var newTimezone by rememberSaveable { mutableStateOf(timezone) }
     val defaultTimezone = if (LocalInspectionMode.current) "Europe/Vienna" else TimeZone.getDefault().id
     val defaultDateTime = ZonedDateTime.now()
-
-    fun isValidDate(date: Long): Boolean {
-        val zonedDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), DateTimeUtils.requireTzId(timezone))
-        return if(timezone == TZ_ALLDAY)
-            zonedDate.year >= (minDate?.year ?:-1) && zonedDate.monthValue >= (minDate?.monthValue ?:-1) && zonedDate.dayOfMonth > (minDate?.dayOfMonth ?:-1)
-                    && zonedDate.year <= (maxDate?.year ?:3000) && zonedDate.monthValue <= (maxDate?.monthValue ?:13) && zonedDate.dayOfMonth < (maxDate?.dayOfMonth ?: 367)
-        else
-            zonedDate.year >= (minDate?.year ?:-1) && zonedDate.monthValue >= (minDate?.monthValue ?:-1) && zonedDate.dayOfMonth >= (minDate?.dayOfMonth ?:-1)
-                    && zonedDate.year <= (maxDate?.year ?:3000) && zonedDate.monthValue <= (maxDate?.monthValue ?:13) && zonedDate.dayOfMonth <= (maxDate?.dayOfMonth ?: 367)
-    }
 
     AlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
@@ -104,7 +107,7 @@ fun DatePickerDialog(
                                         Checkbox(
                                             checked = datePickerState.selectedDateMillis != null,
                                             onCheckedChange = {
-                                                datePickerState.setSelection(if (it) defaultDateTime.withZoneSameLocal(ZoneId.of("UTC")).toInstant().toEpochMilli() else null)
+                                                datePickerState.selectedDateMillis = if (it) defaultDateTime.withZoneSameLocal(ZoneId.of("UTC")).toInstant().toEpochMilli() else null
                                                 newTimezone = if (it) TZ_ALLDAY else null
                                                 selectedTab = tabIndexDate
                                             },
@@ -190,7 +193,6 @@ fun DatePickerDialog(
                     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                         DatePicker(
                             state = datePickerState,
-                            dateValidator = { date -> isValidDate(date) },
                             modifier = Modifier.requiredWidth(360.dp)  // from DatePickerModalTokens.ContainerWidth
                         )
                     }
@@ -253,10 +255,11 @@ fun DatePickerDialog(
                         }
 
                         val newZonedDateTime = datePickerState.selectedDateMillis?.let { dateTime ->
+                            val selection = Instant.ofEpochMilli(dateTime).atZone(ZoneId.of("UTC"))
                             when (newTimezone) {
-                                TZ_ALLDAY -> Instant.ofEpochMilli(dateTime).atZone(ZoneId.of("UTC")).withHour(0).withMinute(0).withSecond(0).withNano(0)
-                                in TimeZone.getAvailableIDs() -> Instant.ofEpochMilli(dateTime).atZone(ZoneId.of(newTimezone)).withHour(timePickerState.hour).withMinute(timePickerState.minute).withSecond(0).withNano(0)
-                                null -> Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).withHour(timePickerState.hour).withMinute(timePickerState.minute).withNano(0).withSecond(0)
+                                TZ_ALLDAY -> ZonedDateTime.ofInstant(Instant.ofEpochMilli(dateTime), ZoneId.of("UTC")).withYear(selection.year).withMonth(selection.monthValue).withDayOfMonth(selection.dayOfMonth).withHour(0).withMinute(0).withSecond(0).withNano(0)
+                                in TimeZone.getAvailableIDs() -> ZonedDateTime.ofInstant(Instant.ofEpochMilli(dateTime), ZoneId.of(newTimezone)).withYear(selection.year).withMonth(selection.monthValue).withDayOfMonth(selection.dayOfMonth).withHour(timePickerState.hour).withMinute(timePickerState.minute).withSecond(0).withNano(0)
+                                null -> ZonedDateTime.ofInstant(Instant.ofEpochMilli(dateTime), ZoneId.systemDefault()).withYear(selection.year).withMonth(selection.monthValue).withDayOfMonth(selection.dayOfMonth).withHour(timePickerState.hour).withMinute(timePickerState.minute).withNano(0).withSecond(0)
                                 else -> null
                             }
                         }

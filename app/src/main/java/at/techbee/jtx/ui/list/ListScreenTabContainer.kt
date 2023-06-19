@@ -134,7 +134,8 @@ fun ListScreenTabContainer(
                 }
             } else {
                 0
-            }
+            },
+        pageCount = { enabledTabs.size }
     )
 
     val icalListViewModelJournals: ListViewModelJournals = viewModel()
@@ -658,7 +659,6 @@ fun ListScreenTabContainer(
                             Box {
                                 HorizontalPager(
                                     state = pagerState,
-                                    pageCount = enabledTabs.size,
                                     userScrollEnabled = !filterSheetState.isVisible,
                                     verticalAlignment = Alignment.Top
                                 ) { page ->

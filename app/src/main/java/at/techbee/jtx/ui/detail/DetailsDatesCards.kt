@@ -75,21 +75,21 @@ fun DetailsDatesCards(
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
                         if((due ?: Long.MAX_VALUE) <= (datetime ?: Long.MIN_VALUE)) {
-                            Toast.makeText(
-                                context,
-                                context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart),
-                                Toast.LENGTH_LONG
-                            ).show()
+                            Toast.makeText(context, context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart), Toast.LENGTH_LONG).show()
                         } else {
                             dtstart = datetime
                             dtstartTimezone = timezone
                             onDtstartChanged(datetime, timezone)
 
                             due?.let {
-                                if((dueTimezone == TZ_ALLDAY && dtstartTimezone != TZ_ALLDAY) || (dueTimezone != TZ_ALLDAY && dtstartTimezone == TZ_ALLDAY)) {
-                                    val dueZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(dueTimezone))
+                                val dueZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(dueTimezone))
+                                if((dueTimezone == TZ_ALLDAY && dtstartTimezone != TZ_ALLDAY)) {
                                     due = dueZoned.withHour(0).withMinute(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone)).toInstant().toEpochMilli()
                                     dueTimezone = timezone
+                                    onDueChanged(due, dueTimezone)
+                                } else if (dueTimezone != TZ_ALLDAY && dtstartTimezone == TZ_ALLDAY) {
+                                    due = dueZoned.withHour(0).withMinute(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone)).toInstant().toEpochMilli()
+                                    dueTimezone = TZ_ALLDAY
                                     onDueChanged(due, dueTimezone)
                                 }
                             }
