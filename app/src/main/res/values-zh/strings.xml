@@ -129,9 +129,6 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"复制为任务"</string>
     <string name="menu_view_copy_as_note">"复制为笔记"</string>
     <string name="menu_view_copy_item">"创建复本"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"任务截止提醒"</string>
-    <string name="notification_channel_reminder_description">"提醒任务到期"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"添加日记"</string>
     <string name="shortcut_addNote_longLabel">"添加笔记"</string>
@@ -503,12 +500,4 @@ Global Strings -->
     <string name="active_filters">活动过滤器：</string>
     <string name="kanban_columns_based_on_first_category">基于第一个类别</string>
     <string name="clear_filters">"清除过滤规则"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
 </resources>
