@@ -144,9 +144,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Copy as Todo"</string>
     <string name="menu_view_copy_as_note">"Copy as Note"</string>
     <string name="menu_view_copy_item">"Create copy"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Todo Due Reminder"</string>
-    <string name="notification_channel_reminder_description">"Notification for due todos"</string>
+    <string name="notification_channel_alarms_name">"Alarms"</string>
+    <string name="notification_channel_geofences_name">"Geofences"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Add Journal"</string>
     <string name="shortcut_addNote_longLabel">"Add Note"</string>
@@ -610,12 +609,10 @@ Thank you!"</string>
     <string name="kanban_columns_based_on_extended_status">based on extended statuses</string>
     <string name="kanban_columns_based_on_first_category">based on first category</string>
     <string name="clear_filters">"Clear filters"</string>
-    <!--
     <string name="geofence_radius_meter">"Radius %1$d m"</string>
     <string name="geofence_radius_feet">"Radius %1$d ft"</string>
     <string name="geofence_selection">"Geofence: %1$s"</string>
     <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="geofence_missing_permission_info">"jtx Board needs the persmissions to access your background location and to send you notifications. Please update the location permission to 'Allow all the time' and grant the notification permission in order to get notified when you reach your geofence!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please set the location permission to 'Allow all the time' and grant the notifications permission to use this feature."</string>
 </resources>
