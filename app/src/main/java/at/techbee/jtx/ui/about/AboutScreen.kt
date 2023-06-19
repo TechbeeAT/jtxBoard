@@ -44,7 +44,7 @@ fun AboutScreen(
         AboutTabDestination.Translations,
         AboutTabDestination.Thanks
     )
-    val pagerState = rememberPagerState(initialPage = screens.indexOf(AboutTabDestination.Jtx))
+    val pagerState = rememberPagerState(initialPage = screens.indexOf(AboutTabDestination.Jtx), pageCount = { screens.size })
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -77,7 +77,6 @@ fun AboutScreen(
                         }
                         HorizontalPager(
                             state = pagerState,
-                            pageCount = screens.size,
                             verticalAlignment = Alignment.Top
                         ) { page ->
                             when (page) {

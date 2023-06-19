@@ -641,7 +641,7 @@ DELETEs by Object
     fun getAlarmSync(key: Long): Alarm?
 
     @Transaction
-    @Query("SELECT * from alarm WHERE icalObjectId = :icalobjectId")
+    @Query("SELECT * from $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = :icalobjectId")
     fun getAlarmsSync(icalobjectId: Long): List<Alarm>?
 
 
