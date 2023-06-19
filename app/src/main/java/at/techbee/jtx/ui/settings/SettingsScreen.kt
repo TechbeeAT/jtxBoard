@@ -364,21 +364,6 @@ fun SettingsScreen(
                         expandedDefault = false,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        SwitchSetting(
-                            setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS,
-                            initiallyChecked = settingsStateHolder.settingShowProgressForMainTasks.value,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingShowProgressForMainTasks.value = it
-                                SETTING_SHOW_PROGRESS_FOR_MAINTASKS.save(it, context)
-                            })
-                        SwitchSetting(
-                            setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
-                            initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingShowProgressForSubTasks.value = it
-                                SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
-                            })
-
                         DropdownSetting(
                             setting = SETTING_DEFAULT_START_DATE,
                             selected = settingsStateHolder.settingDefaultStartDate.value,
@@ -393,14 +378,6 @@ fun SettingsScreen(
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingDefaultDueDate.value = selection
                                 SETTING_DEFAULT_DUE_DATE.save(selection, context = context)
-                            }
-                        )
-                        DropdownSetting(
-                            setting = SETTING_PROGRESS_STEP,
-                            selected = settingsStateHolder.settingStepForProgress.value,
-                            onSelectionChanged = { selection ->
-                                settingsStateHolder.settingStepForProgress.value = selection
-                                SETTING_PROGRESS_STEP.save(selection, context = context)
                             }
                         )
                         SwitchSetting(
@@ -421,6 +398,54 @@ fun SettingsScreen(
                             }
                         )
                         SwitchSetting(
+                            setting = SETTING_STICKY_ALARMS,
+                            initiallyChecked = settingsStateHolder.settingStickyAlarms.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingStickyAlarms.value = it
+                                SETTING_STICKY_ALARMS.save(it, context)
+                            }
+                        )
+                        SwitchSetting(
+                            setting = SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION,
+                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationTasks.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = it
+                                SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
+                            }
+                        )
+                    }
+
+
+                    ExpandableSettingsSection(
+                        headerText = R.string.settings_tasks_status_progress,
+                        expandedDefault = false,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        SwitchSetting(
+                            setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS,
+                            initiallyChecked = settingsStateHolder.settingShowProgressForMainTasks.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingShowProgressForMainTasks.value = it
+                                SETTING_SHOW_PROGRESS_FOR_MAINTASKS.save(it, context)
+                            }
+                        )
+                        SwitchSetting(
+                            setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
+                            initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingShowProgressForSubTasks.value = it
+                                SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
+                            }
+                        )
+                        DropdownSetting(
+                            setting = SETTING_PROGRESS_STEP,
+                            selected = settingsStateHolder.settingStepForProgress.value,
+                            onSelectionChanged = { selection ->
+                                settingsStateHolder.settingStepForProgress.value = selection
+                                SETTING_PROGRESS_STEP.save(selection, context = context)
+                            }
+                        )
+                        SwitchSetting(
                             setting = SETTING_LINK_PROGRESS_TO_SUBTASKS,
                             initiallyChecked = settingsStateHolder.settingLinkProgressToSubtasks.value,
                             onCheckedChanged = {
@@ -434,22 +459,6 @@ fun SettingsScreen(
                             onCheckedChanged = {
                                 settingsStateHolder.settingKeepStatusProgressCompletedInSync.value = it
                                 SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.save(it, context)
-                            }
-                        )
-                        SwitchSetting(
-                            setting = SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION,
-                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationTasks.value,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = it
-                                SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
-                            }
-                        )
-                        SwitchSetting(
-                            setting = SETTING_STICKY_ALARMS,
-                            initiallyChecked = settingsStateHolder.settingStickyAlarms.value,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingStickyAlarms.value = it
-                                SETTING_STICKY_ALARMS.save(it, context)
                             }
                         )
                     }

@@ -249,7 +249,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
             currentItem.status = newStatus.status
             if(settingsStateHolder.settingKeepStatusProgressCompletedInSync.value) {
                 when(newStatus) {
-                    Status.NEEDS_ACTION -> currentItem.setUpdatedProgress(0, true)
                     Status.IN_PROCESS -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
                     Status.COMPLETED -> currentItem.setUpdatedProgress(100, true)
                     else -> { }

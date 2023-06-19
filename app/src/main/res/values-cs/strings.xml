@@ -289,7 +289,6 @@ Global Strings -->
     <string name="view_share_part_of_series">"Tento záznam je součástí série."</string>
     <string name="view_share_repeats">"Tento záznam se opakuje každý(ch)"</string>
     <string name="collections_dialog_move_title">"Přesunout všechny záznamy z \"%1$s\" do"</string>
-    <string name="collection_dialog_move_info">"Upozornění: Lze vybrat pouze zapisovatelné sbírky a sbírky s podporou stejných komponent (Deníky, Poznámky, Úkoly)."</string>
     <string name="menu_collections_popup_move_entries">"Přesunout záznamy"</string>
     <string name="list_no_dates_set">"Nejsou nastavena žádná data"</string>
     <string name="list_without_start_date">"Bez data začátku"</string>
@@ -455,7 +454,6 @@ Děkujeme vám!"</string>
     <string name="settings_progress_step_25">"Přírůstek o 25 (4 kroky)"</string>
     <string name="settings_progress_step_50">"Přírůstek o 50 (2 kroky)"</string>
     <string name="settings_progress_step">"Nastavit krok pro posuvník průběhu"</string>
-    <string name="settings_disable_alarms_for_readonly">"Zakázat budíky pro sbírky pouze pro čtení"</string>
     <string name="settings_link_progress_to_subtasks">"Propojit průběh do dílčích úkolů"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Ponechat stav, průběh a dokončení při synchronizaci"</string>
     <string name="settings_attention_experimental_feature">"Pozor: Toto je experimentální funkce"</string>

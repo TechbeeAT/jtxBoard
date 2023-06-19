@@ -440,6 +440,7 @@ Global Strings -->
     <string name="menu_list_viewmode_compact">"Компактно"</string>
     <string name="menu_list_viewmode_kanban">"Канбан"</string>
     <string name="settings_tasks">"Настройки задач"</string>
+    <string name="settings_tasks_status_progress">"Настройки задач (статус/прогресс)"</string>
     <string name="settings_sync">"Настройки синхронизации"</string>
     <string name="settings_default_start_date">"Установить дату начала задачи по умолчанию"</string>
     <string name="settings_default_due_date">"Установить дату завершения задачи по умолчанию"</string>

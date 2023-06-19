@@ -279,7 +279,6 @@ Global Strings -->
     <string name="view_share_part_of_series">"此条目是系列的一部分。"</string>
     <string name="view_share_repeats">"此条目重复，每"</string>
     <string name="collections_dialog_move_title">"从“%1$s”移动所有条目到"</string>
-    <string name="collection_dialog_move_info">"请注意：只能选择可写合集和支持相同组件（日记、笔记、任务）的集合。"</string>
     <string name="menu_collections_popup_move_entries">"移动条目"</string>
     <string name="list_no_dates_set">"未设置日期"</string>
     <string name="list_without_start_date">"没有开始日期"</string>
@@ -421,7 +420,6 @@ Global Strings -->
     <string name="settings_progress_step_25">"递增25（4步）"</string>
     <string name="settings_progress_step_50">"递增50（2步）"</string>
     <string name="settings_progress_step">"设置进度条步长"</string>
-    <string name="settings_disable_alarms_for_readonly">"只读合集禁用提醒"</string>
     <string name="settings_link_progress_to_subtasks">"关联子任务进度"</string>
     <string name="settings_attention_experimental_feature">"注意：这是一个实验功能"</string>
     <string name="settings_create_with_current_location">"使用当前位置创建新条目"</string>

@@ -275,7 +275,6 @@ Global Strings -->
     <string name="view_share_part_of_series">"Esta entrada es parte de una serie."</string>
     <string name="view_share_repeats">"Esta entrada se repite cada"</string>
     <string name="collections_dialog_move_title">"Mover todas las entradas de \"%1$s\" a"</string>
-    <string name="collection_dialog_move_info">"Nota: Sólo se pueden seleccionar las colecciones con posibilidad de escritura y las colecciones con soporte para los mismos componentes (diarios, notas, tareas)."</string>
     <string name="menu_collections_popup_move_entries">"Mover entradas"</string>
     <string name="list_no_dates_set">"Sin fechas establecidas"</string>
     <string name="list_without_start_date">"Sin fecha de inicio"</string>
@@ -430,7 +429,6 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="settings_progress_step_25">"Incrementar en 25 (4 pasos)"</string>
     <string name="settings_progress_step_50">"Incrementar en 50 (2 pasos)"</string>
     <string name="settings_progress_step">"Establecer el paso para el control deslizante de progreso"</string>
-    <string name="settings_disable_alarms_for_readonly">"Deshabilitar alarmas para colecciones de solo lectura"</string>
     <string name="settings_link_progress_to_subtasks">"Enlazar progreso a las subtareas"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Mantener estado, progreso y completado en sincronización"</string>
     <string name="settings_attention_experimental_feature">"Atención: Esta es una característica experimental"</string>

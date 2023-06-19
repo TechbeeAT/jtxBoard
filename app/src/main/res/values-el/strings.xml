@@ -439,6 +439,7 @@ Global Strings -->
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
     <string name="settings_tasks">"Ρυθμίσεις εργασιών"</string>
+    <string name="settings_tasks_status_progress">"Ρυθμίσεις εργασιών (κατάσταση/πρόοδος)"</string>
     <string name="settings_sync">"Ρυθμίσεις συγχρονισμού"</string>
     <string name="settings_default_start_date">"Ορίστε μια προεπιλεγμένη ημερομηνία έναρξης για εργασίες"</string>
     <string name="settings_default_due_date">"Ορίστε μια προεπιλεγμένη ημερομηνία έναρξης για εργασίες"</string>

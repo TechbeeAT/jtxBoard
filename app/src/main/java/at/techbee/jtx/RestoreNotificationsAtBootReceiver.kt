@@ -29,12 +29,13 @@ class RestoreNotificationsAtBootReceiver: BroadcastReceiver() {
                 ?.forEach { iCalObjectId ->
                     CoroutineScope(Dispatchers.IO).launch {
                         val iCalObject = database.getICalObjectByIdSync(iCalObjectId)
+                        val alarms = database.getAlarmsSync(iCalObjectId) ?: return@launch
                         if( iCalObject != null
                             && iCalObject.percent != 100
                             && iCalObject.status != Status.COMPLETED.status
                             && ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+                            && alarms.any { (it.triggerTime?:Long.MAX_VALUE) <= System.currentTimeMillis() }
                         ) {
-
                             val notification = Alarm.createNotification(iCalObject.id, 0L, iCalObject.summary, iCalObject.description, true, context)
                             notificationManager.notify(iCalObjectId.toInt(), notification)
                         }

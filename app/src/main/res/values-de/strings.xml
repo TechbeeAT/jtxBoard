@@ -291,7 +291,6 @@ Global Strings -->
     <string name="view_share_part_of_series">"Dieser Eintrag ist Teil einer Serie."</string>
     <string name="view_share_repeats">"Dieser Eintrag wiederholt sich"</string>
     <string name="collections_dialog_move_title">"Einträge von \"%1$s\" verschieben nach"</string>
-    <string name="collection_dialog_move_info">"Achtung: Es können nur Collections ausgewählt werden, die gleiche Komponenten unterstützen (Journale, Notizen, Aufgaben)."</string>
     <string name="menu_collections_popup_move_entries">"Einträge verschieben"</string>
     <string name="list_no_dates_set">"Ohne Datumsangaben"</string>
     <string name="list_without_start_date">"Ohne Start"</string>
@@ -441,6 +440,7 @@ Danke!"</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
     <string name="settings_tasks">"Aufgaben-Einstellungen"</string>
+    <string name="settings_tasks_status_progress">"Aufgaben-Einstellungen (Status/Fortschritt)"</string>
     <string name="settings_sync">"Sync-Einstellungen"</string>
     <string name="settings_default_start_date">"Standard-Startdatum für Aufgaben"</string>
     <string name="settings_default_due_date">"Standard-Fälligkeit für Aufgaben"</string>
