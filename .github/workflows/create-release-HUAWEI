@@ -1,5 +1,9 @@
-name: Create release
-on: workflow_dispatch
+name: Create release HUAWEI
+on:
+  push:
+    branches:
+      - 'develop-HUAWEI'
+  workflow_dispatch:
 jobs:
   build:
     name: Create release
