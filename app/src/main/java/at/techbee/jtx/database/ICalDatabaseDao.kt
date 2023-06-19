@@ -18,6 +18,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.*
+import at.techbee.jtx.ui.detail.LocationLatLng
 import at.techbee.jtx.ui.presets.XStatusStatusPair
 import kotlinx.coroutines.flow.Flow
 
@@ -558,6 +559,22 @@ DELETEs by Object
     fun getNextAlarms(limit: Int, minDate: Long = System.currentTimeMillis()): List<Alarm>
 
     /**
+     * Gets ICalObjects with lat/long and geofence radius
+     * @param limit: The number of [ICalObject]s that should be returned
+     * @return a list of ICalObjects
+     */
+    @Transaction
+    @Query("SELECT $TABLE_NAME_ICALOBJECT.* " +
+            "FROM $TABLE_NAME_ICALOBJECT " +
+            "WHERE $COLUMN_DELETED = 0 " +
+            "AND $COLUMN_RRULE IS NULL " +
+            "AND $COLUMN_GEO_LAT IS NOT NULL " +
+            "AND $COLUMN_GEO_LONG IS NOT NULL " +
+            "AND $COLUMN_GEOFENCE_RADIUS IS NOT NULL " +
+            "LIMIT :limit")
+    fun getICalObjectsWithGeofence(limit: Int): List<ICalObject>
+
+    /**
      * Gets the next due [ICalObject]s after a certain date or after now.
      * Elements that define a series are excluded.
      * Sorting is ascending by trigger time.
@@ -807,5 +824,11 @@ DELETEs by Object
     @Transaction
     @Query("SELECT DISTINCT $COLUMN_EXTENDED_STATUS, $COLUMN_STATUS FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module AND $COLUMN_EXTENDED_STATUS IS NOT NULL")
     fun getAllXStatusesFor(module: String): LiveData<List<XStatusStatusPair>>
+
+    /**
+     * Gets all location als LocationLatLng object
+     */
+    @Query("SELECT DISTINCT $COLUMN_LOCATION, $COLUMN_GEO_LAT, $COLUMN_GEO_LONG FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_LOCATION IS NOT NULL ORDER BY $COLUMN_LAST_MODIFIED DESC")
+    fun getAllLocationsLatLng(): LiveData<List<LocationLatLng>>
 
 }

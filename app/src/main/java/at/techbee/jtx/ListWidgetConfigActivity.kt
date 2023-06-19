@@ -40,11 +40,12 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.widgets.ListWidget
 import at.techbee.jtx.widgets.ListWidgetConfig
 import at.techbee.jtx.widgets.ListWidgetConfigContent
+import at.techbee.jtx.widgets.ListWidgetReceiver
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-const val TAG = "WidgetConfigAct"
+private const val TAG = "WidgetConfigAct"
 
 class ListWidgetConfigActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

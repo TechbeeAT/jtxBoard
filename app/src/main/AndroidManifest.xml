@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- read/write Android calendars -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
@@ -157,6 +158,7 @@
         </activity>
 
         <receiver android:name=".NotificationPublisher" />
+        <receiver android:name=".GeofenceBroadcastReceiver"/>
         <receiver
             android:name=".widgets.ListWidgetReceiver"
             android:exported="false"> <!-- disabled widget for api levels < 28 as it causes error, check again in future if better support is given when glance goes release -->
