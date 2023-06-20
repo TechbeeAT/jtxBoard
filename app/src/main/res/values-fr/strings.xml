@@ -134,9 +134,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Copie en tant que tâche"</string>
     <string name="menu_view_copy_as_note">"Copie en tant que note"</string>
     <string name="menu_view_copy_item">"Créer une copie"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Rappel des tâches"</string>
-    <string name="notification_channel_reminder_description">"Notification des tâches à accomplir"</string>
+    <string name="notification_channel_alarms_name">"Alarmes"</string>
+    <string name="notification_channel_geofences_name">"Zones géographiques"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Ajouter un journal"</string>
     <string name="shortcut_addNote_longLabel">"Ajouter une note"</string>
@@ -589,12 +588,10 @@ Merci !"</string>
     <string name="kanban_columns_based_on_extended_status">basé sur les statuts étendus</string>
     <string name="kanban_columns_based_on_first_category">basée sur la première catégorie</string>
     <string name="clear_filters">"Supprimer les filtres"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="geofence_radius_meter">"Rayon %1$d m"</string>
+    <string name="geofence_radius_feet">"Rayon %1$d ft"</string>
+    <string name="geofence_selection">"Géorepérage : %1$s"</string>
+    <string name="geofence_options">"Options de géorepérage"</string>
+    <string name="geofence_missing_permission_info">"jtx Board a besoin des autorisations pour accéder à votre position en arrière-plan et vous envoyer des notifications. Veuillez mettre à jour l’autorisation de localisation pour « Toujours autoriser» et accorder l’autorisation de notification afin d’être notifié lorsque vous atteignez votre repère géographique!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board peut vous avertir lorsque vous êtes proche des coordonnées indiquées. Veuillez définir l’autorisation de localisation pour «Toujours autoriser et autoriser les notifications à utiliser cette fonctionnalité."</string>
 </resources>

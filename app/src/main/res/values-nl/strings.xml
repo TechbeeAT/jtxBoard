@@ -134,9 +134,6 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Kopieer als Taak"</string>
     <string name="menu_view_copy_as_note">"Kopieer als Notitie"</string>
     <string name="menu_view_copy_item">"Kopie maken"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Taak verval-herinnering"</string>
-    <string name="notification_channel_reminder_description">"Melding voor vervallende taken"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Logboek toevoegen"</string>
     <string name="shortcut_addNote_longLabel">"Notitie toevoegen"</string>
@@ -590,12 +587,4 @@ Dank u!"</string>
     <string name="kanban_columns_based_on_extended_status">gebaseerd op uitgebreide statussen</string>
     <string name="kanban_columns_based_on_first_category">gebaseerd op de eerste categorie</string>
     <string name="clear_filters">"Filters wissen"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
 </resources>
