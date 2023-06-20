@@ -134,6 +134,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Copia com a Tasca"</string>
     <string name="menu_view_copy_as_note">"Copia com a Nota"</string>
     <string name="menu_view_copy_item">"Crea una còpia"</string>
+    <string name="notification_channel_alarms_name">"Alarmes"</string>
+    <string name="notification_channel_geofences_name">"Geofencing"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Afegir Entrada de Diari"</string>
     <string name="shortcut_addNote_longLabel">"Afegir Nota"</string>
@@ -589,4 +591,9 @@ Gràcies!"</string>
     <string name="kanban_columns_based_on_extended_status">basat en estats addicionals</string>
     <string name="kanban_columns_based_on_first_category">basat en la primera categoria</string>
     <string name="clear_filters">"Elimina els filtres"</string>
+    <string name="geofence_radius_meter">"Radi %1$d m"</string>
+    <string name="geofence_radius_feet">"Radi %1$d peus"</string>
+    <string name="geofence_selection">"Geofence: %1$s"</string>
+    <string name="geofence_options">"Opcions de Geofence"</string>
+    <string name="geofence_missing_permission_info">"jtx Board necessita permís per accedir a la teva ubicació quan està en segon pla, i d'enviar-te notificacions. Per favor, actualitza els permisos d'ubicació a 'Permet tota l'estona', i dona permís per a enviar notificacions per tal de ser avisat en arribar a la teva geofence!"</string>
 </resources>
