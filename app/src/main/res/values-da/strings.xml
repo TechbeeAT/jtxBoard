@@ -1,10 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board synkroniserer Tidsskrifter, Noter &amp; Opgaver"</string>
+    <string name="app_permission_desc">"synkroniser indhold i jtx Board med andre programmer som DAVx5"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="save">"Gem"</string>
+    <string name="cancel">"Annuller"</string>
+    <string name="ok">"OK"</string>
+    <string name="delete">"Slet"</string>
+    <string name="discard">"Fortryd"</string>
+    <string name="cont">"Forsæt"</string>
+    <string name="website">"Hjemmeside"</string>
+    <string name="latitude">"Breddegrad"</string>
+    <string name="longitude">"Længdegrad"</string>
+    <string name="unlink">"Slet relation"</string>
+    <string name="off">"Fra"</string>
+    <string name="permissions">"Tilladelser"</string>
+    <string name="current_location">"Nuværende placering"</string>
+    <string name="toolbar_text_add_journal">"Tilføj Tidsskrift"</string>
+    <string name="toolbar_text_add_note">"Tilføj Note"</string>
+    <string name="toolbar_text_add_task">"Tilføj Opgave"</string>
+    <string name="toast_sync_requested">"Synkronisering forespurgt"</string>
+    <string name="default_local_collection_name">"Lokal"</string>
+    <string name="default_local_account_name">"Lokal"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Kladde"</string>
+    <string name="journal_status_final">"Endelig"</string>
+    <string name="journal_status_cancelled">"Annulleret"</string>
+    <string name="todo_status_needsaction">"Kræver handling"</string>
+    <string name="todo_status_completed">"Fuldført"</string>
+    <string name="todo_status_inprocess">"I gang"</string>
+    <string name="todo_status_cancelled">"Annulleret"</string>
+    <string name="classification_public">"Offentlig"</string>
+    <string name="classification_private">"Privat"</string>
+    <string name="classification_confidential">"Fortrolig"</string>
     <!-- Navigation Drawer -->
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
