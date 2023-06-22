@@ -420,7 +420,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         viewModelScope.launch(Dispatchers.IO) {
             selectedEntries.forEach { iCalObjectId ->
                 database.getICalObjectByIdSync(iCalObjectId)?.let {
-                    it.status = newStatus
+                    it.status = if(newStatus == Status.NO_STATUS.name) null else newStatus
                     when {
                         newStatus == Status.COMPLETED.status -> it.percent = 100
                         newStatus == Status.NEEDS_ACTION.status -> it.percent = 0
