@@ -58,11 +58,16 @@ fun DatePickerDialog(
     var selectedTab by remember { mutableIntStateOf(0) }
 
     fun isValidDate(date: Long): Boolean {
+        /*
         val zonedDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.of("UTC")).withHour(0).withMinute(0).withSecond(0).withNano(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
+        val zonedMinDate = minDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
+        val zonedMaxDate = maxDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
         return if(timezone == TZ_ALLDAY)
-            minDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))?.let { it.year <= zonedDate.year && it.dayOfYear < zonedDate.dayOfYear }?:true && maxDate?.let { it.year >= zonedDate.year && it.dayOfYear > zonedDate.dayOfYear } ?: true
+            zonedDate.year*zonedDate.dayOfYear in (zonedMinDate?.year?:0)*(zonedMinDate?.dayOfYear?:0) until (zonedMaxDate?.year?:3000)*(zonedMaxDate?.dayOfYear?:367)
         else
-            minDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))?.let { it.year <= zonedDate.year && it.dayOfYear <= zonedDate.dayOfYear }?:true && maxDate?.let { it.year >= zonedDate.year && it.dayOfYear >= zonedDate.dayOfYear } ?: true
+            zonedDate.year*zonedDate.dayOfYear in (zonedMinDate?.year?:0)*(zonedMinDate?.dayOfYear?:0) .. (zonedMaxDate?.year?:3000)*(zonedMaxDate?.dayOfYear?:367)
+         */
+        return true
     }
 
     val initialZonedDateTime = datetime
