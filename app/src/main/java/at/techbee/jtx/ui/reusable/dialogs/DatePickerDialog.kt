@@ -60,9 +60,9 @@ fun DatePickerDialog(
     fun isValidDate(date: Long): Boolean {
         val zonedDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.of("UTC")).withHour(0).withMinute(0).withSecond(0).withNano(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
         return if(timezone == TZ_ALLDAY)
-            minDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))?.let { it.year <= zonedDate.year && it.monthValue <= zonedDate.monthValue && it.dayOfMonth < zonedDate.dayOfMonth }?:true && maxDate?.let { it.year >= zonedDate.year && it.monthValue >= zonedDate.monthValue && it.dayOfMonth > zonedDate.dayOfMonth } ?: true
+            minDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))?.let { it.year <= zonedDate.year && it.dayOfYear < zonedDate.dayOfYear }?:true && maxDate?.let { it.year >= zonedDate.year && it.dayOfYear > zonedDate.dayOfYear } ?: true
         else
-            minDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))?.let { it.year <= zonedDate.year && it.monthValue <= zonedDate.monthValue && it.dayOfMonth <= zonedDate.dayOfMonth }?:true && maxDate?.let { it.year >= zonedDate.year && it.monthValue >= zonedDate.monthValue && it.dayOfMonth >= zonedDate.dayOfMonth } ?: true
+            minDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))?.let { it.year <= zonedDate.year && it.dayOfYear <= zonedDate.dayOfYear }?:true && maxDate?.let { it.year >= zonedDate.year && it.dayOfYear >= zonedDate.dayOfYear } ?: true
     }
 
     val initialZonedDateTime = datetime
