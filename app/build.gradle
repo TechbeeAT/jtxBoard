@@ -23,12 +23,12 @@ if(localPropertiesFile.exists()) {
 
 android {
     namespace "at.techbee.jtx"
-    compileSdkVersion 33
+    compileSdkVersion 34
     defaultConfig {
         applicationId "at.techbee.jtx"
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 205000001
         versionName "2.05.00-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""

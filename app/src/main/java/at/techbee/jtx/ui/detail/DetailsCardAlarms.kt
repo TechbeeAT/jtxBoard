@@ -62,6 +62,8 @@ fun DetailsCardAlarms(
     var showDurationPicker by rememberSaveable { mutableStateOf(false) }
 
     val notificationsPermissionState = if (!LocalInspectionMode.current && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS) else null
+    val exactAlarmPermissionState = if (!LocalInspectionMode.current && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) rememberPermissionState(permission = Manifest.permission.SCHEDULE_EXACT_ALARM) else null
+
 
     if(showDateTimePicker) {
         val initialDateTime = if(icalObject.module == Module.JOURNAL.name) icalObject.dtstart ?: System.currentTimeMillis() else icalObject.due ?: System.currentTimeMillis()
@@ -193,6 +195,11 @@ fun DetailsCardAlarms(
         RequestPermissionDialog(
             text = stringResource(id = R.string.edit_fragment_app_notification_permission_message),
             onConfirm = { notificationsPermissionState.launchPermissionRequest() }
+        )
+    } else if(exactAlarmPermissionState?.status?.shouldShowRationale == false && !exactAlarmPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
+        RequestPermissionDialog(
+            text = stringResource(id = R.string.exact_alarm_permission_dialog_message),
+            onConfirm = { exactAlarmPermissionState.launchPermissionRequest() }
         )
     }
 }
