@@ -4,24 +4,41 @@
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="ok">"OK"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_privacy_policy">"Політика конфіденційності"</string>
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
+    <string name="edit_attachment_button_text">"Додати вкладення"</string>
     <!-- fragment_about -->
     <!-- menus -->
     <!-- Shortcuts -->
     <!-- Settings fragment -->
     <!-- Sync fragment -->
+    <string name="sync_congratulations">"Вітання! :-)"</string>
     <!-- Donate fragment -->
+    <string name="donate_thank_you">"Дякую!"</string>
     <!-- sync content provider -->
     <!-- Permissions -->
     <!-- alarms -->
     <!-- fragment_collections -->
     <!-- Fuzzy -->
+    <string name="priority_0_no_priority">"Без пріорітету"</string>
+    <string name="notification_add_1h">"+ 1 година"</string>
+    <string name="notification_add_1d">"+ 1 день"</string>
+    <string name="settings_select_theme">"Обрати тему"</string>
+    <string name="settings_select_theme_dark">"Темна"</string>
+    <string name="settings_select_theme_light">"Світла"</string>
     <!-- Buy Pro fragment -->
+    <string name="edit_comment">"Редагувати коментар"</string>
     <!-- alarms -->
+    <string name="dialog_revert_changes_title">"Скасувати зміни?"</string>
+    <string name="menu_view_copy_to_clipboard">"Копіювати до буфера обміну"</string>
+    <string name="menu_view_copy_to_clipboard_copied">"Скопійовано"</string>
     <!-- fragment_ical_list -->
+    <string name="list_date_today">"Сьогодні"</string>
+    <string name="list_date_tomorrow">"Завтра"</string>
     <!-- Strings for values in properties of an ICalObject -->
 </resources>
