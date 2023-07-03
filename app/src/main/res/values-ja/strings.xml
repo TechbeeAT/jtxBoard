@@ -596,4 +596,5 @@ Global Strings -->
     <string name="geofence_options">"ジオフェンスの設定"</string>
     <string name="geofence_missing_permission_info">"jtx Board はバックグラウンドで位置情報にアクセスする権限と通知を送信する権限を必要とします。ジオフェンスに入ったときに通知を受けるには、位置情報の権限を「常に許可」に変更し、通知の権限を付与してください！"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board は指定された座標に近づいたときにお知らせできます。この機能を有効にするには、位置情報の権限を「常に許可」にし、通知の権限を許可してください。"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board はアラーム通知の遅延を避けるため、正確なアラームを設定する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
 </resources>
