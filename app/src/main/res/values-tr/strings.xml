@@ -4,8 +4,50 @@
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="save">"Kaydet"</string>
+    <string name="cancel">"İptal et"</string>
+    <string name="ok">"Tamam"</string>
+    <string name="delete">"Sil"</string>
+    <string name="discard">"Yoksay"</string>
+    <string name="cont">"Devam et"</string>
+    <string name="website">"Web sitesi"</string>
+    <string name="latitude">"Enlem"</string>
+    <string name="longitude">"Boylam"</string>
+    <string name="unlink">"Bağlantıyı kes"</string>
+    <string name="off">"Kapalı"</string>
+    <string name="permissions">"İzinler"</string>
+    <string name="current_location">"Güncel konum"</string>
+    <string name="toolbar_text_add_journal">"Günlük Ekle"</string>
+    <string name="toolbar_text_add_note">"Not Ekle"</string>
+    <string name="toolbar_text_add_task">"Görev Ekle"</string>
+    <string name="toast_sync_requested">"Senkronizasyon talep edildi"</string>
+    <string name="default_local_collection_name">"Yerel"</string>
+    <string name="default_local_account_name">"Yerel"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Taslak"</string>
+    <string name="journal_status_final">"Son"</string>
+    <string name="journal_status_cancelled">"İptal edildi"</string>
+    <string name="todo_status_needsaction">"Eylem gerekiyor"</string>
+    <string name="todo_status_completed">"Tamamlandı"</string>
+    <string name="todo_status_inprocess">"Devam ediyor"</string>
+    <string name="todo_status_cancelled">"İptal edildi"</string>
+    <string name="classification_public">"Genel"</string>
+    <string name="classification_private">"Kişisel"</string>
+    <string name="classification_confidential">"Gizli"</string>
+    <string name="attendee_role_required_participant">"Katılımcı gerekli"</string>
+    <string name="attendee_role_optional_participant">"Katılımcı isteğe bağlı"</string>
+    <string name="attendee_role_non_participant">"Katılımcı olmayan / Bilgi"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Gezinti çubuğunu aç"</string>
+    <string name="navigation_drawer_close">"Gezinti çubuğunu kapat"</string>
+    <string name="navigation_drawer_synchronization">"Senkronizasyon"</string>
+    <string name="navigation_drawer_about">"Hakkında / Lisans"</string>
+    <string name="navigation_drawer_settings">"Ayarlar"</string>
+    <string name="navigation_drawer_external_links">"Harici bağlantılar"</string>
+    <string name="navigation_drawer_website">"Web sitesi"</string>
+    <string name="navigation_drawer_support">"Destek"</string>
+    <string name="navigation_drawer_donate">"Bağış yap"</string>
+    <string name="navigation_drawer_privacy_policy">"Gizlilik Politikası"</string>
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->

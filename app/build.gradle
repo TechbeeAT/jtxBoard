@@ -29,8 +29,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 205000001
-        versionName "2.05.00-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 205000005
+        versionName "2.05.00-beta03"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -292,7 +292,7 @@ dependencies {
     testImplementation "androidx.test:core-ktx:1.5.0"
     // Required -- JUnit 4 framework
     testImplementation "androidx.test.ext:junit-ktx:1.1.5"
-    testImplementation "org.mockito:mockito-core:5.3.1"
+    //testImplementation "org.mockito:mockito-core:5.3.1"
 
     //About Libraries
     implementation "com.mikepenz:aboutlibraries-core:${version_about_libraries}"

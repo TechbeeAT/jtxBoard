@@ -76,6 +76,7 @@ import at.techbee.jtx.database.properties.TABLE_NAME_RELATEDTO
 import at.techbee.jtx.database.properties.TABLE_NAME_RESOURCE
 import at.techbee.jtx.database.properties.TABLE_NAME_UNKNOWN
 import at.techbee.jtx.database.properties.Unknown
+import at.techbee.jtx.flavored.GeofenceClient
 import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.widgets.ListWidgetReceiver
@@ -235,6 +236,8 @@ class SyncContentProvider : ContentProvider() {
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
+            GeofenceClient(context!!).setGeofences()
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             NotificationPublisher.scheduleNextNotifications(context!!)
@@ -347,6 +350,9 @@ class SyncContentProvider : ContentProvider() {
             NotificationPublisher.scheduleNextNotifications(context!!)
 
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
+
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
+            GeofenceClient(context!!).setGeofences()
 
         return ContentUris.withAppendedId(uri, id)
     }
@@ -613,6 +619,9 @@ class SyncContentProvider : ContentProvider() {
             || sUriMatcher.match(uri) == CODE_ALARM_ITEM
         )
             NotificationPublisher.scheduleNextNotifications(context!!)
+
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
+            GeofenceClient(context!!).setGeofences()
 
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 

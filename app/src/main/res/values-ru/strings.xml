@@ -134,6 +134,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Скопировать как задачу"</string>
     <string name="menu_view_copy_as_note">"Скопировать как заметку"</string>
     <string name="menu_view_copy_item">"Создать копию"</string>
+    <string name="notification_channel_alarms_name">"Напоминания"</string>
+    <string name="notification_channel_geofences_name">"Геозоны"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Добавить журнал"</string>
     <string name="shortcut_addNote_longLabel">"Добавить заметку"</string>
@@ -588,4 +590,10 @@ Global Strings -->
     <string name="kanban_columns_based_on_extended_status">на основе расширенных статусов</string>
     <string name="kanban_columns_based_on_first_category">на основе первой категории</string>
     <string name="clear_filters">"Сбросить фильтры"</string>
+    <string name="geofence_radius_meter">"Радиус %1$d м"</string>
+    <string name="geofence_radius_feet">"Радиус %1$d фт"</string>
+    <string name="geofence_selection">"Геозона: %1$s"</string>
+    <string name="geofence_options">"Настройки геозоны"</string>
+    <string name="geofence_missing_permission_info">"jtx Board требуется разрешение для доступа к вашему местоположению и отправки вам уведомлений. Пожалуйста, обновите права доступа к местоположению на «Разрешать всегда» и предоставьте разрешение на уведомления, чтобы получать их при нахождении в указанных геозонах!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board будет отправлять вам уведомления, когда вы приближаетесь к указанным координатам. Пожалуйста, установите права доступа к местоположению на «Разрешать всегда» и предоставьте разрешение на уведомления для использования этой функции."</string>
 </resources>
