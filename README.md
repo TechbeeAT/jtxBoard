@@ -64,8 +64,10 @@ jtx Board uses/requests the following permissions:
 - INTERNET is used to retrieve the list of contributors for translations from POEditor.com/Crowdin.com and release notes from GitHub.com
 - VIBRATE gives you haptic feedback when moving an entry on the Kanban-Board
 - POST_NOTIFICATIONS let's you receive the notifications when an alarm is due
-- ACCESS_COARSE_LOCATION & ACCESS_FINE_LOCATION can move the map to your current location (gplay flavor only), can set the current location (latitude, longitude) for an entry
+- ACCESS_COARSE_LOCATION & ACCESS_FINE_LOCATION can move the map to your current location, can set the current location (latitude, longitude) for an entry
 - SCHEDULE_EXACT_ALARM used to show a notification when an alarm is due
+- RECEIVE_BOOT_COMPLETED used to restore notifications and geofences after restart
+- ACCESS_BACKGROUND_LOCATION used to trigger a notification for a geofence (gplay flavor only)
 
 
 ### Troubleshooting

@@ -1,22 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board synkroniserer Journaler, Noter &amp; Opgaver"</string>
+    <string name="app_permission_desc">"synkroniser indhold i jtx Board med andre programmer som DAVx5"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="save">"Gem"</string>
+    <string name="cancel">"Annuller"</string>
+    <string name="ok">"OK"</string>
+    <string name="delete">"Slet"</string>
+    <string name="discard">"Fortryd"</string>
+    <string name="cont">"Forsæt"</string>
+    <string name="website">"Hjemmeside"</string>
+    <string name="latitude">"Breddegrad"</string>
+    <string name="longitude">"Længdegrad"</string>
+    <string name="unlink">"Slet relation"</string>
+    <string name="off">"Fra"</string>
+    <string name="permissions">"Tilladelser"</string>
+    <string name="current_location">"Nuværende placering"</string>
+    <string name="toolbar_text_add_journal">"Tilføj Journal"</string>
+    <string name="toolbar_text_add_note">"Tilføj Note"</string>
+    <string name="toolbar_text_add_task">"Tilføj Opgave"</string>
+    <string name="toast_sync_requested">"Synkronisering forespurgt"</string>
+    <string name="default_local_collection_name">"Lokal"</string>
+    <string name="default_local_account_name">"Lokal"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Kladde"</string>
+    <string name="journal_status_final">"Endelig"</string>
+    <string name="journal_status_cancelled">"Annulleret"</string>
+    <string name="todo_status_needsaction">"Kræver handling"</string>
+    <string name="todo_status_completed">"Fuldført"</string>
+    <string name="todo_status_inprocess">"I gang"</string>
+    <string name="todo_status_cancelled">"Annulleret"</string>
+    <string name="classification_public">"Offentlig"</string>
+    <string name="classification_private">"Privat"</string>
+    <string name="classification_confidential">"Fortrolig"</string>
+    <string name="attendee_role_chair">"Forperson"</string>
+    <string name="attendee_role_required_participant">"Påkrævet deltager"</string>
+    <string name="attendee_role_optional_participant">"Valgfri deltager"</string>
+    <string name="attendee_role_non_participant">"Ikke-deltager"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Åbn sidemenu"</string>
+    <string name="navigation_drawer_close">"Luk sidemenu"</string>
+    <string name="navigation_drawer_board">"Tavle"</string>
+    <string name="navigation_drawer_synchronization">"Synkronisering"</string>
+    <string name="navigation_drawer_about">"Om / Licens"</string>
+    <string name="navigation_drawer_subtitle">"journaler, noter &amp; opgaver"</string>
+    <string name="navigation_drawer_settings">"Indstillinger"</string>
+    <string name="navigation_drawer_news_updates">"Nyheder &amp; opdateringer"</string>
+    <string name="navigation_drawer_external_links">"Eksterne henvisninger"</string>
+    <string name="navigation_drawer_website">"Hjemmeside"</string>
+    <string name="navigation_drawer_support">"Support"</string>
+    <string name="navigation_drawer_donate">"Donér"</string>
+    <string name="navigation_drawer_privacy_policy">"Privatlivspolitik"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"Forfalden"</string>
+    <string name="list_due_today">"Forfalder idag"</string>
+    <string name="list_tabitem_journals">"Journaler"</string>
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
+    <string name="dialog_delete_done_message">"OBS: Underopgaver slettes uafhængigt af deres status, hvis deres forælder er markeret som udført. Denne handling kan ikke fortrydes!"</string>
+    <string name="edit_dialog_sure_to_delete_message">"Er du sikker på, at du vil slette \"%1$s\"?"</string>
+    <string name="edit_dialog_sure_to_discard_message">"Er du sikker på, at du vil kassere denne post? Denne post vil ikke blive gemt."</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Forfaldsdatoen kan ikke være før startdatoen."</string>
+    <string name="edit_fragment_app_permission">"App-tilladelser"</string>
+    <string name="edit_fragment_app_permission_message">"jtx Board kan foreslå Deltager-data baseret på dine kontakter som input-værdier for dine indtastninger. Læsetilladelse for dine kontakter er nødvendig for at aktivere denne funktion."</string>
     <!-- fragment_about -->
+    <string name="about_tabitem_translations">"Oversættelser"</string>
+    <string name="about_tabitem_libraries">"Biblioteker"</string>
+    <string name="about_tabitem_thanks">"Særlig tak til"</string>
+    <string name="about_app_version">"Version: %1$s (%2$d)"</string>
+    <string name="about_app_codename">"Kodenavn: %1$s"</string>
+    <string name="about_app_build_date">"Kompileret %s"</string>
+    <string name="about_app_terms">"Vilkår &amp; betingelser"</string>
+    <string name="about_thanks_ffg">"Særlig tak til FFG for deres tillid og økonomiske støtte til at realisere dette projekt."</string>
     <!-- menus -->
-    <!-- Notification channel for Reminders -->
+    <string name="menu_list_gotodate">"Gå til dato"</string>
+    <string name="menu_list_quick_journal">"Hurtig Journal"</string>
+    <string name="menu_view_copy_as_journal">"Kopier som Journal"</string>
     <!-- Shortcuts -->
+    <string name="shortcut_addJournal_longLabel">"Tilføj Journal"</string>
     <!-- Settings fragment -->
     <!-- Sync fragment -->
     <!-- Donate fragment -->
     <!-- sync content provider -->
+    <string name="list_welcome_entry_journal_summary">"Tillykke, dette er dit første journalindlæg :-)"</string>
+    <string name="list_welcome_entry_journal_description">"Journaler kan bruges til at opbevare dine noter til en bestemt dato. Brug denne funktionalitet for eksempel til protokoller, mødeprotokoller, dagbogsposter og så videre. Hvis du redigerer denne post, vil du se mulighederne for at tilføje kategorier, deltagere, vedhæftede filer, … Du er velkommen til at slette denne post, når du vil!"</string>
     <!-- Permissions -->
     <!-- alarms -->
     <!-- fragment_collections -->
@@ -25,12 +95,4 @@ Global Strings -->
     <!-- alarms -->
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
 </resources>
