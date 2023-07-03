@@ -20,16 +20,16 @@ buildscript {
 
     ext {
         version_core = "1.10.1"
-        version_coroutine = "1.7.1"
+        version_coroutine = "1.7.2"
         version_appcompat = "1.6.1"
         version_gradle = '8.0.2'
-        version_kotlin = "1.8.21"
+        version_kotlin = "1.8.22"
         version_room = "2.5.2"
         version_work = "2.8.1"
         version_billing = "6.0.1"
         version_review = "2.0.1"
         version_compose = "1.4.3"
-        version_about_libraries = "10.7.0"
+        version_about_libraries = "10.8.0"
         version_huawei = "1.8.1.300"
         version_huawei_iap = "6.10.0.300"
         version_accompanist = "0.31.4-beta"

@@ -129,6 +129,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"复制为任务"</string>
     <string name="menu_view_copy_as_note">"复制为笔记"</string>
     <string name="menu_view_copy_item">"创建复本"</string>
+    <string name="notification_channel_alarms_name">"闹钟"</string>
+    <string name="notification_channel_geofences_name">"地理围栏"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"添加日记"</string>
     <string name="shortcut_addNote_longLabel">"添加笔记"</string>
@@ -500,4 +502,8 @@ Global Strings -->
     <string name="active_filters">活动过滤器：</string>
     <string name="kanban_columns_based_on_first_category">基于第一个类别</string>
     <string name="clear_filters">"清除过滤规则"</string>
+    <string name="geofence_radius_meter">"半径 %1$d 米"</string>
+    <string name="geofence_radius_feet">"半径 %1$d 英尺"</string>
+    <string name="geofence_selection">"地理围栏：%1$s"</string>
+    <string name="geofence_options">"地理围栏选项"</string>
 </resources>
