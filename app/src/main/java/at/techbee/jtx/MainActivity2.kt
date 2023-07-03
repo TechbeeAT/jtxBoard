@@ -448,9 +448,9 @@ fun MainNavHost(
     }
 
     globalStateHolder.icalObject2Open.value?.let { id ->
-        globalStateHolder.icalObject2Open.value = null
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false, returnToLauncher = true))
     }
+    globalStateHolder.icalObject2Open.value = null
 
     if (!settingsStateHolder.proInfoShown.value && !isProPurchased.value) {
         ProInfoDialog(
