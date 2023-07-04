@@ -622,7 +622,7 @@ enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String
     CREATED(R.string.filter_created, "$COLUMN_CREATED "),
     LAST_MODIFIED(R.string.filter_last_modified, "$COLUMN_LAST_MODIFIED "),
     SUMMARY(R.string.summary, "UPPER($COLUMN_SUMMARY) "),
-    PRIORITY(R.string.priority, "$COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY "),
+    PRIORITY(R.string.priority, "CASE WHEN $COLUMN_PRIORITY IS NULL THEN 1 WHEN $COLUMN_PRIORITY = 0 THEN 1 ELSE 0 END, $COLUMN_PRIORITY "),
     CLASSIFICATION(R.string.classification, "$COLUMN_CLASSIFICATION IS NULL, $COLUMN_CLASSIFICATION "),
     STATUS(R.string.status, "$COLUMN_STATUS IS NULL, $COLUMN_STATUS "),
     PROGRESS(R.string.progress, "$COLUMN_PERCENT "),
