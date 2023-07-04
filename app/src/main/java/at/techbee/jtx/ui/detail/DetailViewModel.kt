@@ -96,6 +96,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     var navigateToId = mutableStateOf<Long?>(null)
     var changeState = mutableStateOf(DetailChangeState.LOADING)
+    var statesLoaded = mutableStateOf(false)  //don't load them again once done
     var toastMessage = mutableStateOf<String?>(null)
     val detailSettings: DetailSettings = DetailSettings()
     val settingsStateHolder = SettingsStateHolder(_application)
@@ -112,6 +113,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     fun load(icalObjectId: Long, isAuthenticated: Boolean) {
         _isAuthenticated = isAuthenticated
+        statesLoaded.value = false
         viewModelScope.launch {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
             icalEntity = database.get(icalObjectId)
