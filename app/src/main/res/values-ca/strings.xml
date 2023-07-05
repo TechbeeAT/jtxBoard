@@ -597,5 +597,6 @@ Gràcies!"</string>
     <string name="geofence_options">"Opcions de Geofence"</string>
     <string name="geofence_missing_permission_info">"jtx Board necessita permís per accedir a la teva ubicació quan està en segon pla, i d'enviar-te notificacions. Per favor, actualitza els permisos d'ubicació a 'Permet tota l'estona', i dona permís per a enviar notificacions per tal de ser avisat en arribar a la teva geofence!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board et pot notificar quan estàs prop de les coordenades indicades. Per favor, estableix el permís d'ubicació a \"Permet tota l'estona\", i dona permís per a enviar notificacions, i podràs fer ús d'aquesta funció."</string>
+    <string name="geofence_notification_summary">"Geo-tanca activada"</string>
     <string name="exact_alarm_permission_dialog_message">"Cal que jtx Board tingui permís per a programar alarmes exactes, en cas de no ser així, les notificacions podrien endarrerir-se. Per favor, dona aquest permís per a fer servir aquesta funció."</string>
 </resources>
