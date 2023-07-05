@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import at.techbee.jtx.GeofenceBroadcastReceiver
 import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.properties.Alarm
 import com.google.android.gms.location.Geofence
@@ -91,24 +92,26 @@ class GeofenceClient(context: Context) : GeofenceClientDefinition(context) {
         val notificationManager = NotificationManagerCompat.from(context)
 
         CoroutineScope(Dispatchers.IO).launch {
+            val db = ICalDatabase.getInstance(context).iCalDatabaseDao
 
             triggeringGeofences.forEach { geofence ->
                 val iCalObjectId = geofence.requestId.toLongOrNull() ?: return@forEach
-                val iCalObject = ICalDatabase.getInstance(context).iCalDatabaseDao.getICalObjectById(iCalObjectId) ?: return@forEach
+                val iCalObject = db.getICalObjectById(iCalObjectId) ?: return@forEach
                 // Test that the reported transition was of interest.
                 when (geofenceTransition) {
                     Geofence.GEOFENCE_TRANSITION_ENTER -> {
                         val notification = Alarm.createNotification(
                             iCalObjectId = iCalObject.id,
                             alarmId = 0L,
-                            notificationSummary = "Geofence activated",
-                            notificationDescription = iCalObject.summary ?: iCalObject.description ?: "",
+                            notificationSummary = context.getString(R.string.geofence_notification_summary),
+                            notificationDescription = iCalObject.summary ?: iCalObject.description,
                             isReadOnly = true,
                             notificationChannel = MainActivity2.NOTIFICATION_CHANNEL_GEOFENCES,
                             isSticky = true,
                             context = context
                         )
-                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+                            && notificationManager.activeNotifications.none {iCalObject.id.toInt() == it.id }) {
                             notificationManager.notify(iCalObject.id.toInt(), notification)
                         }
                     }

@@ -358,6 +358,7 @@ fun MainNavHost(
 
             val detailViewModel: DetailViewModel = viewModel()
             detailViewModel.load(icalObjectId, globalStateHolder.isAuthenticated.value)
+            globalStateHolder.icalObject2Open.value = null  // reset (if it was set)
 
             DetailsScreen(
                 navController = navController,
@@ -448,7 +449,6 @@ fun MainNavHost(
     }
 
     globalStateHolder.icalObject2Open.value?.let { id ->
-        globalStateHolder.icalObject2Open.value = null
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false, returnToLauncher = true))
     }
 
