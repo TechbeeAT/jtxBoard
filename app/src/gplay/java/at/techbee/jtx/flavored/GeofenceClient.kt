@@ -107,7 +107,7 @@ class GeofenceClient(context: Context) : GeofenceClientDefinition(context) {
                             notificationDescription = iCalObject.summary ?: iCalObject.description,
                             isReadOnly = true,
                             notificationChannel = MainActivity2.NOTIFICATION_CHANNEL_GEOFENCES,
-                            isSticky = true,
+                            isSticky = false,
                             context = context
                         )
                         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
