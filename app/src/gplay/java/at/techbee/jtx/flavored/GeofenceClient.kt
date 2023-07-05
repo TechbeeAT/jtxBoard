@@ -109,8 +109,7 @@ class GeofenceClient(context: Context) : GeofenceClientDefinition(context) {
                             context = context
                         )
                         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
-                            //&& notificationManager.activeNotifications.none {iCalObject.id.toInt() == it.id }
-                        ) {
+                            && notificationManager.activeNotifications.none {iCalObject.id.toInt() == it.id }) {
                             notificationManager.notify(iCalObject.id.toInt(), notification)
                         }
                     }
