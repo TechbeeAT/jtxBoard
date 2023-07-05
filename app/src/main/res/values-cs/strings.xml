@@ -41,7 +41,7 @@ Global Strings -->
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Otevřít navigační panel"</string>
     <string name="navigation_drawer_close">"Zavřít navigační panel"</string>
-    <string name="navigation_drawer_board">"Deska"</string>
+    <string name="navigation_drawer_board">"Nástěnka"</string>
     <string name="navigation_drawer_synchronization">"Synchronizace"</string>
     <string name="navigation_drawer_about">"O aplikaci / Licence"</string>
     <string name="navigation_drawer_subtitle">"deníky, poznámky a úkoly"</string>
@@ -567,4 +567,7 @@ Děkujeme vám!"</string>
     <string name="preset_categories">"Předvolba kategorií"</string>
     <string name="preset_resources">"Předvolba zdrojů"</string>
     <string name="active_filters">Aktivní filtry:</string>
+    <string name="geofence_missing_permission_info">"jtx Board potřebuje oprávnění pro přístup k vaší poloze na pozadí a pro zasílání oznámení. Aktualizujte oprávnění k poloze na ‚Vždy povolit‘ a udělte oprávnění k oznámení, abyste mohli být upozorněni, až dosáhnete hranice své geografické oblasti!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board vás může upozornit, když se nacházíte v blízkosti zadaných souřadnic. Nastavte oprávnění k poloze na ‚Vždy povolit‘ a udělte oprávnění k oznámením pro použití této funkce."</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board potřebuje oprávnění k plánování přesných budíků, jinak může dojít ke zpoždění oznámení z budíků. Pro použití funkce udělte toto oprávnění."</string>
 </resources>
