@@ -57,11 +57,12 @@ fun ListTopRow(
     storedResources: List<StoredResource>,
     extendedStatuses: List<ExtendedStatus>,
     modifier: Modifier = Modifier,
-    includeJournalDate: Boolean = false
+    includeJournalDate: Boolean = false,
+    enableScroll: Boolean = true
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(3.dp),
-        modifier = modifier.horizontalScroll(rememberScrollState())
+        modifier = if(enableScroll) modifier.horizontalScroll(rememberScrollState()) else modifier
     ) {
         ListBadge(
             icon = Icons.Outlined.FolderOpen,

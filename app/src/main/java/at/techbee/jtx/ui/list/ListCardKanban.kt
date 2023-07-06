@@ -75,7 +75,8 @@ fun ListCardKanban(
                 storedCategories = storedCategories,
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
-                includeJournalDate = true
+                includeJournalDate = true,
+                enableScroll = false
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
