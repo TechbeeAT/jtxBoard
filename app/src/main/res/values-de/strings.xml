@@ -597,5 +597,6 @@ Danke!"</string>
     <string name="geofence_options">"Geofence-Optionen"</string>
     <string name="geofence_missing_permission_info">"jtx Board benötigt die Berechtigung, um auf Ihren Standort im Hintergrund zuzugreifen und Ihnen Benachrichtigungen zu senden. Bitte aktualisieren Sie die Standortberechtigung auf \"Immer erlauben\" und erteilen Sie die Benachrichtigungs-Berechtigung, um benachrichtigt zu werden, wenn Sie einen Geofence erreichen!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board kann Sie benachrichtigen, wenn Sie in der Nähe der angegebenen Koordinaten sind. Bitte setzen Sie die Standortberechtigung auf \"Immer erlauben\" und gewähren Sie die Benachrichtigungs-Berechtigung um diese Funktion nutzen zu können."</string>
+    <string name="geofence_notification_summary">"Geofence aktiviert"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board benötigt die Berechtigung, genaue Erinnerungen zu planen, da sonst Alarme verzögert ausgegeben werden könnten. Bitte erteilen Sie diese Berechtigung, um diese Funktion zu nutzen."</string>
 </resources>
