@@ -31,9 +31,13 @@ Global Strings -->
     <string name="classification_private">"Privát"</string>
     <string name="classification_confidential">"Bizalmas"</string>
     <string name="attendee_role_chair">"Vezető"</string>
+    <string name="attendee_role_required_participant">"Meghívott"</string>
+    <string name="attendee_role_optional_participant">"Opcionális meghívott"</string>
+    <string name="attendee_role_non_participant">"Csak értesítés"</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Navigációs sáv megnyitása"</string>
     <string name="navigation_drawer_close">"Navigációs sáv bezárása"</string>
+    <string name="navigation_drawer_synchronization">"Szinkronizálás"</string>
     <string name="navigation_drawer_about">"Névjegy / Licencek"</string>
     <string name="navigation_drawer_settings">"Beállítások"</string>
     <string name="navigation_drawer_news_updates">"Hírek &amp; frissítések"</string>
@@ -117,6 +121,7 @@ Global Strings -->
     <string name="list_welcome_entry_journal_description">"A naplók adott időponthoz kötődő jegyzetek tárolására szolgálnak. Használja ezt a funkciót például feljegyzések, emlékeztetők, naplóbejegyzések készítéséhez. Ha szerkeszti ezt a bejegyzést, látni fogja, hogy van lehetőség hozzáadni kategóriákat, résztvevőket, mellékletek, … Ezt a bejegyzést bátran törölheti, ha már nincs rá szükséges!"</string>
     <string name="list_welcome_entry_note_description">"A Jegyzetek hagyományos, nem dátumhoz kötődő jegyzetek tárolására szolgál. A naplókhoz hasonlóan a bejegyzés szerkesztésekor vagy hozzáadásakor mellékleteket, résztvevőket és egyebeket is hozzáadhat. Egyébként bármely bejegyzéshez hozzáadhat részfeladatokat is, függetlenül attól, hogy az napló, jegyzet vagy feladat!"</string>
     <string name="save_and_edit">"Mentés és szerkesztés"</string>
+    <string name="save_and_new">"Mentés és új"</string>
     <string name="save_and_close">"Mentés és bezárás"</string>
     <!-- Permissions -->
     <string name="intent_dialog_title">"Tartalom hozzáadása egy naplóbejegyzéshez, jegyzethez, vagy feladathoz?"</string>
@@ -150,6 +155,7 @@ Global Strings -->
     <string name="collections_dialog_delete_local_title">"%1$s törlése?"</string>
     <string name="collections_dialog_delete_local_message">"Egy gyűjtemény törlése a gyűjteményen belüli összes naplóbejegyzést, jegyzetet és feladatot is törli. Ezt nem lehet visszavonni. Biztos, hogy folytatni szeretné?"</string>
     <string name="menu_collections_add_local">"Helyi gyűjtemény hozzáadása"</string>
+    <string name="navigation_drawer_website_news">"Újdonságok és verzióismertető"</string>
     <string name="color">"Szín"</string>
     <string name="priority_0_no_priority">"Nincs Prioritás"</string>
     <string name="priority_1_highest">"1 - Legmagasabb"</string>
