@@ -65,6 +65,7 @@ Global Strings -->
     <string name="list_dialog_delete_selected_title">Törli a kijelölt bejegyzéseket?</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Engedélyek"</string>
+    <string name="view_fragment_audio_permission_message">"A jtx Boardnak engedélyre van szüksége ahhoz, hogy hangfelvételt készíthessen, vagy használhassa a hangfelismerés funkciót. Kérjük, adja meg az engedélyt, ha szeretné használni ezt a funkciót."</string>
     <string name="view_add_audio_note">"Hangfelvétel hozzáadása"</string>
     <string name="view_created_text">"Létrehozva: %1$s"</string>
     <string name="view_last_modified_text">"Utoljára módosítva: %1$s"</string>
@@ -135,6 +136,10 @@ Global Strings -->
     <string name="save_and_new">"Mentés és új"</string>
     <string name="save_and_close">"Mentés és bezárás"</string>
     <!-- Permissions -->
+    <string name="permission_read_contacts_granted">"Névjegyek olvasása engedélyezve van"</string>
+    <string name="permission_read_contacts_denied">"Névjegyek olvasása nincs engedélyezve"</string>
+    <string name="permission_record_audio_granted">"Hangfelvétel engedélyezve van"</string>
+    <string name="permission_record_audio_denied">"Hangfelvétel nincs engedélyezve"</string>
     <string name="intent_dialog_title">"Tartalom hozzáadása egy naplóbejegyzéshez, jegyzethez, vagy feladathoz?"</string>
     <string name="add">"Hozzáad"</string>
     <string name="edit">"Szerkesztés"</string>
@@ -234,6 +239,8 @@ Global Strings -->
     <string name="settings_modules_enable_tasks">"Feladatok"</string>
     <string name="settings_default_expand_subtasks">"Az alfeladatok alapértelmezett kibontása a listában"</string>
     <string name="settings_default_expand_attachments">"Az aljegyzetek alapértelmezett kibontása a listában"</string>
+    <string name="permission_coarse_location_granted">"Hozzávetőleges helymeghatározás engedélyezve van"</string>
+    <string name="permission_coarse_location_denied">"Hozzávetőleges helymeghatározás nincs engedélyezve"</string>
     <string name="back">"Vissza"</string>
     <string name="details">"Részletek"</string>
     <string name="date">"Dátum"</string>
