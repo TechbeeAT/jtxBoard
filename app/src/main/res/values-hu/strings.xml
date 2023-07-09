@@ -100,6 +100,7 @@ Global Strings -->
     <string name="edit_dialog_sure_to_delete_title">"%1$s törlése?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Bejegyzés elvetése?"</string>
     <string name="edit_dialog_sure_to_delete_message">"Biztosan törölni szeretné a következőt: \"%1$s\"?"</string>
+    <string name="edit_dialog_sure_to_discard_message">"Biztos, hogy el akarja vetni ezt a bejegyzést? A bejegyzés nem kerül elmentésre."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"A határidő nem lehet korábbi a kezdési dátumnál."</string>
     <string name="edit_fragment_app_permission">"Alkalmazásengedély"</string>
     <string name="edit_fragment_app_permission_message">"A jtx Board javasollatokat tehet résztvevők adataira a Névjegyzék alapján. A funkció használatához adja meg az olvasási jogot a Névjegyzékhez."</string>
@@ -133,14 +134,18 @@ Global Strings -->
     <!-- Sync fragment -->
     <string name="sync_basic_info">"A jtx Board maga nem biztosít szinkronizációs funkciót az adatok távoli szerveren való tárolásához, de támogatja a szinkronizálást a DAVx⁵-n keresztül. Ez a módszer lehetővé teszi, hogy bármilyen kompatibilis CalDAV-kiszolgálót használjon az adatok tárolására, mentésére és szinkronizálására."</string>
     <string name="sync_ksync_basic_info">"A kSync egy DAVx⁵-alapú alkalmazás, amelyet az Infomaniak kifejezetten a saját szolgáltatásaikhoz fejlesztett ki. Míg a DAVx⁵ bármilyen kompatibilis CalDAV-szerverrel használható, a kSync csak Infomaniak-fiókokat engedélyez a szinkronizáláshoz."</string>
+    <string name="sync_manageddavx5_basic_info">"A manedzselt DAVx⁵ a szervezetek számára elérhetővé teszi az alap DAVx⁵-funkcionalitását, olyan vállalati funkciókkal kiegészítve, mint a tömeges telepítés, a vállalati arculat használata vagy az előre bekonfigurálható beállítások."</string>
     <string name="sync_congratulations">"Gratulálunk! :)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"A %1$s alkalmazás telepítve van."</string>
     <string name="sync_sync_app_not_found">"A %1$s alkalmazás nincs telepítve."</string>
     <string name="sync_button_add_account_in_sync_app">"Fiók hozzáadása a %1$s alkalmazásban"</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"Üdvözlet! Patrick vagyok, a jtx Board fejlesztője. Rengeteg időt és energiát fektetek ebbe az alkalmazásba, amelyet ingyen kínálok használatra. De ha tetszik az alkalmazás, kérem, küldjön egy szeretetetcsomagot és esetleg némi adományt is!"</string>
     <string name="donate_thank_you">"Köszönjük!"</string>
+    <string name="donate_other_donation_methods">"Ha más adományozási módot szeretne választani, kérjük, nézzen szét honlapunkon:"</string>
     <!-- sync content provider -->
     <string name="about_translations_basic_info">"A jtx Board egy nyílt forráskódú alkalmazás, amely nagyra értékeli a nyílt forráskódú közösség részvételét és hozzájárulását. Ezen az oldalon a közösség tagjainak a fordításokért tett erőfeszítéseit szeretnénk megköszönni."</string>
+    <string name="about_translations_contribution_info">"Ha szeretne fordításokat szerkeszteni/hozzáadni vagy új nyelveket hozzáadni ehhez az alkalmazáshoz, csatlakozzon a jtx Board projekthez a Crowdin fordítási platformon:"</string>
     <string name="list_welcome_entry_journal_summary">"Gratulálok, ez az első naplóbejegyzése :-)"</string>
     <string name="list_welcome_entry_journal_description">"A naplók adott időponthoz kötődő jegyzetek tárolására szolgálnak. Használja ezt a funkciót például feljegyzések, emlékeztetők, naplóbejegyzések készítéséhez. Ha szerkeszti ezt a bejegyzést, látni fogja, hogy van lehetőség hozzáadni kategóriákat, résztvevőket, mellékletek, … Ezt a bejegyzést bátran törölheti, ha már nincs rá szükséges!"</string>
     <string name="list_welcome_entry_note_summary">"Gratulálok, ez az első jegyzete :-)"</string>
@@ -212,7 +217,15 @@ Global Strings -->
     <string name="journal">"Naplóbejegyzés"</string>
     <string name="task">"Feladat"</string>
     <string name="account">"Fiók"</string>
+    <string name="category">"Kategória"</string>
+    <string name="priority">"Prioritás"</string>
+    <string name="readyonly">"Csak olvasható"</string>
+    <string name="url">"URL"</string>
     <string name="attendees">"Résztvevők"</string>
+    <string name="resources">"Erőforrások"</string>
+    <string name="organizer">"Szervező"</string>
+    <string name="comments">"Megjegyzések"</string>
+    <string name="attachments">"Csatolmányok"</string>
     <string name="alarms">"Riasztások"</string>
     <string name="recurrence">"Ismétlődés"</string>
     <string name="recurrence_exceptions">"Kivétel"</string>
@@ -226,7 +239,11 @@ Global Strings -->
     <string name="started">"Kezdés"</string>
     <string name="add_time_switch">"Idő hozzáadása"</string>
     <string name="progress">"Készültség"</string>
+    <string name="categories">"Kategóriák"</string>
     <string name="subtasks">"Alfeladatok"</string>
+    <string name="priority_7_low">"7-alacsony"</string>
+    <string name="priority_8_lower">"8-alacsonyabb"</string>
+    <string name="priority_9_lowest">"9-legalacsonyabb"</string>
     <string name="list_due_future">"Jövőbeni határidő"</string>
     <string name="view_share_repeats">"A bejegyzés ismétlése"</string>
     <string name="collections_dialog_move_title">"Az össze bejegyzés áthelyezése másik gyűjtőbe:"</string>
@@ -234,10 +251,13 @@ Global Strings -->
     <string name="menu_collections_popup_move_entries">"Bejegyzések áthelyezése"</string>
     <string name="list_without_start_date">"Kezdési dátum nélkül"</string>
     <string name="list_without_due_date">"Határidő nélkül"</string>
+    <string name="list_without_completed_date">"Befejezési idő nélkül"</string>
     <string name="filter_order_by">"Elsődleges rendezési szempont"</string>
     <string name="filter_desc">"Csökkenő"</string>
     <string name="filter_created">"Létrehozva"</string>
     <string name="filter_last_modified">"Utoljára módosítva"</string>
+    <string name="filter_no_category">Kategória nélkül</string>
+    <string name="filter_no_resource">Erőforrás nélkül</string>
     <string name="filter_subtasks_order_by">Alfeladatok rendezése</string>
     <string name="filter_subnotes_order_by">Csatolt jegyzetek rendezési szempontja</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Kérjük, válassza ki a gyűjteményt, amiben a bejegyzést vagy bejegyzéseket létre akarja hozni!"</string>
@@ -263,11 +283,20 @@ Global Strings -->
     <string name="settings_protect_biometric_all">"Mind"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Ennek a beállításnak a módosításához azonosítsa magát!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"A védett bejegyzésekhez való hozzáféréshez azonosítsa magát!"</string>
+    <string name="donate_dialog_message">"Egy alkalmazás fejlesztése összetett feladat, a fejlesztés, karbantartás és támogatás pedig kemény munka. Ha tetszik önnek ez az alkalmazás és szeretne tenni a folyamatos fejlesztés biztosításáért, kérjük, fontolja meg a támogatást :-)
+Köszönjük!"</string>
     <!-- Buy Pro fragment -->
+    <string name="buypro_text">"Egy alkalmazás fejlesztése összetett feladat, a fejlesztés, karbantartás és támogatás pedig kemény munka. Ha szeretné használni a Pro funkciókat, vagy ha támogatni szeretné a projektünket, kérjük, fontolja meg az alábbi alkalmazáson belüli vásárlást:"</string>
+    <string name="buypro_purchase_header">"Szintugrás: jtx Board Pro"</string>
     <string name="buypro_purchase_description">"Köszönjük, hogy megfontolja jtx Board Pro verzójának megvásárlását. Ez a verzió lehetővé teszi a távoli gyűjteményekben lévő bejegyzések szerkesztését, a gyorsbejegyzés funkciót, a hosszú kattintással történő gyorsszerkesztés funkciót és a dinamikus színeket (Android 12 verziótól)."</string>
+    <string name="buypro_purchase_date">"A vásárlás dátuma: %1$s"</string>
     <string name="buypro_order_id">"Rendelési azonosító: %1$s"</string>
+    <string name="buypro_success_header">"Köszönjük, hogy a jtx Board Pro verzójának megvásárlását!"</string>
     <string name="buypro_success_description">"Mostantól lehetséges a távoli gyűjteményekben lévő bejegyzések szerkesztése, illetve elérhetők a gyorsbejegyzés funkció, a hosszú kattintással történő gyorsszerkesztés funkció és a dinamikus színek (Android 12 verziótól)."</string>
+    <string name="buypro_success_thankyou">"Köszönjük!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Kérjük, vásárolja meg a jtx Board Pro verzióját, ha szeretne távoli gyűjtökben lévő bejegyzéseket szerkeszteni."</string>
+    <string name="buypro_initial_dialog_message">"Üdv! A jtx Board sztenderd és Pro verzióban is elérhető. Kérjük, nézze meg a \"Pro verzó megvásárlása\" szakaszt, hogy többet megtudjon a jtx Board Pro-ról! Köszönjük!"</string>
+    <string name="buypro_purchase_init_error_message">"Kérjük, ellenőrizze internetkapcsolatát, vagy próbálkozzon újra később később!"</string>
     <string name="menu_list_viewmode_list">"Listanézet"</string>
     <string name="menu_list_viewmode_grid">"Rácsba rendezés"</string>
     <string name="settings_modules">"Aktív modulok"</string>
@@ -292,6 +321,7 @@ Global Strings -->
     <string name="details_link_existing_subentry_dialog_title">"Meglévő bejegyzések idekapcsolása"</string>
     <string name="details_link_existing_subentry_dialog_info">"Válassza ki azokat az bejegyzéseket, amelyeket ide kíván kapcsolni."</string>
     <string name="details_attendees_processing_info">"Figyelem! Egyes szerverek automatikusan érthesíthetik a résztvevőket, például iMIP-üzenetek küldésével."</string>
+    <string name="details_toast_entry_deleted">"A bejegyzés elvetve/törölve"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Nem támogatott ismétlési szabály!"</string>
     <string name="details_recur_unknown_rrule_dialog_message">"Ismeretlen vagy nem támogatott ismétlődési szabályt észleltek. Ha folytatja, a meglévő ismétlődési szabály törlésre/felülírásra kerül."</string>
     <string name="details_attachment_beta_info">"* A mellékletek szinkronizálása kísérleti funkció. Erősen javasoljuk, hogy csak kis méretű csatolmányokat használjon (legfeljebb 100 KB), mivel a nagyobbak hosszú szinkronizálási időt és váratlan viselkedést eredményezhetnek."</string>
@@ -355,6 +385,8 @@ Global Strings -->
     <string name="settings_sync_on_start">"Szinkronizálás az alkalmazás indításakor"</string>
     <string name="settings_sync_on_pull_refresh">"Szinkronizálás lehúzás-gesztussal"</string>
     <string name="sync_button_go_to_collections">"Ugrás a Gyűjteményekhez"</string>
+    <string name="buypro_snackbar_please_purchase_pro">"Kérjük, vásárolja meg a Pro verziót, hogy használhassa ezt a funkciót."</string>
+    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="menu_view_share_mail">"Megosztás e-mail-ben"</string>
     <string name="menu_view_copy_to_clipboard">"Másolás vágólapra"</string>
     <string name="menu_view_convert_to_journal">"Átalakítás naplóbejegyzéssé"</string>
@@ -380,6 +412,7 @@ Global Strings -->
     <string name="settings_protect_biometric">"Bejegyzések védése a biometrikus azonosítással"</string>
     <string name="settings_protect_biometric_sub">"Ez a funkció elrejti a egyes kiválasztott bejegyzéseket, amíg a biometrikus adatokkal fel nem oldják a zárolást, de nem az adatokat a háttérben."</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="list_date_without">"Dátum nélkül"</string>
     <string name="list_start_without">"Kezdési dátum nélkül"</string>
     <string name="list_due_without">"Határidő nélkül"</string>
     <string name="list_snackbar_no_collection">"Kérjük, vegyen fel egy helyi gyűjteményt, vagy egy távoli gyűjteményt, ami támogatja ezt a modult."</string>
@@ -399,6 +432,8 @@ Global Strings -->
     <string name="select_none">Kijelölés törlése</string>
     <string name="visible">Látható</string>
     <string name="invisible">Rejtett</string>
+    <string name="widget_list_configuration_beta_info">"* Figyelem! A jtx Board egy új, kísérleti módszert használ a widgetek kezelésére, ami ritka esetekben váratlan viselkedést okozhat."</string>
+    <string name="widget_list_configuration_pro_info">"További konfigurációs beállaítások használatához vásárolja meg a Pro verziót."</string>
     <string name="widget_list_view_settings">"Beállítások megtekintése"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Figyelem! A widget jelenleg csak egy hierarchiaszintet támogat. Az mélyebb szinteken lévő bejegyzések megtekintéséhez kérjük, használja az egyszintű nézetet."</string>
     <string name="opacity">"Átlátszóság"</string>
@@ -437,6 +472,7 @@ Global Strings -->
     <string name="extended_status_attention">"Figyelem! Az egyéni státuszokat más alkalmazásban nem fogja tudni kezelni, de minden egyéni státusz mögött ott áll egy szabványos státusz; más alkalmazások ezeket fogják megjeleníteni."</string>
     <string name="extended_status">\"Egyéni státusz</string>
     <string name="kanban_columns_based_on_extended_status">egyéni státuszok szerint</string>
+    <string name="kanban_columns_based_on_first_category">az első kategória szerint</string>
     <string name="geofence_missing_permission_info">"A helyfüggő értesítések küldéséhez szükséges a helyadatok háttérbeli elérését biztosító engedély. Kérjük, frissítse a helymeghatározási engedélynél válassza a \"mindig engedélyezett\" opciót, hogy értesítést kaphasson, amikor eléri a megadott környéket!"</string>
     <string name="geofence_request_permission_dialog_message">"A jtx Board értesítést tud küldeni, ha közel van a megadott koordinátákhoz. Kérjük, adja meg az engedélyt és válassza a \"mindig engedélyezett\" opciót, ha szeretné használni ezt a funkciót."</string>
     <string name="exact_alarm_permission_dialog_message">"A riasztások pontos ütemezéséhez szükség van erre az engedélyre, különben a riasztások nem biztos, hogy időben fognak megjelenni. 
