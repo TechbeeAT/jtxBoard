@@ -15,6 +15,9 @@ import android.os.Build
 import android.util.Log
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 abstract class GeofenceClientDefinition(val context: Context) {
 
@@ -29,21 +32,24 @@ abstract class GeofenceClientDefinition(val context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return
 
-        val database = ICalDatabase.getInstance(context).iCalDatabaseDao
-        val geofenceObjects = database.getICalObjectsWithGeofence(MAX_GEOFENCES)
-        val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val activeGeofences = prefs.getStringSet(PREFS_ACTIVE_GEOFENCES, emptySet())
-            ?.map {
-                try { it.toLong() } catch (e: NumberFormatException) { return }
-            }?: emptyList()
+        CoroutineScope(Dispatchers.IO).launch {
 
+            val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+            val geofenceObjects = database.getICalObjectsWithGeofence(MAX_GEOFENCES)
+            val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+            val activeGeofences = prefs.getStringSet(PREFS_ACTIVE_GEOFENCES, emptySet())
+                ?.map {try { it.toLong() } catch (e: NumberFormatException) { return@launch } } ?: emptyList()
 
-        removeGeofence(activeGeofences)
-        geofenceObjects.forEach { iCalObject ->
-            addGeofence(iCalObject.geoLat!!, iCalObject.geoLong!!, iCalObject.geofenceRadius!!, iCalObject.id)
+            removeGeofence(activeGeofences)
+            geofenceObjects.forEach { iCalObject ->
+                addGeofence(iCalObject.geoLat!!, iCalObject.geoLong!!, iCalObject.geofenceRadius!!, iCalObject.id)
+            }
+            prefs.edit().putStringSet(
+                PREFS_ACTIVE_GEOFENCES,
+                geofenceObjects.map { it.id.toString() }.toSet()
+            ).apply()
+            Log.d("GeofenceBroadcastRec", "Geofence set for ${activeGeofences.joinToString(separator = ", ")}")
         }
-        prefs.edit().putStringSet(PREFS_ACTIVE_GEOFENCES, geofenceObjects.map { it.id.toString() }.toSet()).apply()
-        Log.d("GeofenceBroadcastRec", "Geofence set for ${activeGeofences.joinToString(separator = ", ")}")
     }
 
     /**
