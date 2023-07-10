@@ -233,6 +233,7 @@ Global Strings -->
     <string name="description">"Leírás"</string>
     <string name="search">"Keresés"</string>
     <string name="search_journals">Naplóbejegyzések keresése</string>
+    <string name="search_notes">Jegyzetek keresése</string>
     <string name="search_todos">Feladat keresése</string>
     <string name="due">"Határidő"</string>
     <string name="completed">"Befejezett"</string>
@@ -432,10 +433,15 @@ Köszönjük!"</string>
     <string name="select_none">Kijelölés törlése</string>
     <string name="visible">Látható</string>
     <string name="invisible">Rejtett</string>
+    <string name="widget_list_description">"Lista widget"</string>
+    <string name="widget_list_configuration">"Widget beállítások"</string>
     <string name="widget_list_configuration_beta_info">"* Figyelem! A jtx Board egy új, kísérleti módszert használ a widgetek kezelésére, ami ritka esetekben váratlan viselkedést okozhat."</string>
     <string name="widget_list_configuration_pro_info">"További konfigurációs beállaítások használatához vásárolja meg a Pro verziót."</string>
+    <string name="widget_list_configuration_checkbox_position">"A jelölőnégyzet helye"</string>
     <string name="widget_list_view_settings">"Beállítások megtekintése"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Figyelem! A widget jelenleg csak egy hierarchiaszintet támogat. Az mélyebb szinteken lévő bejegyzések megtekintéséhez kérjük, használja az egyszintű nézetet."</string>
+    <string name="widget_list_maximum_entries_reached">"A bejegyzések száma elérte a widgetre vonatkozó maximumot (%1$d)."</string>
+    <string name="widget_list_compat_updating_widget_notification">"Widget frissítése"</string>
     <string name="opacity">"Átlátszóság"</string>
     <string name="general">"Általános"</string>
     <string name="edit_recur_second">"másodpercenként"</string>
