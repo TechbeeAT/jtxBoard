@@ -15,7 +15,6 @@ import android.content.Context
 import android.content.Intent
 import android.icu.util.LocaleData
 import android.icu.util.ULocale
-import android.location.Criteria
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
@@ -136,8 +135,8 @@ fun DetailsCardLocation(
                     location = newLocation ?: ""
                     geoLat = newLat
                     geoLong = newLong
-                    geoLatText = String.format("%.5f", geoLat)
-                    geoLongText = String.format("%.5f", geoLong)
+                    geoLatText = geoLat?.toString() ?:""
+                    geoLongText = geoLong?.toString() ?:""
                     onLocationUpdated(location, geoLat, geoLong)
                 },
                 onDismiss = {
@@ -166,7 +165,7 @@ fun DetailsCardLocation(
             LocationUpdateState.LOCATION_REQUESTED -> {
                 // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
                 val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                val bestProvider = locationManager.getBestProvider(Criteria(), false) ?: return@LaunchedEffect
+                val bestProvider = locationManager.getProviders(true).lastOrNull() ?: return@LaunchedEffect
                 val locListener = LocationListener { }
                 locationManager.requestLocationUpdates(bestProvider, 0, 0f, locListener)
                 locationManager.getLastKnownLocation(bestProvider)?.let { lastKnownLocation ->
@@ -216,8 +215,8 @@ fun DetailsCardLocation(
                                             location = locationLatLng.location ?: ""
                                             geoLat = locationLatLng.geoLat
                                             geoLong = locationLatLng.geoLong
-                                            geoLatText = geoLat?.let { String.format("%.5f", it) } ?: ""
-                                            geoLongText = geoLong?.let { String.format("%.5f", it) } ?: ""
+                                            geoLatText = geoLat?.toString()?:""
+                                            geoLongText = geoLong?.toString()?:""
                                         },
                                         label = {
                                             val displayString =
@@ -299,6 +298,7 @@ fun DetailsCardLocation(
                             }
                         },
                         isError = (geoLatText.isNotEmpty() && geoLatText.toDoubleOrNull() == null)
+                                || (geoLongText.isNotEmpty() && geoLongText.toDoubleOrNull() == null)
                                 || (geoLatText.isEmpty() && geoLongText.isNotEmpty())
                                 || (geoLatText.isNotEmpty() && geoLongText.isEmpty()),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),

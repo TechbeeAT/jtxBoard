@@ -19,6 +19,8 @@ import at.techbee.jtx.database.Status
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.widgets.ListWidgetConfig
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 
 class ListSettings {
@@ -117,9 +119,13 @@ class ListSettings {
 
         private const val PREFS_TOPAPPBAR_MODE = "topAppBarMode"
         private const val PREFS_TOPAPPBAR_COLLECTION_ID = "topAppBarCollectionId"
-        private const val PREFS_KANBAN_COLUMNS_STATUS = "kanbanColumnsStatus"
-        private const val PREFS_KANBAN_COLUMNS_EXTENDED_STATUS = "kanbanColumnsXStatus"
-        private const val PREFS_KANBAN_COLUMNS_CATEGORY = "kanbanColumnsCategory"
+
+        @Deprecated("Kept for legacy handling only, remove in future") private const val PREFS_KANBAN_COLUMNS_STATUS = "kanbanColumnsStatus"
+        @Deprecated("Kept for legacy handling only, remove in future") private const val PREFS_KANBAN_COLUMNS_EXTENDED_STATUS = "kanbanColumnsXStatus"
+        @Deprecated("Kept for legacy handling only, remove in future") private const val PREFS_KANBAN_COLUMNS_CATEGORY = "kanbanColumnsCategory"
+        private const val PREFS_KANBAN_COLUMNS_STATUS2 = "kanbanColumnsStatus2"
+        private const val PREFS_KANBAN_COLUMNS_EXTENDED_STATUS2 = "kanbanColumnsXStatus2"
+        private const val PREFS_KANBAN_COLUMNS_CATEGORY2 = "kanbanColumnsCategory2"
 
         //private const val PREFS_CHECKBOX_POSITION_END = "prefsCheckboxPosition"
         //private const val PREFS_WIDGET_ALPHA = "prefsWidgetAlpha"
@@ -173,9 +179,15 @@ class ListSettings {
 
             viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
+
+            // Legacy handling
             kanbanColumnsStatus.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS_STATUS, emptySet())?.toList()?: emptyList())
             kanbanColumnsXStatus.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS, emptySet())?.toList()?: emptyList())
             kanbanColumnsCategory.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS_CATEGORY, emptySet())?.toList()?: emptyList())
+
+            kanbanColumnsStatus.addAll(prefs.getString(PREFS_KANBAN_COLUMNS_STATUS2, null)?.let { Json.decodeFromString(it) }?: emptyList())
+            kanbanColumnsXStatus.addAll(prefs.getString(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS2, null)?.let { Json.decodeFromString(it) }?: emptyList())
+            kanbanColumnsCategory.addAll(prefs.getString(PREFS_KANBAN_COLUMNS_CATEGORY2, null)?.let { Json.decodeFromString(it) }?: emptyList())
 
             showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
 
@@ -275,10 +287,12 @@ class ListSettings {
 
             putString(PREFS_VIEWMODE, viewMode.value.name)
             putBoolean(PREFS_FLAT_VIEW, flatView.value)
-            putStringSet(PREFS_KANBAN_COLUMNS_STATUS, kanbanColumnsStatus.toSet())
-            putStringSet(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS, kanbanColumnsXStatus.toSet())
-            putStringSet(PREFS_KANBAN_COLUMNS_CATEGORY, kanbanColumnsCategory.toSet())
-
+            remove(PREFS_KANBAN_COLUMNS_STATUS)   // remove legacy config
+            remove(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS) // remove legacy config
+            remove(PREFS_KANBAN_COLUMNS_CATEGORY)  // remove legacy config
+            putString(PREFS_KANBAN_COLUMNS_STATUS2, Json.encodeToString(kanbanColumnsStatus.toList()))
+            putString(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS2, Json.encodeToString(kanbanColumnsXStatus.toList()))
+            putString(PREFS_KANBAN_COLUMNS_CATEGORY2, Json.encodeToString(kanbanColumnsCategory.toList()))
 
             putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
 
