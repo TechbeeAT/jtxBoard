@@ -72,9 +72,12 @@ Global Strings -->
     <string name="list_dialog_delete_selected_message">Ez a művelet törli az összes kiválasztott bejegyzést (%1$d). Biztos, hogy folytatni szeretné? Ez a művelet nem vonható vissza!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Összefoglaló/Leírás"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Az első sort összefoglalóként, a többit leírásként lesz értelmezve. A hashtageket kategóriaként értelmezzük (pl. #kategória)."</string>
+    <string name="list_item_recurring">"Ismétlődő bejegyzés"</string>
+    <string name="list_item_edited_recurring">"Ismétlődő bejegyzés szerkeszve"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Engedélyek"</string>
     <string name="view_fragment_audio_permission_message">"A hangfelvételt készítéséhez és a hangfelismerés funkció használatához szükség van erre az engedélyre. Kérjük, adja meg az engedélyt, ha szeretné használni ezeket a funkciókat."</string>
+    <string name="view_reccurrence_note_is_exception">"Ez az elem kivételes tagja egy ismétlődő bejegyzésnek."</string>
     <string name="view_feedback_linked_notes">"Visszajelzés / csatolt jegyzet"</string>
     <string name="view_add_audio_note">"Hangfelvétel hozzáadása"</string>
     <string name="view_created_text">"Létrehozva: %1$s"</string>
@@ -160,6 +163,7 @@ Global Strings -->
     <string name="donate_donate_with">"Adományozás alapértelmezett csatornán:"</string>
     <string name="donate_other_donation_methods">"Ha más adományozási csatornát szeretne választani, kérjük, nézzen szét honlapunkon:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nem találtunk alkalmazást a fájl/URL megnyitásához."</string>
+    <string name="toast_item_is_now_recu_exception">"Ez az elem tagja egy ismétlődő bejegyzésnek."</string>
     <string name="toast_done_tasks_deleted">"Késznek jelölt feladatok törölve (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Küszönjük"</string>
@@ -278,6 +282,7 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Az össze bejegyzés áthelyezése másik gyűjtőbe:"</string>
     <string name="collection_dialog_move_info">"Megjegyzés: Csak írható gyűjtemények és az azonos komponenseket (Naplók, Jegyzetek, Feladatok) támogató gyűjtemények választhatók ki."</string>
     <string name="menu_collections_popup_move_entries">"Bejegyzések áthelyezése"</string>
+    <string name="list_no_dates_set">"Nincs dátum beállítáva"</string>
     <string name="list_without_start_date">"Kezdési dátum nélkül"</string>
     <string name="list_without_due_date">"Határidő nélkül"</string>
     <string name="list_without_completed_date">"Befejezési idő nélkül"</string>
@@ -357,13 +362,16 @@ Köszönjük!"</string>
     <string name="audio_pause">"Szünet"</string>
     <string name="audio_error_toast">"Sajnáljuk, a lejátszást nem lehet elindítani."</string>
     <string name="sync_in_progress">"Szinkronizálás folyamatban"</string>
+    <string name="invalid_timezone_message">"Kérjük, válasszon egy érvényes időzónát!"</string>
     <string name="invalid_url_message">"Kérjük, adjon meg egy érvényes URL-t!"</string>
+    <string name="list_quickadd_dialog_sr_start">"Hangfelismerés indítása"</string>
     <string name="collections_dialog_buypro_info">"Kérjük, vásárolja meg a jtx Board Pro verzióját, ha szeretne távoli gyűjtökben lévő bejegyzéseket szerkeszteni."</string>
     <string name="list_update_entries_dialog_title">"Bejegyzések frissítése"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Figyelem! Az ismétlődő példányokat el kell távolítani a sorozatuktól, mielőtt egy másik gyűjteménybe helyeznék át, különben ebben a folyamatban ki lesznek hagyva."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Válassza ki azt az bejegyzést, amelyhez a kiválasztott bejegyzéseket részfeladatként/összekapcsolt jegyzetként hozzákapcsolja."</string>
     <string name="details_link_existing_subentry_dialog_title">"Meglévő bejegyzések idekapcsolása"</string>
     <string name="details_link_existing_subentry_dialog_info">"Válassza ki azokat az bejegyzéseket, amelyeket ide kíván kapcsolni."</string>
+    <string name="details_app_bar_behaviour">"Alkalmazássáv viselkedése"</string>
     <string name="details_attendees_processing_info">"Figyelem! Egyes szerverek automatikusan érthesíthetik a résztvevőket, például iMIP-üzenetek küldésével."</string>
     <string name="details_toast_entry_deleted">"A bejegyzés elvetve/törölve"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Nem támogatott ismétlési szabály!"</string>
@@ -485,6 +493,8 @@ Köszönjük!"</string>
     <string name="filter_save_as_preset">"Szűrőbeállítás mentése"</string>
     <string name="menu_list_flat_view">"Egyszintű lista"</string>
     <string name="menu_list_flat_view_sub">"A csatolt bejegyzések megjelenítése a többi bejegyzés között"</string>
+    <string name="menu_list_limit_recur_entries">"Ismétlődők korlátozása"</string>
+    <string name="menu_list_limit_recur_entries_sub">"Csak egy jövőbeli ismétlődő bejegyzés mutatása"</string>
     <string name="menu_view_markdown_formatting">"Markdown formázás"</string>
     <string name="menu_view_autosave">"Automatikus mentés"</string>
     <string name="next">"Következő"</string>
