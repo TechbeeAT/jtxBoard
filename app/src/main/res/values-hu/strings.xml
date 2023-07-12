@@ -383,6 +383,7 @@ Köszönjük!"</string>
     <string name="details_series_attention_subentries">"Figyelem! A sorozatelemek letükrözik a sorozat részfeladatait és a kapcsolódó jegyzeteket. Ha csak egy sorozatelem részfeladatait és kapcsolódó jegyzeteit szeretné megváltoztatni, kérjük, előbb távolítsa el a sorozatból."</string>
     <string name="details_go_to_series">"Ugrás a sorozathoz"</string>
     <string name="details_detach_from_series">"Leválasztás a sorozatról"</string>
+    <string name="details_detach_all_instances">"Az összes leválasztása"</string>
     <string name="dialog_unlink_from_parent_title">"Leválasztás a szülőről"</string>
     <string name="dialog_unlink_from_parent_message">"Eltávolítsuk a szülőbejegyzésre való hivatkozást? A bejegyzés önálló bejegyzésként marad meg."</string>
     <string name="edit_subnote_add_helper">"Aljegyzet hozzáadása"</string>
@@ -454,6 +455,7 @@ Köszönjük!"</string>
     <string name="sync_button_go_to_collections">"Ugrás a Gyűjteményekhez"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Kérjük, vásárolja meg a Pro verziót, hogy használhassa ezt a funkciót."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
+    <string name="error_no_app_found_to_open_entry">"Nem találtunk alkalmazást a bejegyzés küldéséhez."</string>
     <string name="menu_view_share_mail">"Megosztás e-mail-ben"</string>
     <string name="menu_view_copy_to_clipboard">"Másolás vágólapra"</string>
     <string name="menu_view_convert_to_journal">"Átalakítás naplóbejegyzéssé"</string>
