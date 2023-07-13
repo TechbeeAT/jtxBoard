@@ -16,6 +16,7 @@ Global Strings -->
     <string name="latitude">"Szélesség"</string>
     <string name="longitude">"Hosszúság"</string>
     <string name="unlink">"Leválasztás"</string>
+    <string name="off">"Nincs"</string>
     <string name="permissions">"Engedélyek"</string>
     <string name="current_location">"Aktuális hely"</string>
     <string name="toolbar_text_add_journal">"Napló hozzáadása"</string>
@@ -59,7 +60,7 @@ Global Strings -->
     <string name="list_due_tomorrow">"Holnapi határidő"</string>
     <string name="list_due_inXhours">"%d órán belül esedékes"</string>
     <string name="list_due_on_weekday">"Határidő: %s"</string>
-    <string name="list_start_past">"Kezdés a múltban"</string>
+    <string name="list_start_past">"Múltbéli kezdés"</string>
     <string name="list_start_today">"Tervezett kezdés ma"</string>
     <string name="list_start_tomorrow">"Holnap kezdődik"</string>
     <string name="list_start_inXhours">"Tervezett kezdés %d órán belül"</string>
@@ -72,10 +73,15 @@ Global Strings -->
     <string name="list_dialog_delete_selected_message">Ez a művelet törli az összes kiválasztott bejegyzést (%1$d). Biztos, hogy folytatni szeretné? Ez a művelet nem vonható vissza!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Összefoglaló/Leírás"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Az első sort összefoglalóként, a többit leírásként lesz értelmezve. A hashtageket kategóriaként értelmezzük (pl. #kategória)."</string>
+    <string name="list_item_recurring">"Ismétlődő bejegyzés"</string>
+    <string name="list_item_edited_recurring">"Ismétlődő bejegyzés szerkeszve"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Engedélyek"</string>
     <string name="view_fragment_audio_permission_message">"A hangfelvételt készítéséhez és a hangfelismerés funkció használatához szükség van erre az engedélyre. Kérjük, adja meg az engedélyt, ha szeretné használni ezeket a funkciókat."</string>
+    <string name="view_reccurrence_note_is_exception">"Ez az elem kivételes tagja egy ismétlődő bejegyzésnek."</string>
     <string name="view_feedback_linked_notes">"Visszajelzés / csatolt jegyzet"</string>
+    <string name="view_subtask_of">"Szülő"</string>
+    <string name="view_linked_note_of">"Szülő:"</string>
     <string name="view_add_audio_note">"Hangfelvétel hozzáadása"</string>
     <string name="view_created_text">"Létrehozva: %1$s"</string>
     <string name="view_last_modified_text">"Utoljára módosítva: %1$s"</string>
@@ -160,6 +166,7 @@ Global Strings -->
     <string name="donate_donate_with">"Adományozás alapértelmezett csatornán:"</string>
     <string name="donate_other_donation_methods">"Ha más adományozási csatornát szeretne választani, kérjük, nézzen szét honlapunkon:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nem találtunk alkalmazást a fájl/URL megnyitásához."</string>
+    <string name="toast_item_is_now_recu_exception">"Ez az elem tagja egy ismétlődő bejegyzésnek."</string>
     <string name="toast_done_tasks_deleted">"Késznek jelölt feladatok törölve (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Küszönjük"</string>
@@ -195,6 +202,8 @@ Global Strings -->
     <string name="navigation_drawer_collections">"Gyűjtemények"</string>
     <string name="navigation_drawer_presets">"Egyéni jellemzők"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Dátum/Idő"</string>
+    <string name="alarms_duration">"Relatív"</string>
     <string name="alarms_onstart">"Kezdéskor"</string>
     <string name="alarms_ondue">"Határidőkor"</string>
     <string name="alarms_before_start">"kezdés előtt"</string>
@@ -237,8 +246,11 @@ Global Strings -->
     <string name="menu_collection_popup_show_in_sync_app">"Megjelenítés a %1$s alkalmazásban"</string>
     <string name="menu_collection_popup_export_as_ics">"Mentés .ics formátumban"</string>
     <string name="journal">"Naplóbejegyzés"</string>
+    <string name="note">"Jegyzet"</string>
     <string name="task">"Feladat"</string>
     <string name="account">"Fiók"</string>
+    <string name="status">"Státusz"</string>
+    <string name="classification">"Besoroláls"</string>
     <string name="category">"Kategória"</string>
     <string name="priority">"Prioritás"</string>
     <string name="readyonly">"Csak olvasható"</string>
@@ -248,6 +260,7 @@ Global Strings -->
     <string name="attendees">"Résztvevők"</string>
     <string name="resources">"Erőforrások"</string>
     <string name="organizer">"Szervező"</string>
+    <string name="contact">"Névjegy"</string>
     <string name="comments">"Megjegyzések"</string>
     <string name="attachments">"Csatolmányok"</string>
     <string name="alarms">"Riasztások"</string>
@@ -278,6 +291,7 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Az össze bejegyzés áthelyezése másik gyűjtőbe:"</string>
     <string name="collection_dialog_move_info">"Megjegyzés: Csak írható gyűjtemények és az azonos komponenseket (Naplók, Jegyzetek, Feladatok) támogató gyűjtemények választhatók ki."</string>
     <string name="menu_collections_popup_move_entries">"Bejegyzések áthelyezése"</string>
+    <string name="list_no_dates_set">"Nincs dátum beállítáva"</string>
     <string name="list_without_start_date">"Kezdési dátum nélkül"</string>
     <string name="list_without_due_date">"Határidő nélkül"</string>
     <string name="list_without_completed_date">"Befejezési idő nélkül"</string>
@@ -357,13 +371,18 @@ Köszönjük!"</string>
     <string name="audio_pause">"Szünet"</string>
     <string name="audio_error_toast">"Sajnáljuk, a lejátszást nem lehet elindítani."</string>
     <string name="sync_in_progress">"Szinkronizálás folyamatban"</string>
+    <string name="invalid_timezone_message">"Kérjük, válasszon egy érvényes időzónát!"</string>
     <string name="invalid_url_message">"Kérjük, adjon meg egy érvényes URL-t!"</string>
+    <string name="list_quickadd_dialog_sr_start">"Hangfelismerés indítása"</string>
     <string name="collections_dialog_buypro_info">"Kérjük, vásárolja meg a jtx Board Pro verzióját, ha szeretne távoli gyűjtökben lévő bejegyzéseket szerkeszteni."</string>
     <string name="list_update_entries_dialog_title">"Bejegyzések frissítése"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Figyelem! Az ismétlődő példányokat el kell távolítani a sorozatuktól, mielőtt egy másik gyűjteménybe helyeznék át, különben ebben a folyamatban ki lesznek hagyva."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Válassza ki azt az bejegyzést, amelyhez a kiválasztott bejegyzéseket részfeladatként/összekapcsolt jegyzetként hozzákapcsolja."</string>
     <string name="details_link_existing_subentry_dialog_title">"Meglévő bejegyzések idekapcsolása"</string>
     <string name="details_link_existing_subentry_dialog_info">"Válassza ki azokat az bejegyzéseket, amelyeket ide kíván kapcsolni."</string>
+    <string name="details_app_bar_behaviour">"Alkalmazássáv viselkedése"</string>
+    <string name="details_show_all_options">"További paraméterek"</string>
+    <string name="details_show_hide_elements">Pareméterek megjelenítése/elrejtése</string>
     <string name="details_attendees_processing_info">"Figyelem! Egyes szerverek automatikusan érthesíthetik a résztvevőket, például iMIP-üzenetek küldésével."</string>
     <string name="details_toast_entry_deleted">"A bejegyzés elvetve/törölve"</string>
     <string name="details_recur_unknown_rrule_dialog_title">"Nem támogatott ismétlési szabály!"</string>
@@ -375,8 +394,10 @@ Köszönjük!"</string>
     <string name="details_series_attention_subentries">"Figyelem! A sorozatelemek letükrözik a sorozat részfeladatait és a kapcsolódó jegyzeteket. Ha csak egy sorozatelem részfeladatait és kapcsolódó jegyzeteit szeretné megváltoztatni, kérjük, előbb távolítsa el a sorozatból."</string>
     <string name="details_go_to_series">"Ugrás a sorozathoz"</string>
     <string name="details_detach_from_series">"Leválasztás a sorozatról"</string>
+    <string name="details_detach_all_instances">"Az összes leválasztása"</string>
     <string name="dialog_unlink_from_parent_title">"Leválasztás a szülőről"</string>
     <string name="dialog_unlink_from_parent_message">"Eltávolítsuk a szülőbejegyzésre való hivatkozást? A bejegyzés önálló bejegyzésként marad meg."</string>
+    <string name="edit_comment">"Megjegyzés módosítása"</string>
     <string name="edit_subnote_add_helper">"Aljegyzet hozzáadása"</string>
     <string name="edit_subtask">"Alfeladat módosítása"</string>
     <string name="edit_subnote">"Aljegyzet szerkesztése"</string>
@@ -384,6 +405,8 @@ Köszönjük!"</string>
     <string name="edit_fragment_app_coarse_location_permission_message">"A jtx Board fel tudja használni az aktuális helyet a naptár használatakor, hogy az az aktuális helyet mutassa. Kérjük adja meg az engedélyt a hozzávetőleges helymeghatározáshoz, ha szeretné használni ezt a funkciót."</string>
     <!-- alarms -->
     <string name="alarms_alarm">"Riasztás"</string>
+    <string name="alarms_before">"előbb, mint a"</string>
+    <string name="alarms_after">"később, mint a"</string>
     <string name="alarms_start">"kezdés"</string>
     <string name="alarms_due">"határidő"</string>
     <string name="about_tabitem_releasenotes">"Verzióismertetők"</string>
@@ -446,8 +469,11 @@ Köszönjük!"</string>
     <string name="sync_button_go_to_collections">"Ugrás a Gyűjteményekhez"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Kérjük, vásárolja meg a Pro verziót, hogy használhassa ezt a funkciót."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
+    <string name="error_no_app_found_to_open_entry">"Nem találtunk alkalmazást a bejegyzés küldéséhez."</string>
+    <string name="close">"Bezárás"</string>
     <string name="menu_view_share_mail">"Megosztás e-mail-ben"</string>
     <string name="menu_view_copy_to_clipboard">"Másolás vágólapra"</string>
+    <string name="menu_view_copy_to_clipboard_copied">"Kész"</string>
     <string name="menu_view_convert_to_journal">"Átalakítás naplóbejegyzéssé"</string>
     <string name="menu_view_convert_to_note">"Átalakítás jegyzetté"</string>
     <string name="menu_view_convert_to_task">"Átalakítás feladattá"</string>
@@ -459,10 +485,11 @@ Köszönjük!"</string>
     <string name="list_date_start_in_past">"Múltbéli kezdés"</string>
     <string name="list_date_today">"Ma"</string>
     <string name="list_date_tomorrow">"Holnap"</string>
-    <string name="list_start_date_in_past">"Kezdés a múltban"</string>
+    <string name="list_date_future">"Jövőbeni dátum"</string>
+    <string name="list_start_date_in_past">"Múltbéli kezdés"</string>
     <string name="list_start_date_today">"Kezdés ma"</string>
     <string name="list_start_date_tomorrow">"Kezdés holnap"</string>
-    <string name="list_start_date_future">"Kezdési a jövőben"</string>
+    <string name="list_start_date_future">"Jjövőbeni kezdés"</string>
     <string name="list_hide_completed_tasks">"Befejezett feladatok elrejtése"</string>
     <string name="list_biometric_protected_entries_locked">A biometrikusan védett bejegyzések zárolva</string>
     <string name="list_delete_done">"Késznek jelölt feladatok törlése"</string>
@@ -475,6 +502,10 @@ Köszönjük!"</string>
     <string name="settings_protect_biometric">"Bejegyzések védése a biometrikus azonosítással"</string>
     <string name="settings_protect_biometric_sub">"Ez a funkció elrejti a egyes kiválasztott bejegyzéseket, amíg a biometrikus adatokkal fel nem oldják a zárolást, de nem az adatokat a háttérben."</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="status_no_status">"Nincs státusz"</string>
+    <string name="classification_no_classification">"Nincs besorolás (nyilvános)"</string>
+    <string name="map">"Térkép"</string>
+    <string name="open_in_browser">"Megnyitás böngészőben"</string>
     <string name="list_date_without">"Dátum nélkül"</string>
     <string name="list_start_without">"Kezdési dátum nélkül"</string>
     <string name="list_due_without">"Határidő nélkül"</string>
@@ -485,6 +516,8 @@ Köszönjük!"</string>
     <string name="filter_save_as_preset">"Szűrőbeállítás mentése"</string>
     <string name="menu_list_flat_view">"Egyszintű lista"</string>
     <string name="menu_list_flat_view_sub">"A csatolt bejegyzések megjelenítése a többi bejegyzés között"</string>
+    <string name="menu_list_limit_recur_entries">"Ismétlődők korlátozása"</string>
+    <string name="menu_list_limit_recur_entries_sub">"Csak egy jövőbeli ismétlődő bejegyzés mutatása"</string>
     <string name="menu_view_markdown_formatting">"Markdown formázás"</string>
     <string name="menu_view_autosave">"Automatikus mentés"</string>
     <string name="next">"Következő"</string>
@@ -509,6 +542,7 @@ Köszönjük!"</string>
     <string name="widget_list_color_warning">"Megjegyzés: Ez egy kísérleti funkció! A színtéma változásai nem fognak tükröződni! Válassza a \"nincs színt\" a rendszer alapértelmezett állapotához való visszatéréshez."</string>
     <string name="opacity">"Áttetszőség"</string>
     <string name="general">"Általános"</string>
+    <string name="list_collapse">"Összeszárás"</string>
     <string name="edit_recur_second">"másodpercenként"</string>
     <string name="edit_recur_minute">"percenként"</string>
     <string name="edit_recur_hour">"óránként"</string>
@@ -536,8 +570,9 @@ Köszönjük!"</string>
     <string name="markdown_heading1">"Címsor 1"</string>
     <string name="markdown_heading2">"Címsor 2"</string>
     <string name="markdown_heading3">"Címsor 3"</string>
-    <string name="markdown_horizontal_ruler">"Vízszintes vonalzó"</string>
+    <string name="markdown_horizontal_ruler">"Vízszintes vonal"</string>
     <string name="markdown_unordered_list">"Lista"</string>
+    <string name="markdown_code">"Kód"</string>
     <string name="preset_categories">"Kategóriák"</string>
     <string name="preset_resources">"Erőforrások"</string>
     <string name="extended_statuses">"Egyéni státuszok"</string>
