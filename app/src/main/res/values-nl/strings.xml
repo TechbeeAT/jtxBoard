@@ -134,6 +134,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Kopieer als Taak"</string>
     <string name="menu_view_copy_as_note">"Kopieer als Notitie"</string>
     <string name="menu_view_copy_item">"Kopie maken"</string>
+    <string name="notification_channel_alarms_name">"Meldingen"</string>
+    <string name="notification_channel_geofences_name">"Geomuren"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Logboek toevoegen"</string>
     <string name="shortcut_addNote_longLabel">"Notitie toevoegen"</string>
@@ -437,6 +439,7 @@ Dank u!"</string>
     <string name="menu_list_viewmode_compact">"Compacte weergave"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-weergave"</string>
     <string name="settings_tasks">"Taakinstellingen"</string>
+    <string name="settings_tasks_status_progress">"Taken Instellingen (status/voortgang)"</string>
     <string name="settings_sync">"Synchroniseerinstellingen"</string>
     <string name="settings_default_start_date">"Stel een standaard startdatum voor taken in"</string>
     <string name="settings_default_due_date">"Stel een standaard vervaldatum voor taken in"</string>
@@ -587,4 +590,8 @@ Dank u!"</string>
     <string name="kanban_columns_based_on_extended_status">gebaseerd op uitgebreide statussen</string>
     <string name="kanban_columns_based_on_first_category">gebaseerd op de eerste categorie</string>
     <string name="clear_filters">"Filters wissen"</string>
+    <string name="geofence_radius_meter">"Radius %1$d m"</string>
+    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
+    <string name="geofence_selection">"Geomuur: %1$s"</string>
+    <string name="geofence_options">"Geomuur opties"</string>
 </resources>
