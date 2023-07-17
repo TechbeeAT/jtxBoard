@@ -4,22 +4,39 @@
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="save">"Spara"</string>
+    <string name="cancel">"Avbryt"</string>
+    <string name="delete">"Radera"</string>
+    <string name="cont">"Fortsätt"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_settings">"Inställningar"</string>
+    <string name="navigation_drawer_donate">"Donera"</string>
+    <string name="navigation_drawer_privacy_policy">"Integritetspolicy"</string>
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
+    <string name="edit_datepicker_dialog_add_timezone">"Lägg till tidszon"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Redigera tidszon"</string>
     <!-- fragment_about -->
+    <string name="about_app_version">"Version: %1$s (%2$d)"</string>
     <!-- menus -->
+    <string name="menu_view_share_ics">"Dela som .ics"</string>
     <!-- Shortcuts -->
     <!-- Settings fragment -->
     <!-- Sync fragment -->
     <!-- Donate fragment -->
     <!-- sync content provider -->
+    <string name="about_translations_thanks_to">"Tack till"</string>
     <!-- Permissions -->
     <!-- alarms -->
     <!-- fragment_collections -->
     <!-- Fuzzy -->
+    <string name="account">"Konto"</string>
+    <string name="status">"Status"</string>
+    <string name="category">"Kategori"</string>
+    <string name="location">"Plats"</string>
+    <string name="attachments">"Bilagor"</string>
     <!-- Buy Pro fragment -->
     <!-- alarms -->
     <!-- fragment_ical_list -->
