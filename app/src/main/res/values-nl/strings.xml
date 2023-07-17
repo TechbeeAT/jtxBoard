@@ -135,7 +135,7 @@ Global Strings -->
     <string name="menu_view_copy_as_note">"Kopieer als Notitie"</string>
     <string name="menu_view_copy_item">"Kopie maken"</string>
     <string name="notification_channel_alarms_name">"Meldingen"</string>
-    <string name="notification_channel_geofences_name">"Geomuren"</string>
+    <string name="notification_channel_geofences_name">"Geofences"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Logboek toevoegen"</string>
     <string name="shortcut_addNote_longLabel">"Notitie toevoegen"</string>
@@ -593,5 +593,9 @@ Dank u!"</string>
     <string name="geofence_radius_meter">"Radius %1$d m"</string>
     <string name="geofence_radius_feet">"Radius %1$d ft"</string>
     <string name="geofence_selection">"Geomuur: %1$s"</string>
-    <string name="geofence_options">"Geomuur opties"</string>
+    <string name="geofence_options">"Geofence opties"</string>
+    <string name="geofence_missing_permission_info">"jtx Board heeft de rechten nodig om toegang te krijgen tot je achtergrondlocatie en om je meldingen te sturen. Werk de locatie-machtiging bij naar 'Altijd toestaan' en geef de meldingsmachtiging om een melding te krijgen wanneer je de Geofence bereikt!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board kan je een melding geven wanneer je in de buurt bent van de opgegeven coördinaten. Stel de locatie-toestemming in op 'Altijd toestaan' en geef de meldingstoestemming om deze functie te gebruiken."</string>
+    <string name="geofence_notification_summary">"Geofence geactiveerd"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board heeft toestemming nodig om exacte meldingen te plannen, anders kunnen meldingen vertraagd worden. Geef deze toestemming om deze functie te kunnen gebruiken."</string>
 </resources>
