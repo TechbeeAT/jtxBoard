@@ -9,6 +9,7 @@ Global Strings -->
     <string name="delete">"Radera"</string>
     <string name="cont">"Fortsätt"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Utkast"</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_settings">"Inställningar"</string>
     <string name="navigation_drawer_donate">"Donera"</string>
@@ -16,6 +17,7 @@ Global Strings -->
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
+    <string name="edit_recur_x_times">"gånger"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Lägg till tidszon"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Redigera tidszon"</string>
     <!-- fragment_about -->
@@ -32,12 +34,16 @@ Global Strings -->
     <!-- alarms -->
     <!-- fragment_collections -->
     <!-- Fuzzy -->
+    <string name="color">"Färg"</string>
     <string name="account">"Konto"</string>
     <string name="status">"Status"</string>
     <string name="category">"Kategori"</string>
     <string name="location">"Plats"</string>
     <string name="attachments">"Bilagor"</string>
+    <string name="navigation_drawer_buypro">"Köp Pro"</string>
     <!-- Buy Pro fragment -->
+    <string name="timezone">"Tidszon"</string>
+    <string name="edit_comment">"Redigera kommentar"</string>
     <!-- alarms -->
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
