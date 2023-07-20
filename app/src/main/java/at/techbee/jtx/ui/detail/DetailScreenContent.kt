@@ -391,7 +391,8 @@ fun DetailScreenContent(
                         iCalObject.setUpdatedProgress(100, true)
                 }
                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-            }
+            },
+            toggleEditMode = { isEditMode.value = !isEditMode.value }
         )
 
         AnimatedVisibility(!isEditMode.value && (summary.isNotBlank() || description.text.isNotBlank())) {
