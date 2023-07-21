@@ -31,7 +31,7 @@ class BaselineProfileGenerator {
     val rule = BaselineProfileRule()
 
     @Test
-    fun generate() = rule.collectBaselineProfile("at.techbee.jtx") {
+    fun generate() = rule.collect("at.techbee.jtx") {
         pressHome()
         startActivityAndWait()
         device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
