@@ -40,6 +40,7 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
+import com.arnyminerz.markdowntext.MarkdownText
 
 
 @Composable
@@ -50,6 +51,7 @@ fun ListCardKanban(
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
     storedStatuses: List<ExtendedStatus>,
+    markdownEnabled: Boolean,
     selected: Boolean,
     player: MediaPlayer?,
     modifier: Modifier = Modifier
@@ -98,12 +100,20 @@ fun ListCardKanban(
                     fontWeight = FontWeight.Bold
                 )
 
-            if (iCalObject.description?.isNotBlank() == true)
-                Text(
-                    text = iCalObject.description?.trim() ?: "",
-                    maxLines = 4,
-                    overflow = TextOverflow.Ellipsis
-                )
+            if (iCalObject.description?.isNotBlank() == true) {
+                if(markdownEnabled)
+                    MarkdownText(
+                        markdown = iCalObject.description?.trim() ?: "",
+                        maxLines = 4,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                else
+                    Text(
+                        text = iCalObject.description?.trim() ?: "",
+                        maxLines = 4,
+                        overflow = TextOverflow.Ellipsis
+                    )
+            }
         }
     }
 }
@@ -124,6 +134,7 @@ fun ListCardKanban_JOURNAL() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
+            markdownEnabled = false,
             player = null,
             modifier = Modifier
                 .width(150.dp)
@@ -152,6 +163,7 @@ fun ListCardKanban_NOTE() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = true,
+            markdownEnabled = false,
             player = null,
             modifier = Modifier
                 .width(150.dp)
@@ -188,6 +200,7 @@ fun ListCardKanban_TODO() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
+            markdownEnabled = false,
             player = null,
         )
     }
