@@ -47,6 +47,7 @@ fun DetailsDatesCards(
     onDtstartChanged: (Long?, String?) -> Unit,
     onDueChanged: (Long?, String?) -> Unit,
     onCompletedChanged: (Long?, String?) -> Unit,
+    toggleEditMode: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -101,7 +102,8 @@ fun DetailsDatesCards(
                     else
                         null,
                     allowNull = icalObject.module == Module.TODO.name,
-                    dateOnly = false
+                    dateOnly = false,
+                    toggleEditMode = toggleEditMode
                 )
             }
 
@@ -137,6 +139,7 @@ fun DetailsDatesCards(
                     labelTop = stringResource(id = R.string.due),
                     allowNull = icalObject.module == Module.TODO.name,
                     dateOnly = false,
+                    toggleEditMode = toggleEditMode
                 )
             }
             AnimatedVisibility (icalObject.module == Module.TODO.name
@@ -154,7 +157,8 @@ fun DetailsDatesCards(
                     labelTop = stringResource(id = R.string.completed),
                     allowNull = icalObject.module == Module.TODO.name,
                     dateOnly = false,
-                    enabled = allowCompletedChange
+                    enabled = allowCompletedChange,
+                    toggleEditMode = toggleEditMode
                 )
             }
         }
@@ -174,7 +178,8 @@ fun DetailsCardDates_Journal_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            toggleEditMode = {}
         )
     }
 }
@@ -199,7 +204,8 @@ fun DetailsCardDates_Todo_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            toggleEditMode = {}
         )
     }
 }
@@ -219,7 +225,8 @@ fun DetailsCardDates_Journal_edit_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            toggleEditMode = {}
         )
     }
 }
@@ -242,7 +249,8 @@ fun DetailsCardDates_Todo_edit_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            toggleEditMode = {}
         )
     }
 }
@@ -264,7 +272,8 @@ fun DetailsCardDates_Todo_edit_Preview_completed_hidden() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            toggleEditMode = {}
         )
     }
 }
@@ -282,7 +291,8 @@ fun DetailsCardDates_Note_edit_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            toggleEditMode = {}
         )
     }
 }
@@ -300,7 +310,8 @@ fun DetailsCardDates_Note_Preview() {
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
+            onCompletedChanged = { _, _ -> },
+            toggleEditMode = {}
         )
     }
 }
