@@ -98,7 +98,7 @@ android {
     packagingOptions {
         resources {
             excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/*.md']
-            pickFirsts += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
+            pickFirsts += ['META-INF/AL2.0', 'META-INF/LGPL2.1', 'META-INF/INDEX.LIST']
         }
     }
 
@@ -217,7 +217,8 @@ gradle.projectsEvaluated {
 
 dependencies {
 
-    implementation project(':ical4android')
+    //implementation project(':ical4android')
+    implementation "com.github.bitfireAT:ical4android:a78e72f580"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
