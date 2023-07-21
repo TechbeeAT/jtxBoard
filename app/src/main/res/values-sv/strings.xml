@@ -10,7 +10,10 @@ Global Strings -->
     <string name="cont">"Fortsätt"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Utkast"</string>
+    <string name="classification_private">"Privat"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_synchronization">"Synkronisering"</string>
+    <string name="navigation_drawer_about">"Om / Licens"</string>
     <string name="navigation_drawer_settings">"Inställningar"</string>
     <string name="navigation_drawer_donate">"Donera"</string>
     <string name="navigation_drawer_privacy_policy">"Integritetspolicy"</string>
@@ -28,9 +31,11 @@ Global Strings -->
     <!-- Settings fragment -->
     <!-- Sync fragment -->
     <!-- Donate fragment -->
+    <string name="donate_donate_with">"Donera med"</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Tack till"</string>
     <!-- Permissions -->
+    <string name="add">"Lägg till"</string>
     <!-- alarms -->
     <!-- fragment_collections -->
     <!-- Fuzzy -->
