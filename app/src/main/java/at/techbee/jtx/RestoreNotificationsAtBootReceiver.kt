@@ -18,25 +18,32 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RestoreNotificationsAtBootReceiver: BroadcastReceiver() {
+class RestoreNotificationsAtBootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             //Log.d("jtx Board", "Restart completed received")
-            val notificationManager = NotificationManagerCompat.from(context)
-            val database = ICalDatabase.getInstance(context).iCalDatabaseDao
-            val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+            CoroutineScope(Dispatchers.IO).launch {
 
-            prefs.getStringSet(NotificationPublisher.PREFS_SCHEDULED_ALARMS, null)
-                ?.map { try { it.toLong()} catch (e: NumberFormatException) { return } }
-                ?.forEach { iCalObjectId ->
-                    CoroutineScope(Dispatchers.IO).launch {
+                val notificationManager = NotificationManagerCompat.from(context)
+                val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+                val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+                prefs.getStringSet(NotificationPublisher.PREFS_SCHEDULED_ALARMS, null)
+                    ?.map {
+                        try {
+                            it.toLong()
+                        } catch (e: NumberFormatException) {
+                            return@launch
+                        }
+                    }
+                    ?.forEach { iCalObjectId ->
                         val iCalObject = database.getICalObjectByIdSync(iCalObjectId)
                         val alarms = database.getAlarmsSync(iCalObjectId) ?: return@launch
-                        if( iCalObject != null
+                        if (iCalObject != null
                             && iCalObject.percent != 100
                             && iCalObject.status != Status.COMPLETED.status
                             && ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
-                            && alarms.any { (it.triggerTime?:Long.MAX_VALUE) <= System.currentTimeMillis() }
+                            && alarms.any { (it.triggerTime ?: Long.MAX_VALUE) <= System.currentTimeMillis() }
                         ) {
                             val notification = Alarm.createNotification(
                                 iCalObject.id,
@@ -51,8 +58,8 @@ class RestoreNotificationsAtBootReceiver: BroadcastReceiver() {
                             notificationManager.notify(iCalObjectId.toInt(), notification)
                         }
                     }
-                }
-            GeofenceClient(context).setGeofences()
+                GeofenceClient(context).setGeofences()
+            }
         }
     }
 }
