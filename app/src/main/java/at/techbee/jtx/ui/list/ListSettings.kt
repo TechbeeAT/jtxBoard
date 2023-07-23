@@ -62,6 +62,7 @@ class ListSettings {
     var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
     var flatView: MutableState<Boolean> = mutableStateOf(false)
     var showOneRecurEntryInFuture: MutableState<Boolean> = mutableStateOf(false)
+    var markdownEnabled: MutableState<Boolean> = mutableStateOf(false)
 
     var topAppBarCollectionId: MutableState<Long> = mutableStateOf(0L)   // list view only
     var topAppBarMode: MutableState<ListTopAppBarMode> = mutableStateOf(ListTopAppBarMode.SEARCH)   // list view only
@@ -114,6 +115,7 @@ class ListSettings {
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
         private const val PREFS_FLAT_VIEW = "prefsFlatView"
         private const val PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE = "prefsShowOneRecurEntryInFuture"
+        private const val PREFS_MARKDOWN_ENABLED = "prefsMarkdownEnabled"
         private const val PREFS_FILTER_NO_CATEGORY_SET = "prefsFilterNoCategorySet"
         private const val PREFS_FILTER_NO_RESOURCE_SET = "prefsFilterNoResourceSet"
 
@@ -180,6 +182,7 @@ class ListSettings {
 
             viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
+            markdownEnabled.value = prefs.getBoolean(PREFS_MARKDOWN_ENABLED, false)
 
             // Legacy handling
             kanbanColumnsStatus.addAll(prefs.getStringSet(PREFS_KANBAN_COLUMNS_STATUS, emptySet())?.toList()?: emptyList())
@@ -288,6 +291,7 @@ class ListSettings {
 
             putString(PREFS_VIEWMODE, viewMode.value.name)
             putBoolean(PREFS_FLAT_VIEW, flatView.value)
+            putBoolean(PREFS_MARKDOWN_ENABLED, markdownEnabled.value)
             remove(PREFS_KANBAN_COLUMNS_STATUS)   // remove legacy config
             remove(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS) // remove legacy config
             remove(PREFS_KANBAN_COLUMNS_CATEGORY)  // remove legacy config

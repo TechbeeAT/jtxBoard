@@ -75,6 +75,7 @@ fun ListScreenKanban(
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
     isPullRefreshEnabled: Boolean,
+    markdownEnabled: Boolean,
     player: MediaPlayer?,
     onStatusChanged: (itemid: Long, status: Status, scrollOnce: Boolean) -> Unit,
     onXStatusChanged: (itemid: Long, status: ExtendedStatus, scrollOnce: Boolean) -> Unit,
@@ -178,7 +179,7 @@ fun ListScreenKanban(
                             subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRel.iCal4List.uid } }
                                 .map { it.iCal4List }
 
-                        var offsetX by remember { mutableStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
+                        var offsetX by remember { mutableFloatStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
                         val maxOffset = 50f
 
                         ListCardKanban(
@@ -189,6 +190,7 @@ fun ListScreenKanban(
                             storedResources = storedResources,
                             storedStatuses = extendedStatuses,
                             selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
+                            markdownEnabled = markdownEnabled,
                             player = player,
                             modifier = Modifier
                                 .animateItemPlacement()
@@ -323,6 +325,7 @@ fun ListScreenKanban_TODO() {
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
             isPullRefreshEnabled = true,
+            markdownEnabled = false,
             player = null,
             onStatusChanged = { _, _, _ -> },
             onXStatusChanged = { _, _, _ -> },
@@ -385,6 +388,7 @@ fun ListScreenKanban_JOURNAL() {
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
             isPullRefreshEnabled = true,
+            markdownEnabled = false,
             player = null,
             onStatusChanged = { _, _, _ -> },
             onXStatusChanged = { _, _, _ -> },

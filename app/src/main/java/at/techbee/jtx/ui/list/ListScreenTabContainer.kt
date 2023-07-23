@@ -483,6 +483,15 @@ fun ListScreenTabContainer(
                                 getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                             }
                         )
+                        Divider()
+                        CheckboxWithText(
+                            text = stringResource(R.string.menu_view_markdown_formatting),
+                            isSelected = getActiveViewModel().listSettings.markdownEnabled.value,
+                            onCheckedChange = {
+                                getActiveViewModel().listSettings.markdownEnabled.value = it
+                                getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
+                            }
+                        )
                     }
                 }
             )
