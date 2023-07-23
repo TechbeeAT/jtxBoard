@@ -468,7 +468,10 @@ fun DetailsScreen(
                 onLinkSubEntries = { newSubEntries -> detailViewModel.linkNewSubentries(newSubEntries) },
                 onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },
                 player = detailViewModel.mediaPlayer,
-                goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
+                goToDetail = { itemId, editMode, list, popBackStack ->
+                    if(popBackStack)
+                        navController.popBackStack()
+                    navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },
                 goToFilteredList = {
                     navController.navigate(
