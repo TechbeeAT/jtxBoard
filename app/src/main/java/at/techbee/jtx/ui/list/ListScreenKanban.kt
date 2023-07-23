@@ -116,9 +116,9 @@ fun ListScreenKanban(
         kanbanColumnsCategory.isNotEmpty() -> kanbanColumnsCategory
         else -> {   // default columns as fallback
             when(module) {
-                Module.JOURNAL -> listOf(stringResource(id = Status.DRAFT.stringResource), stringResource(id = Status.FINAL.stringResource))
-                Module.NOTE -> listOf(stringResource(id = Status.DRAFT.stringResource), stringResource(id = Status.FINAL.stringResource))
-                Module.TODO -> listOf(stringResource(id = Status.NEEDS_ACTION.stringResource), stringResource(id = Status.IN_PROCESS.stringResource), stringResource(id = Status.COMPLETED.stringResource))
+                Module.JOURNAL -> listOf(stringResource(id = Status.NO_STATUS.stringResource), stringResource(id = Status.DRAFT.stringResource), stringResource(id = Status.FINAL.stringResource))
+                Module.NOTE -> listOf(stringResource(id = Status.NO_STATUS.stringResource), stringResource(id = Status.DRAFT.stringResource), stringResource(id = Status.FINAL.stringResource))
+                Module.TODO -> listOf(stringResource(id = Status.NO_STATUS.stringResource), stringResource(id = Status.NEEDS_ACTION.stringResource), stringResource(id = Status.IN_PROCESS.stringResource), stringResource(id = Status.COMPLETED.stringResource))
             }
         }
     }
