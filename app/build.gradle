@@ -129,7 +129,6 @@ android {
     compileOptions {
         // Flag to enable support for the new language APIs, this is especially necessary to use java.time for versions < O
         // https://developer.android.com/studio/write/java8-support#library-desugaring
-        // also good for ical4android
         coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -217,7 +216,6 @@ gradle.projectsEvaluated {
 
 dependencies {
 
-    //implementation project(':ical4android')
     implementation "com.github.bitfireAT:ical4android:a78e72f580"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
