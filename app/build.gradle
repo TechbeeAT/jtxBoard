@@ -213,6 +213,13 @@ gradle.projectsEvaluated {
     preBuild.dependsOn('updateLocalesConfig')
 }
 
+configurations {
+    all {
+        // exclude modules which are in conflict with system libraries
+        exclude module: "commons-logging"
+    }
+}
+
 
 dependencies {
 
