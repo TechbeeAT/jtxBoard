@@ -98,7 +98,7 @@ android {
     packagingOptions {
         resources {
             excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/*.md']
-            pickFirsts += ['META-INF/AL2.0', 'META-INF/LGPL2.1', 'META-INF/INDEX.LIST']
+            pickFirsts += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
         }
     }
 
