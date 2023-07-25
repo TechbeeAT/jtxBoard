@@ -129,7 +129,6 @@ android {
     compileOptions {
         // Flag to enable support for the new language APIs, this is especially necessary to use java.time for versions < O
         // https://developer.android.com/studio/write/java8-support#library-desugaring
-        // also good for ical4android
         coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -214,10 +213,21 @@ gradle.projectsEvaluated {
     preBuild.dependsOn('updateLocalesConfig')
 }
 
+configurations {
+    all {
+        // exclude modules which are in conflict with system libraries
+        exclude module: "commons-logging"
+        exclude group: "org.json", module: "json"
+
+        // Groovy requires SDK 26+, and it's not required, so exclude it
+        exclude group: 'org.codehaus.groovy'
+    }
+}
+
 
 dependencies {
 
-    implementation project(':ical4android')
+    implementation "com.github.bitfireAT:ical4android:a78e72f580"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -329,7 +339,4 @@ dependencies {
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
     
     implementation "androidx.profileinstaller:profileinstaller:1.3.1"
-
-
 }
-
