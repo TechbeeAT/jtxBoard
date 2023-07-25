@@ -4,7 +4,7 @@
 name: generate baseline-profiles
 
 # Workflow title
-run-name: ${{ github.actor }} requested a workflow
+# run-name: ${{ github.actor }} requested a workflow
 
 # Event trigger so this actions gets executed every time a push is made on the main branch
 # Change this event to what suits your project best.
@@ -31,7 +31,7 @@ jobs:
     generate-baseline-profiles:
 
       # Operating system where the job gets to be executed
-      runs-on: ubuntu-latest
+      runs-on: ubuntu-latest-4-cores
 
       # Job steps
       steps:
