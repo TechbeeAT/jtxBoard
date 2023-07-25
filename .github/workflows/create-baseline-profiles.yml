@@ -35,27 +35,28 @@ jobs:
 
       # Job steps
       steps:
-
-        # Checks your code out on the machine
         - uses: actions/checkout@v3
-
-        # Sets java up
+          with:
+            submodules: true
         - uses: actions/setup-java@v3
           with:
             distribution: temurin
-            java-version: 11
+            java-version: 17
+            cache: gradle
+        - uses: gradle/wrapper-validation-action@v1
 
         # Sets gradle up
-        - name: Setup Gradle
-          uses: gradle/gradle-build-action@v2
+        #- name: Setup Gradle
+        #  uses: gradle/gradle-build-action@v2
+        - uses: gradle/gradle-build-action@v2
 
         # Grants execute permission to gradle (safety step)
-        - name: Grant Permissions to gradlew
-          run: chmod +x gradlew
+        #- name: Grant Permissions to gradlew
+        #  run: chmod +x gradlew
 
         # Cleans managed device if previously settle and space currently is not available
-        - name: Clean Managed Devices
-          run: ./gradlew cleanManagedDevices --unused-only
+        #- name: Clean Managed Devices
+        #  run: ./gradlew cleanManagedDevices --unused-only
 
         # Generates Baseline Profile
         - name: Generate Baseline Profile
@@ -71,7 +72,7 @@ jobs:
           ## gradle.workers.max: 
           ## Required to avoid running multiple managed device tests concurrently. Read more at https://issuetracker.google.com/issues/193118030
           
-          run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile -Dorg.gradle.workers.max=4
+          run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -P android.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile
 
         # Sets the Baseline Profile on its proper place so it gets correctly bundled into Play Store
         - name: Move & Rename Baseline Profiles
