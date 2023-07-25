@@ -155,6 +155,13 @@ class MainActivity2 : AppCompatActivity() {
             })
         /* END Initialise biometric prompt */
 
+        if(settingsStateHolder.settingSyncOnStart.value) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
+                SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+            }
+        }
+
         setContent {
             val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
             JtxBoardTheme(
@@ -188,13 +195,6 @@ class MainActivity2 : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         ListWidgetReceiver.setPeriodicWork(this)
-
-        if(settingsStateHolder.settingSyncOnStart.value) {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
-                SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
-            }
-        }
 
         //handle intents, but only if it wasn't already handled
         if (intent.hashCode() != lastProcessedIntentHash) {
