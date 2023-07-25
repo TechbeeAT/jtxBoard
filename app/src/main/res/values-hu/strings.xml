@@ -272,7 +272,7 @@ Global Strings -->
     <string name="search">"Keresés"</string>
     <string name="search_journals">Naplóbejegyzések keresése</string>
     <string name="search_notes">Jegyzetek keresése</string>
-    <string name="search_todos">Feladat keresése</string>
+    <string name="search_todos">Feladatok keresése</string>
     <string name="filter">"Szűrő"</string>
     <string name="sync_now">"Szinkronizálás most"</string>
     <string name="due">"Határidő"</string>
