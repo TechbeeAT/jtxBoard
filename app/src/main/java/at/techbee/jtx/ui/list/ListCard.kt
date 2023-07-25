@@ -72,6 +72,7 @@ import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.reusable.elements.VerticalDateBlock
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import com.arnyminerz.markdowntext.MarkdownText
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -98,6 +99,7 @@ fun ListCard(
     settingShowProgressSubtasks: Boolean = true,
     progressIncrement: Int,
     linkProgressToSubtasks: Boolean,
+    markdownEnabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -209,13 +211,22 @@ fun ListCard(
                                 })
                     }
 
-                    if (iCalObject.description?.isNotBlank() == true)
-                        Text(
-                            text = iCalObject.description?.trim() ?: "",
-                            maxLines = 6,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                    if (iCalObject.description?.isNotBlank() == true) {
+                        if(markdownEnabled)
+                            MarkdownText(
+                                markdown = iCalObject.description?.trim() ?: "",
+                                maxLines = 6,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        else
+                            Text(
+                                text = iCalObject.description?.trim() ?: "",
+                                maxLines = 6,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                    }
                 }
             }
 
@@ -532,6 +543,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
             linkProgressToSubtasks = false,
+            markdownEnabled = false,
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onProgressChanged = { _, _ -> },
@@ -574,6 +586,7 @@ fun ICalObjectListCardPreview_NOTE() {
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
             linkProgressToSubtasks = false,
+            markdownEnabled = false,
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onProgressChanged = { _, _ -> },
@@ -624,6 +637,7 @@ fun ICalObjectListCardPreview_TODO() {
             settingShowProgressMaintasks = true,
             progressIncrement = 1,
             linkProgressToSubtasks = false,
+            markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null
@@ -671,6 +685,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             progressIncrement = 1,
             linkProgressToSubtasks = false,
             settingShowProgressMaintasks = false,
+            markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null
@@ -720,6 +735,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
             linkProgressToSubtasks = false,
+            markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null
@@ -770,6 +786,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             settingShowProgressMaintasks = false,
             progressIncrement = 1,
             linkProgressToSubtasks = false,
+            markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null

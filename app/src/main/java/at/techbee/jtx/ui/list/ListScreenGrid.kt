@@ -65,6 +65,7 @@ fun ListScreenGrid(
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
     isPullRefreshEnabled: Boolean,
+    markdownEnabled: Boolean,
     player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
@@ -123,6 +124,7 @@ fun ListScreenGrid(
                     storedStatuses = storedStatuses,
                     selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                     progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                    markdownEnabled = markdownEnabled,
                     player = player,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -194,6 +196,7 @@ fun ListScreenGrid_TODO() {
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
             isPullRefreshEnabled = true,
+            markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
@@ -250,6 +253,7 @@ fun ListScreenGrid_JOURNAL() {
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
             isPullRefreshEnabled = true,
+            markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
