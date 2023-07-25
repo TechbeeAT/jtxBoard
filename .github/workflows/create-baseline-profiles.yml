@@ -31,7 +31,7 @@ jobs:
     generate-baseline-profiles:
 
       # Operating system where the job gets to be executed
-      runs-on: ubuntu-latest
+      runs-on: ubuntu-latest-4-cores
 
       # Job steps
       steps:
