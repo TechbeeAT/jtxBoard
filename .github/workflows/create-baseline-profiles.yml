@@ -71,7 +71,7 @@ jobs:
           ## gradle.workers.max: 
           ## Required to avoid running multiple managed device tests concurrently. Read more at https://issuetracker.google.com/issues/193118030
           
-          run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile -Dorg.gradle.workers.max=4
+          run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -P android.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -P android.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile
 
         # Sets the Baseline Profile on its proper place so it gets correctly bundled into Play Store
         - name: Move & Rename Baseline Profiles
