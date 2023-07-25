@@ -227,7 +227,7 @@ configurations {
 
 dependencies {
 
-    implementation "com.github.bitfireAT:ical4android:a78e72f580"
+    implementation "com.github.bitfireAT:ical4android:1.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
