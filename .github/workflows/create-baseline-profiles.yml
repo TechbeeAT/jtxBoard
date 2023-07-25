@@ -31,10 +31,7 @@ jobs:
     generate-baseline-profiles:
 
       # Operating system where the job gets to be executed
-      runs-on: ubuntu-latest-4-cores
-      strategy:
-        matrix:
-          api-level: [ 31 ]
+      runs-on: ubuntu-latest
 
       # Job steps
       steps:
@@ -46,7 +43,7 @@ jobs:
         - uses: actions/setup-java@v3
           with:
             distribution: temurin
-            java-version: 17
+            java-version: 11
 
         # Sets gradle up
         - name: Setup Gradle
