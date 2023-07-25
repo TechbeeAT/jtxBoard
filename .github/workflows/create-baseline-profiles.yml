@@ -31,60 +31,31 @@ jobs:
     generate-baseline-profiles:
 
       # Operating system where the job gets to be executed
-      runs-on: ubuntu-latest-4-cores
-      strategy:
-        matrix:
-          api-level: [ 31 ]
+      runs-on: macos-latest
 
       # Job steps
       steps:
+
+        # Checks your code out on the machine
         - uses: actions/checkout@v3
-          with:
-            submodules: true
+
+        # Sets java up
         - uses: actions/setup-java@v3
           with:
             distribution: temurin
             java-version: 17
-            cache: gradle
-        
+
         # Sets gradle up
-        #- name: Setup Gradle
-        #  uses: gradle/gradle-build-action@v2
-        - uses: gradle/gradle-build-action@v2
-        
-        - name: Enable KVM group perms
-          run: |
-            echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-            sudo udevadm control --reload-rules
-            sudo udevadm trigger --name-match=kvm
-
-        - name: Cache AVD and APKs
-          uses: actions/cache@v3
-          id: avd-cache
-          with:
-            path: |
-              ~/.android/avd/*
-              ~/.android/adb*
-            key: avd-${{ matrix.api-level }}
-
-        - name: Create AVD and generate snapshot for caching
-          if: steps.avd-cache.outputs.cache-hit != 'true'
-          uses: reactivecircus/android-emulator-runner@v2
-          with:
-            api-level: ${{ matrix.api-level }}
-            arch: x86_64
-            force-avd-creation: false
-            emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-            disable-animations: false
-            script: echo "Generated AVD snapshot for caching."
+        - name: Setup Gradle
+          uses: gradle/gradle-build-action@v2
 
         # Grants execute permission to gradle (safety step)
-        #- name: Grant Permissions to gradlew
-        #  run: chmod +x gradlew
+        - name: Grant Permissions to gradlew
+          run: chmod +x gradlew
 
         # Cleans managed device if previously settle and space currently is not available
-        #- name: Clean Managed Devices
-        #  run: ./gradlew cleanManagedDevices --unused-only
+        - name: Clean Managed Devices
+          run: ./gradlew cleanManagedDevices --unused-only
 
         # Generates Baseline Profile
         - name: Generate Baseline Profile
@@ -100,7 +71,7 @@ jobs:
           ## gradle.workers.max: 
           ## Required to avoid running multiple managed device tests concurrently. Read more at https://issuetracker.google.com/issues/193118030
           
-          run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -P android.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile
+          run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile -Dorg.gradle.workers.max=4
 
         # Sets the Baseline Profile on its proper place so it gets correctly bundled into Play Store
         - name: Move & Rename Baseline Profiles
