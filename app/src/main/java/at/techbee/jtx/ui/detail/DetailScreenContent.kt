@@ -598,9 +598,8 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(parents.value.isNotEmpty()) {
+        AnimatedVisibility(parents.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] ?: true || showAllOptions))) {
             DetailsCardParents(
-                module = iCalObject.getModuleFromString(),
                 parents = parents.value,
                 isEditMode = isEditMode,
                 sliderIncrement = sliderIncrement,
