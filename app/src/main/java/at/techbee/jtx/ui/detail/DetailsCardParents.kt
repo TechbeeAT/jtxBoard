@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.detail
 
-import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -21,11 +20,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,20 +29,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.locals.ExtendedStatus
-import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
-import at.techbee.jtx.ui.reusable.dialogs.LinkExistingEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.LinkExistingMode
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
@@ -56,37 +45,16 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @Composable
 fun DetailsCardParents(
     parents: List<ICal4List>,
-    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
-    storedCategories: List<StoredCategory>,
-    storedResources: List<StoredResource>,
-    storedStatuses: List<ExtendedStatus>,
     isEditMode: MutableState<Boolean>,
+    showLinkExistingDialog: MutableState<LinkExistingMode?>,
     sliderIncrement: Int,
     showSlider: Boolean,
     blockProgressUpdates: Boolean,
-    player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     onUnlinkFromParent: (parentUID: String?) -> Unit,
-    onLinkNewParents: (List<ICal4List>) -> Unit,
-    onAllEntriesSearchTextUpdated: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    var showLinkExistingParentDialog by rememberSaveable { mutableStateOf(false) }
-    if(showLinkExistingParentDialog) {
-        LinkExistingEntryDialog(
-            linkExistingMode = LinkExistingMode.PARENT,
-            allEntriesLive = selectFromAllListLive,
-            storedCategories = storedCategories,
-            storedResources = storedResources,
-            extendedStatuses = storedStatuses,
-            player = player,
-            onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
-            onEntriesToLinkConfirmed = { selected -> onLinkNewParents(selected) },
-            onDismiss = { showLinkExistingParentDialog = false }
-        )
-    }
     
     ElevatedCard(modifier = modifier) {
         Column(
@@ -104,7 +72,7 @@ fun DetailsCardParents(
                 HeadlineWithIcon(icon = Icons.Outlined.SubdirectoryArrowRight, iconDesc = null, text = stringResource(id = R.string.linked_parents), modifier = Modifier.weight(1f))
 
                 AnimatedVisibility(isEditMode.value) {
-                    IconButton(onClick = { showLinkExistingParentDialog = true }) {
+                    IconButton(onClick = { showLinkExistingDialog.value = LinkExistingMode.PARENT }) {
                         Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_parent_dialog_info))
                     }
                 }
@@ -180,20 +148,14 @@ fun DetailsCardParents_Preview_Journal() {
                             this.summary = "My Subnote"
                         }
                     ),
-            selectFromAllListLive = MutableLiveData(emptyList()),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            storedStatuses = emptyList(),
             isEditMode = remember { mutableStateOf(false) },
+            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            onUnlinkFromParent = { },
-            onLinkNewParents = { },
-            player = null,
-            onAllEntriesSearchTextUpdated = { }
+            onUnlinkFromParent = { }
         )
     }
 }
@@ -211,20 +173,14 @@ fun DetailsCardParents_Preview_Journal_edit() {
                     this.summary = "My Subnote"
                 }
             ),
-            selectFromAllListLive = MutableLiveData(emptyList()),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            storedStatuses = emptyList(),
             isEditMode = remember { mutableStateOf(true) },
+            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
             onUnlinkFromParent = { },
-            onLinkNewParents = { },
-            player = null,
-            onAllEntriesSearchTextUpdated = { }
         )
     }
 }
@@ -241,20 +197,14 @@ fun DetailsCardParents_Preview_tasksview() {
                     this.summary = "My Subtask"
                 }
             ),
-            selectFromAllListLive = MutableLiveData(emptyList()),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            storedStatuses = emptyList(),
             isEditMode = remember { mutableStateOf(false) },
+            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            onUnlinkFromParent = { },
-            onLinkNewParents = { },
-            player = null,
-            onAllEntriesSearchTextUpdated = { }
+            onUnlinkFromParent = { }
         )
     }
 }
@@ -271,20 +221,14 @@ fun DetailsCardParents_Preview_tasksedit() {
                     this.summary = "My Subtask"
                 }
             ),
-            selectFromAllListLive = MutableLiveData(emptyList()),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            storedStatuses = emptyList(),
             isEditMode = remember { mutableStateOf(true) },
+            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            onUnlinkFromParent = { },
-            onLinkNewParents = { },
-            player = null,
-            onAllEntriesSearchTextUpdated = { }
+            onUnlinkFromParent = { }
         )
     }
 }

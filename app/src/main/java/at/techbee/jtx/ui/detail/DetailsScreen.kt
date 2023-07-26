@@ -214,10 +214,10 @@ fun DetailsScreen(
         )
     }
 
-    var showLinkExistingDialog by rememberSaveable { mutableStateOf<LinkExistingMode?>(null) }
-    if(showLinkExistingDialog != null) {
+    val showLinkExistingDialog = rememberSaveable { mutableStateOf<LinkExistingMode?>(null) }
+    if(showLinkExistingDialog.value != null) {
         LinkExistingEntryDialog(
-            linkExistingMode = showLinkExistingDialog!!,
+            linkExistingMode = showLinkExistingDialog.value!!,
             allEntriesLive = detailViewModel.selectFromAllList,
             storedCategories = storedCategories,
             storedResources = storedResources,
@@ -225,13 +225,13 @@ fun DetailsScreen(
             detailViewModel.mediaPlayer,
             onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },
             onEntriesToLinkConfirmed = { selected ->
-                when(showLinkExistingDialog) {
+                when(showLinkExistingDialog.value) {
                     LinkExistingMode.CHILD -> detailViewModel.linkNewSubentries(selected)
                     LinkExistingMode.PARENT -> detailViewModel.linkNewParents(selected)
                     null -> {}
                 }
             },
-            onDismiss = { showLinkExistingDialog = null }
+            onDismiss = { showLinkExistingDialog.value = null }
         )
     }
 
@@ -314,7 +314,7 @@ fun DetailsScreen(
                         DropdownMenuItem(
                             text = { Text(text = stringResource(id = R.string.details_link_existing_subentry_dialog_title)) },
                             onClick = {
-                                showLinkExistingDialog = LinkExistingMode.CHILD
+                                showLinkExistingDialog.value = LinkExistingMode.CHILD
                                 menuExpanded.value = false
                             },
                             leadingIcon = { Icon(painterResource(id = R.drawable.ic_link_variant_plus), null) }
@@ -322,7 +322,7 @@ fun DetailsScreen(
                         DropdownMenuItem(
                             text = { Text(text = stringResource(id = R.string.details_link_existing_parent_dialog_title)) },
                             onClick = {
-                                showLinkExistingDialog = LinkExistingMode.PARENT
+                                showLinkExistingDialog.value = LinkExistingMode.PARENT
                                 menuExpanded.value = false
                             },
                             leadingIcon = { Icon(painterResource(id = R.drawable.ic_link_variant_plus), null) }
@@ -463,6 +463,7 @@ fun DetailsScreen(
                 attachments = detailViewModel.mutableAttachments,
                 alarms = detailViewModel.mutableAlarms,
                 isEditMode = isEditMode,
+                showLinkExistingDialog = showLinkExistingDialog,
                 changeState = detailViewModel.changeState,
                 parents = parents,
                 subtasks = subtasks,
@@ -474,7 +475,6 @@ fun DetailsScreen(
                 storedCategories = storedCategories,
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
-                selectFromAllListLive = detailViewModel.selectFromAllList,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
                 seriesInstances = seriesInstances.value,
@@ -508,9 +508,6 @@ fun DetailsScreen(
                 onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                 onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                 onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },
-                onLinkSubEntries = { newSubEntries -> detailViewModel.linkNewSubentries(newSubEntries) },
-                onLinkNewParents = { newParents -> detailViewModel.linkNewParents(newParents) },
-                onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list, popBackStack ->
                     if(popBackStack)
