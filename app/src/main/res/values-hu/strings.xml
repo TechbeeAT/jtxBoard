@@ -51,7 +51,7 @@ Global Strings -->
     <string name="navigation_drawer_news_updates">"Hírek &amp; frissítések"</string>
     <string name="navigation_drawer_external_links">"Külső hivatkozások"</string>
     <string name="navigation_drawer_website">"Honlap"</string>
-    <string name="navigation_drawer_support">"Ügyfélszolgálat"</string>
+    <string name="navigation_drawer_support">"Támogatás"</string>
     <string name="navigation_drawer_donate">"Adományozás"</string>
     <string name="navigation_drawer_privacy_policy">"Adatvédelmi nyilatkozat"</string>
     <!-- fragment_ical_list -->
@@ -272,7 +272,7 @@ Global Strings -->
     <string name="search">"Keresés"</string>
     <string name="search_journals">Naplóbejegyzések keresése</string>
     <string name="search_notes">Jegyzetek keresése</string>
-    <string name="search_todos">Feladat keresése</string>
+    <string name="search_todos">Feladatok keresése</string>
     <string name="filter">"Szűrő"</string>
     <string name="sync_now">"Szinkronizálás most"</string>
     <string name="due">"Határidő"</string>
