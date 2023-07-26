@@ -50,16 +50,18 @@ import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
 
+enum class LinkExistingMode { CHILD, PARENT }
 
 @Composable
-fun LinkExistingSubentryDialog(
+fun LinkExistingEntryDialog(
+    linkExistingMode: LinkExistingMode,
     allEntriesLive: LiveData<List<ICal4ListRel>>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
     extendedStatuses: List<ExtendedStatus>,
     player: MediaPlayer?,
     onAllEntriesSearchTextUpdated: (String) -> Unit,
-    onNewSubentriesConfirmed: (newSubentries: List<ICal4List>) -> Unit,
+    onEntriesToLinkConfirmed: (newSubentries: List<ICal4List>) -> Unit,
     onDismiss: () -> Unit
 ) {
     val allEntries by allEntriesLive.observeAsState(emptyList())
@@ -71,7 +73,7 @@ fun LinkExistingSubentryDialog(
     AlertDialog(
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        title = { Text(stringResource(R.string.details_link_existing_subentry_dialog_title)) },
+        title = { Text(stringResource(R.string.details_link_existing_entry_dialog_title)) },
         text = {
             Column(
                 modifier = Modifier
@@ -82,7 +84,11 @@ fun LinkExistingSubentryDialog(
             ) {
 
                 Text(
-                    text = stringResource(R.string.details_link_existing_subentry_dialog_info),
+                    text =
+                    when(linkExistingMode) {
+                        LinkExistingMode.CHILD -> stringResource(R.string.details_link_existing_subentry_dialog_info)
+                        LinkExistingMode.PARENT -> stringResource(id = R.string.details_link_existing_parent_dialog_info)
+                    },
                     style = MaterialTheme.typography.labelMedium
                 )
 
@@ -150,7 +156,7 @@ fun LinkExistingSubentryDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onNewSubentriesConfirmed(selectedEntries)
+                    onEntriesToLinkConfirmed(selectedEntries)
                     onDismiss()
                 },
                 enabled = selectedEntries.isNotEmpty()
@@ -172,10 +178,11 @@ fun LinkExistingSubentryDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun LinkExistingSubentryDialog_Preview() {
+fun LinkExistingEntryDialog_Preview_CHILD() {
     MaterialTheme {
 
-        LinkExistingSubentryDialog(
+        LinkExistingEntryDialog(
+            linkExistingMode = LinkExistingMode.CHILD,
             allEntriesLive = MutableLiveData(
                 listOf(
                     ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList()),
@@ -188,7 +195,32 @@ fun LinkExistingSubentryDialog_Preview() {
             extendedStatuses = emptyList(),
             player = null,
             onAllEntriesSearchTextUpdated = { },
-            onNewSubentriesConfirmed = { },
+            onEntriesToLinkConfirmed = { },
+            onDismiss = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LinkExistingEntryDialog_Preview_PARENT() {
+    MaterialTheme {
+
+        LinkExistingEntryDialog(
+            linkExistingMode = LinkExistingMode.PARENT,
+            allEntriesLive = MutableLiveData(
+                listOf(
+                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList()),
+                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList()),
+                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList())
+                )
+            ),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            extendedStatuses = emptyList(),
+            player = null,
+            onAllEntriesSearchTextUpdated = { },
+            onEntriesToLinkConfirmed = { },
             onDismiss = { }
         )
     }

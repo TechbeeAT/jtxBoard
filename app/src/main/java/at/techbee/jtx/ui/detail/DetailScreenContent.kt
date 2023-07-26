@@ -117,6 +117,7 @@ fun DetailScreenContent(
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
     onUnlinkSubEntry: (icalObjectId: Long, parentUID: String?) -> Unit,
     onLinkSubEntries: (List<ICal4List>) -> Unit,
+    onLinkNewParents: (List<ICal4List>) -> Unit,
     onAllEntriesSearchTextUpdated: (String) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>, popBackStack: Boolean) -> Unit,
     goBack: () -> Unit,
@@ -601,15 +602,22 @@ fun DetailScreenContent(
         AnimatedVisibility(parents.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] ?: true || showAllOptions))) {
             DetailsCardParents(
                 parents = parents.value,
+                selectFromAllListLive = selectFromAllListLive,
+                storedCategories = storedCategories,
+                storedResources = storedResources,
+                storedStatuses = extendedStatuses,
                 isEditMode = isEditMode,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgressForSubTasks,
                 blockProgressUpdates = linkProgressToSubtasks,
+                player = player,
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
                 },
                 goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
-                onUnlinkFromParent = { parentUID -> onUnlinkSubEntry(iCalObject.id, parentUID) }
+                onUnlinkFromParent = { parentUID -> onUnlinkSubEntry(iCalObject.id, parentUID) },
+                onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
+                onLinkNewParents = onLinkNewParents,
                 )
         }
 
@@ -923,6 +931,7 @@ fun DetailScreenContent_JOURNAL() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             onLinkSubEntries = { },
+            onLinkNewParents = { },
             onAllEntriesSearchTextUpdated = { },
             goToFilteredList = { }
         )
@@ -987,6 +996,7 @@ fun DetailScreenContent_TODO_editInitially() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             onLinkSubEntries = { },
+            onLinkNewParents = { },
             onAllEntriesSearchTextUpdated = { },
             goToFilteredList = { }
         )
@@ -1050,6 +1060,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
+            onLinkNewParents = { },
             onLinkSubEntries = { },
             onAllEntriesSearchTextUpdated = { },
             goToFilteredList = { }
@@ -1109,6 +1120,7 @@ fun DetailScreenContent_failedLoading() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             onLinkSubEntries = { },
+            onLinkNewParents = { },
             onAllEntriesSearchTextUpdated = { },
             goToFilteredList = { }
         )

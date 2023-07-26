@@ -46,7 +46,8 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.dialogs.EditSubtaskDialog
-import at.techbee.jtx.ui.reusable.dialogs.LinkExistingSubentryDialog
+import at.techbee.jtx.ui.reusable.dialogs.LinkExistingEntryDialog
+import at.techbee.jtx.ui.reusable.dialogs.LinkExistingMode
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
@@ -80,14 +81,15 @@ fun DetailsCardSubtasks(
 
     var showLinkExistingSubentryDialog by rememberSaveable { mutableStateOf(false) }
     if(showLinkExistingSubentryDialog) {
-        LinkExistingSubentryDialog(
+        LinkExistingEntryDialog(
+            linkExistingMode = LinkExistingMode.CHILD,
             allEntriesLive = selectFromAllListLive,
             storedCategories = storedCategories,
             storedResources = storedResources,
             extendedStatuses = storedStatuses,
             player = player,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
-            onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
+            onEntriesToLinkConfirmed = { selected -> onLinkSubEntries(selected) },
             onDismiss = { showLinkExistingSubentryDialog = false }
         )
     }
@@ -107,10 +109,9 @@ fun DetailsCardSubtasks(
 
                 AnimatedVisibility(isEditMode.value) {
                     IconButton(onClick = { showLinkExistingSubentryDialog = true }) {
-                        Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_subentry_dialog_title))
+                        Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_entry_dialog_title))
                     }
                 }
-
             }
 
 

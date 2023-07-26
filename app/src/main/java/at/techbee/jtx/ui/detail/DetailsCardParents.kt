@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.detail
 
+import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -32,13 +33,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.ExtendedStatus
+import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredResource
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
+import at.techbee.jtx.ui.reusable.dialogs.LinkExistingEntryDialog
+import at.techbee.jtx.ui.reusable.dialogs.LinkExistingMode
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
@@ -47,31 +56,36 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @Composable
 fun DetailsCardParents(
     parents: List<ICal4List>,
+    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
+    storedStatuses: List<ExtendedStatus>,
     isEditMode: MutableState<Boolean>,
     sliderIncrement: Int,
     showSlider: Boolean,
     blockProgressUpdates: Boolean,
+    player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     onUnlinkFromParent: (parentUID: String?) -> Unit,
+    onLinkNewParents: (List<ICal4List>) -> Unit,
+    onAllEntriesSearchTextUpdated: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     var showLinkExistingParentDialog by rememberSaveable { mutableStateOf(false) }
     if(showLinkExistingParentDialog) {
-        TODO()
-        /*
-        LinkExistingSubentryDialog(
+        LinkExistingEntryDialog(
+            linkExistingMode = LinkExistingMode.PARENT,
             allEntriesLive = selectFromAllListLive,
             storedCategories = storedCategories,
             storedResources = storedResources,
             extendedStatuses = storedStatuses,
             player = player,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
-            onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
-            onDismiss = { showLinkExistingSubentryDialog = false }
+            onEntriesToLinkConfirmed = { selected -> onLinkNewParents(selected) },
+            onDismiss = { showLinkExistingParentDialog = false }
         )
-         */
     }
     
     ElevatedCard(modifier = modifier) {
@@ -166,13 +180,20 @@ fun DetailsCardParents_Preview_Journal() {
                             this.summary = "My Subnote"
                         }
                     ),
+            selectFromAllListLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            storedStatuses = emptyList(),
             isEditMode = remember { mutableStateOf(false) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            onUnlinkFromParent = { }
+            onUnlinkFromParent = { },
+            onLinkNewParents = { },
+            player = null,
+            onAllEntriesSearchTextUpdated = { }
         )
     }
 }
@@ -190,13 +211,20 @@ fun DetailsCardParents_Preview_Journal_edit() {
                     this.summary = "My Subnote"
                 }
             ),
+            selectFromAllListLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            storedStatuses = emptyList(),
             isEditMode = remember { mutableStateOf(true) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            onUnlinkFromParent = { }
+            onUnlinkFromParent = { },
+            onLinkNewParents = { },
+            player = null,
+            onAllEntriesSearchTextUpdated = { }
         )
     }
 }
@@ -213,13 +241,20 @@ fun DetailsCardParents_Preview_tasksview() {
                     this.summary = "My Subtask"
                 }
             ),
+            selectFromAllListLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            storedStatuses = emptyList(),
             isEditMode = remember { mutableStateOf(false) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            onUnlinkFromParent = { }
+            onUnlinkFromParent = { },
+            onLinkNewParents = { },
+            player = null,
+            onAllEntriesSearchTextUpdated = { }
         )
     }
 }
@@ -236,13 +271,20 @@ fun DetailsCardParents_Preview_tasksedit() {
                     this.summary = "My Subtask"
                 }
             ),
+            selectFromAllListLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            storedStatuses = emptyList(),
             isEditMode = remember { mutableStateOf(true) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            onUnlinkFromParent = { }
+            onUnlinkFromParent = { },
+            onLinkNewParents = { },
+            player = null,
+            onAllEntriesSearchTextUpdated = { }
         )
     }
 }

@@ -47,7 +47,8 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
-import at.techbee.jtx.ui.reusable.dialogs.LinkExistingSubentryDialog
+import at.techbee.jtx.ui.reusable.dialogs.LinkExistingEntryDialog
+import at.techbee.jtx.ui.reusable.dialogs.LinkExistingMode
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
@@ -87,14 +88,15 @@ fun DetailsCardSubnotes(
     }
     var showLinkExistingSubentryDialog by rememberSaveable { mutableStateOf(false) }
     if(showLinkExistingSubentryDialog) {
-        LinkExistingSubentryDialog(
+        LinkExistingEntryDialog(
+            linkExistingMode = LinkExistingMode.CHILD,
             allEntriesLive = selectFromAllListLive,
             storedCategories = storedCategories,
             storedResources = storedResources,
             extendedStatuses = storedStatuses,
             player = player,
             onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
-            onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
+            onEntriesToLinkConfirmed = { selected -> onLinkSubEntries(selected) },
             onDismiss = { showLinkExistingSubentryDialog = false }
         )
     }
@@ -118,7 +120,7 @@ fun DetailsCardSubnotes(
                 
                 AnimatedVisibility(isEditMode.value) {
                         IconButton(onClick = { showLinkExistingSubentryDialog = true }) {
-                            Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_subentry_dialog_title))
+                            Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_entry_dialog_title))
                         }
                 }
                 

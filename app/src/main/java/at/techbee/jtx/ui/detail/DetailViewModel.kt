@@ -270,6 +270,37 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * Adds a new relatedTo to the passed entries relating to the current ICalObject as a CHILD
+     * @param newParents that should get a link to the current entry
+     */
+    fun linkNewParents(newParents: List<ICal4List>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            newParents.forEach { newParent ->
+                if(newParent.uid == null)
+                    return@forEach
+
+                if(newParent.uid == icalEntity.value?.property?.uid)
+                    return@forEach
+
+                val existing = newParent.uid?.let { database.findRelatedTo(icalEntity.value?.property?.id!!, it, Reltype.PARENT.name) != null } ?: return@forEach
+                if(!existing) {
+                    database.insertRelatedto(
+                        Relatedto(
+                            icalObjectId = icalEntity.value?.property?.id!!,
+                            text = newParent.uid,
+                            reltype = Reltype.PARENT.name
+                        )
+                    )
+                    database.getICalObjectById(icalEntity.value?.property?.id!!)?.let {
+                        it.makeDirty()
+                        database.update(it)
+                    }
+                }
+            }
+        }
+    }
+
     fun moveToNewCollection(newCollectionId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             mutableICalObject?.let {

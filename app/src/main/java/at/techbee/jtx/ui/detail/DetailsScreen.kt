@@ -466,6 +466,7 @@ fun DetailsScreen(
                 onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                 onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },
                 onLinkSubEntries = { newSubEntries -> detailViewModel.linkNewSubentries(newSubEntries) },
+                onLinkNewParents = { newParents -> detailViewModel.linkNewParents(newParents) },
                 onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list, popBackStack ->
