@@ -109,7 +109,7 @@ fun DetailsCardSubtasks(
 
                 AnimatedVisibility(isEditMode.value) {
                     IconButton(onClick = { showLinkExistingSubentryDialog = true }) {
-                        Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_entry_dialog_title))
+                        Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_subentry_dialog_title))
                     }
                 }
             }

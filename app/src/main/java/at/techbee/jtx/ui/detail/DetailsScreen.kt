@@ -27,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -42,6 +43,8 @@ import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
+import at.techbee.jtx.ui.reusable.dialogs.LinkExistingEntryDialog
+import at.techbee.jtx.ui.reusable.dialogs.LinkExistingMode
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
@@ -211,6 +214,27 @@ fun DetailsScreen(
         )
     }
 
+    var showLinkExistingDialog by rememberSaveable { mutableStateOf<LinkExistingMode?>(null) }
+    if(showLinkExistingDialog != null) {
+        LinkExistingEntryDialog(
+            linkExistingMode = showLinkExistingDialog!!,
+            allEntriesLive = detailViewModel.selectFromAllList,
+            storedCategories = storedCategories,
+            storedResources = storedResources,
+            extendedStatuses = storedStatuses,
+            detailViewModel.mediaPlayer,
+            onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },
+            onEntriesToLinkConfirmed = { selected ->
+                when(showLinkExistingDialog) {
+                    LinkExistingMode.CHILD -> detailViewModel.linkNewSubentries(selected)
+                    LinkExistingMode.PARENT -> detailViewModel.linkNewParents(selected)
+                    null -> {}
+                }
+            },
+            onDismiss = { showLinkExistingDialog = null }
+        )
+    }
+
     if(detailsBottomSheetState.currentValue != SheetValue.Hidden) {
         ModalBottomSheet(
             sheetState = detailsBottomSheetState,
@@ -283,6 +307,25 @@ fun DetailsScreen(
                                     tint = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                                 )
                             }
+                        )
+
+                        Divider()
+
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.details_link_existing_subentry_dialog_title)) },
+                            onClick = {
+                                showLinkExistingDialog = LinkExistingMode.CHILD
+                                menuExpanded.value = false
+                            },
+                            leadingIcon = { Icon(painterResource(id = R.drawable.ic_link_variant_plus), null) }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.details_link_existing_parent_dialog_title)) },
+                            onClick = {
+                                showLinkExistingDialog = LinkExistingMode.PARENT
+                                menuExpanded.value = false
+                            },
+                            leadingIcon = { Icon(painterResource(id = R.drawable.ic_link_variant_plus), null) }
                         )
 
                         Divider()

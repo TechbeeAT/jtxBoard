@@ -73,7 +73,12 @@ fun LinkExistingEntryDialog(
     AlertDialog(
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        title = { Text(stringResource(R.string.details_link_existing_entry_dialog_title)) },
+        title = { Text(
+            when(linkExistingMode) {
+                LinkExistingMode.CHILD -> stringResource(R.string.details_link_existing_subentry_dialog_title)
+                LinkExistingMode.PARENT -> stringResource(id = R.string.details_link_existing_parent_dialog_title)
+            })
+        },
         text = {
             Column(
                 modifier = Modifier
