@@ -139,8 +139,8 @@ fun DetailsCardSubtasks(
                             showProgress = showSlider,
                             sliderIncrement = sliderIncrement,
                             onProgressChanged = onProgressChanged,
-                            onDeleteClicked = { icalObjectId ->  onSubtaskDeleted(icalObjectId) },
-                            onUnlinkClicked = onUnlinkSubEntry,
+                            onDeleteClicked = { onSubtaskDeleted(subtask.id) },
+                            onUnlinkClicked = { onUnlinkSubEntry(subtask.id) },
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(

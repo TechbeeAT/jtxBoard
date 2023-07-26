@@ -146,8 +146,8 @@ fun DetailsCardSubnotes(
                             subnote = subnote,
                             selected = false,
                             isEditMode = isEditMode.value,
-                            onDeleteClicked = { icalObjectId ->  onSubnoteDeleted(icalObjectId) },
-                            onUnlinkClicked = onUnlinkSubEntry,
+                            onDeleteClicked = { onSubnoteDeleted(subnote.id) },
+                            onUnlinkClicked = { onUnlinkSubEntry(subnote.id) },
                             player = player,
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)

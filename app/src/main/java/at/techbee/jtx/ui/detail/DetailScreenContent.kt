@@ -115,7 +115,7 @@ fun DetailScreenContent(
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
-    onUnlinkSubEntry: (icalObjectId: Long) -> Unit,
+    onUnlinkSubEntry: (icalObjectId: Long, parentUID: String?) -> Unit,
     onLinkSubEntries: (List<ICal4List>) -> Unit,
     onAllEntriesSearchTextUpdated: (String) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>, popBackStack: Boolean) -> Unit,
@@ -598,7 +598,7 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
+        AnimatedVisibility(parents.value.isNotEmpty()) {
             DetailsCardParents(
                 module = iCalObject.getModuleFromString(),
                 parents = parents.value,
@@ -609,8 +609,9 @@ fun DetailScreenContent(
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
                 },
-                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) }
-            )
+                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
+                onUnlinkFromParent = { parentUID -> onUnlinkSubEntry(iCalObject.id, parentUID) }
+                )
         }
 
         AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
@@ -635,7 +636,7 @@ fun DetailScreenContent(
                     )
                 },
                 onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                onUnlinkSubEntry = onUnlinkSubEntry,
+                onUnlinkSubEntry = { id -> onUnlinkSubEntry(id, iCalObject.uid) },
                 onLinkSubEntries = onLinkSubEntries,
                 onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
                 goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) }
@@ -663,7 +664,7 @@ fun DetailScreenContent(
                     )
                 },
                 onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                onUnlinkSubEntry = onUnlinkSubEntry,
+                onUnlinkSubEntry = { id -> onUnlinkSubEntry(id, iCalObject.uid) },
                 onLinkSubEntries = onLinkSubEntries,
                 onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
                 player = player,
@@ -921,7 +922,7 @@ fun DetailScreenContent_JOURNAL() {
             goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
+            onUnlinkSubEntry = { _, _ ->  },
             onLinkSubEntries = { },
             onAllEntriesSearchTextUpdated = { },
             goToFilteredList = { }
@@ -985,7 +986,7 @@ fun DetailScreenContent_TODO_editInitially() {
             goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
+            onUnlinkSubEntry = { _, _ ->  },
             onLinkSubEntries = { },
             onAllEntriesSearchTextUpdated = { },
             goToFilteredList = { }
@@ -1049,7 +1050,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
+            onUnlinkSubEntry = { _, _ ->  },
             onLinkSubEntries = { },
             onAllEntriesSearchTextUpdated = { },
             goToFilteredList = { }
@@ -1107,7 +1108,7 @@ fun DetailScreenContent_failedLoading() {
             goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
+            onUnlinkSubEntry = { _, _ ->  },
             onLinkSubEntries = { },
             onAllEntriesSearchTextUpdated = { },
             goToFilteredList = { }

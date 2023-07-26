@@ -48,10 +48,9 @@ fun DetailsCardParents(
     blockProgressUpdates: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    onUnlinkFromParent: (parentUID: String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if(isEditMode.value)
-        return
 
     val headline = stringResource(id = if(module == Module.TODO) R.string.view_subtask_of else R.string.view_linked_note_of)
 
@@ -85,8 +84,9 @@ fun DetailsCardParents(
                                 selected = false,
                                 isEditMode = isEditMode.value,
                                 onDeleteClicked = { },
-                                onUnlinkClicked = { },
+                                onUnlinkClicked = { onUnlinkFromParent(parent.uid) },
                                 player = null,
+                                allowDeletion = false,
                                 modifier = Modifier
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
@@ -101,13 +101,14 @@ fun DetailsCardParents(
                             SubtaskCard(
                                 subtask = parent,
                                 selected = false,
-                                isEditMode = false,
+                                isEditMode = isEditMode.value,
                                 showProgress = showSlider,
                                 sliderIncrement = sliderIncrement,
                                 onProgressChanged = onProgressChanged,
                                 blockProgressUpdates = blockProgressUpdates,
+                                allowDeletion = false,
                                 onDeleteClicked = { },
-                                onUnlinkClicked = { },
+                                onUnlinkClicked = { onUnlinkFromParent(parent.uid) },
                                 modifier = Modifier
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
@@ -146,14 +147,39 @@ fun DetailsCardParents_Preview_Journal() {
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
+            onUnlinkFromParent = { }
         )
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardParents_Preview_Journal_edit() {
+    MaterialTheme {
+
+        DetailsCardParents(
+            module = Module.JOURNAL,
+            parents = listOf(
+                ICal4List.getSample().apply {
+                    this.component = Component.VJOURNAL.name
+                    this.module = Module.NOTE.name
+                    this.summary = "My Subnote"
+                }
+            ),
+            isEditMode = remember { mutableStateOf(true) },
+            sliderIncrement = 10,
+            showSlider = true,
+            blockProgressUpdates = false,
+            onProgressChanged = { _, _ -> },
+            goToDetail = { _, _, _ -> },
+            onUnlinkFromParent = { }
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardParents_Preview_tasksedit() {
+fun DetailsCardParents_Preview_tasksview() {
     MaterialTheme {
         DetailsCardParents(
             module = Module.TODO,
@@ -170,6 +196,31 @@ fun DetailsCardParents_Preview_tasksedit() {
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
+            onUnlinkFromParent = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardParents_Preview_tasksedit() {
+    MaterialTheme {
+        DetailsCardParents(
+            module = Module.TODO,
+            parents = listOf(
+                ICal4List.getSample().apply {
+                    this.component = Component.VTODO.name
+                    this.module = Module.TODO.name
+                    this.summary = "My Subtask"
+                }
+            ),
+            isEditMode = remember { mutableStateOf(true) },
+            sliderIncrement = 10,
+            showSlider = true,
+            blockProgressUpdates = false,
+            onProgressChanged = { _, _ -> },
+            goToDetail = { _, _, _ -> },
+            onUnlinkFromParent = { }
         )
     }
 }

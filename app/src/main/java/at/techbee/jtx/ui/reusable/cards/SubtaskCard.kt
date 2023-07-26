@@ -48,15 +48,16 @@ fun SubtaskCard(
     isEditMode: Boolean = false,
     sliderIncrement: Int,
     blockProgressUpdates: Boolean = false,
+    allowDeletion: Boolean = true,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onDeleteClicked: (itemId: Long) -> Unit,
-    onUnlinkClicked: (itemId: Long) -> Unit
+    onDeleteClicked: () -> Unit,
+    onUnlinkClicked: () -> Unit
 ) {
 
     var showUnlinkFromParentDialog by rememberSaveable { mutableStateOf(false) }
     if(showUnlinkFromParentDialog) {
         UnlinkEntryDialog(
-            onConfirm = { onUnlinkClicked(subtask.id) },
+            onConfirm = { onUnlinkClicked() },
             onDismiss = { showUnlinkFromParentDialog = false }
         )
     }
@@ -96,8 +97,10 @@ fun SubtaskCard(
             if (isEditMode) {
                 Divider(modifier = Modifier.height(28.dp).width(1.dp))
 
-                IconButton(onClick = { onDeleteClicked(subtask.id) }) {
-                    Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
+                if(allowDeletion) {
+                    IconButton(onClick = { onDeleteClicked() }) {
+                        Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
+                    }
                 }
                 IconButton(onClick = { showUnlinkFromParentDialog = true }) {
                     Icon(painterResource(id = R.drawable.ic_link_variant_remove), stringResource(R.string.dialog_unlink_from_parent_title))

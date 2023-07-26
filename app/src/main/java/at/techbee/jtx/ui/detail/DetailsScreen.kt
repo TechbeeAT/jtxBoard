@@ -464,7 +464,7 @@ fun DetailsScreen(
                 onSubEntryAdded = { icalObject, attachment -> detailViewModel.addSubEntry(icalObject, attachment) },
                 onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                 onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
-                onUnlinkSubEntry = { icalObjectId -> detailViewModel.unlinkFromParent(icalObjectId) },
+                onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },
                 onLinkSubEntries = { newSubEntries -> detailViewModel.linkNewSubentries(newSubEntries) },
                 onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },
                 player = detailViewModel.mediaPlayer,

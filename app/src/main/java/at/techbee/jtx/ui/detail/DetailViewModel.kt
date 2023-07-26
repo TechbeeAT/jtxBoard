@@ -531,10 +531,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun unlinkFromParent(icalObjectId: Long) {
+    fun unlinkFromParent(icalObjectId: Long, parentUID: String?) {
+        if(parentUID == null)
+            return
+
         viewModelScope.launch(Dispatchers.IO) {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
-            database.deleteRelatedto(icalObjectId, icalEntity.value?.property?.uid?:"")
+            database.deleteRelatedto(icalObjectId, parentUID)
             database.getICalObjectByIdSync(icalObjectId)?.let {
                 it.makeDirty()
                 database.update(it)
