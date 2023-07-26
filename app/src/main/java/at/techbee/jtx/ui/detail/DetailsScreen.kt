@@ -278,7 +278,7 @@ fun DetailsScreen(
                                 )
                             },
                             onClick = {
-                                detailViewModel.settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBTASK
+                                detailViewModel.settingsStateHolder.setDetailTopAppBarMode(DetailTopAppBarMode.ADD_SUBTASK)
                                 menuExpanded.value = false
                             },
                             leadingIcon = {
@@ -297,7 +297,7 @@ fun DetailsScreen(
                                 )
                             },
                             onClick = {
-                                detailViewModel.settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBNOTE
+                                detailViewModel.settingsStateHolder.setDetailTopAppBarMode(DetailTopAppBarMode.ADD_SUBNOTE)
                                 menuExpanded.value = false
                             },
                             leadingIcon = {
