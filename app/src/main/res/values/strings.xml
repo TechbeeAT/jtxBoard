@@ -102,6 +102,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Take picture"</string>
     <string name="edit_add_link_button_text">"Add attachment link"</string>
     <string name="edit_subtasks_add_helper">"Add a subtask"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Quick add subtask"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Quick add subnote"</string>
     <string name="edit_attachment_add_link_dialog">"Add attachment link"</string>
     <string name="edit_recur_repeat_every_x">"Repeat every"</string>
     <string name="edit_recur_on_weekday">"on"</string>

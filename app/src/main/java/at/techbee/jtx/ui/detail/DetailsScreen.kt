@@ -273,7 +273,7 @@ fun DetailsScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = stringResource(id = R.string.edit_subtasks_add_helper),
+                                    text = stringResource(id = R.string.detail_top_app_bar_quick_add_subtask),
                                     color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
                                 )
                             },
@@ -292,7 +292,7 @@ fun DetailsScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = stringResource(id = R.string.edit_subnote_add_helper),
+                                    text = stringResource(id = R.string.detail_top_app_bar_quick_add_subnote),
                                     color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
                                 )
                             },
