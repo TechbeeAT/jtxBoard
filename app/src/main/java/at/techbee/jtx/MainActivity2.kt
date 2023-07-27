@@ -156,6 +156,13 @@ class MainActivity2 : AppCompatActivity() {
             })
         /* END Initialise biometric prompt */
 
+        if(settingsStateHolder.settingSyncOnStart.value) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
+                SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+            }
+        }
+
         setContent {
             val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
             JtxBoardTheme(

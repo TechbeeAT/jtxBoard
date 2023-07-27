@@ -29,8 +29,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 205010006
-        versionName "2.05.01-rc4"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 205010009
+        versionName "2.05.01-rc7"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -129,7 +129,6 @@ android {
     compileOptions {
         // Flag to enable support for the new language APIs, this is especially necessary to use java.time for versions < O
         // https://developer.android.com/studio/write/java8-support#library-desugaring
-        // also good for ical4android
         coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -214,10 +213,21 @@ gradle.projectsEvaluated {
     preBuild.dependsOn('updateLocalesConfig')
 }
 
+configurations {
+    all {
+        // exclude modules which are in conflict with system libraries
+        exclude module: "commons-logging"
+        exclude group: "org.json", module: "json"
+
+        // Groovy requires SDK 26+, and it's not required, so exclude it
+        exclude group: 'org.codehaus.groovy'
+    }
+}
+
 
 dependencies {
 
-    implementation project(':ical4android')
+    implementation "com.github.bitfireAT:ical4android:a78e72f580"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -250,7 +260,7 @@ dependencies {
 
     // Amazon billing & maps support
     amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.4'
-    amazonImplementation "com.google.maps.android:maps-compose:2.11.4"
+    amazonImplementation "com.google.maps.android:maps-compose:2.11.5"
     amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
 
@@ -258,7 +268,7 @@ dependencies {
     //huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
 
     // Google Maps
-    gplayImplementation "com.google.maps.android:maps-compose:2.11.4"
+    gplayImplementation "com.google.maps.android:maps-compose:2.11.5"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
     gplayImplementation "com.google.android.gms:play-services-location:21.0.1"
 
@@ -307,14 +317,14 @@ dependencies {
     // jetpack compose
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation "androidx.compose.material3:material3:1.2.0-alpha03"
+    implementation "androidx.compose.material3:material3:1.2.0-alpha04"
     implementation "androidx.compose.material:material-icons-extended:1.4.3"
     implementation "androidx.compose.material:material:1.4.3"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    implementation "androidx.navigation:navigation-compose:2.7.0-beta02"
+    implementation "androidx.navigation:navigation-compose:2.7.0-rc01"
     implementation "com.arnyminerz.markdowntext:markdowntext:1.3.2"
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
@@ -329,7 +339,4 @@ dependencies {
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
     
     implementation "androidx.profileinstaller:profileinstaller:1.3.1"
-
-
 }
-
