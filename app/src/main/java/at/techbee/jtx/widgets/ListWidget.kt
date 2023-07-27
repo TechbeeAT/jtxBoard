@@ -27,7 +27,6 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.getAppWidgetState
-import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
@@ -165,19 +164,20 @@ class ListWidget : GlanceAppWidget() {
                     entryOverdueTextColor = entryOverdueTextColor,
                     onCheckedChange = { iCalObjectId, checked ->
                         scope.launch(Dispatchers.IO) {
-                                val settingsStateHolder = SettingsStateHolder(context)
-                                val database = ICalDatabase.getInstance(context).iCalDatabaseDao
-                                val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return@launch
-                                iCalObject.setUpdatedProgress(if(checked) null else 100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-                                database.update(iCalObject)
-                                if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
-                                    ICalObject.findTopParent(iCalObject.id, database)?.let {
-                                        ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-                                    }
+                            val settingsStateHolder = SettingsStateHolder(context)
+                            val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+                            val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return@launch
+                            iCalObject.setUpdatedProgress(if(checked) null else 100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+                            database.update(iCalObject)
+                            if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
+                                ICalObject.findTopParent(iCalObject.id, database)?.let {
+                                    ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                                 }
-                                NotificationPublisher.scheduleNextNotifications(context)
-                                ListWidget().updateAll(context)
-                                //ListWidget().compose(context, glanceId)
+                            }
+                            NotificationPublisher.scheduleNextNotifications(context)
+                            super.update(context, id)
+                            //ListWidget().updateAll(context)
+                            //ListWidget().compose(context, glanceId)
                         }
                     },
                     onOpenWidgetConfig = {

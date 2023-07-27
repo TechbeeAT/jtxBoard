@@ -31,7 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.getAppWidgetState
 import androidx.glance.appwidget.state.updateAppWidgetState
-import androidx.glance.appwidget.updateAll
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.settings.DropdownSettingOption
@@ -40,7 +39,6 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.widgets.ListWidget
 import at.techbee.jtx.widgets.ListWidgetConfig
 import at.techbee.jtx.widgets.ListWidgetConfigContent
-import at.techbee.jtx.widgets.ListWidgetReceiver
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -110,7 +108,8 @@ class ListWidgetConfigActivity : ComponentActivity() {
                                                 Json.encodeToString(listWidgetConfig)
                                         }
                                     }
-                                    ListWidget().updateAll(context)
+                                    ListWidget().update(context, glanceId)
+                                    //ListWidget().updateAll(context)
                                     Log.d(TAG, "Widget update requested")
 
                                     val resultValue = Intent().putExtra(
