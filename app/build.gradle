@@ -23,7 +23,7 @@ if(localPropertiesFile.exists()) {
 
 android {
     namespace "at.techbee.jtx"
-    compileSdkVersion 34
+    compileSdk 34
     defaultConfig {
         applicationId "at.techbee.jtx"
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
