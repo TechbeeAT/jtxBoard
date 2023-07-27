@@ -6,13 +6,15 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-apply plugin: "com.android.application"
-apply plugin: "com.mikepenz.aboutlibraries.plugin"
-apply plugin: "kotlin-android"
-apply plugin: "kotlin-parcelize"
-apply plugin: "kotlin-kapt"
-apply plugin: "kotlinx-serialization"
-//apply plugin: "com.huawei.agconnect"
+plugins {
+    id("com.android.application") version "8.1.0" apply false
+//    id("com.mikepenz.aboutlibraries.plugin")
+    id("kotlin-android")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
+    id("kotlinx-serialization")
+//id("com.huawei.agconnect")
+}
 
 
 def localPropertiesFile = rootProject.file('local.properties')
@@ -25,7 +27,7 @@ android {
     namespace "at.techbee.jtx"
     compileSdk 34
     defaultConfig {
-        applicationId "at.techbee.jtx"
+        applicationId("at.techbee.jtx")
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34

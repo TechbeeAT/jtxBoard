@@ -35,39 +35,8 @@ buildscript {
         version_accompanist = "0.31.5-beta"
         version_osmdroid = "6.1.16"
     }
-
-    repositories {
-        google()
-        mavenCentral()
-
-        // AboutLibraries
-        maven { url "https://plugins.gradle.org/m2/" }
-
-        // Huawei - only for use in Huawei branch
-        //maven { url 'https://developer.huawei.com/repo/' }
-    }
-
-    dependencies {
-        classpath "com.android.tools.build:gradle:$version_gradle"
-        classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:$version_about_libraries"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$version_kotlin"
-        // Huawei - only for use in Huawei branch
-        //classpath "com.huawei.agconnect:agcp:$version_huawei"
-    }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-
-        // ical4android
-        maven { url 'https://jitpack.io' }
-        // Huawei - only for use in Huawei branch
-        maven { url 'https://developer.huawei.com/repo/' }
-    }
-}
 
 tasks.register('clean', Delete) {
     delete rootProject.buildDir
