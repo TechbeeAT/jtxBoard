@@ -24,7 +24,7 @@ buildscript {
         version_appcompat = "1.6.1"
         version_gradle = '8.1.0'
         version_kotlin = "1.8.22"
-        version_room = "2.5.2"
+        version_room = "2.6.0-alpha02"
         version_work = "2.8.1"
         version_billing = "6.0.1"
         version_review = "2.0.1"
@@ -55,6 +55,10 @@ buildscript {
         // Huawei - only for use in Huawei branch
         //classpath "com.huawei.agconnect:agcp:$version_huawei"
     }
+}
+
+plugins {
+    id 'com.google.devtools.ksp' version '1.9.0-1.0.12' apply false
 }
 
 allprojects {

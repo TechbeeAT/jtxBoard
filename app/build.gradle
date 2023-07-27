@@ -6,13 +6,15 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-apply plugin: "com.android.application"
-apply plugin: "com.mikepenz.aboutlibraries.plugin"
-apply plugin: "kotlin-android"
-apply plugin: "kotlin-parcelize"
-apply plugin: "kotlin-kapt"
-apply plugin: "kotlinx-serialization"
-//apply plugin: "com.huawei.agconnect"
+plugins {
+    id "com.android.application"
+    id "com.mikepenz.aboutlibraries.plugin"
+    id "kotlin-android"
+    id "kotlin-parcelize"
+    id "kotlinx-serialization"
+    id "com.google.devtools.ksp"
+    //id "com.huawei.agconnect"
+}
 
 
 def localPropertiesFile = rootProject.file('local.properties')
@@ -39,10 +41,12 @@ android {
             unitTests.includeAndroidResources = true
             unitTests.returnDefaultValues = true
         }
-        // defining the room.schemaLocation explicitly allows AutoMigrations
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
+
+        ksp {
+            // defining the room.schemaLocation explicitly allows AutoMigrations
+            room {
+                generateKotlin
+                schemaDirectory "$projectDir/schemas/"
             }
         }
 
@@ -241,7 +245,7 @@ dependencies {
     // Room dependencies
     implementation "androidx.room:room-runtime:$version_room"
     implementation "androidx.room:room-ktx:$version_room"   // Kotlin Extensions and Coroutines support for Room
-    kapt "androidx.room:room-compiler:$version_room"
+    ksp "androidx.room:room-compiler:$version_room"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
