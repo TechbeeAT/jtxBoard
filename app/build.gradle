@@ -184,7 +184,7 @@ def getLocales() {
  * @since 20221016
  * @return A list with the language codes of the locales available.
  */
-task updateLocalesConfig() {
+tasks.register('updateLocalesConfig') {
     println 'Building locale config...'
     ext.outputDir = new File(projectDir, 'build/generated/res/locale/xml')
 
@@ -200,7 +200,7 @@ task updateLocalesConfig() {
             destXmlMkp.yield "\r\n"
 
             def locales = getLocales()
-            destXml."locale-config"(['xmlns:android':"http://schemas.android.com/apk/res/android"]) {
+            destXml."locale-config"(['xmlns:android': "http://schemas.android.com/apk/res/android"]) {
                 locales.forEach { locale ->
                     destXml."locale"("android:name": locale)
                 }
@@ -214,7 +214,7 @@ gradle.projectsEvaluated {
 }
 
 configurations {
-    all {
+    configureEach {
         // exclude modules which are in conflict with system libraries
         exclude module: "commons-logging"
         exclude group: "org.json", module: "json"
