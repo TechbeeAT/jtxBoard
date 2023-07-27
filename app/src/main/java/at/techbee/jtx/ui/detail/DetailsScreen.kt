@@ -222,6 +222,7 @@ fun DetailsScreen(
     }
     if(showLinkEntryDialog) {
         LinkExistingEntryDialog(
+            excludeCurrentId = detailViewModel.icalEntity.value?.property?.id,
             preselectedLinkEntryModules = linkEntryDialogModule,
             preselectedLinkEntryReltype = linkEntryDialogReltype ?: Reltype.CHILD,
             allEntriesLive = detailViewModel.selectFromAllList,
@@ -229,7 +230,7 @@ fun DetailsScreen(
             storedResources = storedResources,
             extendedStatuses = storedStatuses,
             detailViewModel.mediaPlayer,
-            onAllEntriesSearchTextUpdated = { searchText, modules -> detailViewModel.updateSelectFromAllListQuery(searchText, modules) },
+            onAllEntriesSearchTextUpdated = { searchText, modules, sameCollection, sameAccount -> detailViewModel.updateSelectFromAllListQuery(searchText, modules, sameCollection, sameAccount) },
             onEntriesToLinkConfirmed = { selected, reltype ->
                 when(reltype) {
                     Reltype.CHILD -> detailViewModel.linkNewSubentries(selected)

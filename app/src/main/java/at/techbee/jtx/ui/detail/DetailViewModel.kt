@@ -159,10 +159,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun updateSelectFromAllListQuery(searchText: String, modules: List<Module>) {
+    fun updateSelectFromAllListQuery(searchText: String, modules: List<Module>, sameCollection: Boolean, sameAccount: Boolean) {
         selectFromAllListQuery.postValue(ICal4List.constructQuery(
             modules = modules,
             searchText = searchText,
+            searchCollection = if(sameCollection) icalEntity.value?.ICalCollection?.displayName?.let { listOf(it) }?: emptyList() else emptyList(),
+            searchAccount = if(sameAccount) icalEntity.value?.ICalCollection?.accountName?.let { listOf(it) }?: emptyList() else emptyList(),
             orderBy = OrderBy.LAST_MODIFIED,
             sortOrder = SortOrder.DESC,
             hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)

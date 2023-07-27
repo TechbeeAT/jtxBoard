@@ -19,13 +19,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -57,11 +54,14 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
+import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
+import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun LinkExistingEntryDialog(
+    excludeCurrentId: Long?,
     preselectedLinkEntryModules: List<Module>,
     preselectedLinkEntryReltype: Reltype,
     allEntriesLive: LiveData<List<ICal4ListRel>>,
@@ -69,7 +69,7 @@ fun LinkExistingEntryDialog(
     storedResources: List<StoredResource>,
     extendedStatuses: List<ExtendedStatus>,
     player: MediaPlayer?,
-    onAllEntriesSearchTextUpdated: (String, List<Module>) -> Unit,
+    onAllEntriesSearchTextUpdated: (String, List<Module>, sameAccount: Boolean, sameCollection: Boolean) -> Unit,
     onEntriesToLinkConfirmed: (newSubentries: List<ICal4List>, linkEntryReltype: Reltype) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -83,15 +83,18 @@ fun LinkExistingEntryDialog(
     var allEntriesSearchText by remember { mutableStateOf("") }
     val selectedEntries = remember { mutableStateListOf<ICal4List>() }
     var maxEntriesShown by remember { mutableIntStateOf(10) }
+    val menuExpanded = remember { mutableStateOf(false) }
+    var searchWithinSameCollection by remember { mutableStateOf(true) }
+    var searchWithinSameAccount by remember { mutableStateOf(true) }
 
     LaunchedEffect(true) {
-        onAllEntriesSearchTextUpdated(allEntriesSearchText, linkEntryModules)
+        onAllEntriesSearchTextUpdated(allEntriesSearchText, linkEntryModules, searchWithinSameCollection, searchWithinSameAccount)
     }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        title = { Text(stringResource(R.string.link_entry)) },
+        title = { Text(stringResource(R.string.link_selected_as)) },
         text = {
             Column(
                 modifier = Modifier
@@ -100,39 +103,6 @@ fun LinkExistingEntryDialog(
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                FlowRow {
-                    Module.values().forEach { module ->
-                        FilterChip(
-                            selected = linkEntryModules.contains(module),
-                            onClick = {
-                                if(linkEntryModules.contains(module))
-                                      linkEntryModules.remove(module)
-                                else
-                                    linkEntryModules.add(module)
-                                onAllEntriesSearchTextUpdated(allEntriesSearchText, linkEntryModules)
-                            },
-                            label = {
-                                Text(
-                                    stringResource(
-                                        id = when (module) {
-                                            Module.JOURNAL -> R.string.list_tabitem_journals
-                                            Module.NOTE -> R.string.list_tabitem_notes
-                                            Module.TODO -> R.string.list_tabitem_todos
-                                        }
-                                    ),
-                                    textAlign = TextAlign.Center
-                                )
-                            },
-                            modifier = Modifier.padding(horizontal = 2.dp)
-                        )
-                    }
-                }
-
-                Text(
-                    text = stringResource(R.string.link_selected_as),
-                    style = MaterialTheme.typography.labelMedium
-                )
 
                 FlowRow {
                     listOf(Reltype.CHILD, Reltype.PARENT).forEach { reltype ->
@@ -167,19 +137,59 @@ fun LinkExistingEntryDialog(
                     value = allEntriesSearchText,
                     onValueChange = {
                         allEntriesSearchText = it
-                        onAllEntriesSearchTextUpdated(it, linkEntryModules)
+                        onAllEntriesSearchTextUpdated(it, linkEntryModules, searchWithinSameCollection, searchWithinSameAccount)
                     },
                     label = { Text(stringResource(R.string.search)) },
                     trailingIcon = {
-                        AnimatedVisibility(allEntriesSearchText.isNotEmpty()) {
-                            IconButton(
-                                onClick = {
-                                    allEntriesSearchText = ""
-                                    onAllEntriesSearchTextUpdated("", linkEntryModules)
-                                }
-                            ) {
-                                Icon(Icons.Outlined.Close, stringResource(R.string.delete))
+
+                        OverflowMenu(menuExpanded = menuExpanded) {
+
+                            Text(stringResource(R.string.link_entry_search_within), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 8.dp))
+
+                            HorizontalDivider()
+
+                            Module.values().forEach { module ->
+                                CheckboxWithText(
+                                    text = stringResource(
+                                        id = when (module) {
+                                            Module.JOURNAL -> R.string.list_tabitem_journals
+                                            Module.NOTE -> R.string.list_tabitem_notes
+                                            Module.TODO -> R.string.list_tabitem_todos
+                                        }
+                                    ),
+                                    isSelected = linkEntryModules.contains(module),
+                                    onCheckedChange = {
+                                        if(it) linkEntryModules.add(module) else linkEntryModules.remove(module)
+                                        onAllEntriesSearchTextUpdated(allEntriesSearchText, linkEntryModules, searchWithinSameCollection, searchWithinSameAccount)
+                                    },
+                                    modifier = Modifier.padding(horizontal = 2.dp)
+                                )
                             }
+
+                            HorizontalDivider()
+
+                            CheckboxWithText(
+                                text = stringResource(R.string.link_entry_search_within_same_collection),
+                                isSelected = searchWithinSameCollection,
+                                onCheckedChange = {
+                                    searchWithinSameCollection = it
+                                    if(it)
+                                        searchWithinSameAccount = true
+                                    onAllEntriesSearchTextUpdated(allEntriesSearchText, linkEntryModules, searchWithinSameCollection, searchWithinSameAccount)
+                                },
+                                modifier = Modifier.padding(horizontal = 2.dp)
+                            )
+                            CheckboxWithText(
+                                text = stringResource(R.string.link_entry_search_within_same_account),
+                                isSelected = searchWithinSameAccount,
+                                onCheckedChange = {
+                                    searchWithinSameAccount = it
+                                    if(!it)
+                                        searchWithinSameCollection = false
+                                    onAllEntriesSearchTextUpdated(allEntriesSearchText, linkEntryModules, searchWithinSameCollection, searchWithinSameAccount)
+                                },
+                                modifier = Modifier.padding(horizontal = 2.dp)
+                            )
                         }
                     }
                 )
@@ -191,6 +201,9 @@ fun LinkExistingEntryDialog(
                     ) {
                         allEntries.forEachIndexed { index, entry ->
                             if(index > maxEntriesShown)
+                                return@forEachIndexed
+
+                            if(entry.iCal4List.id == excludeCurrentId)
                                 return@forEachIndexed
 
                             ListCardGrid(
@@ -253,6 +266,7 @@ fun LinkExistingEntryDialog_Preview_CHILD() {
     MaterialTheme {
 
         LinkExistingEntryDialog(
+            excludeCurrentId = null,
             preselectedLinkEntryModules = listOf(Module.TODO),
             preselectedLinkEntryReltype = Reltype.PARENT,
             allEntriesLive = MutableLiveData(
@@ -266,7 +280,7 @@ fun LinkExistingEntryDialog_Preview_CHILD() {
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
             player = null,
-            onAllEntriesSearchTextUpdated = { _, _ -> },
+            onAllEntriesSearchTextUpdated = { _, _, _, _ -> },
             onEntriesToLinkConfirmed = { _, _ ->  },
             onDismiss = { }
         )
@@ -279,6 +293,7 @@ fun LinkExistingEntryDialog_Preview_PARENT() {
     MaterialTheme {
 
         LinkExistingEntryDialog(
+            excludeCurrentId = null,
             preselectedLinkEntryModules = listOf(Module.TODO),
             preselectedLinkEntryReltype = Reltype.PARENT,
             allEntriesLive = MutableLiveData(
@@ -292,7 +307,7 @@ fun LinkExistingEntryDialog_Preview_PARENT() {
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
             player = null,
-            onAllEntriesSearchTextUpdated = { _, _ -> },
+            onAllEntriesSearchTextUpdated = { _, _, _, _ -> },
             onEntriesToLinkConfirmed = { _, _ -> },
             onDismiss = { }
         )
