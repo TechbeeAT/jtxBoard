@@ -36,6 +36,7 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
@@ -44,7 +45,6 @@ import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.LinkExistingEntryDialog
-import at.techbee.jtx.ui.reusable.dialogs.LinkExistingMode
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
@@ -76,6 +76,9 @@ fun DetailsScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showRevertDialog by remember { mutableStateOf(false) }
     var showUnsavedChangesDialog by rememberSaveable { mutableStateOf(false) }
+    var showLinkEntryDialog by rememberSaveable { mutableStateOf(false) }
+    var linkEntryDialogModule by rememberSaveable { mutableStateOf(listOf<Module>())}
+    var linkEntryDialogReltype by rememberSaveable { mutableStateOf<Reltype?>(null)}
     var navigateUp by remember { mutableStateOf(false) }
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
 
@@ -214,24 +217,30 @@ fun DetailsScreen(
         )
     }
 
-    val showLinkExistingDialog = rememberSaveable { mutableStateOf<LinkExistingMode?>(null) }
-    if(showLinkExistingDialog.value != null) {
+    LaunchedEffect(linkEntryDialogModule, linkEntryDialogReltype) {
+        showLinkEntryDialog = linkEntryDialogModule.isNotEmpty() && linkEntryDialogReltype != null
+    }
+    if(showLinkEntryDialog) {
         LinkExistingEntryDialog(
-            linkExistingMode = showLinkExistingDialog.value!!,
+            preselectedLinkEntryModules = linkEntryDialogModule,
+            preselectedLinkEntryReltype = linkEntryDialogReltype ?: Reltype.CHILD,
             allEntriesLive = detailViewModel.selectFromAllList,
             storedCategories = storedCategories,
             storedResources = storedResources,
             extendedStatuses = storedStatuses,
             detailViewModel.mediaPlayer,
-            onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },
-            onEntriesToLinkConfirmed = { selected ->
-                when(showLinkExistingDialog.value) {
-                    LinkExistingMode.CHILD -> detailViewModel.linkNewSubentries(selected)
-                    LinkExistingMode.PARENT -> detailViewModel.linkNewParents(selected)
-                    null -> {}
+            onAllEntriesSearchTextUpdated = { searchText, modules -> detailViewModel.updateSelectFromAllListQuery(searchText, modules) },
+            onEntriesToLinkConfirmed = { selected, reltype ->
+                when(reltype) {
+                    Reltype.CHILD -> detailViewModel.linkNewSubentries(selected)
+                    Reltype.PARENT -> detailViewModel.linkNewParents(selected)
+                    Reltype.SIBLING -> Unit
                 }
             },
-            onDismiss = { showLinkExistingDialog.value = null }
+            onDismiss = {
+                linkEntryDialogModule = emptyList()
+                linkEntryDialogReltype = null
+            }
         )
     }
 
@@ -309,26 +318,19 @@ fun DetailsScreen(
                             }
                         )
 
-                        Divider()
+                        HorizontalDivider()
 
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.details_link_existing_subentry_dialog_title)) },
+                            text = { Text(text = stringResource(id = R.string.link_entry)) },
                             onClick = {
-                                showLinkExistingDialog.value = LinkExistingMode.CHILD
-                                menuExpanded.value = false
-                            },
-                            leadingIcon = { Icon(painterResource(id = R.drawable.ic_link_variant_plus), null) }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.details_link_existing_parent_dialog_title)) },
-                            onClick = {
-                                showLinkExistingDialog.value = LinkExistingMode.PARENT
+                                linkEntryDialogModule = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+                                linkEntryDialogReltype = Reltype.CHILD
                                 menuExpanded.value = false
                             },
                             leadingIcon = { Icon(painterResource(id = R.drawable.ic_link_variant_plus), null) }
                         )
 
-                        Divider()
+                        HorizontalDivider()
 
                         if (!isEditMode.value) {
                             DropdownMenuItem(
@@ -391,7 +393,7 @@ fun DetailsScreen(
                             )
                         }
 
-                        Divider()
+                        HorizontalDivider()
 
                         CheckboxWithText(
                             text = stringResource(id = R.string.menu_view_markdown_formatting),
@@ -402,7 +404,7 @@ fun DetailsScreen(
                             isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] ?: true,
                         )
 
-                        Divider()
+                        HorizontalDivider()
 
                         if(icalEntity.value?.ICalCollection?.readonly == false && icalEntity.value?.ICalCollection?.supportsVJOURNAL == true) {
                             if (icalEntity.value?.property?.module != Module.JOURNAL.name) {
@@ -463,7 +465,6 @@ fun DetailsScreen(
                 attachments = detailViewModel.mutableAttachments,
                 alarms = detailViewModel.mutableAlarms,
                 isEditMode = isEditMode,
-                showLinkExistingDialog = showLinkExistingDialog,
                 changeState = detailViewModel.changeState,
                 parents = parents,
                 subtasks = subtasks,
@@ -523,6 +524,10 @@ fun DetailsScreen(
                     )
                 },
                 unlinkFromSeries = { instances, series, deleteAfterUnlink -> detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink) },
+                onShowLinkExistingDialog = { modules, reltype ->
+                    linkEntryDialogModule = modules
+                    linkEntryDialogReltype = reltype
+                },
                 modifier = Modifier.padding(paddingValues)
             )
         },

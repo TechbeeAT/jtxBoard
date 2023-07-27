@@ -159,10 +159,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun updateSelectFromAllListQuery(searchText: String) {
+    fun updateSelectFromAllListQuery(searchText: String, modules: List<Module>) {
         selectFromAllListQuery.postValue(ICal4List.constructQuery(
-            modules = listOf(Module.JOURNAL, Module.NOTE, Module.TODO),
+            modules = modules,
             searchText = searchText,
+            orderBy = OrderBy.LAST_MODIFIED,
+            sortOrder = SortOrder.DESC,
             hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
         ))
     }

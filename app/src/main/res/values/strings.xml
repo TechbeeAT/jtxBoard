@@ -211,6 +211,9 @@ Global Strings -->
     <string name="collection">"Collection"</string>
     <string name="collection_owner_displayname">"Owner: %1$s"</string>
     <string name="link_to_parent">"Link to parent"</string>
+    <string name="link_selected_as_parent">"parent"</string>
+    <string name="link_selected_as_subtask_note">"subtask/-note"</string>
+    <string name="link_selected_as">"Link selected as …"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
     <string name="navigation_drawer_presets">"Presets"</string>
     <!-- alarms -->
@@ -396,6 +399,7 @@ Thank you!"</string>
     <string name="list_update_entries_dialog_title">"Update entries"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Attention: Recurring instances must be unlinked from its series before being moved to another collection and will be ignored in this process."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Choose the parent to which the selected entries should be linked as subtasks/linked notes."</string>
+    <string name="link_entry">"Link entry"</string>
     <string name="details_link_existing_subentry_dialog_title">"Link sub-entries"</string>
     <string name="details_link_existing_parent_dialog_title">"Link parents"</string>
     <string name="details_link_existing_subentry_dialog_info">"Choose the sub-entries that should be linked."</string>

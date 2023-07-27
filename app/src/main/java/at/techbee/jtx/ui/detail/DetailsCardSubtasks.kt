@@ -39,7 +39,6 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.dialogs.EditSubtaskDialog
-import at.techbee.jtx.ui.reusable.dialogs.LinkExistingMode
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
@@ -50,7 +49,6 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubtasks(
     subtasks: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
-    showLinkExistingDialog: MutableState<LinkExistingMode?>,
     sliderIncrement: Int,
     showSlider: Boolean,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
@@ -59,6 +57,7 @@ fun DetailsCardSubtasks(
     onSubtaskDeleted: (subtaskId: Long) -> Unit,
     onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    onShowLinkExistingDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -80,7 +79,7 @@ fun DetailsCardSubtasks(
                 HeadlineWithIcon(icon = Icons.Outlined.Task, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
 
                 AnimatedVisibility(isEditMode.value) {
-                    IconButton(onClick = { showLinkExistingDialog.value = LinkExistingMode.CHILD }) {
+                    IconButton(onClick = { onShowLinkExistingDialog() }) {
                         Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_subentry_dialog_title))
                     }
                 }
@@ -182,7 +181,6 @@ fun DetailsCardSubtasks_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 25,
             showSlider = true,
             onSubtaskAdded = { },
@@ -191,6 +189,7 @@ fun DetailsCardSubtasks_Preview() {
             onSubtaskDeleted = { },
             onUnlinkSubEntry = { },
             goToDetail = { _, _, _ -> },
+            onShowLinkExistingDialog = {}
         )
     }
 }
@@ -209,7 +208,6 @@ fun DetailsCardSubtasks_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 25,
             showSlider = true,
             onSubtaskAdded = { },
@@ -218,6 +216,7 @@ fun DetailsCardSubtasks_Preview_edit() {
             onSubtaskDeleted = { },
             onUnlinkSubEntry = { },
             goToDetail = { _, _, _ -> },
+            onShowLinkExistingDialog = {}
         )
     }
 }
@@ -236,7 +235,6 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 25,
             showSlider = false,
             onSubtaskAdded = { },
@@ -245,6 +243,7 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
             onSubtaskDeleted = { },
             onUnlinkSubEntry = { },
             goToDetail = { _, _, _ -> },
+            onShowLinkExistingDialog = {}
         )
     }
 }

@@ -36,7 +36,6 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
-import at.techbee.jtx.ui.reusable.dialogs.LinkExistingMode
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 
@@ -46,13 +45,13 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 fun DetailsCardParents(
     parents: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
-    showLinkExistingDialog: MutableState<LinkExistingMode?>,
     sliderIncrement: Int,
     showSlider: Boolean,
     blockProgressUpdates: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     onUnlinkFromParent: (parentUID: String?) -> Unit,
+    onShowLinkExistingDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     
@@ -72,7 +71,7 @@ fun DetailsCardParents(
                 HeadlineWithIcon(icon = Icons.Outlined.SubdirectoryArrowRight, iconDesc = null, text = stringResource(id = R.string.linked_parents), modifier = Modifier.weight(1f))
 
                 AnimatedVisibility(isEditMode.value) {
-                    IconButton(onClick = { showLinkExistingDialog.value = LinkExistingMode.PARENT }) {
+                    IconButton(onClick = { onShowLinkExistingDialog() }) {
                         Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_parent_dialog_info))
                     }
                 }
@@ -149,13 +148,13 @@ fun DetailsCardParents_Preview_Journal() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            onUnlinkFromParent = { }
+            onUnlinkFromParent = { },
+            onShowLinkExistingDialog = {}
         )
     }
 }
@@ -174,13 +173,13 @@ fun DetailsCardParents_Preview_Journal_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
             onUnlinkFromParent = { },
+            onShowLinkExistingDialog = {}
         )
     }
 }
@@ -198,13 +197,13 @@ fun DetailsCardParents_Preview_tasksview() {
                 }
             ),
             isEditMode = remember { mutableStateOf(false) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            onUnlinkFromParent = { }
+            onUnlinkFromParent = { },
+            onShowLinkExistingDialog = {}
         )
     }
 }
@@ -222,13 +221,13 @@ fun DetailsCardParents_Preview_tasksedit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             sliderIncrement = 10,
             showSlider = true,
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
-            onUnlinkFromParent = { }
+            onUnlinkFromParent = { },
+            onShowLinkExistingDialog = {}
         )
     }
 }

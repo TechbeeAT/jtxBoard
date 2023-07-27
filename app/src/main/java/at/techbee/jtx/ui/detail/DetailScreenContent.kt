@@ -55,7 +55,6 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
-import at.techbee.jtx.ui.reusable.dialogs.LinkExistingMode
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import at.techbee.jtx.ui.reusable.elements.ListBadge
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
@@ -82,7 +81,6 @@ fun DetailScreenContent(
     attachments: SnapshotStateList<Attachment>,
     alarms: SnapshotStateList<Alarm>,
     isEditMode: MutableState<Boolean>,
-    showLinkExistingDialog: MutableState<LinkExistingMode?>,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     subtasks: State<List<ICal4List>>,
     subnotes: State<List<ICal4List>>,
@@ -117,7 +115,8 @@ fun DetailScreenContent(
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>, popBackStack: Boolean) -> Unit,
     goBack: () -> Unit,
     goToFilteredList:  (StoredListSettingData) -> Unit,
-    unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit
+    unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit,
+    onShowLinkExistingDialog: (modules: List<Module>, reltype: Reltype) -> Unit,
 ) {
     if(iCalObject == null)
         return
@@ -596,7 +595,6 @@ fun DetailScreenContent(
         AnimatedVisibility(parents.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] ?: true || showAllOptions))) {
             DetailsCardParents(
                 parents = parents.value,
-                showLinkExistingDialog = showLinkExistingDialog,
                 isEditMode = isEditMode,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgressForSubTasks,
@@ -605,7 +603,8 @@ fun DetailScreenContent(
                     onProgressChanged(itemId, newPercent)
                 },
                 goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
-                onUnlinkFromParent = { parentUID -> onUnlinkSubEntry(iCalObject.id, parentUID) }
+                onUnlinkFromParent = { parentUID -> onUnlinkSubEntry(iCalObject.id, parentUID) },
+                onShowLinkExistingDialog = { onShowLinkExistingDialog(listOf(Module.JOURNAL, Module.NOTE, Module.TODO), Reltype.PARENT) }
                 )
         }
 
@@ -613,7 +612,6 @@ fun DetailScreenContent(
             DetailsCardSubtasks(
                 subtasks = subtasks.value,
                 isEditMode = isEditMode,
-                showLinkExistingDialog = showLinkExistingDialog,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgressForSubTasks,
                 onProgressChanged = { itemId, newPercent ->
@@ -628,7 +626,8 @@ fun DetailScreenContent(
                 },
                 onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
                 onUnlinkSubEntry = { id -> onUnlinkSubEntry(id, iCalObject.uid) },
-                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) }
+                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
+                onShowLinkExistingDialog = { onShowLinkExistingDialog(listOf(Module.TODO), Reltype.CHILD) }
             )
         }
 
@@ -636,7 +635,6 @@ fun DetailScreenContent(
             DetailsCardSubnotes(
                 subnotes = subnotes.value,
                 isEditMode = isEditMode,
-                showLinkExistingDialog = showLinkExistingDialog,
                 onSubnoteAdded = { subnote, attachment ->
                     onSubEntryAdded(
                         subnote,
@@ -652,7 +650,8 @@ fun DetailScreenContent(
                 onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
                 onUnlinkSubEntry = { id -> onUnlinkSubEntry(id, iCalObject.uid) },
                 player = player,
-                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) }
+                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
+                onShowLinkExistingDialog = { onShowLinkExistingDialog(listOf(Module.JOURNAL, Module.NOTE), Reltype.CHILD) }
             )
         }
 
@@ -873,7 +872,6 @@ fun DetailScreenContent_JOURNAL() {
             attachments = remember { mutableStateListOf() },
             alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(false) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
@@ -907,7 +905,8 @@ fun DetailScreenContent_JOURNAL() {
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
-            goToFilteredList = { }
+            goToFilteredList = { }, 
+            onShowLinkExistingDialog = { _, _ -> }
         )
     }
 }
@@ -935,7 +934,6 @@ fun DetailScreenContent_TODO_editInitially() {
             attachments = remember { mutableStateListOf() },
             alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(true) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
@@ -969,7 +967,8 @@ fun DetailScreenContent_TODO_editInitially() {
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
-            goToFilteredList = { }
+            goToFilteredList = { },
+            onShowLinkExistingDialog = { _, _ -> }
         )
     }
 }
@@ -997,7 +996,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             attachments = remember { mutableStateListOf() },
             alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(true) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
@@ -1031,7 +1029,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
-            goToFilteredList = { }
+            goToFilteredList = { },
+            onShowLinkExistingDialog = { _, _ -> }
         )
     }
 }
@@ -1053,7 +1052,6 @@ fun DetailScreenContent_failedLoading() {
             attachments = remember { mutableStateListOf() },
             alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(true) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             parents = remember { mutableStateOf(emptyList()) },
             subtasks = remember { mutableStateOf(emptyList()) },
@@ -1087,7 +1085,8 @@ fun DetailScreenContent_failedLoading() {
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
-            goToFilteredList = { }
+            goToFilteredList = { },
+            onShowLinkExistingDialog = { _, _ -> }
         )
     }
 }

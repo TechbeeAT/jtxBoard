@@ -41,7 +41,6 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
-import at.techbee.jtx.ui.reusable.dialogs.LinkExistingMode
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
@@ -52,13 +51,13 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
-    showLinkExistingDialog: MutableState<LinkExistingMode?>,
     onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
     player: MediaPlayer?,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    onShowLinkExistingDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -92,7 +91,7 @@ fun DetailsCardSubnotes(
                 HeadlineWithIcon(icon = Icons.Outlined.Note, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
                 
                 AnimatedVisibility(isEditMode.value) {
-                        IconButton(onClick = { showLinkExistingDialog.value = LinkExistingMode.CHILD }) {
+                        IconButton(onClick = { onShowLinkExistingDialog() }) {
                             Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_subentry_dialog_title))
                         }
                 }
@@ -203,13 +202,13 @@ fun DetailsCardSubnotes_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
             player = null,
             goToDetail = { _, _, _ -> },
+            onShowLinkExistingDialog = {}
         )
     }
 }
@@ -228,13 +227,13 @@ fun DetailsCardSubnotes_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
-            showLinkExistingDialog = remember { mutableStateOf(null) },
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
             player = null,
             goToDetail = { _, _, _ -> },
+            onShowLinkExistingDialog = {}
         )
     }
 }
