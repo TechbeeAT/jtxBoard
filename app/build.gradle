@@ -23,14 +23,14 @@ if(localPropertiesFile.exists()) {
 
 android {
     namespace "at.techbee.jtx"
-    compileSdkVersion 34
+    compileSdk 34
     defaultConfig {
         applicationId "at.techbee.jtx"
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 205010009
-        versionName "2.05.01-rc7"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 205010011
+        versionName "2.05.01-rc9"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -184,7 +184,7 @@ def getLocales() {
  * @since 20221016
  * @return A list with the language codes of the locales available.
  */
-task updateLocalesConfig() {
+tasks.register('updateLocalesConfig') {
     println 'Building locale config...'
     ext.outputDir = new File(projectDir, 'build/generated/res/locale/xml')
 
@@ -200,7 +200,7 @@ task updateLocalesConfig() {
             destXmlMkp.yield "\r\n"
 
             def locales = getLocales()
-            destXml."locale-config"(['xmlns:android':"http://schemas.android.com/apk/res/android"]) {
+            destXml."locale-config"(['xmlns:android': "http://schemas.android.com/apk/res/android"]) {
                 locales.forEach { locale ->
                     destXml."locale"("android:name": locale)
                 }
@@ -214,7 +214,7 @@ gradle.projectsEvaluated {
 }
 
 configurations {
-    all {
+    configureEach {
         // exclude modules which are in conflict with system libraries
         exclude module: "commons-logging"
         exclude group: "org.json", module: "json"
@@ -260,7 +260,7 @@ dependencies {
 
     // Amazon billing & maps support
     amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.4'
-    amazonImplementation "com.google.maps.android:maps-compose:2.11.5"
+    amazonImplementation "com.google.maps.android:maps-compose:2.12.0"
     amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
 
@@ -268,7 +268,7 @@ dependencies {
     //huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
 
     // Google Maps
-    gplayImplementation "com.google.maps.android:maps-compose:2.11.5"
+    gplayImplementation "com.google.maps.android:maps-compose:2.12.0"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
     gplayImplementation "com.google.android.gms:play-services-location:21.0.1"
 
