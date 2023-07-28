@@ -173,7 +173,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"A jtx Board egy nyílt forráskódú alkalmazás, amely nagyra értékeli a nyílt forráskódú közösség részvételét és hozzájárulását. Ezen az oldalon a közösség tagjainak a fordításokért tett erőfeszítéseit szeretnénk megköszönni."</string>
     <string name="about_translations_contribution_info">"Ha szeretne fordításokat szerkeszteni/hozzáadni vagy új nyelveket hozzáadni ehhez az alkalmazáshoz, csatlakozzon a jtx Board projekthez a Crowdin fordítási platformon:"</string>
     <string name="about_translations_contribution_button">"Csatlakozz a Crowdin.com projekthez"</string>
-    <string name="about_translations_poeditor">"POeditor.com közreműködők (korábbi platform)"</string>
     <string name="list_welcome_entry_journal_summary">"Gratulálok, ez az első naplóbejegyzése :-)"</string>
     <string name="list_welcome_entry_journal_description">"A naplók adott időponthoz kötődő jegyzetek tárolására szolgálnak. Használja ezt a funkciót például feljegyzések, emlékeztetők, naplóbejegyzések készítéséhez. Ha szerkeszti ezt a bejegyzést, látni fogja, hogy van lehetőség hozzáadni kategóriákat, résztvevőket, mellékletek, … Ezt a bejegyzést bátran törölheti, ha már nincs rá szükséges!"</string>
     <string name="list_welcome_entry_note_summary">"Gratulálok, ez az első jegyzete :-)"</string>
