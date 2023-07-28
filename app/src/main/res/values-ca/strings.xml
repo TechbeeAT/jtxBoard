@@ -173,7 +173,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board és una aplicació de codi obert que aprecia la participació i contribució de la comunitat. En aquesta pàgina ens agradaria donar tribut als esforços de la comunitat per a les traduccions."</string>
     <string name="about_translations_contribution_info">"Si t'agradaria afegir o editar traduccions d'aquesta aplicació, et pots unir al projecte de jtx Board a Crowdin:"</string>
     <string name="about_translations_contribution_button">"Uneix-te a Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Traductors a POeditor.com (herència)"</string>
     <string name="list_welcome_entry_journal_summary">"Felicitats, aquesta és la teua primera entrada de diari :-)"</string>
     <string name="list_welcome_entry_journal_description">"Els diaris es poden fer servir per a mantenir les teues notes d'una data específica. Fes servir aquesta funció per a protocols, temps de reunió o entrades de diari, per exemple. Si edites aquesta entrada, veuràs diferents opcions per a afegir categories, assistents, adjunts, … Pots eliminar aquesta entrada quan vulgues!"</string>
     <string name="list_welcome_entry_note_summary">"Felicitats, aquesta és la teua primera nota :-)"</string>
