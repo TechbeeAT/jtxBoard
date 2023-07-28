@@ -45,6 +45,7 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 
@@ -201,16 +202,13 @@ class ListWidget : GlanceAppWidget() {
                         }
                         context.startActivity(addNewIntent)
                     },
-                    onOpenModule = {
-                        val openModuleIntent = Intent(context, MainActivity2::class.java).apply {
+                    onOpenFilteredList = {
+                        val openFilteredListIntent = Intent(context, MainActivity2::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            action = when (listWidgetConfig.module) {
-                                Module.JOURNAL -> MainActivity2.INTENT_ACTION_OPEN_JOURNALS
-                                Module.NOTE -> MainActivity2.INTENT_ACTION_OPEN_NOTES
-                                Module.TODO -> MainActivity2.INTENT_ACTION_OPEN_TODOS
-                            }
+                            action = MainActivity2.INTENT_ACTION_OPEN_FILTERED_LIST
+                            putExtra(MainActivity2.INTENT_EXTRA_LISTWIDGETCONFIG, Json.encodeToString(listWidgetConfig))
                         }
-                        context.startActivity(openModuleIntent)
+                        context.startActivity(openFilteredListIntent)
                     },
                     modifier = GlanceModifier
                         .appWidgetBackground()

@@ -70,6 +70,7 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidget
+import at.techbee.jtx.widgets.ListWidgetConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -101,12 +102,11 @@ class MainActivity2 : AppCompatActivity() {
         const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
         const val INTENT_ACTION_ADD_NOTE = "addNote"
         const val INTENT_ACTION_ADD_TODO = "addTodo"
-        const val INTENT_ACTION_OPEN_JOURNALS = "openJournal"
-        const val INTENT_ACTION_OPEN_NOTES = "openNote"
-        const val INTENT_ACTION_OPEN_TODOS = "openTodo"
+        const val INTENT_ACTION_OPEN_FILTERED_LIST = "openFilteredList"
         const val INTENT_ACTION_OPEN_ICALOBJECT = "openICalObject"
         const val INTENT_EXTRA_ITEM2SHOW = "item2show"
         const val INTENT_EXTRA_COLLECTION2PRESELECT = "collection2preselect"
+        const val INTENT_EXTRA_LISTWIDGETCONFIG = "listWidgetConfig"
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -223,14 +223,8 @@ class MainActivity2 : AppCompatActivity() {
                     globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                 }
-                INTENT_ACTION_OPEN_JOURNALS -> {
-                    globalStateHolder.icalFromIntentModule.value = Module.JOURNAL
-                }
-                INTENT_ACTION_OPEN_NOTES -> {
-                    globalStateHolder.icalFromIntentModule.value = Module.NOTE
-                }
-                INTENT_ACTION_OPEN_TODOS -> {
-                    globalStateHolder.icalFromIntentModule.value = Module.TODO
+                INTENT_ACTION_OPEN_FILTERED_LIST -> {
+                    globalStateHolder.filteredList2Load.value = intent.getStringExtra(INTENT_EXTRA_LISTWIDGETCONFIG)?.let { Json.decodeFromString<ListWidgetConfig>(it) }
                 }
                 INTENT_ACTION_OPEN_ICALOBJECT -> {
                     val id = intent.getLongExtra(INTENT_EXTRA_ITEM2SHOW, 0L)
@@ -347,7 +341,6 @@ fun MainNavHost(
                 initialModule = module,
                 storedListSettingData = storedListSettingData
             )
-
         }
         composable(
             DetailDestination.Detail.route,
@@ -458,6 +451,12 @@ fun MainNavHost(
 
     globalStateHolder.icalObject2Open.value?.let { id ->
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false, returnToLauncher = true))
+    }
+
+    globalStateHolder.filteredList2Load.value?.let { listWidgetConfig ->
+        val listSettings = ListSettings.fromListWidgetConfig(listWidgetConfig)
+        val storedListSettingData = StoredListSettingData.fromListSettings(listSettings)
+        navController.navigate(FilteredListDestination.FilteredList.getRoute(listWidgetConfig.module, storedListSettingData))
     }
 
     if (!settingsStateHolder.proInfoShown.value && !isProPurchased.value) {

@@ -13,6 +13,7 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.util.SyncUtil
+import at.techbee.jtx.widgets.ListWidgetConfig
 
 private const val TAG = "GlobalStateHolder"
 class GlobalStateHolder(context: Context) {
@@ -21,6 +22,7 @@ class GlobalStateHolder(context: Context) {
     var icalString2Import: MutableState<String?> = mutableStateOf(null)
 
     var icalObject2Open: MutableState<Long?> = mutableStateOf(null)
+    var filteredList2Load: MutableState<ListWidgetConfig?> = mutableStateOf(null)
 
     var icalFromIntentString: MutableState<String?> = mutableStateOf(null)
     var icalFromIntentAttachment: MutableState<Attachment?> = mutableStateOf(null)

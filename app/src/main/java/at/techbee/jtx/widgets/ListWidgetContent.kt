@@ -56,7 +56,7 @@ fun ListWidgetContent(
     onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
     onOpenWidgetConfig: () -> Unit,
     onAddNew: () -> Unit,
-    onOpenModule: () -> Unit,
+    onOpenFilteredList: () -> Unit,
     modifier: GlanceModifier = GlanceModifier
 ) {
 
@@ -121,7 +121,7 @@ fun ListWidgetContent(
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
-                .clickable { onOpenModule() },
+                .clickable { onOpenFilteredList() },
             verticalAlignment = Alignment.CenterVertically,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
