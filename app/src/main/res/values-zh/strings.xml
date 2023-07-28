@@ -106,6 +106,7 @@ Global Strings -->
     <string name="edit_dialog_sure_to_delete_title">"删除“%1$s”？"</string>
     <string name="edit_dialog_sure_to_discard_title">"舍弃此条目？"</string>
     <string name="dialog_delete_done_title">"删除所有已完成的任务？"</string>
+    <string name="dialog_delete_done_message">"注意：如果父任务被标记为已完成，则其子任务不论状态如何都将被删除。此操作不能撤销！"</string>
     <string name="edit_dialog_sure_to_delete_message">"确定要删除“%1$s”？"</string>
     <string name="edit_dialog_sure_to_discard_message">"确定要舍弃此条目？此操作无法撤销。"</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"截止日期不能早于开始日期。"</string>
@@ -129,9 +130,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"复制为任务"</string>
     <string name="menu_view_copy_as_note">"复制为笔记"</string>
     <string name="menu_view_copy_item">"创建复本"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"任务截止提醒"</string>
-    <string name="notification_channel_reminder_description">"提醒任务到期"</string>
+    <string name="notification_channel_alarms_name">"闹钟"</string>
+    <string name="notification_channel_geofences_name">"地理围栏"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"添加日记"</string>
     <string name="shortcut_addNote_longLabel">"添加笔记"</string>
@@ -153,6 +153,7 @@ Global Strings -->
     <string name="sync_button_add_account_in_sync_app">"在 %1$s 中添加账号"</string>
     <string name="sync_toast_intent_open_sync_app_failed">"打开 %1$s 失败，请手动打开应用软件。"</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"嘿，我是Patrick，jtx Board的开发者。 我正在投入大量的时间和精力开发这个免费的应用。 如果你喜欢它，请给我一些支持或者一小笔捐赠！"</string>
     <string name="donate_thank_you">"感谢您！"</string>
     <string name="donate_donate_with">"使用PayPal捐赠"</string>
     <string name="donate_other_donation_methods">"如您想使用其它捐赠方式，请访问我们的网站："</string>
@@ -186,7 +187,9 @@ Global Strings -->
     <string name="edit">"编辑"</string>
     <string name="reset">"重置"</string>
     <string name="apply">"应用"</string>
+    <string name="not_available_abbreviation">"不适用"</string>
     <string name="collection">"合集"</string>
+    <string name="collection_owner_displayname">"所有者： %1$s"</string>
     <string name="link_to_parent">"关联到父级"</string>
     <string name="navigation_drawer_collections">"合集"</string>
     <string name="navigation_drawer_presets">"预设"</string>
@@ -317,6 +320,8 @@ Global Strings -->
     <string name="settings_protect_biometric_info_on_settings_unlock">"请进行身份验证以更改此设置！"</string>
     <string name="settings_protect_biometric_info_on_unlock">"请进行身份验证以显示受保护的条目！"</string>
     <string name="donate_dialog_title">"喜欢 jtx Board 吗？"</string>
+    <string name="donate_dialog_message">"应用程序开发是一项复杂的工作，开发、维护和提供支持是一项艰巨的工作。如您喜欢此应用程序，并且希望其持续发展，请考虑捐赠 :-)
+非常感谢。"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"应用程序的开发是一个复杂的主题，开发、维护和提供支持是一项艰巨的工作。如您想使用高级功能，或想支持我们的项目，请考虑以下应用内购买："</string>
     <string name="buypro_purchase_header">"升级到jtx Board Pro版"</string>
@@ -342,11 +347,14 @@ Global Strings -->
     <string name="permission_coarse_location_granted">"已授予大致位置权限"</string>
     <string name="permission_coarse_location_denied">"大致位置权限被拒绝"</string>
     <string name="sorry">"抱歉"</string>
+    <string name="back">"返回"</string>
+    <string name="details">"详细信息"</string>
     <string name="date">"日期"</string>
     <string name="timezone">"时区"</string>
     <string name="not_set2">"未设置"</string>
     <string name="invert_selection">"反选"</string>
     <string name="clear_selection">"清除选择"</string>
+    <string name="preferences">"偏好"</string>
     <string name="audio_play">"播放"</string>
     <string name="audio_record">"录音"</string>
     <string name="audio_stop">"停止"</string>
@@ -503,12 +511,8 @@ Global Strings -->
     <string name="active_filters">活动过滤器：</string>
     <string name="kanban_columns_based_on_first_category">基于第一个类别</string>
     <string name="clear_filters">"清除过滤规则"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="geofence_radius_meter">"半径 %1$d 米"</string>
+    <string name="geofence_radius_feet">"半径 %1$d 英尺"</string>
+    <string name="geofence_selection">"地理围栏：%1$s"</string>
+    <string name="geofence_options">"地理围栏选项"</string>
 </resources>

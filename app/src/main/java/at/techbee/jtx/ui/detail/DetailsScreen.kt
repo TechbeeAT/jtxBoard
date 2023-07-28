@@ -98,9 +98,8 @@ fun DetailsScreen(
     }
 
     // load objects into states for editing
-    var statesLoaded by remember { mutableStateOf(false) }  //don't load them again once done
-    LaunchedEffect(detailViewModel.icalEntity.isInitialized) {
-        if(detailViewModel.icalEntity.isInitialized && !statesLoaded) {
+    LaunchedEffect(detailViewModel.changeState.value, icalEntity.value, icalEntity.value?.property) {
+        if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED) {
             detailViewModel.mutableICalObject = icalEntity.value?.property
             if(detailViewModel.mutableCategories.isEmpty()) detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
             if(detailViewModel.mutableResources.isEmpty()) detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
@@ -108,7 +107,6 @@ fun DetailsScreen(
             if(detailViewModel.mutableComments.isEmpty()) detailViewModel.mutableComments.addAll(icalEntity.value?.comments ?: emptyList())
             if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttachments.addAll(icalEntity.value?.attachments ?: emptyList())
             if(detailViewModel.mutableAlarms.isEmpty()) detailViewModel.mutableAlarms.addAll(icalEntity.value?.alarms ?: emptyList())
-            statesLoaded = true
         }
     }
 
@@ -470,7 +468,10 @@ fun DetailsScreen(
                 onLinkSubEntries = { newSubEntries -> detailViewModel.linkNewSubentries(newSubEntries) },
                 onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },
                 player = detailViewModel.mediaPlayer,
-                goToDetail = { itemId, editMode, list -> navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
+                goToDetail = { itemId, editMode, list, popBackStack ->
+                    if(popBackStack)
+                        navController.popBackStack()
+                    navController.navigate(DetailDestination.Detail.getRoute(itemId, list, editMode)) },
                 goBack = { navigateUp = true },
                 goToFilteredList = {
                     navController.navigate(

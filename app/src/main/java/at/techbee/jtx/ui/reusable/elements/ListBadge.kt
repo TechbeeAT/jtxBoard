@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
@@ -64,7 +65,7 @@ fun ListBadge(
                     modifier = Modifier.size(12.dp)
                 )
             }
-            text?.let { Text(it) }
+            text?.let { Text(text = it, maxLines = 1, overflow = TextOverflow.Ellipsis) }
         }
     }
 }

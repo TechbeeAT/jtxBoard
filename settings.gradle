@@ -1,4 +1,3 @@
 rootProject.name='jtx Board'
 include ':app'
-include ':ical4android'
 include ':benchmark'

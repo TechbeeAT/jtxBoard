@@ -162,24 +162,27 @@ const val COLUMN_ALARM_TRIGGER_RELATIVE_TO = "triggerRelativeTo"
 const val COLUMN_ALARM_TRIGGER_RELATIVE_DURATION = "triggerRelativeDuration"
 
 
-
 @Parcelize
-@Entity(tableName = TABLE_NAME_ALARM,
-    foreignKeys = [ForeignKey(entity = ICalObject::class,
+@Entity(
+    tableName = TABLE_NAME_ALARM,
+    foreignKeys = [ForeignKey(
+        entity = ICalObject::class,
         parentColumns = arrayOf(COLUMN_ID),
         childColumns = arrayOf(COLUMN_ALARM_ICALOBJECT_ID),
-        onDelete = ForeignKey.CASCADE)])
-data class Alarm (
+        onDelete = ForeignKey.CASCADE
+    )]
+)
+data class Alarm(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(index = true, name = COLUMN_ALARM_ID)
     var alarmId: Long = 0L,
 
-    @ColumnInfo(index = true, name = COLUMN_ALARM_ICALOBJECT_ID)var icalObjectId: Long = 0L,
+    @ColumnInfo(index = true, name = COLUMN_ALARM_ICALOBJECT_ID) var icalObjectId: Long = 0L,
     @ColumnInfo(name = COLUMN_ALARM_ACTION) var action: String? = null,
     @ColumnInfo(name = COLUMN_ALARM_DESCRIPTION) var description: String? = "",
     @ColumnInfo(name = COLUMN_ALARM_SUMMARY) var summary: String? = null,
-    @ColumnInfo(name = COLUMN_ALARM_ATTENDEE)var attendee: String? = null,
+    @ColumnInfo(name = COLUMN_ALARM_ATTENDEE) var attendee: String? = null,
     @ColumnInfo(name = COLUMN_ALARM_DURATION) var duration: String? = null,
     @ColumnInfo(name = COLUMN_ALARM_REPEAT) var repeat: String? = null,
     @ColumnInfo(name = COLUMN_ALARM_ATTACH) var attach: String? = null,
@@ -189,9 +192,7 @@ data class Alarm (
     @ColumnInfo(name = COLUMN_ALARM_TRIGGER_RELATIVE_TO) var triggerRelativeTo: String? = null,
     @ColumnInfo(name = COLUMN_ALARM_TRIGGER_RELATIVE_DURATION) var triggerRelativeDuration: String? = null
 
-): Parcelable
-
-{
+) : Parcelable {
     companion object Factory {
 
         /**
@@ -205,11 +206,11 @@ data class Alarm (
             if (values == null)
                 return null
 
-            if(values.getAsLong(COLUMN_ALARM_ICALOBJECT_ID) == null)
+            if (values.getAsLong(COLUMN_ALARM_ICALOBJECT_ID) == null)
                 return null
 
             // time or duration must be present, otherwise the entry is rejected.
-            if(values.getAsLong(COLUMN_ALARM_TRIGGER_TIME) == null && values.getAsString(COLUMN_ALARM_TRIGGER_RELATIVE_DURATION) == null)
+            if (values.getAsLong(COLUMN_ALARM_TRIGGER_TIME) == null && values.getAsString(COLUMN_ALARM_TRIGGER_RELATIVE_DURATION) == null)
                 return null
 
 
@@ -218,7 +219,7 @@ data class Alarm (
 
         /**
          * @return [Alarm] with action set to AlarmAction.DISPLAY
-          */
+         */
         fun createDisplayAlarm() = Alarm().apply {
             action = AlarmAction.DISPLAY.name
         }
@@ -250,6 +251,8 @@ data class Alarm (
             notificationSummary: String?,
             notificationDescription: String?,
             isReadOnly: Boolean,
+            notificationChannel: String,
+            isSticky: Boolean,
             context: Context
         ): Notification {
 
@@ -258,7 +261,8 @@ data class Alarm (
                 this.action = INTENT_ACTION_OPEN_ICALOBJECT
                 this.putExtra(INTENT_EXTRA_ITEM2SHOW, iCalObjectId)
             }
-            val contentIntent: PendingIntent = PendingIntent.getActivity(context, iCalObjectId.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            val contentIntent: PendingIntent =
+                PendingIntent.getActivity(context, iCalObjectId.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
             /* function to create intents for snooze and done */
             fun createActionIntent(action: String): PendingIntent {
@@ -267,25 +271,30 @@ data class Alarm (
                     putExtra(NotificationPublisher.ALARM_ID, alarmId)
                     putExtra(NotificationPublisher.ICALOBJECT_ID, iCalObjectId)
                 }
-                return PendingIntent.getBroadcast(context, alarmId.toInt(), actionIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                return PendingIntent.getBroadcast(
+                    context,
+                    alarmId.toInt(),
+                    actionIntent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
             }
 
             // this is the notification itself that will be put as an Extra into the notificationIntent
-            val notification = NotificationCompat.Builder(context, MainActivity2.CHANNEL_REMINDER_DUE).apply {
+            val notification = NotificationCompat.Builder(context, notificationChannel).apply {
                 setSmallIcon(R.drawable.ic_notification)
                 notificationSummary?.let { setContentTitle(it) }
                 notificationDescription?.let { setContentText(it) }
                 setContentIntent(contentIntent)
                 priority = NotificationCompat.PRIORITY_MAX
                 setCategory(NotificationCompat.CATEGORY_REMINDER)     //  CATEGORY_REMINDER might also be an alternative
-                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default)) {
+                if (isSticky) {
                     setAutoCancel(false)
                     setOngoing(true)
                 } else {
                     setAutoCancel(true)
                 }
                 //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
-                if(!isReadOnly && alarmId != 0L) {    // no alarm for readonly entries and implicit alarms that come only from the due date
+                if (!isReadOnly && alarmId != 0L) {    // no alarm for readonly entries and implicit alarms that come only from the due date
                     addAction(
                         R.drawable.ic_snooze,
                         context.getString(R.string.notification_add_1h),
@@ -321,7 +330,8 @@ data class Alarm (
         values.getAsLong(COLUMN_ALARM_TRIGGER_TIME)?.let { triggerTime -> this.triggerTime = triggerTime }
         values.getAsString(COLUMN_ALARM_TRIGGER_TIMEZONE)?.let { triggerTimezone -> this.triggerTimezone = triggerTimezone }
         values.getAsString(COLUMN_ALARM_TRIGGER_RELATIVE_TO)?.let { triggerRelativeTo -> this.triggerRelativeTo = triggerRelativeTo }
-        values.getAsString(COLUMN_ALARM_TRIGGER_RELATIVE_DURATION)?.let { triggerRelativeDuration -> this.triggerRelativeDuration = triggerRelativeDuration }
+        values.getAsString(COLUMN_ALARM_TRIGGER_RELATIVE_DURATION)
+            ?.let { triggerRelativeDuration -> this.triggerRelativeDuration = triggerRelativeDuration }
         return this
     }
 
@@ -348,14 +358,14 @@ data class Alarm (
         // The final structure should be "xx minutes/hours/days before/after-start/due
         // "%1$d %2$s %3$s", e.g. 7 days before start
         val param1Value = when {
-            dur.absoluteValue.inWholeMinutes%(24*60) == 0L -> dur.absoluteValue.inWholeDays      // if minutes modulo (24h * 60m) has no rest, we have full days and show days
-            dur.absoluteValue.inWholeMinutes%(60) == 0L -> dur.absoluteValue.inWholeHours      // if minutes modulo (60m) has no rest, we have full hours and show hours
+            dur.absoluteValue.inWholeMinutes % (24 * 60) == 0L -> dur.absoluteValue.inWholeDays      // if minutes modulo (24h * 60m) has no rest, we have full days and show days
+            dur.absoluteValue.inWholeMinutes % (60) == 0L -> dur.absoluteValue.inWholeHours      // if minutes modulo (60m) has no rest, we have full hours and show hours
             dur.absoluteValue.inWholeMinutes > 0L -> dur.absoluteValue.inWholeMinutes      // if minutes modulo (24h * 60m) has no rest, we have full days and show days
             else -> null
         }
         val param2Unit = when {
-            dur.absoluteValue.inWholeMinutes%(24*60) == 0L -> context.getString(R.string.alarms_days)
-            dur.absoluteValue.inWholeMinutes%(60) == 0L -> context.getString(R.string.alarms_hours)
+            dur.absoluteValue.inWholeMinutes % (24 * 60) == 0L -> context.getString(R.string.alarms_days)
+            dur.absoluteValue.inWholeMinutes % (60) == 0L -> context.getString(R.string.alarms_hours)
             dur.absoluteValue.inWholeMinutes > 0L -> context.getString(R.string.alarms_minutes)
             else -> null
         }
@@ -375,20 +385,39 @@ data class Alarm (
         }
     }
 
-    fun scheduleNotification(context: Context, requestCode: Int, isReadOnly: Boolean, notificationSummary: String?, notificationDescription: String?) {
+    fun scheduleNotification(
+        context: Context,
+        requestCode: Int,
+        isReadOnly: Boolean,
+        notificationSummary: String?,
+        notificationDescription: String?
+    ) {
 
-        if((this.triggerTime?:0) < System.currentTimeMillis())
+        if ((this.triggerTime ?: 0) < System.currentTimeMillis())
             return
 
-        if(isReadOnly && SettingsStateHolder(context).settingDisableAlarmsReadonly.value)   // don't schedule alarm for read only if option was deactivated!
+        if (isReadOnly && SettingsStateHolder(context).settingDisableAlarmsReadonly.value)   // don't schedule alarm for read only if option was deactivated!
             return
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            Log.i("scheduleNotification", "Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)")
+            Log.i(
+                "scheduleNotification",
+                "Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)"
+            )
             return
         }
 
-        val notification = createNotification(icalObjectId, alarmId, notificationSummary, notificationDescription, isReadOnly, context)
+        val notification = createNotification(
+            icalObjectId,
+            alarmId,
+            notificationSummary,
+            notificationDescription,
+            isReadOnly,
+            MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default),
+            context
+        )
 
         val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
             putExtra(NotificationPublisher.NOTIFICATION, notification)
@@ -406,13 +435,16 @@ data class Alarm (
 
         // the alarmManager finally takes care, that the pendingIntent is queued to start the notification Intent that on click would start the contentIntent
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms()) || Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
+        else
+            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
     }
 
     /**
      * Updates the duration of this entry and automatically sets the (absolute) triggerTime and triggerTimezone
      */
-    fun updateDuration(dur: Duration, alarmRelativeTo: AlarmRelativeTo?, referenceDate: Long, referenceTimezone: String?)  {
+    fun updateDuration(dur: Duration, alarmRelativeTo: AlarmRelativeTo?, referenceDate: Long, referenceTimezone: String?) {
         triggerRelativeDuration = dur.toIsoString()
         alarmRelativeTo?.let { triggerRelativeTo = it.name }
         this.triggerTime = referenceDate + dur.inWholeMilliseconds
@@ -422,12 +454,12 @@ data class Alarm (
 
 /** This enum class defines the possible values for the attribute [Alarm.triggerRelativeTo] for the Component VALARM  */
 @Suppress("unused")
-enum class AlarmRelativeTo  {
+enum class AlarmRelativeTo {
     START, END
 }
 
 /** This enum class defines the possible values for the attribute [Alarm.action] for the Component VALARM  */
 @Suppress("unused")
-enum class AlarmAction  {
+enum class AlarmAction {
     AUDIO, DISPLAY, EMAIL
 }

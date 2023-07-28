@@ -39,6 +39,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import com.arnyminerz.markdowntext.MarkdownText
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -52,6 +53,7 @@ fun ListCardCompact(
     storedResources: List<StoredResource>,
     storedStatuses: List<ExtendedStatus>,
     progressUpdateDisabled: Boolean,
+    markdownEnabled: Boolean,
     selected: List<Long>,
     player: MediaPlayer?,
     modifier: Modifier = Modifier,
@@ -111,12 +113,20 @@ fun ListCardCompact(
                         modifier = Modifier.weight(1f)
                     )
                 } else if (!iCalObject.description.isNullOrEmpty()) {
-                    Text(
-                        text = iCalObject.description?.trim() ?: "",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
+                    if(markdownEnabled)
+                        MarkdownText(
+                            markdown = iCalObject.description?.trim() ?: "",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
+                        )
+                    else
+                        Text(
+                            text = iCalObject.description?.trim() ?: "",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
+                        )
                 }
 
                 if (iCalObject.module == Module.TODO.name) {
@@ -135,11 +145,18 @@ fun ListCardCompact(
 
             // put the description in the second row only if the first row was not already occupied by the description due to a missing summary
             if (!iCalObject.summary.isNullOrEmpty() && !iCalObject.description.isNullOrEmpty()) {
-                Text(
-                    text = iCalObject.description?.trim() ?: "",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                if(markdownEnabled)
+                    MarkdownText(
+                        markdown = iCalObject.description?.trim() ?: "",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                else
+                    Text(
+                        text = iCalObject.description?.trim() ?: "",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
             }
 
             Column(modifier = Modifier.padding(horizontal = 8.dp)) {
@@ -190,6 +207,7 @@ fun ListCardCompact_JOURNAL() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            markdownEnabled = false,
             selected = emptyList(),
             player = null,
             onProgressChanged = { _, _ -> },
@@ -219,6 +237,7 @@ fun ListCardCompact_JOURNAL2() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            markdownEnabled = false,
             selected = emptyList(),
             player = null,
             onProgressChanged = { _, _ -> },
@@ -249,6 +268,7 @@ fun ListCardCompact_NOTE() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            markdownEnabled = false,
             selected = emptyList(),
             player = null,
             onProgressChanged = { _, _ -> },
@@ -283,6 +303,7 @@ fun ListCardCompact_TODO() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            markdownEnabled = false,
             selected = emptyList(),
             player = null,
             onProgressChanged = { _, _ -> },
@@ -331,6 +352,7 @@ fun ListCardCompact_TODO_only_summary() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            markdownEnabled = false,
             selected = emptyList(),
             player = null,
             onProgressChanged = { _, _ -> },

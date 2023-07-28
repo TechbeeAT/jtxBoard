@@ -239,7 +239,7 @@ fun DetailsCardStatusClassificationPriority(
                                     DropdownMenuItem(
                                         text = { Text(prio) },
                                         onClick = {
-                                            icalObject.priority = index
+                                            icalObject.priority = if(index == 0) null else index
                                             priorityMenuExpanded = false
                                             onPriorityChanged(icalObject.priority)
                                         }

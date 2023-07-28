@@ -118,7 +118,7 @@ fun DetailScreenContent(
     onUnlinkSubEntry: (icalObjectId: Long) -> Unit,
     onLinkSubEntries: (List<ICal4List>) -> Unit,
     onAllEntriesSearchTextUpdated: (String) -> Unit,
-    goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>, popBackStack: Boolean) -> Unit,
     goBack: () -> Unit,
     goToFilteredList:  (StoredListSettingData) -> Unit,
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit
@@ -391,7 +391,8 @@ fun DetailScreenContent(
                         iCalObject.setUpdatedProgress(100, true)
                 }
                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-            }
+            },
+            toggleEditMode = { isEditMode.value = !isEditMode.value }
         )
 
         AnimatedVisibility(!isEditMode.value && (summary.isNotBlank() || description.text.isNotBlank())) {
@@ -608,7 +609,7 @@ fun DetailScreenContent(
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
                 },
-                goToDetail = goToDetail
+                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) }
             )
         }
 
@@ -637,7 +638,7 @@ fun DetailScreenContent(
                 onUnlinkSubEntry = onUnlinkSubEntry,
                 onLinkSubEntries = onLinkSubEntries,
                 onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
-                goToDetail = goToDetail
+                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) }
             )
         }
 
@@ -666,7 +667,7 @@ fun DetailScreenContent(
                 onLinkSubEntries = onLinkSubEntries,
                 onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
                 player = player,
-                goToDetail = goToDetail
+                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) }
             )
         }
 
@@ -780,7 +781,7 @@ fun DetailScreenContent(
                     }
                     changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
-                goToDetail = goToDetail,
+                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
                 unlinkFromSeries = unlinkFromSeries
             )
         }
@@ -830,7 +831,8 @@ fun DetailScreenContent(
                             goToDetail(
                                 icalObjectIdList[curIndex - 1],
                                 false,
-                                icalObjectIdList
+                                icalObjectIdList,
+                                true
                             )
                         }) {
                             Icon(Icons.Outlined.NavigateBefore, stringResource(id = R.string.previous))
@@ -844,7 +846,8 @@ fun DetailScreenContent(
                             goToDetail(
                                 icalObjectIdList[curIndex + 1],
                                 false,
-                                icalObjectIdList
+                                icalObjectIdList,
+                                true
                             )
                         }) {
                             Icon(Icons.Outlined.NavigateNext, stringResource(id = R.string.next))
@@ -915,7 +918,7 @@ fun DetailScreenContent_JOURNAL() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
-            goToDetail = { _, _, _ -> },
+            goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { },
@@ -979,7 +982,7 @@ fun DetailScreenContent_TODO_editInitially() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
-            goToDetail = { _, _, _ -> },
+            goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { },
@@ -1043,7 +1046,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
-            goToDetail = { _, _, _ -> },
+            goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { },
@@ -1101,7 +1104,7 @@ fun DetailScreenContent_failedLoading() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
-            goToDetail = { _, _, _ -> },
+            goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { },

@@ -47,13 +47,21 @@ fun HorizontalDateCard(
     pickerMinDate: ZonedDateTime? = null,
     pickerMaxDate: ZonedDateTime? = null,
     enabled: Boolean = true,
-    onDateTimeChanged: (Long?, String?) -> Unit
+    onDateTimeChanged: (Long?, String?) -> Unit,
+    toggleEditMode: () -> Unit
 ) {
 
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
 
     Card(
-        onClick = { if(isEditMode) { showDatePickerDialog = true  } },
+        onClick = {
+            if(isEditMode) {
+                showDatePickerDialog = true
+            } else {
+                toggleEditMode()
+                showDatePickerDialog = true
+            }
+        },
         shape = if(isEditMode) CardDefaults.outlinedShape else CardDefaults.elevatedShape,
         colors = if(isEditMode) CardDefaults.outlinedCardColors() else CardDefaults.elevatedCardColors(),
         elevation = if(isEditMode) CardDefaults.outlinedCardElevation() else CardDefaults.elevatedCardElevation(),
@@ -125,7 +133,8 @@ fun HorizontalDateCard_Preview_Allday() {
             allowNull = true,
             isEditMode = false,
             dateOnly = false,
-            onDateTimeChanged = { _, _ -> }
+            onDateTimeChanged = { _, _ -> },
+            toggleEditMode = { }
         )
     }
 }
@@ -140,7 +149,8 @@ fun HorizontalDateCard_Preview_Allday_edit() {
             allowNull = true,
             isEditMode = true,
             dateOnly = false,
-            onDateTimeChanged = { _, _ -> }
+            onDateTimeChanged = { _, _ -> },
+            toggleEditMode = { }
         )
     }
 }
@@ -156,8 +166,8 @@ fun HorizontalDateCard_Preview_WithTime() {
             allowNull = true,
             dateOnly = false,
             onDateTimeChanged = { _, _ -> },
-            labelTop = stringResource(id = R.string.completed)
-
+            labelTop = stringResource(id = R.string.completed),
+            toggleEditMode = { }
         )
     }
 }
@@ -172,7 +182,8 @@ fun HorizontalDateCard_Preview_WithTimezone() {
             isEditMode = false,
             allowNull = true,
             dateOnly = false,
-            onDateTimeChanged = { _, _ -> }
+            onDateTimeChanged = { _, _ -> },
+            toggleEditMode = { }
         )
     }
 }
@@ -187,7 +198,8 @@ fun HorizontalDateCard_Preview_WithTimezone2() {
             isEditMode = false,
             allowNull = true,
             dateOnly = false,
-            onDateTimeChanged = { _, _ -> }
+            onDateTimeChanged = { _, _ -> },
+            toggleEditMode = { }
         )
     }
 }
@@ -203,7 +215,8 @@ fun HorizontalDateCard_Preview_NotSet() {
             allowNull = true,
             dateOnly = false,
             onDateTimeChanged = { _, _ -> },
-            labelTop = stringResource(id = R.string.due)
+            labelTop = stringResource(id = R.string.due),
+            toggleEditMode = { }
         )
     }
 }
@@ -220,7 +233,8 @@ fun HorizontalDateCard_Preview_edit_NotSet() {
             allowNull = true,
             dateOnly = false,
             onDateTimeChanged = { _, _ -> },
-            labelTop = stringResource(id = R.string.due)
+            labelTop = stringResource(id = R.string.due),
+            toggleEditMode = { }
         )
     }
 }

@@ -22,6 +22,7 @@ Global Strings -->
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
     <string name="toolbar_text_add_task">"タスクを追加"</string>
+    <string name="toast_sync_requested">"同期が要求されました"</string>
     <string name="default_local_collection_name">"ローカル"</string>
     <string name="default_local_account_name">"ローカル"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -133,9 +134,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"ToDo としてコピー"</string>
     <string name="menu_view_copy_as_note">"メモとしてコピー"</string>
     <string name="menu_view_copy_item">"複製"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"ToDo の締め切りリマインダー"</string>
-    <string name="notification_channel_reminder_description">"ToDo の締め切りの通知"</string>
+    <string name="notification_channel_alarms_name">"アラーム"</string>
+    <string name="notification_channel_geofences_name">"ジオフェンス"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"ジャーナルを追加"</string>
     <string name="shortcut_addNote_longLabel">"メモを追加"</string>
@@ -439,6 +439,7 @@ Global Strings -->
     <string name="menu_list_viewmode_compact">"コンパクト表示"</string>
     <string name="menu_list_viewmode_kanban">"カンバン表示"</string>
     <string name="settings_tasks">"タスクの設定"</string>
+    <string name="settings_tasks_status_progress">"タスクの設定 (ステータス/進捗)"</string>
     <string name="settings_sync">"同期設定"</string>
     <string name="settings_default_start_date">"タスクのデフォルトの着手日"</string>
     <string name="settings_default_due_date">"タスクのデフォルトの締切日"</string>
@@ -589,12 +590,11 @@ Global Strings -->
     <string name="kanban_columns_based_on_extended_status">拡張ステータスを基準にする</string>
     <string name="kanban_columns_based_on_first_category">1 つ目のカテゴリーを基準にする</string>
     <string name="clear_filters">"フィルターをクリア"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="geofence_radius_meter">"半径 %1$d m"</string>
+    <string name="geofence_radius_feet">"半径 %1$d ft"</string>
+    <string name="geofence_selection">"ジオフェンス: %1$s"</string>
+    <string name="geofence_options">"ジオフェンスの設定"</string>
+    <string name="geofence_missing_permission_info">"jtx Board はバックグラウンドで位置情報にアクセスする権限と通知を送信する権限を必要とします。ジオフェンスに入ったときに通知を受けるには、位置情報の権限を「常に許可」に変更し、通知の権限を付与してください！"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board は指定された座標に近づいたときにお知らせできます。この機能を有効にするには、位置情報の権限を「常に許可」にし、通知の権限を許可してください。"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board はアラーム通知の遅延を避けるため、正確なアラームを設定する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
 </resources>

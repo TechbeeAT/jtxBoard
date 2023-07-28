@@ -13,7 +13,8 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.location.Criteria
+import android.icu.util.LocaleData
+import android.icu.util.ULocale
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
@@ -22,24 +23,36 @@ import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
+import androidx.room.ColumnInfo
 import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
+import at.techbee.jtx.database.COLUMN_GEO_LAT
+import at.techbee.jtx.database.COLUMN_GEO_LONG
+import at.techbee.jtx.database.COLUMN_LOCATION
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.flavored.MapComposable
 import at.techbee.jtx.ui.reusable.dialogs.LocationPickerDialog
@@ -48,6 +61,7 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import com.google.accompanist.permissions.*
 import java.net.URLEncoder
 import java.util.*
+import kotlin.math.roundToInt
 
 
 @SuppressLint("MissingPermission")
@@ -78,6 +92,8 @@ fun DetailsCardLocation(
     var geoLongText by remember { mutableStateOf(initialGeoLong?.toString() ?: "") }
     var geofenceRadius by remember { mutableStateOf(initialGeofenceRadius) }
 
+    val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao.getAllLocationsLatLng().observeAsState(emptyList())
+
     val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -86,11 +102,12 @@ fun DetailsCardLocation(
     ) else null
 
     val geofencePermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
-        permissions =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-            else
-                listOf(Manifest.permission.ACCESS_FINE_LOCATION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            listOf(Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            listOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+        else
+            listOf(Manifest.permission.ACCESS_FINE_LOCATION)
     ) else null
 
     var locationUpdateState by remember { mutableStateOf(
@@ -118,8 +135,8 @@ fun DetailsCardLocation(
                     location = newLocation ?: ""
                     geoLat = newLat
                     geoLong = newLong
-                    geoLatText = String.format("%.5f", geoLat)
-                    geoLongText = String.format("%.5f", geoLong)
+                    geoLatText = geoLat?.toString() ?:""
+                    geoLongText = geoLong?.toString() ?:""
                     onLocationUpdated(location, geoLat, geoLong)
                 },
                 onDismiss = {
@@ -129,7 +146,6 @@ fun DetailsCardLocation(
         }
     }
 
-    /*
     if(showRequestGeofencePermissionsDialog) {
         RequestPermissionDialog(
             text = stringResource(id = R.string.geofence_request_permission_dialog_message),
@@ -142,7 +158,6 @@ fun DetailsCardLocation(
             }
         )
     }
-     */
 
     LaunchedEffect(locationUpdateState, locationPermissionState?.permissions?.any { it.status.isGranted }) {
         when (locationUpdateState) {
@@ -150,7 +165,7 @@ fun DetailsCardLocation(
             LocationUpdateState.LOCATION_REQUESTED -> {
                 // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
                 val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                val bestProvider = locationManager.getBestProvider(Criteria(), false) ?: return@LaunchedEffect
+                val bestProvider = locationManager.getProviders(true).lastOrNull() ?: return@LaunchedEffect
                 val locListener = LocationListener { }
                 locationManager.requestLocationUpdates(bestProvider, 0, 0f, locListener)
                 locationManager.getLastKnownLocation(bestProvider)?.let { lastKnownLocation ->
@@ -177,8 +192,8 @@ fun DetailsCardLocation(
                 .padding(8.dp),
         ) {
 
-            Crossfade(isEditMode) {
-                if (!it) {
+            Crossfade(isEditMode) { editMode ->
+                if (!editMode) {
                     Column {
                         HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
                         Text(
@@ -187,36 +202,71 @@ fun DetailsCardLocation(
                         )
                     }
                 } else {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = location,
-                            leadingIcon = { Icon(Icons.Outlined.EditLocation, headline) },
-                            trailingIcon = {
-                                IconButton(onClick = {
-                                    location = ""
-                                    onLocationUpdated(location, geoLat, geoLong)
-                                }) {
-                                    if (location.isNotEmpty())
-                                        Icon(
-                                            Icons.Outlined.Clear,
-                                            stringResource(id = R.string.delete)
+                    Column {
+                        if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY && allLocations.isNotEmpty()) {
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+
+                                items(allLocations) { locationLatLng ->
+                                    AssistChip(
+                                        onClick = {
+                                            location = locationLatLng.location ?: ""
+                                            geoLat = locationLatLng.geoLat
+                                            geoLong = locationLatLng.geoLong
+                                            geoLatText = geoLat?.toString()?:""
+                                            geoLongText = geoLong?.toString()?:""
+                                        },
+                                        label = {
+                                            val displayString =
+                                                if (locationLatLng.geoLat != null && locationLatLng.geoLong != null)
+                                                    "${locationLatLng.location} (${String.format("%.5f", locationLatLng.geoLat)},${String.format("%.5f", locationLatLng.geoLong)})"
+                                                else
+                                                    "${locationLatLng.location}"
+                                            Text(displayString)
+                                        },
+                                        leadingIcon = {
+                                            Icon(Icons.Outlined.EditLocation, null)
+                                        },
+                                        modifier = Modifier.alpha(
+                                            if (locationLatLng.location == location && locationLatLng.geoLat == geoLat && locationLatLng.geoLong == geoLong) 1f else 0.4f
                                         )
+                                    )
                                 }
-                            },
-                            singleLine = true,
-                            label = { Text(headline) },
-                            onValueChange = { newLocation ->
-                                location = newLocation
-                                onLocationUpdated(newLocation, geoLat, geoLong)
-                            },
-                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
-                            modifier = Modifier.weight(1f)
-                        )
-                        IconButton(onClick = { showLocationPickerDialog = true }) {
-                            Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            OutlinedTextField(
+                                value = location,
+                                leadingIcon = { Icon(Icons.Outlined.EditLocation, headline) },
+                                trailingIcon = {
+                                    IconButton(onClick = {
+                                        location = ""
+                                        onLocationUpdated(location, geoLat, geoLong)
+                                    }) {
+                                        if (location.isNotEmpty())
+                                            Icon(
+                                                Icons.Outlined.Clear,
+                                                stringResource(id = R.string.delete)
+                                            )
+                                    }
+                                },
+                                singleLine = true,
+                                label = { Text(headline) },
+                                onValueChange = { newLocation ->
+                                    location = newLocation
+                                    onLocationUpdated(newLocation, geoLat, geoLong)
+                                },
+                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                                modifier = Modifier.weight(1f)
+                            )
+                            IconButton(onClick = { showLocationPickerDialog = true }) {
+                                Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
+                            }
                         }
                     }
                 }
@@ -248,6 +298,7 @@ fun DetailsCardLocation(
                             }
                         },
                         isError = (geoLatText.isNotEmpty() && geoLatText.toDoubleOrNull() == null)
+                                || (geoLongText.isNotEmpty() && geoLongText.toDoubleOrNull() == null)
                                 || (geoLatText.isEmpty() && geoLongText.isNotEmpty())
                                 || (geoLatText.isNotEmpty() && geoLongText.isEmpty()),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
@@ -315,7 +366,7 @@ fun DetailsCardLocation(
                     Text(ICalObject.getLatLongString(geoLat, geoLong) ?: "")
 
                     IconButton(onClick = {
-                        val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat)  + ","  + "%.5f".format(Locale.ENGLISH, geoLong)
+                        val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
                         val geoUri = if (location.isNotEmpty())
                             Uri.parse("geo:0,0?q=$latLngParam(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
                         else
@@ -333,101 +384,108 @@ fun DetailsCardLocation(
                 }
             }
 
-            /*
-            AnimatedVisibility(geoLat != null && geoLong != null) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY) {
+                AnimatedVisibility(geoLat != null && geoLong != null) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
 
-                    var geofenceOptionsExpanded by remember { mutableStateOf(false) }
-                    val useFeet = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && LocaleData.getMeasurementSystem(ULocale.getDefault()) != LocaleData.MeasurementSystem.SI
-                    fun Int.metersInFeet() = (((this * 3.281)/50).roundToInt()*50)
+                        var geofenceOptionsExpanded by remember { mutableStateOf(false) }
+                        val useFeet = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && LocaleData.getMeasurementSystem(ULocale.getDefault()) != LocaleData.MeasurementSystem.SI
+                        fun Int.metersInFeet() = (((this * 3.281) / 50).roundToInt() * 50)
 
-                    Icon(
-                        painter = painterResource(R.drawable.ic_geofence_radius),
-                        contentDescription = null,
-                        modifier = Modifier.padding(horizontal = if(isEditMode) 8.dp else 0.dp)
-                    )
-                    Text(
-                        stringResource(R.string.geofence_selection,
-                            when {
-                                geofenceRadius == null -> stringResource(R.string.off)
-                                useFeet -> stringResource(R.string.geofence_radius_feet, geofenceRadius!!.metersInFeet())
-                                else -> stringResource(R.string.geofence_radius_meter, geofenceRadius!!)
-                            }
+                        Icon(
+                            painter = painterResource(R.drawable.ic_geofence_radius),
+                            contentDescription = null,
+                            modifier = Modifier.padding(horizontal = if (isEditMode) 8.dp else 0.dp)
                         )
-                    )
+                        Text(
+                            stringResource(
+                                R.string.geofence_selection,
+                                when {
+                                    geofenceRadius == null -> stringResource(R.string.off)
+                                    useFeet -> stringResource(R.string.geofence_radius_feet, geofenceRadius!!.metersInFeet())
+                                    else -> stringResource(R.string.geofence_radius_meter, geofenceRadius!!)
+                                }
+                            )
+                        )
 
-                    AnimatedVisibility(isEditMode) {
-                        IconButton(
-                            onClick = { geofenceOptionsExpanded = true },
-                        ) {
-
-                            DropdownMenu(
-                                expanded = geofenceOptionsExpanded,
-                                onDismissRequest = { geofenceOptionsExpanded = false }
+                        AnimatedVisibility(isEditMode) {
+                            IconButton(
+                                onClick = { geofenceOptionsExpanded = true },
                             ) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.off)) },
-                                    onClick = {
-                                        geofenceRadius = null
-                                        onGeofenceRadiusUpdatd(null)
-                                        geofenceOptionsExpanded = false
-                                    }
-                                )
 
-                                listOf(50, 200, 500).forEach {
+                                DropdownMenu(
+                                    expanded = geofenceOptionsExpanded,
+                                    onDismissRequest = { geofenceOptionsExpanded = false }
+                                ) {
                                     DropdownMenuItem(
-                                        text = {
-                                            val metersInFeet = (((it * 3.281)/50).roundToInt()*50)
-                                            if (useFeet)
-                                                Text(text = stringResource(R.string.geofence_radius_feet, metersInFeet))
-                                            else
-                                                Text(text = stringResource(R.string.geofence_radius_meter, it))
-                                        },
+                                        text = { Text(stringResource(R.string.off)) },
                                         onClick = {
-                                            if (geofencePermissionState?.allPermissionsGranted != true)
-                                                showRequestGeofencePermissionsDialog = true
-                                            geofenceRadius = it
-                                            onGeofenceRadiusUpdatd(it)
+                                            geofenceRadius = null
+                                            onGeofenceRadiusUpdatd(null)
                                             geofenceOptionsExpanded = false
                                         }
                                     )
-                                }
-                            }
 
-                            Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.geofence_options))
+                                    listOf(50, 200, 500).forEach {
+                                        DropdownMenuItem(
+                                            text = {
+                                                val metersInFeet = (((it * 3.281) / 50).roundToInt() * 50)
+                                                if (useFeet)
+                                                    Text(text = stringResource(R.string.geofence_radius_feet, metersInFeet))
+                                                else
+                                                    Text(text = stringResource(R.string.geofence_radius_meter, it))
+                                            },
+                                            onClick = {
+                                                if (geofencePermissionState?.allPermissionsGranted != true)
+                                                    showRequestGeofencePermissionsDialog = true
+                                                geofenceRadius = it
+                                                onGeofenceRadiusUpdatd(it)
+                                                geofenceOptionsExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
+
+                                Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.geofence_options))
+                            }
+                        }
+                    }
+                }
+
+
+                AnimatedVisibility(geofenceRadius != null && (LocalInspectionMode.current || geofencePermissionState?.allPermissionsGranted != true)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.geofence_missing_permission_info),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.weight(1f)
+                        )
+                        TextButton(
+                            onClick = { startActivity(context, openPermissionsIntent, null) }
+                        ) {
+                            Text(stringResource(id = R.string.permissions))
                         }
                     }
                 }
             }
-
-
-            AnimatedVisibility(geofenceRadius != null && (geofencePermissionState?.allPermissionsGranted != true || LocalInspectionMode.current)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(R.string.geofence_missing_permission_info),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.weight(1f)
-                    )
-                    TextButton(
-                        onClick = { startActivity(context, openPermissionsIntent, null) }
-                    ) {
-                            Text(stringResource(id = R.string.permissions))
-                    }
-                }
-            }
-            */
         }
     }
 }
+
+data class LocationLatLng(
+    @ColumnInfo(name = COLUMN_LOCATION) val location: String?,
+    @ColumnInfo(name = COLUMN_GEO_LAT) val geoLat: Double?,
+    @ColumnInfo(name = COLUMN_GEO_LONG) val geoLong: Double?
+)
 
 enum class LocationUpdateState { IDLE, LOCATION_REQUESTED, PERMISSION_NEEDED }
 

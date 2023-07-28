@@ -134,9 +134,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Kopieer als Taak"</string>
     <string name="menu_view_copy_as_note">"Kopieer als Notitie"</string>
     <string name="menu_view_copy_item">"Kopie maken"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Taak verval-herinnering"</string>
-    <string name="notification_channel_reminder_description">"Melding voor vervallende taken"</string>
+    <string name="notification_channel_alarms_name">"Meldingen"</string>
+    <string name="notification_channel_geofences_name">"Geofences"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Logboek toevoegen"</string>
     <string name="shortcut_addNote_longLabel">"Notitie toevoegen"</string>
@@ -440,6 +439,7 @@ Dank u!"</string>
     <string name="menu_list_viewmode_compact">"Compacte weergave"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-weergave"</string>
     <string name="settings_tasks">"Taakinstellingen"</string>
+    <string name="settings_tasks_status_progress">"Taken Instellingen (status/voortgang)"</string>
     <string name="settings_sync">"Synchroniseerinstellingen"</string>
     <string name="settings_default_start_date">"Stel een standaard startdatum voor taken in"</string>
     <string name="settings_default_due_date">"Stel een standaard vervaldatum voor taken in"</string>
@@ -590,12 +590,12 @@ Dank u!"</string>
     <string name="kanban_columns_based_on_extended_status">gebaseerd op uitgebreide statussen</string>
     <string name="kanban_columns_based_on_first_category">gebaseerd op de eerste categorie</string>
     <string name="clear_filters">"Filters wissen"</string>
-    <!--
     <string name="geofence_radius_meter">"Radius %1$d m"</string>
     <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="geofence_selection">"Geomuur: %1$s"</string>
+    <string name="geofence_options">"Geofence opties"</string>
+    <string name="geofence_missing_permission_info">"jtx Board heeft de rechten nodig om toegang te krijgen tot je achtergrondlocatie en om je meldingen te sturen. Werk de locatie-machtiging bij naar 'Altijd toestaan' en geef de meldingsmachtiging om een melding te krijgen wanneer je de Geofence bereikt!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board kan je een melding geven wanneer je in de buurt bent van de opgegeven coördinaten. Stel de locatie-toestemming in op 'Altijd toestaan' en geef de meldingstoestemming om deze functie te gebruiken."</string>
+    <string name="geofence_notification_summary">"Geofence geactiveerd"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board heeft toestemming nodig om exacte meldingen te plannen, anders kunnen meldingen vertraagd worden. Geef deze toestemming om deze functie te kunnen gebruiken."</string>
 </resources>

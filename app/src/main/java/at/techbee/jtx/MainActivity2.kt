@@ -2,13 +2,10 @@ package at.techbee.jtx
 
 import android.accounts.Account
 import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.Window
 import android.widget.Toast
@@ -30,6 +27,8 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.NotificationChannelCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -90,7 +89,8 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var settingsStateHolder: SettingsStateHolder
 
     companion object {
-        const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
+        const val NOTIFICATION_CHANNEL_ALARMS = "REMINDER_DUE"   // different name for legacy handling!
+        const val NOTIFICATION_CHANNEL_GEOFENCES = "NOTIFICATION_CHANNEL_GEOFENCES"
 
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
@@ -126,7 +126,7 @@ class MainActivity2 : AppCompatActivity() {
         settingsStateHolder = SettingsStateHolder(this)
 
         TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
-        createNotificationChannel()   // Register Notification Channel for Reminders
+        createNotificationChannels()   // Register Notification Channel for Reminders
         BillingManager.getInstance().initialise(this)
         UpdateCheckManager(this).checkForUpdates()
 
@@ -156,6 +156,13 @@ class MainActivity2 : AppCompatActivity() {
                 }
             })
         /* END Initialise biometric prompt */
+
+        if(settingsStateHolder.settingSyncOnStart.value) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
+                SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+            }
+        }
 
         setContent {
             val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
@@ -190,13 +197,6 @@ class MainActivity2 : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         ListWidgetReceiver.setPeriodicWork(this)
-
-        if(settingsStateHolder.settingSyncOnStart.value) {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
-                SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
-            }
-        }
 
         //handle intents, but only if it wasn't already handled
         if (intent.hashCode() != lastProcessedIntentHash) {
@@ -285,21 +285,17 @@ class MainActivity2 : AppCompatActivity() {
         globalStateHolder.authenticationTimeout = System.currentTimeMillis() + (10).minutes.inWholeMilliseconds
     }
 
-    private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.notification_channel_reminder_name)
-            val descriptionText = getString(R.string.notification_channel_reminder_description)
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(CHANNEL_REMINDER_DUE, name, importance).apply {
-                description = descriptionText
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
+    private fun createNotificationChannels() {
+        val alarmChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_ALARMS, NotificationManagerCompat.IMPORTANCE_HIGH)
+            .setName(getString(R.string.notification_channel_alarms_name))
+            .build()
+        val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_HIGH)
+            .setName(getString(R.string.notification_channel_geofences_name))
+            .build()
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
+            NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel, geofenceChannel))
+        else
+            NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel))
     }
 }
 
@@ -364,6 +360,7 @@ fun MainNavHost(
 
             val detailViewModel: DetailViewModel = viewModel()
             detailViewModel.load(icalObjectId, globalStateHolder.isAuthenticated.value)
+            globalStateHolder.icalObject2Open.value = null  // reset (if it was set)
 
             DetailsScreen(
                 navController = navController,
@@ -454,7 +451,6 @@ fun MainNavHost(
     }
 
     globalStateHolder.icalObject2Open.value?.let { id ->
-        globalStateHolder.icalObject2Open.value = null
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false, returnToLauncher = true))
     }
 

@@ -134,9 +134,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Als Aufgabe kopieren"</string>
     <string name="menu_view_copy_as_note">"Als Notiz kopieren"</string>
     <string name="menu_view_copy_item">"Kopie anlegen"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Aufgaben Fälligkeits-Erinnerung"</string>
-    <string name="notification_channel_reminder_description">"Benachrichtigung für fällige Aufgaben"</string>
+    <string name="notification_channel_alarms_name">"Alarme"</string>
+    <string name="notification_channel_geofences_name">"Geofences"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Journal hinzufügen"</string>
     <string name="shortcut_addNote_longLabel">"Notiz hinzufügen"</string>
@@ -291,6 +290,7 @@ Global Strings -->
     <string name="view_share_part_of_series">"Dieser Eintrag ist Teil einer Serie."</string>
     <string name="view_share_repeats">"Dieser Eintrag wiederholt sich"</string>
     <string name="collections_dialog_move_title">"Einträge von \"%1$s\" verschieben nach"</string>
+    <string name="collection_dialog_move_info">"Achtung: Es können nur Collections ausgewählt werden, die gleiche Komponenten unterstützen (Journale, Notizen, Aufgaben)."</string>
     <string name="menu_collections_popup_move_entries">"Einträge verschieben"</string>
     <string name="list_no_dates_set">"Ohne Datumsangaben"</string>
     <string name="list_without_start_date">"Ohne Start"</string>
@@ -591,12 +591,12 @@ Danke!"</string>
     <string name="kanban_columns_based_on_extended_status">basierend auf erweitertem Status</string>
     <string name="kanban_columns_based_on_first_category">basierend auf der ersten Kategorie</string>
     <string name="clear_filters">"Filter zurücksetzen"</string>
-    <!--
     <string name="geofence_radius_meter">"Radius %1$d m"</string>
     <string name="geofence_radius_feet">"Radius %1$d ft"</string>
     <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="geofence_options">"Geofence-Optionen"</string>
+    <string name="geofence_missing_permission_info">"jtx Board benötigt die Berechtigung, um auf Ihren Standort im Hintergrund zuzugreifen und Ihnen Benachrichtigungen zu senden. Bitte aktualisieren Sie die Standortberechtigung auf \"Immer erlauben\" und erteilen Sie die Benachrichtigungs-Berechtigung, um benachrichtigt zu werden, wenn Sie einen Geofence erreichen!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board kann Sie benachrichtigen, wenn Sie in der Nähe der angegebenen Koordinaten sind. Bitte setzen Sie die Standortberechtigung auf \"Immer erlauben\" und gewähren Sie die Benachrichtigungs-Berechtigung um diese Funktion nutzen zu können."</string>
+    <string name="geofence_notification_summary">"Geofence aktiviert"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board benötigt die Berechtigung, genaue Erinnerungen zu planen, da sonst Alarme verzögert ausgegeben werden könnten. Bitte erteilen Sie diese Berechtigung, um diese Funktion zu nutzen."</string>
 </resources>

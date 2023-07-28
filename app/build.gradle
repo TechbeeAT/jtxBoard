@@ -23,15 +23,15 @@ if(localPropertiesFile.exists()) {
 
 android {
     namespace "at.techbee.jtx"
-    compileSdkVersion 33
+    compileSdk 34
     defaultConfig {
         applicationId "at.techbee.jtx"
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
-        targetSdkVersion 33
-        versionCode 204050007
-        versionName "2.04.05"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
-        buildConfigField "String", "versionCodename", "\"Love is the answer\""
+        targetSdkVersion 34
+        versionCode 205010012
+        versionName "2.05.01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -92,7 +92,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.4.7"
+        kotlinCompilerExtensionVersion "1.4.8"
     }
 
     packagingOptions {
@@ -129,7 +129,6 @@ android {
     compileOptions {
         // Flag to enable support for the new language APIs, this is especially necessary to use java.time for versions < O
         // https://developer.android.com/studio/write/java8-support#library-desugaring
-        // also good for ical4android
         coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -154,7 +153,7 @@ import groovy.xml.MarkupBuilder
  */
 def getLocales() {
     // Initialize the list English, since it's available by default
-    def list = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW"]
+    def list = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu"]
 
     /*
     // deactivated script for now in order to have better control over available locales in the app
@@ -185,7 +184,7 @@ def getLocales() {
  * @since 20221016
  * @return A list with the language codes of the locales available.
  */
-task updateLocalesConfig() {
+tasks.register('updateLocalesConfig') {
     println 'Building locale config...'
     ext.outputDir = new File(projectDir, 'build/generated/res/locale/xml')
 
@@ -201,7 +200,7 @@ task updateLocalesConfig() {
             destXmlMkp.yield "\r\n"
 
             def locales = getLocales()
-            destXml."locale-config"(['xmlns:android':"http://schemas.android.com/apk/res/android"]) {
+            destXml."locale-config"(['xmlns:android': "http://schemas.android.com/apk/res/android"]) {
                 locales.forEach { locale ->
                     destXml."locale"("android:name": locale)
                 }
@@ -214,10 +213,21 @@ gradle.projectsEvaluated {
     preBuild.dependsOn('updateLocalesConfig')
 }
 
+configurations {
+    configureEach {
+        // exclude modules which are in conflict with system libraries
+        exclude module: "commons-logging"
+        exclude group: "org.json", module: "json"
+
+        // Groovy requires SDK 26+, and it's not required, so exclude it
+        exclude group: 'org.codehaus.groovy'
+    }
+}
+
 
 dependencies {
 
-    implementation project(':ical4android')
+    implementation "com.github.bitfireAT:ical4android:a78e72f580"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -250,7 +260,7 @@ dependencies {
 
     // Amazon billing & maps support
     amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.4'
-    amazonImplementation "com.google.maps.android:maps-compose:2.11.4"
+    amazonImplementation "com.google.maps.android:maps-compose:2.12.0"
     amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
 
@@ -260,7 +270,7 @@ dependencies {
 
 
     // Google Maps
-    gplayImplementation "com.google.maps.android:maps-compose:2.11.4"
+    gplayImplementation "com.google.maps.android:maps-compose:2.12.0"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
     gplayImplementation "com.google.android.gms:play-services-location:21.0.1"
 
@@ -294,7 +304,7 @@ dependencies {
     testImplementation "androidx.test:core-ktx:1.5.0"
     // Required -- JUnit 4 framework
     testImplementation "androidx.test.ext:junit-ktx:1.1.5"
-    testImplementation "org.mockito:mockito-core:5.3.1"
+    //testImplementation "org.mockito:mockito-core:5.3.1"
 
     //About Libraries
     implementation "com.mikepenz:aboutlibraries-core:${version_about_libraries}"
@@ -309,14 +319,14 @@ dependencies {
     // jetpack compose
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation "androidx.compose.material3:material3:1.2.0-alpha02"
+    implementation "androidx.compose.material3:material3:1.2.0-alpha04"
     implementation "androidx.compose.material:material-icons-extended:1.4.3"
     implementation "androidx.compose.material:material:1.4.3"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    implementation "androidx.navigation:navigation-compose:2.7.0-beta01"
+    implementation "androidx.navigation:navigation-compose:2.7.0-rc01"
     implementation "com.arnyminerz.markdowntext:markdowntext:1.3.2"
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
@@ -332,4 +342,3 @@ dependencies {
 
     implementation "androidx.profileinstaller:profileinstaller:1.3.1"
 }
-
