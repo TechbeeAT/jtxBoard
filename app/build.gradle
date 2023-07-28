@@ -102,7 +102,7 @@ android {
         }
     }
 
-    flavorDimensions 'version'
+    flavorDimensions = ['version']
     productFlavors {
         gplay {
             dimension 'version'
