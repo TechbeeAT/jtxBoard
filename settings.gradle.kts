@@ -2,6 +2,9 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
         gradlePluginPortal()
 
         // ical4android
@@ -15,7 +18,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-
 
         // AboutLibraries
         maven { setUrl("https://plugins.gradle.org/m2/") }
@@ -38,7 +40,7 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.mikepenz.aboutlibraries.plugin") version "10.8.3"
+    //id("com.mikepenz.aboutlibraries.plugin") version "10.8.3"
 }
 
 

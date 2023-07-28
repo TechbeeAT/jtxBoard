@@ -6,37 +6,34 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
+
 plugins {
-    id("com.android.application") version "8.1.0" apply false
-//    id("com.mikepenz.aboutlibraries.plugin")
-    id("kotlin-android")
-    id("kotlin-parcelize")
-    id("kotlin-kapt")
-    id("kotlinx-serialization")
-//id("com.huawei.agconnect")
+
 }
 
-
-def localPropertiesFile = rootProject.file('local.properties')
-def localProperties = new Properties()
+/*
+val localPropertiesFile = rootProject.file("local.properties")
+val localProperties = Properties()
 if(localPropertiesFile.exists()) {
     localProperties.load(new FileInputStream(localPropertiesFile))
 }
 
+ */
+
 android {
-    namespace "at.techbee.jtx"
-    compileSdk 34
+    namespace = "at.techbee.jtx"
+    compileSdk = 34
     defaultConfig {
-        applicationId("at.techbee.jtx")
-        buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
-        minSdkVersion 21
-        targetSdkVersion 34
-        versionCode 205010011
-        versionName "2.05.01-rc9"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
-        buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""
-        multiDexEnabled true
+        applicationId = "at.techbee.jtx"
+        //buildConfigField = "long", "buildTime", System.currentTimeMillis() + "L"
+        minSdkVersion = 21
+        targetSdkVersion = 34
+        versionCode = 205010011
+        versionName = "2.05.01-rc9"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        //buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""
+        multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testOptions {
             unitTests.includeAndroidResources = true
             unitTests.returnDefaultValues = true
@@ -48,20 +45,20 @@ android {
             }
         }
 
-        def locales = getLocales()
-        buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
-        resConfigs locales
+        //def locales = getLocales()
+        //buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
+        //resConfigs locales
 
-        buildConfigField "String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: localProperties["crowdin.apikey"] ) + "\""
-        resValue "string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: localProperties["google.geo.apikey"] ?: ""
+        buildConfigField("String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: localProperties["crowdin.apikey"] ) + "\"")
+        resValue("string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: localProperties["google.geo.apikey"] ?: "")
     }
 
     signingConfigs {
         jtx {
-            storeFile file(System.getenv("ANDROID_KEYSTORE") ?: localProperties["keystore.file"] ?: file("/dev/null"))
-            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: localProperties["keystore.password"]
-            keyAlias System.getenv("ANDROID_KEY_ALIAS") ?: localProperties["keystore.key.alias"]
-            keyPassword System.getenv("ANDROID_KEY_PASSWORD") ?: localProperties["keystore.key.password"]
+            storeFile = file(System.getenv("ANDROID_KEYSTORE") ?: localProperties["keystore.file"] ?: file("/dev/null"))
+            storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: localProperties["keystore.password"]
+            keyAlias = System.getenv("ANDROID_KEY_ALIAS") ?: localProperties["keystore.key.alias"]
+            keyPassword = System.getenv("ANDROID_KEY_PASSWORD") ?: localProperties["keystore.key.password"]
         }
     }
 
@@ -69,15 +66,15 @@ android {
         release {
             minifyEnabled = true
             shrinkResources = false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles(getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro')
 
-            signingConfig signingConfigs.jtx
+            signingConfig = signingConfigs.jtx
         }
 
         benchmark {
-            signingConfig signingConfigs.debug
+            signingConfig = signingConfigs.debug
             matchingFallbacks = ['release']
-            debuggable false
+            debuggable = false
         }
 
         // uncomment to test minifyEnabled without signing the package
@@ -91,10 +88,10 @@ android {
     // Enables data binding.
     buildFeatures {
         buildConfig = true
-        compose true
+        compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.4.8"
+        kotlinCompilerExtensionVersion = "1.4.8"
     }
 
     packagingOptions {
@@ -104,27 +101,27 @@ android {
         }
     }
 
-    flavorDimensions 'version'
+    flavorDimensions = "version"
     productFlavors {
         gplay {
-            dimension 'version'
-            versionNameSuffix '.gplay'
+            dimension = "version"
+            versionNameSuffix = ".gplay"
         }
         amazon {
-            dimension 'version'
-            versionNameSuffix '.amazon'
+            dimension = "version"
+            versionNameSuffix = ".amazon"
         }
         ose {
-            dimension 'version'
-            versionNameSuffix '.ose'
+            dimension = "version"
+            versionNameSuffix = ".ose"
         }
         generic {
-            dimension 'version'
-            versionNameSuffix '.generic'
+            dimension = "version"
+            versionNameSuffix = ".generic"
         }
         huawei {
-            dimension 'version'
-            versionNameSuffix '.huawei'
+            dimension = "version"
+            versionNameSuffix = ".huawei"
         }
     }
 
@@ -132,11 +129,11 @@ android {
         // Flag to enable support for the new language APIs, this is especially necessary to use java.time for versions < O
         // https://developer.android.com/studio/write/java8-support#library-desugaring
         coreLibraryDesugaringEnabled = true
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     lint {
-        disable 'MissingTranslation', 'ExtraTranslation'
+        disable('MissingTranslation', 'ExtraTranslation')
     }
     sourceSets {
         main {
@@ -146,88 +143,34 @@ android {
 }
 
 
-import groovy.xml.MarkupBuilder
-
-/**
- * Obtains a list of all the available locales
- * @since 20220928
- * @return A list with the language codes of the locales available.
- */
-def getLocales() {
-    // Initialize the list English, since it's available by default
-    def list = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu"]
-
-    /*
-    // deactivated script for now in order to have better control over available locales in the app
-    // until a better solution is found together with Crowdin
-    // Get all directories inside resources
-    def dir = new File(projectDir, "src/main/res")
-    dir.traverse(type: DIRECTORIES, maxDepth: 0) { file ->
-        // Get only values directories
-        def fileName = file.name
-        if (!fileName.startsWith("values-")) return
-
-        // Take only the values directories that contain strings
-        def stringsFile = new File(file, "strings.xml")
-        if (!stringsFile.exists()) return
-
-        // Add to the list the locale of the strings file
-        list.add(fileName.substring(fileName.indexOf('-') + 1))
-    }
-     */
-    // Log the available locales
-    println "Supported locales: " + list.join(", ")
-    // Return the built list
-    return list
-}
-
-/**
- * Writes the available locales obtained from getLocales() in locale-config.xml
- * @since 20221016
- * @return A list with the language codes of the locales available.
- */
-tasks.register('updateLocalesConfig') {
-    println 'Building locale config...'
-    ext.outputDir = new File(projectDir, 'build/generated/res/locale/xml')
-
-    doFirst {
-        mkdir outputDir
-
-        new File(outputDir, "locales_config.xml").withWriter { writer ->
-            def destXml = new MarkupBuilder(new IndentPrinter(writer, "    ", true, true))
-            destXml.setDoubleQuotes(true)
-            def destXmlMkp = destXml.getMkp()
-            destXmlMkp.xmlDeclaration(version: "1.0", encoding: "utf-8")
-            destXmlMkp.comment("Generated at ${new Date()}")
-            destXmlMkp.yield "\r\n"
-
-            def locales = getLocales()
-            destXml."locale-config"(['xmlns:android': "http://schemas.android.com/apk/res/android"]) {
-                locales.forEach { locale ->
-                    destXml."locale"("android:name": locale)
-                }
-            }
-        }
-    }
-}
-
-gradle.projectsEvaluated {
-    preBuild.dependsOn("updateLocalesConfig")
-}
-
 configurations {
     configureEach {
         // exclude modules which are in conflict with system libraries
-        exclude module: "commons-logging"
-        exclude group: "org.json", module: "json"
+        exclude("commons-logging")
+        exclude("org.json","json")
 
         // Groovy requires SDK 26+, and it's not required, so exclude it
-        exclude group: 'org.codehaus.groovy'
+        exclude("org.codehaus.groovy")
     }
 }
 
 
 dependencies {
+    val version_core = "1.12.0-beta01"
+    val version_coroutine = "1.7.3"
+    val version_appcompat = "1.6.1"
+    val version_gradle = '8.1.0'
+    val version_kotlin = "1.8.22"
+    val version_room = "2.5.2"
+    val version_work = "2.8.1"
+    val version_billing = "6.0.1"
+    val version_review = "2.0.1"
+    val version_compose = "1.4.3"
+    val version_about_libraries = "10.8.3"
+    val version_huawei = "1.8.1.300"
+    val version_huawei_iap = "6.10.0.300"
+    val version_accompanist = "0.31.5-beta"
+    val version_osmdroid = "6.1.16"
 
     implementation("com.github.bitfireAT:ical4android:a78e72f580")
 

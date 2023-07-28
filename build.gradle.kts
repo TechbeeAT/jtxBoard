@@ -15,29 +15,21 @@
  */
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
-buildscript {
-
-    ext {
-        version_core = "1.12.0-beta01"
-        version_coroutine = "1.7.3"
-        version_appcompat = "1.6.1"
-        version_gradle = '8.1.0'
-        version_kotlin = "1.8.22"
-        version_room = "2.5.2"
-        version_work = "2.8.1"
-        version_billing = "6.0.1"
-        version_review = "2.0.1"
-        version_compose = "1.4.3"
-        version_about_libraries = "10.8.3"
-        version_huawei = "1.8.1.300"
-        version_huawei_iap = "6.10.0.300"
-        version_accompanist = "0.31.5-beta"
-        version_osmdroid = "6.1.16"
-    }
+plugins {
+    id("com.android.application") version "8.1.0" apply false
+    id("org.jetbrains.kotlin.android") version "1.8.10" apply false
+    id("com.mikepenz.aboutlibraries.plugin") version "10.8.3" apply false
+    //id("org.jetbrains.kotlin.plugin.parcelize") version "1.9.0"
+    //id("org.jetbrains.kotlin.kapt") version "1.9.0"
+    //id("org.jetbrains.kotlin.plugin.serialization") version "1.7.10" apply false
+//id("com.huawei.agconnect")
 }
 
 
+/*
 tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
+
+
+ */
