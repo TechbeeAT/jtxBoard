@@ -173,7 +173,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board — приложение с открытым исходным кодом, и мы высоко ценим участие и вклад нашего сообщества. На этой странице мы хотели бы отметить усилия всех переводчиков."</string>
     <string name="about_translations_contribution_info">"Если вы хотите отредактировать/добавить перевод или новые языки в это приложение, присоединяйтесь к jtx Board на платформе Crowdin:"</string>
     <string name="about_translations_contribution_button">"Перейти на Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Переводчики на POeditor.com (прошлая платформа)"</string>
     <string name="list_welcome_entry_journal_summary">"Поздравляем, это ваша первая запись в журнале :-)"</string>
     <string name="list_welcome_entry_journal_description">"Журналы можно использовать для хранения заметок на конкретную дату. Используйте эту функцию, например, для протоколов, протоколов собраний, записей в дневнике и т. д. Если вы отредактируете эту запись, вы увидите варианты добавления категорий, участников, вложений и т. д. Не стесняйтесь удалять эту запись, когда захотите!"</string>
     <string name="list_welcome_entry_note_summary">"Поздравляем, это ваша первая заметка :-)"</string>
