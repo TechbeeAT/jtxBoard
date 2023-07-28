@@ -173,7 +173,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board は、オープンソースコミュニティへの参加と貢献を評価するオープンソースアプリです。このページではコミュニティメンバーの翻訳への取り組みを紹介します。"</string>
     <string name="about_translations_contribution_info">"翻訳を編集/追加したい、またはこのアプリに新しい言語を追加したい場合は、翻訳プラットフォーム Crowdin で jtx Board プロジェクトに参加してください:"</string>
     <string name="about_translations_contribution_button">"Crowdin.com で参加"</string>
-    <string name="about_translations_poeditor">"POeditor.com (レガシー) の翻訳者"</string>
     <string name="list_welcome_entry_journal_summary">"おめでとうございます。最初のジャーナルです :-)"</string>
     <string name="list_welcome_entry_journal_description">"ジャーナルでは、特定の日付に対応したメモを保存できます。この機能の使い方は、議事録、ミーティングの時間、日記など自由です。このエントリーを編集すると、カテゴリーや参加者、添付ファイルなどを追加するオプションを確認できます。このエントリーが不要なら削除してください！"</string>
     <string name="list_welcome_entry_note_summary">"おめでとうございます。最初のメモです :-)"</string>
