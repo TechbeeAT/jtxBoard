@@ -165,7 +165,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board是一款开源应用程序，感谢开源社区的参与和贡献。在此，我们想展示社区成员在翻译方面所做的努力。"</string>
     <string name="about_translations_contribution_info">"想要为此应用程序编辑/添加翻译，随时可在 Crowdin 翻译平台上加入 jtx Board 项目："</string>
     <string name="about_translations_contribution_button">"在 Crowdin.com 上加入"</string>
-    <string name="about_translations_poeditor">"POeditor.com 上的翻译者（停更）"</string>
     <string name="list_welcome_entry_journal_summary">"恭喜，这是您的首篇日记:-)"</string>
     <string name="list_welcome_entry_journal_description">"日志可用于在特定日期撰写笔记。草案、会议记录和日记等需要使用此功能。编辑此条目，可添加类别、与会者、附件等等……此为示例条目，您可随时删除！"</string>
     <string name="list_welcome_entry_note_summary">"恭喜，这是您的首篇笔记:-)"</string>
