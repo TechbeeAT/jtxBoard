@@ -94,6 +94,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Foto maken"</string>
     <string name="edit_add_link_button_text">"Link van bijlage toevoegen"</string>
     <string name="edit_subtasks_add_helper">"Subtaak toevoegen"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Subtaak snel toevoegen"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Subnotitie snel toevoegen"</string>
     <string name="edit_attachment_add_link_dialog">"Link van bijlage toevoegen"</string>
     <string name="edit_recur_repeat_every_x">"Herhaal elke"</string>
     <string name="edit_recur_on_weekday">"op"</string>
@@ -198,6 +200,9 @@ Global Strings -->
     <string name="collection">"Verzameling"</string>
     <string name="collection_owner_displayname">"Eigenaar: %1$s"</string>
     <string name="link_to_parent">"Link naar bovenliggend element"</string>
+    <string name="link_selected_as_parent">"Bovenliggend"</string>
+    <string name="link_selected_as_subtask_note">"Subtaak/-notitie"</string>
+    <string name="link_selected_as">"Link geselecteerd als …"</string>
     <string name="navigation_drawer_collections">"Verzamelingen"</string>
     <string name="navigation_drawer_presets">"Voorkeursinstellingen"</string>
     <!-- alarms -->
@@ -379,6 +384,8 @@ Dank u!"</string>
     <string name="list_update_entries_dialog_title">"Items bijwerken"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Let op: Terugkerende instanties moeten ontkoppeld zijn van de serie voordat ze verplaatst worden naar een andere verzamelingen en zullen genegeerd worden in dit proces."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Kies het bovenliggend element waaraan de deze moeten worden gekoppeld als subtaak/gekoppelde notities."</string>
+    <string name="link_entry_search_within">"Zoeken binnen …"</string>
+    <string name="link_entry_search_within_same_collection">"Dezelfde collectie"</string>
     <string name="details_link_existing_subentry_dialog_title">"Link subitems"</string>
     <string name="details_link_existing_subentry_dialog_info">"Kies de sub-items die moeten worden gekoppeld."</string>
     <string name="details_app_bar_behaviour">"App-balk gedrag"</string>
