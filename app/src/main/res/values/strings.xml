@@ -185,7 +185,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board is an open source app that appreciates the participation and contribution of the open source community. On this page we would like to attribute the efforts of community members for translations."</string>
     <string name="about_translations_contribution_info">"If you would like to edit/add translations or add new languages to this app, feel free to join the jtx Board project on the translation platform Crowdin:"</string>
     <string name="about_translations_contribution_button">"Join on Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Translators on POeditor.com (legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Congratulations, this is your first journal entry :-)"</string>
     <string name="list_welcome_entry_journal_description">"Journals can be used to keep your notes for a specific date. Use this functionality for example for protocols, meeting minutes, diary entries and so on. If you edit this entry, you will see the options to add categories, attendees, attachments, … Feel free to delete this entry whenever you want!"</string>
     <string name="list_welcome_entry_note_summary">"Congratulations, this is your first note entry :-)"</string>
