@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AboutScreen(
-    translatorsPoeditor: MutableState<List<String>>,
     translatorsCrowdin: MutableState<List<String>>,
     releaseinfo: MutableLiveData<MutableSet<Release>>,
     libraries: Libs,
@@ -85,9 +84,7 @@ fun AboutScreen(
                                     releaseinfo
                                 )
                                 AboutTabDestination.Libraries.tabIndex -> AboutLibraries(libraries)
-                                AboutTabDestination.Translations.tabIndex -> AboutTranslations(
-                                    translatorsPoeditor, translatorsCrowdin
-                                )
+                                AboutTabDestination.Translations.tabIndex -> AboutTranslations(translatorsCrowdin)
                                 AboutTabDestination.Thanks.tabIndex -> AboutSpecialThanks()
                             }
                         }
@@ -106,7 +103,6 @@ fun AboutScreen(
 fun AboutScreenPreview() {
     MaterialTheme {
         AboutScreen(
-            translatorsPoeditor = remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) },
             translatorsCrowdin = remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) },
             releaseinfo = MutableLiveData(
                 mutableSetOf(

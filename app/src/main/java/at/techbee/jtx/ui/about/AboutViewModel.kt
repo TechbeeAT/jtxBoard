@@ -22,72 +22,20 @@ import com.android.volley.toolbox.Volley
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.util.withContext
 import org.json.JSONException
-import kotlin.collections.HashMap
-import kotlin.collections.List
-import kotlin.collections.MutableMap
-import kotlin.collections.MutableSet
-import kotlin.collections.emptyList
-import kotlin.collections.mutableListOf
-import kotlin.collections.mutableSetOf
 import kotlin.collections.set
 
 
 class AboutViewModel(application: Application) : AndroidViewModel(application) {
 
-    val translatorsPoeditor: MutableState<List<String>> = mutableStateOf(emptyList())
     val translatorsCrowdin: MutableState<List<String>> = mutableStateOf(emptyList())
     val releaseinfos: MutableLiveData<MutableSet<Release>> = MutableLiveData(mutableSetOf())
     val libraries = Libs.Builder().withContext(application).build()
     private val app = application
 
     init {
-        getTranslatorInfosPoeditor()
         getReleaseInfos()
         getTranslatorInfosCrowdin()
     }
-
-    /**
-     * This method queries the translators from the POEditor API and sets the livedata
-     */
-    private fun getTranslatorInfosPoeditor() {
-
-        val url = "https://api.poeditor.com/v2/contributors/list"
-
-        val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
-            Method.POST, url, null,
-            { response ->
-                try {
-                    val translators = mutableListOf<String>()
-                    Log.d("jsonResponse", response.toString())
-                    val result = response.getJSONObject("result")
-                    val contributors = result.getJSONArray("contributors")
-                    for(i in 0 until contributors.length()) {
-                        val name = contributors.getJSONObject(i).getString("name")
-                        Log.d("json", "Name = $name")
-                        translators.add(name)
-                    }
-                    translatorsPoeditor.value = translators
-                } catch (e: JSONException) {
-                    Log.w("Contributors", "Failed to parse JSON response with contributors\n$e")
-                }
-            },
-            { error ->
-                   Log.d("jsonResponse", error.toString())
-            }) {
-
-            override fun getBody(): ByteArray {
-                return "api_token=7f94161134af8f355eb6feced64dcad5&id=500401".toByteArray()
-            }
-
-            override fun getHeaders(): MutableMap<String, String> {
-                val params: MutableMap<String, String> = HashMap()
-                params["Content-Type"] = "application/x-www-form-urlencoded"
-                return params
-            }
-        }
-        Volley.newRequestQueue(app).add(jsonObjectRequest)
-    }
-
 
     /**
      * This method queries the members of the translation project on POEditor.com

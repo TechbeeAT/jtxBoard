@@ -36,7 +36,6 @@ import at.techbee.jtx.ui.theme.Typography
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AboutTranslations(
-    translatorsPoeditor: MutableState<List<String>>,
     translatorsCrowdin: MutableState<List<String>>,
     modifier: Modifier = Modifier
 ) {
@@ -97,23 +96,6 @@ fun AboutTranslations(
                     .animateItemPlacement()
             )
         }
-
-        item {
-            Text(
-                text = stringResource(R.string.about_translations_poeditor),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 8.dp, end = 8.dp)
-            )
-        }
-
-        items(items = translatorsPoeditor.value) { translator ->
-            TranslatorCard(
-                name = translator,
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .animateItemPlacement()
-            )
-        }
     }
 }
 
@@ -123,7 +105,6 @@ fun AboutTranslations(
 fun AboutTranslations_Preview() {
     MaterialTheme {
         AboutTranslations(
-            remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) },
             remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) }
         )
     }
