@@ -173,7 +173,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board is een open source app die de bijdrage van de open source community waardeert. Op deze pagina willen we de inspanningen van gemeenschapsleden voor vertalingen toeschrijven."</string>
     <string name="about_translations_contribution_info">"Als u vertalingen wilt bewerken/toevoegen of nieuwe talen wilt toevoegen aan deze app, voel je vrij om deel te nemen aan het jtx-beheerproject op het vertaalplatform Crowdin:"</string>
     <string name="about_translations_contribution_button">"Doe mee op Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Vertalers op POeditor.com (verouderd)"</string>
     <string name="list_welcome_entry_journal_summary">"Gefeliciteerd, dit is je eerste logboek-item :-)"</string>
     <string name="list_welcome_entry_journal_description">"Logboekenkunnen worden gebruikt om je notities voor een specifieke datum bij te houden. Gebruik deze functionaliteit bijvoorbeeld voor protocollen, notulen, dagboekvermeldingen enzovoort. Als u deze invoer wijzigt, ziet u de opties om categorieën toe te voegen, deelnemers, bijlagen, … Voel je vrij om dit item te verwijderen wanneer je maar wilt!"</string>
     <string name="list_welcome_entry_note_summary">"Gefeliciteerd, dit is je eerste notitie-item :-)"</string>
