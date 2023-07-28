@@ -94,6 +94,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Prendre una foto"</string>
     <string name="edit_add_link_button_text">"Afegir enllaç d'adjunt"</string>
     <string name="edit_subtasks_add_helper">"Afegir una sub-tasca"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Afegeix una subtasca ràpida"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Afegeix una subnota ràpida"</string>
     <string name="edit_attachment_add_link_dialog">"Afegir enllaç adjunt"</string>
     <string name="edit_recur_repeat_every_x">"Repeteix cada"</string>
     <string name="edit_recur_on_weekday">"els"</string>
@@ -198,6 +200,9 @@ Global Strings -->
     <string name="collection">"Col·lecció"</string>
     <string name="collection_owner_displayname">"Propietari: %1$s"</string>
     <string name="link_to_parent">"Enllaçar a un superior"</string>
+    <string name="link_selected_as_parent">"Pare"</string>
+    <string name="link_selected_as_subtask_note">"Subtasca/nota"</string>
+    <string name="link_selected_as">"Enllaça la selecció com a …"</string>
     <string name="navigation_drawer_collections">"Col·leccions"</string>
     <string name="navigation_drawer_presets">"Predefinits"</string>
     <!-- alarms -->
@@ -282,6 +287,7 @@ Global Strings -->
     <string name="progress">"Progrés"</string>
     <string name="categories">"Categories"</string>
     <string name="subtasks">"Sub-tasques"</string>
+    <string name="linked_parents">"Pares enllaçats"</string>
     <string name="priority_7_low">"7 - Baixa"</string>
     <string name="priority_8_lower">"8 - Més baixa"</string>
     <string name="priority_9_lowest">"9- La més baixa"</string>
@@ -380,8 +386,14 @@ Gràcies!"</string>
     <string name="list_update_entries_dialog_title">"Actualitza entrades"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Atenció: Les instàncies recurrents han de ser desenllaçades de la seua sèrie abans de ser mogudes a una altra col·lecció, i seran ignorades en aquest procés."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Tria el superior al qual enllaçar les sub-tasques/notes enllaçades."</string>
+    <string name="link_entry">"Enllaça una entrada"</string>
+    <string name="link_entry_search_within">"Cerca a …"</string>
+    <string name="link_entry_search_within_same_collection">"La mateixa col·lecció"</string>
+    <string name="link_entry_search_within_same_account">"Mateix compte"</string>
     <string name="details_link_existing_subentry_dialog_title">"Enllaça sub-entrades"</string>
+    <string name="details_link_existing_parent_dialog_title">"Enllaça els pares"</string>
     <string name="details_link_existing_subentry_dialog_info">"Tria les sub-entrades que s'han d'enllaçar."</string>
+    <string name="details_link_existing_parent_dialog_info">"Tria una entrada pare que s'hauria d'enllaçar."</string>
     <string name="details_app_bar_behaviour">"Comportament de la barra de l'aplicació"</string>
     <string name="details_show_all_options">"Mostra totes les opcions"</string>
     <string name="details_show_hide_elements">Mostra/amaga elements</string>
