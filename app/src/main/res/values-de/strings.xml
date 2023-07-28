@@ -175,7 +175,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board ist ein Open-Source-Projekt, das unter Beteiligung der Open Source Community realisiert wird. Auf dieser Seite wollen wir uns bei den Community-Mitgliedern für die Übersetzungen bedanken."</string>
     <string name="about_translations_contribution_info">"Falls Sie auch Übersetzungen bearbeiten/hinzufügen wollen, freuen wir uns über Ihren Beitrag über die Plattform Crowdin:"</string>
     <string name="about_translations_contribution_button">"Auf Crowdin.com beitreten"</string>
-    <string name="about_translations_poeditor">"Übersetzer auf POeditor.com (Legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Glückwunsch, das ist Ihr erster Journaleintrag :-)"</string>
     <string name="list_welcome_entry_journal_description">"Journale können genutzt werden um Ihre Notizen zu einem bestimmten Datum festzuhalten. Dies kann zum Beispiel für Protokolle, Versammlungsberichte, Tagebucheinträge und ähnliches genutzt werden. Wenn Sie diesen Beitrag bearbeiten, werfen Sie auch einen Blick auf die weiteren Optionen zum Eintragen von Kategorien, Teilnehmern, Anhängen, … Sie können diesen Eintrag jederzeit löschen!"</string>
     <string name="list_welcome_entry_note_summary">"Glückwunsch, das ist Ihr erster Notiz-Eintrag :-)"</string>
