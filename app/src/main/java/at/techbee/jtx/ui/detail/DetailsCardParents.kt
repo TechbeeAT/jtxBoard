@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.SubdirectoryArrowRight
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -23,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,7 +43,6 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsCardParents(
-    module: Module,
     parents: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
     sliderIncrement: Int,
@@ -48,13 +50,11 @@ fun DetailsCardParents(
     blockProgressUpdates: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    onUnlinkFromParent: (parentUID: String?) -> Unit,
+    onShowLinkExistingDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if(isEditMode.value)
-        return
-
-    val headline = stringResource(id = if(module == Module.TODO) R.string.view_subtask_of else R.string.view_linked_note_of)
-
+    
     ElevatedCard(modifier = modifier) {
         Column(
             modifier = Modifier
@@ -68,7 +68,13 @@ fun DetailsCardParents(
                 modifier = Modifier.fillMaxWidth(), 
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HeadlineWithIcon(icon = Icons.Outlined.SubdirectoryArrowRight, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
+                HeadlineWithIcon(icon = Icons.Outlined.SubdirectoryArrowRight, iconDesc = null, text = stringResource(id = R.string.linked_parents), modifier = Modifier.weight(1f))
+
+                AnimatedVisibility(isEditMode.value) {
+                    IconButton(onClick = { onShowLinkExistingDialog() }) {
+                        Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_parent_dialog_info))
+                    }
+                }
             }
 
             AnimatedVisibility(parents.isNotEmpty()) {
@@ -85,8 +91,9 @@ fun DetailsCardParents(
                                 selected = false,
                                 isEditMode = isEditMode.value,
                                 onDeleteClicked = { },
-                                onUnlinkClicked = { },
+                                onUnlinkClicked = { onUnlinkFromParent(parent.uid) },
                                 player = null,
+                                allowDeletion = false,
                                 modifier = Modifier
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
@@ -101,19 +108,20 @@ fun DetailsCardParents(
                             SubtaskCard(
                                 subtask = parent,
                                 selected = false,
-                                isEditMode = false,
+                                isEditMode = isEditMode.value,
                                 showProgress = showSlider,
                                 sliderIncrement = sliderIncrement,
                                 onProgressChanged = onProgressChanged,
                                 blockProgressUpdates = blockProgressUpdates,
+                                allowDeletion = false,
                                 onDeleteClicked = { },
-                                onUnlinkClicked = { },
+                                onUnlinkClicked = { onUnlinkFromParent(parent.uid) },
                                 modifier = Modifier
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
                                         onClick = { goToDetail(parent.id, false, parents.map { it.id }) },
                                         onLongClick = {
-                                            if (!isEditMode.value &&!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                            if (!isEditMode.value && !parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                                 goToDetail(parent.id, true, parents.map { it.id })
                                         }
                                     )
@@ -132,7 +140,6 @@ fun DetailsCardParents_Preview_Journal() {
     MaterialTheme {
 
         DetailsCardParents(
-            module = Module.JOURNAL,
             parents = listOf(
                         ICal4List.getSample().apply {
                             this.component = Component.VJOURNAL.name
@@ -146,17 +153,42 @@ fun DetailsCardParents_Preview_Journal() {
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
+            onUnlinkFromParent = { },
+            onShowLinkExistingDialog = {}
         )
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardParents_Preview_Journal_edit() {
+    MaterialTheme {
+
+        DetailsCardParents(
+            parents = listOf(
+                ICal4List.getSample().apply {
+                    this.component = Component.VJOURNAL.name
+                    this.module = Module.NOTE.name
+                    this.summary = "My Subnote"
+                }
+            ),
+            isEditMode = remember { mutableStateOf(true) },
+            sliderIncrement = 10,
+            showSlider = true,
+            blockProgressUpdates = false,
+            onProgressChanged = { _, _ -> },
+            goToDetail = { _, _, _ -> },
+            onUnlinkFromParent = { },
+            onShowLinkExistingDialog = {}
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardParents_Preview_tasksedit() {
+fun DetailsCardParents_Preview_tasksview() {
     MaterialTheme {
         DetailsCardParents(
-            module = Module.TODO,
             parents = listOf(
                 ICal4List.getSample().apply {
                     this.component = Component.VTODO.name
@@ -170,6 +202,32 @@ fun DetailsCardParents_Preview_tasksedit() {
             blockProgressUpdates = false,
             onProgressChanged = { _, _ -> },
             goToDetail = { _, _, _ -> },
+            onUnlinkFromParent = { },
+            onShowLinkExistingDialog = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardParents_Preview_tasksedit() {
+    MaterialTheme {
+        DetailsCardParents(
+            parents = listOf(
+                ICal4List.getSample().apply {
+                    this.component = Component.VTODO.name
+                    this.module = Module.TODO.name
+                    this.summary = "My Subtask"
+                }
+            ),
+            isEditMode = remember { mutableStateOf(true) },
+            sliderIncrement = 10,
+            showSlider = true,
+            blockProgressUpdates = false,
+            onProgressChanged = { _, _ -> },
+            goToDetail = { _, _, _ -> },
+            onUnlinkFromParent = { },
+            onShowLinkExistingDialog = {}
         )
     }
 }

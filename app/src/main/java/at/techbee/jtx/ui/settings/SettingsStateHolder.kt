@@ -79,13 +79,14 @@ class SettingsStateHolder(val context: Context) {
             field = newValue
         }
 
-    var detailTopAppBarMode = mutableStateOf(
-        try { DetailTopAppBarMode.valueOf(prefs.getString(PREFS_DETAIL_TOP_APP_BAR_MODE, null)?: DetailTopAppBarMode.ADD_SUBTASK.name) } catch (e: java.lang.IllegalArgumentException) { DetailTopAppBarMode.ADD_SUBTASK }
+    val detailTopAppBarMode = mutableStateOf(
+        DetailTopAppBarMode.values().find { it.name == prefs.getString(PREFS_DETAIL_TOP_APP_BAR_MODE, null) }?: DetailTopAppBarMode.ADD_SUBTASK
     )
-        set(newValue) {
-            prefs.edit().putString(PREFS_DETAIL_TOP_APP_BAR_MODE, newValue.value.name).apply()
-            field = newValue
-        }
+    fun setDetailTopAppBarMode(mode: DetailTopAppBarMode) {
+        detailTopAppBarMode.value = mode
+        prefs.edit().putString(PREFS_DETAIL_TOP_APP_BAR_MODE, mode.name).apply()
+    }
+
 
     /*
     var showJtx20releaseinfo = mutableStateOf(prefs.getBoolean("jtx_2.0_beta_info_shown", context.packageManager.getPackageInfoCompat(context.packageName, 0).firstInstallTime < 1665260058251))

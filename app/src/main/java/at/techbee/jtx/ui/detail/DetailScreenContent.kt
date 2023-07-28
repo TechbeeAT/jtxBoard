@@ -43,8 +43,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -53,7 +51,6 @@ import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.*
-import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
@@ -95,7 +92,6 @@ fun DetailScreenContent(
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
     extendedStatuses: List<ExtendedStatus>,
-    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
     seriesInstances: List<ICalObject>,
@@ -115,14 +111,12 @@ fun DetailScreenContent(
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
-    onUnlinkSubEntry: (icalObjectId: Long) -> Unit,
-    onLinkSubEntries: (List<ICal4List>) -> Unit,
-    onAllEntriesSearchTextUpdated: (String) -> Unit,
+    onUnlinkSubEntry: (icalObjectId: Long, parentUID: String?) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>, popBackStack: Boolean) -> Unit,
     goBack: () -> Unit,
     goToFilteredList:  (StoredListSettingData) -> Unit,
-    unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit
-
+    unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit,
+    onShowLinkExistingDialog: (modules: List<Module>, reltype: Reltype) -> Unit,
 ) {
     if(iCalObject == null)
         return
@@ -598,9 +592,8 @@ fun DetailScreenContent(
             )
         }
 
-        AnimatedVisibility(parents.value.isNotEmpty() && !isEditMode.value) {
+        AnimatedVisibility(parents.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] ?: true || showAllOptions))) {
             DetailsCardParents(
-                module = iCalObject.getModuleFromString(),
                 parents = parents.value,
                 isEditMode = isEditMode,
                 sliderIncrement = sliderIncrement,
@@ -609,21 +602,18 @@ fun DetailScreenContent(
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
                 },
-                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) }
-            )
+                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
+                onUnlinkFromParent = { parentUID -> onUnlinkSubEntry(iCalObject.id, parentUID) },
+                onShowLinkExistingDialog = { onShowLinkExistingDialog(listOf(Module.JOURNAL, Module.NOTE, Module.TODO), Reltype.PARENT) }
+                )
         }
 
         AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
             DetailsCardSubtasks(
                 subtasks = subtasks.value,
                 isEditMode = isEditMode,
-                selectFromAllListLive = selectFromAllListLive,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgressForSubTasks,
-                storedCategories = storedCategories,
-                storedResources = storedResources,
-                storedStatuses = extendedStatuses,
-                player = player,
                 onProgressChanged = { itemId, newPercent ->
                     onProgressChanged(itemId, newPercent)
                 },
@@ -635,10 +625,9 @@ fun DetailScreenContent(
                     )
                 },
                 onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                onUnlinkSubEntry = onUnlinkSubEntry,
-                onLinkSubEntries = onLinkSubEntries,
-                onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
-                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) }
+                onUnlinkSubEntry = { id -> onUnlinkSubEntry(id, iCalObject.uid) },
+                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
+                onShowLinkExistingDialog = { onShowLinkExistingDialog(listOf(Module.TODO), Reltype.CHILD) }
             )
         }
 
@@ -646,10 +635,6 @@ fun DetailScreenContent(
             DetailsCardSubnotes(
                 subnotes = subnotes.value,
                 isEditMode = isEditMode,
-                selectFromAllListLive = selectFromAllListLive,
-                storedCategories = storedCategories,
-                storedResources = storedResources,
-                storedStatuses = extendedStatuses,
                 onSubnoteAdded = { subnote, attachment ->
                     onSubEntryAdded(
                         subnote,
@@ -663,11 +648,10 @@ fun DetailScreenContent(
                     )
                 },
                 onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                onUnlinkSubEntry = onUnlinkSubEntry,
-                onLinkSubEntries = onLinkSubEntries,
-                onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
+                onUnlinkSubEntry = { id -> onUnlinkSubEntry(id, iCalObject.uid) },
                 player = player,
-                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) }
+                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
+                onShowLinkExistingDialog = { onShowLinkExistingDialog(listOf(Module.JOURNAL, Module.NOTE), Reltype.CHILD) }
             )
         }
 
@@ -909,7 +893,6 @@ fun DetailScreenContent_JOURNAL() {
             storedCategories = emptyList(),
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
-            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             saveEntry = { },
@@ -921,10 +904,9 @@ fun DetailScreenContent_JOURNAL() {
             goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { },
-            goToFilteredList = { }
+            onUnlinkSubEntry = { _, _ ->  },
+            goToFilteredList = { }, 
+            onShowLinkExistingDialog = { _, _ -> }
         )
     }
 }
@@ -966,7 +948,6 @@ fun DetailScreenContent_TODO_editInitially() {
             storedCategories = emptyList(),
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
-            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -985,10 +966,9 @@ fun DetailScreenContent_TODO_editInitially() {
             goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { },
-            goToFilteredList = { }
+            onUnlinkSubEntry = { _, _ ->  },
+            goToFilteredList = { },
+            onShowLinkExistingDialog = { _, _ -> }
         )
     }
 }
@@ -1030,7 +1010,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             storedCategories = emptyList(),
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
-            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -1049,10 +1028,9 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { },
-            goToFilteredList = { }
+            onUnlinkSubEntry = { _, _ ->  },
+            goToFilteredList = { },
+            onShowLinkExistingDialog = { _, _ -> }
         )
     }
 }
@@ -1088,7 +1066,6 @@ fun DetailScreenContent_failedLoading() {
             storedCategories = emptyList(),
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
-            selectFromAllListLive = MutableLiveData(emptyList()),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -1107,10 +1084,9 @@ fun DetailScreenContent_failedLoading() {
             goToDetail = { _, _, _, _ -> },
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
-            onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
-            onAllEntriesSearchTextUpdated = { },
-            goToFilteredList = { }
+            onUnlinkSubEntry = { _, _ ->  },
+            goToFilteredList = { },
+            onShowLinkExistingDialog = { _, _ -> }
         )
     }
 }

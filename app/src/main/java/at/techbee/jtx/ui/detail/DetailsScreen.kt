@@ -27,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -35,6 +36,7 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
@@ -42,6 +44,7 @@ import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
+import at.techbee.jtx.ui.reusable.dialogs.LinkExistingEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
@@ -73,6 +76,9 @@ fun DetailsScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showRevertDialog by remember { mutableStateOf(false) }
     var showUnsavedChangesDialog by rememberSaveable { mutableStateOf(false) }
+    var showLinkEntryDialog by rememberSaveable { mutableStateOf(false) }
+    var linkEntryDialogModule by rememberSaveable { mutableStateOf(listOf<Module>())}
+    var linkEntryDialogReltype by rememberSaveable { mutableStateOf<Reltype?>(null)}
     var navigateUp by remember { mutableStateOf(false) }
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
 
@@ -211,6 +217,34 @@ fun DetailsScreen(
         )
     }
 
+    LaunchedEffect(linkEntryDialogModule, linkEntryDialogReltype) {
+        showLinkEntryDialog = linkEntryDialogModule.isNotEmpty() && linkEntryDialogReltype != null
+    }
+    if(showLinkEntryDialog) {
+        LinkExistingEntryDialog(
+            excludeCurrentId = detailViewModel.icalEntity.value?.property?.id,
+            preselectedLinkEntryModules = linkEntryDialogModule,
+            preselectedLinkEntryReltype = linkEntryDialogReltype ?: Reltype.CHILD,
+            allEntriesLive = detailViewModel.selectFromAllList,
+            storedCategories = storedCategories,
+            storedResources = storedResources,
+            extendedStatuses = storedStatuses,
+            detailViewModel.mediaPlayer,
+            onAllEntriesSearchTextUpdated = { searchText, modules, sameCollection, sameAccount -> detailViewModel.updateSelectFromAllListQuery(searchText, modules, sameCollection, sameAccount) },
+            onEntriesToLinkConfirmed = { selected, reltype ->
+                when(reltype) {
+                    Reltype.CHILD -> detailViewModel.linkNewSubentries(selected)
+                    Reltype.PARENT -> detailViewModel.linkNewParents(selected)
+                    Reltype.SIBLING -> Unit
+                }
+            },
+            onDismiss = {
+                linkEntryDialogModule = emptyList()
+                linkEntryDialogReltype = null
+            }
+        )
+    }
+
     if(detailsBottomSheetState.currentValue != SheetValue.Hidden) {
         ModalBottomSheet(
             sheetState = detailsBottomSheetState,
@@ -249,12 +283,12 @@ fun DetailsScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = stringResource(id = R.string.edit_subtasks_add_helper),
+                                    text = stringResource(id = R.string.detail_top_app_bar_quick_add_subtask),
                                     color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
                                 )
                             },
                             onClick = {
-                                detailViewModel.settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBTASK
+                                detailViewModel.settingsStateHolder.setDetailTopAppBarMode(DetailTopAppBarMode.ADD_SUBTASK)
                                 menuExpanded.value = false
                             },
                             leadingIcon = {
@@ -268,12 +302,12 @@ fun DetailsScreen(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = stringResource(id = R.string.edit_subnote_add_helper),
+                                    text = stringResource(id = R.string.detail_top_app_bar_quick_add_subnote),
                                     color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
                                 )
                             },
                             onClick = {
-                                detailViewModel.settingsStateHolder.detailTopAppBarMode.value = DetailTopAppBarMode.ADD_SUBNOTE
+                                detailViewModel.settingsStateHolder.setDetailTopAppBarMode(DetailTopAppBarMode.ADD_SUBNOTE)
                                 menuExpanded.value = false
                             },
                             leadingIcon = {
@@ -285,7 +319,19 @@ fun DetailsScreen(
                             }
                         )
 
-                        Divider()
+                        HorizontalDivider()
+
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.link_entry)) },
+                            onClick = {
+                                linkEntryDialogModule = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+                                linkEntryDialogReltype = Reltype.CHILD
+                                menuExpanded.value = false
+                            },
+                            leadingIcon = { Icon(painterResource(id = R.drawable.ic_link_variant_plus), null) }
+                        )
+
+                        HorizontalDivider()
 
                         if (!isEditMode.value) {
                             DropdownMenuItem(
@@ -348,7 +394,7 @@ fun DetailsScreen(
                             )
                         }
 
-                        Divider()
+                        HorizontalDivider()
 
                         CheckboxWithText(
                             text = stringResource(id = R.string.menu_view_markdown_formatting),
@@ -359,7 +405,7 @@ fun DetailsScreen(
                             isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] ?: true,
                         )
 
-                        Divider()
+                        HorizontalDivider()
 
                         if(icalEntity.value?.ICalCollection?.readonly == false && icalEntity.value?.ICalCollection?.supportsVJOURNAL == true) {
                             if (icalEntity.value?.property?.module != Module.JOURNAL.name) {
@@ -431,7 +477,6 @@ fun DetailsScreen(
                 storedCategories = storedCategories,
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
-                selectFromAllListLive = detailViewModel.selectFromAllList,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
                 seriesInstances = seriesInstances.value,
@@ -464,9 +509,7 @@ fun DetailsScreen(
                 onSubEntryAdded = { icalObject, attachment -> detailViewModel.addSubEntry(icalObject, attachment) },
                 onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                 onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
-                onUnlinkSubEntry = { icalObjectId -> detailViewModel.unlinkFromParent(icalObjectId) },
-                onLinkSubEntries = { newSubEntries -> detailViewModel.linkNewSubentries(newSubEntries) },
-                onAllEntriesSearchTextUpdated = { searchText -> detailViewModel.updateSelectFromAllListQuery(searchText) },
+                onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list, popBackStack ->
                     if(popBackStack)
@@ -482,6 +525,10 @@ fun DetailsScreen(
                     )
                 },
                 unlinkFromSeries = { instances, series, deleteAfterUnlink -> detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink) },
+                onShowLinkExistingDialog = { modules, reltype ->
+                    linkEntryDialogModule = modules
+                    linkEntryDialogReltype = reltype
+                },
                 modifier = Modifier.padding(paddingValues)
             )
         },
