@@ -94,6 +94,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Fotó készítése"</string>
     <string name="edit_add_link_button_text">"Webes hivatkozás hozzáadása"</string>
     <string name="edit_subtasks_add_helper">"Alfeladat hozzáadása"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Alfeladat gyors hozzáadása"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Aljegyzet gyors hozzáadása"</string>
     <string name="edit_attachment_add_link_dialog">"Webes hivatkozás hozzáadása"</string>
     <string name="edit_recur_repeat_every_x">"Ismétlés"</string>
     <string name="edit_recur_on_weekday">" "</string>
@@ -199,6 +201,8 @@ Global Strings -->
     <string name="collection_owner_displayname">"Tulajdonos: %1$s"</string>
     <string name="link_to_parent">"Hozzácsatolás szülőbejegyzéshez"</string>
     <string name="link_selected_as_parent">"Szülő"</string>
+    <string name="link_selected_as_subtask_note">"Alfeladat/-jegyzet"</string>
+    <string name="link_selected_as">"Csatolás mint …"</string>
     <string name="navigation_drawer_collections">"Gyűjtemények"</string>
     <string name="navigation_drawer_presets">"Egyéni jellemzők"</string>
     <!-- alarms -->
@@ -380,6 +384,9 @@ Köszönjük!"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Figyelem! Az ismétlődő példányokat el kell távolítani a sorozatuktól, mielőtt egy másik gyűjteménybe helyeznék át, különben ebben a folyamatban ki lesznek hagyva."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Válassza ki azt az bejegyzést, amelyhez a kiválasztott bejegyzéseket részfeladatként/összekapcsolt jegyzetként hozzákapcsolja."</string>
     <string name="link_entry">"Bejegyzés csatolása"</string>
+    <string name="link_entry_search_within">"Keresés …"</string>
+    <string name="link_entry_search_within_same_collection">"Gyűjteményen belül"</string>
+    <string name="link_entry_search_within_same_account">"Fiókon belül"</string>
     <string name="details_link_existing_subentry_dialog_title">"Meglévő bejegyzések idekapcsolása"</string>
     <string name="details_link_existing_parent_dialog_title">"Szülők csatolása"</string>
     <string name="details_link_existing_subentry_dialog_info">"Válassza ki azokat az bejegyzéseket, amelyeket ide kíván kapcsolni."</string>
