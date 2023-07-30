@@ -28,7 +28,7 @@ import androidx.compose.material.icons.outlined.ArrowDropUp
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -209,9 +209,8 @@ fun ListScreenCompact(
                         )
 
                         if (iCal4ListRelObject != group.last())
-                            Divider(
+                            HorizontalDivider(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                thickness = 1.dp,
                                 modifier = Modifier.alpha(0.25f)
                             )
                     }

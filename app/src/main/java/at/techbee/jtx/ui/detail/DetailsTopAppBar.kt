@@ -65,8 +65,8 @@ fun DetailsTopAppBar(
                 placeholder = {
                 Crossfade(detailTopAppBarMode) {
                     when(it) {
-                        DetailTopAppBarMode.ADD_SUBTASK -> Text(stringResource(id = R.string.edit_subtasks_add_helper))
-                        DetailTopAppBarMode.ADD_SUBNOTE -> Text(stringResource(id = R.string.edit_subnote_add_helper))
+                        DetailTopAppBarMode.ADD_SUBTASK -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
+                        DetailTopAppBarMode.ADD_SUBNOTE -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
                     }
                 }
                     },
@@ -94,8 +94,8 @@ fun DetailsTopAppBar(
                             }) {
                                 Crossfade(detailTopAppBarMode) {
                                     when(it) {
-                                        DetailTopAppBarMode.ADD_SUBTASK -> Icon(Icons.Outlined.AddTask, stringResource(id = R.string.edit_subtasks_add_helper))
-                                        DetailTopAppBarMode.ADD_SUBNOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(id = R.string.edit_subnote_add_helper))
+                                        DetailTopAppBarMode.ADD_SUBTASK -> Icon(Icons.Outlined.AddTask, stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
+                                        DetailTopAppBarMode.ADD_SUBNOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
                                     }
                                 }
                             }

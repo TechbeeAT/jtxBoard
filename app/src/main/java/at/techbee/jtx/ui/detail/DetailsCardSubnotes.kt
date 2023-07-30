@@ -32,22 +32,15 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.locals.ExtendedStatus
-import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
-import at.techbee.jtx.ui.reusable.dialogs.LinkExistingSubentryDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
@@ -58,18 +51,13 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
-    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
-    storedCategories: List<StoredCategory>,
-    storedResources: List<StoredResource>,
-    storedStatuses: List<ExtendedStatus>,
     onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
-    onLinkSubEntries: (List<ICal4List>) -> Unit,
-    onAllEntriesSearchTextUpdated: (String) -> Unit,
     player: MediaPlayer?,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    onShowLinkExistingDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -85,20 +73,6 @@ fun DetailsCardSubnotes(
             onDismiss = { showAddAudioNoteDialog = false }
         )
     }
-    var showLinkExistingSubentryDialog by rememberSaveable { mutableStateOf(false) }
-    if(showLinkExistingSubentryDialog) {
-        LinkExistingSubentryDialog(
-            allEntriesLive = selectFromAllListLive,
-            storedCategories = storedCategories,
-            storedResources = storedResources,
-            extendedStatuses = storedStatuses,
-            player = player,
-            onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
-            onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
-            onDismiss = { showLinkExistingSubentryDialog = false }
-        )
-    }
-
 
 
     ElevatedCard(modifier = modifier) {
@@ -117,7 +91,7 @@ fun DetailsCardSubnotes(
                 HeadlineWithIcon(icon = Icons.Outlined.Note, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
                 
                 AnimatedVisibility(isEditMode.value) {
-                        IconButton(onClick = { showLinkExistingSubentryDialog = true }) {
+                        IconButton(onClick = { onShowLinkExistingDialog() }) {
                             Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_subentry_dialog_title))
                         }
                 }
@@ -146,8 +120,8 @@ fun DetailsCardSubnotes(
                             subnote = subnote,
                             selected = false,
                             isEditMode = isEditMode.value,
-                            onDeleteClicked = { icalObjectId ->  onSubnoteDeleted(icalObjectId) },
-                            onUnlinkClicked = onUnlinkSubEntry,
+                            onDeleteClicked = { onSubnoteDeleted(subnote.id) },
+                            onUnlinkClicked = { onUnlinkSubEntry(subnote.id) },
                             player = player,
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
@@ -228,18 +202,13 @@ fun DetailsCardSubnotes_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
-            selectFromAllListLive = MutableLiveData(emptyList()),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            storedStatuses = emptyList() ,
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
             player = null,
             goToDetail = { _, _, _ -> },
-            onAllEntriesSearchTextUpdated = { }
+            onShowLinkExistingDialog = {}
         )
     }
 }
@@ -258,18 +227,13 @@ fun DetailsCardSubnotes_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
-            selectFromAllListLive = MutableLiveData(emptyList()),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            storedStatuses = emptyList() ,
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
             player = null,
             goToDetail = { _, _, _ -> },
-            onAllEntriesSearchTextUpdated = { }
+            onShowLinkExistingDialog = {}
         )
     }
 }

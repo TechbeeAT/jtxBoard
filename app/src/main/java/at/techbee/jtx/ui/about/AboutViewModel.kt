@@ -10,11 +10,11 @@ package at.techbee.jtx.ui.about
 
 
 import android.app.Application
+import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.BuildConfig
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
@@ -22,77 +22,27 @@ import com.android.volley.toolbox.Volley
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.util.withContext
 import org.json.JSONException
-import kotlin.collections.HashMap
-import kotlin.collections.List
-import kotlin.collections.MutableMap
-import kotlin.collections.MutableSet
-import kotlin.collections.emptyList
-import kotlin.collections.mutableListOf
-import kotlin.collections.mutableSetOf
 import kotlin.collections.set
 
 
 class AboutViewModel(application: Application) : AndroidViewModel(application) {
 
-    val translatorsPoeditor: MutableState<List<String>> = mutableStateOf(emptyList())
-    val translatorsCrowdin: MutableState<List<String>> = mutableStateOf(emptyList())
-    val releaseinfos: MutableLiveData<MutableSet<Release>> = MutableLiveData(mutableSetOf())
+    val translatorsCrowdin: SnapshotStateList<String> = mutableStateListOf()
+    val contributors: SnapshotStateList<Contributor> = mutableStateListOf()
+    val releaseinfos: SnapshotStateList<Release> = SnapshotStateList()
     val libraries = Libs.Builder().withContext(application).build()
-    private val app = application
+    private val _application = application
 
     init {
-        getTranslatorInfosPoeditor()
-        getReleaseInfos()
+        getGitHubReleaseInfos()
         getTranslatorInfosCrowdin()
+        getGitHubContributors()
     }
 
     /**
-     * This method queries the translators from the POEditor API and sets the livedata
+     * This method queries the Release infos from GitHub
      */
-    private fun getTranslatorInfosPoeditor() {
-
-        val url = "https://api.poeditor.com/v2/contributors/list"
-
-        val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
-            Method.POST, url, null,
-            { response ->
-                try {
-                    val translators = mutableListOf<String>()
-                    Log.d("jsonResponse", response.toString())
-                    val result = response.getJSONObject("result")
-                    val contributors = result.getJSONArray("contributors")
-                    for(i in 0 until contributors.length()) {
-                        val name = contributors.getJSONObject(i).getString("name")
-                        Log.d("json", "Name = $name")
-                        translators.add(name)
-                    }
-                    translatorsPoeditor.value = translators
-                } catch (e: JSONException) {
-                    Log.w("Contributors", "Failed to parse JSON response with contributors\n$e")
-                }
-            },
-            { error ->
-                   Log.d("jsonResponse", error.toString())
-            }) {
-
-            override fun getBody(): ByteArray {
-                return "api_token=7f94161134af8f355eb6feced64dcad5&id=500401".toByteArray()
-            }
-
-            override fun getHeaders(): MutableMap<String, String> {
-                val params: MutableMap<String, String> = HashMap()
-                params["Content-Type"] = "application/x-www-form-urlencoded"
-                return params
-            }
-        }
-        Volley.newRequestQueue(app).add(jsonObjectRequest)
-    }
-
-
-    /**
-     * This method queries the members of the translation project on POEditor.com
-     */
-    private fun getReleaseInfos() {
+    private fun getGitHubReleaseInfos() {
 
         val url = "https://api.github.com/repos/TechbeeAT/jtxBoard/releases?per_page=100"
 
@@ -108,19 +58,60 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
                             prerelease = response.getJSONObject(i).getBoolean("prerelease"),
                             githubUrl = response.getJSONObject(i).getString("html_url")
                         )
-                        Log.d("json", "tag_name = ${release.releaseName}, description = ${release.releaseText}")
-                        if(!release.prerelease)   // prereleases are excluded
-                            releaseinfos.value?.add(release)
+                        Log.d("GithubRelease", "tag_name = ${release.releaseName}, description = ${release.releaseText}")
+                        if(!release.prerelease && !releaseinfos.contains(release))   // prereleases are excluded
+                            releaseinfos.add(release)
                     }
                 } catch (e: JSONException) {
-                    Log.w("Gitlab", "Failed to parse JSON response with release info\n$e")
+                    Log.w("GithubRelease", "Failed to parse JSON response with release info\n$e")
                 }
             },
             { error ->
                 Log.d("jsonResponse", error.toString())
             }) {
         }
-        Volley.newRequestQueue(app).add(jsonArrayRequest)
+        Volley.newRequestQueue(_application).add(jsonArrayRequest)
+    }
+
+    /**
+     * This method queries the contributors on GitHub
+     */
+    private fun getGitHubContributors() {
+
+        val url = "https://api.github.com/repos/TechbeeAT/jtxBoard/collaborators"
+
+        val jsonArrayRequest: JsonArrayRequest = object : JsonArrayRequest(
+            Method.GET, url, null,
+            { response ->
+                try {
+                    Log.d("GithubContributor", "response: $response")
+                    for(i in 0 until response.length()) {
+                        val contributor = Contributor(
+                            login = response.getJSONObject(i).getString("login"),
+                            url = response.getJSONObject(i).getString("url")?.let { Uri.parse(it) },
+                            avatarUrl = response.getJSONObject(i).getString("avatar_url")?.let { Uri.parse(it) }
+                        )
+                        if(!contributors.contains(contributor))
+                            contributors.add(contributor)
+                        Log.d("GithubContributor", "login = ${contributor.login}")
+                    }
+                } catch (e: JSONException) {
+                    Log.w("GithubContributor", "Failed to parse JSON response with contributors\n$e")
+                }
+            },
+            { error ->
+                Log.d("GithubContributor", "error: $error")
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Accept"] = "application/vnd.github+json"
+                headers["Authorization"] = "Bearer ${BuildConfig.GITHUB_CONTRIBUTORS_API_KEY}"
+                headers["X-GitHub-Api-Version"] = "2022-11-28"
+                return headers
+            }
+        }
+        Volley.newRequestQueue(_application).add(jsonArrayRequest)
     }
 
 
@@ -140,14 +131,13 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
 
                 try {
                     Log.d("jsonResponse", response.toString())
-                    val translators = mutableListOf<String>()
                     val data = response.getJSONArray("data")
                     for(i in 0 until data.length()) {
                         val name = data.getJSONObject(i).getJSONObject("data").getString("username")
                         Log.d("json", "Name = $name")
-                        translators.add(name)
+                        if(!translatorsCrowdin.contains(name))
+                            translatorsCrowdin.add(name)
                     }
-                    translatorsCrowdin.value = translators
                 } catch (e: JSONException) {
                     Log.w("Crowdin", "Failed to parse JSON response with release info\n$e")
                 }
@@ -163,7 +153,7 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
                 return headers
             }
         }
-        Volley.newRequestQueue(app).add(jsonObjectRequest)
+        Volley.newRequestQueue(_application).add(jsonObjectRequest)
     }
 }
 
@@ -174,3 +164,17 @@ data class Release(
     var prerelease: Boolean,
     var githubUrl: String
 )
+
+data class Contributor(
+    var login: String,
+    var url: Uri?,
+    var avatarUrl: Uri?
+) {
+    companion object {
+        fun getSample() = Contributor(
+            login = "Sample",
+            url = Uri.parse("https://github.com/patrickunterwegs"),
+            avatarUrl = Uri.parse("")
+        )
+    }
+}
