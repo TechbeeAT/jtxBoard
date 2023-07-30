@@ -94,6 +94,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"写真を撮る"</string>
     <string name="edit_add_link_button_text">"リンクを追加"</string>
     <string name="edit_subtasks_add_helper">"サブタスクを追加"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"サブタスクをクイック追加"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"サブメモをクイック追加"</string>
     <string name="edit_attachment_add_link_dialog">"リンクを追加"</string>
     <string name="edit_recur_repeat_every_x">"繰り返し"</string>
     <string name="edit_recur_on_weekday">"曜日:"</string>
@@ -198,6 +200,9 @@ Global Strings -->
     <string name="collection">"コレクション"</string>
     <string name="collection_owner_displayname">"所有者: %1$s"</string>
     <string name="link_to_parent">"親にリンク"</string>
+    <string name="link_selected_as_parent">"親"</string>
+    <string name="link_selected_as_subtask_note">"サブタスク/-メモ"</string>
+    <string name="link_selected_as">"…としてリンクを選択"</string>
     <string name="navigation_drawer_collections">"コレクション"</string>
     <string name="navigation_drawer_presets">"プリセット"</string>
     <!-- alarms -->
@@ -282,6 +287,7 @@ Global Strings -->
     <string name="progress">"進捗状況"</string>
     <string name="categories">"カテゴリー"</string>
     <string name="subtasks">"サブタスク"</string>
+    <string name="linked_parents">"リンクされた親"</string>
     <string name="priority_7_low">"7 - 低"</string>
     <string name="priority_8_lower">"8 - 特に低"</string>
     <string name="priority_9_lowest">"9 - 最低"</string>
@@ -379,8 +385,14 @@ Global Strings -->
     <string name="list_update_entries_dialog_title">"エントリーを更新"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意: 繰り返しのあるインスタンスは、別のコレクションに移動する前に系列から切り離す必要があるため、このプロセスでは無視されます。"</string>
     <string name="list_update_entries_dialog_new_parent_info">"選択したエントリーをサブタスク/メモとしてリンクする親を選択してください。"</string>
+    <string name="link_entry">"エントリーをリンク"</string>
+    <string name="link_entry_search_within">"…を検索"</string>
+    <string name="link_entry_search_within_same_collection">"同じコレクション"</string>
+    <string name="link_entry_search_within_same_account">"同じアカウント"</string>
     <string name="details_link_existing_subentry_dialog_title">"サブエントリーをリンク"</string>
+    <string name="details_link_existing_parent_dialog_title">"親をリンク"</string>
     <string name="details_link_existing_subentry_dialog_info">"リンクするサブエントリーを選択してください。"</string>
+    <string name="details_link_existing_parent_dialog_info">"リンクしたい親エントリーを選択してください。"</string>
     <string name="details_app_bar_behaviour">"アプリバーの動作"</string>
     <string name="details_show_all_options">"すべてのオプションを表示"</string>
     <string name="details_show_hide_elements">要素の表示/非表示</string>
@@ -595,5 +607,6 @@ Global Strings -->
     <string name="geofence_options">"ジオフェンスの設定"</string>
     <string name="geofence_missing_permission_info">"jtx Board はバックグラウンドで位置情報にアクセスする権限と通知を送信する権限を必要とします。ジオフェンスに入ったときに通知を受けるには、位置情報の権限を「常に許可」に変更し、通知の権限を付与してください！"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board は指定された座標に近づいたときにお知らせできます。この機能を有効にするには、位置情報の権限を「常に許可」にし、通知の権限を許可してください。"</string>
+    <string name="geofence_notification_summary">"ジオフェンスが有効です"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board はアラーム通知の遅延を避けるため、正確なアラームを設定する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
 </resources>
