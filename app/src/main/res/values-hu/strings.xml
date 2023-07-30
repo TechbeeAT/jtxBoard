@@ -94,6 +94,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Fotó készítése"</string>
     <string name="edit_add_link_button_text">"Webes hivatkozás hozzáadása"</string>
     <string name="edit_subtasks_add_helper">"Alfeladat hozzáadása"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Alfeladat gyors hozzáadása"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Aljegyzet gyors hozzáadása"</string>
     <string name="edit_attachment_add_link_dialog">"Webes hivatkozás hozzáadása"</string>
     <string name="edit_recur_repeat_every_x">"Ismétlés"</string>
     <string name="edit_recur_on_weekday">" "</string>
@@ -173,7 +175,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"A jtx Board egy nyílt forráskódú alkalmazás, amely nagyra értékeli a nyílt forráskódú közösség részvételét és hozzájárulását. Ezen az oldalon a közösség tagjainak a fordításokért tett erőfeszítéseit szeretnénk megköszönni."</string>
     <string name="about_translations_contribution_info">"Ha szeretne fordításokat szerkeszteni/hozzáadni vagy új nyelveket hozzáadni ehhez az alkalmazáshoz, csatlakozzon a jtx Board projekthez a Crowdin fordítási platformon:"</string>
     <string name="about_translations_contribution_button">"Csatlakozz a Crowdin.com projekthez"</string>
-    <string name="about_translations_poeditor">"POeditor.com közreműködők (korábbi platform)"</string>
     <string name="list_welcome_entry_journal_summary">"Gratulálok, ez az első naplóbejegyzése :-)"</string>
     <string name="list_welcome_entry_journal_description">"A naplók adott időponthoz kötődő jegyzetek tárolására szolgálnak. Használja ezt a funkciót például feljegyzések, emlékeztetők, naplóbejegyzések készítéséhez. Ha szerkeszti ezt a bejegyzést, látni fogja, hogy van lehetőség hozzáadni kategóriákat, résztvevőket, mellékletek, … Ezt a bejegyzést bátran törölheti, ha már nincs rá szükséges!"</string>
     <string name="list_welcome_entry_note_summary">"Gratulálok, ez az első jegyzete :-)"</string>
@@ -199,6 +200,9 @@ Global Strings -->
     <string name="collection">"Gyűjtemény"</string>
     <string name="collection_owner_displayname">"Tulajdonos: %1$s"</string>
     <string name="link_to_parent">"Hozzácsatolás szülőbejegyzéshez"</string>
+    <string name="link_selected_as_parent">"Szülő"</string>
+    <string name="link_selected_as_subtask_note">"Alfeladat/-jegyzet"</string>
+    <string name="link_selected_as">"Csatolás mint …"</string>
     <string name="navigation_drawer_collections">"Gyűjtemények"</string>
     <string name="navigation_drawer_presets">"Egyéni jellemzők"</string>
     <!-- alarms -->
@@ -282,6 +286,7 @@ Global Strings -->
     <string name="progress">"Készültség"</string>
     <string name="categories">"Kategóriák"</string>
     <string name="subtasks">"Alfeladatok"</string>
+    <string name="linked_parents">"Csatolt szülők"</string>
     <string name="priority_7_low">"7-alacsony"</string>
     <string name="priority_8_lower">"8-alacsonyabb"</string>
     <string name="priority_9_lowest">"9-legalacsonyabb"</string>
@@ -378,8 +383,14 @@ Köszönjük!"</string>
     <string name="list_update_entries_dialog_title">"Bejegyzések frissítése"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Figyelem! Az ismétlődő példányokat el kell távolítani a sorozatuktól, mielőtt egy másik gyűjteménybe helyeznék át, különben ebben a folyamatban ki lesznek hagyva."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Válassza ki azt az bejegyzést, amelyhez a kiválasztott bejegyzéseket részfeladatként/összekapcsolt jegyzetként hozzákapcsolja."</string>
+    <string name="link_entry">"Bejegyzés csatolása"</string>
+    <string name="link_entry_search_within">"Keresés …"</string>
+    <string name="link_entry_search_within_same_collection">"Gyűjteményen belül"</string>
+    <string name="link_entry_search_within_same_account">"Fiókon belül"</string>
     <string name="details_link_existing_subentry_dialog_title">"Meglévő bejegyzések idekapcsolása"</string>
+    <string name="details_link_existing_parent_dialog_title">"Szülők csatolása"</string>
     <string name="details_link_existing_subentry_dialog_info">"Válassza ki azokat az bejegyzéseket, amelyeket ide kíván kapcsolni."</string>
+    <string name="details_link_existing_parent_dialog_info">"Válaszzon ki egy szülő-bejegyzést, amit csatolni szeretne."</string>
     <string name="details_app_bar_behaviour">"Alkalmazássáv viselkedése"</string>
     <string name="details_show_all_options">"További paraméterek"</string>
     <string name="details_show_hide_elements">Pareméterek megjelenítése/elrejtése</string>

@@ -167,7 +167,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board è un'app open source che apprezza la partecipazione e il contributo della comunità open source. In questa pagina vorremmo attribuire gli sforzi dei membri della comunità per le traduzioni."</string>
     <string name="about_translations_contribution_info">"Se desideri modificare/aggiungere traduzioni o aggiungere nuove lingue a questa app, sentiti libero di unirti al progetto jtx Board sulla piattaforma di traduzione Crowdin:"</string>
     <string name="about_translations_contribution_button">"Partecipa a Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Traduttori su POeditor.com (legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Congratulazioni, questa è la tua prima annotazione nel diario :-)"</string>
     <string name="list_welcome_entry_journal_description">"I Diari possono essere utilizzati per conservare i tuoi appunti per una data specifica. Utilizzare questa funzionalità ad esempio per i protocolli, i verbali delle riunioni, le voci del diario e così via. Se modifichi questa voce, vedrai le opzioni per aggiungere categorie, partecipanti, allegati, … Sentiti libero di eliminare questa voce quando vuoi!"</string>
     <string name="list_welcome_entry_note_summary">"Congratulazioni, questa è la tua prima nota :-)"</string>
