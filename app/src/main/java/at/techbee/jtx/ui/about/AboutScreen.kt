@@ -18,9 +18,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
+import at.techbee.jtx.ui.buypro.BuyProScreenContent
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import com.mikepenz.aboutlibraries.Libs
@@ -33,16 +37,27 @@ fun AboutScreen(
     releaseinfo: List<Release>,
     contributors: List<Contributor>,
     libraries: Libs,
+    isPurchased: State<Boolean?>,
+    priceLive: LiveData<String?>,
+    purchaseDateLive: LiveData<String?>,
+    orderIdLive: LiveData<String?>,
+    launchBillingFlow: () -> Unit,
     navController: NavHostController
 ) {
 
-    val screens = listOf(
-        AboutTabDestination.Jtx,
-        AboutTabDestination.Releasenotes,
-        AboutTabDestination.Libraries,
-        AboutTabDestination.Translations,
-        AboutTabDestination.Contributors
-    )
+    val screens = mutableListOf<AboutTabDestination>().apply {
+        add(AboutTabDestination.Jtx)
+        if(BuildFlavor.getCurrent().hasBilling && isPurchased.value == true)
+            add(AboutTabDestination.JtxBoardPro)
+        addAll(
+            listOf(
+                AboutTabDestination.Releasenotes,
+                AboutTabDestination.Libraries,
+                AboutTabDestination.Translations,
+                AboutTabDestination.Contributors
+            )
+        )
+    }
     val pagerState = rememberPagerState(initialPage = screens.indexOf(AboutTabDestination.Jtx), pageCount = { screens.size })
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -61,10 +76,10 @@ fun AboutScreen(
                 mainContent = {
                     Column {
                         TabRow(selectedTabIndex = pagerState.currentPage) {
-                            screens.forEach { screen ->
-                                Tab(selected = pagerState.currentPage == screen.tabIndex,
+                            screens.forEachIndexed { index, screen ->
+                                Tab(selected = pagerState.currentPage == index,
                                     onClick = {
-                                        scope.launch { pagerState.animateScrollToPage(screen.tabIndex) }
+                                        scope.launch { pagerState.animateScrollToPage(index) }
                                               },
                                     text = {
                                         Icon(
@@ -79,11 +94,18 @@ fun AboutScreen(
                             verticalAlignment = Alignment.Top
                         ) { page ->
                             when (page) {
-                                AboutTabDestination.Jtx.tabIndex -> AboutJtx()
-                                AboutTabDestination.Releasenotes.tabIndex -> AboutReleaseinfo(releaseinfo)
-                                AboutTabDestination.Libraries.tabIndex -> AboutLibraries(libraries)
-                                AboutTabDestination.Translations.tabIndex -> AboutTranslations(translators)
-                                AboutTabDestination.Contributors.tabIndex -> AboutContributors(contributors)
+                                screens.indexOf(AboutTabDestination.Jtx) -> AboutJtx()
+                                screens.indexOf(AboutTabDestination.Releasenotes) -> AboutReleaseinfo(releaseinfo)
+                                screens.indexOf(AboutTabDestination.Libraries) -> AboutLibraries(libraries)
+                                screens.indexOf(AboutTabDestination.Translations) -> AboutTranslations(translators)
+                                screens.indexOf(AboutTabDestination.Contributors) -> AboutContributors(contributors)
+                                screens.indexOf(AboutTabDestination.JtxBoardPro) -> BuyProScreenContent(
+                                    isPurchased = isPurchased,
+                                    priceLive = priceLive,
+                                    purchaseDateLive = purchaseDateLive,
+                                    orderIdLive = orderIdLive,
+                                    launchBillingFlow = launchBillingFlow
+                                )
                             }
                         }
                     }
@@ -124,6 +146,11 @@ fun AboutScreenPreview() {
                 )
             ),
             libraries = Libs(emptyList(), emptySet()),
+            isPurchased = remember { mutableStateOf(null) },
+            priceLive = MutableLiveData("€ 3,29"),
+            orderIdLive = MutableLiveData("93287z4"),
+            purchaseDateLive = MutableLiveData("Thursday, 1. Jannuary 2021"),
+            launchBillingFlow = { },
             navController = rememberNavController()
         )
     }

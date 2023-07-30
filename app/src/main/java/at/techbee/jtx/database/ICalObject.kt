@@ -24,8 +24,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.JtxContract
-import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -818,10 +818,10 @@ data class ICalObject(
         }
 
 
-        fun getMapLink(geoLat: Double?, geoLong: Double?, flavor: String): Uri? {
+        fun getMapLink(geoLat: Double?, geoLong: Double?, flavor: BuildFlavor): Uri? {
             return if(geoLat != null || geoLong != null) {
                 try {
-                    if (flavor == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY || flavor == MainActivity2.BUILD_FLAVOR_AMAZON)
+                    if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
                         Uri.parse("https://www.google.com/maps/search/?api=1&query=$geoLat%2C$geoLong")
                     else
                         Uri.parse("https://www.openstreetmap.org/#map=15/$geoLat/$geoLong")

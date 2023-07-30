@@ -35,8 +35,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
-import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_OSE
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.locals.StoredListSettingData
@@ -80,6 +78,18 @@ import kotlin.time.Duration.Companion.minutes
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
+enum class BuildFlavor(val flavor: String, val hasBilling: Boolean, val hasGeofence: Boolean, val hasReview: Boolean, val hasDonation: Boolean) {
+    OSE("ose", false, false, false, true),
+    GPLAY("gplay", true, true, true, false),
+    AMAZON("amazon", true, false, false, false),
+    HUAWEI("huawei", true, false, false, false),
+    GENERIC("generic", false, false, false, false);
+
+    companion object {
+        fun getCurrent() = values().find { it.flavor == BuildConfig.FLAVOR } ?: OSE
+    }
+}
+
 //class MainActivity2 : ComponentActivity() {   // Using AppCompatActivity activity instead of ComponentActivity
 class MainActivity2 : AppCompatActivity() {
 
@@ -90,12 +100,6 @@ class MainActivity2 : AppCompatActivity() {
     companion object {
         const val NOTIFICATION_CHANNEL_ALARMS = "REMINDER_DUE"   // different name for legacy handling!
         const val NOTIFICATION_CHANNEL_GEOFENCES = "NOTIFICATION_CHANNEL_GEOFENCES"
-
-        const val BUILD_FLAVOR_OSE = "ose"
-        const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
-        const val BUILD_FLAVOR_AMAZON = "amazon"
-        const val BUILD_FLAVOR_HUAWEI = "huawei"
-        const val BUILD_FLAVOR_GENERIC = "generic"
 
         const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
         const val INTENT_ACTION_ADD_NOTE = "addNote"
@@ -266,7 +270,7 @@ class MainActivity2 : AppCompatActivity() {
         }
         lastProcessedIntentHash = intent.hashCode()
 
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI)
+        if(BuildFlavor.getCurrent() == BuildFlavor.HUAWEI)
             BillingManager.getInstance().initialise(this)  // only Huawei needs to call the update functions again
 
         // reset authentication state if timeout was set and expired or remove timeout if onResume was done within timeout
@@ -290,7 +294,7 @@ class MainActivity2 : AppCompatActivity() {
         val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_HIGH)
             .setName(getString(R.string.notification_channel_geofences_name))
             .build()
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
+        if(BuildFlavor.getCurrent().hasGeofence)
             NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel, geofenceChannel))
         else
             NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel))
@@ -367,9 +371,9 @@ fun MainNavHost(
                 returnToLauncher = returnToLauncher,
                 icalObjectIdList = icalObjectIdList,
                 onRequestReview = {
-                    if (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
+                    if (BuildFlavor.getCurrent().hasReview)
                         JtxReviewManager(activity).showIfApplicable()
-                    else if (BuildConfig.FLAVOR == BUILD_FLAVOR_OSE)
+                    if (BuildFlavor.getCurrent().hasDonation)
                         showOSEDonationDialog = JtxReviewManager(activity).showIfApplicable()
                 },
                 onLastUsedCollectionChanged = { module, collectionId ->
@@ -420,6 +424,13 @@ fun MainNavHost(
                 releaseinfo = viewModel.releaseinfos,
                 contributors = viewModel.contributors,
                 libraries = viewModel.libraries,
+                isPurchased = isProPurchased,
+                priceLive = BillingManager.getInstance().proPrice,
+                purchaseDateLive = BillingManager.getInstance().proPurchaseDate,
+                orderIdLive = BillingManager.getInstance().proOrderId,
+                launchBillingFlow = {
+                    BillingManager.getInstance().launchBillingFlow(activity)
+                },
                 navController = navController
             )
         }

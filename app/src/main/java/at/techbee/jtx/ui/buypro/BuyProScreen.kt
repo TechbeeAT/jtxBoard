@@ -10,10 +10,19 @@ package at.techbee.jtx.ui.buypro
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -62,66 +71,14 @@ fun BuyProScreen(
             JtxNavigationDrawer(
                 drawerState = drawerState,
                 mainContent = {
-
-                    Column(
+                    BuyProScreenContent(
+                        isPurchased = isPurchased,
+                        priceLive = priceLive,
+                        purchaseDateLive = purchaseDateLive,
+                        orderIdLive = orderIdLive,
+                        launchBillingFlow = launchBillingFlow,
                         modifier = modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(8.dp),
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-
-                        Image(
-                            painter = painterResource(id = R.drawable.bg_adfree),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                                .padding(top = 32.dp, bottom = 32.dp)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.buypro_text),
-                            modifier = Modifier.padding(top = 16.dp),
-                            style = Typography.bodyLarge,
-                            textAlign = TextAlign.Center
-                        )
-
-                        Crossfade(targetState = isPurchased.value) {
-
-                            Column(modifier = Modifier.padding(top = 16.dp)) {
-                                if (it == false) {
-                                    BuyProCard(
-                                        priceLive = priceLive,
-                                        onClick = { launchBillingFlow() }
-                                    )
-                                } else if(it == true) {
-                                    BuyProCardPurchased(
-                                        purchaseDateLive = purchaseDateLive,
-                                        orderIdLive = orderIdLive
-                                    )
-                                    Text(
-                                        text = stringResource(id = R.string.buypro_success_thankyou),
-                                        modifier = Modifier
-                                            .padding(top = 16.dp)
-                                            .fillMaxWidth(),
-                                        style = Typography.displaySmall,
-                                        textAlign = TextAlign.Center,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Image(
-                                        painter = painterResource(id = R.drawable.bg_thankyou),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(240.dp)
-                                            .padding(top = 32.dp, bottom = 32.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
+                    )
                 },
                 navController = navController,
                 paddingValues = paddingValues
@@ -129,7 +86,76 @@ fun BuyProScreen(
 
         }
     )
+}
 
+@Composable
+fun BuyProScreenContent(
+    isPurchased: State<Boolean?>,
+    priceLive: LiveData<String?>,
+    purchaseDateLive: LiveData<String?>,
+    orderIdLive: LiveData<String?>,
+    launchBillingFlow: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(8.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+
+        Image(
+            painter = painterResource(id = R.drawable.bg_adfree),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(top = 32.dp, bottom = 32.dp)
+        )
+        Text(
+            text = stringResource(id = R.string.buypro_text),
+            modifier = Modifier.padding(top = 16.dp),
+            style = Typography.bodyLarge,
+            textAlign = TextAlign.Center
+        )
+
+        Crossfade(targetState = isPurchased.value, label = "isPurchased") {
+
+            Column(modifier = Modifier.padding(top = 16.dp)) {
+                if (it == false) {
+                    BuyProCard(
+                        priceLive = priceLive,
+                        onClick = { launchBillingFlow() }
+                    )
+                } else if(it == true) {
+                    BuyProCardPurchased(
+                        purchaseDateLive = purchaseDateLive,
+                        orderIdLive = orderIdLive
+                    )
+                    Text(
+                        text = stringResource(id = R.string.buypro_success_thankyou),
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .fillMaxWidth(),
+                        style = Typography.displaySmall,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.bg_thankyou),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(240.dp)
+                            .padding(top = 32.dp, bottom = 32.dp)
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)

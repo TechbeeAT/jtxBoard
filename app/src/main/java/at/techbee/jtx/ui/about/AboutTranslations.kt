@@ -27,8 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import at.techbee.jtx.BuildConfig
-import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
 
@@ -64,29 +62,26 @@ fun AboutTranslations(
             )
         }
         item {
-            if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_OSE)
-                Text(
-                    stringResource(id = R.string.about_translations_contribution_info),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(8.dp)
-                )
+            Text(
+                stringResource(id = R.string.about_translations_contribution_info),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(8.dp)
+            )
         }
         item {
-            if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_OSE)
-                Button(
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    onClick = {
-                    context.startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("https://crowdin.com/project/jtx-board/invite?h=a8fd45e2dfea25534eda503b441476ea1545967")
-                        )
+            Button(
+                modifier = Modifier.padding(bottom = 8.dp),
+                onClick = {
+                context.startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://crowdin.com/project/jtx-board/invite?h=a8fd45e2dfea25534eda503b441476ea1545967")
                     )
-                }) {
-                    Text(stringResource(id = R.string.about_translations_contribution_button))
-                }
+                )
+            }) {
+                Text(stringResource(id = R.string.about_translations_contribution_button))
+            }
         }
-
 
         items(items = translators) { translator ->
             TranslatorCard(
