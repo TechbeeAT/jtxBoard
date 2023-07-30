@@ -44,10 +44,12 @@ fun ContributorCard(
 ) {
 
     val context = LocalContext.current
-    val openGithubProfileIntent = contributor.url?.let { Intent(Intent.ACTION_VIEW, it) }
 
     ElevatedCard(
-        onClick = { openGithubProfileIntent.let { context.startActivity(it) } },
+        onClick = {
+            contributor.url
+                ?.let { Intent(Intent.ACTION_VIEW, it) }
+                ?.let { context.startActivity(it) } },
         modifier = modifier
     ) {
 
@@ -77,7 +79,7 @@ fun ContributorCard(
                     .padding(horizontal = 8.dp)
             )
 
-            if(openGithubProfileIntent !=null) {
+            if(contributor.url !=null) {
                 Icon(
                     imageVector = Icons.Outlined.OpenInNew,
                     contentDescription = null,
