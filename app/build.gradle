@@ -51,7 +51,7 @@ android {
         resConfigs locales
 
         buildConfigField "String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: localProperties["crowdin.apikey"] ) + "\""
-        buildConfigField "String", "GITHUB_CONTRIBUTORS_API_KEY", "\"" + (System.getenv("GITHUB_CONTRIBUTORS_API_KEY") ?: localProperties["githubcontributors.apikey"] ) + "\""
+        buildConfigField "String", "GITHUB_CONTRIBUTORS_API_KEY", "\"" + (System.getenv("GH_CONTRIBUTORS_API_KEY") ?: localProperties["githubcontributors.apikey"] ) + "\""
         resValue "string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: localProperties["google.geo.apikey"] ?: ""
     }
 
