@@ -118,7 +118,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"翻訳"</string>
     <string name="about_tabitem_libraries">"ライブラリー"</string>
-    <string name="about_tabitem_thanks">"スペシャルサンクス"</string>
+    <string name="about_special_thanks">"スペシャルサンクス"</string>
     <string name="about_app_version">"バージョン: %1$s (%2$d)"</string>
     <string name="about_app_codename">"コードネーム: %1$s"</string>
     <string name="about_app_build_date">"コンパイル: %s"</string>

@@ -115,7 +115,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"翻译"</string>
     <string name="about_tabitem_libraries">"库"</string>
-    <string name="about_tabitem_thanks">"特别致谢"</string>
+    <string name="about_special_thanks">"特别致谢"</string>
     <string name="about_app_version">"版本：%1$s (%2$d)"</string>
     <string name="about_app_build_date">"编译于%s"</string>
     <string name="about_app_terms">"条款与条件"</string>

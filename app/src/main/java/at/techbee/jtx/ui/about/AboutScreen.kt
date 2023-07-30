@@ -18,7 +18,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
@@ -30,8 +29,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AboutScreen(
-    translatorsCrowdin: MutableState<List<String>>,
-    releaseinfo: MutableLiveData<MutableSet<Release>>,
+    translators: List<String>,
+    releaseinfo: List<Release>,
+    contributors: List<Contributor>,
     libraries: Libs,
     navController: NavHostController
 ) {
@@ -41,7 +41,7 @@ fun AboutScreen(
         AboutTabDestination.Releasenotes,
         AboutTabDestination.Libraries,
         AboutTabDestination.Translations,
-        AboutTabDestination.Thanks
+        AboutTabDestination.Contributors
     )
     val pagerState = rememberPagerState(initialPage = screens.indexOf(AboutTabDestination.Jtx), pageCount = { screens.size })
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -80,12 +80,10 @@ fun AboutScreen(
                         ) { page ->
                             when (page) {
                                 AboutTabDestination.Jtx.tabIndex -> AboutJtx()
-                                AboutTabDestination.Releasenotes.tabIndex -> AboutReleaseinfo(
-                                    releaseinfo
-                                )
+                                AboutTabDestination.Releasenotes.tabIndex -> AboutReleaseinfo(releaseinfo)
                                 AboutTabDestination.Libraries.tabIndex -> AboutLibraries(libraries)
-                                AboutTabDestination.Translations.tabIndex -> AboutTranslations(translatorsCrowdin)
-                                AboutTabDestination.Thanks.tabIndex -> AboutSpecialThanks()
+                                AboutTabDestination.Translations.tabIndex -> AboutTranslations(translators)
+                                AboutTabDestination.Contributors.tabIndex -> AboutContributors(contributors)
                             }
                         }
                     }
@@ -103,31 +101,30 @@ fun AboutScreen(
 fun AboutScreenPreview() {
     MaterialTheme {
         AboutScreen(
-            translatorsCrowdin = remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) },
-            releaseinfo = MutableLiveData(
-                mutableSetOf(
-                    Release(
-                        "v1.2.0",
-                        "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!",
-                        prerelease = false,
-                        githubUrl = "https://github.com/TechbeeAT/jtxBoard/releases"
-                    ),
-                    Release(
-                        "v1.2.1",
-                        "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!",
-                        prerelease = false,
-                        githubUrl = "https://github.com/TechbeeAT/jtxBoard/releases"
-                    ),
-                    Release(
-                        "v1.2.2",
-                        "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!",
-                        prerelease = false,
-                        githubUrl = "https://github.com/TechbeeAT/jtxBoard/releases"
-                    )
+            translators = listOf("Patrick", "Ioannis", "Luis"),
+            contributors = listOf(Contributor.getSample()),
+            releaseinfo = listOf(
+                Release(
+                    "v1.2.0",
+                    "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!",
+                    prerelease = false,
+                    githubUrl = "https://github.com/TechbeeAT/jtxBoard/releases"
+                ),
+                Release(
+                    "v1.2.1",
+                    "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!",
+                    prerelease = false,
+                    githubUrl = "https://github.com/TechbeeAT/jtxBoard/releases"
+                ),
+                Release(
+                    "v1.2.2",
+                    "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!",
+                    prerelease = false,
+                    githubUrl = "https://github.com/TechbeeAT/jtxBoard/releases"
                 )
             ),
             libraries = Libs(emptyList(), emptySet()),
-            rememberNavController()
+            navController = rememberNavController()
         )
     }
 }

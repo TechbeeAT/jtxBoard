@@ -129,7 +129,8 @@ Global Strings -->
     <string name="about_tabitem_jtx" translatable="false">"jtx Board"</string>
     <string name="about_tabitem_translations">"Translations"</string>
     <string name="about_tabitem_libraries">"Libraries"</string>
-    <string name="about_tabitem_thanks">"Special thanks"</string>
+    <string name="about_tabitem_contributors">"Contributors"</string>
+    <string name="about_special_thanks">"Special thanks"</string>
     <string name="about_app_version">"Version: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Codename: %1$s"</string>
     <string name="about_app_build_date">"Compiled on %s"</string>

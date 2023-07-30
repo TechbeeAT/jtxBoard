@@ -9,7 +9,11 @@
 package at.techbee.jtx.ui.about
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.DataObject
+import androidx.compose.material.icons.outlined.Handshake
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.NewReleases
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.ui.graphics.vector.ImageVector
 import at.techbee.jtx.R
 
@@ -39,9 +43,9 @@ sealed class AboutTabDestination (
         titleResource = R.string.about_tabitem_translations,
         icon = Icons.Outlined.Translate,
     )
-    object Thanks: AboutTabDestination(
+    object Contributors: AboutTabDestination(
         tabIndex = 4,
-        titleResource = R.string.about_tabitem_thanks,
+        titleResource = R.string.about_tabitem_contributors,
         icon = Icons.Outlined.Handshake,
     )
 

@@ -118,7 +118,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Перевод"</string>
     <string name="about_tabitem_libraries">"Библиотеки"</string>
-    <string name="about_tabitem_thanks">"Особая благодарность"</string>
+    <string name="about_special_thanks">"Особая благодарность"</string>
     <string name="about_app_version">"Версия: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Кодовое название: %1$s"</string>
     <string name="about_app_build_date">"Скомпилировано %s"</string>
@@ -371,7 +371,7 @@ Global Strings -->
     <string name="audio_stop">"Стоп"</string>
     <string name="audio_pause">"Пауза"</string>
     <string name="audio_error_toast">"К сожалению, начать воспроизведение не удалось."</string>
-    <string name="sync_in_progress">"Синхронизация..."</string>
+    <string name="sync_in_progress">"Синхронизация…"</string>
     <string name="invalid_timezone_message">"Пожалуйста, выберите корректный часовой пояс!"</string>
     <string name="invalid_url_message">"Пожалуйста, введите допустимый URL-адрес!"</string>
     <string name="list_quickadd_dialog_sr_start">"Начать распознавание речи"</string>

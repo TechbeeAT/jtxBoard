@@ -36,7 +36,7 @@ import at.techbee.jtx.ui.theme.Typography
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AboutTranslations(
-    translatorsCrowdin: MutableState<List<String>>,
+    translators: List<String>,
     modifier: Modifier = Modifier
 ) {
 
@@ -88,7 +88,7 @@ fun AboutTranslations(
         }
 
 
-        items(items = translatorsCrowdin.value) { translator ->
+        items(items = translators) { translator ->
             TranslatorCard(
                 name = translator,
                 modifier = Modifier
@@ -104,8 +104,6 @@ fun AboutTranslations(
 @Composable
 fun AboutTranslations_Preview() {
     MaterialTheme {
-        AboutTranslations(
-            remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) }
-        )
+        AboutTranslations(listOf("Patrick", "Ioannis", "Luis"))
     }
 }
