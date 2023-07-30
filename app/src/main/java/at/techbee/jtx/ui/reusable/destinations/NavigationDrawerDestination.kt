@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
-import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
 
 enum class NavigationDrawerDestination (
@@ -61,6 +61,7 @@ enum class NavigationDrawerDestination (
         iconRes = R.drawable.ic_settings,
         navigationAction = { navHost, _ -> navHost.navigate(SETTINGS.name)}
     ),
+    /*
     TWITTER(
         titleResource = R.string.twitter_account_name,
         iconRes = R.drawable.twitter,
@@ -72,6 +73,7 @@ enum class NavigationDrawerDestination (
             )
         ) }
     ),
+     */
     MASTODON(
         titleResource = R.string.mastodon_account_name,
         iconRes = R.drawable.logo_mastodon,
@@ -119,15 +121,13 @@ enum class NavigationDrawerDestination (
 
     companion object {
 
-        fun valuesFor(flavor: String): List<NavigationDrawerDestination> {
-            return when(flavor) {
-                MainActivity2.BUILD_FLAVOR_GOOGLEPLAY -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_AMAZON -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_OSE -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, MASTODON, WEBSITE, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_HUAWEI -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
-                MainActivity2.BUILD_FLAVOR_GENERIC -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
-                else -> listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, SUPPORT, PRIVACY)
-            }
+        fun valuesFor(isPurchased: Boolean): List<NavigationDrawerDestination> = mutableListOf<NavigationDrawerDestination>().apply {
+            addAll(listOf(BOARD, PRESETS, COLLECTIONS, SYNC, ABOUT))
+            if(BuildFlavor.getCurrent().hasBilling && !isPurchased)
+                add(BUYPRO)
+            if(BuildFlavor.getCurrent().hasDonation)
+                add(DONATE)
+            addAll(listOf(SETTINGS, MASTODON, WEBSITE, SUPPORT, PRIVACY))
         }
     }
 

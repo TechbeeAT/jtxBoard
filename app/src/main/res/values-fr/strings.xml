@@ -118,7 +118,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Traductions"</string>
     <string name="about_tabitem_libraries">"Bibliothèques"</string>
-    <string name="about_tabitem_thanks">"Remerciements"</string>
+    <string name="about_special_thanks">"Remerciements"</string>
     <string name="about_app_version">"Version : %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nom de code : %1$s"</string>
     <string name="about_app_build_date">"Compilé le %s"</string>
@@ -172,7 +172,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board est une application open source qui apprécie la participation et la contribution de la communauté open source. Sur cette page, nous aimerions remercier les efforts des membres de la communauté pour les traductions."</string>
     <string name="about_translations_contribution_info">"Si vous souhaitez modifier/ajouter des traductions ou ajouter de nouvelles langues à cette application, n'hésitez pas à rejoindre le projet jtx Board sur la plate-forme de traduction Crowdin :"</string>
     <string name="about_translations_contribution_button">"Rejoindre sur Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Traducteurs sur POeditor.com (legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Félicitations, c'est votre premier journal :-)"</string>
     <string name="list_welcome_entry_journal_description">"Les journaux peuvent être utilisés pour conserver vos notes pour une date spécifique. Utilisez cette fonctionnalité par exemple pour les protocoles, les comptes rendus de réunion, les entrées d'agenda, etc. Si vous modifiez cette entrée, vous verrez les options pour ajouter des catégories, des participants, des pièces jointes, … N'hésitez pas à supprimer cette entrée quand vous le souhaitez !"</string>
     <string name="list_welcome_entry_note_summary">"Félicitations, c'est votre première note :-)"</string>

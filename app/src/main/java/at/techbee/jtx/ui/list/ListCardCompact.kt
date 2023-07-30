@@ -178,10 +178,7 @@ fun ListCardCompact(
                     )
 
                     if (subtask.id != subtasks.last().id)
-                        Divider(
-                            thickness = 1.dp,
-                            modifier = Modifier.alpha(0.25f)
-                        )
+                        HorizontalDivider(modifier = Modifier.alpha(0.25f))
                 }
             }
         }

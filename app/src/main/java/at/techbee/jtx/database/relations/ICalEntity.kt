@@ -12,7 +12,7 @@ import android.content.Context
 import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Relation
-import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_COLLECTION_ID
 import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
@@ -215,7 +215,7 @@ data class ICalEntity(
 
         if(property.geoLat != null && property.geoLong != null) {
             shareText += context.getString(R.string.map) + ": ${getLatLongString(property.geoLat, property.geoLong)} - "
-            getMapLink(property.geoLat, property.geoLong, BuildConfig.FLAVOR)?.let { shareText += it }
+            getMapLink(property.geoLat, property.geoLong, BuildFlavor.getCurrent())?.let { shareText += it }
             shareText += System.lineSeparator()
         }
 

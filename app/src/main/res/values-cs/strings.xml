@@ -118,7 +118,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Překlady"</string>
     <string name="about_tabitem_libraries">"Knihovny"</string>
-    <string name="about_tabitem_thanks">"Zvláštní poděkování"</string>
+    <string name="about_special_thanks">"Zvláštní poděkování"</string>
     <string name="about_app_version">"Verze: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Kódový název: %1$s"</string>
     <string name="about_app_build_date">"Zkompilováno dne %s"</string>
@@ -173,7 +173,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board je aplikace s otevřeným zdrojovým kódem, která si cení účasti a příspěvků komunity open source. Na této stránce bychom rádi ocenili úsilí členů komunity v oblasti překladů."</string>
     <string name="about_translations_contribution_info">"Pokud chcete upravovat či přidávat překlady nebo přidávat nové jazyky do této aplikace, neváhejte se připojit k projektu jtx Board na překladatelské platformě Crowdin:"</string>
     <string name="about_translations_contribution_button">"Připojte se na Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Překladatelé na POeditor.com (starší verze)"</string>
     <string name="list_welcome_entry_journal_summary">"Blahopřejeme, toto je váš první záznam do deníku :-)"</string>
     <string name="list_welcome_entry_journal_description">"Deníky lze použít k uchovávání poznámek k určitému datu. Tuto funkci můžete použít například pro protokoly, zápisy z jednání, deníkové záznamy apod. Pokud tento záznam upravíte, zobrazí se možnosti přidání kategorií, účastníků, příloh, … Nebojte se tento záznam kdykoli odstranit!"</string>
     <string name="list_welcome_entry_note_summary">"Blahopřejeme, toto je váš první záznam poznámky :-)"</string>

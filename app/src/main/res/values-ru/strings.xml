@@ -118,7 +118,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Перевод"</string>
     <string name="about_tabitem_libraries">"Библиотеки"</string>
-    <string name="about_tabitem_thanks">"Особая благодарность"</string>
+    <string name="about_special_thanks">"Особая благодарность"</string>
     <string name="about_app_version">"Версия: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Кодовое название: %1$s"</string>
     <string name="about_app_build_date">"Скомпилировано %s"</string>
@@ -173,7 +173,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board — приложение с открытым исходным кодом, и мы высоко ценим участие и вклад нашего сообщества. На этой странице мы хотели бы отметить усилия всех переводчиков."</string>
     <string name="about_translations_contribution_info">"Если вы хотите отредактировать/добавить перевод или новые языки в это приложение, присоединяйтесь к jtx Board на платформе Crowdin:"</string>
     <string name="about_translations_contribution_button">"Перейти на Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Переводчики на POeditor.com (прошлая платформа)"</string>
     <string name="list_welcome_entry_journal_summary">"Поздравляем, это ваша первая запись в журнале :-)"</string>
     <string name="list_welcome_entry_journal_description">"Журналы можно использовать для хранения заметок на конкретную дату. Используйте эту функцию, например, для протоколов, протоколов собраний, записей в дневнике и т. д. Если вы отредактируете эту запись, вы увидите варианты добавления категорий, участников, вложений и т. д. Не стесняйтесь удалять эту запись, когда захотите!"</string>
     <string name="list_welcome_entry_note_summary">"Поздравляем, это ваша первая заметка :-)"</string>
@@ -371,7 +370,7 @@ Global Strings -->
     <string name="audio_stop">"Стоп"</string>
     <string name="audio_pause">"Пауза"</string>
     <string name="audio_error_toast">"К сожалению, начать воспроизведение не удалось."</string>
-    <string name="sync_in_progress">"Синхронизация..."</string>
+    <string name="sync_in_progress">"Синхронизация…"</string>
     <string name="invalid_timezone_message">"Пожалуйста, выберите корректный часовой пояс!"</string>
     <string name="invalid_url_message">"Пожалуйста, введите допустимый URL-адрес!"</string>
     <string name="list_quickadd_dialog_sr_start">"Начать распознавание речи"</string>
