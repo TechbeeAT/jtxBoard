@@ -94,6 +94,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Προσθήκη φωτογραφίας"</string>
     <string name="edit_add_link_button_text">"Προσθήκη link"</string>
     <string name="edit_subtasks_add_helper">"Προσθήκη υποεργασίας"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Γρήγορη προσθήκη εργασίας"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Γρήγορη προσθήκη εργασίας"</string>
     <string name="edit_attachment_add_link_dialog">"Προσθήκη συνημμένου συνδέσμου"</string>
     <string name="edit_recur_repeat_every_x">"Επανάληψη κάθε"</string>
     <string name="edit_recur_on_weekday">"σε"</string>
@@ -199,6 +201,9 @@ Global Strings -->
     <string name="collection">"Συλλογή"</string>
     <string name="collection_owner_displayname">"Ιδιοκτήτης: %1$s"</string>
     <string name="link_to_parent">"Πίσω στην αρχική"</string>
+    <string name="link_selected_as_parent">"Γονικό Στοιχείο"</string>
+    <string name="link_selected_as_subtask_note">"Υποεργασία/-σημείωση"</string>
+    <string name="link_selected_as">"Ο σύνδεσμος επιλέχθηκε ως …"</string>
     <string name="navigation_drawer_collections">"Συλλογες"</string>
     <string name="navigation_drawer_presets">"Προκαθορισμένα"</string>
     <!-- alarms -->
@@ -283,6 +288,7 @@ Global Strings -->
     <string name="progress">"Πρόοδος"</string>
     <string name="categories">"Κατηγορίες"</string>
     <string name="subtasks">"Υποεργασίες"</string>
+    <string name="linked_parents">"Συνδεδεμένοι γονικοί σύνδεσμοι"</string>
     <string name="priority_7_low">"7 - Χαμηλή"</string>
     <string name="priority_8_lower">"8 - Πολύ χαμηλή"</string>
     <string name="priority_9_lowest">"9 - Χαμηλότερη"</string>
@@ -381,6 +387,10 @@ Global Strings -->
     <string name="list_update_entries_dialog_title">"Ενημέρωση καταχωρήσεων"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Προσοχή: Τα επαναλαμβανόμενα στιγμιότυπα πρέπει να αποσυνδέονται από τη σειρά τους πριν μεταφερθούν σε άλλη συλλογή και θα αγνοηθούν σε αυτή τη διαδικασία."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Επιλέξτε την κύρια εγγραφή με την οποία οι επιλεγμένες καταχωρήσεις θα συνδέονται ως υποεργασίες/συνδεδεμένες σημειώσεις."</string>
+    <string name="link_entry">"Σύνδεση καταχώρησης"</string>
+    <string name="link_entry_search_within">"Αναζήτηση μεταξύ ..."</string>
+    <string name="link_entry_search_within_same_collection">"Ίδια συλλογή"</string>
+    <string name="link_entry_search_within_same_account">"Ίδιος λογαριασμός"</string>
     <string name="details_link_existing_subentry_dialog_title">"Σύνδεση υπο-καταχωρήσεων"</string>
     <string name="details_link_existing_subentry_dialog_info">"Επιλέξτε τις υπο-καταχωρήσεις που θα πρέπει να συνδεθούν."</string>
     <string name="details_app_bar_behaviour">"Συμπεριφορά γραμμής εφαρμογής"</string>
