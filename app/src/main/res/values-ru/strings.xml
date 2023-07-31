@@ -94,6 +94,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Сделать фотографию"</string>
     <string name="edit_add_link_button_text">"Добавить ссылку на прикрепленный файл"</string>
     <string name="edit_subtasks_add_helper">"Добавить подзадачу"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Быстрое добавление подзадачи"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Быстрое добавление доч. заметки"</string>
     <string name="edit_attachment_add_link_dialog">"Добавить ссылку на вложение"</string>
     <string name="edit_recur_repeat_every_x">"Повторять каждые"</string>
     <string name="edit_recur_on_weekday">"по"</string>
@@ -118,6 +120,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Перевод"</string>
     <string name="about_tabitem_libraries">"Библиотеки"</string>
+    <string name="about_tabitem_contributors">"Внесшие вклад"</string>
     <string name="about_special_thanks">"Особая благодарность"</string>
     <string name="about_app_version">"Версия: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Кодовое название: %1$s"</string>
@@ -198,6 +201,9 @@ Global Strings -->
     <string name="collection">"Коллекция"</string>
     <string name="collection_owner_displayname">"Владелец: %1$s"</string>
     <string name="link_to_parent">"Привязать к родителю"</string>
+    <string name="link_selected_as_parent">"Родитель"</string>
+    <string name="link_selected_as_subtask_note">"Подзадача/-заметка"</string>
+    <string name="link_selected_as">"Привязать выбранное как …"</string>
     <string name="navigation_drawer_collections">"Коллекции"</string>
     <string name="navigation_drawer_presets">"Пресеты"</string>
     <!-- alarms -->
@@ -282,6 +288,7 @@ Global Strings -->
     <string name="progress">"Прогресс"</string>
     <string name="categories">"Категория"</string>
     <string name="subtasks">"Подзадачи"</string>
+    <string name="linked_parents">"Привязанные род. записи"</string>
     <string name="priority_7_low">"7 - Пониженный"</string>
     <string name="priority_8_lower">"8 - Низкий"</string>
     <string name="priority_9_lowest">"9 - Минимальный"</string>
@@ -379,8 +386,14 @@ Global Strings -->
     <string name="list_update_entries_dialog_title">"Обновить записи"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Внимание: повторяющиеся записи должны быть отсоединены от своей серии перед перемещением в другую коллекцию и будут проигнорированы в этом процессе."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Выберите родителя, к которому выбранные записи должны быть привязаны в качестве подзадач/связанных заметок."</string>
+    <string name="link_entry">"Привязать запись"</string>
+    <string name="link_entry_search_within">"Поиск в …"</string>
+    <string name="link_entry_search_within_same_collection">"Текущая коллекция"</string>
+    <string name="link_entry_search_within_same_account">"Текущий аккаунт"</string>
     <string name="details_link_existing_subentry_dialog_title">"Привязать записи"</string>
+    <string name="details_link_existing_parent_dialog_title">"Привязать род. записи"</string>
     <string name="details_link_existing_subentry_dialog_info">"Выберите записи, которые нужно привязать."</string>
+    <string name="details_link_existing_parent_dialog_info">"Выберите род. запись для привязки."</string>
     <string name="details_app_bar_behaviour">"Управление панелью"</string>
     <string name="details_show_all_options">"Показать все опции"</string>
     <string name="details_show_hide_elements">Показать/скрыть элементы</string>
@@ -519,7 +532,7 @@ Global Strings -->
     <string name="menu_list_flat_view_sub">"Всегда показывать дочерние записи на верхнем уровне в списке"</string>
     <string name="menu_list_limit_recur_entries">"Лимит повторений"</string>
     <string name="menu_list_limit_recur_entries_sub">"Показывать только одно повторение записи из серии"</string>
-    <string name="menu_view_markdown_formatting">"Формат Markdown"</string>
+    <string name="menu_view_markdown_formatting">"Markdown-разметка"</string>
     <string name="menu_view_autosave">"Автосохранение"</string>
     <string name="next">"Далее"</string>
     <string name="previous">"Предыдущий"</string>
