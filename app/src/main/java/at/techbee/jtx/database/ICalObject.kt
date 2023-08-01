@@ -1430,9 +1430,9 @@ data class ICalObject(
             return
 
         val formats = listOf(
-            Regex("\\d*[.]\\d*[,]\\d*[.]\\d*"),   // Google Maps & Apple Maps
-            Regex("\\d*[.]\\d*[~]\\d*[.]\\d*"),   // Bing Maps (Microsoft)
-            Regex("\\d*[.]\\d*[/]\\d*[.]\\d*"),   // Open Street Maps
+            Regex("\\d*[.]\\d*,\\d*[.]\\d*"),   // Google Maps & Apple Maps
+            Regex("\\d*[.]\\d*~\\d*[.]\\d*"),   // Bing Maps (Microsoft)
+            Regex("\\d*[.]\\d*/\\d*[.]\\d*"),   // Open Street Maps
         )
         val urlDecoded = try { URLDecoder.decode(text, "UTF-8") } catch (e: UnsupportedEncodingException) { text }
 
