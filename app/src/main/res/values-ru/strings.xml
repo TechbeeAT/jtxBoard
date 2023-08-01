@@ -392,8 +392,8 @@ Global Strings -->
     <string name="link_entry_search_within_same_account">"Текущий аккаунт"</string>
     <string name="details_link_existing_subentry_dialog_title">"Привязать записи"</string>
     <string name="details_link_existing_parent_dialog_title">"Привязать род. записи"</string>
-    <string name="details_link_existing_subentry_dialog_info">"Выберите записи, которые нужно привязать."</string>
-    <string name="details_link_existing_parent_dialog_info">"Выберите род. запись для привязки."</string>
+    <string name="details_link_existing_subentry_dialog_info">"Выберите дочерние записи для привязки."</string>
+    <string name="details_link_existing_parent_dialog_info">"Выберите родительскую запись для привязки."</string>
     <string name="details_app_bar_behaviour">"Управление панелью"</string>
     <string name="details_show_all_options">"Показать все опции"</string>
     <string name="details_show_hide_elements">Показать/скрыть элементы</string>
