@@ -392,7 +392,9 @@ Global Strings -->
     <string name="link_entry_search_within_same_collection">"Ίδια συλλογή"</string>
     <string name="link_entry_search_within_same_account">"Ίδιος λογαριασμός"</string>
     <string name="details_link_existing_subentry_dialog_title">"Σύνδεση υπο-καταχωρήσεων"</string>
+    <string name="details_link_existing_parent_dialog_title">"Συνδεδεμένοι γονικοί σύνδεσμοι"</string>
     <string name="details_link_existing_subentry_dialog_info">"Επιλέξτε τις υπο-καταχωρήσεις που θα πρέπει να συνδεθούν."</string>
+    <string name="details_link_existing_parent_dialog_info">"Επιλέξτε τις υπο-καταχωρήσεις που θα πρέπει να συνδεθούν."</string>
     <string name="details_app_bar_behaviour">"Συμπεριφορά γραμμής εφαρμογής"</string>
     <string name="details_show_all_options">"Εμφάνιση όλων των επιλογών"</string>
     <string name="details_show_hide_elements">Εμφάνιση/απόκρυψη στοιχείων</string>
@@ -608,4 +610,5 @@ Global Strings -->
     <string name="geofence_missing_permission_info">"jtx Board χρειάζεται της άδεια σας για να έχει πρόσβαση στην τοποθεσία παρασκηνίου σας και να σας στέλνει ειδοποιήσεις. Παρακαλούμε ενημερώστε την άδεια τοποθεσίας σε 'Επιτρέψτε όλη την ώρα' και παραχωρήστε την άδεια ειδοποίησης για να ειδοποιηθείτε όταν φτάσετε στο geofence σας!"</string>
     <string name="geofence_request_permission_dialog_message">"Το jtx Board μπορεί να σας ειδοποιήσει όταν είστε κοντά στις δεδομένες συντεταγμένες. Παρακαλώ ορίστε την άδεια τοποθεσίας για 'Να επιτρέπονται όλη την ώρα' και παραχωρήστε το δικαίωμα ειδοποιήσεων για να χρησιμοποιήσετε αυτήν τη δυνατότητα."</string>
     <string name="geofence_notification_summary">"Ο γεωφράκτης ενεργοποιήθηκε"</string>
+    <string name="exact_alarm_permission_dialog_message">"Το jtx Board χρειάζεται την άδεια για τον προγραμματισμό ακριβών ειδοποιήσεων, διαφορετικά ενδέχεται να καθυστερήσει η ειδοποίηση. Παρακαλούμε χορηγήστε αυτό το δικαίωμα για να χρησιμοποιήσετε αυτήν τη δυνατότητα."</string>
 </resources>
