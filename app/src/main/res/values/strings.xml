@@ -102,6 +102,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Take picture"</string>
     <string name="edit_add_link_button_text">"Add attachment link"</string>
     <string name="edit_subtasks_add_helper">"Add a subtask"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Quick add subtask"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Quick add subnote"</string>
     <string name="edit_attachment_add_link_dialog">"Add attachment link"</string>
     <string name="edit_recur_repeat_every_x">"Repeat every"</string>
     <string name="edit_recur_on_weekday">"on"</string>
@@ -127,7 +129,8 @@ Global Strings -->
     <string name="about_tabitem_jtx" translatable="false">"jtx Board"</string>
     <string name="about_tabitem_translations">"Translations"</string>
     <string name="about_tabitem_libraries">"Libraries"</string>
-    <string name="about_tabitem_thanks">"Special thanks"</string>
+    <string name="about_tabitem_contributors">"Contributors"</string>
+    <string name="about_special_thanks">"Special thanks"</string>
     <string name="about_app_version">"Version: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Codename: %1$s"</string>
     <string name="about_app_build_date">"Compiled on %s"</string>
@@ -183,7 +186,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board is an open source app that appreciates the participation and contribution of the open source community. On this page we would like to attribute the efforts of community members for translations."</string>
     <string name="about_translations_contribution_info">"If you would like to edit/add translations or add new languages to this app, feel free to join the jtx Board project on the translation platform Crowdin:"</string>
     <string name="about_translations_contribution_button">"Join on Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Translators on POeditor.com (legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Congratulations, this is your first journal entry :-)"</string>
     <string name="list_welcome_entry_journal_description">"Journals can be used to keep your notes for a specific date. Use this functionality for example for protocols, meeting minutes, diary entries and so on. If you edit this entry, you will see the options to add categories, attendees, attachments, … Feel free to delete this entry whenever you want!"</string>
     <string name="list_welcome_entry_note_summary">"Congratulations, this is your first note entry :-)"</string>
@@ -209,6 +211,9 @@ Global Strings -->
     <string name="collection">"Collection"</string>
     <string name="collection_owner_displayname">"Owner: %1$s"</string>
     <string name="link_to_parent">"Link to parent"</string>
+    <string name="link_selected_as_parent">"Parent"</string>
+    <string name="link_selected_as_subtask_note">"Subtask/-note"</string>
+    <string name="link_selected_as">"Link selected as …"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
     <string name="navigation_drawer_presets">"Presets"</string>
     <!-- alarms -->
@@ -294,6 +299,7 @@ Global Strings -->
     <string name="progress">"Progress"</string>
     <string name="categories">"Categories"</string>
     <string name="subtasks">"Subtasks"</string>
+    <string name="linked_parents">"Linked parents"</string>
     <string name="priority_7_low">"7 - Low"</string>
     <string name="priority_8_lower">"8 - Lower"</string>
     <string name="priority_9_lowest">"9 - Lowest"</string>
@@ -393,8 +399,14 @@ Thank you!"</string>
     <string name="list_update_entries_dialog_title">"Update entries"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Attention: Recurring instances must be unlinked from its series before being moved to another collection and will be ignored in this process."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Choose the parent to which the selected entries should be linked as subtasks/linked notes."</string>
+    <string name="link_entry">"Link entry"</string>
+    <string name="link_entry_search_within">"Search within …"</string>
+    <string name="link_entry_search_within_same_collection">"Same collection"</string>
+    <string name="link_entry_search_within_same_account">"Same account"</string>
     <string name="details_link_existing_subentry_dialog_title">"Link sub-entries"</string>
+    <string name="details_link_existing_parent_dialog_title">"Link parents"</string>
     <string name="details_link_existing_subentry_dialog_info">"Choose the sub-entries that should be linked."</string>
+    <string name="details_link_existing_parent_dialog_info">"Choose a parent-entry that should be linked."</string>
     <string name="details_app_bar_behaviour">"App bar behaviour"</string>
     <string name="details_show_all_options">"Show all options"</string>
     <string name="details_show_hide_elements">Show/hide elements</string>

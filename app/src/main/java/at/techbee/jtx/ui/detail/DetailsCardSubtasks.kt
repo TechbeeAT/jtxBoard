@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.detail
 
-import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -33,20 +32,13 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.locals.ExtendedStatus
-import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.dialogs.EditSubtaskDialog
-import at.techbee.jtx.ui.reusable.dialogs.LinkExistingSubentryDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
@@ -57,40 +49,21 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubtasks(
     subtasks: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
-    selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     sliderIncrement: Int,
     showSlider: Boolean,
-    storedCategories: List<StoredCategory>,
-    storedResources: List<StoredResource>,
-    storedStatuses: List<ExtendedStatus>,
-    player: MediaPlayer?,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubtaskDeleted: (subtaskId: Long) -> Unit,
     onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
-    onLinkSubEntries: (List<ICal4List>) -> Unit,
-    onAllEntriesSearchTextUpdated: (String) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
+    onShowLinkExistingDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val headline = stringResource(id = R.string.subtasks)
     var newSubtaskText by rememberSaveable { mutableStateOf("") }
 
-    var showLinkExistingSubentryDialog by rememberSaveable { mutableStateOf(false) }
-    if(showLinkExistingSubentryDialog) {
-        LinkExistingSubentryDialog(
-            allEntriesLive = selectFromAllListLive,
-            storedCategories = storedCategories,
-            storedResources = storedResources,
-            extendedStatuses = storedStatuses,
-            player = player,
-            onAllEntriesSearchTextUpdated = onAllEntriesSearchTextUpdated,
-            onNewSubentriesConfirmed = { selected -> onLinkSubEntries(selected) },
-            onDismiss = { showLinkExistingSubentryDialog = false }
-        )
-    }
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -106,11 +79,10 @@ fun DetailsCardSubtasks(
                 HeadlineWithIcon(icon = Icons.Outlined.Task, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
 
                 AnimatedVisibility(isEditMode.value) {
-                    IconButton(onClick = { showLinkExistingSubentryDialog = true }) {
+                    IconButton(onClick = { onShowLinkExistingDialog() }) {
                         Icon(painterResource(id = R.drawable.ic_link_variant_plus), stringResource(R.string.details_link_existing_subentry_dialog_title))
                     }
                 }
-
             }
 
 
@@ -139,8 +111,8 @@ fun DetailsCardSubtasks(
                             showProgress = showSlider,
                             sliderIncrement = sliderIncrement,
                             onProgressChanged = onProgressChanged,
-                            onDeleteClicked = { icalObjectId ->  onSubtaskDeleted(icalObjectId) },
-                            onUnlinkClicked = onUnlinkSubEntry,
+                            onDeleteClicked = { onSubtaskDeleted(subtask.id) },
+                            onUnlinkClicked = { onUnlinkSubEntry(subtask.id) },
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
@@ -209,21 +181,15 @@ fun DetailsCardSubtasks_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
-            selectFromAllListLive = MutableLiveData(emptyList()),
             sliderIncrement = 25,
             showSlider = true,
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            storedStatuses = emptyList(),
-            player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
             onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
             goToDetail = { _, _, _ -> },
-            onAllEntriesSearchTextUpdated = { }
+            onShowLinkExistingDialog = {}
         )
     }
 }
@@ -242,21 +208,15 @@ fun DetailsCardSubtasks_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
-            selectFromAllListLive = MutableLiveData(emptyList()),
             sliderIncrement = 25,
             showSlider = true,
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            storedStatuses = emptyList(),
-            player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
             onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
             goToDetail = { _, _, _ -> },
-            onAllEntriesSearchTextUpdated = { }
+            onShowLinkExistingDialog = {}
         )
     }
 }
@@ -275,21 +235,15 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
-            selectFromAllListLive = MutableLiveData(emptyList()),
             sliderIncrement = 25,
             showSlider = false,
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            storedStatuses = emptyList(),
-            player = null,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
             onUnlinkSubEntry = { },
-            onLinkSubEntries = { },
             goToDetail = { _, _, _ -> },
-            onAllEntriesSearchTextUpdated = { }
+            onShowLinkExistingDialog = {}
         )
     }
 }

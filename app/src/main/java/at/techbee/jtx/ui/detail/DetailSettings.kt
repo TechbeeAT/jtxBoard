@@ -155,6 +155,15 @@ enum class DetailSettingsOption(
         defaultForTasks = false,
         possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
     ),
+    ENABLE_PARENTS(
+        key = "enableParents",
+        stringResource = R.string.linked_parents,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        defaultForJournals = false,
+        defaultForNotes = false,
+        defaultForTasks = false,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
     ENABLE_SUBTASKS(
         key = "enableSubtasks",
         stringResource = R.string.subtasks,

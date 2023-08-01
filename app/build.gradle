@@ -31,8 +31,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 205010010
-        versionName "2.05.01-rc8"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 205020005
+        versionName "2.05.02-beta05"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -55,6 +55,7 @@ android {
         resConfigs locales
 
         buildConfigField "String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: localProperties["crowdin.apikey"] ) + "\""
+        buildConfigField "String", "GITHUB_CONTRIBUTORS_API_KEY", "\"" + (System.getenv("GH_CONTRIBUTORS_API_KEY") ?: localProperties["githubcontributors.apikey"] ) + "\""
         resValue "string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: localProperties["google.geo.apikey"] ?: ""
     }
 
@@ -106,7 +107,7 @@ android {
         }
     }
 
-    flavorDimensions 'version'
+    flavorDimensions = ['version']
     productFlavors {
         gplay {
             dimension 'version'
@@ -343,4 +344,7 @@ dependencies {
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
     
     implementation "androidx.profileinstaller:profileinstaller:1.3.1"
+
+    //image loading from the web
+    implementation "io.coil-kt:coil-compose:2.4.0"
 }

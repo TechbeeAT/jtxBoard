@@ -9,10 +9,21 @@
 package at.techbee.jtx.ui.reusable.cards
 
 import android.media.MediaPlayer
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,14 +52,15 @@ fun SubnoteCard(
     player: MediaPlayer?,
     isEditMode: Boolean,
     modifier: Modifier = Modifier,
-    onDeleteClicked: (itemId: Long) -> Unit,
-    onUnlinkClicked: (itemId: Long) -> Unit
+    allowDeletion: Boolean = true,
+    onDeleteClicked: () -> Unit,
+    onUnlinkClicked: () -> Unit
 ) {
 
     var showUnlinkFromParentDialog by rememberSaveable { mutableStateOf(false) }
     if(showUnlinkFromParentDialog) {
         UnlinkEntryDialog(
-            onConfirm = { onUnlinkClicked(subnote.id) },
+            onConfirm = { onUnlinkClicked() },
             onDismiss = { showUnlinkFromParentDialog = false }
         )
     }
@@ -98,10 +110,12 @@ fun SubnoteCard(
                 }
             }
             if (isEditMode) {
-                Divider(modifier = Modifier.height(28.dp).width(1.dp))
+                VerticalDivider(modifier = Modifier.height(28.dp))
 
-                IconButton(onClick = { onDeleteClicked(subnote.id) }) {
-                    Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
+                if(allowDeletion) {
+                    IconButton(onClick = { onDeleteClicked() }) {
+                        Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
+                    }
                 }
                 IconButton(onClick = { showUnlinkFromParentDialog = true }) {
                     Icon(painterResource(id = R.drawable.ic_link_variant_remove), stringResource(R.string.dialog_unlink_from_parent_title))
