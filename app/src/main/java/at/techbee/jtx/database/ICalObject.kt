@@ -56,6 +56,7 @@ import net.fortuna.ical4j.model.property.ExDate
 import net.fortuna.ical4j.model.property.RDate
 import net.fortuna.ical4j.model.property.RRule
 import net.fortuna.ical4j.model.property.RecurrenceId
+import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.text.ParseException
 import java.time.DayOfWeek
@@ -1429,13 +1430,14 @@ data class ICalObject(
             return
 
         val formats = listOf(
-            Regex("\\d*[.]\\d*[,]\\d*[.]\\d*"),   // Google Maps & Apple Maps
-            Regex("\\d*[.]\\d*[~]\\d*[.]\\d*"),   // Bing Maps (Microsoft)
-            Regex("\\d*[.]\\d*[/]\\d*[.]\\d*"),   // Open Street Maps
+            Regex("\\d*[.]\\d*,\\d*[.]\\d*"),   // Google Maps & Apple Maps
+            Regex("\\d*[.]\\d*~\\d*[.]\\d*"),   // Bing Maps (Microsoft)
+            Regex("\\d*[.]\\d*/\\d*[.]\\d*"),   // Open Street Maps
         )
+        val urlDecoded = try { URLDecoder.decode(text, "UTF-8") } catch (e: UnsupportedEncodingException) { text }
 
         formats.forEach { format ->
-            format.find(URLDecoder.decode(text, "UTF-8"))?.value?.let {
+            format.find(urlDecoded)?.value?.let {
                 val latLng = it.split(",", "~", "/")
                 if (latLng.size != 2)
                     return@let
