@@ -46,8 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.room.ColumnInfo
-import at.techbee.jtx.BuildConfig
-import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_GEO_LAT
 import at.techbee.jtx.database.COLUMN_GEO_LONG
@@ -192,7 +191,7 @@ fun DetailsCardLocation(
                 .padding(8.dp),
         ) {
 
-            Crossfade(isEditMode) { editMode ->
+            Crossfade(isEditMode, label = "toggleEditModeForMap") { editMode ->
                 if (!editMode) {
                     Column {
                         HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
@@ -203,7 +202,7 @@ fun DetailsCardLocation(
                     }
                 } else {
                     Column {
-                        if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY && allLocations.isNotEmpty()) {
+                        if (BuildFlavor.getCurrent() == BuildFlavor.GPLAY && allLocations.isNotEmpty()) {
                             LazyRow(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.fillMaxWidth()
@@ -376,7 +375,7 @@ fun DetailsCardLocation(
                         try {
                             context.startActivity(geoIntent)
                         } catch (e: ActivityNotFoundException) {
-                            context.startActivity(Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, BuildConfig.FLAVOR)))
+                            context.startActivity(Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, BuildFlavor.getCurrent())))
                         }
                     }) {
                         Icon(Icons.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
@@ -384,7 +383,7 @@ fun DetailsCardLocation(
                 }
             }
 
-            if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY) {
+            if (BuildFlavor.getCurrent() == BuildFlavor.GPLAY) {
                 AnimatedVisibility(geoLat != null && geoLong != null) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),

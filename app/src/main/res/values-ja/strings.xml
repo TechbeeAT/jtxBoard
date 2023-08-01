@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board ジャーナル、メモ、タスクを同期"</string>
+    <string name="app_permission_label">"jtx Board ジャーナル、メモ、ToDo を同期"</string>
     <string name="app_permission_desc">"jtx Board のコンテンツを DAVx⁵ のような外部のアプリケーションで同期"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
@@ -21,7 +21,7 @@ Global Strings -->
     <string name="current_location">"現在地"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
-    <string name="toolbar_text_add_task">"タスクを追加"</string>
+    <string name="toolbar_text_add_task">"ToDo を追加"</string>
     <string name="toast_sync_requested">"同期が要求されました"</string>
     <string name="default_local_collection_name">"ローカル"</string>
     <string name="default_local_account_name">"ローカル"</string>
@@ -46,7 +46,7 @@ Global Strings -->
     <string name="navigation_drawer_board">"ボード"</string>
     <string name="navigation_drawer_synchronization">"同期"</string>
     <string name="navigation_drawer_about">"アプリについて / ライセンス"</string>
-    <string name="navigation_drawer_subtitle">"ジャーナル、メモ、タスク"</string>
+    <string name="navigation_drawer_subtitle">"ジャーナル、メモ、ToDo"</string>
     <string name="navigation_drawer_settings">"設定"</string>
     <string name="navigation_drawer_news_updates">"ニュース &amp; アップデート"</string>
     <string name="navigation_drawer_external_links">"外部リンク"</string>
@@ -67,7 +67,7 @@ Global Strings -->
     <string name="list_start_on_weekday">"%s に着手予定"</string>
     <string name="list_tabitem_journals">"ジャーナル"</string>
     <string name="list_tabitem_notes">"メモ"</string>
-    <string name="list_tabitem_todos">"タスク"</string>
+    <string name="list_tabitem_todos">"ToDo"</string>
     <string name="list_expand">"展開"</string>
     <string name="list_dialog_delete_selected_title">選択したエントリーを削除しますか？</string>
     <string name="list_dialog_delete_selected_message">このアクションは選択したすべてのエントリー (%1$d 件) を削除します。本当に続行しますか？ この操作は元に戻せません！</string>
@@ -80,7 +80,7 @@ Global Strings -->
     <string name="view_fragment_audio_permission_message">"jtx Board は音声を録音する権限または音声文字変換を使用する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
     <string name="view_reccurrence_note_is_exception">"このアイテムはエントリーの繰り返しの例外です。"</string>
     <string name="view_feedback_linked_notes">"フィードバック / リンクされたメモ"</string>
-    <string name="view_subtask_of">"このエントリーのサブタスク"</string>
+    <string name="view_subtask_of">"このエントリーのサブ ToDo"</string>
     <string name="view_linked_note_of">"メモのリンク先:"</string>
     <string name="view_add_audio_note">"音声メモを追加"</string>
     <string name="view_created_text">"作成日時: %1$s"</string>
@@ -93,7 +93,9 @@ Global Strings -->
     <string name="edit_attachment_button_text">"添付ファイルを追加"</string>
     <string name="edit_take_picture_button_text">"写真を撮る"</string>
     <string name="edit_add_link_button_text">"リンクを追加"</string>
-    <string name="edit_subtasks_add_helper">"サブタスクを追加"</string>
+    <string name="edit_subtasks_add_helper">"サブ ToDo を追加"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"サブ ToDo をクイック追加"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"サブメモをクイック追加"</string>
     <string name="edit_attachment_add_link_dialog">"リンクを追加"</string>
     <string name="edit_recur_repeat_every_x">"繰り返し"</string>
     <string name="edit_recur_on_weekday">"曜日:"</string>
@@ -108,8 +110,8 @@ Global Strings -->
     <string name="edit_datepicker_dialog_edit_timezone">"タイムゾーンを編集"</string>
     <string name="edit_dialog_sure_to_delete_title">"「%1$s」を削除しますか？"</string>
     <string name="edit_dialog_sure_to_discard_title">"このエントリーを破棄しますか？"</string>
-    <string name="dialog_delete_done_title">"完了したタスクをすべて削除しますか？"</string>
-    <string name="dialog_delete_done_message">"注意: 親が完了としてマークされている場合、サブタスクはステータスに関係なく削除されます。この操作は元に戻せません！"</string>
+    <string name="dialog_delete_done_title">"完了した ToDo をすべて削除しますか？"</string>
+    <string name="dialog_delete_done_message">"注意: 親が完了としてマークされている場合、サブ ToDo はステータスに関係なく削除されます。この操作は元に戻せません！"</string>
     <string name="edit_dialog_sure_to_delete_message">"本当に「%1$s」を削除しますか？"</string>
     <string name="edit_dialog_sure_to_discard_message">"本当にこのエントリーを破棄しますか？ 破棄を選択すると保存されません。"</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"着手より前の日時を締め切りに設定することはできません。"</string>
@@ -118,7 +120,8 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"翻訳"</string>
     <string name="about_tabitem_libraries">"ライブラリー"</string>
-    <string name="about_tabitem_thanks">"スペシャルサンクス"</string>
+    <string name="about_tabitem_contributors">"貢献者"</string>
+    <string name="about_special_thanks">"スペシャルサンクス"</string>
     <string name="about_app_version">"バージョン: %1$s (%2$d)"</string>
     <string name="about_app_codename">"コードネーム: %1$s"</string>
     <string name="about_app_build_date">"コンパイル: %s"</string>
@@ -142,8 +145,8 @@ Global Strings -->
     <string name="shortcut_addTodo_longLabel">"ToDo を追加"</string>
     <!-- Settings fragment -->
     <string name="settings_list">"アイテム一覧の設定"</string>
-    <string name="settings_show_progress_for_subtasks">サブタスクの進捗状況を表示</string>
-    <string name="settings_show_progress_for_maintasks">メインタスクの進捗状況を表示</string>
+    <string name="settings_show_progress_for_subtasks">サブ ToDo の進捗状況を表示</string>
+    <string name="settings_show_progress_for_maintasks">メイン ToDo の進捗状況を表示</string>
     <string name="settings_app">"アプリの設定"</string>
     <string name="settings_select_mimetype_for_audio">"音声メモの MIME タイプを選択"</string>
     <!-- Sync fragment -->
@@ -167,19 +170,18 @@ Global Strings -->
     <string name="donate_other_donation_methods">"その他の寄付方法は、私たちのウェブサイトからご確認ください:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"この ファイル/URL を開けるアプリが見つかりませんでした。"</string>
     <string name="toast_item_is_now_recu_exception">"繰り返しのあるアイテムが例外になりました。"</string>
-    <string name="toast_done_tasks_deleted">"完了したタスクが削除されました (%d)。"</string>
+    <string name="toast_done_tasks_deleted">"完了した ToDo が削除されました (%d)。"</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Thanks to"</string>
     <string name="about_translations_basic_info">"jtx Board は、オープンソースコミュニティへの参加と貢献を評価するオープンソースアプリです。このページではコミュニティメンバーの翻訳への取り組みを紹介します。"</string>
     <string name="about_translations_contribution_info">"翻訳を編集/追加したい、またはこのアプリに新しい言語を追加したい場合は、翻訳プラットフォーム Crowdin で jtx Board プロジェクトに参加してください:"</string>
     <string name="about_translations_contribution_button">"Crowdin.com で参加"</string>
-    <string name="about_translations_poeditor">"POeditor.com (レガシー) の翻訳者"</string>
     <string name="list_welcome_entry_journal_summary">"おめでとうございます。最初のジャーナルです :-)"</string>
     <string name="list_welcome_entry_journal_description">"ジャーナルでは、特定の日付に対応したメモを保存できます。この機能の使い方は、議事録、ミーティングの時間、日記など自由です。このエントリーを編集すると、カテゴリーや参加者、添付ファイルなどを追加するオプションを確認できます。このエントリーが不要なら削除してください！"</string>
     <string name="list_welcome_entry_note_summary">"おめでとうございます。最初のメモです :-)"</string>
-    <string name="list_welcome_entry_note_description">"メモは特定の日付に対応しません。ジャーナルと同じように、作成時や編集時に添付ファイルや参加者を追加できます。また、ジャーナル、メモ、タスクのすべてでサブタスクを設定できます！"</string>
-    <string name="list_welcome_entry_todo_summary">"おめでとうございます。最初のタスクです :-)"</string>
-    <string name="list_welcome_entry_todo_description">"さらに、ジャーナル、メモとタスクは着手や締切、完了日時を設定できます。これらは、完了したときや目標が設定されたときに確認できます。試しにこのエントリーを編集して、さまざまなオプションを確認してみてください :-)"</string>
+    <string name="list_welcome_entry_note_description">"メモは特定の日付に対応しません。ジャーナルと同じように、作成時や編集時に添付ファイルや参加者を追加できます。また、ジャーナル、メモ、ToDo のすべてでサブ ToDo を設定できます！"</string>
+    <string name="list_welcome_entry_todo_summary">"おめでとうございます。最初の ToDo です :-)"</string>
+    <string name="list_welcome_entry_todo_description">"さらに、ジャーナル、メモと ToDo は着手や締切、完了日時を設定できます。これらは、完了したときや目標が設定されたときに確認できます。試しにこのエントリーを編集して、さまざまなオプションを確認してみてください :-)"</string>
     <string name="list_welcome_category">"#ファーストステップ"</string>
     <string name="save_and_edit">"保存して編集"</string>
     <string name="save_and_new">"保存して新規作成"</string>
@@ -190,7 +192,7 @@ Global Strings -->
     <string name="permission_read_contacts_denied">"連絡先の読み取り権限が拒否されました"</string>
     <string name="permission_record_audio_granted">"音声録音の権限が付与されました"</string>
     <string name="permission_record_audio_denied">"音声録音の権限が拒否されました"</string>
-    <string name="intent_dialog_title">"ジャーナル、メモ、タスクにコンテンツを追加しますか？"</string>
+    <string name="intent_dialog_title">"ジャーナル、メモ、ToDo にコンテンツを追加しますか？"</string>
     <string name="add">"追加"</string>
     <string name="edit">"編集"</string>
     <string name="reset">"リセット"</string>
@@ -199,6 +201,9 @@ Global Strings -->
     <string name="collection">"コレクション"</string>
     <string name="collection_owner_displayname">"所有者: %1$s"</string>
     <string name="link_to_parent">"親にリンク"</string>
+    <string name="link_selected_as_parent">"親"</string>
+    <string name="link_selected_as_subtask_note">"サブ ToDo/-メモ"</string>
+    <string name="link_selected_as">"…としてリンクを選択"</string>
     <string name="navigation_drawer_collections">"コレクション"</string>
     <string name="navigation_drawer_presets">"プリセット"</string>
     <!-- alarms -->
@@ -217,13 +222,13 @@ Global Strings -->
     <string name="collections_journals_num">"ジャーナル: %1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_notes_num">"メモ: %1$s"</string>
-    <string name="collections_tasks_num">"タスク: %1$s"</string>
+    <string name="collections_tasks_num">"ToDo : %1$s"</string>
     <string name="collections_info">"コレクションは、ファイルのあるフォルダーのようなエントリーの集積です。メニューから新しいローカルのコレクションを作成できます。DAVx⁵ などの同期アプリをインストールして、新しいリモートのコレクションを設定し、同期することもできます。"</string>
     <string name="collections_collection_menu">"コレクション メニュー"</string>
     <string name="collections_dialog_add_local_collection_title">"ローカルのコレクションを追加"</string>
     <string name="collections_dialog_edit_local_collection_title">"ローカルのコレクションを編集"</string>
     <string name="collections_dialog_delete_local_title">"「%1$s」を削除しますか？"</string>
-    <string name="collections_dialog_delete_local_message">"コレクションを削除すると、このコレクション内のすべてのジャーナル、メモ、タスクも削除されます。この操作は元に戻せません。本当に続行しますか？"</string>
+    <string name="collections_dialog_delete_local_message">"コレクションを削除すると、このコレクション内のすべてのジャーナル、メモ、ToDo も削除されます。この操作は元に戻せません。本当に続行しますか？"</string>
     <string name="menu_collections_add_local">"ローカルのコレクションを追加"</string>
     <string name="navigation_drawer_website_news">"ヘルプ &amp; リリースノート"</string>
     <string name="color">"色"</string>
@@ -247,7 +252,7 @@ Global Strings -->
     <string name="menu_collection_popup_export_as_ics">".ics ファイルでエクスポート"</string>
     <string name="journal">"ジャーナル"</string>
     <string name="note">"メモ"</string>
-    <string name="task">"タスク"</string>
+    <string name="task">"ToDo"</string>
     <string name="account">"アカウント"</string>
     <string name="status">"ステータス"</string>
     <string name="classification">"公開設定"</string>
@@ -273,7 +278,7 @@ Global Strings -->
     <string name="search">"検索"</string>
     <string name="search_journals">ジャーナルを検索</string>
     <string name="search_notes">メモを検索</string>
-    <string name="search_todos">タスクを検索</string>
+    <string name="search_todos">ToDo を検索</string>
     <string name="filter">"フィルター"</string>
     <string name="sync_now">"今すぐ同期"</string>
     <string name="due">"締め切り"</string>
@@ -282,7 +287,8 @@ Global Strings -->
     <string name="add_time_switch">"時刻を追加"</string>
     <string name="progress">"進捗状況"</string>
     <string name="categories">"カテゴリー"</string>
-    <string name="subtasks">"サブタスク"</string>
+    <string name="subtasks">"サブ ToDo"</string>
+    <string name="linked_parents">"リンクされた親"</string>
     <string name="priority_7_low">"7 - 低"</string>
     <string name="priority_8_lower">"8 - 特に低"</string>
     <string name="priority_9_lowest">"9 - 最低"</string>
@@ -290,7 +296,7 @@ Global Strings -->
     <string name="view_share_part_of_series">"このエントリーは系列の一部です。"</string>
     <string name="view_share_repeats">"このエントリーは次の期間ごとに繰り返されます:"</string>
     <string name="collections_dialog_move_title">"「%1$s」のすべてのエントリーの移動先:"</string>
-    <string name="collection_dialog_move_info">"注意: 書き込み可能で、対応するコンポーネント (ジャーナル、メモ、タスク) に対応するコレクションのみを選択できます。"</string>
+    <string name="collection_dialog_move_info">"注意: 書き込み可能で、対応するコンポーネント (ジャーナル、メモ、ToDo) に対応するコレクションのみを選択できます。"</string>
     <string name="menu_collections_popup_move_entries">"エントリーを移動"</string>
     <string name="list_no_dates_set">"日付未設定"</string>
     <string name="list_without_start_date">"着手日なし"</string>
@@ -303,7 +309,7 @@ Global Strings -->
     <string name="filter_last_modified">"最終更新日時"</string>
     <string name="filter_no_category">カテゴリーなし</string>
     <string name="filter_no_resource">必要なものなし</string>
-    <string name="filter_subtasks_order_by">サブタスクの並べ替え</string>
+    <string name="filter_subtasks_order_by">サブ ToDo の並べ替え</string>
     <string name="filter_subnotes_order_by">リンクされたメモの並べ替え</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"エントリーを追加するコレクションをクリックしてください！"</string>
     <string name="collections_snackbar_x_items_added">"追加 %1$d 件、 スキップ %2$d 件 (繰り返しのあるエントリーを含む)"</string>
@@ -350,8 +356,8 @@ Global Strings -->
     <string name="settings_modules">"有効なモジュール"</string>
     <string name="settings_modules_enable_journals">"ジャーナル"</string>
     <string name="settings_modules_enable_notes">"メモ"</string>
-    <string name="settings_modules_enable_tasks">"タスク"</string>
-    <string name="settings_default_expand_subtasks">"デフォルトでサブタスクを一覧に展開"</string>
+    <string name="settings_modules_enable_tasks">"ToDo"</string>
+    <string name="settings_default_expand_subtasks">"デフォルトでサブ ToDo を一覧に展開"</string>
     <string name="settings_default_expand_subnotes">"デフォルトでサブメモを一覧に展開"</string>
     <string name="settings_default_expand_attachments">"デフォルトで添付ファイルを一覧に展開"</string>
     <string name="permission_coarse_location_granted">"おおよその位置情報の権限が付与されました"</string>
@@ -379,9 +385,15 @@ Global Strings -->
     <string name="collections_dialog_buypro_info">"リモートのコレクションの編集機能を有効にするには jtx Board Pro をご購入ください。"</string>
     <string name="list_update_entries_dialog_title">"エントリーを更新"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意: 繰り返しのあるインスタンスは、別のコレクションに移動する前に系列から切り離す必要があるため、このプロセスでは無視されます。"</string>
-    <string name="list_update_entries_dialog_new_parent_info">"選択したエントリーをサブタスク/メモとしてリンクする親を選択してください。"</string>
+    <string name="list_update_entries_dialog_new_parent_info">"選択したエントリーをサブ ToDo/メモとしてリンクする親を選択してください。"</string>
+    <string name="link_entry">"エントリーをリンク"</string>
+    <string name="link_entry_search_within">"…を検索"</string>
+    <string name="link_entry_search_within_same_collection">"同じコレクション"</string>
+    <string name="link_entry_search_within_same_account">"同じアカウント"</string>
     <string name="details_link_existing_subentry_dialog_title">"サブエントリーをリンク"</string>
+    <string name="details_link_existing_parent_dialog_title">"親をリンク"</string>
     <string name="details_link_existing_subentry_dialog_info">"リンクするサブエントリーを選択してください。"</string>
+    <string name="details_link_existing_parent_dialog_info">"リンクしたい親エントリーを選択してください。"</string>
     <string name="details_app_bar_behaviour">"アプリバーの動作"</string>
     <string name="details_show_all_options">"すべてのオプションを表示"</string>
     <string name="details_show_hide_elements">要素の表示/非表示</string>
@@ -393,7 +405,7 @@ Global Strings -->
     <string name="details_attachment_beta_info">"* 添付ファイルの同期は試験運用中の機能です。大きなサイズのファイルでは同期に時間がかかったり予期せぬ動作が発生したりする可能性があります。サイズの小さな添付ファイル (最大 100 KB) の使用を強くおすすめします。"</string>
     <string name="details_unchanged_part_of_series">"このエントリーは系列の一部です。このエントリーは、系列に対して行われた変更をすべてコピーします。"</string>
     <string name="details_changed_part_of_series">"このエントリーは系列の一部ですが、変更されました。このエントリーは系列の変更による影響を受けません。"</string>
-    <string name="details_series_attention_subentries">"注意: 系列の各要素には、系列のサブタスクとリンクされたメモが反映されます。各要素のサブタスクやリンクされたメモを変更する場合は、最初に系列からリンクを解除してください。"</string>
+    <string name="details_series_attention_subentries">"注意: 系列の各要素には、系列のサブ ToDo とリンクされたメモが反映されます。各要素のサブ ToDo やリンクされたメモを変更する場合は、最初に系列からリンクを解除してください。"</string>
     <string name="details_go_to_series">"系列に移動"</string>
     <string name="details_detach_from_series">"系列から切り離す"</string>
     <string name="details_detach_all_instances">"すべてのインスタンスを切り離す"</string>
@@ -401,7 +413,7 @@ Global Strings -->
     <string name="dialog_unlink_from_parent_message">"サブエントリーとしての関係を解除しますか？ エントリーは独立して残ります。"</string>
     <string name="edit_comment">"コメントを編集"</string>
     <string name="edit_subnote_add_helper">"サブメモを追加"</string>
-    <string name="edit_subtask">"サブタスクを編集"</string>
+    <string name="edit_subtask">"サブ ToDo を編集"</string>
     <string name="edit_subnote">"サブメモを編集"</string>
     <string name="edit_fragment_app_notification_permission_message">"jtx Board はアラーム時刻に通知を表示します。この機能を使用するには通知の権限を付与してください。"</string>
     <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board では、位置情報を利用して地図を開いたときに今いる場所にズームできます。この機能を使用するには、おおよその位置情報へのアクセス権限を付与してください。"</string>
@@ -420,12 +432,12 @@ Global Strings -->
     <string name="dialog_error_on_update_message">"このエントリーの挿入/更新中にエラーが発生しました。エントリーまたはコレクションが存在しない可能性があります。"</string>
     <string name="dialog_revert_changes_title">"変更を元に戻しますか？"</string>
     <string name="dialog_revert_changes_message">"本当に変更を破棄して内容を編集前に戻しますか？"</string>
-    <string name="dialog_revert_changes_message2">"注意: サブタスクとサブメモは別のエントリーであるため、元に戻せません。"</string>
+    <string name="dialog_revert_changes_message2">"注意: サブ ToDo とサブメモは別のエントリーであるため、元に戻せません。"</string>
     <string name="dialog_select_module_txt_dialog_title">"%1$d 件のファイルのインポート先"</string>
     <string name="dialog_collection_new_entries_title">"新しいエントリー用のコレクション"</string>
     <string name="dialog_detach_from_series_title">"系列から切り離しますか？"</string>
-    <string name="dialog_detach_from_series_text_all">"すべての要素を切り離すと系列が削除され、各インスタンスそれぞれにサブタスクやリンクされたメモを設定できるようになります。しかし、元の系列や他のインスタンスへのリンクは無くなります。続行しますか？"</string>
-    <string name="dialog_detach_from_series_text_single">"この要素を切り離すと、独立したサブタスクやリンクされたメモを設定できるようになります。しかし、元の系列へのリンクは無くなります。続行しますか？"</string>
+    <string name="dialog_detach_from_series_text_all">"すべての要素を切り離すと系列が削除され、各インスタンスそれぞれにサブ ToDo やリンクされたメモを設定できるようになります。しかし、元の系列や他のインスタンスへのリンクは無くなります。続行しますか？"</string>
+    <string name="dialog_detach_from_series_text_single">"この要素を切り離すと、独立したサブ ToDo やリンクされたメモを設定できるようになります。しかし、元の系列へのリンクは無くなります。続行しますか？"</string>
     <string name="dialog_detach_from_series_text_attention">"注意: この操作は元に戻せません！"</string>
     <string name="dialog_detach_from_series_button">"系列から切り離す"</string>
     <string name="dialog_sync_app_outdated_title">"同期アプリのバージョンが古すぎます"</string>
@@ -438,11 +450,11 @@ Global Strings -->
     <string name="dialog_add_audio_entry_title">"音声エントリーを追加"</string>
     <string name="menu_list_viewmode_compact">"コンパクト表示"</string>
     <string name="menu_list_viewmode_kanban">"カンバン表示"</string>
-    <string name="settings_tasks">"タスクの設定"</string>
-    <string name="settings_tasks_status_progress">"タスクの設定 (ステータス/進捗)"</string>
+    <string name="settings_tasks">"ToDo の設定"</string>
+    <string name="settings_tasks_status_progress">"ToDo の設定 (ステータス/進捗)"</string>
     <string name="settings_sync">"同期設定"</string>
-    <string name="settings_default_start_date">"タスクのデフォルトの着手日"</string>
-    <string name="settings_default_due_date">"タスクのデフォルトの締切日"</string>
+    <string name="settings_default_start_date">"ToDo のデフォルトの着手日"</string>
+    <string name="settings_default_due_date">"ToDo のデフォルトの締切日"</string>
     <string name="settings_default_date_none">"なし"</string>
     <string name="settings_default_date_same_day">"当日"</string>
     <string name="settings_default_date_next_day">"翌日"</string>
@@ -460,7 +472,7 @@ Global Strings -->
     <string name="settings_progress_step_50">"50 ずつ増加 (2 段階)"</string>
     <string name="settings_progress_step">"進捗スライダーの段階"</string>
     <string name="settings_disable_alarms_for_readonly">"読み取り専用コレクションのアラームを無効にする"</string>
-    <string name="settings_link_progress_to_subtasks">"進捗状況をサブタスクにリンク"</string>
+    <string name="settings_link_progress_to_subtasks">"進捗状況をサブ ToDo にリンク"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"同期でステータス、進捗状況、完了を維持"</string>
     <string name="settings_attention_experimental_feature">"注意: これは試験運用中の機能です"</string>
     <string name="settings_create_with_current_location">"新規作成するエントリーに現在の位置情報を設定"</string>
@@ -478,7 +490,7 @@ Global Strings -->
     <string name="menu_view_copy_to_clipboard_copied">"コピーしました"</string>
     <string name="menu_view_convert_to_journal">"ジャーナルに変換"</string>
     <string name="menu_view_convert_to_note">"メモに変換"</string>
-    <string name="menu_view_convert_to_task">"タスクに変換"</string>
+    <string name="menu_view_convert_to_task">"ToDo に変換"</string>
     <string name="settings_select_language">"言語を選択"</string>
     <string name="settings_select_language_system">"システムのデフォルト"</string>
     <string name="filter_special">"特別なフィルター"</string>
@@ -492,7 +504,7 @@ Global Strings -->
     <string name="list_start_date_today">"今日から着手"</string>
     <string name="list_start_date_tomorrow">"明日から着手"</string>
     <string name="list_start_date_future">"今後に着手"</string>
-    <string name="list_hide_completed_tasks">"完了したタスクを非表示"</string>
+    <string name="list_hide_completed_tasks">"完了した ToDo を非表示"</string>
     <string name="list_biometric_protected_entries_locked">生体認証で保護されたエントリーはロックされています</string>
     <string name="list_delete_done">"完了したものを削除"</string>
     <string name="collections_biometric_protected_entries_locked_title">生体認証で保護されたエントリーはロックされています</string>
@@ -563,7 +575,7 @@ Global Strings -->
     <string name="settings_default_journals_date_current_15min">"現在の時刻 (15 分刻み)"</string>
     <string name="settings_default_journals_date_current_5min">"現在の時刻 (5 分刻み)"</string>
     <string name="settings_default_journals_date_current_min">"現在の時刻 (1 分刻み)"</string>
-    <string name="widget_list_show_subtasks">"サブタスクを表示"</string>
+    <string name="widget_list_show_subtasks">"サブ ToDo を表示"</string>
     <string name="widget_list_show_subnotes">"サブメモを表示"</string>
     <string name="markdown_bold">"太字"</string>
     <string name="markdown_italic">"斜体"</string>
@@ -580,7 +592,7 @@ Global Strings -->
     <string name="extended_statuses">"拡張ステータス"</string>
     <string name="extended_statuses_for_journals">"ジャーナル向けの…"</string>
     <string name="extended_statuses_for_notes">"メモ向けの…"</string>
-    <string name="extended_statuses_for_tasks">"タスク向けの…"</string>
+    <string name="extended_statuses_for_tasks">"ToDo 向けの…"</string>
     <string name="extended_status_attention">"注意: 拡張ステータスは他のアプリと互換性がなく、標準ステータスに書きこまれます。他のアプリケーションは標準ステータスのみを表示します。"</string>
     <string name="extended_status">\"拡張ステータス</string>
     <string name="active_filters">有効なフィルター:</string>
@@ -596,5 +608,6 @@ Global Strings -->
     <string name="geofence_options">"ジオフェンスの設定"</string>
     <string name="geofence_missing_permission_info">"jtx Board はバックグラウンドで位置情報にアクセスする権限と通知を送信する権限を必要とします。ジオフェンスに入ったときに通知を受けるには、位置情報の権限を「常に許可」に変更し、通知の権限を付与してください！"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board は指定された座標に近づいたときにお知らせできます。この機能を有効にするには、位置情報の権限を「常に許可」にし、通知の権限を許可してください。"</string>
+    <string name="geofence_notification_summary">"ジオフェンスが有効です"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board はアラーム通知の遅延を避けるため、正確なアラームを設定する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
 </resources>

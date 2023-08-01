@@ -159,10 +159,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun updateSelectFromAllListQuery(searchText: String) {
+    fun updateSelectFromAllListQuery(searchText: String, modules: List<Module>, sameCollection: Boolean, sameAccount: Boolean) {
         selectFromAllListQuery.postValue(ICal4List.constructQuery(
-            modules = listOf(Module.JOURNAL, Module.NOTE, Module.TODO),
+            modules = modules,
             searchText = searchText,
+            searchCollection = if(sameCollection) icalEntity.value?.ICalCollection?.displayName?.let { listOf(it) }?: emptyList() else emptyList(),
+            searchAccount = if(sameAccount) icalEntity.value?.ICalCollection?.accountName?.let { listOf(it) }?: emptyList() else emptyList(),
+            orderBy = OrderBy.LAST_MODIFIED,
+            sortOrder = SortOrder.DESC,
             hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
         ))
     }
@@ -262,6 +266,37 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         )
                     )
                     database.getICalObjectById(newSubEntry.id)?.let {
+                        it.makeDirty()
+                        database.update(it)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds a new relatedTo to the passed entries relating to the current ICalObject as a CHILD
+     * @param newParents that should get a link to the current entry
+     */
+    fun linkNewParents(newParents: List<ICal4List>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            newParents.forEach { newParent ->
+                if(newParent.uid == null)
+                    return@forEach
+
+                if(newParent.uid == icalEntity.value?.property?.uid)
+                    return@forEach
+
+                val existing = newParent.uid?.let { database.findRelatedTo(icalEntity.value?.property?.id!!, it, Reltype.PARENT.name) != null } ?: return@forEach
+                if(!existing) {
+                    database.insertRelatedto(
+                        Relatedto(
+                            icalObjectId = icalEntity.value?.property?.id!!,
+                            text = newParent.uid,
+                            reltype = Reltype.PARENT.name
+                        )
+                    )
+                    database.getICalObjectById(icalEntity.value?.property?.id!!)?.let {
                         it.makeDirty()
                         database.update(it)
                     }
@@ -531,10 +566,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun unlinkFromParent(icalObjectId: Long) {
+    fun unlinkFromParent(icalObjectId: Long, parentUID: String?) {
+        if(parentUID == null)
+            return
+
         viewModelScope.launch(Dispatchers.IO) {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
-            database.deleteRelatedto(icalObjectId, icalEntity.value?.property?.uid?:"")
+            database.deleteRelatedto(icalObjectId, parentUID)
             database.getICalObjectByIdSync(icalObjectId)?.let {
                 it.makeDirty()
                 database.update(it)

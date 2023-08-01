@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.Close
@@ -30,7 +29,6 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.SyncProblem
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -39,6 +37,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -193,7 +192,7 @@ fun ListBottomAppBar(
 
                     AnimatedVisibility(isBiometricsEnabled) {
                         IconButton(onClick = { onToggleBiometricAuthentication() }) {
-                            Crossfade(isBiometricsUnlocked) {
+                            Crossfade(isBiometricsUnlocked, label = "isBiometricsUnlocked") {
                                 if(it) {
                                     Icon(
                                         painterResource(id = R.drawable.ic_shield_lock_open),
@@ -262,12 +261,7 @@ fun ListBottomAppBar(
                             contentDescription = stringResource(id = R.string.cancel)
                         )
                     }
-                    Divider(
-                        modifier = Modifier
-                            .height(40.dp)
-                            .width(1.dp)
-                    )
-
+                    VerticalDivider(modifier = Modifier.height(40.dp))
 
                     IconButton(
                         onClick = { onDeleteSelectedClicked() },
@@ -305,7 +299,7 @@ fun ListBottomAppBar(
                             }
                         }
                     }) {
-                        Crossfade(selectedEntries.size) {
+                        Crossfade(selectedEntries.size, label = "selectall_selectnone") {
                             when (it) {
                                 0 -> Text(stringResource(R.string.select_all))
                                 iCal4List.size -> Text(stringResource(R.string.select_none))
@@ -323,7 +317,7 @@ fun ListBottomAppBar(
                 FloatingActionButton(
                     onClick = { onAddNewEntry() },
                 ) {
-                    Crossfade(module) {
+                    Crossfade(module, label = "fab_content_list") {
                         when (it) {
                             Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
                             Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))

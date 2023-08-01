@@ -31,6 +31,7 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
           CROWDIN_API_KEY: ${{ secrets.crowdin_api_key }}
           GOOGLE_GEO_API_KEY: ${{ secrets.google_geo_api_key }}
+          GH_CONTRIBUTORS_API_KEY: ${{ secrets.gh_contributors_api_key }}
 
       - name: Build signed package for Amazon
         run: ./gradlew app:assembleAmazonRelease
@@ -41,6 +42,7 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
           CROWDIN_API_KEY: ${{ secrets.crowdin_api_key }}
           GOOGLE_GEO_API_KEY: ${{ secrets.google_geo_api_key }}
+          GH_CONTRIBUTORS_API_KEY: ${{ secrets.gh_contributors_api_key }}
           
       - name: Build app bundle release (AAB) for Gplay
         run: ./gradlew app:bundleGplayRelease
@@ -51,6 +53,7 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
           CROWDIN_API_KEY: ${{ secrets.crowdin_api_key }}
           GOOGLE_GEO_API_KEY: ${{ secrets.google_geo_api_key }}
+          GH_CONTRIBUTORS_API_KEY: ${{ secrets.gh_contributors_api_key }}
 
       - name: Generate archive
         run: tar -cJvf release-${{ github.ref_name }}.tar.xz app/build/outputs/apk/ app/build/outputs/mapping/*/mapping.txt app/build/outputs/bundle/gplayRelease/

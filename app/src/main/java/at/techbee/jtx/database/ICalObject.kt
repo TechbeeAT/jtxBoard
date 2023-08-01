@@ -24,8 +24,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.JtxContract
-import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -56,6 +56,7 @@ import net.fortuna.ical4j.model.property.ExDate
 import net.fortuna.ical4j.model.property.RDate
 import net.fortuna.ical4j.model.property.RRule
 import net.fortuna.ical4j.model.property.RecurrenceId
+import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.text.ParseException
 import java.time.DayOfWeek
@@ -818,10 +819,10 @@ data class ICalObject(
         }
 
 
-        fun getMapLink(geoLat: Double?, geoLong: Double?, flavor: String): Uri? {
+        fun getMapLink(geoLat: Double?, geoLong: Double?, flavor: BuildFlavor): Uri? {
             return if(geoLat != null || geoLong != null) {
                 try {
-                    if (flavor == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY || flavor == MainActivity2.BUILD_FLAVOR_AMAZON)
+                    if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
                         Uri.parse("https://www.google.com/maps/search/?api=1&query=$geoLat%2C$geoLong")
                     else
                         Uri.parse("https://www.openstreetmap.org/#map=15/$geoLat/$geoLong")
@@ -1429,13 +1430,14 @@ data class ICalObject(
             return
 
         val formats = listOf(
-            Regex("\\d*[.]\\d*[,]\\d*[.]\\d*"),   // Google Maps & Apple Maps
-            Regex("\\d*[.]\\d*[~]\\d*[.]\\d*"),   // Bing Maps (Microsoft)
-            Regex("\\d*[.]\\d*[/]\\d*[.]\\d*"),   // Open Street Maps
+            Regex("\\d*[.]\\d*,\\d*[.]\\d*"),   // Google Maps & Apple Maps
+            Regex("\\d*[.]\\d*~\\d*[.]\\d*"),   // Bing Maps (Microsoft)
+            Regex("\\d*[.]\\d*/\\d*[.]\\d*"),   // Open Street Maps
         )
+        val urlDecoded = try { URLDecoder.decode(text, "UTF-8") } catch (e: UnsupportedEncodingException) { text }
 
         formats.forEach { format ->
-            format.find(URLDecoder.decode(text, "UTF-8"))?.value?.let {
+            format.find(urlDecoded)?.value?.let {
                 val latLng = it.split(",", "~", "/")
                 if (latLng.size != 2)
                     return@let
