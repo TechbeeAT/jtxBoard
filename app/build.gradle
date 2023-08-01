@@ -43,11 +43,8 @@ android {
         }
 
         ksp {
-            // defining the room.schemaLocation explicitly allows AutoMigrations
-            room {
-                generateKotlin
-                schemaDirectory "$projectDir/schemas/"
-            }
+            arg("room.generateKotlin", "true")
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
 
         def locales = getLocales()

@@ -18,8 +18,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
@@ -34,7 +38,7 @@ import java.util.zip.ZipOutputStream
 
 class CollectionsViewModel(application: Application) : AndroidViewModel(application) {
 
-    val database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
+    val database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao()
     val collections = database.getAllCollectionsView()
     val app = application
 

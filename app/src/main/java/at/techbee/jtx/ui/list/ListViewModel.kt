@@ -74,7 +74,7 @@ import kotlinx.coroutines.launch
 open class ListViewModel(application: Application, val module: Module) : AndroidViewModel(application) {
 
     private val _application = application
-    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
+    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao()
     private val settings = PreferenceManager.getDefaultSharedPreferences(application)
 
     val prefs: SharedPreferences = when (module) {

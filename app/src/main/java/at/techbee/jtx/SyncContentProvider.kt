@@ -158,7 +158,7 @@ class SyncContentProvider : ContentProvider() {
         if (context?.applicationContext == null)
             return false
 
-        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao
+        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao()
         TimeZoneRegistryFactory.getInstance().createRegistry()
 
         return true
@@ -593,7 +593,7 @@ class SyncContentProvider : ContentProvider() {
                 database.getAlarmSync(alarmId)?.icalObjectId ?: return 1
             }
 
-            val alarms = database.getAlarmsSync(icalObjectId) ?: emptyList()
+            val alarms = database.getAlarmsSync(icalObjectId)
             val iCalObject = database.getICalObjectByIdSync(alarms.firstOrNull()?.icalObjectId ?: return 1) ?: return 1
 
             alarms.forEach { alarm ->

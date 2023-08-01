@@ -92,7 +92,7 @@ class GeofenceClient(context: Context) : GeofenceClientDefinition(context) {
         val notificationManager = NotificationManagerCompat.from(context)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val db = ICalDatabase.getInstance(context).iCalDatabaseDao
+            val db = ICalDatabase.getInstance(context).iCalDatabaseDao()
 
             triggeringGeofences.forEach { geofence ->
                 val iCalObjectId = geofence.requestId.toLongOrNull() ?: return@forEach

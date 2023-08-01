@@ -51,7 +51,7 @@ fun PresetsScreen(
 ) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val database = ICalDatabase.getInstance(LocalContext.current).iCalDatabaseDao
+    val database = ICalDatabase.getInstance(LocalContext.current).iCalDatabaseDao()
     val allCategories by database.getAllCategoriesAsText().observeAsState(emptyList())
     val storedCategories by database.getStoredCategories().observeAsState(emptyList())
     val allResources by database.getAllResourcesAsText().observeAsState(emptyList())
@@ -127,12 +127,12 @@ fun PresetsScreenContent(
             storedCategory = editCategory!!,
             onStoredCategoryChanged = {
                 scope.launch(Dispatchers.IO) {
-                    ICalDatabase.getInstance(context).iCalDatabaseDao.upsertStoredCategory(it)
+                    ICalDatabase.getInstance(context).iCalDatabaseDao().upsertStoredCategory(it)
                 }
             },
             onDeleteStoredCategory = {
                 scope.launch(Dispatchers.IO) {
-                    ICalDatabase.getInstance(context).iCalDatabaseDao.deleteStoredCategory(it)
+                    ICalDatabase.getInstance(context).iCalDatabaseDao().deleteStoredCategory(it)
                 }
             },
             onDismiss = { editCategory = null }
@@ -144,12 +144,12 @@ fun PresetsScreenContent(
             storedResource = editResource!!,
             onStoredResourceChanged = {
                 scope.launch(Dispatchers.IO) {
-                    ICalDatabase.getInstance(context).iCalDatabaseDao.upsertStoredResource(it)
+                    ICalDatabase.getInstance(context).iCalDatabaseDao().upsertStoredResource(it)
                 }
             },
             onDeleteStoredResource = {
                 scope.launch(Dispatchers.IO) {
-                    ICalDatabase.getInstance(context).iCalDatabaseDao.deleteStoredResource(it)
+                    ICalDatabase.getInstance(context).iCalDatabaseDao().deleteStoredResource(it)
                 }
             },
             onDismiss = { editResource = null }
@@ -161,12 +161,12 @@ fun PresetsScreenContent(
             storedStatus = editXStatus!!,
             onStoredStatusChanged = {
                 scope.launch(Dispatchers.IO) {
-                    ICalDatabase.getInstance(context).iCalDatabaseDao.upsertStoredStatus(it)
+                    ICalDatabase.getInstance(context).iCalDatabaseDao().upsertStoredStatus(it)
                 }
             },
             onDeleteStoredStatus = {
                 scope.launch(Dispatchers.IO) {
-                    ICalDatabase.getInstance(context).iCalDatabaseDao.deleteStoredStatus(it)
+                    ICalDatabase.getInstance(context).iCalDatabaseDao().deleteStoredStatus(it)
                 }
             },
             onDismiss = { editXStatus = null }

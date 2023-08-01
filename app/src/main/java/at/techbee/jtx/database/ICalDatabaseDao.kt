@@ -22,9 +22,7 @@ import at.techbee.jtx.ui.detail.LocationLatLng
 import at.techbee.jtx.ui.presets.XStatusStatusPair
 
 
-/**
- * Defines methods for using the SleepNight class with Room.
- */
+
 @Dao
 interface ICalDatabaseDao {
 
@@ -36,7 +34,6 @@ SELECTs (global selects without parameter)
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
      * @return a list of [Category.text] as LiveData<List<String>>
      */
-    @Transaction
     @Query("SELECT DISTINCT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) ORDER BY $COLUMN_CATEGORY_ID DESC")
     fun getAllCategoriesAsText(): LiveData<List<String>>
 
@@ -44,7 +41,6 @@ SELECTs (global selects without parameter)
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
      * @return a list of [Category.text] as LiveData<List<String>>
      */
-    @Transaction
     @Query("SELECT DISTINCT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) ORDER BY $COLUMN_RESOURCE_ID DESC")
     fun getAllResourcesAsText(): LiveData<List<String>>
 
@@ -54,7 +50,6 @@ SELECTs (global selects without parameter)
      *
      * @return a list of [Attachment.uri] as List<String>
      */
-    @Transaction
     @Query("SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT")
     suspend fun getAllAttachmentUris(): List<String>
 
@@ -63,7 +58,6 @@ SELECTs (global selects without parameter)
      *
      * @return the [Attachment] with this [id]
      */
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ID = :id")
     fun getAttachmentById(id: Long): Attachment?
 
@@ -74,7 +68,6 @@ SELECTs (global selects without parameter)
      *
      * @return a list of [Organizer.caladdress] as LiveData<List<String>>
      */
-    @Transaction
     @Query("SELECT DISTINCT caladdress FROM organizer ORDER BY caladdress ASC")
     fun getAllOrganizers(): LiveData<List<String>>
 
@@ -83,7 +76,6 @@ SELECTs (global selects without parameter)
      *
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_READONLY = 0 AND ($COLUMN_COLLECTION_SUPPORTSVJOURNAL = 1 OR $COLUMN_COLLECTION_SUPPORTSVTODO = 1) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllWriteableCollections(): LiveData<List<ICalCollection>>
 
@@ -92,7 +84,6 @@ SELECTs (global selects without parameter)
      * @param module (Module.name) for which there are existing entries for a collection
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
-    @Transaction
     @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID IN (SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollections(module: String): LiveData<List<ICalCollection>>
 
@@ -102,7 +93,6 @@ SELECTs (global selects without parameter)
      *
      * @return a list of [CollectionsView] as LiveData<List<CollectionsView>>
      */
-    @Transaction
     @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW ORDER BY $COLUMN_COLLECTION_ACCOUNT_TYPE = 'LOCAL' DESC, $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollectionsView(): LiveData<List<CollectionsView>>
 
@@ -111,7 +101,6 @@ SELECTs (global selects without parameter)
      * Retrieve a list of ICalObjectIds that can be moved to a new collection
      * This process excludes child-entries that should be handled by the move-method
      */
-    @Transaction
     @Query("SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ICALOBJECT_COLLECTIONID = :collectionId AND $COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_RELTYPE = 'PARENT')")
     suspend fun getICalObjectIdsToMove(collectionId: Long): List<Long>
 
@@ -120,7 +109,6 @@ SELECTs (global selects without parameter)
      * Retrieve an list of all remote collections ([ICalCollection])
      * @return a list of [ICalCollection] as LiveData
      */
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
     fun getAllRemoteCollectionsLive(): LiveData<List<ICalCollection>>
 
@@ -128,7 +116,6 @@ SELECTs (global selects without parameter)
      * Retrieve an list of all remote collections ([ICalCollection])
      * @return a list of [ICalCollection]
      */
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
     fun getAllRemoteCollections(): List<ICalCollection>
 
@@ -139,7 +126,6 @@ SELECTs (global selects without parameter)
      *
      * @return a list of [Relatedto] as List<Relatedto>
      */
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_RELATEDTO")
     fun getAllRelatedto(): LiveData<List<Relatedto>>
 
@@ -148,7 +134,6 @@ SELECTs (global selects without parameter)
      * @param uids of the entries
      * @return list of [ICal4List]
      */
-    @Transaction
     @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_UID IN (:uids)")
     fun getICal4ListByUIDs(uids: List<String?>): LiveData<List<ICal4List>>
 
@@ -157,7 +142,6 @@ SELECTs (global selects without parameter)
      *
      * @return a list of [Relatedto] as List<Relatedto>
      */
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_RELATEDTO")
     fun getAllRelatedtoSync(): List<Relatedto>
 
@@ -166,7 +150,6 @@ SELECTs (global selects without parameter)
      * @param uid ot find
      * @return ICalObject of the UID
      */
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid")
     fun getICalObjectFor(uid: String): ICalObject?
 
@@ -178,7 +161,6 @@ SELECTs (global selects without parameter)
      *
      * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
      */
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT")
     fun getAllAttachments(): LiveData<List<Attachment>>
 
@@ -187,7 +169,6 @@ SELECTs (global selects without parameter)
      * Retrieve an list of all  [Attachment]
      * @return a list of [Attachment] as LiveData<List<[Attachment]>>
      */
-    @Transaction
     @Query("SELECT CASE WHEN (EXISTS (SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :id AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')) THEN 1 ELSE 0 END")
     fun isChild(id: Long): LiveData<Boolean>
 
@@ -289,7 +270,7 @@ INSERTs (Asyncronously / Suspend)
     suspend fun insertAttachment(attachment: Attachment): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun upsertCollection(ICalCollection: ICalCollection): Long
+    suspend fun upsertCollection(iCalCollection: ICalCollection): Long
 
 
 /*
@@ -327,7 +308,7 @@ INSERTs (Synchronously)
     fun insertUnknownSync(unknown: Unknown): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCollectionSync(ICalCollection: ICalCollection): Long
+    fun insertCollectionSync(iCalCollection: ICalCollection): Long
 
 
 
@@ -505,28 +486,6 @@ DELETEs by Object
 
 
 
-    /**
-     * Delete entities through a RawQuery.
-     * This is especially used for the Content Provider
-     *
-     * @param query The DELETE statement.
-     * @return A number of Entities deleted.
-     */
-    @Transaction
-    @RawQuery
-    fun deleteRAW(query: SupportSQLiteQuery): Int
-
-    /**
-     * Updates entities through a RawQuery.
-     * This is especially used for the Content Provider
-     *
-     * @param query The UPDATE statement.
-     * @return A number of Entities that were updated.
-     */
-    @Transaction
-    @RawQuery
-    fun updateRAW(query: SupportSQLiteQuery): Int
-
 
     @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun update(icalObject: ICalObject)
@@ -545,7 +504,6 @@ DELETEs by Object
      * @param minDate: The date from which the [Alarm]s should be fetched (default: System.currentTimeMillis())
      * @return a list of the next alarms
      */
-    @Transaction
     @Query("SELECT $TABLE_NAME_ALARM.* " +
             "FROM $TABLE_NAME_ALARM " +
             "INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
@@ -562,7 +520,6 @@ DELETEs by Object
      * @param limit: The number of [ICalObject]s that should be returned
      * @return a list of ICalObjects
      */
-    @Transaction
     @Query("SELECT $TABLE_NAME_ICALOBJECT.* " +
             "FROM $TABLE_NAME_ICALOBJECT " +
             "WHERE $COLUMN_DELETED = 0 " +
@@ -581,7 +538,6 @@ DELETEs by Object
      * @param minDate: The due date from which the [ICalObject]s should be fetched (default: System.currentTimeMillis())
      * @return a list of the next due icalobjects
      */
-    @Transaction
     @Query("SELECT $TABLE_NAME_ICALOBJECT.* " +
             "FROM $TABLE_NAME_ICALOBJECT " +
             "WHERE $COLUMN_DELETED = 0 " +
@@ -595,26 +551,20 @@ DELETEs by Object
     @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun updateCollection(collection: ICalCollection)
 
-    @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = 1, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:id)")
     suspend fun updateToDeleted(id: Long, lastModified: Long)
 
-    @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_ICALOBJECT_COLLECTIONID = :collectionId, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:ids)")
     suspend fun updateCollection(ids: List<Long>, collectionId: Long, lastModified: Long)
 
-    @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
     suspend fun updateSetDirty(id: Long, lastModified: Long)
 
-    @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SUBTASKS_EXPANDED = :isSubtasksExpanded, $COLUMN_SUBNOTES_EXPANDED = :isSubnotesExpanded, $COLUMN_ATTACHMENTS_EXPANDED = :isAttachmentsExpanded, $COLUMN_PARENTS_EXPANDED = :isParentsExpanded WHERE $COLUMN_ID = :id")
     suspend fun updateExpanded(id: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean)
 
-    @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SORT_INDEX = :index WHERE $COLUMN_ID = :id")
     suspend fun updateOrder(id: Long, index: Int?)
-
 
 
     @Transaction
@@ -622,7 +572,27 @@ DELETEs by Object
     fun getAllParents(): LiveData<List<ICal4ListRel>>
 
 
+    /**
+     * Delete entities through a RawQuery.
+     * This is especially used for the Content Provider
+     *
+     * @param query The DELETE statement.
+     * @return A number of Entities deleted.
+     */
+    @RawQuery
+    fun deleteRAW(query: SupportSQLiteQuery): Int
+
+    /**
+     * Updates entities through a RawQuery.
+     * This is especially used for the Content Provider
+     *
+     * @param query The UPDATE statement.
+     * @return A number of Entities that were updated.
+     */
     @Transaction
+    @RawQuery
+    fun updateRAW(query: SupportSQLiteQuery): Int
+
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4List(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
 
@@ -653,55 +623,44 @@ DELETEs by Object
     fun getSync(key: Long): ICalEntity?
 
 
-    @Transaction
     @Query("SELECT * from alarm WHERE _id = :key")
     fun getAlarmSync(key: Long): Alarm?
 
-    @Transaction
     @Query("SELECT * from $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = :icalobjectId")
-    fun getAlarmsSync(icalobjectId: Long): List<Alarm>?
+    fun getAlarmsSync(icalobjectId: Long): List<Alarm>
 
 
-    @Transaction
     @Query("SELECT * from $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_CATEGORY_TEXT = :category")
     fun getCategoryForICalObjectByName(iCalObjectId: Long, category: String): Category?
 
-    @Transaction
     @Query("SELECT * from $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_RESOURCE_TEXT = :resource")
     fun getResourceForICalObjectByName(iCalObjectId: Long, resource: String): Resource?
 
 
     /** This query returns all ids of child elements of the given [parentKey]  */
-    @Transaction
     @Query("SELECT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID IN (SELECT rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO rel INNER JOIN $TABLE_NAME_ICALOBJECT ical ON rel.$COLUMN_RELATEDTO_TEXT = ical.$COLUMN_UID AND ical.$COLUMN_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')" )
     suspend fun getRelatedChildren(parentKey: Long): List<ICalObject>
 
     /** This query returns the average progress of the given ICalObjectIds  */
-    @Transaction
     @Query("SELECT AVG(IFNULL($COLUMN_PERCENT, 0)) FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN (:iCalObjectIds)" )
     suspend fun getAverageProgressOf(iCalObjectIds: List<Long>): Int?
 
-    @Transaction
     @Query("SELECT * from $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectid AND $COLUMN_RELATEDTO_TEXT = :linkedUID AND $COLUMN_RELATEDTO_RELTYPE = :reltype")
     fun findRelatedTo(icalobjectid: Long, linkedUID: String, reltype: String): Relatedto?
 
 
     // This query returns all IcalObjects that have a specific ICalObjectId in the field for the OriginalIcalObjectId (ie. all generated items for a recurring entry)
-    @Transaction
     @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NULL")
     fun getRecurSeriesElement(uid: String): ICalObject?
 
 
     // This query returns all IcalObjects that have a specific ICalObjectId in the field for the OriginalIcalObjectId (ie. all generated items for a recurring entry)
-    @Transaction
     @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NOT NULL")
-    fun getRecurInstances(uid: String): List<ICalObject?>
+    fun getRecurInstances(uid: String): List<ICalObject>
 
-    @Transaction
     @Query("SELECT $COLUMN_EXDATE from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :originalId")
     fun getRecurExceptions(originalId: Long): String?
 
-    @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_EXDATE = :exceptions, $COLUMN_DIRTY = 1, $COLUMN_LAST_MODIFIED = :lastUpdated, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1 WHERE $COLUMN_ID = :originalId")
     fun setRecurExceptions(originalId: Long, exceptions: String?, lastUpdated: Long = System.currentTimeMillis())
 
@@ -713,15 +672,12 @@ DELETEs by Object
      * @param newUID that should be set
      * @param newCollectionId that should be set
      */
-    @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_UID = :newUID, $COLUMN_ICALOBJECT_COLLECTIONID = :newCollectionId WHERE $COLUMN_UID = :oldUID AND $COLUMN_RECURID IS NOT NULL")
     fun updateRecurringInstanceUIDs(oldUID: String?, newUID: String, newCollectionId: Long)
 
-    @Transaction
     @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RRULE IS NULL AND $COLUMN_RECURID IS NOT NULL AND $COLUMN_UID NOT IN (SELECT $COLUMN_UID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RRULE IS NOT NULL)")
     fun removeOrphans()
 
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
     fun getRecurringToPopulate(id: Long): ICalObject?
 
@@ -730,25 +686,20 @@ DELETEs by Object
     /*
     Queries for the content provider returning a Cursor
      */
-    @Transaction
     @RawQuery
     fun getCursor(query: SupportSQLiteQuery): Cursor?
 
-    @Transaction
     @RawQuery
     fun getICalObjectRaw(query: SupportSQLiteQuery): List<ICalObject>
 
 
-    @Transaction
     @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECURID IS NOT NULL AND $COLUMN_UID = :uid AND $COLUMN_SEQUENCE = 0")
     fun deleteUnchangedRecurringInstances(uid: String?)
 
 
-    @Transaction
     @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECURID IS NOT NULL AND $COLUMN_UID = :uid")
     fun deleteRecurringInstances(uid: String?)
 
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID = :recurid")
     fun getRecurInstance(uid: String?, recurid: String): ICalObject?
 
@@ -759,7 +710,6 @@ DELETEs by Object
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStoredListSetting(storedListSetting: StoredListSetting): Long
 
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_STORED_LIST_SETTINGS WHERE $COLUMN_STORED_LIST_SETTING_MODULE = :module")
     fun getStoredListSettings(module: String): LiveData<List<StoredListSetting>>
 
@@ -772,7 +722,6 @@ DELETEs by Object
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertStoredCategory(storedCategory: StoredCategory)
 
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_STORED_CATEGORIES")
     fun getStoredCategories(): LiveData<List<StoredCategory>>
 
@@ -787,7 +736,6 @@ DELETEs by Object
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertStoredResource(storedResource: StoredResource)
 
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_STORED_RESOURCES")
     fun getStoredResources(): LiveData<List<StoredResource>>
 
@@ -799,7 +747,6 @@ DELETEs by Object
      * StoredStatus
      */
 
-    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_EXTENDED_STATUS")
     fun getStoredStatuses(): LiveData<List<ExtendedStatus>>
 
@@ -814,7 +761,6 @@ DELETEs by Object
      * @param [module] for which the XStatuses should be retrieved
      * @return a pair of XSTATUS and mapped STATUS
      */
-    @Transaction
     @Query("SELECT DISTINCT $COLUMN_EXTENDED_STATUS, $COLUMN_STATUS FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module AND $COLUMN_EXTENDED_STATUS IS NOT NULL")
     fun getAllXStatusesFor(module: String): LiveData<List<XStatusStatusPair>>
 

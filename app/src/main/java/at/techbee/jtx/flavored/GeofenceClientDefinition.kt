@@ -34,7 +34,7 @@ abstract class GeofenceClientDefinition(val context: Context) {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+            val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
             val geofenceObjects = database.getICalObjectsWithGeofence(MAX_GEOFENCES)
             val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
             val activeGeofences = prefs.getStringSet(PREFS_ACTIVE_GEOFENCES, emptySet())
