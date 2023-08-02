@@ -13,7 +13,11 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -21,7 +25,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SmallFloatingActionButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,8 +52,8 @@ fun AudioPlaybackElement(
 ) {
 
     var playing by remember { mutableStateOf(false) }
-    var position by remember { mutableStateOf(0F) }
-    var duration by remember { mutableStateOf(0) }
+    var position by remember { mutableFloatStateOf(0F) }
+    var duration by remember { mutableIntStateOf(0) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -100,7 +111,7 @@ fun AudioPlaybackElement(
         ) {
 
             Box(contentAlignment = Alignment.BottomCenter) {
-                Crossfade(playing) {
+                Crossfade(playing, label = "AudioPlaybackElement_Play_Pause_Button") {
                     Icon(
                         if (!it) Icons.Filled.PlayArrow else Icons.Filled.Pause,
                         stringResource(if (!it) R.string.audio_play else R.string.audio_pause)
