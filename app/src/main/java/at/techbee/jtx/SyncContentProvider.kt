@@ -434,7 +434,7 @@ class SyncContentProvider : ContentProvider() {
 
         // if the request was for an Attachment, then allow the calling application to access the file by grantUriPermission
         if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR || sUriMatcher.match(uri) == CODE_ATTACHMENT_ITEM) {
-            while (result?.moveToNext() == true) {
+            while (result.moveToNext()) {
                 try {
                     val uriColumnIndex = result.getColumnIndex(COLUMN_ATTACHMENT_URI)
                     val attachmentUriString = result.getString(uriColumnIndex)
@@ -448,9 +448,11 @@ class SyncContentProvider : ContentProvider() {
                     )
                 } catch (e: NullPointerException) {
                     Log.i("attachment", "Uri not present or could not be parsed.")
+                } catch (e: IllegalStateException) {
+                    Log.d("attachment", "Cursor for attachments is empty")
                 }
             }
-            result?.moveToPosition(-1)   // reset to beginning
+            result.moveToPosition(-1)   // reset to beginning
         }
         return result
     }

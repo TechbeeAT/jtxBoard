@@ -687,7 +687,7 @@ DELETEs by Object
     Queries for the content provider returning a Cursor
      */
     @RawQuery
-    fun getCursor(query: SupportSQLiteQuery): Cursor?
+    fun getCursor(query: SupportSQLiteQuery): Cursor
 
     @RawQuery
     fun getICalObjectRaw(query: SupportSQLiteQuery): List<ICalObject>
