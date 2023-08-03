@@ -226,13 +226,13 @@ class SyncContentProvider : ContentProvider() {
         // this block updates the count variable. The raw query doesn't return the count of the deleted rows, so we determine it before
         val countQueryString = queryString.replace("DELETE FROM ", "SELECT count(*) FROM ")
         val countQuery = SimpleSQLiteQuery(countQueryString, args.toArray())
-        count = database.deleteRAW(countQuery)
+        count = database.executeRAW(countQuery)
 
         val deleteQuery = SimpleSQLiteQuery(queryString, args.toArray())
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query prepared: $queryString")
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query args prepared: ${args.joinToString(separator = ", ")}")
 
-        database.deleteRAW(deleteQuery)
+        database.executeRAW(deleteQuery)
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
@@ -568,7 +568,7 @@ class SyncContentProvider : ContentProvider() {
 
         // TODO: find a solution to efficiently return the actual count of updated rows (the return value of the RAW-query doesn't work)
         //val count = database.updateRAW(updateQuery)
-        database.updateRAW(updateQuery)
+        database.executeRAW(updateQuery)
 
         // updates on recurring instances through bulk updates should not occur, only updates on single items will update the recurring instances
         if (sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) || values.containsKey(

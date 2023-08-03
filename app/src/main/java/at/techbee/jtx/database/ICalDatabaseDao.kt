@@ -61,16 +61,6 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ID = :id")
     fun getAttachmentById(id: Long): Attachment?
 
-
-
-    /**
-     * Retrieve an list of all DISTINCT Organizer caladdresses ([Organizer.caladdress]) as a LiveData-List
-     *
-     * @return a list of [Organizer.caladdress] as LiveData<List<String>>
-     */
-    @Query("SELECT DISTINCT caladdress FROM organizer ORDER BY caladdress ASC")
-    fun getAllOrganizers(): LiveData<List<String>>
-
     /**
      * Retrieve an list of all Collections ([Collection]) as a LiveData-List
      *
@@ -119,15 +109,6 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
     fun getAllRemoteCollections(): List<ICalCollection>
 
-
-
-    /**
-     * Retrieve an list of all Relatedto ([Relatedto]) as a List
-     *
-     * @return a list of [Relatedto] as List<Relatedto>
-     */
-    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO")
-    fun getAllRelatedto(): LiveData<List<Relatedto>>
 
     /**
      * Retrieve an list of all [ICal4List] their UIDs
@@ -269,9 +250,6 @@ INSERTs (Asyncronously / Suspend)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAttachment(attachment: Attachment): Long
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun upsertCollection(iCalCollection: ICalCollection): Long
-
 
 /*
 INSERTs (Synchronously)
@@ -331,12 +309,6 @@ DELETEs by Object
     @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
     fun deleteICalObjectsbyId(id: Long)
 
-    /**
-     * Delete an ICalCollection by the id.
-     * @param id The ICalCollection to be deleted.
-     */
-    @Query("DELETE FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ID = :id")
-    fun deleteICalCollectionbyId(id: Long)
 
     /**
      * Delete an ICalCollection by the object.
@@ -376,13 +348,6 @@ DELETEs by Object
     fun deleteAttachments(icalobjectId: Long)
 
     /**
-     * Delete all relatedto with a specific icalobjectid.
-     * @param [icalobjectId] of the icalObject that should be deleted.
-     */
-    @Query("DELETE FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectId")
-    fun deleteRelatedtos(icalobjectId: Long)
-
-    /**
      * Delete all attendees with a specific icalobjectid.
      * @param [icalobjectId] of the icalObject that should be deleted.
      */
@@ -403,29 +368,6 @@ DELETEs by Object
     @Query("DELETE FROM $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = :icalobjectId")
     fun deleteAlarms(icalobjectId: Long)
 
-    /**
-     * Delete a category by the object.
-     *
-     * @param category The object of the category that should be deleted.
-     */
-    @Delete
-    fun deleteCategory(category: Category)
-
-    /**
-     * Delete a comment by the object.
-     *
-     * @param comment The object of the comment that should be deleted.
-     */
-    @Delete
-    fun deleteComment(comment: Comment)
-
-    /**
-     * Delete an attachment by the object.
-     *
-     * @param attachment The object of the attachment that should be deleted.
-     */
-    @Delete
-    fun deleteAttachment(attachment: Attachment)
 
     /**
      * Delete a relatedto by the object.
@@ -440,22 +382,6 @@ DELETEs by Object
      */
     @Query("DELETE FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_RELATEDTO_TEXT = :parentUID AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT'")
     fun deleteRelatedto(iCalObjectId: Long, parentUID: String)
-
-    /**
-     * Delete an attendee by the object.
-     *
-     * @param attendee The object of the attendee that should be deleted.
-     */
-    @Delete
-    fun deleteAttendee(attendee: Attendee)
-
-    /**
-     * Delete a resource by the object.
-     *
-     * @param resource The object of the resource that should be deleted.
-     */
-    @Delete
-    fun deleteResource(resource: Resource)
 
     /**
      * Deletes all ICalObjects. ONLY FOR TESTING!
@@ -554,9 +480,6 @@ DELETEs by Object
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = 1, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:id)")
     suspend fun updateToDeleted(id: Long, lastModified: Long)
 
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_ICALOBJECT_COLLECTIONID = :collectionId, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:ids)")
-    suspend fun updateCollection(ids: List<Long>, collectionId: Long, lastModified: Long)
-
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
     suspend fun updateSetDirty(id: Long, lastModified: Long)
 
@@ -571,19 +494,8 @@ DELETEs by Object
     @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_UID in (SELECT $COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $COLUMN_DELETED = 0)")
     fun getAllParents(): LiveData<List<ICal4ListRel>>
 
-
     /**
-     * Delete entities through a RawQuery.
-     * This is especially used for the Content Provider
-     *
-     * @param query The DELETE statement.
-     * @return A number of Entities deleted.
-     */
-    @RawQuery
-    fun deleteRAW(query: SupportSQLiteQuery): Int
-
-    /**
-     * Updates entities through a RawQuery.
+     * Updates/deletes entities through a RawQuery.
      * This is especially used for the Content Provider
      *
      * @param query The UPDATE statement.
@@ -591,7 +503,7 @@ DELETEs by Object
      */
     @Transaction
     @RawQuery
-    fun updateRAW(query: SupportSQLiteQuery): Int
+    fun executeRAW(query: SupportSQLiteQuery): Int
 
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4List(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
@@ -641,10 +553,6 @@ DELETEs by Object
     @Query("SELECT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID IN (SELECT rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO rel INNER JOIN $TABLE_NAME_ICALOBJECT ical ON rel.$COLUMN_RELATEDTO_TEXT = ical.$COLUMN_UID AND ical.$COLUMN_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')" )
     suspend fun getRelatedChildren(parentKey: Long): List<ICalObject>
 
-    /** This query returns the average progress of the given ICalObjectIds  */
-    @Query("SELECT AVG(IFNULL($COLUMN_PERCENT, 0)) FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN (:iCalObjectIds)" )
-    suspend fun getAverageProgressOf(iCalObjectIds: List<Long>): Int?
-
     @Query("SELECT * from $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectid AND $COLUMN_RELATEDTO_TEXT = :linkedUID AND $COLUMN_RELATEDTO_RELTYPE = :reltype")
     fun findRelatedTo(icalobjectid: Long, linkedUID: String, reltype: String): Relatedto?
 
@@ -688,10 +596,6 @@ DELETEs by Object
      */
     @RawQuery
     fun getCursor(query: SupportSQLiteQuery): Cursor
-
-    @RawQuery
-    fun getICalObjectRaw(query: SupportSQLiteQuery): List<ICalObject>
-
 
     @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECURID IS NOT NULL AND $COLUMN_UID = :uid AND $COLUMN_SEQUENCE = 0")
     fun deleteUnchangedRecurringInstances(uid: String?)
