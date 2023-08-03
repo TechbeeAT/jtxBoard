@@ -116,7 +116,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Traduzioni"</string>
     <string name="about_tabitem_libraries">"Librerie"</string>
-    <string name="about_tabitem_thanks">"Ringraziamenti speciali"</string>
+    <string name="about_special_thanks">"Ringraziamenti speciali"</string>
     <string name="about_app_version">"Versione: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nome in codice: %1$s"</string>
     <string name="about_app_build_date">"Compilato tramite %s"</string>
@@ -132,9 +132,6 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Copia come Attività"</string>
     <string name="menu_view_copy_as_note">"Copia come Nota"</string>
     <string name="menu_view_copy_item">"Crea copia"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Promemoria per attività scadente"</string>
-    <string name="notification_channel_reminder_description">"Notifica per Attività"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Aggiungi Diario"</string>
     <string name="shortcut_addNote_longLabel">"Aggiungi Nota"</string>
@@ -170,7 +167,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board è un'app open source che apprezza la partecipazione e il contributo della comunità open source. In questa pagina vorremmo attribuire gli sforzi dei membri della comunità per le traduzioni."</string>
     <string name="about_translations_contribution_info">"Se desideri modificare/aggiungere traduzioni o aggiungere nuove lingue a questa app, sentiti libero di unirti al progetto jtx Board sulla piattaforma di traduzione Crowdin:"</string>
     <string name="about_translations_contribution_button">"Partecipa a Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Traduttori su POeditor.com (legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Congratulazioni, questa è la tua prima annotazione nel diario :-)"</string>
     <string name="list_welcome_entry_journal_description">"I Diari possono essere utilizzati per conservare i tuoi appunti per una data specifica. Utilizzare questa funzionalità ad esempio per i protocolli, i verbali delle riunioni, le voci del diario e così via. Se modifichi questa voce, vedrai le opzioni per aggiungere categorie, partecipanti, allegati, … Sentiti libero di eliminare questa voce quando vuoi!"</string>
     <string name="list_welcome_entry_note_summary">"Congratulazioni, questa è la tua prima nota :-)"</string>
@@ -285,7 +281,6 @@ Global Strings -->
     <string name="view_share_part_of_series">"Questa voce fa parte di una serie."</string>
     <string name="view_share_repeats">"Questa voce si ripete ogni"</string>
     <string name="collections_dialog_move_title">"Sposta tutte le voci da \"%1$s\" a"</string>
-    <string name="collection_dialog_move_info">"Nota: solo le collezioni scrivibili e le collezioni con supporto per gli stessi componenti (Diari, Note, Compiti) possono essere selezionate."</string>
     <string name="menu_collections_popup_move_entries">"Spostare le voci"</string>
     <string name="list_no_dates_set">"Nessuna data fissata"</string>
     <string name="list_without_start_date">"Senza data di inizio"</string>
@@ -443,7 +438,6 @@ Grazie!"</string>
     <string name="settings_progress_step_25">"Incremento di 25 (4 passi)"</string>
     <string name="settings_progress_step_50">"Incremento di 50 (2 passi)"</string>
     <string name="settings_progress_step">"Imposta il passo per il cursore di avanzamento"</string>
-    <string name="settings_disable_alarms_for_readonly">"Disattivare gli allarmi per le raccolte di sola lettura"</string>
     <string name="settings_attention_experimental_feature">"Attenzione: Questa è una funzione sperimentale"</string>
     <string name="settings_create_with_current_location">"Crea nuove voci con la posizione corrente"</string>
     <string name="sync_button_go_to_collections">"Vai alle Collezioni"</string>
@@ -544,12 +538,4 @@ Grazie!"</string>
     <string name="markdown_code">"Codice"</string>
     <string name="active_filters">Filtri attivi:</string>
     <string name="clear_filters">"Rimuovi filtri"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
 </resources>

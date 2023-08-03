@@ -27,8 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import at.techbee.jtx.BuildConfig
-import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
 
@@ -36,8 +34,7 @@ import at.techbee.jtx.ui.theme.Typography
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AboutTranslations(
-    translatorsPoeditor: MutableState<List<String>>,
-    translatorsCrowdin: MutableState<List<String>>,
+    translators: List<String>,
     modifier: Modifier = Modifier
 ) {
 
@@ -65,48 +62,28 @@ fun AboutTranslations(
             )
         }
         item {
-            if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_OSE)
-                Text(
-                    stringResource(id = R.string.about_translations_contribution_info),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(8.dp)
-                )
-        }
-        item {
-            if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_OSE)
-                Button(
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    onClick = {
-                    context.startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("https://crowdin.com/project/jtx-board/invite?h=a8fd45e2dfea25534eda503b441476ea1545967")
-                        )
-                    )
-                }) {
-                    Text(stringResource(id = R.string.about_translations_contribution_button))
-                }
-        }
-
-
-        items(items = translatorsCrowdin.value) { translator ->
-            TranslatorCard(
-                name = translator,
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .animateItemPlacement()
-            )
-        }
-
-        item {
             Text(
-                text = stringResource(R.string.about_translations_poeditor),
+                stringResource(id = R.string.about_translations_contribution_info),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 8.dp, end = 8.dp)
+                modifier = Modifier.padding(8.dp)
             )
         }
+        item {
+            Button(
+                modifier = Modifier.padding(bottom = 8.dp),
+                onClick = {
+                context.startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://crowdin.com/project/jtx-board/invite?h=a8fd45e2dfea25534eda503b441476ea1545967")
+                    )
+                )
+            }) {
+                Text(stringResource(id = R.string.about_translations_contribution_button))
+            }
+        }
 
-        items(items = translatorsPoeditor.value) { translator ->
+        items(items = translators) { translator ->
             TranslatorCard(
                 name = translator,
                 modifier = Modifier
@@ -122,9 +99,6 @@ fun AboutTranslations(
 @Composable
 fun AboutTranslations_Preview() {
     MaterialTheme {
-        AboutTranslations(
-            remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) },
-            remember { mutableStateOf(listOf("Patrick", "Ioannis", "Luis")) }
-        )
+        AboutTranslations(listOf("Patrick", "Ioannis", "Luis"))
     }
 }

@@ -94,6 +94,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Сделать фотографию"</string>
     <string name="edit_add_link_button_text">"Добавить ссылку на прикрепленный файл"</string>
     <string name="edit_subtasks_add_helper">"Добавить подзадачу"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Быстрое добавление подзадачи"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Быстрое добавление доч. заметки"</string>
     <string name="edit_attachment_add_link_dialog">"Добавить ссылку на вложение"</string>
     <string name="edit_recur_repeat_every_x">"Повторять каждые"</string>
     <string name="edit_recur_on_weekday">"по"</string>
@@ -118,7 +120,8 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Перевод"</string>
     <string name="about_tabitem_libraries">"Библиотеки"</string>
-    <string name="about_tabitem_thanks">"Особая благодарность"</string>
+    <string name="about_tabitem_contributors">"Внесшие вклад"</string>
+    <string name="about_special_thanks">"Особая благодарность"</string>
     <string name="about_app_version">"Версия: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Кодовое название: %1$s"</string>
     <string name="about_app_build_date">"Скомпилировано %s"</string>
@@ -134,9 +137,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Скопировать как задачу"</string>
     <string name="menu_view_copy_as_note">"Скопировать как заметку"</string>
     <string name="menu_view_copy_item">"Создать копию"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Напоминание о задачах"</string>
-    <string name="notification_channel_reminder_description">"Уведомление о невыполненных задачах"</string>
+    <string name="notification_channel_alarms_name">"Напоминания"</string>
+    <string name="notification_channel_geofences_name">"Геозоны"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Добавить журнал"</string>
     <string name="shortcut_addNote_longLabel">"Добавить заметку"</string>
@@ -174,7 +176,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board — приложение с открытым исходным кодом, и мы высоко ценим участие и вклад нашего сообщества. На этой странице мы хотели бы отметить усилия всех переводчиков."</string>
     <string name="about_translations_contribution_info">"Если вы хотите отредактировать/добавить перевод или новые языки в это приложение, присоединяйтесь к jtx Board на платформе Crowdin:"</string>
     <string name="about_translations_contribution_button">"Перейти на Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Переводчики на POeditor.com (прошлая платформа)"</string>
     <string name="list_welcome_entry_journal_summary">"Поздравляем, это ваша первая запись в журнале :-)"</string>
     <string name="list_welcome_entry_journal_description">"Журналы можно использовать для хранения заметок на конкретную дату. Используйте эту функцию, например, для протоколов, протоколов собраний, записей в дневнике и т. д. Если вы отредактируете эту запись, вы увидите варианты добавления категорий, участников, вложений и т. д. Не стесняйтесь удалять эту запись, когда захотите!"</string>
     <string name="list_welcome_entry_note_summary">"Поздравляем, это ваша первая заметка :-)"</string>
@@ -200,6 +201,9 @@ Global Strings -->
     <string name="collection">"Коллекция"</string>
     <string name="collection_owner_displayname">"Владелец: %1$s"</string>
     <string name="link_to_parent">"Привязать к родителю"</string>
+    <string name="link_selected_as_parent">"Родитель"</string>
+    <string name="link_selected_as_subtask_note">"Подзадача/-заметка"</string>
+    <string name="link_selected_as">"Привязать выбранное как …"</string>
     <string name="navigation_drawer_collections">"Коллекции"</string>
     <string name="navigation_drawer_presets">"Пресеты"</string>
     <!-- alarms -->
@@ -284,6 +288,7 @@ Global Strings -->
     <string name="progress">"Прогресс"</string>
     <string name="categories">"Категория"</string>
     <string name="subtasks">"Подзадачи"</string>
+    <string name="linked_parents">"Привязанные род. записи"</string>
     <string name="priority_7_low">"7 - Пониженный"</string>
     <string name="priority_8_lower">"8 - Низкий"</string>
     <string name="priority_9_lowest">"9 - Минимальный"</string>
@@ -372,7 +377,7 @@ Global Strings -->
     <string name="audio_stop">"Стоп"</string>
     <string name="audio_pause">"Пауза"</string>
     <string name="audio_error_toast">"К сожалению, начать воспроизведение не удалось."</string>
-    <string name="sync_in_progress">"Синхронизация..."</string>
+    <string name="sync_in_progress">"Синхронизация…"</string>
     <string name="invalid_timezone_message">"Пожалуйста, выберите корректный часовой пояс!"</string>
     <string name="invalid_url_message">"Пожалуйста, введите допустимый URL-адрес!"</string>
     <string name="list_quickadd_dialog_sr_start">"Начать распознавание речи"</string>
@@ -381,8 +386,14 @@ Global Strings -->
     <string name="list_update_entries_dialog_title">"Обновить записи"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Внимание: повторяющиеся записи должны быть отсоединены от своей серии перед перемещением в другую коллекцию и будут проигнорированы в этом процессе."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Выберите родителя, к которому выбранные записи должны быть привязаны в качестве подзадач/связанных заметок."</string>
+    <string name="link_entry">"Привязать запись"</string>
+    <string name="link_entry_search_within">"Поиск в …"</string>
+    <string name="link_entry_search_within_same_collection">"Текущая коллекция"</string>
+    <string name="link_entry_search_within_same_account">"Текущий аккаунт"</string>
     <string name="details_link_existing_subentry_dialog_title">"Привязать записи"</string>
-    <string name="details_link_existing_subentry_dialog_info">"Выберите записи, которые нужно привязать."</string>
+    <string name="details_link_existing_parent_dialog_title">"Привязать род. записи"</string>
+    <string name="details_link_existing_subentry_dialog_info">"Выберите дочерние записи для привязки."</string>
+    <string name="details_link_existing_parent_dialog_info">"Выберите родительскую запись для привязки."</string>
     <string name="details_app_bar_behaviour">"Управление панелью"</string>
     <string name="details_show_all_options">"Показать все опции"</string>
     <string name="details_show_hide_elements">Показать/скрыть элементы</string>
@@ -440,6 +451,7 @@ Global Strings -->
     <string name="menu_list_viewmode_compact">"Компактно"</string>
     <string name="menu_list_viewmode_kanban">"Канбан"</string>
     <string name="settings_tasks">"Настройки задач"</string>
+    <string name="settings_tasks_status_progress">"Настройки задач (статус/прогресс)"</string>
     <string name="settings_sync">"Настройки синхронизации"</string>
     <string name="settings_default_start_date">"Установить дату начала задачи по умолчанию"</string>
     <string name="settings_default_due_date">"Установить дату завершения задачи по умолчанию"</string>
@@ -520,7 +532,7 @@ Global Strings -->
     <string name="menu_list_flat_view_sub">"Всегда показывать дочерние записи на верхнем уровне в списке"</string>
     <string name="menu_list_limit_recur_entries">"Лимит повторений"</string>
     <string name="menu_list_limit_recur_entries_sub">"Показывать только одно повторение записи из серии"</string>
-    <string name="menu_view_markdown_formatting">"Формат Markdown"</string>
+    <string name="menu_view_markdown_formatting">"Markdown-разметка"</string>
     <string name="menu_view_autosave">"Автосохранение"</string>
     <string name="next">"Далее"</string>
     <string name="previous">"Предыдущий"</string>
@@ -590,12 +602,12 @@ Global Strings -->
     <string name="kanban_columns_based_on_extended_status">на основе расширенных статусов</string>
     <string name="kanban_columns_based_on_first_category">на основе первой категории</string>
     <string name="clear_filters">"Сбросить фильтры"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="geofence_radius_meter">"Радиус %1$d м"</string>
+    <string name="geofence_radius_feet">"Радиус %1$d фт"</string>
+    <string name="geofence_selection">"Геозона: %1$s"</string>
+    <string name="geofence_options">"Настройки геозоны"</string>
+    <string name="geofence_missing_permission_info">"jtx Board требуется разрешение для доступа к вашему местоположению и отправки вам уведомлений. Пожалуйста, обновите права доступа к местоположению на «Разрешать всегда» и предоставьте разрешение на уведомления, чтобы получать их при нахождении в указанных геозонах!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board будет отправлять вам уведомления, когда вы приближаетесь к указанным координатам. Пожалуйста, установите права доступа к местоположению на «Разрешать всегда» и предоставьте разрешение на уведомления для использования этой функции."</string>
+    <string name="geofence_notification_summary">"Геозона активирована"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board требуется разрешение для установки точного времени напоминания, в противном случае уведомления могут быть задержаны. Пожалуйста, предоставьте это разрешение для использования этой функции."</string>
 </resources>

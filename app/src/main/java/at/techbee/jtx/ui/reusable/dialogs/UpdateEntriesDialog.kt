@@ -29,9 +29,9 @@ import androidx.compose.material.icons.outlined.NewLabel
 import androidx.compose.material.icons.outlined.WorkOff
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
@@ -43,6 +43,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -130,7 +131,7 @@ fun UpdateEntriesDialog(
     var selectFromAllListSelectedEntry by remember { mutableStateOf<ICal4List?>(null) }
 
     var updateEntriesDialogMode by remember { mutableStateOf(UpdateEntriesDialogMode.CATEGORIES) }
-    var selectFromAllListMaxEntriesShown by remember { mutableStateOf(10) }
+    var selectFromAllListMaxEntriesShown by remember { mutableIntStateOf(10) }
 
 
     AlertDialog(
@@ -174,7 +175,7 @@ fun UpdateEntriesDialog(
                     }
                 }
 
-                Divider(modifier = Modifier.padding(8.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
                 AnimatedVisibility(visible = updateEntriesDialogMode == UpdateEntriesDialogMode.CATEGORIES) {
                     FlowRow(
@@ -383,6 +384,7 @@ fun UpdateEntriesDialog(
                                 storedStatuses = storedStatuses,
                                 selected = entry.iCal4List == selectFromAllListSelectedEntry,
                                 progressUpdateDisabled = true,
+                                markdownEnabled = false, 
                                 player = player,
                                 onProgressChanged = {_, _ -> },
                                 modifier = Modifier.clickable {

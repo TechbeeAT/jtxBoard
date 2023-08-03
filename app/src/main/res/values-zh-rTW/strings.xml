@@ -102,7 +102,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"翻譯"</string>
     <string name="about_tabitem_libraries">"库"</string>
-    <string name="about_tabitem_thanks">"特別感謝"</string>
+    <string name="about_special_thanks">"特別感謝"</string>
     <string name="about_app_version">"版本：%1$s (%2$d)"</string>
     <string name="about_app_build_date">"编译于%s"</string>
     <string name="about_app_terms">"条款与条件"</string>
@@ -117,9 +117,6 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"复制为任务"</string>
     <string name="menu_view_copy_as_note">"复制为笔记"</string>
     <string name="menu_view_copy_item">"创建复本"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"任務到期提醒"</string>
-    <string name="notification_channel_reminder_description">"任務到期通知"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"新增日誌"</string>
     <string name="shortcut_addNote_longLabel">"新增筆記"</string>
@@ -248,7 +245,6 @@ Global Strings -->
     <string name="view_share_part_of_series">"此条目是系列的一部分。"</string>
     <string name="view_share_repeats">"此条目重复，每"</string>
     <string name="collections_dialog_move_title">"从“%1$s”移动所有条目到"</string>
-    <string name="collection_dialog_move_info">"请注意：只能选择可写合集和支持相同组件（日志、笔记、任务）的集合。"</string>
     <string name="menu_collections_popup_move_entries">"移动条目"</string>
     <string name="list_no_dates_set">"未设置日期"</string>
     <string name="filter_order_by">"排序"</string>
@@ -389,12 +385,4 @@ Global Strings -->
     <string name="markdown_horizontal_ruler">"分隔線"</string>
     <string name="markdown_unordered_list">"清單/列表"</string>
     <string name="markdown_code">"程式碼"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
 </resources>

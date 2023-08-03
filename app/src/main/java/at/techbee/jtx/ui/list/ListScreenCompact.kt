@@ -28,7 +28,7 @@ import androidx.compose.material.icons.outlined.ArrowDropUp
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -79,6 +79,7 @@ fun ListScreenCompact(
     listSettings: ListSettings,
     settingLinkProgressToSubtasks: Boolean,
     isPullRefreshEnabled: Boolean,
+    markdownEnabled: Boolean,
     player: MediaPlayer?,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
@@ -175,6 +176,7 @@ fun ListScreenCompact(
                             storedResources = storedResources,
                             storedStatuses = storedStatuses,
                             progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                            markdownEnabled = markdownEnabled,
                             selected = selectedEntries,
                             player = player,
                             modifier = Modifier
@@ -207,9 +209,8 @@ fun ListScreenCompact(
                         )
 
                         if (iCal4ListRelObject != group.last())
-                            Divider(
+                            HorizontalDivider(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                thickness = 1.dp,
                                 modifier = Modifier.alpha(0.25f)
                             )
                     }
@@ -278,6 +279,7 @@ fun ListScreenCompact_TODO() {
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
             isPullRefreshEnabled = true,
+            markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
@@ -342,6 +344,7 @@ fun ListScreenCompact_JOURNAL() {
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
             isPullRefreshEnabled = true,
+            markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },

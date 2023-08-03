@@ -1,0 +1,88 @@
+# template: https://levelup.gitconnected.com/baseline-profiles-github-actions-ce8bc6858bb3
+
+# Workflow name
+name: generate baseline-profiles
+
+# Workflow title
+# run-name: ${{ github.actor }} requested a workflow
+
+# Event trigger so this actions gets executed every time a push is made on the main branch
+# Change this event to what suits your project best.
+# Read more at https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+on:
+  workflow_dispatch
+
+# Environment variables (Optional)
+# Small projects might have signingConfigs locally. This could lead to failures on GitHub Actions.
+# If that's the case, upload your properties defined locally to GitHub Secrets.
+
+# On your signingConfigs, you can recover GitHub Secrets using: variable = System.getenv("VARIABLE")
+
+# Then uncomment this block properly defining your uploaded variables
+# env:
+#  VARIABLE: ${{ secrets.VARIABLE }}
+
+# Read more at https://docs.github.com/en/actions/security-guides/encrypted-secrets
+
+# Jobs to executed on GitHub machines
+jobs:
+
+    # Job name
+    generate-baseline-profiles:
+
+      # Operating system where the job gets to be executed
+      runs-on: ubuntu-latest-4-cores
+
+      # Job steps
+      steps:
+
+        # Checks your code out on the machine
+        - uses: actions/checkout@v3
+
+        # Sets java up
+        - uses: actions/setup-java@v3
+          with:
+            distribution: temurin
+            java-version: 17
+
+        # Sets gradle up
+        - name: Setup Gradle
+          uses: gradle/gradle-build-action@v2
+
+        # Grants execute permission to gradle (safety step)
+        - name: Grant Permissions to gradlew
+          run: chmod +x gradlew
+
+        # Cleans managed device if previously settle and space currently is not available
+        - name: Clean Managed Devices
+          run: ./gradlew cleanManagedDevices --unused-only
+
+        # Generates Baseline Profile
+        - name: Generate Baseline Profile
+
+          ## swiftshader_indirect: 
+          ## Required to use software acceleration on machines that can't use hardware acceleration
+
+          ## enabledRules=BaselineProfile:
+          ## Required to skip macrobenchmark tests. 
+          ## Read more at https://developer.android.com/topic/performance/benchmarking/benchmarking-in-ci#real-devices
+          ## Read more at https://developer.android.com/topic/performance/benchmarking/macrobenchmark-overview#configuration-errors
+          
+          ## gradle.workers.max: 
+          ## Required to avoid running multiple managed device tests concurrently. Read more at https://issuetracker.google.com/issues/193118030
+          
+          run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -P android.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -P android.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile
+
+        # Sets the Baseline Profile on its proper place so it gets correctly bundled into Play Store
+        - name: Move & Rename Baseline Profiles
+          run:  |
+            mv -f benchmark/build/outputs/managed_device_android_test_additional_output/pixel2Api31/BaselineProfileGenerator_startup-baseline-prof.txt app/src/main/baseline-prof.txt
+
+        # Commits the generated Baseline Profile to your origin/remote
+        - name: Commit Baseline Profiles
+          run: |
+            git config --global user.name 'Baseline Profiles - GitHub Actions'
+            git config --global user.email 'github@actions'
+            git add app/src/main/baseline-prof.txt
+            git commit -m "Generate baseline profiles"
+            git push

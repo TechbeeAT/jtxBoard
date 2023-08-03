@@ -118,7 +118,8 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Traductions"</string>
     <string name="about_tabitem_libraries">"Bibliothèques"</string>
-    <string name="about_tabitem_thanks">"Remerciements"</string>
+    <string name="about_tabitem_contributors">"Contributeurs"</string>
+    <string name="about_special_thanks">"Remerciements"</string>
     <string name="about_app_version">"Version : %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nom de code : %1$s"</string>
     <string name="about_app_build_date">"Compilé le %s"</string>
@@ -134,9 +135,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Copie en tant que tâche"</string>
     <string name="menu_view_copy_as_note">"Copie en tant que note"</string>
     <string name="menu_view_copy_item">"Créer une copie"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Rappel des tâches"</string>
-    <string name="notification_channel_reminder_description">"Notification des tâches à accomplir"</string>
+    <string name="notification_channel_alarms_name">"Alarmes"</string>
+    <string name="notification_channel_geofences_name">"Zones géographiques"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Ajouter un journal"</string>
     <string name="shortcut_addNote_longLabel">"Ajouter une note"</string>
@@ -173,7 +173,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board est une application open source qui apprécie la participation et la contribution de la communauté open source. Sur cette page, nous aimerions remercier les efforts des membres de la communauté pour les traductions."</string>
     <string name="about_translations_contribution_info">"Si vous souhaitez modifier/ajouter des traductions ou ajouter de nouvelles langues à cette application, n'hésitez pas à rejoindre le projet jtx Board sur la plate-forme de traduction Crowdin :"</string>
     <string name="about_translations_contribution_button">"Rejoindre sur Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Traducteurs sur POeditor.com (legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Félicitations, c'est votre premier journal :-)"</string>
     <string name="list_welcome_entry_journal_description">"Les journaux peuvent être utilisés pour conserver vos notes pour une date spécifique. Utilisez cette fonctionnalité par exemple pour les protocoles, les comptes rendus de réunion, les entrées d'agenda, etc. Si vous modifiez cette entrée, vous verrez les options pour ajouter des catégories, des participants, des pièces jointes, … N'hésitez pas à supprimer cette entrée quand vous le souhaitez !"</string>
     <string name="list_welcome_entry_note_summary">"Félicitations, c'est votre première note :-)"</string>
@@ -439,6 +438,7 @@ Merci !"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
     <string name="settings_tasks">"Paramètres des tâches"</string>
+    <string name="settings_tasks_status_progress">"Paramètres des tâches (statut/progression)"</string>
     <string name="settings_sync">"Paramètres de synchronisation"</string>
     <string name="settings_default_start_date">"Définir une date de début par défaut pour les tâches"</string>
     <string name="settings_default_due_date">"Définir une date d'échéance par défaut pour les tâches"</string>
@@ -588,12 +588,10 @@ Merci !"</string>
     <string name="kanban_columns_based_on_extended_status">basé sur les statuts étendus</string>
     <string name="kanban_columns_based_on_first_category">basée sur la première catégorie</string>
     <string name="clear_filters">"Supprimer les filtres"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="geofence_radius_meter">"Rayon %1$d m"</string>
+    <string name="geofence_radius_feet">"Rayon %1$d ft"</string>
+    <string name="geofence_selection">"Géorepérage : %1$s"</string>
+    <string name="geofence_options">"Options de géorepérage"</string>
+    <string name="geofence_missing_permission_info">"jtx Board a besoin des autorisations pour accéder à votre position en arrière-plan et vous envoyer des notifications. Veuillez mettre à jour l’autorisation de localisation pour « Toujours autoriser» et accorder l’autorisation de notification afin d’être notifié lorsque vous atteignez votre repère géographique!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board peut vous avertir lorsque vous êtes proche des coordonnées indiquées. Veuillez définir l’autorisation de localisation pour «Toujours autoriser et autoriser les notifications à utiliser cette fonctionnalité."</string>
 </resources>

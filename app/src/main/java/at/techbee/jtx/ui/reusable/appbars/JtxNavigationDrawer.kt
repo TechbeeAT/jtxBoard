@@ -2,11 +2,29 @@ package at.techbee.jtx.ui.reusable.appbars
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,8 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import kotlinx.coroutines.launch
 
@@ -31,8 +49,9 @@ fun JtxNavigationDrawer(
     paddingValues: PaddingValues = PaddingValues()
 ) {
     val scope = rememberCoroutineScope()
-    val items =
-        NavigationDrawerDestination.valuesFor(BuildConfig.FLAVOR).groupBy { it.groupRes }
+    val isProPurchased by BillingManager.getInstance().isProPurchased.observeAsState(false)
+    val items = NavigationDrawerDestination.valuesFor(isProPurchased).groupBy { it.groupRes }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -107,7 +126,7 @@ fun JtxNavigationDrawerMenu(
         items.entries.forEach { entry ->
 
             entry.key?.let {
-                Divider(modifier = Modifier.padding(16.dp))
+                HorizontalDivider(modifier = Modifier.padding(16.dp))
                 Text(
                     text = stringResource(id = it),
                     modifier = Modifier.padding(start = 24.dp),
@@ -120,8 +139,8 @@ fun JtxNavigationDrawerMenu(
                 NavigationDrawerItem(
                     icon = item.getIconComposable(
                         modifier = Modifier.size(24.dp),
-                        tint = if(item == NavigationDrawerDestination.TWITTER) Color.Unspecified
-                        else if (item == NavigationDrawerDestination.MASTODON) Color.Unspecified
+                        tint = //if(item == NavigationDrawerDestination.TWITTER) Color.Unspecified
+                        if (item == NavigationDrawerDestination.MASTODON) Color.Unspecified
                         else if(item.name == navController.currentDestination?.route) MaterialTheme.colorScheme.onPrimary
                         else MaterialTheme.colorScheme.onSurface
                     ),
@@ -151,7 +170,7 @@ fun JtxNavigationDrawerMenu(
 fun JtxNavigationDrawerMenu_Preview() {
     MaterialTheme {
         val items =
-            NavigationDrawerDestination.valuesFor(BuildConfig.FLAVOR).groupBy { it.groupRes }
+            NavigationDrawerDestination.valuesFor(false).groupBy { it.groupRes }
 
         JtxNavigationDrawerMenu(
             items = items,

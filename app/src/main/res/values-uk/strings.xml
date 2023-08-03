@@ -4,33 +4,41 @@
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="ok">"OK"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_privacy_policy">"Політика конфіденційності"</string>
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
+    <string name="edit_attachment_button_text">"Додати вкладення"</string>
     <!-- fragment_about -->
     <!-- menus -->
-    <!-- Notification channel for Reminders -->
     <!-- Shortcuts -->
     <!-- Settings fragment -->
     <!-- Sync fragment -->
+    <string name="sync_congratulations">"Вітання! :-)"</string>
     <!-- Donate fragment -->
+    <string name="donate_thank_you">"Дякую!"</string>
     <!-- sync content provider -->
     <!-- Permissions -->
     <!-- alarms -->
     <!-- fragment_collections -->
     <!-- Fuzzy -->
+    <string name="priority_0_no_priority">"Без пріорітету"</string>
+    <string name="notification_add_1h">"+ 1 година"</string>
+    <string name="notification_add_1d">"+ 1 день"</string>
+    <string name="settings_select_theme">"Обрати тему"</string>
+    <string name="settings_select_theme_dark">"Темна"</string>
+    <string name="settings_select_theme_light">"Світла"</string>
     <!-- Buy Pro fragment -->
+    <string name="edit_comment">"Редагувати коментар"</string>
     <!-- alarms -->
+    <string name="dialog_revert_changes_title">"Скасувати зміни?"</string>
+    <string name="menu_view_copy_to_clipboard">"Копіювати до буфера обміну"</string>
+    <string name="menu_view_copy_to_clipboard_copied">"Скопійовано"</string>
     <!-- fragment_ical_list -->
+    <string name="list_date_today">"Сьогодні"</string>
+    <string name="list_date_tomorrow">"Завтра"</string>
     <!-- Strings for values in properties of an ICalObject -->
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
 </resources>

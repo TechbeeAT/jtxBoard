@@ -17,10 +17,12 @@ Global Strings -->
     <string name="longitude">"Zeměpisná délka"</string>
     <string name="unlink">"Zrušit propojení"</string>
     <string name="off">"Vypnuto"</string>
+    <string name="permissions">"Oprávnění"</string>
     <string name="current_location">"Současná poloha"</string>
     <string name="toolbar_text_add_journal">"Přidat Deník"</string>
     <string name="toolbar_text_add_note">"Přidat Poznámku"</string>
     <string name="toolbar_text_add_task">"Přidat Úkol"</string>
+    <string name="toast_sync_requested">"Vyžadována synchronizace"</string>
     <string name="default_local_collection_name">"Místní"</string>
     <string name="default_local_account_name">"Místní"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -41,7 +43,7 @@ Global Strings -->
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Otevřít navigační panel"</string>
     <string name="navigation_drawer_close">"Zavřít navigační panel"</string>
-    <string name="navigation_drawer_board">"Deska"</string>
+    <string name="navigation_drawer_board">"Nástěnka"</string>
     <string name="navigation_drawer_synchronization">"Synchronizace"</string>
     <string name="navigation_drawer_about">"O aplikaci / Licence"</string>
     <string name="navigation_drawer_subtitle">"deníky, poznámky a úkoly"</string>
@@ -116,7 +118,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Překlady"</string>
     <string name="about_tabitem_libraries">"Knihovny"</string>
-    <string name="about_tabitem_thanks">"Zvláštní poděkování"</string>
+    <string name="about_special_thanks">"Zvláštní poděkování"</string>
     <string name="about_app_version">"Verze: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Kódový název: %1$s"</string>
     <string name="about_app_build_date">"Zkompilováno dne %s"</string>
@@ -132,9 +134,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Kopírovat jako Úkol"</string>
     <string name="menu_view_copy_as_note">"Kopírovat jako Poznámku"</string>
     <string name="menu_view_copy_item">"Vytvořit kopii"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Připomenutí termínu úkolů"</string>
-    <string name="notification_channel_reminder_description">"Oznámení pro termíny úkolů"</string>
+    <string name="notification_channel_alarms_name">"Budíky"</string>
+    <string name="notification_channel_geofences_name">"Sledované oblasti"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Přidat Deník"</string>
     <string name="shortcut_addNote_longLabel">"Přidat Poznámku"</string>
@@ -172,7 +173,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board je aplikace s otevřeným zdrojovým kódem, která si cení účasti a příspěvků komunity open source. Na této stránce bychom rádi ocenili úsilí členů komunity v oblasti překladů."</string>
     <string name="about_translations_contribution_info">"Pokud chcete upravovat či přidávat překlady nebo přidávat nové jazyky do této aplikace, neváhejte se připojit k projektu jtx Board na překladatelské platformě Crowdin:"</string>
     <string name="about_translations_contribution_button">"Připojte se na Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Překladatelé na POeditor.com (starší verze)"</string>
     <string name="list_welcome_entry_journal_summary">"Blahopřejeme, toto je váš první záznam do deníku :-)"</string>
     <string name="list_welcome_entry_journal_description">"Deníky lze použít k uchovávání poznámek k určitému datu. Tuto funkci můžete použít například pro protokoly, zápisy z jednání, deníkové záznamy apod. Pokud tento záznam upravíte, zobrazí se možnosti přidání kategorií, účastníků, příloh, … Nebojte se tento záznam kdykoli odstranit!"</string>
     <string name="list_welcome_entry_note_summary">"Blahopřejeme, toto je váš první záznam poznámky :-)"</string>
@@ -433,10 +433,13 @@ Děkujeme vám!"</string>
     <string name="dialog_save_current_filter_my_filter">"Můj filtr"</string>
     <string name="dialog_edit_stored_category_title">"Přidat nebo upravit předvolbu kategorie"</string>
     <string name="dialog_edit_stored_resource_title">"Přidat nebo upravit předvolbu zdroje"</string>
+    <string name="dialog_edit_stored_status_title">"Přidat nebo upravit předvolbu stavu"</string>
     <string name="dialog_add_audio_entry_title">"Přidat zvukovou položku"</string>
     <string name="menu_list_viewmode_compact">"Kompaktní zobrazení"</string>
     <string name="menu_list_viewmode_kanban">"Zobrazení Kanban"</string>
     <string name="settings_tasks">"Nastavení Úkolů"</string>
+    <string name="settings_tasks_status_progress">"Nastavení úkolů (stav nebo průběh)"</string>
+    <string name="settings_sync">"Nastavení synchronizace"</string>
     <string name="settings_default_start_date">"Nastavit výchozí datum zahájení úkolů"</string>
     <string name="settings_default_due_date">"Nastavit výchozí datum termínu úkolů"</string>
     <string name="settings_default_date_none">"Žádné"</string>
@@ -462,6 +465,8 @@ Děkujeme vám!"</string>
     <string name="settings_create_with_current_location">"Vytvořit nové položky s aktuální polohou"</string>
     <string name="settings_sticky_alarms">"Rychlé budíky"</string>
     <string name="settings_sticky_alarms_sub">"Ponechat oznámení dokud není dokončeno nebo odloženo"</string>
+    <string name="settings_sync_on_start">"Synchronizovat při spuštění aplikace"</string>
+    <string name="settings_sync_on_pull_refresh">"Synchronizovat při potažení dolů"</string>
     <string name="sync_button_go_to_collections">"Přejít na Sbírky"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Pro povolení této funkce si zakupte prosím balíček Pro."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -571,13 +576,25 @@ Děkujeme vám!"</string>
     <string name="markdown_code">"Kód"</string>
     <string name="preset_categories">"Předvolba kategorií"</string>
     <string name="preset_resources">"Předvolba zdrojů"</string>
+    <string name="extended_statuses">"Rozšířené stavy"</string>
+    <string name="extended_statuses_for_journals">"… pro deníky"</string>
+    <string name="extended_statuses_for_notes">"… pro poznámky"</string>
+    <string name="extended_statuses_for_tasks">"… pro úkoly"</string>
+    <string name="extended_status_attention">"Upozornění: Rozšířené stavy nejsou kompatibilní s jinými aplikacemi, ale jsou mapovány na standardní stav. Ostatní aplikace budou zobrazovat pouze standardní stav."</string>
+    <string name="extended_status">\"Rozšířený stav</string>
     <string name="active_filters">Aktivní filtry:</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="kanban_settings">"Kanban"</string>
+    <string name="kanban_columns">"Kanban-Sloupce"</string>
+    <string name="kanban_columns_based_on_standard_status">na základě standardních stavů</string>
+    <string name="kanban_columns_based_on_extended_status">na základě rozšířených stavů</string>
+    <string name="kanban_columns_based_on_first_category">na základě první kategorie</string>
+    <string name="clear_filters">"Vymazat filtry"</string>
+    <string name="geofence_radius_meter">"Poloměr %1$d m"</string>
+    <string name="geofence_radius_feet">"Poloměr %1$d ft"</string>
+    <string name="geofence_selection">"Sledovaná oblast: %1$s"</string>
+    <string name="geofence_options">"Možnosti sledované oblasti"</string>
+    <string name="geofence_missing_permission_info">"jtx Board potřebuje oprávnění pro přístup k vaší poloze na pozadí a pro zasílání oznámení. Aktualizujte oprávnění k poloze na ‚Vždy povolit‘ a udělte oprávnění k oznámení, abyste mohli být upozorněni, až dosáhnete hranice své sledované oblasti!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board vás může upozornit, když se nacházíte v blízkosti zadaných souřadnic. Nastavte oprávnění k poloze na ‚Vždy povolit‘ a udělte oprávnění k oznámením pro použití této funkce."</string>
+    <string name="geofence_notification_summary">"Sledovaná oblast aktivována"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board potřebuje oprávnění k plánování přesných budíků, jinak může dojít ke zpoždění oznámení z budíků. Pro použití funkce udělte toto oprávnění."</string>
 </resources>

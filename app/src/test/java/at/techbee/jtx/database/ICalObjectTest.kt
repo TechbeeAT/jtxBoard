@@ -9,7 +9,7 @@
 package at.techbee.jtx.database
 
 import android.net.Uri
-import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import net.fortuna.ical4j.model.Recur
 import org.junit.Assert.assertEquals
@@ -39,11 +39,11 @@ class ICalObjectTest {
 
 
     @Test
-    fun setUpdatedProgress_no_change() {
-        val task = ICalObject.createTask("setUpdatedProgress_no_change")
+    fun setUpdatedProgress_0() {
+        val task = ICalObject.createTask("setUpdatedProgress_0")
         task.setUpdatedProgress(0, true)
 
-        assertEquals("setUpdatedProgress_no_change", task.summary)
+        assertEquals("setUpdatedProgress_0", task.summary)
         assertNull(task.percent)
         assertEquals(Status.NEEDS_ACTION.status, task.status)
         assertNotNull(task.lastModified)
@@ -51,7 +51,7 @@ class ICalObjectTest {
     }
 
     @Test
-    fun setUpdatedProgress_needs_action() {
+    fun setUpdatedProgress_keep_in_process() {
         val task = ICalObject.createTask("setUpdatedProgress_needs_action_in_Progress")
         task.status = Status.NEEDS_ACTION.status
         task.setUpdatedProgress(1, true)
@@ -805,19 +805,19 @@ class ICalObjectTest {
     @Test fun getMapLink_gplay() {
         assertEquals(
             Uri.parse("https://www.google.com/maps/search/?api=1&query=$1.111%2C$2.222"),
-            ICalObject.getMapLink(1.111, 2.222, MainActivity2.BUILD_FLAVOR_GOOGLEPLAY)
+            ICalObject.getMapLink(1.111, 2.222, BuildFlavor.GPLAY)
         )
     }
 
     @Test fun getMapLink_ose() {
         assertEquals(
             Uri.parse("https://www.google.com/maps/search/?api=1&query=$1.111%2C$2.222"),
-            ICalObject.getMapLink(1.111, 2.222, MainActivity2.BUILD_FLAVOR_OSE)
+            ICalObject.getMapLink(1.111, 2.222, BuildFlavor.OSE)
         )
     }
 
     @Test fun getMapLink_empty() {
-        assertNull(ICalObject.getMapLink(null, null, MainActivity2.BUILD_FLAVOR_OSE))
+        assertNull(ICalObject.getMapLink(null, null, BuildFlavor.OSE))
     }
 
     @Test fun getLatLongString1() = assertEquals("(1.11100,12345.12312)", ICalObject.getLatLongString(1.111, 12345.123123123))

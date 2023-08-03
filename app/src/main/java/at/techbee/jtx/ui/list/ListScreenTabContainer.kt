@@ -26,11 +26,11 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -134,7 +134,8 @@ fun ListScreenTabContainer(
                 }
             } else {
                 0
-            }
+            },
+        pageCount = { enabledTabs.size }
     )
 
     val icalListViewModelJournals: ListViewModelJournals = viewModel()
@@ -420,7 +421,7 @@ fun ListScreenTabContainer(
                                 }
                             }
                         )
-                        Divider()
+                        HorizontalDivider()
 
 
                         if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
@@ -436,7 +437,7 @@ fun ListScreenTabContainer(
                                     topBarMenuExpanded = false
                                 }
                             )
-                            Divider()
+                            HorizontalDivider()
                         }
                         ViewMode.values().forEach { viewMode ->
                             RadiobuttonWithText(
@@ -462,7 +463,7 @@ fun ListScreenTabContainer(
                                 }
                             )
                         }
-                        Divider()
+                        HorizontalDivider()
                         CheckboxWithText(
                             text = stringResource(R.string.menu_list_flat_view),
                             subtext = stringResource(R.string.menu_list_flat_view_sub),
@@ -472,13 +473,22 @@ fun ListScreenTabContainer(
                                 getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                             }
                         )
-                        Divider()
+                        HorizontalDivider()
                         CheckboxWithText(
                             text = stringResource(R.string.menu_list_limit_recur_entries),
                             subtext = stringResource(R.string.menu_list_limit_recur_entries_sub),
                             isSelected = getActiveViewModel().listSettings.showOneRecurEntryInFuture.value,
                             onCheckedChange = {
                                 getActiveViewModel().listSettings.showOneRecurEntryInFuture.value = it
+                                getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
+                            }
+                        )
+                        HorizontalDivider()
+                        CheckboxWithText(
+                            text = stringResource(R.string.menu_view_markdown_formatting),
+                            isSelected = getActiveViewModel().listSettings.markdownEnabled.value,
+                            onCheckedChange = {
+                                getActiveViewModel().listSettings.markdownEnabled.value = it
                                 getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                             }
                         )
@@ -658,7 +668,6 @@ fun ListScreenTabContainer(
                             Box {
                                 HorizontalPager(
                                     state = pagerState,
-                                    pageCount = enabledTabs.size,
                                     userScrollEnabled = !filterSheetState.isVisible,
                                     verticalAlignment = Alignment.Top
                                 ) { page ->

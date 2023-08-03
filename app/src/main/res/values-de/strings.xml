@@ -29,7 +29,7 @@ Global Strings -->
     <string name="journal_status_draft">"Entwurf"</string>
     <string name="journal_status_final">"Final"</string>
     <string name="journal_status_cancelled">"Annulliert"</string>
-    <string name="todo_status_needsaction">"Aktion ausständig"</string>
+    <string name="todo_status_needsaction">"Aktion erforderlich"</string>
     <string name="todo_status_completed">"Abgeschlossen"</string>
     <string name="todo_status_inprocess">"In Bearbeitung"</string>
     <string name="todo_status_cancelled">"Annulliert"</string>
@@ -94,6 +94,8 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Foto aufnehmen"</string>
     <string name="edit_add_link_button_text">"Anhang als Link hinzufügen"</string>
     <string name="edit_subtasks_add_helper">"Teilaufgabe hinzufügen"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Unteraufgabe hinzufügen"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Verlinkte Notiz hinzufügen"</string>
     <string name="edit_attachment_add_link_dialog">"Link zu Anhang hinzufügen"</string>
     <string name="edit_recur_repeat_every_x">"Wiederhole jede/n/s"</string>
     <string name="edit_recur_on_weekday">"am"</string>
@@ -118,7 +120,8 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Übersetzungen"</string>
     <string name="about_tabitem_libraries">"Bibliotheken"</string>
-    <string name="about_tabitem_thanks">" Dank an"</string>
+    <string name="about_tabitem_contributors">"Mitwirkende"</string>
+    <string name="about_special_thanks">" Dank an"</string>
     <string name="about_app_version">"Version: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Codename: %1$s"</string>
     <string name="about_app_build_date">"Kompiliert am %s"</string>
@@ -134,9 +137,8 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Als Aufgabe kopieren"</string>
     <string name="menu_view_copy_as_note">"Als Notiz kopieren"</string>
     <string name="menu_view_copy_item">"Kopie anlegen"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Aufgaben Fälligkeits-Erinnerung"</string>
-    <string name="notification_channel_reminder_description">"Benachrichtigung für fällige Aufgaben"</string>
+    <string name="notification_channel_alarms_name">"Alarme"</string>
+    <string name="notification_channel_geofences_name">"Geofences"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Journal hinzufügen"</string>
     <string name="shortcut_addNote_longLabel">"Notiz hinzufügen"</string>
@@ -174,7 +176,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board ist ein Open-Source-Projekt, das unter Beteiligung der Open Source Community realisiert wird. Auf dieser Seite wollen wir uns bei den Community-Mitgliedern für die Übersetzungen bedanken."</string>
     <string name="about_translations_contribution_info">"Falls Sie auch Übersetzungen bearbeiten/hinzufügen wollen, freuen wir uns über Ihren Beitrag über die Plattform Crowdin:"</string>
     <string name="about_translations_contribution_button">"Auf Crowdin.com beitreten"</string>
-    <string name="about_translations_poeditor">"Übersetzer auf POeditor.com (Legacy)"</string>
     <string name="list_welcome_entry_journal_summary">"Glückwunsch, das ist Ihr erster Journaleintrag :-)"</string>
     <string name="list_welcome_entry_journal_description">"Journale können genutzt werden um Ihre Notizen zu einem bestimmten Datum festzuhalten. Dies kann zum Beispiel für Protokolle, Versammlungsberichte, Tagebucheinträge und ähnliches genutzt werden. Wenn Sie diesen Beitrag bearbeiten, werfen Sie auch einen Blick auf die weiteren Optionen zum Eintragen von Kategorien, Teilnehmern, Anhängen, … Sie können diesen Eintrag jederzeit löschen!"</string>
     <string name="list_welcome_entry_note_summary">"Glückwunsch, das ist Ihr erster Notiz-Eintrag :-)"</string>
@@ -200,6 +201,9 @@ Global Strings -->
     <string name="collection">"Collection"</string>
     <string name="collection_owner_displayname">"Besitzer: %1$s"</string>
     <string name="link_to_parent">"Zu übergeordnetem Element verknüpfen"</string>
+    <string name="link_selected_as_parent">"Übergeordneter Eintrag"</string>
+    <string name="link_selected_as_subtask_note">"Unteraufgabe/-notiz"</string>
+    <string name="link_selected_as">"Ausgewählte Einträge verlinken als …"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
     <string name="navigation_drawer_presets">"Voreinstellungen"</string>
     <!-- alarms -->
@@ -284,6 +288,7 @@ Global Strings -->
     <string name="progress">"Fortschritt"</string>
     <string name="categories">"Kategorien"</string>
     <string name="subtasks">"Teilaufgaben"</string>
+    <string name="linked_parents">"Verknüpfte übergeordnete Einträge"</string>
     <string name="priority_7_low">"7 - Niedrig"</string>
     <string name="priority_8_lower">"8 - Niedriger"</string>
     <string name="priority_9_lowest">"9 - Niedrigste"</string>
@@ -382,8 +387,14 @@ Danke!"</string>
     <string name="list_update_entries_dialog_title">"Einträge aktualisieren"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Achtung: Wiederkehrende Instanzen müssen von ihrer Serie getrennt werden, bevor sie in eine andere Collection verschoben werden und werden in diesem Prozess ignoriert."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Wählen Sie das übergeordnete Element, zu dem die ausgewählten Einträge als Unteraufgaben/verknüpfte Notizen verlinkt werden sollen."</string>
+    <string name="link_entry">"Eintrag verknüpfen"</string>
+    <string name="link_entry_search_within">"Suchen in …"</string>
+    <string name="link_entry_search_within_same_collection">"Gleicher Collection"</string>
+    <string name="link_entry_search_within_same_account">"Gleichem Account"</string>
     <string name="details_link_existing_subentry_dialog_title">"Untereinträge verlinken"</string>
+    <string name="details_link_existing_parent_dialog_title">"Zu übergeordnetem Element verknüpfen"</string>
     <string name="details_link_existing_subentry_dialog_info">"Wählen Sie die Untereinträge, die verlinkt werden sollen."</string>
+    <string name="details_link_existing_parent_dialog_info">"Wählen Sie einen übergeordneten Eintrag, der verlinkt werden soll."</string>
     <string name="details_app_bar_behaviour">"App Bar Verhalten"</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
     <string name="details_show_hide_elements">Elemente ein-/ausblenden</string>
@@ -441,6 +452,7 @@ Danke!"</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
     <string name="settings_tasks">"Aufgaben-Einstellungen"</string>
+    <string name="settings_tasks_status_progress">"Aufgaben-Einstellungen (Status/Fortschritt)"</string>
     <string name="settings_sync">"Sync-Einstellungen"</string>
     <string name="settings_default_start_date">"Standard-Startdatum für Aufgaben"</string>
     <string name="settings_default_due_date">"Standard-Fälligkeit für Aufgaben"</string>
@@ -591,12 +603,12 @@ Danke!"</string>
     <string name="kanban_columns_based_on_extended_status">basierend auf erweitertem Status</string>
     <string name="kanban_columns_based_on_first_category">basierend auf der ersten Kategorie</string>
     <string name="clear_filters">"Filter zurücksetzen"</string>
-    <!--
     <string name="geofence_radius_meter">"Radius %1$d m"</string>
     <string name="geofence_radius_feet">"Radius %1$d ft"</string>
     <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="geofence_options">"Geofence-Optionen"</string>
+    <string name="geofence_missing_permission_info">"jtx Board benötigt die Berechtigung, um auf Ihren Standort im Hintergrund zuzugreifen und Ihnen Benachrichtigungen zu senden. Bitte aktualisieren Sie die Standortberechtigung auf \"Immer erlauben\" und erteilen Sie die Benachrichtigungs-Berechtigung, um benachrichtigt zu werden, wenn Sie einen Geofence erreichen!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board kann Sie benachrichtigen, wenn Sie in der Nähe der angegebenen Koordinaten sind. Bitte setzen Sie die Standortberechtigung auf \"Immer erlauben\" und gewähren Sie die Benachrichtigungs-Berechtigung um diese Funktion nutzen zu können."</string>
+    <string name="geofence_notification_summary">"Geofence aktiviert"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board benötigt die Berechtigung, genaue Erinnerungen zu planen, da sonst Alarme verzögert ausgegeben werden könnten. Bitte erteilen Sie diese Berechtigung, um diese Funktion zu nutzen."</string>
 </resources>

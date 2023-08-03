@@ -76,6 +76,7 @@ import at.techbee.jtx.database.properties.TABLE_NAME_RELATEDTO
 import at.techbee.jtx.database.properties.TABLE_NAME_RESOURCE
 import at.techbee.jtx.database.properties.TABLE_NAME_UNKNOWN
 import at.techbee.jtx.database.properties.Unknown
+import at.techbee.jtx.flavored.GeofenceClient
 import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.widgets.ListWidgetReceiver
@@ -235,6 +236,8 @@ class SyncContentProvider : ContentProvider() {
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
+            GeofenceClient(context!!).setGeofences()
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             NotificationPublisher.scheduleNextNotifications(context!!)
@@ -348,6 +351,9 @@ class SyncContentProvider : ContentProvider() {
 
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
+            GeofenceClient(context!!).setGeofences()
+
         return ContentUris.withAppendedId(uri, id)
     }
 
@@ -427,9 +433,8 @@ class SyncContentProvider : ContentProvider() {
         val result = database.getCursor(query)
 
         // if the request was for an Attachment, then allow the calling application to access the file by grantUriPermission
-        if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR || CODE_ATTACHMENT_DIR == CODE_ATTACHMENT_ITEM) {
+        if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR || sUriMatcher.match(uri) == CODE_ATTACHMENT_ITEM) {
             while (result?.moveToNext() == true) {
-
                 try {
                     val uriColumnIndex = result.getColumnIndex(COLUMN_ATTACHMENT_URI)
                     val attachmentUriString = result.getString(uriColumnIndex)
@@ -613,6 +618,9 @@ class SyncContentProvider : ContentProvider() {
             || sUriMatcher.match(uri) == CODE_ALARM_ITEM
         )
             NotificationPublisher.scheduleNextNotifications(context!!)
+
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
+            GeofenceClient(context!!).setGeofences()
 
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 

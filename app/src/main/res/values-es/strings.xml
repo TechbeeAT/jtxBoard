@@ -115,7 +115,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Traducciones"</string>
     <string name="about_tabitem_libraries">"Librerías"</string>
-    <string name="about_tabitem_thanks">"Agradecimiento especial"</string>
+    <string name="about_special_thanks">"Agradecimiento especial"</string>
     <string name="about_app_version">"Versión: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nombre en clave: %1$s"</string>
     <string name="about_app_build_date">"Compilado el %s"</string>
@@ -131,9 +131,6 @@ Global Strings -->
     <string name="menu_view_copy_as_todo">"Copiar como Tarea"</string>
     <string name="menu_view_copy_as_note">"Copiar como Nota"</string>
     <string name="menu_view_copy_item">"Crear copia"</string>
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Recordatorio de vencimiento de tarea"</string>
-    <string name="notification_channel_reminder_description">"Notificación para vencimiento de tareas"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Agregar Diario"</string>
     <string name="shortcut_addNote_longLabel">"Agregar Nota"</string>
@@ -163,7 +160,6 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board es una aplicación de código abierto que aprecia la participación y la contribución de la comunidad de código abierto. En esta página nos gustaría atribuir los esfuerzos de los miembros de la comunidad en las traducciones."</string>
     <string name="about_translations_contribution_info">"Si desea editar/añadir traducciones o añadir nuevos idiomas a esta aplicación, no dude en unirse al proyecto jtx Board en la plataforma de traducción Crowdin:"</string>
     <string name="about_translations_contribution_button">"Únete en Crowdin.com"</string>
-    <string name="about_translations_poeditor">"Traductores en POeditor.com (antiguo)"</string>
     <string name="list_welcome_entry_journal_summary">"Felicidades, esta es su primera entrada en el diario :-)"</string>
     <string name="list_welcome_entry_journal_description">"Los diarios se pueden usar para guardar sus notas para una fecha específica. Utilice esta funcionalidad, por ejemplo, para protocolos, actas de reuniones, entradas de diario, etc. Si edita esta entrada, verá las opciones para añadir categorías, asistentes, archivos adjuntos,… ¡Siéntase libre de eliminar esta entrada cuando quiera!"</string>
     <string name="list_welcome_entry_note_summary">"Felicidades, esta es su primera entrada en notas :-)"</string>
@@ -275,7 +271,6 @@ Global Strings -->
     <string name="view_share_part_of_series">"Esta entrada es parte de una serie."</string>
     <string name="view_share_repeats">"Esta entrada se repite cada"</string>
     <string name="collections_dialog_move_title">"Mover todas las entradas de \"%1$s\" a"</string>
-    <string name="collection_dialog_move_info">"Nota: Sólo se pueden seleccionar las colecciones con posibilidad de escritura y las colecciones con soporte para los mismos componentes (diarios, notas, tareas)."</string>
     <string name="menu_collections_popup_move_entries">"Mover entradas"</string>
     <string name="list_no_dates_set">"Sin fechas establecidas"</string>
     <string name="list_without_start_date">"Sin fecha de inicio"</string>
@@ -430,7 +425,6 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="settings_progress_step_25">"Incrementar en 25 (4 pasos)"</string>
     <string name="settings_progress_step_50">"Incrementar en 50 (2 pasos)"</string>
     <string name="settings_progress_step">"Establecer el paso para el control deslizante de progreso"</string>
-    <string name="settings_disable_alarms_for_readonly">"Deshabilitar alarmas para colecciones de solo lectura"</string>
     <string name="settings_link_progress_to_subtasks">"Enlazar progreso a las subtareas"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Mantener estado, progreso y completado en sincronización"</string>
     <string name="settings_attention_experimental_feature">"Atención: Esta es una característica experimental"</string>
@@ -510,12 +504,4 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="markdown_horizontal_ruler">"Regla horizontal"</string>
     <string name="markdown_unordered_list">"Lista"</string>
     <string name="markdown_code">"Código"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
 </resources>

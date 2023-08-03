@@ -38,7 +38,7 @@ fun AboutJtx(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     // let the bee talk, just for fun ;-)
-    var clickCount by remember { mutableStateOf(-1) }
+    var clickCount by remember { mutableIntStateOf(-1) }
     val messages = arrayOf(
         "Bzzzz",
         "Bzzzzzzzzz",
@@ -135,7 +135,7 @@ fun AboutJtx(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Crossfade(targetState = clickCount) { clicks ->
+                Crossfade(targetState = clickCount, label = "techbee_logo_swap") { clicks ->
                     Image(
                         painter = if (clicks < 4) painterResource(id = R.drawable.logo_techbee) else painterResource(
                             id = R.drawable.logo_techbee_front

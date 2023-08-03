@@ -2,6 +2,7 @@
 <resources>
     <!-- App title and fragment titles -->
     <string name="app_permission_label">"jtx Board وقایع روزانه، یادداشت ها و &amp; کارها را همگام سازی می کند"</string>
+    <string name="app_permission_desc">"محتوای jtx Board را با دیگر برنامه ها همچون DAVx⁵ همگام سازی کنید"</string>
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
@@ -12,8 +13,15 @@ Global Strings -->
     <string name="discard">"ول کن"</string>
     <string name="cont">"ادامه"</string>
     <string name="website">"وب سایت"</string>
+    <string name="latitude">"عرض جغرافیایی"</string>
+    <string name="longitude">"طول جغرافیایی"</string>
+    <string name="unlink">"لغو پیوند"</string>
+    <string name="off">"خاموش"</string>
+    <string name="permissions">"دسترسي ها"</string>
+    <string name="current_location">"محل کنونی"</string>
     <string name="toolbar_text_add_journal">"افزودن واقعه روزانه"</string>
     <string name="toolbar_text_add_note">"افزودن یادداشت"</string>
+    <string name="toast_sync_requested">"همگام سازی درخواست شد"</string>
     <string name="default_local_collection_name">"محلی"</string>
     <string name="default_local_account_name">"محلی"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -31,6 +39,7 @@ Global Strings -->
     <string name="navigation_drawer_open">"بازکردن کشوی ناوبری"</string>
     <string name="navigation_drawer_close">"بستن کشوی ناوبری"</string>
     <string name="navigation_drawer_board">"تابلو"</string>
+    <string name="navigation_drawer_synchronization">"همگام سازى"</string>
     <string name="navigation_drawer_about">"درباره / مجوز"</string>
     <string name="navigation_drawer_subtitle">"وقایع روزانه، یادداشت ها و &amp; کارها"</string>
     <string name="navigation_drawer_settings">"تنظیمات"</string>
@@ -52,6 +61,7 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"مجوز برنامه"</string>
     <string name="view_feedback_linked_notes">"بازخورد / یادداشت پیوندخورده"</string>
+    <string name="view_subtask_of">"کارهای فرعیِ"</string>
     <string name="view_add_audio_note">"افزودن صدا"</string>
     <string name="view_created_text">"ایجاد شد: %1$s"</string>
     <string name="view_last_modified_text">"آخرین اصلاح: %1$s"</string>
@@ -64,6 +74,7 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"گرفتن عکس"</string>
     <string name="edit_add_link_button_text">"افزودن پیوست پیوند"</string>
     <string name="edit_subtasks_add_helper">"افزودن کارفرعی"</string>
+    <string name="edit_attachment_add_link_dialog">"افزودن پیوست پیوند"</string>
     <string name="edit_recur_repeat_every_x">"تکرار شود هر"</string>
     <string name="edit_recur_on_weekday">"در"</string>
     <string name="edit_recur_on_the_x_day_of_month">"در"</string>
@@ -82,7 +93,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"ترجمه‌ها"</string>
     <string name="about_tabitem_libraries">"کتابخانه ها"</string>
-    <string name="about_tabitem_thanks">"سپاس ویژه"</string>
+    <string name="about_special_thanks">"سپاس ویژه"</string>
     <string name="about_app_version">"نسخه: %1$s (%2$d)"</string>
     <string name="about_app_terms">"شرایط &amp; ضوابط"</string>
     <string name="about_thanks_ffg">"سپاس ویژه به FFG برای اعتماد و حمایت مالی شان برای تحقق این پروژه."</string>
@@ -92,7 +103,8 @@ Global Strings -->
     <string name="menu_view_share_ics">"اشتراک گذاری با پسوند ics"</string>
     <string name="menu_view_copy_as_note">"رونوشت به عنوان یادداشت"</string>
     <string name="menu_view_copy_item">"ایجاد رونوشت"</string>
-    <!-- Notification channel for Reminders -->
+    <string name="notification_channel_alarms_name">"هشدارها"</string>
+    <string name="notification_channel_geofences_name">"محدوده مکانی"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addNote_longLabel">"افزودن یادداشت"</string>
     <!-- Settings fragment -->
@@ -101,6 +113,13 @@ Global Strings -->
     <string name="settings_app">"تنظیمات برنامه"</string>
     <!-- Sync fragment -->
     <string name="sync_congratulations">"تبریک! :-)"</string>
+    <string name="sync_setup_instructions">"دستورالعمل های راه‌اندازی"</string>
+    <string name="sync_check_out_sync_app">"بررسی %1$s!"</string>
+    <string name="sync_sync_app_not_found">"ما %1$s را روی دستگاه شما تشخیص ندادیم."</string>
+    <string name="sync_more_about_sync_app">"بیشتر درباره %1$s"</string>
+    <string name="sync_download_sync_app">"بارگیری %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"افزودن حساب در %1$s"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"خطا در بازکردن %1$s، لطفا برنامه را خودتان باز کنید."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"سلام، من پاتریک هستم، توسعه‌دهنده‌ی jtx Board. من وقت و تلاش زیادی رو روی این برنامه گداشتم که اون رو رایگان بهتون پیشنهاد دادم. اگر این برنامه رو دوست دارید، لطفا کمی عشق بفرستید و یه هدیه کوچولو بدید!"</string>
     <string name="donate_thank_you">"ممنون از شما!"</string>
@@ -116,6 +135,7 @@ Global Strings -->
     <string name="save_and_edit">"ذخیره &amp; ویرایش"</string>
     <string name="save_and_new">"ذخیره &amp; جدید"</string>
     <string name="save_and_close">"ذخیره &amp; بستن"</string>
+    <string name="list_quickadd_add_audio_attachment">"ضبط پیوست صوتی"</string>
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"مجوز خواندن مخاطبین داده شد"</string>
     <string name="permission_read_contacts_denied">"مجوز خواندن مخاطبین رد شد"</string>
@@ -129,6 +149,8 @@ Global Strings -->
     <string name="collection">"مجموعه"</string>
     <string name="navigation_drawer_collections">"مجموعه ها"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"زمان/تاریخ"</string>
+    <string name="alarms_duration">"مدت زمان"</string>
     <string name="alarms_onstart">"در هنگام شروع"</string>
     <string name="alarms_before_start">"قبل از شروع"</string>
     <string name="alarms_after_start">"پس از شروع"</string>
@@ -144,7 +166,23 @@ Global Strings -->
     <string name="collections_dialog_delete_local_title">"\"%1$s\" حذف شود؟"</string>
     <string name="menu_collections_add_local">"افزودن مجموعه محلی"</string>
     <string name="navigation_drawer_website_news">"اخبار &amp; یادداشت های انتشار"</string>
+    <string name="color">"رنگ"</string>
+    <string name="priority_0_no_priority">"بدون اولویت"</string>
+    <string name="priority_1_highest">"۱ - بالاترین"</string>
+    <string name="priority_2_higher">"۲ - بالاتر"</string>
+    <string name="priority_3_high">"۳ - بالا"</string>
+    <string name="priority_4_medium_high">"۴ - متوسط رو به بالا"</string>
+    <string name="priority_5_medium">"۵ - متوسط"</string>
+    <string name="priority_6_medium_low">"۶ - متوسط رو به پایین"</string>
+    <string name="edit_recur_day">"روز"</string>
+    <string name="edit_recur_week">"هفته"</string>
+    <string name="edit_recur_month">"ماه"</string>
     <string name="edit_recur_year">"سال"</string>
+    <string name="collections_toast_export_ics_success">"صادرکردن مجموعه‌ها با موفقیت پایان یافت."</string>
+    <string name="collections_toast_export_ics_error">"یک خطا زمان صادرکردن مجموعه‌های انتخابی رخ داد."</string>
+    <string name="attachment_export_saved_successfully">"با موفقیت ذخیره شد"</string>
+    <string name="attachment_export_error_error_occurred">"هنگام ذخیره فایل انتخابی خطایی روی داد!"</string>
+    <string name="menu_collection_popup_show_in_sync_app">"نمایش در %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"خروجی به صورت ics."</string>
     <string name="note">"یادداشت"</string>
     <string name="account">"حساب"</string>
@@ -185,6 +223,7 @@ Global Strings -->
     <string name="collections_dialog_move_title">"تمام ورودی ها از \"%1$s\" انتقال یابد به"</string>
     <string name="menu_collections_popup_move_entries">"انتقال ورودی ها"</string>
     <string name="list_no_dates_set">"تاریخی تنظفم نشد"</string>
+    <string name="list_without_completed_date">"بدون تاریخ تکمیلی"</string>
     <string name="filter_order_by">"ترتیب بر اساس"</string>
     <string name="filter_asc">"صعودی"</string>
     <string name="filter_desc">"نزولی"</string>
@@ -194,9 +233,12 @@ Global Strings -->
     <string name="filter_no_resource">بدون منابع</string>
     <string name="filter_subtasks_order_by">ترتیب کارهای فرعی بر اساس</string>
     <string name="filter_subnotes_order_by">ترتیب پیوندها بر اساس</string>
+    <string name="menu_collection_popup_import_from_ics">"وارد کردن از ics."</string>
+    <string name="menu_collection_popup_import_from_textfile">"وارد کردن از فایل متنی"</string>
     <string name="notification_done">"انجام شد"</string>
     <string name="notification_add_1h">"۱+ ساعت"</string>
     <string name="notification_add_1d">"۱+ روز"</string>
+    <string name="edit_recur_ends_never">"هیچوقت پایان نیابد"</string>
     <string name="edit_recur_ends_on">"پایان در"</string>
     <string name="edit_recur_ends_after">"پایان بعد از"</string>
     <string name="collections_toast_export_all_ics_success">"صادرکردن تمام مجموعه‌ها با موفقیت پایان یافت."</string>
@@ -212,6 +254,15 @@ Global Strings -->
     <string name="donate_dialog_message">"توسعه‌دادن یک برنامه موضوع پیچیده‌ای است و توسعه، نگهداری و پشتیبانی کار سختی است. اگر این برنامه را دوست دارید و از ادامه توسعه آن مطمئم شوید، لطفا کمک‌مالی درنظر بگیرید :-)
 ممنونم از شما!"</string>
     <!-- Buy Pro fragment -->
+    <string name="sorry">"متأسفم"</string>
+    <string name="back">"برگشت"</string>
+    <string name="details">"جزئیات"</string>
+    <string name="date">"تاریخ"</string>
+    <string name="timezone">"منقطه زمانی"</string>
+    <string name="not_set2">"تنظیم نشده"</string>
+    <string name="invert_selection">"انتخاب برعکس"</string>
+    <string name="clear_selection">"پاک کردن انتخاب"</string>
+    <string name="preferences">"ترجیحات"</string>
     <string name="revert">"بازگرداندن"</string>
     <string name="audio_play">"پخش"</string>
     <string name="audio_record">"ضبط"</string>
@@ -239,6 +290,16 @@ Global Strings -->
     <string name="about_tabitem_releasenotes">"یادداشت‌های انتشار"</string>
     <string name="collections_account_delete_dialog_title">"\"%1$s\" حذف شود؟"</string>
     <string name="dialog_unsaved_changes_title">"ذخیره تغییرات؟"</string>
+    <string name="settings_sync">"همگام سازی تنظیمات"</string>
+    <string name="settings_default_date_none">"هیچیک"</string>
+    <string name="settings_default_date_same_day">"همان روز"</string>
+    <string name="settings_default_date_next_day">"روز بعد"</string>
+    <string name="settings_default_date_two_days">"دو روز پس از"</string>
+    <string name="settings_default_date_three_days">"سه روز پس از"</string>
+    <string name="settings_default_date_one_week">"یک هفته پس از"</string>
+    <string name="settings_default_date_two_weeks">"دو هفته پس از"</string>
+    <string name="settings_default_date_four_weeks">"چهار هفته پس از"</string>
+    <string name="settings_progress_step_1">"افزایش یکی یکی (100 گام)"</string>
     <string name="settings_progress_step_2">"افزایش 2 تایی (50 گام)"</string>
     <string name="settings_progress_step_5">"افزایش 5 تایی (20 گام)"</string>
     <string name="settings_progress_step_10">"افزایش 10 تایی (10 گام)"</string>
@@ -262,6 +323,7 @@ Global Strings -->
     <string name="list_start_date_today">"شروع امروز"</string>
     <string name="list_start_date_tomorrow">"شروع در فردا"</string>
     <string name="list_start_date_future">"شروع در آينده"</string>
+    <string name="list_delete_done">"حذف انجام شد"</string>
     <string name="settings_auto_alarm">"هشدار خودکار"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"بدون وضعیت"</string>
@@ -270,14 +332,26 @@ Global Strings -->
     <string name="list_date_without">"بدون تاریخ"</string>
     <string name="list_start_without">"بدون تاریخ شروع"</string>
     <string name="filter_group_by">"گروه‌بندی بر اساس"</string>
+    <string name="opacity">"وضوح"</string>
+    <string name="general">"عمومی"</string>
+    <string name="list_collapse">"بستن"</string>
+    <string name="edit_recur_second">"ثانيه"</string>
+    <string name="edit_recur_minute">"دقیقه"</string>
+    <string name="edit_recur_hour">"ساعت"</string>
+    <string name="widget_list_configuration_widget_background">"پس‌زمینهٔ ابزارک"</string>
+    <string name="widget_list_show_description">"نمایش توضیح"</string>
+    <string name="settings_default_journals_date_previous_day">"روز پیشین"</string>
+    <string name="settings_default_journals_date_current_day">"روز جاری"</string>
+    <string name="settings_default_journals_date_current_hour">"ساعت جاری"</string>
+    <string name="settings_default_journals_date_current_15min">"15 دقیقه جاری"</string>
+    <string name="settings_default_journals_date_current_5min">"5 دقیقه جاری"</string>
+    <string name="settings_default_journals_date_current_min">"دقیقه جاری"</string>
+    <string name="markdown_bold">"برجسته"</string>
+    <string name="markdown_italic">"مورب"</string>
+    <string name="markdown_underlined">"زیر خطدار"</string>
+    <string name="markdown_strikethrough">"خط‌خورده"</string>
+    <string name="markdown_horizontal_ruler">"خط کش افقی"</string>
     <string name="markdown_unordered_list">"فهرست"</string>
     <string name="markdown_code">"کد"</string>
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
+    <string name="geofence_notification_summary">"محدوده مکانی فعال شد"</string>
 </resources>

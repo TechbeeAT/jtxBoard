@@ -15,10 +15,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.EventNote
@@ -29,7 +29,6 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.SyncProblem
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -38,6 +37,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -68,7 +68,7 @@ import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncApp
 import java.time.Instant
 import java.time.ZoneId
-import java.util.TimeZone
+import java.time.ZonedDateTime
 
 @Composable
 fun ListBottomAppBar(
@@ -98,32 +98,32 @@ fun ListBottomAppBar(
     val iCal4List by iCal4ListRelLive.observeAsState(emptyList())
 
     if(showGoToDatePicker) {
-        var dates = iCal4List.map { it.iCal4List.dtstart ?: System.currentTimeMillis() }.toList()
-        if (dates.isEmpty())
-            dates = listOf(System.currentTimeMillis())
-
-        // finds the closes number in a list of long
-        fun List<Long>.findClosest(input: Long) = fold(null) { acc: Long?, num ->
-            val closest = if (num <= input && (acc == null || num > acc)) num else acc
-            if (closest == input) return@findClosest closest else return@fold closest
-        }
-
         DatePickerDialog(
             datetime = DateTimeUtils.getTodayAsLong(),
-            timezone = TimeZone.getDefault().id,
+            timezone = ZoneId.systemDefault().id,
             allowNull = false,
             onConfirm = { selectedDate, _ ->
-                selectedDate?.let { selected ->
-                    val closestDate = dates.findClosest(selected)
-                    iCal4List.find { it.iCal4List.dtstart == closestDate }?.let { foundEntry ->
-                        onGoToDateSelected(foundEntry.iCal4List.id)
-                    }
+                val selectedZoned = selectedDate?.let {ZonedDateTime.ofInstant(Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault()) } ?: return@DatePickerDialog
+
+                var match = iCal4List.firstOrNull {
+                    val dtstartZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.iCal4List.dtstart!!), DateTimeUtils.requireTzId(it.iCal4List.dtstartTimezone))
+                    if(listSettings.sortOrder.value == SortOrder.ASC)
+                        dtstartZoned.year >= selectedZoned.year && dtstartZoned.monthValue >= selectedZoned.monthValue && dtstartZoned.dayOfMonth >= selectedZoned.dayOfMonth
+                    else
+                        dtstartZoned.year <= selectedZoned.year && dtstartZoned.monthValue <= selectedZoned.monthValue && dtstartZoned.dayOfMonth <= selectedZoned.dayOfMonth
                 }
+
+                if(match == null && listSettings.sortOrder.value == SortOrder.ASC) // no match found, sort order ascending, so the date must be after the last one!
+                    match = iCal4List.lastOrNull()
+                else if(match == null && listSettings.sortOrder.value == SortOrder.DESC) // no match found, sort order descending, so the date must be before the last one!
+                    match = iCal4List.lastOrNull()
+
+                match?.let { closest -> onGoToDateSelected(closest.iCal4List.id) }
             },
             onDismiss = { showGoToDatePicker = false },
             dateOnly = true,
-            minDate = Instant.ofEpochMilli(dates.minOf { it }).atZone(ZoneId.systemDefault()),
-            maxDate = Instant.ofEpochMilli(dates.maxOf { it }).atZone(ZoneId.systemDefault())
+            minDate = iCal4List.minByOrNull { it.iCal4List.dtstart ?: Long.MAX_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC"))},
+            //maxDate = iCal4List.maxByOrNull { it.iCal4List.dtstart ?: Long.MIN_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())},
         )
     }
 
@@ -180,8 +180,7 @@ fun ListBottomAppBar(
                         }
                     }
 
-                    /*
-                    AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null) {
+                    AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null && listSettings.orderBy.value == OrderBy.START_VJOURNAL) {
                         IconButton(onClick = { showGoToDatePicker = true }) {
                             Icon(
                                 Icons.Outlined.DateRange,
@@ -189,11 +188,11 @@ fun ListBottomAppBar(
                             )
                         }
                     }
-                     */
+
 
                     AnimatedVisibility(isBiometricsEnabled) {
                         IconButton(onClick = { onToggleBiometricAuthentication() }) {
-                            Crossfade(isBiometricsUnlocked) {
+                            Crossfade(isBiometricsUnlocked, label = "isBiometricsUnlocked") {
                                 if(it) {
                                     Icon(
                                         painterResource(id = R.drawable.ic_shield_lock_open),
@@ -262,12 +261,7 @@ fun ListBottomAppBar(
                             contentDescription = stringResource(id = R.string.cancel)
                         )
                     }
-                    Divider(
-                        modifier = Modifier
-                            .height(40.dp)
-                            .width(1.dp)
-                    )
-
+                    VerticalDivider(modifier = Modifier.height(40.dp))
 
                     IconButton(
                         onClick = { onDeleteSelectedClicked() },
@@ -305,7 +299,7 @@ fun ListBottomAppBar(
                             }
                         }
                     }) {
-                        Crossfade(selectedEntries.size) {
+                        Crossfade(selectedEntries.size, label = "selectall_selectnone") {
                             when (it) {
                                 0 -> Text(stringResource(R.string.select_all))
                                 iCal4List.size -> Text(stringResource(R.string.select_none))
@@ -323,7 +317,7 @@ fun ListBottomAppBar(
                 FloatingActionButton(
                     onClick = { onAddNewEntry() },
                 ) {
-                    Crossfade(module) {
+                    Crossfade(module, label = "fab_content_list") {
                         when (it) {
                             Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
                             Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))

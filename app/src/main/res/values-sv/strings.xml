@@ -4,33 +4,67 @@
     <!-- Reusable links in different contexts -->
     <!-- Possible audio formats for settings
 Global Strings -->
+    <string name="save">"Spara"</string>
+    <string name="cancel">"Avbryt"</string>
+    <string name="delete">"Radera"</string>
+    <string name="cont">"Fortsätt"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Utkast"</string>
+    <string name="classification_private">"Privat"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_synchronization">"Synkronisering"</string>
+    <string name="navigation_drawer_about">"Om / Licens"</string>
+    <string name="navigation_drawer_settings">"Inställningar"</string>
+    <string name="navigation_drawer_donate">"Donera"</string>
+    <string name="navigation_drawer_privacy_policy">"Integritetspolicy"</string>
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
+    <string name="edit_recur_x_times">"gånger"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Lägg till tidszon"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Redigera tidszon"</string>
     <!-- fragment_about -->
+    <string name="about_app_version">"Version: %1$s (%2$d)"</string>
     <!-- menus -->
-    <!-- Notification channel for Reminders -->
+    <string name="menu_view_share_ics">"Dela som .ics"</string>
     <!-- Shortcuts -->
     <!-- Settings fragment -->
     <!-- Sync fragment -->
     <!-- Donate fragment -->
+    <string name="donate_donate_with">"Donera med"</string>
     <!-- sync content provider -->
+    <string name="about_translations_thanks_to">"Tack till"</string>
     <!-- Permissions -->
+    <string name="add">"Lägg till"</string>
+    <string name="edit">"Redigera"</string>
+    <string name="reset">"Återställ"</string>
     <!-- alarms -->
     <!-- fragment_collections -->
     <!-- Fuzzy -->
+    <string name="color">"Färg"</string>
+    <string name="priority_0_no_priority">"Ingen prioritet"</string>
+    <string name="account">"Konto"</string>
+    <string name="status">"Status"</string>
+    <string name="category">"Kategori"</string>
+    <string name="url">"URL"</string>
+    <string name="location">"Plats"</string>
+    <string name="resources">"Resurser"</string>
+    <string name="attachments">"Bilagor"</string>
+    <string name="description">"Beskrivning"</string>
+    <string name="search">"Sök"</string>
+    <string name="sync_now">"Synkronisera nu"</string>
+    <string name="categories">"Kategorier"</string>
+    <string name="menu_collection_popup_import_from_ics">"Importera från .ics"</string>
+    <string name="navigation_drawer_buypro">"Köp Pro"</string>
+    <string name="settings_select_theme">"Välj tema"</string>
+    <string name="settings_select_theme_dark">"Mörkt"</string>
+    <string name="settings_select_theme_light">"Ljust"</string>
     <!-- Buy Pro fragment -->
+    <string name="buypro_purchase_header">"Uppgradera till jtx Board Pro"</string>
+    <string name="timezone">"Tidszon"</string>
+    <string name="edit_comment">"Redigera kommentar"</string>
     <!-- alarms -->
+    <string name="close">"Stäng"</string>
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
-    <!--
-    <string name="geofence_radius_meter">"Radius %1$d m"</string>
-    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
-    <string name="geofence_selection">"Geofence: %1$s"</string>
-    <string name="geofence_options">"Geofence options"</string>
-    <string name="geofence_missing_permission_info">"jtx Board needs the fine location and background location permission in order to use geofences. Please update the app permissions to get notified when you reach your geofence!"</string>
-    <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please grant permissions to use the fine location and background location to use this feature."</string>
-        -->
 </resources>

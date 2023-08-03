@@ -2,13 +2,10 @@ package at.techbee.jtx
 
 import android.accounts.Account
 import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.Window
 import android.widget.Toast
@@ -30,14 +27,14 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.NotificationChannelCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
-import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_OSE
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.locals.StoredListSettingData
@@ -81,6 +78,18 @@ import kotlin.time.Duration.Companion.minutes
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
+enum class BuildFlavor(val flavor: String, val hasBilling: Boolean, val hasGeofence: Boolean, val hasReview: Boolean, val hasDonation: Boolean) {
+    OSE("ose", false, false, false, true),
+    GPLAY("gplay", true, true, true, false),
+    AMAZON("amazon", true, false, false, false),
+    HUAWEI("huawei", true, false, false, false),
+    GENERIC("generic", false, false, false, false);
+
+    companion object {
+        fun getCurrent() = values().find { it.flavor == BuildConfig.FLAVOR } ?: OSE
+    }
+}
+
 //class MainActivity2 : ComponentActivity() {   // Using AppCompatActivity activity instead of ComponentActivity
 class MainActivity2 : AppCompatActivity() {
 
@@ -89,13 +98,8 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var settingsStateHolder: SettingsStateHolder
 
     companion object {
-        const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
-
-        const val BUILD_FLAVOR_OSE = "ose"
-        const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
-        const val BUILD_FLAVOR_AMAZON = "amazon"
-        const val BUILD_FLAVOR_HUAWEI = "huawei"
-        const val BUILD_FLAVOR_GENERIC = "generic"
+        const val NOTIFICATION_CHANNEL_ALARMS = "REMINDER_DUE"   // different name for legacy handling!
+        const val NOTIFICATION_CHANNEL_GEOFENCES = "NOTIFICATION_CHANNEL_GEOFENCES"
 
         const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
         const val INTENT_ACTION_ADD_NOTE = "addNote"
@@ -125,7 +129,7 @@ class MainActivity2 : AppCompatActivity() {
         settingsStateHolder = SettingsStateHolder(this)
 
         TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
-        createNotificationChannel()   // Register Notification Channel for Reminders
+        createNotificationChannels()   // Register Notification Channel for Reminders
         BillingManager.getInstance().initialise(this)
 
         /* START Initialise biometric prompt */
@@ -154,6 +158,13 @@ class MainActivity2 : AppCompatActivity() {
                 }
             })
         /* END Initialise biometric prompt */
+
+        if(settingsStateHolder.settingSyncOnStart.value) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
+                SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+            }
+        }
 
         setContent {
             val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
@@ -188,13 +199,6 @@ class MainActivity2 : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         ListWidgetReceiver.setPeriodicWork(this)
-
-        if(settingsStateHolder.settingSyncOnStart.value) {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
-                SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
-            }
-        }
 
         //handle intents, but only if it wasn't already handled
         if (intent.hashCode() != lastProcessedIntentHash) {
@@ -266,7 +270,7 @@ class MainActivity2 : AppCompatActivity() {
         }
         lastProcessedIntentHash = intent.hashCode()
 
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI)
+        if(BuildFlavor.getCurrent() == BuildFlavor.HUAWEI)
             BillingManager.getInstance().initialise(this)  // only Huawei needs to call the update functions again
 
         // reset authentication state if timeout was set and expired or remove timeout if onResume was done within timeout
@@ -283,21 +287,17 @@ class MainActivity2 : AppCompatActivity() {
         globalStateHolder.authenticationTimeout = System.currentTimeMillis() + (10).minutes.inWholeMilliseconds
     }
 
-    private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.notification_channel_reminder_name)
-            val descriptionText = getString(R.string.notification_channel_reminder_description)
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(CHANNEL_REMINDER_DUE, name, importance).apply {
-                description = descriptionText
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
+    private fun createNotificationChannels() {
+        val alarmChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_ALARMS, NotificationManagerCompat.IMPORTANCE_HIGH)
+            .setName(getString(R.string.notification_channel_alarms_name))
+            .build()
+        val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_HIGH)
+            .setName(getString(R.string.notification_channel_geofences_name))
+            .build()
+        if(BuildFlavor.getCurrent().hasGeofence)
+            NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel, geofenceChannel))
+        else
+            NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel))
     }
 }
 
@@ -362,6 +362,7 @@ fun MainNavHost(
 
             val detailViewModel: DetailViewModel = viewModel()
             detailViewModel.load(icalObjectId, globalStateHolder.isAuthenticated.value)
+            globalStateHolder.icalObject2Open.value = null  // reset (if it was set)
 
             DetailsScreen(
                 navController = navController,
@@ -370,9 +371,9 @@ fun MainNavHost(
                 returnToLauncher = returnToLauncher,
                 icalObjectIdList = icalObjectIdList,
                 onRequestReview = {
-                    if (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
+                    if (BuildFlavor.getCurrent().hasReview)
                         JtxReviewManager(activity).showIfApplicable()
-                    else if (BuildConfig.FLAVOR == BUILD_FLAVOR_OSE)
+                    if (BuildFlavor.getCurrent().hasDonation)
                         showOSEDonationDialog = JtxReviewManager(activity).showIfApplicable()
                 },
                 onLastUsedCollectionChanged = { module, collectionId ->
@@ -419,10 +420,17 @@ fun MainNavHost(
         composable(NavigationDrawerDestination.ABOUT.name) {
             val viewModel: AboutViewModel = viewModel()
             AboutScreen(
-                translatorsPoeditor = viewModel.translatorsPoeditor,
-                translatorsCrowdin = viewModel.translatorsCrowdin,
+                translators = viewModel.translatorsCrowdin,
                 releaseinfo = viewModel.releaseinfos,
+                contributors = viewModel.contributors,
                 libraries = viewModel.libraries,
+                isPurchased = isProPurchased,
+                priceLive = BillingManager.getInstance().proPrice,
+                purchaseDateLive = BillingManager.getInstance().proPurchaseDate,
+                orderIdLive = BillingManager.getInstance().proOrderId,
+                launchBillingFlow = {
+                    BillingManager.getInstance().launchBillingFlow(activity)
+                },
                 navController = navController
             )
         }
@@ -452,7 +460,6 @@ fun MainNavHost(
     }
 
     globalStateHolder.icalObject2Open.value?.let { id ->
-        globalStateHolder.icalObject2Open.value = null
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false, returnToLauncher = true))
     }
 

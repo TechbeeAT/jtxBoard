@@ -246,7 +246,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
             currentItem.status = newStatus.status
             if(settingsStateHolder.settingKeepStatusProgressCompletedInSync.value) {
                 when(newStatus) {
-                    Status.NEEDS_ACTION -> currentItem.setUpdatedProgress(0, true)
                     Status.IN_PROCESS -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
                     Status.COMPLETED -> currentItem.setUpdatedProgress(100, true)
                     else -> { }
@@ -421,7 +420,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         viewModelScope.launch(Dispatchers.IO) {
             selectedEntries.forEach { iCalObjectId ->
                 database.getICalObjectByIdSync(iCalObjectId)?.let {
-                    it.status = newStatus
+                    it.status = if(newStatus == Status.NO_STATUS.name) null else newStatus
                     when {
                         newStatus == Status.COMPLETED.status -> it.percent = 100
                         newStatus == Status.NEEDS_ACTION.status -> it.percent = 0
@@ -616,14 +615,14 @@ open class ListViewModelTodos(application: Application) : ListViewModel(applicat
 
 
 enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String) {
-    START_VTODO(R.string.started, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
+    START_VTODO(R.string.started, "$COLUMN_COMPLETED IS NOT NULL OR $COLUMN_PERCENT = 100, $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
     START_VJOURNAL(R.string.date, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
-    DUE(R.string.due, "$COLUMN_DUE IS NULL, $COLUMN_DUE "),
+    DUE(R.string.due, "$COLUMN_COMPLETED IS NOT NULL OR $COLUMN_PERCENT = 100, $COLUMN_DUE IS NULL, $COLUMN_DUE "),
     COMPLETED(R.string.completed, "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED "),
     CREATED(R.string.filter_created, "$COLUMN_CREATED "),
     LAST_MODIFIED(R.string.filter_last_modified, "$COLUMN_LAST_MODIFIED "),
     SUMMARY(R.string.summary, "UPPER($COLUMN_SUMMARY) "),
-    PRIORITY(R.string.priority, "$COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY "),
+    PRIORITY(R.string.priority, "CASE WHEN $COLUMN_PRIORITY IS NULL THEN 1 WHEN $COLUMN_PRIORITY = 0 THEN 1 ELSE 0 END, $COLUMN_PRIORITY "),
     CLASSIFICATION(R.string.classification, "$COLUMN_CLASSIFICATION IS NULL, $COLUMN_CLASSIFICATION "),
     STATUS(R.string.status, "$COLUMN_STATUS IS NULL, $COLUMN_STATUS "),
     PROGRESS(R.string.progress, "$COLUMN_PERCENT "),

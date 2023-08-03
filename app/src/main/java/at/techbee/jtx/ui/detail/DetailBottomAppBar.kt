@@ -70,7 +70,7 @@ fun DetailBottomAppBar(
     val scope = rememberCoroutineScope()
     var copyOptionsExpanded by remember { mutableStateOf(false) }
 
-    val syncIconAnimation = rememberInfiniteTransition()
+    val syncIconAnimation = rememberInfiniteTransition(label = "syncIconAnimation")
     val angle by syncIconAnimation.animateFloat(
         initialValue = 0f,
         targetValue = -360f,
@@ -78,7 +78,7 @@ fun DetailBottomAppBar(
             animation = keyframes {
                 durationMillis = 2000
             }
-        )
+        ), label = "syncIconAnimationAngle"
     )
 
     val isPreview = LocalInspectionMode.current
@@ -214,7 +214,7 @@ fun DetailBottomAppBar(
                     },
                     enabled = seriesElement?.dirty ?: icalObject.dirty && !isSyncInProgress
                 ) {
-                    Crossfade(isSyncInProgress) { synchronizing ->
+                    Crossfade(isSyncInProgress, label = "isSyncInProgress") { synchronizing ->
                         if (synchronizing) {
                             Icon(
                                 Icons.Outlined.Sync,
@@ -244,7 +244,7 @@ fun DetailBottomAppBar(
                     onClick = { },
                     enabled = false
                 ) {
-                    Crossfade(changeState.value) { state ->
+                    Crossfade(changeState.value, label = "saving_change_state") { state ->
                         when(state) {
                             DetailViewModel.DetailChangeState.CHANGEUNSAVED -> {
                                 Icon(
@@ -256,7 +256,9 @@ fun DetailBottomAppBar(
                             }
                             DetailViewModel.DetailChangeState.CHANGESAVING -> {
                                 IconButton(onClick = { /* no action, icon button just to keep the same style */  }) {
-                                    CircularProgressIndicator(modifier = Modifier.alpha(0.3f).size(24.dp))
+                                    CircularProgressIndicator(modifier = Modifier
+                                        .alpha(0.3f)
+                                        .size(24.dp))
                                 }
                             }
                             DetailViewModel.DetailChangeState.CHANGESAVED -> {
@@ -281,11 +283,7 @@ fun DetailBottomAppBar(
                     IconButton(onClick = { markdownState.value = MarkdownState.CLOSED }) {
                         Icon(Icons.Outlined.ArrowBack, stringResource(R.string.back))
                     }
-                    Divider(
-                        modifier = Modifier
-                            .height(40.dp)
-                            .width(1.dp)
-                    )
+                    VerticalDivider(modifier = Modifier.height(40.dp))
                 }
             }
             AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
@@ -345,7 +343,7 @@ fun DetailBottomAppBar(
                 },
                 containerColor = if (collection.readonly || !isProActionAvailable) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primaryContainer
             ) {
-                Crossfade(targetState = isEditMode.value) { isEditMode ->
+                Crossfade(targetState = isEditMode.value, label = "fab_icon_content") { isEditMode ->
                     if (isEditMode) {
                         Icon(painterResource(id = R.drawable.ic_save_move_outline), stringResource(id = R.string.save))
                     } else {

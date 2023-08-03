@@ -1,0 +1,37 @@
+name: Create release HUAWEI
+on:
+  push:
+    branches:
+      - 'develop-HUAWEI'
+  workflow_dispatch:
+jobs:
+  build:
+    name: Create release
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/gradle-build-action@v2
+
+      - name: Prepare keystore
+        run: echo ${{ secrets.android_keystore_base64 }} | base64 -d >$GITHUB_WORKSPACE/keystore.jks
+
+      - name: Build signed package for HUAWEI
+        run: ./gradlew app:assembleHuaweiRelease
+        env:
+          ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.android_keystore_password }}
+          ANDROID_KEY_ALIAS: ${{ secrets.android_key_alias }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
+          CROWDIN_API_KEY: ${{ secrets.crowdin_api_key }}
+          GOOGLE_GEO_API_KEY: ${{ secrets.google_geo_api_key }}
+            
+      - name: Copy OSE apk to root
+        run: cp app/build/outputs/apk/ose/release/app-huawei-release.apk jtxBoard-${{ github.ref_name }}.apk
