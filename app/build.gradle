@@ -46,9 +46,10 @@ android {
             }
         }
 
-        def locales = getLocales()
+        //don't forget to update locales_config.xml when changing the languages!
+        def locales = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu"]
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
-        resConfigs locales
+        resourceConfigurations += locales
 
         buildConfigField "String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: localProperties["crowdin.apikey"] ) + "\""
         buildConfigField "String", "GITHUB_CONTRIBUTORS_API_KEY", "\"" + (System.getenv("GH_CONTRIBUTORS_API_KEY") ?: localProperties["githubcontributors.apikey"] ) + "\""
@@ -137,81 +138,6 @@ android {
     lint {
         disable 'MissingTranslation', 'ExtraTranslation'
     }
-    sourceSets {
-        main {
-            res.srcDirs += ['build/generated/res/locale']
-        }
-    }
-}
-
-
-import groovy.xml.MarkupBuilder
-
-/**
- * Obtains a list of all the available locales
- * @since 20220928
- * @return A list with the language codes of the locales available.
- */
-def getLocales() {
-    // Initialize the list English, since it's available by default
-    def list = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu"]
-
-    /*
-    // deactivated script for now in order to have better control over available locales in the app
-    // until a better solution is found together with Crowdin
-    // Get all directories inside resources
-    def dir = new File(projectDir, "src/main/res")
-    dir.traverse(type: DIRECTORIES, maxDepth: 0) { file ->
-        // Get only values directories
-        def fileName = file.name
-        if (!fileName.startsWith("values-")) return
-
-        // Take only the values directories that contain strings
-        def stringsFile = new File(file, "strings.xml")
-        if (!stringsFile.exists()) return
-
-        // Add to the list the locale of the strings file
-        list.add(fileName.substring(fileName.indexOf('-') + 1))
-    }
-     */
-    // Log the available locales
-    println "Supported locales: " + list.join(", ")
-    // Return the built list
-    return list
-}
-
-/**
- * Writes the available locales obtained from getLocales() in locale-config.xml
- * @since 20221016
- * @return A list with the language codes of the locales available.
- */
-tasks.register('updateLocalesConfig') {
-    println 'Building locale config...'
-    ext.outputDir = new File(projectDir, 'build/generated/res/locale/xml')
-
-    doFirst {
-        mkdir outputDir
-
-        new File(outputDir, "locales_config.xml").withWriter { writer ->
-            def destXml = new MarkupBuilder(new IndentPrinter(writer, "    ", true, true))
-            destXml.setDoubleQuotes(true)
-            def destXmlMkp = destXml.getMkp()
-            destXmlMkp.xmlDeclaration(version: "1.0", encoding: "utf-8")
-            destXmlMkp.comment("Generated at ${new Date()}")
-            destXmlMkp.yield "\r\n"
-
-            def locales = getLocales()
-            destXml."locale-config"(['xmlns:android': "http://schemas.android.com/apk/res/android"]) {
-                locales.forEach { locale ->
-                    destXml."locale"("android:name": locale)
-                }
-            }
-        }
-    }
-}
-
-gradle.projectsEvaluated {
-    preBuild.dependsOn('updateLocalesConfig')
 }
 
 configurations {
