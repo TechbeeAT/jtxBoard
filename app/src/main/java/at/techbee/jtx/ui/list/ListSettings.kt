@@ -12,6 +12,8 @@ package at.techbee.jtx.ui.list
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.Classification
@@ -64,7 +66,7 @@ class ListSettings {
     var showOneRecurEntryInFuture: MutableState<Boolean> = mutableStateOf(false)
     var markdownEnabled: MutableState<Boolean> = mutableStateOf(false)
 
-    var topAppBarCollectionId: MutableState<Long> = mutableStateOf(0L)   // list view only
+    var topAppBarCollectionId: MutableState<Long> = mutableLongStateOf(0L)   // list view only
     var topAppBarMode: MutableState<ListTopAppBarMode> = mutableStateOf(ListTopAppBarMode.SEARCH)   // list view only
     var kanbanColumnsStatus = mutableStateListOf<String?>()
     var kanbanColumnsXStatus = mutableStateListOf<String>()
@@ -73,8 +75,8 @@ class ListSettings {
 
     var widgetHeader: MutableState<String> = mutableStateOf("") //widgetOnly
     var checkboxPositionEnd: MutableState<Boolean> = mutableStateOf(false)  // widget only
-    var widgetAlpha: MutableState<Float> = mutableStateOf(1F)  // widget only
-    var widgetAlphaEntries: MutableState<Float> = mutableStateOf(1F)  // widget only
+    var widgetAlpha: MutableState<Float> = mutableFloatStateOf(1F)  // widget only
+    var widgetAlphaEntries: MutableState<Float> = mutableFloatStateOf(1F)  // widget only
     var widgetColor: MutableState<Int?> = mutableStateOf(null)  // widget only
     var widgetColorEntries: MutableState<Int?> = mutableStateOf(null)  // widget only
     var showDescription: MutableState<Boolean> = mutableStateOf(true)  // widget only

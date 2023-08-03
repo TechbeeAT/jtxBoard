@@ -16,7 +16,13 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -40,7 +46,7 @@ fun ProgressElement(
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit
 ) {
 
-    var sliderPosition by remember { mutableStateOf(
+    var sliderPosition by remember { mutableFloatStateOf(
         progress?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
     ) }
 
@@ -59,9 +65,9 @@ fun ProgressElement(
      * Here we make sure, that if the icalobjectid of the current instance has changed, the progress
      * gets reset
      */
-    val lastICalObjectId = remember { mutableStateOf(0L) }
-    if(lastICalObjectId.value != iCalObjectId) {
-        lastICalObjectId.value = iCalObjectId
+    val lastICalObjectId = remember { mutableLongStateOf(0L) }
+    if(lastICalObjectId.longValue != iCalObjectId) {
+        lastICalObjectId.longValue = iCalObjectId
         sliderPosition = progress?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
     }
 

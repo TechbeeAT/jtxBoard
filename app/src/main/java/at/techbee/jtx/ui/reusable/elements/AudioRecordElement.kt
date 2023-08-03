@@ -71,7 +71,7 @@ fun AudioRecordElement(
 
     val cachedFilename = Uri.parse("${context.cacheDir}/recorded.${audioFormat.extension}")
 
-    var secondsRemaining by remember { mutableStateOf(maxRecordingDurationMillis/1000) }
+    var secondsRemaining by remember { mutableIntStateOf(maxRecordingDurationMillis/1000) }
     suspend fun updateTimer() {
         while (recording && secondsRemaining > 0) {
             secondsRemaining -= 1
@@ -125,7 +125,7 @@ fun AudioRecordElement(
                     }
                 }
             }) {
-            Crossfade(recording) {
+            Crossfade(recording, label = "AudioRecordElement_Record_Stop_Button") {
                 if (it) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
