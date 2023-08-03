@@ -1279,7 +1279,7 @@ data class ICalObject(
 
 
     fun recreateRecurring(context: Context) {
-        val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+        val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
 
         if(recurid?.isNotEmpty() == true) {
             database.getRecurSeriesElement(uid)?.recreateRecurring(context)

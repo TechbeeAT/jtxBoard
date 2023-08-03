@@ -65,7 +65,7 @@ import java.io.FileOutputStream
 class DetailViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _application = application
-    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
+    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao()
 
     var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
     var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
