@@ -47,7 +47,7 @@ android {
         }
 
         //don't forget to update locales_config.xml when changing the languages!
-        def locales = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW"]
+        def locales = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu"]
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         resourceConfigurations += locales
 
@@ -137,11 +137,6 @@ android {
     }
     lint {
         disable 'MissingTranslation', 'ExtraTranslation'
-    }
-    sourceSets {
-        main {
-            res.srcDirs += ['build/generated/res/locale']
-        }
     }
 }
 
