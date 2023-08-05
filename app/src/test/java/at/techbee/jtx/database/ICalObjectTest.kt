@@ -11,12 +11,18 @@ package at.techbee.jtx.database
 import android.net.Uri
 import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import net.fortuna.ical4j.model.Recur
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.TimeZone
 
 
@@ -826,4 +832,49 @@ class ICalObjectTest {
     @Test fun getAsRecurId_1() = assertEquals("20230101T000000", ICalObject.getAsRecurId(1672527600000L, "Europe/Vienna"))
     @Test fun getAsRecurId_ALLDAY() = assertEquals("20230101", ICalObject.getAsRecurId(1672531200000, TZ_ALLDAY))
 
+    @Test fun setDefaultStartDateFromSettings_TestStart() {
+        val iCalObject = ICalObject.createTodo()
+        iCalObject.setDefaultStartDateFromSettings(
+            DropdownSettingOption.DEFAULT_DATE_SAME_DAY,
+            LocalTime.of(15,0),
+        )
+
+        val now = LocalDateTime.now().withHour(15).withMinute(0)
+        val entryStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iCalObject.dtstart!!), ZoneId.of("UTC")).toLocalDateTime()
+        assertEquals(now.year, entryStart.year)
+        assertEquals(now.monthValue, entryStart.monthValue)
+        assertEquals(now.dayOfMonth, entryStart.dayOfMonth)
+        assertEquals(now.hour, entryStart.hour)
+        assertEquals(now.minute, entryStart.minute)
+    }
+
+    @Test fun setDefaultDueDateFromSettings_TestDue() {
+        val iCalObject = ICalObject.createTodo()
+        iCalObject.setDefaultDueDateFromSettings(
+            DropdownSettingOption.DEFAULT_DATE_NEXT_DAY,
+            LocalTime.of(22,15),
+        )
+
+        val now = LocalDateTime.now().plusDays(1).withHour(22).withMinute(15)
+        val entryStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iCalObject.due!!), ZoneId.of("UTC")).toLocalDateTime()
+        assertEquals(now.year, entryStart.year)
+        assertEquals(now.monthValue, entryStart.monthValue)
+        assertEquals(now.dayOfMonth, entryStart.dayOfMonth)
+        assertEquals(now.hour, entryStart.hour)
+        assertEquals(now.minute, entryStart.minute)
+    }
+
+    @Test fun setDefaultJournalDateFromSettings_Test() {
+        val iCalObject = ICalObject.createJournal()
+        iCalObject.setDefaultJournalDateFromSettings(
+            DropdownSettingOption.DEFAULT_JOURNALS_DATE_PREVIOUS_DAY
+        )
+
+        val now = LocalDateTime.now().minusDays(1)
+        val entryStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(iCalObject.dtstart!!), ZoneId.of("UTC")).toLocalDateTime()
+        assertEquals(now.year, entryStart.year)
+        assertEquals(now.monthValue, entryStart.monthValue)
+        assertEquals(now.dayOfMonth, entryStart.dayOfMonth)
+        assertEquals(TZ_ALLDAY, iCalObject.dtstartTimezone)
+    }
 }
