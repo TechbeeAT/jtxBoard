@@ -120,6 +120,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Vertalingen"</string>
     <string name="about_tabitem_libraries">"Bibliotheken"</string>
+    <string name="about_tabitem_contributors">"Bijdragers"</string>
     <string name="about_special_thanks">"Speciale dank aan"</string>
     <string name="about_app_version">"Versie: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Codenaam: %1$s"</string>
@@ -388,8 +389,11 @@ Dank u!"</string>
     <string name="link_entry">"Link item"</string>
     <string name="link_entry_search_within">"Zoeken binnen …"</string>
     <string name="link_entry_search_within_same_collection">"Dezelfde collectie"</string>
+    <string name="link_entry_search_within_same_account">"Zelfde account"</string>
     <string name="details_link_existing_subentry_dialog_title">"Link subitems"</string>
+    <string name="details_link_existing_parent_dialog_title">"Ouders koppelen"</string>
     <string name="details_link_existing_subentry_dialog_info">"Kies de sub-items die moeten worden gekoppeld."</string>
+    <string name="details_link_existing_parent_dialog_info">"Kies een ouder-item om aan te koppelen."</string>
     <string name="details_app_bar_behaviour">"App-balk gedrag"</string>
     <string name="details_show_all_options">"Toon alle opties"</string>
     <string name="details_show_hide_elements">Toon/verberg delen</string>
