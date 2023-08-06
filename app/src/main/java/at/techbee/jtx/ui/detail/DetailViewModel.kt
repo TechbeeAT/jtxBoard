@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.detail
 
 import android.app.Application
 import android.content.ActivityNotFoundException
+import android.content.ClipboardManager
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.media.MediaPlayer
@@ -102,12 +103,22 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     val mediaPlayer = MediaPlayer()
 
+    val clipboardManager = _application.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    var clipboardHasUri = mutableStateOf(clipboardManager.hasPrimaryClip())
+
+
     private var _isAuthenticated = false
 
     companion object {
         const val PREFS_DETAIL_JOURNALS = "prefsDetailJournals"
         const val PREFS_DETAIL_NOTES = "prefsDetailNotes"
         const val PREFS_DETAIL_TODOS = "prefsDetailTodos"
+    }
+
+    init {
+        clipboardManager.addPrimaryClipChangedListener {
+            clipboardHasUri.value = clipboardManager.hasPrimaryClip()
+        }
     }
 
     fun load(icalObjectId: Long, isAuthenticated: Boolean) {

@@ -58,9 +58,11 @@ fun DetailBottomAppBar(
     isProActionAvailable: Boolean,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     detailsBottomSheetState: SheetState,
+    clipboardHasUri: Boolean,
     onDeleteClicked: () -> Unit,
     onCopyRequested: (Module) -> Unit,
     onRevertClicked: () -> Unit,
+    onPasteUriFromClipboardClicked: () -> Unit
 ) {
 
     if (icalObject == null || collection == null)
@@ -183,6 +185,19 @@ fun DetailBottomAppBar(
                     Icon(
                         Icons.Outlined.Delete,
                         contentDescription = stringResource(id = R.string.delete),
+                    )
+                }
+            }
+
+            if(
+                !collection.readonly
+                && clipboardHasUri
+                && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
+            ) {
+                IconButton(onClick = { onPasteUriFromClipboardClicked() }) {
+                    Icon(
+                        Icons.Outlined.ContentPaste,
+                        contentDescription = stringResource(id = R.string.paste_attachment_from_clipboard),
                     )
                 }
             }
@@ -379,9 +394,11 @@ fun DetailBottomAppBar_Preview_View() {
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
+            clipboardHasUri = true,
             onDeleteClicked = { },
             onCopyRequested = { },
-            onRevertClicked = { }
+            onRevertClicked = { },
+            onPasteUriFromClipboardClicked = { }
         )
     }
 }
@@ -407,9 +424,11 @@ fun DetailBottomAppBar_Preview_edit() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
+            clipboardHasUri = true,
             onDeleteClicked = { },
             onCopyRequested = { },
-            onRevertClicked = { }
+            onRevertClicked = { },
+            onPasteUriFromClipboardClicked = { }
         )
     }
 }
@@ -434,9 +453,11 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
             markdownState = remember { mutableStateOf(MarkdownState.OBSERVING) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
+            clipboardHasUri = true,
             onDeleteClicked = { },
             onCopyRequested = { },
-            onRevertClicked = { }
+            onRevertClicked = { },
+            onPasteUriFromClipboardClicked = { }
         )
     }
 }
@@ -461,9 +482,11 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
+            clipboardHasUri = true,
             onDeleteClicked = { },
             onCopyRequested = { },
-            onRevertClicked = { }
+            onRevertClicked = { },
+            onPasteUriFromClipboardClicked = { }
         )
     }
 }
@@ -488,9 +511,11 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
             isProActionAvailable = false,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
+            clipboardHasUri = true,
             onDeleteClicked = { },
             onCopyRequested = { },
-            onRevertClicked = { }
+            onRevertClicked = { },
+            onPasteUriFromClipboardClicked = { }
         )
     }
 }
@@ -518,9 +543,11 @@ fun DetailBottomAppBar_Preview_View_local() {
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailsBottomSheetState = rememberModalBottomSheetState(),
+            clipboardHasUri = true,
             onDeleteClicked = { },
             onCopyRequested = { },
-            onRevertClicked = { }
+            onRevertClicked = { },
+            onPasteUriFromClipboardClicked = { }
         )
     }
 }

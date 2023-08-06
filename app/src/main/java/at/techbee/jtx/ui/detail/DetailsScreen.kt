@@ -9,11 +9,10 @@
 package at.techbee.jtx.ui.detail
 
 import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
-import android.content.Context.CLIPBOARD_SERVICE
 import android.content.ContextWrapper
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
@@ -366,8 +365,7 @@ fun DetailsScreen(
                                 text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
                                 onClick = {
                                     val text = icalEntity.value?.getShareText(context) ?: ""
-                                    val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-                                    clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
+                                    detailViewModel.clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
                                     if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
                                         Toast.makeText(context, context.getText(R.string.menu_view_copy_to_clipboard_copied), Toast.LENGTH_SHORT).show()
                                     menuExpanded.value = false
@@ -542,9 +540,28 @@ fun DetailsScreen(
                 isProActionAvailable = isProActionAvailable,
                 changeState = detailViewModel.changeState,
                 detailsBottomSheetState = detailsBottomSheetState,
+                clipboardHasUri = detailViewModel.clipboardHasUri.value,
                 onDeleteClicked = { showDeleteDialog = true },
                 onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) },
-                onRevertClicked = { showRevertDialog = true }
+                onRevertClicked = { showRevertDialog = true },
+                onPasteUriFromClipboardClicked = {
+                    val clipboardItem = detailViewModel.clipboardManager.primaryClip!!.getItemAt(0)
+                    Log.d("clipboardItem", "uri: ${clipboardItem.uri}")
+                    Log.d("clipboardItem", "text: ${clipboardItem.text}")
+                    Log.d("clipboardItem", "htmlText: ${clipboardItem.htmlText}")
+                    Log.d("clipboardItem", "intent: ${clipboardItem.intent}")
+                    if(clipboardItem.uri != null) {
+                        val newAttachment = if (clipboardItem.uri.scheme?.startsWith("content") == true) {
+                            Attachment.getNewAttachmentFromUri(clipboardItem.uri, context)
+                        } else {
+                            Attachment(uri = clipboardItem.uri.toString())
+                        }
+                        newAttachment?.let {
+                            detailViewModel.mutableAttachments.add(it)
+                        }
+                    }
+                    detailViewModel.saveEntry()
+                }
             )
         }
     )
