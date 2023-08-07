@@ -18,9 +18,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.CollectionsView
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +33,7 @@ import kotlinx.coroutines.launch
 import java.io.BufferedOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.time.LocalTime
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -161,10 +167,30 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun insertTxt(text: String, module: Module, collection: ICalCollection) {
+    fun insertTxt(
+        text: String,
+        module: Module,
+        collection: ICalCollection,
+        defaultJournalDateSettingOption: DropdownSettingOption,
+        defaultStartDateSettingOption: DropdownSettingOption,
+        defaultStartTime: LocalTime?,
+        defaultDueDateSettingOption: DropdownSettingOption,
+        defaultDueTime: LocalTime?
+    ) {
         isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
-            database.insertICalObject(ICalObject.fromText(module, collection.collectionId, text, getApplication()))
+            database.insertICalObject(
+                ICalObject.fromText(
+                    module,
+                    collection.collectionId,
+                    text,
+                    defaultJournalDateSettingOption,
+                    defaultStartDateSettingOption,
+                    defaultStartTime,
+                    defaultDueDateSettingOption,
+                    defaultDueTime
+                )
+            )
             if(collection.accountType != LOCAL_ACCOUNT_TYPE)
                 SyncUtil.notifyContentObservers(getApplication())
             isProcessing.postValue(false)

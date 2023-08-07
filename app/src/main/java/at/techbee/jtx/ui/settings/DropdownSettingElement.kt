@@ -1,4 +1,4 @@
-package at.techbee.jtx.ui.reusable.elements
+package at.techbee.jtx.ui.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,20 +7,26 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import at.techbee.jtx.ui.settings.DropdownSetting
-import at.techbee.jtx.ui.settings.DropdownSettingOption
 
 
 @Composable
-fun DropdownSetting(
+fun DropdownSettingElement(
     setting: DropdownSetting,
     selected: DropdownSettingOption,
     onSelectionChanged: (selection: DropdownSettingOption) -> Unit,
@@ -94,10 +100,10 @@ fun DropdownSetting(
 
 @Preview(showBackground = true)
 @Composable
-fun DropdownSetting_Theme() {
+fun DropdownSettingElement_Theme() {
     MaterialTheme {
 
-        DropdownSetting(
+        DropdownSettingElement(
             setting = DropdownSetting.SETTING_THEME,
             selected = DropdownSetting.SETTING_THEME.options.last(),
             onSelectionChanged = { }
@@ -108,10 +114,10 @@ fun DropdownSetting_Theme() {
 
 @Preview(showBackground = true)
 @Composable
-fun DropdownSetting_Auto_Alarm() {
+fun DropdownSettingElement_Auto_Alarm() {
     MaterialTheme {
 
-        DropdownSetting(
+        DropdownSettingElement(
             setting = DropdownSetting.SETTING_AUTO_ALARM,
             selected = DropdownSetting.SETTING_AUTO_ALARM.options.last(),
             onSelectionChanged = { }
@@ -122,10 +128,10 @@ fun DropdownSetting_Auto_Alarm() {
 
 @Preview(showBackground = true)
 @Composable
-fun DropdownSetting_AudioTheme() {
+fun DropdownSettingElement_AudioTheme() {
     MaterialTheme {
 
-        DropdownSetting(
+        DropdownSettingElement(
             setting = DropdownSetting.SETTING_AUDIO_FORMAT,
             selected = DropdownSetting.SETTING_AUDIO_FORMAT.options.last(),
             onSelectionChanged = { }
