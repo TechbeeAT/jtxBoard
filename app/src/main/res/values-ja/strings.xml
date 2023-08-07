@@ -298,6 +298,7 @@ Global Strings -->
     <string name="collections_dialog_move_title">"「%1$s」のすべてのエントリーの移動先:"</string>
     <string name="collection_dialog_move_info">"注意: 書き込み可能で、対応するコンポーネント (ジャーナル、メモ、ToDo) に対応するコレクションのみを選択できます。"</string>
     <string name="menu_collections_popup_move_entries">"エントリーを移動"</string>
+    <string name="setting_no_time">"時間なし"</string>
     <string name="list_no_dates_set">"日付未設定"</string>
     <string name="list_without_start_date">"着手日なし"</string>
     <string name="list_without_due_date">"締切日なし"</string>
@@ -455,6 +456,8 @@ Global Strings -->
     <string name="settings_sync">"同期設定"</string>
     <string name="settings_default_start_date">"ToDo のデフォルトの着手日"</string>
     <string name="settings_default_due_date">"ToDo のデフォルトの締切日"</string>
+    <string name="settings_default_start_time">"ToDo のデフォルトの着手時間"</string>
+    <string name="settings_default_due_time">"ToDo のデフォルトの締切時間"</string>
     <string name="settings_default_date_none">"なし"</string>
     <string name="settings_default_date_same_day">"当日"</string>
     <string name="settings_default_date_next_day">"翌日"</string>

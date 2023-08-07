@@ -62,9 +62,16 @@ Global Strings -->
     <!-- Buy Pro fragment -->
     <string name="buypro_purchase_header">"Uppgradera till jtx Board Pro"</string>
     <string name="timezone">"Tidszon"</string>
+    <string name="audio_pause">"Pausa"</string>
     <string name="edit_comment">"Redigera kommentar"</string>
     <!-- alarms -->
+    <string name="dialog_unsaved_changes_title">"Spara ändringar?"</string>
     <string name="close">"Stäng"</string>
+    <string name="menu_view_copy_to_clipboard">"Kopiera till urklipp"</string>
+    <string name="settings_select_language">"Välj språk"</string>
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="next">"Nästa"</string>
+    <string name="active_filters">Aktiva filter:</string>
+    <string name="clear_filters">"Rensa filter"</string>
 </resources>
