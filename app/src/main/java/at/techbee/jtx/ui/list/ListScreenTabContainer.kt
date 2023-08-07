@@ -278,7 +278,16 @@ fun ListScreenTabContainer(
         editAfterSaving: Boolean
     ) {
 
-        val newICalObject = ICalObject.fromText(module, collectionId, text, context)
+        val newICalObject = ICalObject.fromText(
+            module,
+            collectionId,
+            text,
+            settingsStateHolder.settingDefaultJournalsDate.value,
+            settingsStateHolder.settingDefaultStartDate.value,
+            settingsStateHolder.settingDefaultStartTime.value,
+            settingsStateHolder.settingDefaultDueDate.value,
+            settingsStateHolder.settingDefaultDueTime.value
+        )
         val categories = Category.extractHashtagsFromText(text)
 
         //handle autoAlarm

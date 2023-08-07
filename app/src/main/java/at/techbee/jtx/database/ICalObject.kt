@@ -18,7 +18,6 @@ import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.util.PatternsCompat
-import androidx.preference.PreferenceManager
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -32,7 +31,6 @@ import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
-import at.techbee.jtx.ui.settings.DropdownSetting
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
@@ -62,6 +60,7 @@ import java.text.ParseException
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.TextStyle
@@ -598,18 +597,27 @@ data class ICalObject(
             return ICalObject().applyContentValues(values)
         }
 
-        fun fromText(module: Module, collectionId: Long, text: String?, context: Context): ICalObject {
+        fun fromText(
+            module: Module,
+            collectionId: Long,
+            text: String?,
+            defaultJournalDateSettingOption: DropdownSettingOption,
+            defaultStartDateSettingOption: DropdownSettingOption,
+            defaultStartTime: LocalTime?,
+            defaultDueDateSettingOption: DropdownSettingOption,
+            defaultDueTime: LocalTime?,
+        ): ICalObject {
             val iCalObject = when(module) {
                 Module.JOURNAL -> createJournal()
                 Module.NOTE -> createNote()
                 Module.TODO -> createTodo()
             }
             if(module == Module.JOURNAL) {
-                iCalObject.setDefaultJournalDateFromSettings(context)
+                iCalObject.setDefaultJournalDateFromSettings(defaultJournalDateSettingOption)
             }
             if(module == Module.TODO) {
-                iCalObject.setDefaultDueDateFromSettings(context)
-                iCalObject.setDefaultStartDateFromSettings(context)
+                iCalObject.setDefaultStartDateFromSettings(defaultStartDateSettingOption, defaultStartTime)
+                iCalObject.setDefaultDueDateFromSettings(defaultDueDateSettingOption, defaultDueTime)
             }
             iCalObject.parseSummaryAndDescription(text)
             iCalObject.parseURL(text)
@@ -1508,62 +1516,67 @@ data class ICalObject(
             recurInfo + System.lineSeparator()
     }
 
-    fun setDefaultJournalDateFromSettings(context: Context) {
-        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(
-            DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.key, null) ?: DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.default.key
+    fun setDefaultJournalDateFromSettings(defaultJournalDateSetting: DropdownSettingOption) {
         try {
-            when(default) {
-                DropdownSettingOption.DEFAULT_JOURNALS_DATE_PREVIOUS_DAY.key -> {
+            when(defaultJournalDateSetting) {
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_PREVIOUS_DAY -> {
                     this.dtstart = DateTimeUtils.getTodayAsLong()-(1).days.inWholeMilliseconds
                     this.dtstartTimezone = TZ_ALLDAY
                 }
-                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_DAY.key -> {
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_DAY -> {
                     this.dtstart = DateTimeUtils.getTodayAsLong()
                     this.dtstartTimezone = TZ_ALLDAY
                 }
-                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_HOUR.key -> {
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_HOUR -> {
                     this.dtstart = LocalDateTime.now().withMinute(0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     this.dtstartTimezone = null
                 }
-                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_15MIN.key -> {
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_15MIN -> {
                     this.dtstart = LocalDateTime.now().withMinute(((LocalDateTime.now().minute)/15)*15).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     this.dtstartTimezone = null
                 }
-                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_5MIN.key -> {
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_5MIN -> {
                     this.dtstart = LocalDateTime.now().withMinute(((LocalDateTime.now().minute)/5)*5).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     this.dtstartTimezone = null
                 }
-                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_MIN.key -> {
+                DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_MIN -> {
                     this.dtstart = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     this.dtstartTimezone = null
                 }
+                else -> { }
             }
         } catch (e: IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
 
-    fun setDefaultStartDateFromSettings(context: Context) {
-        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(
-            DropdownSetting.SETTING_DEFAULT_START_DATE.key, null) ?: return
-        if(default == "null")
+    fun setDefaultStartDateFromSettings(defaultStartDate: DropdownSettingOption, defaultStartTime: LocalTime?) {
+        if(defaultStartDate == DropdownSettingOption.DEFAULT_DATE_NONE)
             return
         try {
-            this.dtstart = DateTimeUtils.getTodayAsLong() + Duration.parse(default).inWholeMilliseconds
-            this.dtstartTimezone = TZ_ALLDAY
+            this.dtstart = DateTimeUtils.getTodayAsLong() + Duration.parse(defaultStartDate.key).inWholeMilliseconds
+            if(defaultStartTime == null) {
+                this.dtstartTimezone = TZ_ALLDAY
+            } else {
+                this.dtstart = this.dtstart!! + defaultStartTime.toSecondOfDay()*1000
+                this.dtstartTimezone = null
+            }
         } catch (e: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
 
-    fun setDefaultDueDateFromSettings(context: Context) {
-        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(
-            DropdownSetting.SETTING_DEFAULT_DUE_DATE.key, null) ?: return
-        if(default == "null")
+    fun setDefaultDueDateFromSettings(defaultDueDate: DropdownSettingOption, defaultDueTime: LocalTime?) {
+        if(defaultDueDate == DropdownSettingOption.DEFAULT_DATE_NONE)
             return
         try {
-            this.due = DateTimeUtils.getTodayAsLong() + Duration.parse(default).inWholeMilliseconds
-            this.dueTimezone = TZ_ALLDAY
+            this.due = DateTimeUtils.getTodayAsLong() + Duration.parse(defaultDueDate.key).inWholeMilliseconds
+            if(defaultDueTime == null) {
+                this.dueTimezone = TZ_ALLDAY
+            } else {
+                this.due = this.due!! + defaultDueTime.toSecondOfDay()*1000
+                this.dueTimezone = null
+            }
         } catch (e: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
