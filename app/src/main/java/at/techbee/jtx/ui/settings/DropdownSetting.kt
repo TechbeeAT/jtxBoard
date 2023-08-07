@@ -8,7 +8,7 @@
 
 package at.techbee.jtx.ui.settings
 
-import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Alarm
@@ -18,7 +18,6 @@ import androidx.compose.material.icons.outlined.FormatPaint
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 
 enum class DropdownSetting(
@@ -149,8 +148,10 @@ enum class DropdownSetting(
     ),
     ;
 
-    fun save(newDropdownSettingOption: DropdownSettingOption, context: Context) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit()
-            .putString(key, newDropdownSettingOption.key).apply()
-    }
+    fun saveSetting(newDropdownSettingOption: DropdownSettingOption, prefs: SharedPreferences) =
+        prefs.edit().putString(key, newDropdownSettingOption.key).apply()
+
+    fun getSetting(prefs: SharedPreferences) = DropdownSettingOption.values().find { setting ->
+        setting.key == prefs.getString(key, default.key)
+    } ?: default
 }

@@ -8,7 +8,7 @@
 
 package at.techbee.jtx.ui.settings
 
-import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddTask
@@ -29,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 
 enum class SwitchSetting(
@@ -152,7 +151,7 @@ enum class SwitchSetting(
         title = R.string.settings_sync_on_pull_refresh,
         default = true
     );
-    fun save(newSwitchValue: Boolean, context: Context) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, newSwitchValue).apply()
-    }
+    fun saveSetting(newSwitchValue: Boolean, prefs: SharedPreferences) = prefs.edit().putBoolean(key, newSwitchValue).apply()
+
+    fun getSetting(prefs: SharedPreferences) = prefs.getBoolean(key, default)
 }
