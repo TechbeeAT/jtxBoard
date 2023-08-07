@@ -297,6 +297,7 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Az össze bejegyzés áthelyezése másik gyűjtőbe:"</string>
     <string name="collection_dialog_move_info">"Megjegyzés: Csak írható gyűjtemények és az azonos komponenseket (Naplók, Jegyzetek, Feladatok) támogató gyűjtemények választhatók ki."</string>
     <string name="menu_collections_popup_move_entries">"Bejegyzések áthelyezése"</string>
+    <string name="setting_no_time">"Nincs megadva"</string>
     <string name="list_no_dates_set">"Nincs dátum beállítáva"</string>
     <string name="list_without_start_date">"Kezdési dátum nélkül"</string>
     <string name="list_without_due_date">"Határidő nélkül"</string>
@@ -453,6 +454,8 @@ Köszönjük!"</string>
     <string name="settings_sync">"Szinkronizációs beállítások"</string>
     <string name="settings_default_start_date">"A feladatok alapértelmezett kezdési dátumának megadása"</string>
     <string name="settings_default_due_date">"Feladatok alapértelemezett határidejének beállítása"</string>
+    <string name="settings_default_start_time">"A feladatok alapértelmezett kezdési idejének megadása"</string>
+    <string name="settings_default_due_time">"Feladatok alapértelemezett határidejének beállítása"</string>
     <string name="settings_default_date_none">"Nincs"</string>
     <string name="settings_default_date_same_day">"Mai nap"</string>
     <string name="settings_default_date_next_day">"Holnap"</string>
