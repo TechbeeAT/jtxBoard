@@ -309,6 +309,7 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Move all entries from \"%1$s\" to"</string>
     <string name="collection_dialog_move_info">"Please note: Only writeable collections and collections with support for the same components (Journals, Notes, Tasks) can be selected."</string>
     <string name="menu_collections_popup_move_entries">"Move entries"</string>
+    <string name="setting_no_time">"No time"</string>
     <string name="list_no_dates_set">"No dates set"</string>
     <string name="list_without_start_date">"Without start date"</string>
     <string name="list_without_due_date">"Without due date"</string>
@@ -472,6 +473,8 @@ Thank you!"</string>
     <string name="settings_sync">"Sync Settings"</string>
     <string name="settings_default_start_date">"Set a default start date for tasks"</string>
     <string name="settings_default_due_date">"Set a default due date for tasks"</string>
+    <string name="settings_default_start_time">"Set a default start time for tasks"</string>
+    <string name="settings_default_due_time">"Set a default due time for tasks"</string>
     <string name="settings_default_date_none">"None"</string>
     <string name="settings_default_date_same_day">"Same day"</string>
     <string name="settings_default_date_next_day">"Next day"</string>

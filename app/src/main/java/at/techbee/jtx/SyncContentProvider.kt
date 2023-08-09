@@ -448,6 +448,8 @@ class SyncContentProvider : ContentProvider() {
                     )
                 } catch (e: NullPointerException) {
                     Log.i("attachment", "Uri not present or could not be parsed.")
+                } catch (e: IllegalStateException) {
+                    Log.d("attachment", "Cursor for attachments is empty")
                 }
             }
             result?.moveToPosition(-1)   // reset to beginning

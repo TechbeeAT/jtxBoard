@@ -12,7 +12,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Criteria
 import android.location.LocationListener
 import android.location.LocationManager
 import androidx.compose.foundation.layout.*
@@ -57,7 +56,7 @@ fun MapComposable(
             || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
     ) {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val bestProvider = locationManager.getBestProvider(Criteria(), false)
+        val bestProvider = locationManager.getProviders(false).firstOrNull()
         val locListener = LocationListener { }
         if(bestProvider != null) {
             locationManager.requestLocationUpdates(bestProvider, 0, 0f, locListener)

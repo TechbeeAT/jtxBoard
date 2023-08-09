@@ -46,12 +46,7 @@ class ListWidgetUpdateWorker(
 
             val notification = NotificationCompat.Builder(context, widgetUpdateChannelId)
                 .setContentIntent(
-                    PendingIntent.getActivity(
-                        context,
-                        0,
-                        Intent(context, MainActivity2::class.java),
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
-                    )
+                    PendingIntent.getActivity(context, 0, Intent(context, MainActivity2::class.java), PendingIntent.FLAG_IMMUTABLE)
                 )
                 .setSmallIcon(R.drawable.ic_widget_jtx)
                 .setOngoing(true)
