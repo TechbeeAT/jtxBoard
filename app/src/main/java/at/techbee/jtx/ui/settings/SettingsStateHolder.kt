@@ -23,46 +23,40 @@ class SettingsStateHolder(val context: Context) {
         private const val PREFS_DETAIL_TOP_APP_BAR_MODE = "detailTopAppBarMode"
     }
 
-    private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     var settingEnableJournals = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ENABLE_JOURNALS.key, SwitchSetting.SETTING_ENABLE_JOURNALS.default))
     var settingEnableNotes = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ENABLE_NOTES.key, SwitchSetting.SETTING_ENABLE_NOTES.default))
     var settingEnableTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ENABLE_TASKS.key, SwitchSetting.SETTING_ENABLE_TASKS.default))
 
-    var settingTheme = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
-        DropdownSetting.SETTING_THEME.key, DropdownSetting.SETTING_THEME.default.key) } ?: DropdownSetting.SETTING_THEME.default )
-    var settingAudioFormat = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
-        DropdownSetting.SETTING_AUDIO_FORMAT.key, DropdownSetting.SETTING_AUDIO_FORMAT.default.key) } ?: DropdownSetting.SETTING_AUDIO_FORMAT.default )
-    var settingAutoExpandSubtasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_AUTO_EXPAND_SUBTASKS.key, SwitchSetting.SETTING_AUTO_EXPAND_SUBTASKS.default))
-    var settingAutoExpandSubnotes = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_AUTO_EXPAND_SUBNOTES.key, SwitchSetting.SETTING_AUTO_EXPAND_SUBNOTES.default))
-    var settingAutoExpandAttachments = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS.key, SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS.default))
+    var settingTheme = mutableStateOf(DropdownSetting.SETTING_THEME.getSetting(prefs))
+    var settingAudioFormat = mutableStateOf(DropdownSetting.SETTING_AUDIO_FORMAT.getSetting(prefs))
+    var settingAutoExpandSubtasks = mutableStateOf(SwitchSetting.SETTING_AUTO_EXPAND_SUBTASKS.getSetting(prefs))
+    var settingAutoExpandSubnotes = mutableStateOf(SwitchSetting.SETTING_AUTO_EXPAND_SUBNOTES.getSetting(prefs))
+    var settingAutoExpandAttachments = mutableStateOf(SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS.getSetting(prefs))
 
-    var settingShowProgressForMainTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS.key, SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS.default))
-    var settingShowProgressForSubTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS.key, SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS.default))
+    var settingShowProgressForMainTasks = mutableStateOf(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS.getSetting(prefs))
+    var settingShowProgressForSubTasks = mutableStateOf(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS.getSetting(prefs))
 
-    var settingDefaultJournalsDate = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
-        DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.key, DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.default.key) } ?: DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.default )
-    var settingDefaultStartDate = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
-        DropdownSetting.SETTING_DEFAULT_START_DATE.key, DropdownSetting.SETTING_DEFAULT_START_DATE.default.key) } ?: DropdownSetting.SETTING_DEFAULT_START_DATE.default )
-    var settingDefaultDueDate = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
-        DropdownSetting.SETTING_DEFAULT_DUE_DATE.key, DropdownSetting.SETTING_DEFAULT_DUE_DATE.default.key) } ?: DropdownSetting.SETTING_DEFAULT_DUE_DATE.default )
-    var settingStepForProgress = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
-        DropdownSetting.SETTING_PROGRESS_STEP.key, DropdownSetting.SETTING_PROGRESS_STEP.default.key) } ?: DropdownSetting.SETTING_PROGRESS_STEP.default )
-    var settingDisableAlarmsReadonly = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.key, SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.default))
-    var settingAutoAlarm = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
-        DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key) } ?: DropdownSetting.SETTING_AUTO_ALARM.default )
-    var settingLinkProgressToSubtasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS.key, SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS.default))
-    var settingKeepStatusProgressCompletedInSync = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.key, SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.default))
-    var settingProtectBiometric = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
-        DropdownSetting.SETTING_PROTECT_BIOMETRIC.key, DropdownSetting.SETTING_PROTECT_BIOMETRIC.default.key) } ?: DropdownSetting.SETTING_PROTECT_BIOMETRIC.default )
+    var settingDefaultJournalsDate = mutableStateOf(DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.getSetting(prefs))
+    var settingDefaultStartDate = mutableStateOf(DropdownSetting.SETTING_DEFAULT_START_DATE.getSetting(prefs))
+    var settingDefaultStartTime = mutableStateOf(TimeSetting.SETTING_DEFAULT_START_TIME.getSetting(prefs))
+    var settingDefaultDueDate = mutableStateOf(DropdownSetting.SETTING_DEFAULT_DUE_DATE.getSetting(prefs))
+    var settingDefaultDueTime = mutableStateOf(TimeSetting.SETTING_DEFAULT_DUE_TIME.getSetting(prefs))
+    var settingStepForProgress = mutableStateOf(DropdownSetting.SETTING_PROGRESS_STEP.getSetting(prefs))
+    var settingDisableAlarmsReadonly = mutableStateOf(SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.getSetting(prefs))
+    var settingAutoAlarm = mutableStateOf(DropdownSetting.SETTING_AUTO_ALARM.getSetting(prefs))
+    var settingLinkProgressToSubtasks = mutableStateOf(SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS.getSetting(prefs))
+    var settingKeepStatusProgressCompletedInSync = mutableStateOf(SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.getSetting(prefs))
+    var settingProtectBiometric = mutableStateOf(DropdownSetting.SETTING_PROTECT_BIOMETRIC.getSetting(prefs))
 
-    var settingSetDefaultCurrentLocationJournals = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.default))
-    var settingSetDefaultCurrentLocationNotes = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.default))
-    var settingSetDefaultCurrentLocationTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.key, SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.default))
+    var settingSetDefaultCurrentLocationJournals = mutableStateOf(SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
+    var settingSetDefaultCurrentLocationNotes = mutableStateOf(SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
+    var settingSetDefaultCurrentLocationTasks = mutableStateOf(SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
 
-    var settingStickyAlarms = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default))
+    var settingStickyAlarms = mutableStateOf(SwitchSetting.SETTING_STICKY_ALARMS.getSetting(prefs))
 
-    var settingSyncOnStart = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SYNC_ON_START.key, SwitchSetting.SETTING_SYNC_ON_START.default))
-    var settingSyncOnPullRefresh = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH.key, SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH.default))
+    var settingSyncOnStart = mutableStateOf(SwitchSetting.SETTING_SYNC_ON_START.getSetting(prefs))
+    var settingSyncOnPullRefresh = mutableStateOf(SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH.getSetting(prefs))
 
     //invisible settings
     var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))

@@ -10,7 +10,7 @@ Global Strings -->
     <string name="cancel">"Annulla"</string>
     <string name="ok">"Ok"</string>
     <string name="delete">"Elimina"</string>
-    <string name="discard">"Annulla"</string>
+    <string name="discard">"Scarta"</string>
     <string name="cont">"Continua"</string>
     <string name="website">"Sito web"</string>
     <string name="latitude">"Latitudine"</string>
@@ -105,11 +105,11 @@ Global Strings -->
     <string name="edit_datepicker_dialog_add_timezone">"Aggiungi fuso orario"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Modifica fuso orario"</string>
     <string name="edit_dialog_sure_to_delete_title">"Eliminare \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_title">"Annulla questa voce?"</string>
+    <string name="edit_dialog_sure_to_discard_title">"Scartare questa voce?"</string>
     <string name="dialog_delete_done_title">"Eliminare tutte le attività completate?"</string>
     <string name="dialog_delete_done_message">"Attenzione: le sottoattività vengono eliminate indipendentemente dal loro stato se il loro genitore è segnato come fatto. Questa operazione non può essere annullata!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Sei sicuro di voler eliminare \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_message">"Sei sicuro di voler eliminare questa voce? Questa voce non verrà salvata."</string>
+    <string name="edit_dialog_sure_to_discard_message">"Sei sicuro di voler scartare questa voce? Questa voce non verrà salvata."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La data di scadenza non può precedere la data di inizio."</string>
     <string name="edit_fragment_app_permission">"Autorizzazione app"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board può suggerire i dati dei partecipanti in base ai tuoi contatti per le tue voci. Le autorizzazioni di lettura sui tuoi contatti sono necessarie per abilitare questa funzione."</string>

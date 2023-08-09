@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.settings
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,8 +53,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
-import at.techbee.jtx.ui.reusable.elements.DropdownSetting
-import at.techbee.jtx.ui.reusable.elements.SwitchSetting
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_AUDIO_FORMAT
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_AUTO_ALARM
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_DUE_DATE
@@ -83,6 +82,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+enum class SettingsScreenSection { APP_SETTINGS, ACTIVE_MODUES, ITEM_LIST, JOURNALS_SETTINGS, NOTES_SETTINGS, TASKS_SETTINGS, TASKS_SETTINGS_STATUS, SYNC_SETTINGS }
 
 @Composable
 fun SettingsScreen(
@@ -95,6 +95,10 @@ fun SettingsScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    var expandedSection by remember { mutableStateOf<SettingsScreenSection?>(SettingsScreenSection.APP_SETTINGS) }
+    fun expandOrCollapse(selectedSection: SettingsScreenSection) {
+        expandedSection = if (expandedSection == selectedSection) null else selectedSection
+    }
 
     val languageOptions = mutableListOf<Locale?>(null)
     for (language in BuildConfig.TRANSLATION_ARRAY) {
@@ -107,7 +111,7 @@ fun SettingsScreen(
     var pendingSettingProtectiometric: DropdownSettingOption? by remember { mutableStateOf(null) }
     if(globalStateHolder.isAuthenticated.value && pendingSettingProtectiometric != null) {
         settingsStateHolder.settingProtectBiometric.value = pendingSettingProtectiometric!!
-        SETTING_PROTECT_BIOMETRIC.save(pendingSettingProtectiometric!!, context = context)
+        SETTING_PROTECT_BIOMETRIC.saveSetting(pendingSettingProtectiometric!!, settingsStateHolder.prefs)
         pendingSettingProtectiometric = null
     }
 
@@ -135,16 +139,17 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_app,
-                        expandedDefault = true, 
+                        expanded = expandedSection == SettingsScreenSection.APP_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.APP_SETTINGS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         
-                        DropdownSetting(
+                        DropdownSettingElement(
                             setting = SETTING_THEME,
                             selected = settingsStateHolder.settingTheme.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingTheme.value = selection
-                                SETTING_THEME.save(selection, context = context)
+                                SETTING_THEME.saveSetting(selection, settingsStateHolder.prefs)
                                 when (selection) {
                                     DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                                     DropdownSettingOption.THEME_TRUE_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -225,22 +230,22 @@ fun SettingsScreen(
                             }
                         }
 
-                        DropdownSetting(
+                        DropdownSettingElement(
                             setting = SETTING_AUDIO_FORMAT,
                             selected = settingsStateHolder.settingAudioFormat.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingAudioFormat.value = selection
-                                SETTING_AUDIO_FORMAT.save(selection, context = context)
+                                SETTING_AUDIO_FORMAT.saveSetting(selection, settingsStateHolder.prefs)
                             }
                         )
 
                         if(globalStateHolder.biometricStatus == BiometricManager.BIOMETRIC_SUCCESS) {
-                            DropdownSetting(
+                            DropdownSettingElement(
                                 setting = SETTING_PROTECT_BIOMETRIC,
                                 selected = settingsStateHolder.settingProtectBiometric.value,
                                 onSelectionChanged = { selection ->
                                     if(settingsStateHolder.settingProtectBiometric.value == selection)
-                                        return@DropdownSetting
+                                        return@DropdownSettingElement
 
                                     if(!globalStateHolder.isAuthenticated.value) {
                                         val promptInfo: BiometricPrompt.PromptInfo = BiometricPrompt.PromptInfo.Builder()
@@ -252,7 +257,7 @@ fun SettingsScreen(
                                         pendingSettingProtectiometric = selection
                                     } else {
                                         settingsStateHolder.settingProtectBiometric.value = selection
-                                        SETTING_PROTECT_BIOMETRIC.save(selection, context = context)
+                                        SETTING_PROTECT_BIOMETRIC.saveSetting(selection, settingsStateHolder.prefs)
                                     }
                                 }
                             )
@@ -261,35 +266,36 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_modules,
-                        expandedDefault = true,
+                        expanded = expandedSection == SettingsScreenSection.ACTIVE_MODUES,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.ACTIVE_MODUES) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
 
 
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_ENABLE_JOURNALS,
                             initiallyChecked = settingsStateHolder.settingEnableJournals.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingEnableJournals.value = it
-                                SETTING_ENABLE_JOURNALS.save(it, context)
+                                SETTING_ENABLE_JOURNALS.saveSetting(it, settingsStateHolder.prefs)
                             },
                             enabled = !(!settingsStateHolder.settingEnableNotes.value && !settingsStateHolder.settingEnableTasks.value)
                         )
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_ENABLE_NOTES,
                             initiallyChecked = settingsStateHolder.settingEnableNotes.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingEnableNotes.value = it
-                                SETTING_ENABLE_NOTES.save(it, context)
+                                SETTING_ENABLE_NOTES.saveSetting(it, settingsStateHolder.prefs)
                             },
                             enabled = !(!settingsStateHolder.settingEnableJournals.value && !settingsStateHolder.settingEnableTasks.value)
                         )
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_ENABLE_TASKS,
                             initiallyChecked = settingsStateHolder.settingEnableTasks.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingEnableTasks.value = it
-                                SETTING_ENABLE_TASKS.save(it, context)
+                                SETTING_ENABLE_TASKS.saveSetting(it, settingsStateHolder.prefs)
                             },
                             enabled = !(!settingsStateHolder.settingEnableJournals.value && !settingsStateHolder.settingEnableNotes.value)
                         )
@@ -297,120 +303,166 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_list,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.ITEM_LIST,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.ITEM_LIST) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_AUTO_EXPAND_SUBTASKS,
                             initiallyChecked = settingsStateHolder.settingAutoExpandSubtasks.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingAutoExpandSubtasks.value = it
-                                SETTING_AUTO_EXPAND_SUBTASKS.save(it, context)
+                                SETTING_AUTO_EXPAND_SUBTASKS.saveSetting(it, settingsStateHolder.prefs)
                             })
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_AUTO_EXPAND_SUBNOTES,
                             initiallyChecked = settingsStateHolder.settingAutoExpandSubnotes.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingAutoExpandSubnotes.value = it
-                                SETTING_AUTO_EXPAND_SUBNOTES.save(it, context)
+                                SETTING_AUTO_EXPAND_SUBNOTES.saveSetting(it, settingsStateHolder.prefs)
                             })
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_AUTO_EXPAND_ATTACHMENTS,
                             initiallyChecked = settingsStateHolder.settingAutoExpandAttachments.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingAutoExpandAttachments.value = it
-                                SETTING_AUTO_EXPAND_ATTACHMENTS.save(it, context)
+                                SETTING_AUTO_EXPAND_ATTACHMENTS.saveSetting(it, settingsStateHolder.prefs)
                             })
                     }
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_journals,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.JOURNALS_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.JOURNALS_SETTINGS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        DropdownSetting(
+                        DropdownSettingElement(
                             setting = SETTING_DEFAULT_JOURNALS_DATE,
                             selected = settingsStateHolder.settingDefaultJournalsDate.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingDefaultJournalsDate.value = selection
-                                SETTING_DEFAULT_JOURNALS_DATE.save(selection, context = context)
+                                SETTING_DEFAULT_JOURNALS_DATE.saveSetting(selection, settingsStateHolder.prefs)
                             }
                         )
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION,
                             initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationJournals.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingSetDefaultCurrentLocationJournals.value = it
-                                SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
+                                SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
                             })
                     }
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_notes,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.NOTES_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.NOTES_SETTINGS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION,
                             initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationNotes.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingSetDefaultCurrentLocationNotes.value = it
-                                SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
+                                SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
                             })
                     }
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_tasks,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.TASKS_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.TASKS_SETTINGS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        DropdownSetting(
+                        DropdownSettingElement(
                             setting = SETTING_DEFAULT_START_DATE,
                             selected = settingsStateHolder.settingDefaultStartDate.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingDefaultStartDate.value = selection
-                                SETTING_DEFAULT_START_DATE.save(selection, context = context)
+                                SETTING_DEFAULT_START_DATE.saveSetting(selection, settingsStateHolder.prefs)
                             }
                         )
-                        DropdownSetting(
+                        AnimatedVisibility(settingsStateHolder.settingDefaultStartDate.value != DropdownSettingOption.DEFAULT_DATE_NONE) {
+                            TimeSettingElement(
+                                setting = TimeSetting.SETTING_DEFAULT_START_TIME,
+                                dialogTitleRes = TimeSetting.SETTING_DEFAULT_START_TIME.title,
+                                selectedTime = settingsStateHolder.settingDefaultStartTime.value,
+                                onSelectionChanged = { selectedTime ->
+                                    settingsStateHolder.settingDefaultStartTime.value = selectedTime
+                                    TimeSetting.SETTING_DEFAULT_START_TIME.saveSetting(selectedTime, settingsStateHolder.prefs)
+                                    if(settingsStateHolder.settingDefaultDueDate.value != DropdownSettingOption.DEFAULT_DATE_NONE) {
+                                        if (selectedTime == null) {
+                                            settingsStateHolder.settingDefaultDueTime.value = null
+                                            TimeSetting.SETTING_DEFAULT_DUE_TIME.saveSetting(null, settingsStateHolder.prefs)
+                                        } else if(settingsStateHolder.settingDefaultDueTime.value == null) {
+                                            settingsStateHolder.settingDefaultDueTime.value = selectedTime
+                                            TimeSetting.SETTING_DEFAULT_DUE_TIME.saveSetting(selectedTime, settingsStateHolder.prefs)
+                                        }
+                                    }
+                                }
+                            )
+                        }
+
+                        DropdownSettingElement(
                             setting = SETTING_DEFAULT_DUE_DATE,
                             selected = settingsStateHolder.settingDefaultDueDate.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingDefaultDueDate.value = selection
-                                SETTING_DEFAULT_DUE_DATE.save(selection, context = context)
+                                SETTING_DEFAULT_DUE_DATE.saveSetting(selection, settingsStateHolder.prefs)
                             }
                         )
-                        SwitchSetting(
+                        AnimatedVisibility(settingsStateHolder.settingDefaultDueDate.value != DropdownSettingOption.DEFAULT_DATE_NONE) {
+                            TimeSettingElement(
+                                setting = TimeSetting.SETTING_DEFAULT_DUE_TIME,
+                                dialogTitleRes = TimeSetting.SETTING_DEFAULT_DUE_TIME.title,
+                                selectedTime = settingsStateHolder.settingDefaultDueTime.value,
+                                onSelectionChanged = { selectedTime ->
+                                    settingsStateHolder.settingDefaultDueTime.value = selectedTime
+                                    TimeSetting.SETTING_DEFAULT_DUE_TIME.saveSetting(selectedTime, settingsStateHolder.prefs)
+                                    if(settingsStateHolder.settingDefaultStartDate.value != DropdownSettingOption.DEFAULT_DATE_NONE) {
+                                        if (selectedTime == null) {
+                                            settingsStateHolder.settingDefaultStartTime.value = null
+                                            TimeSetting.SETTING_DEFAULT_START_TIME.saveSetting(null, settingsStateHolder.prefs)
+                                        } else if(settingsStateHolder.settingDefaultStartTime.value == null) {
+                                            settingsStateHolder.settingDefaultStartTime.value = selectedTime
+                                            TimeSetting.SETTING_DEFAULT_START_TIME.saveSetting(selectedTime, settingsStateHolder.prefs)
+                                        }
+                                    }
+                                }
+                            )
+                        }
+
+                        SwitchSettingElement(
                             setting = SETTING_DISABLE_ALARMS_FOR_READONLY,
                             initiallyChecked = settingsStateHolder.settingDisableAlarmsReadonly.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingDisableAlarmsReadonly.value = it
-                                SETTING_DISABLE_ALARMS_FOR_READONLY.save(it, context)
+                                SETTING_DISABLE_ALARMS_FOR_READONLY.saveSetting(it, settingsStateHolder.prefs)
                             }
                         )
-                        DropdownSetting(
+                        DropdownSettingElement(
                             setting = SETTING_AUTO_ALARM,
                             selected = settingsStateHolder.settingAutoAlarm.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingAutoAlarm.value = selection
-                                SETTING_AUTO_ALARM.save(selection, context = context)
+                                SETTING_AUTO_ALARM.saveSetting(selection, settingsStateHolder.prefs)
                                 scope.launch(Dispatchers.IO) { NotificationPublisher.scheduleNextNotifications(context) }
                             }
                         )
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_STICKY_ALARMS,
                             initiallyChecked = settingsStateHolder.settingStickyAlarms.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingStickyAlarms.value = it
-                                SETTING_STICKY_ALARMS.save(it, context)
+                                SETTING_STICKY_ALARMS.saveSetting(it, settingsStateHolder.prefs)
                             }
                         )
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION,
                             initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationTasks.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = it
-                                SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.save(it, context)
+                                SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
                             }
                         )
                     }
@@ -418,70 +470,72 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_tasks_status_progress,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.TASKS_SETTINGS_STATUS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.TASKS_SETTINGS_STATUS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS,
                             initiallyChecked = settingsStateHolder.settingShowProgressForMainTasks.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingShowProgressForMainTasks.value = it
-                                SETTING_SHOW_PROGRESS_FOR_MAINTASKS.save(it, context)
+                                SETTING_SHOW_PROGRESS_FOR_MAINTASKS.saveSetting(it, settingsStateHolder.prefs)
                             }
                         )
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
                             initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingShowProgressForSubTasks.value = it
-                                SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
+                                SETTING_SHOW_PROGRESS_FOR_SUBTASKS.saveSetting(it, settingsStateHolder.prefs)
                             }
                         )
-                        DropdownSetting(
+                        DropdownSettingElement(
                             setting = SETTING_PROGRESS_STEP,
                             selected = settingsStateHolder.settingStepForProgress.value,
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingStepForProgress.value = selection
-                                SETTING_PROGRESS_STEP.save(selection, context = context)
+                                SETTING_PROGRESS_STEP.saveSetting(selection, settingsStateHolder.prefs)
                             }
                         )
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_LINK_PROGRESS_TO_SUBTASKS,
                             initiallyChecked = settingsStateHolder.settingLinkProgressToSubtasks.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingLinkProgressToSubtasks.value = it
-                                SETTING_LINK_PROGRESS_TO_SUBTASKS.save(it, context)
+                                SETTING_LINK_PROGRESS_TO_SUBTASKS.saveSetting(it, settingsStateHolder.prefs)
                             }
                         )
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC,
                             initiallyChecked = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingKeepStatusProgressCompletedInSync.value = it
-                                SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.save(it, context)
+                                SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.saveSetting(it, settingsStateHolder.prefs)
                             }
                         )
                     }
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_sync,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.SYNC_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.SYNC_SETTINGS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_SYNC_ON_START,
                             initiallyChecked = settingsStateHolder.settingSyncOnStart.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingSyncOnStart.value = it
-                                SETTING_SYNC_ON_START.save(it, context)
+                                SETTING_SYNC_ON_START.saveSetting(it, settingsStateHolder.prefs)
                             }
                         )
-                        SwitchSetting(
+                        SwitchSettingElement(
                             setting = SETTING_SYNC_ON_PULL_REFRESH,
                             initiallyChecked = settingsStateHolder.settingSyncOnPullRefresh.value,
                             onCheckedChanged = {
                                 settingsStateHolder.settingSyncOnPullRefresh.value = it
-                                SETTING_SYNC_ON_PULL_REFRESH.save(it, context)
+                                SETTING_SYNC_ON_PULL_REFRESH.saveSetting(it, settingsStateHolder.prefs)
                             }
                         )
                     }

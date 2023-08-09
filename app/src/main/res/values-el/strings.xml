@@ -298,6 +298,7 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Μεταφέρετε όλες τις εγγραφές από \"%1$s\" προς"</string>
     <string name="collection_dialog_move_info">"Σημείωση: Μπορούν να επιλεγούν μόνο εγγράψιμες συλλογές και συλλογές με υποστήριξη για τα ίδια στοιχεία (ημερολόγια, σημειώσεις, εργασίες)."</string>
     <string name="menu_collections_popup_move_entries">"Μεταφορά εγγραφών"</string>
+    <string name="setting_no_time">"Δεν υπάρχει χρόνος"</string>
     <string name="list_no_dates_set">"Ελλιπής ημερομηνία"</string>
     <string name="list_without_start_date">"Χωρίς ημερομηνία έναρξης"</string>
     <string name="list_without_due_date">"Χωρίς διάρκεια ημερομηνίας"</string>
@@ -456,7 +457,9 @@ Global Strings -->
     <string name="settings_sync">"Ρυθμίσεις συγχρονισμού"</string>
     <string name="settings_default_start_date">"Ορίστε μια προεπιλεγμένη ημερομηνία έναρξης για εργασίες"</string>
     <string name="settings_default_due_date">"Ορίστε μια προεπιλεγμένη ημερομηνία έναρξης για εργασίες"</string>
-    <string name="settings_default_date_none">"Ορίστε μια προεπιλεγμένη ημερομηνία λήξης για εργασίες"</string>
+    <string name="settings_default_start_time">"Ορίστε μια προεπιλεγμένη ώρα έναρξης για εργασίες"</string>
+    <string name="settings_default_due_time">"Ορίστε μια προεπιλεγμένη ώρα έναρξης για εργασίες"</string>
+    <string name="settings_default_date_none">"Κανένα"</string>
     <string name="settings_default_date_same_day">"Ίδια ημέρα"</string>
     <string name="settings_default_date_next_day">"Επόμενη ημέρα"</string>
     <string name="settings_default_date_two_days">"Δύο ημέρες αργότερα"</string>

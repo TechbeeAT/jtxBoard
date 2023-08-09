@@ -298,6 +298,7 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Einträge von \"%1$s\" verschieben nach"</string>
     <string name="collection_dialog_move_info">"Achtung: Es können nur Collections ausgewählt werden, die gleiche Komponenten unterstützen (Journale, Notizen, Aufgaben)."</string>
     <string name="menu_collections_popup_move_entries">"Einträge verschieben"</string>
+    <string name="setting_no_time">"Keine Zeit"</string>
     <string name="list_no_dates_set">"Ohne Datumsangaben"</string>
     <string name="list_without_start_date">"Ohne Start"</string>
     <string name="list_without_due_date">"Ohne Fälligkeit"</string>
@@ -456,6 +457,8 @@ Danke!"</string>
     <string name="settings_sync">"Sync-Einstellungen"</string>
     <string name="settings_default_start_date">"Standard-Startdatum für Aufgaben"</string>
     <string name="settings_default_due_date">"Standard-Fälligkeit für Aufgaben"</string>
+    <string name="settings_default_start_time">"Standard-Startzeit für Aufgaben festlegen"</string>
+    <string name="settings_default_due_time">"Standard-Fälligkeitszeit für Aufgaben festlegen"</string>
     <string name="settings_default_date_none">"Keines"</string>
     <string name="settings_default_date_same_day">"Am gleichen Tag"</string>
     <string name="settings_default_date_next_day">"Am darauffolgenden Tag"</string>

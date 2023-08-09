@@ -24,10 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,12 +36,11 @@ import at.techbee.jtx.R
 @Composable
 fun ExpandableSettingsSection(
     @StringRes headerText: Int,
-    expandedDefault: Boolean,
+    expanded: Boolean,
+    onToggle: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
-
-    var expanded by remember { mutableStateOf(expandedDefault) }
 
     Column(
         modifier = modifier,
@@ -54,7 +49,7 @@ fun ExpandableSettingsSection(
     ) {
 
         TextButton(
-            onClick = { expanded = !expanded },
+            onClick = { onToggle() },
             modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
         ) {
             Row(
@@ -97,7 +92,8 @@ fun ExpandableSettingsSection_Preview() {
 
         ExpandableSettingsSection(
             headerText = R.string.settings_list,
-            expandedDefault = true,
+            expanded = true,
+            onToggle = { },
             content = { Text("Whatever setting") }
         )
     }

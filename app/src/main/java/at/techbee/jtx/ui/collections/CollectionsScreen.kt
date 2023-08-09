@@ -162,7 +162,16 @@ fun CollectionsScreen(
         if (resultImportTxtFilepaths.isNotEmpty() && importCollection != null) {
             resultImportTxtFilepaths.forEach { filepath ->
                 context.contentResolver?.openInputStream(filepath)?.use {
-                    collectionsViewModel.insertTxt(text = it.readBytes().decodeToString(), module = importModule!!, collection = importCollection!!.toICalCollection())
+                    collectionsViewModel.insertTxt(
+                        text = it.readBytes().decodeToString(),
+                        module = importModule!!,
+                        collection = importCollection!!.toICalCollection(),
+                        defaultJournalDateSettingOption = settingsStateHolder.settingDefaultJournalsDate.value,
+                        defaultStartDateSettingOption = settingsStateHolder.settingDefaultStartDate.value,
+                        defaultStartTime = settingsStateHolder.settingDefaultStartTime.value,
+                        defaultDueDateSettingOption = settingsStateHolder.settingDefaultDueDate.value,
+                        defaultDueTime = settingsStateHolder.settingDefaultDueTime.value
+                    )
                     it.close()
                 }
             }
