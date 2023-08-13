@@ -56,11 +56,13 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Datenschutzerklärung"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Überfällig"</string>
+    <string name="list_due_shortly">"Fällig in Kürze"</string>
     <string name="list_due_today">"Heute fällig"</string>
     <string name="list_due_tomorrow">"Morgen fällig"</string>
     <string name="list_due_inXhours">"In %d Stunden fällig"</string>
     <string name="list_due_on_weekday">"Fällig am %s"</string>
     <string name="list_start_past">"Start in Vergangenheit"</string>
+    <string name="list_start_shortly">"Start in Kürze"</string>
     <string name="list_start_today">"Geplanter Start heute"</string>
     <string name="list_start_tomorrow">"Geplanter Start morgen"</string>
     <string name="list_start_inXhours">"Geplanter Start in %d Stunden"</string>
