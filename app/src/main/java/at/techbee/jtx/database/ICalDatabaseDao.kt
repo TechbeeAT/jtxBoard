@@ -760,7 +760,7 @@ DELETEs by Object
     suspend fun upsertStoredListSetting(storedListSetting: StoredListSetting): Long
 
     @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_STORED_LIST_SETTINGS WHERE $COLUMN_STORED_LIST_SETTING_MODULE = :module")
+    @Query("SELECT * FROM $TABLE_NAME_STORED_LIST_SETTINGS WHERE $COLUMN_STORED_LIST_SETTING_MODULE = :module ORDER BY $COLUMN_STORED_LIST_SETTING_ID DESC")
     fun getStoredListSettings(module: String): LiveData<List<StoredListSetting>>
 
     @Delete
