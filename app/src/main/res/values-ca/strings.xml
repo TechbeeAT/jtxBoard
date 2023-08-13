@@ -4,8 +4,7 @@
     <string name="app_permission_label">"jtx Board sincronitza Diaris, Notes i Tasques"</string>
     <string name="app_permission_desc">"sincronitza el contingut de jtx Board amb altres aplicacions com DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Desa"</string>
     <string name="cancel">"Cancel·lar"</string>
     <string name="ok">"OK"</string>

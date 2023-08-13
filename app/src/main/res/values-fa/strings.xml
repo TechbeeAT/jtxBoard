@@ -4,8 +4,7 @@
     <string name="app_permission_label">"jtx Board وقایع روزانه، یادداشت ها و &amp; کارها را همگام سازی می کند"</string>
     <string name="app_permission_desc">"محتوای jtx Board را با دیگر برنامه ها همچون DAVx⁵ همگام سازی کنید"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"ذخیره"</string>
     <string name="cancel">"لغو"</string>
     <string name="ok">"باشه"</string>
