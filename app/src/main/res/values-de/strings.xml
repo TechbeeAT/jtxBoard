@@ -314,6 +314,8 @@
     <string name="filter_no_resource">Ohne Materialien</string>
     <string name="filter_subtasks_order_by">Unteraufgaben sortieren nach</string>
     <string name="filter_subnotes_order_by">Verlinkte Notizen sortieren nach</string>
+    <string name="filter_no_filter">"Kein Filter"</string>
+    <string name="filter_options_more_entries">"Mehr (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Bitte klicken Sie auf die Collection, zu der die Einträge hinzugefügt werden sollen!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d hinzugefügt, %2$d übersprungen. (Exklusive Instanzen von wiederkehrenden Einträgen)"</string>
     <string name="collections_toast_x_items_added">"%1$d Einträge hinzugefügt!"</string>
