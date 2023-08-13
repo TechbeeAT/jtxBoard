@@ -4,8 +4,7 @@
     <string name="app_permission_label">"jtx Board synchroniseert Logboeken, Notities &amp; Taken"</string>
     <string name="app_permission_desc">"synchroniseer jtx Board-inhoud met andere applicaties zoals DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Opslaan"</string>
     <string name="cancel">"Annuleren"</string>
     <string name="ok">"OK"</string>
