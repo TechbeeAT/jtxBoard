@@ -4,8 +4,7 @@
     <string name="app_permission_label">"jtx Board 同步日记、笔记和任务"</string>
     <string name="app_permission_desc">"使用 DAVx⁵ 之类的其它程序同步 jtx Board 内容"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"保存"</string>
     <string name="cancel">"取消"</string>
     <string name="ok">"确定"</string>
