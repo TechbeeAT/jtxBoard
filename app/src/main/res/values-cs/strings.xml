@@ -4,9 +4,9 @@
     <string name="app_permission_label">"jtx Board synchronizuje deníky, poznámky a úkoly"</string>
     <string name="app_permission_desc">"synchronizovat obsah jtx Board s jinými aplikacemi, jako je DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Uložit"</string>
+    <string name="update">"Aktualizovat"</string>
     <string name="cancel">"Zrušit"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Odstranit"</string>
