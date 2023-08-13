@@ -314,6 +314,8 @@
     <string name="filter_no_resource">Bez zdrojů</string>
     <string name="filter_subtasks_order_by">Řadit dílčí úkoly podle</string>
     <string name="filter_subnotes_order_by">Řadit propojené poznámky podle</string>
+    <string name="filter_no_filter">"Žádný filtr"</string>
+    <string name="filter_options_more_entries">"Více (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Klikněte na sbírku, do které by měly být záznamy přidány!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d přidáno, %2$d přeskočeno. (Výhradní případy opakujících se záznamů.)"</string>
     <string name="collections_toast_x_items_added">"Přidáno %1$d položek!"</string>
@@ -500,6 +502,7 @@ Děkujeme vám!"</string>
     <string name="settings_select_language_system">"Výchozí nastavení systému"</string>
     <string name="filter_special">"Speciální filtry"</string>
     <string name="filter_presets">"Předvolby filtrů"</string>
+    <string name="filter_presets_edit_info">"Přidejte, aktualizujte nebo odstraňte přednastavení filtrů z nabídky filtrů v zobrazení seznamu."</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum v minulosti"</string>
     <string name="list_date_today">"Dnes"</string>
