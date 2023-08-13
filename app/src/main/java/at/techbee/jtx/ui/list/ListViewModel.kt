@@ -111,7 +111,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val allResources = database.getAllResourcesAsText()
     val allWriteableCollections = database.getAllWriteableCollections()
     val allCollections = database.getAllCollections(module = module.name)
-    val storedListSettings = database.getStoredListSettings(module = module.name)
+    val storedListSettings = database.getStoredListSettings(modules = listOf(module.name))
     val storedCategories = database.getStoredCategories()
     val storedResources = database.getStoredResources()
     val extendedStatuses = database.getStoredStatuses()

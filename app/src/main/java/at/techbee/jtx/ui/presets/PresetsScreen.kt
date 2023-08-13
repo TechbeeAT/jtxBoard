@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DashboardCustomize
 import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.WorkOutline
@@ -35,6 +36,8 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
+import at.techbee.jtx.database.locals.StoredListSetting
+import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
@@ -62,6 +65,7 @@ fun PresetsScreen(
         Pair(Module.TODO, database.getAllXStatusesFor(Module.TODO.name).observeAsState(emptyList()))
     )
     val extendedStatuses by database.getStoredStatuses().observeAsState(emptyList())
+    val storedListSettings by database.getStoredListSettings(modules = listOf(Module.JOURNAL.name, Module.NOTE.name, Module.TODO.name)).observeAsState(emptyList())
 
 
     Scaffold(
@@ -91,6 +95,7 @@ fun PresetsScreen(
                             storedResources = storedResources,
                             allXStatuses = allXStatuses,
                             extendedStatuses = extendedStatuses,
+                            storedListSettings = storedListSettings,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -113,6 +118,7 @@ fun PresetsScreenContent(
     storedResources: List<StoredResource>,
     allXStatuses: Map<Module, State<List<XStatusStatusPair>>>,
     extendedStatuses: List<ExtendedStatus>,
+    storedListSettings: List<StoredListSetting>,
     modifier: Modifier = Modifier
 ) {
 
@@ -309,6 +315,50 @@ fun PresetsScreenContent(
                 )
             }
         }
+
+        if(storedListSettings.isNotEmpty()) {
+            HeadlineWithIcon(
+                icon = Icons.Outlined.DashboardCustomize,
+                iconDesc = null,
+                text = stringResource(id = R.string.filter_presets),
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Text(
+                text = stringResource(id = R.string.filter_presets_edit_info),
+                style = MaterialTheme.typography.labelSmall,
+                fontStyle = FontStyle.Italic,
+                modifier = Modifier.padding(8.dp)
+            )
+
+            Module.values().forEach { module ->
+                if(storedListSettings.none { it.module == module })
+                    return@forEach
+
+                Text(
+                    text = when (module) {
+                        Module.JOURNAL -> stringResource(id = R.string.extended_statuses_for_journals)
+                        Module.NOTE -> stringResource(id = R.string.extended_statuses_for_notes)
+                        Module.TODO -> stringResource(id = R.string.extended_statuses_for_tasks)
+                    },
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(8.dp)
+                )
+
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(3.dp)
+                ) {
+                    storedListSettings
+                        .filter { it.module == module }
+                        .forEach { storedListSetting ->
+                            ElevatedAssistChip(
+                                onClick = { },
+                                label = { Text(storedListSetting.name) }
+                            )
+                        }
+                }
+            }
+        }
     }
 }
 
@@ -322,7 +372,8 @@ fun PresetsScreen_Preview() {
             allResources = listOf("existing resource"),
             storedResources = listOf(StoredResource("blue", Color.Blue.toArgb()), StoredResource("ohne Farbe", null)),
             allXStatuses = emptyMap(),
-            extendedStatuses = listOf(ExtendedStatus("Final", Module.JOURNAL, Status.NO_STATUS, Color.Blue.toArgb()), ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))
+            extendedStatuses = listOf(ExtendedStatus("Final", Module.JOURNAL, Status.NO_STATUS, Color.Blue.toArgb()), ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb())), 
+            storedListSettings = listOf(StoredListSetting(module = Module.JOURNAL, name = "my list setting", storedListSettingData = StoredListSettingData()))
         )
     }
 }
