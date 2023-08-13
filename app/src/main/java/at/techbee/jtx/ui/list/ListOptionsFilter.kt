@@ -30,6 +30,7 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
+import at.techbee.jtx.ui.reusable.dialogs.DeleteFilterPresetDialog
 import at.techbee.jtx.ui.reusable.dialogs.SaveListSettingsPresetDialog
 import at.techbee.jtx.ui.reusable.elements.FilterSection
 
@@ -45,7 +46,7 @@ fun ListOptionsFilter(
     storedListSettingLive: LiveData<List<StoredListSetting>>,
     extendedStatusesLive: LiveData<List<ExtendedStatus>>,
     onListSettingsChanged: () -> Unit,
-    onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
+    onSaveStoredListSetting: (StoredListSetting) -> Unit,
     onDeleteStoredListSetting: (StoredListSetting) -> Unit,
     modifier: Modifier = Modifier,
     isWidgetConfig: Boolean = false
@@ -60,8 +61,13 @@ fun ListOptionsFilter(
     var showSaveListSettingsPresetDialog by remember { mutableStateOf(false) }
 
     if(showSaveListSettingsPresetDialog) {
+        val currentListSettingData = StoredListSettingData.fromListSettings(listSettings)
+        val currentListSetting = storedListSettings.firstOrNull { it.module == module && it.storedListSettingData == currentListSettingData } ?:
+            StoredListSetting(module = module, name = "", storedListSettingData = currentListSettingData)
         SaveListSettingsPresetDialog(
-            onConfirm = { name ->  onSaveStoredListSetting(name, StoredListSettingData.fromListSettings(listSettings)) },
+            currentSetting = currentListSetting,
+            storedListSettings = storedListSettings,
+            onConfirm = { newStoredListSetting ->  onSaveStoredListSetting(newStoredListSetting) },
             onDismiss = { showSaveListSettingsPresetDialog = false }
         )
     }
@@ -81,7 +87,15 @@ fun ListOptionsFilter(
                 showMenu = false
             ) {
                 storedListSettings.forEach { storedListSetting ->
-                    var expanded by remember { mutableStateOf(false) }
+                    var showDeleteDialog by remember { mutableStateOf(false) }
+
+                    if(showDeleteDialog) {
+                        DeleteFilterPresetDialog(
+                            storedListSetting = storedListSetting,
+                            onConfirm = { onDeleteStoredListSetting(storedListSetting) },
+                            onDismiss = { showDeleteDialog = false}
+                        )
+                    }
 
                     FilterChip(
                         onClick = {
@@ -89,38 +103,15 @@ fun ListOptionsFilter(
                             onListSettingsChanged()
                                   },
                         label = { Text(storedListSetting.name) },
-                        selected = false,
+                        selected = storedListSetting.module == module && storedListSetting.storedListSettingData == StoredListSettingData.fromListSettings(listSettings),
                         trailingIcon = {
 
                             if(!isWidgetConfig) {
                                 Icon(
-                                    Icons.Outlined.ChevronRight,
-                                    contentDescription = stringResource(id = R.string.more),
-                                    modifier = Modifier.clickable { expanded = true }
+                                    Icons.Outlined.Close,
+                                    contentDescription = stringResource(id = R.string.delete),
+                                    modifier = Modifier.clickable { showDeleteDialog = true }
                                 )
-
-                                DropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    DropdownMenuItem(
-                                        leadingIcon = { Icon(Icons.Outlined.Check, null) },
-                                        text = { Text(stringResource(id = R.string.apply)) },
-                                        onClick = {
-                                            storedListSetting.storedListSettingData.applyToListSettings(listSettings)
-                                            onListSettingsChanged()
-                                            expanded = false
-                                        }
-                                    )
-                                    DropdownMenuItem(
-                                        leadingIcon = { Icon(Icons.Outlined.Close, null) },
-                                        text = { Text(stringResource(id = R.string.delete)) },
-                                        onClick = {
-                                            onDeleteStoredListSetting(storedListSetting)
-                                            expanded = false
-                                        }
-                                    )
-                                }
                             }
                         }
                     )
@@ -587,7 +578,7 @@ fun ListOptionsFilter_Preview_TODO() {
             extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
-            onSaveStoredListSetting = { _, _ -> },
+            onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }
         )
     }
@@ -628,7 +619,7 @@ fun ListOptionsFilter_Preview_JOURNAL() {
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             onListSettingsChanged = { },
-            onSaveStoredListSetting = { _, _ -> },
+            onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }
         )
     }

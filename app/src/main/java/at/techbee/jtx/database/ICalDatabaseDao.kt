@@ -757,7 +757,7 @@ DELETEs by Object
      *  StoredListSetting
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStoredListSetting(storedListSetting: StoredListSetting): Long
+    suspend fun upsertStoredListSetting(storedListSetting: StoredListSetting): Long
 
     @Transaction
     @Query("SELECT * FROM $TABLE_NAME_STORED_LIST_SETTINGS WHERE $COLUMN_STORED_LIST_SETTING_MODULE = :module")
