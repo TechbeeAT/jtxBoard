@@ -503,6 +503,7 @@ Danke!"</string>
     <string name="settings_select_language_system">"Systemstandard"</string>
     <string name="filter_special">"Spezialfilter"</string>
     <string name="filter_presets">"Filter-Voreinstellungen"</string>
+    <string name="filter_presets_edit_info">"Bitte bearbeiten Sie Filter-Voreinstellungen über das Filtermenü in der Listenansicht."</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
     <string name="list_date_today">"Heute"</string>
