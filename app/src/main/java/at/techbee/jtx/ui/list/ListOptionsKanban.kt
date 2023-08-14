@@ -73,7 +73,7 @@ fun ListOptionsKanban(
             subtitle = stringResource(R.string.kanban_columns_based_on_standard_status),
             onResetSelection = { },
             onInvertSelection = { },
-            showMenu = false
+            showDefaultMenu = false
         ) {
 
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -106,7 +106,7 @@ fun ListOptionsKanban(
                 subtitle = stringResource(R.string.kanban_columns_based_on_extended_status),
                 onResetSelection = { },
                 onInvertSelection = { },
-                showMenu = false
+                showDefaultMenu = false
             ) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     extendedStatuses
@@ -140,7 +140,7 @@ fun ListOptionsKanban(
                 subtitle = stringResource(R.string.kanban_columns_based_on_first_category),
                 onResetSelection = { },
                 onInvertSelection = { },
-                showMenu = false
+                showDefaultMenu = false
             ) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     storedCategories.forEach { storedCategory ->

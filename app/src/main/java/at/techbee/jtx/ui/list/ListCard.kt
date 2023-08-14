@@ -71,6 +71,7 @@ import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.reusable.elements.VerticalDateBlock
 import at.techbee.jtx.ui.theme.Typography
+import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import com.arnyminerz.markdowntext.MarkdownText
 
@@ -133,7 +134,7 @@ fun ListCard(
             containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
         ),
         elevation = CardDefaults.elevatedCardElevation(),
-        border = iCalObject.colorItem?.let { BorderStroke(1.dp, Color(it)) },
+        border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
         modifier = modifier
     ) {
         Column(

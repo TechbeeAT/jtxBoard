@@ -4,9 +4,9 @@
     <string name="app_permission_label">"jtx Board ジャーナル、メモ、ToDo を同期"</string>
     <string name="app_permission_desc">"jtx Board のコンテンツを DAVx⁵ のような外部のアプリケーションで同期"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"保存"</string>
+    <string name="update">"更新"</string>
     <string name="cancel">"キャンセル"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"削除"</string>
@@ -56,11 +56,13 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"プライバシーポリシー"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"締め切り超過"</string>
+    <string name="list_due_shortly">"間もなく締め切り"</string>
     <string name="list_due_today">"今日が締め切り"</string>
     <string name="list_due_tomorrow">"明日が締め切り"</string>
     <string name="list_due_inXhours">"締め切りまで %d 時間"</string>
     <string name="list_due_on_weekday">"%s に締め切り"</string>
     <string name="list_start_past">"過去に着手"</string>
+    <string name="list_start_shortly">"間もなく着手"</string>
     <string name="list_start_today">"本日から着手"</string>
     <string name="list_start_tomorrow">"明日から着手"</string>
     <string name="list_start_inXhours">"%d 時間後に着手予定"</string>
@@ -312,6 +314,8 @@ Global Strings -->
     <string name="filter_no_resource">必要なものなし</string>
     <string name="filter_subtasks_order_by">サブ ToDo の並べ替え</string>
     <string name="filter_subnotes_order_by">リンクされたメモの並べ替え</string>
+    <string name="filter_no_filter">"フィルターなし"</string>
+    <string name="filter_options_more_entries">"詳細 (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"エントリーを追加するコレクションをクリックしてください！"</string>
     <string name="collections_snackbar_x_items_added">"追加 %1$d 件、 スキップ %2$d 件 (繰り返しのあるエントリーを含む)"</string>
     <string name="collections_toast_x_items_added">"%1$d 件のエントリーが追加されました！"</string>
@@ -496,7 +500,7 @@ Global Strings -->
     <string name="menu_view_convert_to_task">"ToDo に変換"</string>
     <string name="settings_select_language">"言語を選択"</string>
     <string name="settings_select_language_system">"システムのデフォルト"</string>
-    <string name="filter_special">"特別なフィルター"</string>
+    <string name="filter_special">"汎用フィルター"</string>
     <string name="filter_presets">"プリセットのフィルター"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"過去の日付"</string>

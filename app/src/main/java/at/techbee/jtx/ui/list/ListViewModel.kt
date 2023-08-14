@@ -56,7 +56,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
-import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
@@ -116,7 +115,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val allResources = database.getAllResourcesAsText()
     val allWriteableCollections = database.getAllWriteableCollections()
     val allCollections = database.getAllCollections(module = module.name)
-    val storedListSettings = database.getStoredListSettings(module = module.name)
+    val storedListSettings = database.getStoredListSettings(modules = listOf(module.name))
     val storedCategories = database.getStoredCategories()
     val storedResources = database.getStoredResources()
     val extendedStatuses = database.getStoredStatuses()
@@ -514,15 +513,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
         }
     }
 
-    fun saveStoredListSettingsData(name: String, config: StoredListSettingData) {
+    fun saveStoredListSetting(storedListSetting: StoredListSetting) {
         viewModelScope.launch(Dispatchers.IO) {
-            database.insertStoredListSetting(
-                StoredListSetting(
-                    module = module,
-                    name = name,
-                    storedListSettingData = config
-                )
-            )
+            database.upsertStoredListSetting(storedListSetting)
         }
     }
 

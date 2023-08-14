@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import at.techbee.jtx.util.UiUtil
 
-private val DarkColorScheme = darkColorScheme(
+private val _darkColorScheme = darkColorScheme(
     primary = md_theme_light_primary,
     secondary = md_theme_light_secondary,
     tertiary = md_theme_light_tertiary,
@@ -41,7 +41,7 @@ private val DarkColorScheme = darkColorScheme(
     inverseOnSurface = md_theme_dark_inverseOnSurface
 )
 
-private val LightColorScheme = lightColorScheme(
+private val _lightColorScheme = lightColorScheme(
     primary = md_theme_dark_primary,
     secondary = md_theme_dark_secondary,
     tertiary = md_theme_dark_tertiary,
@@ -63,7 +63,7 @@ private val LightColorScheme = lightColorScheme(
     inverseOnSurface = md_theme_light_inverseOnSurface
 )
 
-private val ContrastColorScheme = lightColorScheme(
+private val _contrastColorScheme = lightColorScheme(
     primary = Color.Black,
     secondary = Color(0xFF272727),
     tertiary = Color(0xFF505050),
@@ -115,13 +115,13 @@ fun JtxBoardTheme(
 
     // dynamic colors are only loaded in pro!
     val colorScheme = when {
-        contrastTheme -> ContrastColorScheme
+        contrastTheme -> _contrastColorScheme
         trueDarkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicDarkColorScheme(context).copy(background = Color.Black, surface = Color.Black)
-        trueDarkTheme -> DarkColorScheme.copy(background = Color.Black, surface = Color.Black)
+        trueDarkTheme -> _darkColorScheme.copy(background = Color.Black, surface = Color.Black)
         darkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicDarkColorScheme(context)
         !darkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicLightColorScheme(context)
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> _darkColorScheme
+        else -> _lightColorScheme
     }
 
     SideEffect {

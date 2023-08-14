@@ -4,9 +4,9 @@
     <string name="app_permission_label">"jtx Board sync Ημερολόγιο, Σημειώσεις &amp; Εργασίες"</string>
     <string name="app_permission_desc">"το sync jtx Board παρέχει περιεχόμενο σε συνδυασμό με άλλες εφαρμογές όπως η DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Αποθήκευση"</string>
+    <string name="update">"Ενημέρωση"</string>
     <string name="cancel">"Ακύρωση"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Διαγραφή"</string>
@@ -56,11 +56,13 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Πολιτική Απορρήτου"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Καθυστερημένα"</string>
+    <string name="list_due_shortly">"Λήξη σύντομα"</string>
     <string name="list_due_today">"Μέχρι σήμερα"</string>
     <string name="list_due_tomorrow">"Μέχρι αύριο"</string>
     <string name="list_due_inXhours">"Μέχρι %d ώρες"</string>
     <string name="list_due_on_weekday">"Προθεσμία στις %s"</string>
     <string name="list_start_past">"Παρελθοντικά"</string>
+    <string name="list_start_shortly">"Έναρξη σύντομα"</string>
     <string name="list_start_today">"Για σήμερα"</string>
     <string name="list_start_tomorrow">"Αρχίζουν αύριο"</string>
     <string name="list_start_inXhours">"Σχεδιασμένα να αρχήσουν σε %d ώρες"</string>
