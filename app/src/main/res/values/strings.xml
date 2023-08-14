@@ -341,6 +341,12 @@
     <string name="collections_toast_export_all_ics_success">"Exporting all collections finished successfully."</string>
     <string name="collections_toast_export_all_ics_error">"An error occurred while exporting all collections."</string>
     <string name="menu_collections_export_all">"Export all"</string>
+    <string name="menu_presets_export_presets">"Export presets"</string>
+    <string name="menu_presets_import_presets">"Import presets"</string>
+    <string name="presets_imported">"Presets imported"</string>
+    <string name="presets_import_invalid_file">"Invalid file"</string>
+    <string name="presets_saved">"Presets saved"</string>
+    <string name="presets_export_error">"An error occurred saving presets"</string>
     <string name="more">"More"</string>
     <string name="navigation_drawer_buypro">"Buy Pro"</string>
     <string name="settings_select_theme">"Select theme"</string>
