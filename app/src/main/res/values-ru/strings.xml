@@ -6,6 +6,7 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Сохранить"</string>
+    <string name="update">"Обновить"</string>
     <string name="cancel">"Отмена"</string>
     <string name="ok">"ОК"</string>
     <string name="delete">"Удалить"</string>
@@ -55,11 +56,13 @@
     <string name="navigation_drawer_privacy_policy">"Политика конфиденциальности"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Просрочено"</string>
+    <string name="list_due_shortly">"Скоро завершится"</string>
     <string name="list_due_today">"Завершается сегодня"</string>
     <string name="list_due_tomorrow">"Завершается завтра"</string>
     <string name="list_due_inXhours">"Завершается через %d ч."</string>
     <string name="list_due_on_weekday">"Завершается в %s"</string>
     <string name="list_start_past">"Началось"</string>
+    <string name="list_start_shortly">"Скоро начнется"</string>
     <string name="list_start_today">"Начинается сегодня"</string>
     <string name="list_start_tomorrow">"Начинается завтра"</string>
     <string name="list_start_inXhours">"Начинается через %d ч."</string>
@@ -297,6 +300,7 @@
     <string name="collections_dialog_move_title">"Переместить все записи из \"%1$s\" в"</string>
     <string name="collection_dialog_move_info">"Обратите внимание: могут быть выбраны только доступные для записи коллекции и коллекции с поддержкой тех же компонентов (Журналы, Заметки, Задачи)."</string>
     <string name="menu_collections_popup_move_entries">"Переместить записи"</string>
+    <string name="setting_no_time">"Без времени"</string>
     <string name="list_no_dates_set">"Без даты"</string>
     <string name="list_without_start_date">"Без даты начала"</string>
     <string name="list_without_due_date">"Без даты завершения"</string>
@@ -310,6 +314,8 @@
     <string name="filter_no_resource">Без ресурсов</string>
     <string name="filter_subtasks_order_by">Сортировать подзадачи по</string>
     <string name="filter_subnotes_order_by">Сортировать связанные заметки по</string>
+    <string name="filter_no_filter">"Без фильтра"</string>
+    <string name="filter_options_more_entries">"Больше (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Пожалуйста, нажмите на коллекцию, в которую следует добавить запись/записи!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d добавлено, %2$d пропущено. (исключения в повторяющихся записях)"</string>
     <string name="collections_toast_x_items_added">"%1$d записей добавлено!"</string>
@@ -454,6 +460,8 @@
     <string name="settings_sync">"Настройки синхронизации"</string>
     <string name="settings_default_start_date">"Установить дату начала задачи по умолчанию"</string>
     <string name="settings_default_due_date">"Установить дату завершения задачи по умолчанию"</string>
+    <string name="settings_default_start_time">"Установить время начала задачи по умолчанию"</string>
+    <string name="settings_default_due_time">"Установить время завершения задачи по умолчанию"</string>
     <string name="settings_default_date_none">"Нет"</string>
     <string name="settings_default_date_same_day">"Текущий день"</string>
     <string name="settings_default_date_next_day">"Следующий день"</string>
@@ -494,6 +502,7 @@
     <string name="settings_select_language_system">"Системный"</string>
     <string name="filter_special">"Специальные фильтры"</string>
     <string name="filter_presets">"Пресеты фильтров"</string>
+    <string name="filter_presets_edit_info">"Вы можете добавить/обновить/удалить пресеты фильтров через меню фильтров."</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Дата в прошлом"</string>
     <string name="list_date_today">"Сегодня"</string>
