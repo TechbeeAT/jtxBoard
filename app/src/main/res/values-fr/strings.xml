@@ -485,6 +485,7 @@ Merci !"</string>
     <string name="settings_select_language_system">"Système par défaut"</string>
     <string name="filter_special">"Filtres spéciaux"</string>
     <string name="filter_presets">"Filtrer les préréglages"</string>
+    <string name="filter_presets_edit_info">"Veuillez ajouter/mettre à jour/supprimer les présélections de filtres dans la vue liste."</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date dans le passé"</string>
     <string name="list_date_today">"Aujourd'hui"</string>
