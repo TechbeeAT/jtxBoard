@@ -185,11 +185,7 @@ fun DetailScreenContent(
         it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value            // filter remote collections if pro was not purchased
     }
 
-    // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
-    originalICalEntity.value?.property?.eTag.let { iCalObject.eTag = it }
-    originalICalEntity.value?.property?.flags.let { iCalObject.flags = it }
-    originalICalEntity.value?.property?.scheduleTag.let { iCalObject.scheduleTag = it }
-    originalICalEntity.value?.property?.fileName.let { iCalObject.fileName = it }
+    // Update some fields in the background that might have changed (e.g. by creating a copy)
     if ((originalICalEntity.value?.property?.sequence ?: 0) > iCalObject.sequence) {
         iCalObject.status = originalICalEntity.value?.property?.status
         iCalObject.percent = originalICalEntity.value?.property?.percent

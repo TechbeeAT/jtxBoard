@@ -501,6 +501,7 @@
     <string name="settings_select_language_system">"Προεπιλογή συστήματος"</string>
     <string name="filter_special">"Ειδικά φίλτρα"</string>
     <string name="filter_presets">"Φίλτρο προεπιλογών"</string>
+    <string name="filter_presets_edit_info">"Παρακαλώ προσθέστε/ενημερώστε/διαγράψτε τις προεπιλογές φίλτρων από το μενού φίλτρου στην προβολή λίστας."</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Παρελθοντική ημερομηνία"</string>
     <string name="list_date_today">"Σήμερα"</string>

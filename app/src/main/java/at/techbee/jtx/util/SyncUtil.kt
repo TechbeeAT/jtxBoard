@@ -66,7 +66,7 @@ class SyncUtil {
                     if(context.packageManager?.getPackageInfoCompat(syncApp.packageName, 0) != null)
                         availableSyncApps.add(syncApp)
                 } catch (e: PackageManager.NameNotFoundException) {
-                    Log.d("SyncAppNotFound", e.stackTraceToString())
+                    Log.d("SyncAppNotFound", "NameNotFoundException for ${syncApp.packageName}")
                 }
             }
             return availableSyncApps
