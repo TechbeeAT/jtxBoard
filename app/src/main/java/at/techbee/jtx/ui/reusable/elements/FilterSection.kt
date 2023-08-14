@@ -34,8 +34,9 @@ fun FilterSection(
     onResetSelection: () -> Unit,
     onInvertSelection: () -> Unit,
     modifier: Modifier = Modifier,
-    showMenu: Boolean = true,
     subtitle: String? = null,
+    showDefaultMenu: Boolean = true,
+    customMenu: @Composable () -> Unit = { },
     content: @Composable () -> Unit,
     ) {
 
@@ -67,11 +68,11 @@ fun FilterSection(
                     )
                 }
             }
-            if(showMenu) {
+            if(showDefaultMenu) {
                 Row {
-                IconButton(onClick = { expanded = !expanded }) {
-                    Icon(Icons.Outlined.MoreVert, stringResource(id = R.string.more))
-                }
+                    IconButton(onClick = { expanded = !expanded }) {
+                        Icon(Icons.Outlined.MoreVert, stringResource(id = R.string.more))
+                    }
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
@@ -94,6 +95,8 @@ fun FilterSection(
                         )
                     }
                 }
+            } else {
+                customMenu()
             }
         }
 
@@ -114,6 +117,8 @@ fun FilterSection_Preview() {
             icon = Icons.Outlined.Folder,
             headline = stringResource(id = R.string.collection),
             subtitle = "Here comes the subtitle",
+            onResetSelection = {  },
+            onInvertSelection = {  },
             content = {
                 Row(
                     modifier = Modifier
@@ -122,7 +127,6 @@ fun FilterSection_Preview() {
                 ) {
                     Text("Here comes the content")
                 } },
-            onResetSelection = {  },
-            onInvertSelection = {  })
+        )
     }
 }

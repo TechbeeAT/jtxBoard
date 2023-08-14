@@ -4,9 +4,9 @@
     <string name="app_permission_label">"jtx Board: naplók, jegyezetek és feladatok szinkronizálása"</string>
     <string name="app_permission_desc">"jtx Board bejegyzések szinkronizálása DAVx⁵-el vagy hasonló alkalmazással"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Mentés"</string>
+    <string name="update">"Frissítés"</string>
     <string name="cancel">"Mégsem"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Törlés"</string>
@@ -56,11 +56,13 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Adatvédelmi nyilatkozat"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Késésben"</string>
+    <string name="list_due_shortly">"Hamarosan esedékes"</string>
     <string name="list_due_today">"Mai határidő"</string>
     <string name="list_due_tomorrow">"Holnapi határidő"</string>
     <string name="list_due_inXhours">"%d órán belül esedékes"</string>
     <string name="list_due_on_weekday">"Határidő: %s"</string>
     <string name="list_start_past">"Múltbéli kezdés"</string>
+    <string name="list_start_shortly">"Hamarosan elkezdendő"</string>
     <string name="list_start_today">"Tervezett kezdés ma"</string>
     <string name="list_start_tomorrow">"Holnap kezdődik"</string>
     <string name="list_start_inXhours">"Tervezett kezdés %d órán belül"</string>
@@ -311,6 +313,8 @@ Global Strings -->
     <string name="filter_no_resource">Erőforrás nélkül</string>
     <string name="filter_subtasks_order_by">Alfeladatok rendezése</string>
     <string name="filter_subnotes_order_by">Csatolt jegyzetek rendezési szempontja</string>
+    <string name="filter_no_filter">"Nincs szűrés"</string>
+    <string name="filter_options_more_entries">"Következő (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Kérjük, válassza ki a gyűjteményt, amiben a bejegyzést vagy bejegyzéseket létre akarja hozni!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d hozzáadva, %2$d kihagyva. (Ismétlődő bejegyzések kivételes példányai.)"</string>
     <string name="collections_toast_x_items_added">"%1$d hozzáadva!"</string>

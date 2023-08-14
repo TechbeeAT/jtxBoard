@@ -4,8 +4,7 @@
     <string name="app_permission_label">"jtx Board sincroniza Diarios, Notas y Tareas"</string>
     <string name="app_permission_desc">"Sincronizar el contenido de jtx Board con otras aplicaciones como DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Guardar"</string>
     <string name="cancel">"Cancelar"</string>
     <string name="ok">"Aceptar"</string>

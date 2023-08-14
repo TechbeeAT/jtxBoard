@@ -31,8 +31,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 205030002
-        versionName "2.05.03-beta02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 205030006
+        versionName "2.05.03-beta06"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -175,7 +175,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
 
-    implementation "androidx.preference:preference-ktx:1.2.0"
+    implementation "androidx.preference:preference-ktx:1.2.1"
 
     // Volley for simple network requests
     implementation "com.android.volley:volley:1.2.1"
@@ -245,14 +245,14 @@ dependencies {
     // jetpack compose
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation "androidx.compose.material3:material3:1.2.0-alpha04"
-    implementation "androidx.compose.material:material-icons-extended:1.4.3"
-    implementation "androidx.compose.material:material:1.4.3"
+    implementation "androidx.compose.material3:material3:1.2.0-alpha05"
+    implementation "androidx.compose.material:material-icons-extended:1.5.0"
+    implementation "androidx.compose.material:material:1.5.0"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    implementation "androidx.navigation:navigation-compose:2.7.0-rc01"
+    implementation "androidx.navigation:navigation-compose:2.7.0"
     implementation "com.arnyminerz.markdowntext:markdowntext:1.3.2"
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"

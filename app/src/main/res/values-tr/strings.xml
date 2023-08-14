@@ -2,8 +2,7 @@
 <resources>
     <!-- App title and fragment titles -->
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Kaydet"</string>
     <string name="cancel">"İptal et"</string>
     <string name="ok">"Tamam"</string>

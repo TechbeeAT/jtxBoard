@@ -2,9 +2,9 @@
 <resources>
     <!-- App title and fragment titles -->
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Spara"</string>
+    <string name="update">"Uppdatera"</string>
     <string name="cancel">"Avbryt"</string>
     <string name="delete">"Radera"</string>
     <string name="cont">"Fortsätt"</string>

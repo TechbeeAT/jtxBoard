@@ -4,9 +4,9 @@
     <string name="app_permission_label">"jtx Board Synchronisierung für Journale, Notizen &amp; Aufgaben"</string>
     <string name="app_permission_desc">"synchronisieren von jtx Board mit anderen Anwendungen wie z.B. DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Speichern"</string>
+    <string name="update">"Aktualisieren"</string>
     <string name="cancel">"Abbrechen"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Löschen"</string>
@@ -56,11 +56,13 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Datenschutzerklärung"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Überfällig"</string>
+    <string name="list_due_shortly">"Fällig in Kürze"</string>
     <string name="list_due_today">"Heute fällig"</string>
     <string name="list_due_tomorrow">"Morgen fällig"</string>
     <string name="list_due_inXhours">"In %d Stunden fällig"</string>
     <string name="list_due_on_weekday">"Fällig am %s"</string>
     <string name="list_start_past">"Start in Vergangenheit"</string>
+    <string name="list_start_shortly">"Start in Kürze"</string>
     <string name="list_start_today">"Geplanter Start heute"</string>
     <string name="list_start_tomorrow">"Geplanter Start morgen"</string>
     <string name="list_start_inXhours">"Geplanter Start in %d Stunden"</string>
@@ -312,6 +314,8 @@ Global Strings -->
     <string name="filter_no_resource">Ohne Materialien</string>
     <string name="filter_subtasks_order_by">Unteraufgaben sortieren nach</string>
     <string name="filter_subnotes_order_by">Verlinkte Notizen sortieren nach</string>
+    <string name="filter_no_filter">"Kein Filter"</string>
+    <string name="filter_options_more_entries">"Mehr (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Bitte klicken Sie auf die Collection, zu der die Einträge hinzugefügt werden sollen!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d hinzugefügt, %2$d übersprungen. (Exklusive Instanzen von wiederkehrenden Einträgen)"</string>
     <string name="collections_toast_x_items_added">"%1$d Einträge hinzugefügt!"</string>
@@ -499,6 +503,7 @@ Danke!"</string>
     <string name="settings_select_language_system">"Systemstandard"</string>
     <string name="filter_special">"Spezialfilter"</string>
     <string name="filter_presets">"Filter-Voreinstellungen"</string>
+    <string name="filter_presets_edit_info">"Bitte bearbeiten Sie Filter-Voreinstellungen über das Filtermenü in der Listenansicht."</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
     <string name="list_date_today">"Heute"</string>

@@ -4,8 +4,7 @@
     <string name="app_permission_label">"jtx Board mengsinkronisasikan Jurnal, Catatan, dan Tugas"</string>
     <string name="app_permission_desc">"Sinkronkan konten jtx Board dengan aplikasi lain seperti DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Simpan"</string>
     <string name="cancel">"Batal"</string>
     <string name="delete">"Hapus"</string>
