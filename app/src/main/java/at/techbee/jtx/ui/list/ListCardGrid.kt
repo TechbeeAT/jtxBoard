@@ -42,6 +42,7 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
+import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import com.arnyminerz.markdowntext.MarkdownText
 
 
@@ -65,7 +66,7 @@ fun ListCardGrid(
             containerColor = if (selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.elevatedCardElevation(),
-        border = iCalObject.colorItem?.let { BorderStroke(1.dp, Color(it)) },
+        border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
         modifier = modifier
     ) {
         Column(

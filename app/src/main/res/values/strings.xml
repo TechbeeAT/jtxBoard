@@ -12,9 +12,9 @@
     <string name="link_jtx_twitter" translatable="false">"https://twitter.com/jtxBoard"</string>
     <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
     <string name="twitter_account_name" translatable="false">"@jtxBoard"</string>
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Save"</string>
+    <string name="update">"Update"</string>
     <string name="cancel">"Cancel"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Delete"</string>
@@ -64,11 +64,13 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Privacy Policy"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Overdue"</string>
+    <string name="list_due_shortly">"Due shortly"</string>
     <string name="list_due_today">"Due today"</string>
     <string name="list_due_tomorrow">"Due tomorrow"</string>
     <string name="list_due_inXhours">"Due in %d hours"</string>
     <string name="list_due_on_weekday">"Due on %s"</string>
     <string name="list_start_past">"Start in past"</string>
+    <string name="list_start_shortly">"Start shortly"</string>
     <string name="list_start_today">"Planned start today"</string>
     <string name="list_start_tomorrow">"Start tomorrow"</string>
     <string name="list_start_inXhours">"Planned start in %d hours"</string>
@@ -323,6 +325,8 @@ Global Strings -->
     <string name="filter_no_resource">Without resources</string>
     <string name="filter_subtasks_order_by">Order subtasks by</string>
     <string name="filter_subnotes_order_by">Order linked notes by</string>
+    <string name="filter_no_filter">"No filter"</string>
+    <string name="filter_options_more_entries">"More (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Please click on the collection to which the entry/entries should be added!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d added, %2$d skipped. (Exclusive instances of recurring entries.)"</string>
     <string name="collections_toast_x_items_added">"%1$d entries added!"</string>
@@ -515,6 +519,7 @@ Thank you!"</string>
     <string name="settings_select_language_system">"System default"</string>
     <string name="filter_special">"Special filters"</string>
     <string name="filter_presets">"Filter presets"</string>
+    <string name="filter_presets_edit_info">"Please add/update/delete filter presets from the filter menu in the list view."</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>

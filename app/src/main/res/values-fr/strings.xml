@@ -4,9 +4,9 @@
     <string name="app_permission_label">"jtx Board sync journaux, notes et tâches"</string>
     <string name="app_permission_desc">"synchroniser le contenu de jtx Board avec d'autres applications comme DAVx⁵."</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Sauver"</string>
+    <string name="update">"Mise à jour"</string>
     <string name="cancel">"Annuler"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Supprimer"</string>
@@ -56,11 +56,13 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Politique de confidentialité"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"En retard"</string>
+    <string name="list_due_shortly">"Echéance proche"</string>
     <string name="list_due_today">"Échéance aujourd'hui"</string>
     <string name="list_due_tomorrow">"Échéance demain"</string>
     <string name="list_due_inXhours">"Échéance dans %d heures"</string>
     <string name="list_due_on_weekday">"Échéance le %s"</string>
     <string name="list_start_past">"Début dans le passé"</string>
+    <string name="list_start_shortly">"Début proche"</string>
     <string name="list_start_today">"Début prévu aujourd'hui"</string>
     <string name="list_start_tomorrow">"Début planifié pour demain"</string>
     <string name="list_start_inXhours">"Début planifié dans %d heures"</string>
@@ -304,6 +306,8 @@ Global Strings -->
     <string name="filter_no_resource">Sans ressources</string>
     <string name="filter_subtasks_order_by">Trier les sous-tâches par</string>
     <string name="filter_subnotes_order_by">Trier les notes liées par</string>
+    <string name="filter_no_filter">"Aucun filtre"</string>
+    <string name="filter_options_more_entries">"Plus (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Veuillez cliquer sur la collection à laquelle l'entrée/les entrées doivent être ajoutées !"</string>
     <string name="collections_snackbar_x_items_added">"%1$d ajouté, %2$d ignoré. (Instances exclusives d'entrées récurrentes.)"</string>
     <string name="collections_toast_x_items_added">"%1$d entrées ajoutées !"</string>

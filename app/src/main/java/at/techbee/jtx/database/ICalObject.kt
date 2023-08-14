@@ -862,10 +862,10 @@ data class ICalObject(
             if(due == null)
                 return null
 
-            val zonedDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), requireTzId(dueTimezone)).toInstant().toEpochMilli()
-            val millisLeft = if(dueTimezone == TZ_ALLDAY) zonedDue - DateTimeUtils.getTodayAsLong() else zonedDue - System.currentTimeMillis()
+            val localNow = ZonedDateTime.now()
+            val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dueTimezone))
 
-            return millisLeft < 0L
+            return ChronoUnit.MINUTES.between(localNow, localDue) < 0L
         }
 
         fun getDtstartTextInfo(module: Module, dtstart: Long?, dtstartTimezone: String?, daysOnly: Boolean = false, context: Context): String {
@@ -875,20 +875,19 @@ data class ICalObject(
             else if(dtstart == null)
                 return context.getString(R.string.list_date_without)
 
-            val localNow = LocalDateTime.now()
+            val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localStart = LocalDateTime.ofInstant(Instant.ofEpochMilli(dtstart), requireTzId(dtstartTimezone))
-            val daysLeft = ChronoUnit.DAYS.between(localNow, localStart)
-            val hoursLeft = ChronoUnit.HOURS.between(localNow, localStart)
+            val localStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dtstartTimezone))
 
             return if(module == Module.TODO) {
                  when {
-                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == TZ_ALLDAY) -> context.getString(R.string.list_start_today)
-                    daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_start_past)
-                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, hoursLeft)
-                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
-                    daysLeft <= 7 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
+                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == TZ_ALLDAY) -> context.getString(R.string.list_start_today)
+                     ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> context.getString(R.string.list_start_past)
+                     ChronoUnit.HOURS.between(localNow, localStart) < 1L -> context.getString(R.string.list_start_shortly)
+                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
+                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
+                     ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                     else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
                 }
             } else {
                 when {
@@ -906,18 +905,17 @@ data class ICalObject(
             if(due == null)
                 return context.getString(R.string.list_due_without)
 
-            val localNow = LocalDateTime.now()
+            val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localDue = LocalDateTime.ofInstant(Instant.ofEpochMilli(due), requireTzId(dueTimezone))
-            val daysLeft = ChronoUnit.DAYS.between(localNow, localDue)
-            val hoursLeft = ChronoUnit.HOURS.between(localNow, localDue)
+            val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dueTimezone))
 
             return when {
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || dueTimezone == TZ_ALLDAY) -> context.getString(R.string.list_due_today)
-                daysLeft <= 0L && hoursLeft < 0L -> context.getString(R.string.list_due_overdue)
-                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, hoursLeft)
+                ChronoUnit.MINUTES.between(localNow, localDue) < 0L -> context.getString(R.string.list_due_overdue)
+                ChronoUnit.HOURS.between(localNow, localDue) < 1L -> context.getString(R.string.list_due_shortly)
+                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, ChronoUnit.HOURS.between(localNow, localDue))
                 localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
-                daysLeft <= 7 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                ChronoUnit.DAYS.between(localNow, localDue) <= 7 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
                 else -> DateTimeUtils.convertLongToMediumDateShortTimeString(due, dueTimezone)
             }
         }
