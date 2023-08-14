@@ -502,6 +502,7 @@
     <string name="settings_select_language_system">"システムのデフォルト"</string>
     <string name="filter_special">"汎用フィルター"</string>
     <string name="filter_presets">"プリセットのフィルター"</string>
+    <string name="filter_presets_edit_info">"リスト表示のフィルターメニューから、フィルターのプリセットを追加/更新/削除。"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"過去の日付"</string>
     <string name="list_date_today">"今日"</string>
