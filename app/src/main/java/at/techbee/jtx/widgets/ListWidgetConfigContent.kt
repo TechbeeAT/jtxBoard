@@ -183,7 +183,7 @@ fun ListWidgetConfigContent(
                                 allCategoriesLive = database.getAllCategoriesAsText(),
                                 allResourcesLive = database.getAllResourcesAsText(),
                                 extendedStatusesLive = database.getStoredStatuses(),
-                                storedListSettingLive = database.getStoredListSettings(module = selectedModule.value.name),
+                                storedListSettingLive = database.getStoredListSettings(modules = listOf(selectedModule.value.name)),
                                 onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
                                 isWidgetConfig = true,
                                 onSaveStoredListSetting = { /* no saving option in list widget config*/ },

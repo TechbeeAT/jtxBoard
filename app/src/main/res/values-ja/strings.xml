@@ -314,6 +314,8 @@
     <string name="filter_no_resource">必要なものなし</string>
     <string name="filter_subtasks_order_by">サブ ToDo の並べ替え</string>
     <string name="filter_subnotes_order_by">リンクされたメモの並べ替え</string>
+    <string name="filter_no_filter">"フィルターなし"</string>
+    <string name="filter_options_more_entries">"詳細 (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"エントリーを追加するコレクションをクリックしてください！"</string>
     <string name="collections_snackbar_x_items_added">"追加 %1$d 件、 スキップ %2$d 件 (繰り返しのあるエントリーを含む)"</string>
     <string name="collections_toast_x_items_added">"%1$d 件のエントリーが追加されました！"</string>
@@ -498,7 +500,7 @@
     <string name="menu_view_convert_to_task">"ToDo に変換"</string>
     <string name="settings_select_language">"言語を選択"</string>
     <string name="settings_select_language_system">"システムのデフォルト"</string>
-    <string name="filter_special">"特別なフィルター"</string>
+    <string name="filter_special">"汎用フィルター"</string>
     <string name="filter_presets">"プリセットのフィルター"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"過去の日付"</string>
