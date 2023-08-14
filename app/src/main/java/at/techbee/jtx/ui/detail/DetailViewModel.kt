@@ -380,6 +380,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun saveEntry() {
         viewModelScope.launch(Dispatchers.IO) {
             mutableICalObject?.let {
+                // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
+                icalEntity.value?.property?.eTag.let { currentETag -> it.eTag = currentETag }
+                icalEntity.value?.property?.flags.let { currentFlags -> it.flags = currentFlags }
+                icalEntity.value?.property?.scheduleTag.let { currentScheduleTag -> it.scheduleTag = currentScheduleTag }
+                icalEntity.value?.property?.fileName.let { currentFileName -> it.fileName = currentFileName }
+
                 save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
             }
         }
