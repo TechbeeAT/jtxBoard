@@ -313,6 +313,8 @@
     <string name="filter_no_resource">Erőforrás nélkül</string>
     <string name="filter_subtasks_order_by">Alfeladatok rendezése</string>
     <string name="filter_subnotes_order_by">Csatolt jegyzetek rendezési szempontja</string>
+    <string name="filter_no_filter">"Nincs szűrés"</string>
+    <string name="filter_options_more_entries">"Következő (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Kérjük, válassza ki a gyűjteményt, amiben a bejegyzést vagy bejegyzéseket létre akarja hozni!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d hozzáadva, %2$d kihagyva. (Ismétlődő bejegyzések kivételes példányai.)"</string>
     <string name="collections_toast_x_items_added">"%1$d hozzáadva!"</string>
