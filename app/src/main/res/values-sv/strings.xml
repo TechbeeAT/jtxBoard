@@ -72,6 +72,8 @@
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
     <string name="next">"Nästa"</string>
+    <string name="widget_list_show_description">"Visa beskrivning"</string>
+    <string name="markdown_italic">"Kursiv"</string>
     <string name="active_filters">Aktiva filter:</string>
     <string name="clear_filters">"Rensa filter"</string>
 </resources>
