@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,7 +56,6 @@ import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
-import java.util.TimeZone
 
 
 @Composable
@@ -69,46 +69,24 @@ fun CollectionsScreen(
     val context = LocalContext.current
     val availableSyncApps = SyncUtil.availableSyncApps(context)
     val snackbarHostState = remember { SnackbarHostState() }
+    val collections by collectionsViewModel.collections.observeAsState(emptyList())
+    val toastText = collectionsViewModel.toastText.observeAsState()
+
+    val collectionsToExport = remember { mutableStateListOf<CollectionsView>() }
+
 
     /* EXPORT FUNCTIONALITIES */
-    val collectionsICS = collectionsViewModel.collectionsICS.observeAsState()
-    val resultExportFilepath = remember { mutableStateOf<Uri?>(null) }
     val launcherExportAll = rememberLauncherForActivityResult(CreateDocument("application/zip")) {
-        resultExportFilepath.value = it
+        it?.let { uri ->
+            collectionsViewModel.writeToFile(collectionsToExport, uri)
+            collectionsToExport.clear()
+        }
     }
     val launcherExportSingle = rememberLauncherForActivityResult(CreateDocument("text/calendar")) {
-        resultExportFilepath.value = it
-    }
-    if (resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size > 1) {
-        launcherExportAll.launch(
-            "jtxBoard_${
-                DateTimeUtils.convertLongToYYYYMMDDString(
-                    System.currentTimeMillis(),
-                    TimeZone.getDefault().id
-                )
-            }.zip"
-        )
-    } else if (resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size == 1) {
-        launcherExportSingle.launch(
-            "${collectionsICS.value!!.first().first}_${
-                DateTimeUtils.convertLongToYYYYMMDDString(
-                    System.currentTimeMillis(),
-                    null
-                )
-            }.ics"
-        )
-    } else if (resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size > 1) {
-        collectionsViewModel.exportICSasZIP(
-            resultExportFilepath = resultExportFilepath.value,
-            context = context
-        )
-        resultExportFilepath.value = null
-    } else if (resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size == 1) {
-        collectionsViewModel.exportICS(
-            resultExportFilepath = resultExportFilepath.value,
-            context = context
-        )
-        resultExportFilepath.value = null
+        it?.let { uri ->
+            collectionsViewModel.writeToFile(collectionsToExport, uri)
+            collectionsToExport.clear()
+        }
     }
 
     /* IMPORT FUNCTIONALITIES */
@@ -122,6 +100,13 @@ fun CollectionsScreen(
     }
     var importCollection by remember { mutableStateOf<CollectionsView?>(null) }
     var importModule by remember { mutableStateOf<Module?>(null) }
+
+    LaunchedEffect(toastText.value) {
+        toastText.value?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            collectionsViewModel.toastText.postValue(null)
+        }
+    }
 
 
     LaunchedEffect(resultImportICSFilepaths, importCollection) {
@@ -269,11 +254,8 @@ fun CollectionsScreen(
                             text = { Text(text = stringResource(id = R.string.menu_collections_export_all)) },
                             onClick = {
                                 if(settingsStateHolder.settingProtectBiometric.value == DropdownSettingOption.PROTECT_BIOMETRIC_OFF || globalStateHolder.isAuthenticated.value) {
-                                    collectionsViewModel.collections.value?.let {
-                                        collectionsViewModel.requestICSForExport(
-                                            it
-                                        )
-                                    }
+                                    collectionsToExport.addAll(collections)
+                                    launcherExportAll.launch("jtxBoard_${DateTimeUtils.timestampAsFilenameAppendix()}.zip")
                                 } else {
                                     globalStateHolder.biometricPrompt?.authenticate(biometricPromptInfo)
                                 }
@@ -290,7 +272,7 @@ fun CollectionsScreen(
                 drawerState = drawerState,
                 mainContent = {
                     CollectionsScreenContent(
-                        collectionsLive = collectionsViewModel.collections,
+                        collections = collections,
                         isProcessing = collectionsViewModel.isProcessing,
                         onCollectionChanged = { collection ->
                             collectionsViewModel.saveCollection(
@@ -318,7 +300,8 @@ fun CollectionsScreen(
                         },
                         onExportAsICS = { collection ->
                             if(settingsStateHolder.settingProtectBiometric.value == DropdownSettingOption.PROTECT_BIOMETRIC_OFF || globalStateHolder.isAuthenticated.value) {
-                                collectionsViewModel.requestICSForExport(listOf(collection))
+                                collectionsToExport.add(collection)
+                                launcherExportSingle.launch("${collection.displayName ?: collection.collectionId.toString()}_${DateTimeUtils.timestampAsFilenameAppendix()}.ics")
                             } else {
                                 globalStateHolder.biometricPrompt?.authenticate(biometricPromptInfo)
                             }
