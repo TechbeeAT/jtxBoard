@@ -319,10 +319,12 @@ data class ICal4List(
             isFilterOverdue: Boolean = false,
             isFilterDueToday: Boolean = false,
             isFilterDueTomorrow: Boolean = false,
+            isFilterDueWithin7Days: Boolean = false,
             isFilterDueFuture: Boolean = false,
             isFilterStartInPast: Boolean = false,
             isFilterStartToday: Boolean = false,
             isFilterStartTomorrow: Boolean = false,
+            isFilterStartWithin7Days: Boolean = false,
             isFilterStartFuture: Boolean = false,
             isFilterNoDatesSet: Boolean = false,
             isFilterNoStartDateSet: Boolean = false,
@@ -430,6 +432,8 @@ data class ICal4List(
                 dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds - 1}")
             if (isFilterStartTomorrow)
                 dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds - 1}")
+            if (isFilterStartWithin7Days)
+                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (8).days.inWholeMilliseconds - 1}")
             if (isFilterStartFuture)
                 dateQuery.add("$COLUMN_DTSTART > ${System.currentTimeMillis()}")
             if (isFilterOverdue)
@@ -438,6 +442,8 @@ data class ICal4List(
                 dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds - 1}")
             if (isFilterDueTomorrow)
                 dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds - 1}")
+            if (isFilterDueWithin7Days)
+                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (8).days.inWholeMilliseconds - 1}")
             if (isFilterDueFuture)
                 dateQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
             if (isFilterNoDatesSet)

@@ -248,10 +248,12 @@ fun ListWidgetConfigContent(
                                     isFilterOverdue = listSettings.isFilterOverdue.value
                                     isFilterDueToday = listSettings.isFilterDueToday.value
                                     isFilterDueTomorrow = listSettings.isFilterDueTomorrow.value
+                                    isFilterDueWithin7Days = listSettings.isFilterDueWithin7Days.value
                                     isFilterDueFuture = listSettings.isFilterDueFuture.value
                                     isFilterStartInPast = listSettings.isFilterStartInPast.value
                                     isFilterStartToday = listSettings.isFilterStartToday.value
                                     isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value
+                                    isFilterStartWithin7Days = listSettings.isFilterStartWithin7Days.value
                                     isFilterStartFuture = listSettings.isFilterStartFuture.value
                                     isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value
                                     isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value
@@ -321,10 +323,12 @@ data class ListWidgetConfig(
     var isFilterOverdue: Boolean = false,
     var isFilterDueToday: Boolean = false,
     var isFilterDueTomorrow: Boolean = false,
+    var isFilterDueWithin7Days: Boolean = false,
     var isFilterDueFuture: Boolean = false,
     var isFilterStartInPast: Boolean = false,
     var isFilterStartToday: Boolean = false,
     var isFilterStartTomorrow: Boolean = false,
+    var isFilterStartWithin7Days: Boolean = false,
     var isFilterStartFuture: Boolean = false,
     var isFilterNoDatesSet: Boolean = false,
     var isFilterNoStartDateSet: Boolean = false,

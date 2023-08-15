@@ -67,6 +67,7 @@
     <string name="list_due_shortly">"Due shortly"</string>
     <string name="list_due_today">"Due today"</string>
     <string name="list_due_tomorrow">"Due tomorrow"</string>
+    <string name="list_due_within_7_days">"Due within 7 days"</string>
     <string name="list_due_inXhours">"Due in %d hours"</string>
     <string name="list_due_on_weekday">"Due on %s"</string>
     <string name="list_start_past">"Start in past"</string>
@@ -524,10 +525,12 @@ Thank you!"</string>
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>
     <string name="list_date_tomorrow">"Tomorrow"</string>
+    <string name="list_date_within_7_days">"Within 7 days"</string>
     <string name="list_date_future">"Date in future"</string>
     <string name="list_start_date_in_past">"Start in past"</string>
     <string name="list_start_date_today">"Start today"</string>
     <string name="list_start_date_tomorrow">"Start tomorrow"</string>
+    <string name="list_start_date_within_7_days">"Start within 7 days"</string>
     <string name="list_start_date_future">"Start in future"</string>
     <string name="list_hide_completed_tasks">"Hide completed tasks"</string>
     <string name="list_biometric_protected_entries_locked">Biometric protected entries locked</string>

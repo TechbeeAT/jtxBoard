@@ -169,10 +169,12 @@ fun ListOptionsFilter(
                     listSettings.isFilterOverdue.value = false
                     listSettings.isFilterDueToday.value = false
                     listSettings.isFilterDueTomorrow.value = false
+                    listSettings.isFilterDueWithin7Days.value = false
                     listSettings.isFilterDueFuture.value = false
                     listSettings.isFilterStartInPast.value = false
                     listSettings.isFilterStartToday.value = false
                     listSettings.isFilterStartTomorrow.value = false
+                    listSettings.isFilterStartWithin7Days.value = false
                     listSettings.isFilterStartFuture.value = false
                     listSettings.isFilterNoDatesSet.value = false
                     listSettings.isFilterNoStartDateSet.value = false
@@ -187,10 +189,12 @@ fun ListOptionsFilter(
                     listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
                     listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
                     listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
+                    listSettings.isFilterDueWithin7Days.value = !listSettings.isFilterDueWithin7Days.value
                     listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
                     listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
                     listSettings.isFilterStartToday.value = !listSettings.isFilterStartToday.value
                     listSettings.isFilterStartTomorrow.value = !listSettings.isFilterStartTomorrow.value
+                    listSettings.isFilterStartWithin7Days.value = !listSettings.isFilterStartWithin7Days.value
                     listSettings.isFilterStartFuture.value = !listSettings.isFilterStartFuture.value
                     listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
                     listSettings.isFilterNoStartDateSet.value = !listSettings.isFilterNoStartDateSet.value
@@ -237,6 +241,15 @@ fun ListOptionsFilter(
                     label = { Text(stringResource(id = if (module == Module.TODO) R.string.list_start_date_tomorrow else R.string.list_date_tomorrow)) }
                 )
                 FilterChip(
+                    selected = listSettings.isFilterStartWithin7Days.value,
+                    onClick = {
+                        listSettings.isFilterStartWithin7Days.value =
+                            !listSettings.isFilterStartWithin7Days.value
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = if (module == Module.TODO) R.string.list_start_date_within_7_days else R.string.list_date_within_7_days)) }
+                )
+                FilterChip(
                     selected = listSettings.isFilterStartFuture.value,
                     onClick = {
                         listSettings.isFilterStartFuture.value =
@@ -273,6 +286,15 @@ fun ListOptionsFilter(
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = R.string.list_due_tomorrow)) }
+                )
+                FilterChip(
+                    selected = listSettings.isFilterDueWithin7Days.value,
+                    onClick = {
+                        listSettings.isFilterDueWithin7Days.value =
+                            !listSettings.isFilterDueWithin7Days.value
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = R.string.list_due_within_7_days)) }
                 )
                 FilterChip(
                     selected = listSettings.isFilterDueFuture.value,
