@@ -12,11 +12,16 @@ import android.icu.text.MessageFormat
 import android.os.Build
 import android.util.Log
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
-import java.time.*
+import java.time.DateTimeException
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.temporal.WeekFields
-import java.util.*
+import java.util.Locale
 
 object DateTimeUtils {
 
@@ -135,6 +140,8 @@ object DateTimeUtils {
         return zonedDateTime.toLocalDateTime().format(formatter)
     }
 
+    fun timestampAsFilenameAppendix(): String = convertLongToYYYYMMDDString(System.currentTimeMillis(),null)
+
     fun getLocalizedOrdinal(from: Int, to: Int, includeEmpty: Boolean): Array<String> {
 
         val ordinalValues: MutableList<String> = mutableListOf()
@@ -236,11 +243,8 @@ object DateTimeUtils {
      */
     fun getTodayAsLong() = LocalDate.now().atStartOfDay().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()
 
-    /**
-     * @param [date] of which the time should be removed
-     * @param [timezone] of the date (can be null, then local timezone is taken as default)
-     * @return the given date as UTC timestamp with the hour, minute, second and millis set to 0 or null if date was null
-     */
+
+    /*
     fun getDateWithoutTime(date: Long?, timezone: String?): Long? = date?.let {
         ZonedDateTime
             .ofInstant(Instant.ofEpochMilli(it), requireTzId(timezone))
@@ -252,6 +256,7 @@ object DateTimeUtils {
             .toInstant()
             .toEpochMilli()
     }
+     */
 
     /**
      * @param [seconds] that should be brought into a format like 00:00

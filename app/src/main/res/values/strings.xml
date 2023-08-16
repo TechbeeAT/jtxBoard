@@ -256,8 +256,6 @@
     <string name="edit_recur_week">"week(s)"</string>
     <string name="edit_recur_month">"month(s)"</string>
     <string name="edit_recur_year">"year(s)"</string>
-    <string name="collections_toast_export_ics_success">"Exporting collection finished successfully."</string>
-    <string name="collections_toast_export_ics_error">"An error occurred while exporting the selected collection."</string>
     <string name="attachment_export_saved_successfully">"Saved successfully"</string>
     <string name="attachment_export_error_error_occurred">"An error occurred while saving the selected file!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Add remote Collection (%1$s)"</string>
@@ -338,8 +336,8 @@
     <string name="edit_recur_ends_never">"ends never"</string>
     <string name="edit_recur_ends_on">"ends on"</string>
     <string name="edit_recur_ends_after">"ends after"</string>
-    <string name="collections_toast_export_all_ics_success">"Exporting all collections finished successfully."</string>
-    <string name="collections_toast_export_all_ics_error">"An error occurred while exporting all collections."</string>
+    <string name="collections_toast_export_success">"Collections successfully exported"</string>
+    <string name="collections_toast_export_error">"Error on exporting collections"</string>
     <string name="menu_collections_export_all">"Export all"</string>
     <string name="more">"More"</string>
     <string name="navigation_drawer_buypro">"Buy Pro"</string>
