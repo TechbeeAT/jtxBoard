@@ -14,6 +14,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 
 /** The name of the the table for resources that are stored only locally. */
@@ -22,6 +23,7 @@ const val COLUMN_STORED_RESOURCE_NAME = "resource"
 const val COLUMN_STORED_RESOURCE_COLOR = "color"
 
 
+@Serializable
 @Parcelize
 @Entity(tableName = TABLE_NAME_STORED_RESOURCES)
 data class StoredResource (

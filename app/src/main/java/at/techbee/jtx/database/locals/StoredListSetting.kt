@@ -22,6 +22,7 @@ import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.ui.list.ViewMode
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 
 /** The name of the the table for filters that are stored only locally. */
@@ -37,6 +38,7 @@ const val COLUMN_STORED_LIST_SETTING_NAME = "name"
 const val COLUMN_STORED_LIST_SETTING_SETTINGS = "list_settings"
 
 
+@Serializable
 @Parcelize
 @Entity(tableName = TABLE_NAME_STORED_LIST_SETTINGS)
 data class StoredListSetting (
@@ -53,7 +55,7 @@ data class StoredListSetting (
 
 
 @Parcelize
-@kotlinx.serialization.Serializable
+@Serializable
 data class StoredListSettingData(
     var searchCategories: List<String> = emptyList(),
     var searchResources: List<String> = emptyList(),

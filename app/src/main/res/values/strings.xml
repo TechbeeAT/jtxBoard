@@ -340,6 +340,12 @@
     <string name="collections_toast_export_success">"Collections successfully exported"</string>
     <string name="collections_toast_export_error">"Error on exporting collections"</string>
     <string name="menu_collections_export_all">"Export all"</string>
+    <string name="menu_presets_export_presets">"Export presets"</string>
+    <string name="menu_presets_import_presets">"Import presets"</string>
+    <string name="presets_imported">"Presets imported"</string>
+    <string name="presets_import_invalid_file">"Invalid file"</string>
+    <string name="presets_saved">"Presets saved"</string>
+    <string name="presets_export_error">"An error occurred saving presets"</string>
     <string name="more">"More"</string>
     <string name="navigation_drawer_buypro">"Buy Pro"</string>
     <string name="settings_select_theme">"Select theme"</string>
