@@ -22,6 +22,7 @@ import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.ui.list.ViewMode
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 
 /** The name of the the table for filters that are stored only locally. */
@@ -37,6 +38,7 @@ const val COLUMN_STORED_LIST_SETTING_NAME = "name"
 const val COLUMN_STORED_LIST_SETTING_SETTINGS = "list_settings"
 
 
+@Serializable
 @Parcelize
 @Entity(tableName = TABLE_NAME_STORED_LIST_SETTINGS)
 data class StoredListSetting (
@@ -53,7 +55,7 @@ data class StoredListSetting (
 
 
 @Parcelize
-@kotlinx.serialization.Serializable
+@Serializable
 data class StoredListSettingData(
     var searchCategories: List<String> = emptyList(),
     var searchResources: List<String> = emptyList(),
@@ -74,10 +76,12 @@ data class StoredListSettingData(
     var isFilterOverdue: Boolean = false,
     var isFilterDueToday: Boolean = false,
     var isFilterDueTomorrow: Boolean = false,
+    var isFilterDueWithin7Days: Boolean = false,
     var isFilterDueFuture: Boolean = false,
     var isFilterStartInPast: Boolean = false,
     var isFilterStartToday: Boolean = false,
     var isFilterStartTomorrow: Boolean = false,
+    var isFilterStartWithin7Days: Boolean = false,
     var isFilterStartFuture: Boolean = false,
     var isFilterNoDatesSet: Boolean = false,
     var isFilterNoStartDateSet: Boolean = false,
@@ -113,10 +117,12 @@ data class StoredListSettingData(
                 isFilterOverdue = listSettings.isFilterOverdue.value,
                 isFilterDueToday = listSettings.isFilterDueToday.value,
                 isFilterDueTomorrow = listSettings.isFilterDueTomorrow.value,
+                isFilterDueWithin7Days = listSettings.isFilterDueWithin7Days.value,
                 isFilterDueFuture = listSettings.isFilterDueFuture.value,
                 isFilterStartInPast = listSettings.isFilterStartInPast.value,
                 isFilterStartToday = listSettings.isFilterStartToday.value,
                 isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value,
+                isFilterStartWithin7Days = listSettings.isFilterStartWithin7Days.value,
                 isFilterStartFuture = listSettings.isFilterStartFuture.value,
                 isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
                 isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value,
@@ -149,10 +155,12 @@ data class StoredListSettingData(
         listSettings.isFilterOverdue.value = isFilterOverdue
         listSettings.isFilterDueToday.value = isFilterDueToday
         listSettings.isFilterDueTomorrow.value = isFilterDueTomorrow
+        listSettings.isFilterDueWithin7Days.value = isFilterDueWithin7Days
         listSettings.isFilterDueFuture.value = isFilterDueFuture
         listSettings.isFilterStartInPast.value = isFilterStartInPast
         listSettings.isFilterStartToday.value = isFilterStartToday
         listSettings.isFilterStartTomorrow.value = isFilterStartTomorrow
+        listSettings.isFilterStartWithin7Days.value = isFilterStartWithin7Days
         listSettings.isFilterStartFuture.value = isFilterStartFuture
         listSettings.isFilterNoDatesSet.value = isFilterNoDatesSet
         listSettings.isFilterNoStartDateSet.value = isFilterNoStartDateSet
