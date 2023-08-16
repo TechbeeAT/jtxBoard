@@ -421,7 +421,7 @@ data class ICal4List(
             }
 
             if (isExcludeDone)
-                queryString += "AND $COLUMN_PERCENT IS NOT 100 AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS NOT IN ('${Status.COMPLETED.status}')) "
+                queryString += "AND $COLUMN_PERCENT IS NOT 100 AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS NOT IN ('${Status.COMPLETED.status}', '${Status.CANCELLED.status}')) "
 
             val dateQuery = mutableListOf<String>()
             if (isFilterStartInPast)
