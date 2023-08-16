@@ -71,7 +71,7 @@ fun ListWidgetConfigContent(
 ) {
 
     val context = LocalContext.current
-    val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+    val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
 
     val selectedModule = remember { mutableStateOf(initialConfig.module) }
     val listSettings = ListSettings.fromListWidgetConfig(initialConfig)

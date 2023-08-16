@@ -66,7 +66,7 @@ fun PresetsScreen(
     val scope = rememberCoroutineScope()
     var toastMessage by remember { mutableStateOf<String?>(null) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val database = ICalDatabase.getInstance(LocalContext.current).iCalDatabaseDao
+    val database = ICalDatabase.getInstance(LocalContext.current).iCalDatabaseDao()
     val allCategories by database.getAllCategoriesAsText().observeAsState(emptyList())
     val storedCategories by database.getStoredCategories().observeAsState(emptyList())
     val allResources by database.getAllResourcesAsText().observeAsState(emptyList())

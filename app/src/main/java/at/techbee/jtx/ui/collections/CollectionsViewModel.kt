@@ -38,7 +38,7 @@ import java.util.zip.ZipOutputStream
 class CollectionsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _application = application
-    val database: ICalDatabaseDao = ICalDatabase.getInstance(_application).iCalDatabaseDao
+    val database: ICalDatabaseDao = ICalDatabase.getInstance(_application).iCalDatabaseDao()
     val collections = database.getAllCollectionsView()
 
     val isProcessing = MutableLiveData(false)

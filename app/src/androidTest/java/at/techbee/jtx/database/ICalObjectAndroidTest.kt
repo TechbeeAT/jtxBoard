@@ -46,7 +46,7 @@ class ICalObjectAndroidTest {
     fun createDb() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
         ICalDatabase.switchToInMemory(context)
-        database = ICalDatabase.getInstance(context).iCalDatabaseDao
+        database = ICalDatabase.getInstance(context).iCalDatabaseDao()
 
         database.insertCollectionSync(
             ICalCollection(
@@ -136,8 +136,8 @@ class ICalObjectAndroidTest {
         val recurList = database.getRecurInstances(savedItemUID)
         assertEquals(5, recurList.size)
 
-        assertEquals(1663718400000L, recurList[0]?.dtstart)
-        val firstInstance = database.getRecurInstance("series", ICalObject.getAsRecurId(recurList[0]?.dtstart!!, recurList[0]?.dtstartTimezone)) ?: throw AssertionError("firstInstance not found")
+        assertEquals(1663718400000L, recurList[0].dtstart)
+        val firstInstance = database.getRecurInstance("series", ICalObject.getAsRecurId(recurList[0].dtstart!!, recurList[0].dtstartTimezone)) ?: throw AssertionError("firstInstance not found")
         ICalObject.unlinkFromSeries(firstInstance, database)
 
         val firstInstanceAfter = database.getICalObjectByIdSync(firstInstance.id) ?: throw AssertionError("firstInstance not found")

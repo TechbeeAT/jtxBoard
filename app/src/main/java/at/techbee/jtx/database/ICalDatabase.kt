@@ -91,7 +91,7 @@ abstract class ICalDatabase : RoomDatabase() {
     /**
      * Connects the database to the DAO.
      */
-    abstract val iCalDatabaseDao: ICalDatabaseDao
+    abstract fun iCalDatabaseDao(): ICalDatabaseDao
 
 
     @DeleteColumn(tableName = TABLE_NAME_ALARM, columnName = "trigger")
@@ -120,30 +120,30 @@ abstract class ICalDatabase : RoomDatabase() {
 
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("DROP TABLE `contact`")
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("DROP TABLE `contact`")
             }
         }
 
         // WORKAROUND!!! Recreating the view that was not deleted properly
         private val MIGRATION_12_13 = object : Migration(12, 13) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("DROP VIEW IF EXISTS `ical4viewNote`")
-                database.execSQL("CREATE VIEW `ical4viewNote` AS SELECT icalobject._id, icalobject.module, icalobject.component, icalobject.summary, icalobject.description, icalobject.created, icalobject.lastmodified, relatedto.icalObjectId, attachment.binary, attachment.fmttype, attachment.uri, icalobject.sortIndex FROM icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId LEFT JOIN attachment ON icalobject._id = attachment.icalObjectId WHERE icalobject.deleted = 0 AND icalobject.module = 'NOTE'")
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("DROP VIEW IF EXISTS `ical4viewNote`")
+                db.execSQL("CREATE VIEW `ical4viewNote` AS SELECT icalobject._id, icalobject.module, icalobject.component, icalobject.summary, icalobject.description, icalobject.created, icalobject.lastmodified, relatedto.icalObjectId, attachment.binary, attachment.fmttype, attachment.uri, icalobject.sortIndex FROM icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId LEFT JOIN attachment ON icalobject._id = attachment.icalObjectId WHERE icalobject.deleted = 0 AND icalobject.module = 'NOTE'")
             }
         }
 
         private val MIGRATION_18_19 = object : Migration(18, 19) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("update icalobject set uid = (SELECT sub.uid from icalobject sub where sub._id = icalobject.recur_original_icalobjectid) where recur_islinkedinstance = 1")
-                database.execSQL("update icalobject set recurid = null where recur_islinkedinstance = 0 and recur_original_icalobjectid is not null")
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("update icalobject set uid = (SELECT sub.uid from icalobject sub where sub._id = icalobject.recur_original_icalobjectid) where recur_islinkedinstance = 1")
+                db.execSQL("update icalobject set recurid = null where recur_islinkedinstance = 0 and recur_original_icalobjectid is not null")
             }
         }
 
         private val MIGRATION_30_31 = object : Migration(30, 31) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("update icalobject set recurid = trim(recurid, 'Z') WHERE recurid like '%Z'")
-                database.execSQL("update icalobject set recuridtimezone = dtstarttimezone where recurid is not null")
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("update icalobject set recurid = trim(recurid, 'Z') WHERE recurid like '%Z'")
+                db.execSQL("update icalobject set recuridtimezone = dtstarttimezone where recurid is not null")
             }
         }
 
