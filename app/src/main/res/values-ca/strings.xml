@@ -242,8 +242,6 @@
     <string name="edit_recur_week">"setmana(es)"</string>
     <string name="edit_recur_month">"mes(os)"</string>
     <string name="edit_recur_year">"any(s)"</string>
-    <string name="collections_toast_export_ics_success">"L'exportació de la col·lecció s'ha completat satisfactòriament."</string>
-    <string name="collections_toast_export_ics_error">"Ha hagut un error en exportar la col·lecció seleccionada."</string>
     <string name="attachment_export_saved_successfully">"S'ha desat correctament"</string>
     <string name="attachment_export_error_error_occurred">"S'ha produït un error en desar l'arxiu seleccionat!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Afegeix una col·lecció remota (%1$s)"</string>
@@ -321,8 +319,6 @@
     <string name="edit_recur_ends_never">"no acaba mai"</string>
     <string name="edit_recur_ends_on">"acaba el"</string>
     <string name="edit_recur_ends_after">"acaba després de"</string>
-    <string name="collections_toast_export_all_ics_success">"L'exportació de totes les col·leccions ha finalitzat correctament."</string>
-    <string name="collections_toast_export_all_ics_error">"Ha hagut un error en exportar les col·leccions."</string>
     <string name="menu_collections_export_all">"Exporta-ho tot"</string>
     <string name="more">"Més"</string>
     <string name="navigation_drawer_buypro">"Comprar Pro"</string>
