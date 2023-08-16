@@ -43,35 +43,49 @@
     <!-- Fuzzy -->
     <string name="color">"Färg"</string>
     <string name="priority_0_no_priority">"Ingen prioritet"</string>
+    <string name="menu_collection_popup_export_as_ics">"Exportera som .ics"</string>
     <string name="account">"Konto"</string>
     <string name="status">"Status"</string>
     <string name="category">"Kategori"</string>
     <string name="url">"URL"</string>
     <string name="location">"Plats"</string>
     <string name="resources">"Resurser"</string>
+    <string name="comments">"Kommentarer"</string>
     <string name="attachments">"Bilagor"</string>
+    <string name="alarms">"Alarm"</string>
     <string name="description">"Beskrivning"</string>
     <string name="search">"Sök"</string>
+    <string name="filter">"Filter"</string>
     <string name="sync_now">"Synkronisera nu"</string>
     <string name="categories">"Kategorier"</string>
     <string name="menu_collection_popup_import_from_ics">"Importera från .ics"</string>
+    <string name="notification_add_1h">"+ 1 timme"</string>
+    <string name="notification_add_1d">"+ 1 dag"</string>
     <string name="navigation_drawer_buypro">"Köp Pro"</string>
     <string name="settings_select_theme">"Välj tema"</string>
     <string name="settings_select_theme_dark">"Mörkt"</string>
     <string name="settings_select_theme_light">"Ljust"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_purchase_header">"Uppgradera till jtx Board Pro"</string>
+    <string name="buypro_success_thankyou">"Tack!"</string>
     <string name="timezone">"Tidszon"</string>
     <string name="audio_pause">"Pausa"</string>
+    <string name="invalid_url_message">"Vänligen ange en giltig URL!"</string>
     <string name="edit_comment">"Redigera kommentar"</string>
     <!-- alarms -->
     <string name="dialog_unsaved_changes_title">"Spara ändringar?"</string>
+    <string name="dialog_select_module_txt_dialog_title">"Importera %1$d fil(er) som"</string>
+    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="close">"Stäng"</string>
     <string name="menu_view_copy_to_clipboard">"Kopiera till urklipp"</string>
     <string name="settings_select_language">"Välj språk"</string>
     <!-- fragment_ical_list -->
+    <string name="list_date_today">"I dag"</string>
+    <string name="list_date_tomorrow">"I morgon"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="next">"Nästa"</string>
+    <string name="widget_list_show_description">"Visa beskrivning"</string>
+    <string name="markdown_italic">"Kursiv"</string>
     <string name="active_filters">Aktiva filter:</string>
     <string name="clear_filters">"Rensa filter"</string>
 </resources>
