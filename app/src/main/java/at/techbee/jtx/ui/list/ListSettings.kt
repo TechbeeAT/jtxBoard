@@ -48,10 +48,12 @@ class ListSettings {
     var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueTomorrow: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterDueWithin7Days: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartInPast: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartToday: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartTomorrow: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterStartWithin7Days: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoStartDateSet: MutableState<Boolean> = mutableStateOf(false)
@@ -104,6 +106,7 @@ class ListSettings {
         private const val PREFS_FILTER_OVERDUE = "prefsFilterOverdue"
         private const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
+        private const val PREFS_FILTER_DUE_WITHIN_7_DAYS = "prefsFilterDueWithin7Days"
         private const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
         private const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
         private const val PREFS_FILTER_NO_START_DATE_SET = "prefsFilterNoStartDateSet"
@@ -112,6 +115,7 @@ class ListSettings {
         private const val PREFS_FILTER_START_IN_PAST = "prefsFilterStartOverdue"
         private const val PREFS_FILTER_START_TODAY = "prefsFilterStartToday"
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
+        private const val PREFS_FILTER_START_WITHIN_7_DAYS = "prefsFilterStartWithin7Days"
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
@@ -149,10 +153,12 @@ class ListSettings {
             isFilterOverdue.value = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
             isFilterDueToday.value = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
             isFilterDueTomorrow.value = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
+            isFilterDueWithin7Days.value = prefs.getBoolean(PREFS_FILTER_DUE_WITHIN_7_DAYS, false)
             isFilterDueFuture.value = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
             isFilterStartInPast.value = prefs.getBoolean(PREFS_FILTER_START_IN_PAST, false)
             isFilterStartToday.value = prefs.getBoolean(PREFS_FILTER_START_TODAY, false)
             isFilterStartTomorrow.value = prefs.getBoolean(PREFS_FILTER_START_TOMORROW, false)
+            isFilterStartWithin7Days.value = prefs.getBoolean(PREFS_FILTER_START_WITHIN_7_DAYS, false)
             isFilterStartFuture.value = prefs.getBoolean(PREFS_FILTER_START_FUTURE, false)
             isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
             isFilterNoStartDateSet.value = prefs.getBoolean(PREFS_FILTER_NO_START_DATE_SET, false)
@@ -207,10 +213,12 @@ class ListSettings {
             isFilterOverdue.value = listWidgetConfig.isFilterOverdue
             isFilterDueToday.value = listWidgetConfig.isFilterDueToday
             isFilterDueTomorrow.value = listWidgetConfig.isFilterDueTomorrow
+            isFilterDueWithin7Days.value = listWidgetConfig.isFilterDueWithin7Days
             isFilterDueFuture.value = listWidgetConfig.isFilterDueFuture
             isFilterStartInPast.value = listWidgetConfig.isFilterStartInPast
             isFilterStartToday.value = listWidgetConfig.isFilterStartToday
             isFilterStartTomorrow.value = listWidgetConfig.isFilterStartTomorrow
+            isFilterStartWithin7Days.value = listWidgetConfig.isFilterStartWithin7Days
             isFilterStartFuture.value = listWidgetConfig.isFilterStartFuture
             isFilterNoDatesSet.value = listWidgetConfig.isFilterNoDatesSet
             isFilterNoStartDateSet.value = listWidgetConfig.isFilterNoStartDateSet
@@ -258,10 +266,12 @@ class ListSettings {
             putBoolean(PREFS_FILTER_OVERDUE, isFilterOverdue.value)
             putBoolean(PREFS_FILTER_DUE_TODAY, isFilterDueToday.value)
             putBoolean(PREFS_FILTER_DUE_TOMORROW, isFilterDueTomorrow.value)
+            putBoolean(PREFS_FILTER_DUE_WITHIN_7_DAYS, isFilterDueWithin7Days.value)
             putBoolean(PREFS_FILTER_DUE_FUTURE, isFilterDueFuture.value)
             putBoolean(PREFS_FILTER_START_IN_PAST, isFilterStartInPast.value)
             putBoolean(PREFS_FILTER_START_TODAY, isFilterStartToday.value)
             putBoolean(PREFS_FILTER_START_TOMORROW, isFilterStartTomorrow.value)
+            putBoolean(PREFS_FILTER_START_WITHIN_7_DAYS, isFilterStartWithin7Days.value)
             putBoolean(PREFS_FILTER_START_FUTURE, isFilterStartFuture.value)
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
             putBoolean(PREFS_FILTER_NO_START_DATE_SET, isFilterNoStartDateSet.value)
@@ -321,10 +331,12 @@ class ListSettings {
         isFilterStartInPast.value = false
         isFilterStartToday.value = false
         isFilterStartTomorrow.value = false
+        isFilterStartWithin7Days.value = false
         isFilterStartFuture.value = false
         isFilterOverdue.value = false
         isFilterDueToday.value = false
         isFilterDueTomorrow.value = false
+        isFilterDueWithin7Days.value = false
         isFilterDueFuture.value = false
         isFilterNoDatesSet.value = false
         isFilterNoStartDateSet.value = false
@@ -350,10 +362,12 @@ class ListSettings {
                 || isFilterStartInPast.value
                 || isFilterStartToday.value
                 || isFilterStartTomorrow.value
+                || isFilterStartWithin7Days.value
                 || isFilterStartFuture.value
                 || isFilterOverdue.value
                 || isFilterDueToday.value
                 || isFilterDueTomorrow.value
+                || isFilterDueWithin7Days.value
                 || isFilterDueFuture.value
                 || isFilterNoDatesSet.value
                 || isFilterNoStartDateSet.value

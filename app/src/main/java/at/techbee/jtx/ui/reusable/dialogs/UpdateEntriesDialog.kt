@@ -23,14 +23,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.LabelOff
 import androidx.compose.material.icons.outlined.NewLabel
 import androidx.compose.material.icons.outlined.WorkOff
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -73,6 +76,7 @@ import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
 
+const val MAX_ITEMS = 5
 
 enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     CATEGORIES(R.string.categories),
@@ -81,7 +85,14 @@ enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     CLASSIFICATION(R.string.classification),
     PRIORITY(R.string.priority),
     COLLECTION(R.string.collection),
-    LINK_TO_PARENT(R.string.link_to_parent)
+    LINK_TO_PARENT(R.string.link_to_parent);
+
+    companion object {
+        fun valuesFor(module: Module) = when(module) {
+            Module.JOURNAL, Module.NOTE -> listOf(CATEGORIES, RESOURCES, STATUS, CLASSIFICATION, COLLECTION, LINK_TO_PARENT)
+            Module.TODO -> listOf(CATEGORIES, RESOURCES, STATUS, CLASSIFICATION, PRIORITY, COLLECTION, LINK_TO_PARENT)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -155,24 +166,37 @@ fun UpdateEntriesDialog(
                     verticalAlignment = Alignment.CenterVertically
                 )
                 {
-                    UpdateEntriesDialogMode.values().forEach {
-                        if(module != Module.TODO && it == UpdateEntriesDialogMode.PRIORITY)
-                            return@forEach
+                    var menuExpanded by remember { mutableStateOf(false) }
 
-                        FilterChip(
-                            selected = updateEntriesDialogMode == it,
-                            onClick = {
-                                if (updateEntriesDialogMode != it) {
-                                    addedCategories.clear()
-                                    removedCategories.clear()
-                                    addedResources.clear()
-                                    removedResources.clear()
-                                    updateEntriesDialogMode = it
+                    AssistChip(
+                        onClick = { menuExpanded = true },
+                        label = {
+                            Text(stringResource(id = updateEntriesDialogMode.stringResource))
+
+                            DropdownMenu(
+                                expanded = menuExpanded,
+                                onDismissRequest = { menuExpanded = false }
+                            ) {
+
+                                UpdateEntriesDialogMode.valuesFor(module).forEach {
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(id = it.stringResource)) },
+                                        onClick = {
+                                            if (updateEntriesDialogMode != it) {
+                                                addedCategories.clear()
+                                                removedCategories.clear()
+                                                addedResources.clear()
+                                                removedResources.clear()
+                                                updateEntriesDialogMode = it
+                                            }
+                                            menuExpanded = false
+                                        }
+                                    )
                                 }
-                            },
-                            label = { Text(stringResource(id = it.stringResource)) }
-                        )
-                    }
+                            }
+                        },
+                        trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, null) }
+                    )
                 }
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -183,7 +207,11 @@ fun UpdateEntriesDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
-                        allCategories.forEach { category ->
+                        var maxItems by remember { mutableIntStateOf(MAX_ITEMS) }
+                        allCategories.forEachIndexed { index, category ->
+                            if(index > maxItems-1)
+                                return@forEachIndexed
+
                             InputChip(
                                 onClick = {
                                     when {
@@ -211,6 +239,12 @@ fun UpdateEntriesDialog(
                                     .alpha(if (addedCategories.contains(category) || removedCategories.contains(category)) 1f else 0.4f)
                             )
                         }
+
+                        if(allCategories.size > maxItems) {
+                            TextButton(onClick = { maxItems = Int.MAX_VALUE }) {
+                                Text(stringResource(R.string.filter_options_more_entries, allCategories.size-maxItems))
+                            }
+                        }
                     }
                 }
 
@@ -220,7 +254,12 @@ fun UpdateEntriesDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
-                        allResources.forEach { resource ->
+                        var maxItems by remember { mutableIntStateOf(MAX_ITEMS) }
+
+                        allResources.forEachIndexed { index,resource ->
+                            if(index > maxItems-1)
+                                return@forEachIndexed
+
                             InputChip(
                                 onClick = {
                                     when {
@@ -246,6 +285,13 @@ fun UpdateEntriesDialog(
                                 selected = false,
                                 modifier = Modifier.alpha(if (addedResources.contains(resource) || removedResources.contains(resource)) 1f else 0.4f)
                             )
+                        }
+
+
+                        if(allResources.size > maxItems) {
+                            TextButton(onClick = { maxItems = Int.MAX_VALUE }) {
+                                Text(stringResource(R.string.filter_options_more_entries, allResources.size-maxItems))
+                            }
                         }
                     }
                 }
@@ -317,12 +363,22 @@ fun UpdateEntriesDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
                     {
-                        allCollections.forEach { collection ->
+                        var maxItems by remember { mutableIntStateOf(MAX_ITEMS) }
+
+                        allCollections.forEachIndexed { index, collection ->
+                            if(index > maxItems-1)
+                                return@forEachIndexed
+
                             InputChip(
                                 onClick = { newCollection = collection },
                                 label = { Text(collection.displayName ?: collection.collectionId.toString()) },
                                 selected = newCollection == collection,
                             )
+                        }
+                        if(allCollections.size > maxItems) {
+                            TextButton(onClick = { maxItems = Int.MAX_VALUE }) {
+                                Text(stringResource(R.string.filter_options_more_entries, allCollections.size-maxItems))
+                            }
                         }
                     }
                 }
