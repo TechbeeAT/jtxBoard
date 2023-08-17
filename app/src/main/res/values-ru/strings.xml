@@ -245,8 +245,6 @@
     <string name="edit_recur_week">"нед."</string>
     <string name="edit_recur_month">"мес."</string>
     <string name="edit_recur_year">"лет"</string>
-    <string name="collections_toast_export_ics_success">"Экспорт коллекции успешно завершен."</string>
-    <string name="collections_toast_export_ics_error">"Произошла ошибка при экспорте выбранной коллекции."</string>
     <string name="attachment_export_saved_successfully">"Сохранено"</string>
     <string name="attachment_export_error_error_occurred">"Ошибка при сохранении файла"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Добавить внешнюю коллекцию (%1$s)"</string>
@@ -327,8 +325,6 @@
     <string name="edit_recur_ends_never">"повторять всегда"</string>
     <string name="edit_recur_ends_on">"повторять до"</string>
     <string name="edit_recur_ends_after">"повторять раз"</string>
-    <string name="collections_toast_export_all_ics_success">"Экспорт всех коллекций успешно завершен."</string>
-    <string name="collections_toast_export_all_ics_error">"Произошла ошибка при экспорте всех коллекций."</string>
     <string name="menu_collections_export_all">"Экспортировать всё"</string>
     <string name="more">"Ещё"</string>
     <string name="navigation_drawer_buypro">"Купить Pro"</string>
