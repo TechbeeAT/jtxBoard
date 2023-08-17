@@ -242,8 +242,6 @@
     <string name="edit_recur_week">"week(en)"</string>
     <string name="edit_recur_month">"maand(en)"</string>
     <string name="edit_recur_year">"ja(a)r(en)"</string>
-    <string name="collections_toast_export_ics_success">"Exporteren van collectie gelukt."</string>
-    <string name="collections_toast_export_ics_error">"Fout opgetreden tijdens het exporteren van de geselecteerde verzameling."</string>
     <string name="attachment_export_saved_successfully">"Opslaan is gelukt"</string>
     <string name="attachment_export_error_error_occurred">"Er is een fout opgetreden bij het opslaan van het bestand!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Externe verzameling toevoegen (%1$s)"</string>
@@ -321,8 +319,6 @@
     <string name="edit_recur_ends_never">"stopt niet"</string>
     <string name="edit_recur_ends_on">"stopt op"</string>
     <string name="edit_recur_ends_after">"stopt na"</string>
-    <string name="collections_toast_export_all_ics_success">"Exporteren van collectie gelukt."</string>
-    <string name="collections_toast_export_all_ics_error">"Fout opgetreden tijdens het exporteren van de verzamelingen."</string>
     <string name="menu_collections_export_all">"Alles exporteren"</string>
     <string name="more">"Meer"</string>
     <string name="navigation_drawer_buypro">"Koop Pro"</string>

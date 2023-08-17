@@ -54,7 +54,7 @@ class ListViewModelTest {
         context = InstrumentationRegistry.getInstrumentation().targetContext
         ICalDatabase.switchToInMemory(context)
         application = context.applicationContext as Application
-        database = ICalDatabase.getInstance(context).iCalDatabaseDao
+        database = ICalDatabase.getInstance(context).iCalDatabaseDao()
         database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests", readonly = false, supportsVJOURNAL = true, supportsVTODO = true))
         database.insertCollectionSync(ICalCollection(collectionId = 2L, displayName = "testcollection readonly", readonly = true, supportsVJOURNAL = true, supportsVTODO = true))
 

@@ -107,6 +107,7 @@ fun ListTopRow(
                     dtstartTimezone = ical4List.dtstartTimezone,
                     context = LocalContext.current
                 ),
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -120,6 +121,7 @@ fun ListTopRow(
                     dtstartTimezone = ical4List.dtstartTimezone,
                     context = LocalContext.current
                 ),
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -140,7 +142,7 @@ fun ListTopRow(
                         ical4List.due,
                         ical4List.dueTimezone
                     ) == true
-                ) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer,
+                ) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.secondaryContainer,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }

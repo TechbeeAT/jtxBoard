@@ -91,7 +91,7 @@ fun DetailsCardLocation(
     var geoLongText by remember { mutableStateOf(initialGeoLong?.toString() ?: "") }
     var geofenceRadius by remember { mutableStateOf(initialGeofenceRadius) }
 
-    val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao.getAllLocationsLatLng().observeAsState(emptyList())
+    val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao().getAllLocationsLatLng().observeAsState(emptyList())
 
     val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         permissions = listOf(

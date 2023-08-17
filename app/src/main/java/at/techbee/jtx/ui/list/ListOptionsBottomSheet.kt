@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -88,7 +89,8 @@ fun ListOptionsBottomSheet(
                                 ListOptionsBottomSheetTabs.FILTER -> R.string.filter
                                 ListOptionsBottomSheetTabs.GROUP_SORT -> R.string.filter_group_sort
                                 ListOptionsBottomSheetTabs.KANBAN_SETTINGS -> R.string.kanban_settings
-                            } )
+                            } ),
+                            textAlign = TextAlign.Center
                         )
                     },
                     modifier = Modifier.height(50.dp)

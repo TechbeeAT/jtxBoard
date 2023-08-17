@@ -228,8 +228,6 @@
     <string name="edit_recur_week">"settimana/e"</string>
     <string name="edit_recur_month">"mese/i"</string>
     <string name="edit_recur_year">"anno/i"</string>
-    <string name="collections_toast_export_ics_success">"L'esportazione della collezione è terminata con successo."</string>
-    <string name="collections_toast_export_ics_error">"Si è verificato un errore durante l'esportazione della collezione selezionata."</string>
     <string name="attachment_export_saved_successfully">"Salvato con successo"</string>
     <string name="attachment_export_error_error_occurred">"Si è verificato un errore durante il salvataggio del file selezionato!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Aggiungi una collezione remota (%1$s)"</string>
@@ -305,8 +303,6 @@
     <string name="edit_recur_ends_never">"finisce mai"</string>
     <string name="edit_recur_ends_on">"termina il"</string>
     <string name="edit_recur_ends_after">"termina dopo"</string>
-    <string name="collections_toast_export_all_ics_success">"L'esportazione di tutte le collezioni è terminata con successo."</string>
-    <string name="collections_toast_export_all_ics_error">"Si è verificato un errore durante l'esportazione di tutte le raccolte."</string>
     <string name="menu_collections_export_all">"Esporta tutto"</string>
     <string name="more">"Di più"</string>
     <string name="navigation_drawer_buypro">"Compra Pro"</string>

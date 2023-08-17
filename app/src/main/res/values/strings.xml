@@ -67,6 +67,7 @@
     <string name="list_due_shortly">"Due shortly"</string>
     <string name="list_due_today">"Due today"</string>
     <string name="list_due_tomorrow">"Due tomorrow"</string>
+    <string name="list_due_within_7_days">"Due within 7 days"</string>
     <string name="list_due_inXhours">"Due in %d hours"</string>
     <string name="list_due_on_weekday">"Due on %s"</string>
     <string name="list_start_past">"Start in past"</string>
@@ -256,8 +257,6 @@
     <string name="edit_recur_week">"week(s)"</string>
     <string name="edit_recur_month">"month(s)"</string>
     <string name="edit_recur_year">"year(s)"</string>
-    <string name="collections_toast_export_ics_success">"Exporting collection finished successfully."</string>
-    <string name="collections_toast_export_ics_error">"An error occurred while exporting the selected collection."</string>
     <string name="attachment_export_saved_successfully">"Saved successfully"</string>
     <string name="attachment_export_error_error_occurred">"An error occurred while saving the selected file!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Add remote Collection (%1$s)"</string>
@@ -338,9 +337,15 @@
     <string name="edit_recur_ends_never">"ends never"</string>
     <string name="edit_recur_ends_on">"ends on"</string>
     <string name="edit_recur_ends_after">"ends after"</string>
-    <string name="collections_toast_export_all_ics_success">"Exporting all collections finished successfully."</string>
-    <string name="collections_toast_export_all_ics_error">"An error occurred while exporting all collections."</string>
+    <string name="collections_toast_export_success">"Collections successfully exported"</string>
+    <string name="collections_toast_export_error">"Error on exporting collections"</string>
     <string name="menu_collections_export_all">"Export all"</string>
+    <string name="menu_presets_export_presets">"Export presets"</string>
+    <string name="menu_presets_import_presets">"Import presets"</string>
+    <string name="presets_imported">"Presets imported"</string>
+    <string name="presets_import_invalid_file">"Invalid file"</string>
+    <string name="presets_saved">"Presets saved"</string>
+    <string name="presets_export_error">"An error occurred saving presets"</string>
     <string name="more">"More"</string>
     <string name="navigation_drawer_buypro">"Buy Pro"</string>
     <string name="settings_select_theme">"Select theme"</string>
@@ -524,10 +529,12 @@ Thank you!"</string>
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>
     <string name="list_date_tomorrow">"Tomorrow"</string>
+    <string name="list_date_within_7_days">"Within 7 days"</string>
     <string name="list_date_future">"Date in future"</string>
     <string name="list_start_date_in_past">"Start in past"</string>
     <string name="list_start_date_today">"Start today"</string>
     <string name="list_start_date_tomorrow">"Start tomorrow"</string>
+    <string name="list_start_date_within_7_days">"Start within 7 days"</string>
     <string name="list_start_date_future">"Start in future"</string>
     <string name="list_hide_completed_tasks">"Hide completed tasks"</string>
     <string name="list_biometric_protected_entries_locked">Biometric protected entries locked</string>
