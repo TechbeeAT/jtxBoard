@@ -196,8 +196,6 @@
     <string name="edit_recur_week">"週"</string>
     <string name="edit_recur_month">"月"</string>
     <string name="edit_recur_year">"年"</string>
-    <string name="collections_toast_export_ics_success">"导出合集成功完成。"</string>
-    <string name="collections_toast_export_ics_error">"导出选定的合集时出错。"</string>
     <string name="menu_collection_popup_export_as_ics">"輸出為 .ics"</string>
     <string name="journal">"日誌"</string>
     <string name="note">"筆記"</string>
@@ -260,8 +258,6 @@
     <string name="edit_recur_ends_never">"从不结束"</string>
     <string name="edit_recur_ends_on">"结束，在"</string>
     <string name="edit_recur_ends_after">"结束，在此后"</string>
-    <string name="collections_toast_export_all_ics_success">"导出所有合集已成功完成。"</string>
-    <string name="collections_toast_export_all_ics_error">"导出合集时出错。"</string>
     <string name="menu_collections_export_all">"全部导出"</string>
     <string name="more">"更多"</string>
     <string name="navigation_drawer_buypro">"购买Pro版"</string>

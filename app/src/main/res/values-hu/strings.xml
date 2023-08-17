@@ -245,8 +245,6 @@
     <string name="edit_recur_week">"hét(ek)"</string>
     <string name="edit_recur_month">"hónap(ok)"</string>
     <string name="edit_recur_year">"év(ek)"</string>
-    <string name="collections_toast_export_ics_success">"A gyüjtemény szinkronizálása sikeresen befezeződött."</string>
-    <string name="collections_toast_export_ics_error">"A kiválasztott gyűjtemény exportálása közben hiba lépett fel."</string>
     <string name="attachment_export_saved_successfully">"Sikeresen elmentve"</string>
     <string name="attachment_export_error_error_occurred">"Hiba történt a kiválasztott fájl mentésekor!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Távoli gyűjtemény hozzáadása (%1$s)"</string>
@@ -326,8 +324,6 @@
     <string name="edit_recur_ends_never">"vég nélkül"</string>
     <string name="edit_recur_ends_on">"befejezés"</string>
     <string name="edit_recur_ends_after">"ismétlés"</string>
-    <string name="collections_toast_export_all_ics_success">"Az összes gyüjtemény szinkronizálása sikeresen befezeződött."</string>
-    <string name="collections_toast_export_all_ics_error">"A gyűjtemények exportálása közben hiba lépett fel."</string>
     <string name="menu_collections_export_all">"Az összes exportálása"</string>
     <string name="more">"Tovább"</string>
     <string name="navigation_drawer_buypro">"Pro verzó megvásárlása"</string>

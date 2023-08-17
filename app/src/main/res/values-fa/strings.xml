@@ -177,8 +177,6 @@
     <string name="edit_recur_week">"هفته"</string>
     <string name="edit_recur_month">"ماه"</string>
     <string name="edit_recur_year">"سال"</string>
-    <string name="collections_toast_export_ics_success">"صادرکردن مجموعه‌ها با موفقیت پایان یافت."</string>
-    <string name="collections_toast_export_ics_error">"یک خطا زمان صادرکردن مجموعه‌های انتخابی رخ داد."</string>
     <string name="attachment_export_saved_successfully">"با موفقیت ذخیره شد"</string>
     <string name="attachment_export_error_error_occurred">"هنگام ذخیره فایل انتخابی خطایی روی داد!"</string>
     <string name="menu_collection_popup_show_in_sync_app">"نمایش در %1$s"</string>
@@ -240,8 +238,6 @@
     <string name="edit_recur_ends_never">"هیچوقت پایان نیابد"</string>
     <string name="edit_recur_ends_on">"پایان در"</string>
     <string name="edit_recur_ends_after">"پایان بعد از"</string>
-    <string name="collections_toast_export_all_ics_success">"صادرکردن تمام مجموعه‌ها با موفقیت پایان یافت."</string>
-    <string name="collections_toast_export_all_ics_error">"یک خطا زمان صادرکردن تمام مجموعه‌ها رخ داد."</string>
     <string name="menu_collections_export_all">"صادرکردن همه"</string>
     <string name="more">"بیشتر"</string>
     <string name="navigation_drawer_buypro">"خرید نسخه حرفه‌ای"</string>
