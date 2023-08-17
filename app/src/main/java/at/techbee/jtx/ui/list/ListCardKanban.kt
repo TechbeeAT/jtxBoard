@@ -68,7 +68,7 @@ fun ListCardKanban(
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         ) {
 
             ListTopRow(
