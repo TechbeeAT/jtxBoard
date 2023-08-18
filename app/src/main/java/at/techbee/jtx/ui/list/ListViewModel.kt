@@ -640,6 +640,8 @@ enum class SortOrder(@StringRes val stringResource: Int, val queryAppendix: Stri
 }
 
 enum class GroupBy(@StringRes val stringResource: Int) {
+    CATEGORY(R.string.category),
+    RESOURCE(R.string.resource),
     PRIORITY(R.string.priority),
     STATUS(R.string.status),
     CLASSIFICATION(R.string.classification),
@@ -653,6 +655,7 @@ enum class GroupBy(@StringRes val stringResource: Int) {
         fun getValuesFor(module: Module): Array<GroupBy> =
             when(module) {
                 Module.JOURNAL -> arrayOf(
+                    CATEGORY,
                     DATE,
                     STATUS,
                     CLASSIFICATION,
@@ -660,12 +663,15 @@ enum class GroupBy(@StringRes val stringResource: Int) {
                     COLLECTION
                 )
                 Module.NOTE -> arrayOf(
+                    CATEGORY,
                     STATUS,
                     CLASSIFICATION,
                     ACCOUNT,
                     COLLECTION
                 )
                 Module.TODO -> arrayOf(
+                    CATEGORY,
+                    RESOURCE,
                     START,
                     DUE,
                     STATUS,
