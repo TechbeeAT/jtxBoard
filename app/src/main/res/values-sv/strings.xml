@@ -18,6 +18,7 @@
     <string name="navigation_drawer_donate">"Donera"</string>
     <string name="navigation_drawer_privacy_policy">"Integritetspolicy"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_within_7_days">"Förfaller inom 7 dagar"</string>
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
     <string name="edit_recur_x_times">"gånger"</string>
@@ -61,6 +62,7 @@
     <string name="menu_collection_popup_import_from_ics">"Importera från .ics"</string>
     <string name="notification_add_1h">"+ 1 timme"</string>
     <string name="notification_add_1d">"+ 1 dag"</string>
+    <string name="collections_toast_export_success">"Samlingar har exporterats"</string>
     <string name="navigation_drawer_buypro">"Köp Pro"</string>
     <string name="settings_select_theme">"Välj tema"</string>
     <string name="settings_select_theme_dark">"Mörkt"</string>
@@ -82,6 +84,7 @@
     <!-- fragment_ical_list -->
     <string name="list_date_today">"I dag"</string>
     <string name="list_date_tomorrow">"I morgon"</string>
+    <string name="list_date_within_7_days">"Inom 7 dagar"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="next">"Nästa"</string>
     <string name="widget_list_show_description">"Visa beskrivning"</string>
