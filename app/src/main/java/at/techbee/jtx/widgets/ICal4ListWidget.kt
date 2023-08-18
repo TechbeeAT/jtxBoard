@@ -32,6 +32,9 @@ data class ICal4ListWidget(
 
     var parentUID: String?,
     var isReadOnly: Boolean,
+
+    var categories: String?,
+    var resources: String?
 ) {
 
     companion object {
@@ -58,7 +61,9 @@ data class ICal4ListWidget(
                 isChildOfNote = iCal4List.isChildOfNote,
                 isChildOfTodo = iCal4List.isChildOfTodo,
                 parentUID = parentUID,
-                isReadOnly = iCal4List.isReadOnly
+                isReadOnly = iCal4List.isReadOnly,
+                categories = iCal4List.categories,
+                resources = null //TODO
             )
         }
     }
