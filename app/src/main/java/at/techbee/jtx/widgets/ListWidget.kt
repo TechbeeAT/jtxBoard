@@ -63,42 +63,41 @@ class ListWidget : GlanceAppWidget() {
                 ?: ListWidgetConfig()
         Log.d("provideGlance", "GlanceId $id : filterConfig: $listWidgetConfig")
         //Log.v(TAG, "Loading data ...")
+        val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
 
-        val allEntries = ICalDatabase.getInstance(context)
-            .iCalDatabaseDao
-            .getIcal4ListFlow(
-                ICal4List.constructQuery(
-                    modules = listOf(listWidgetConfig.module),
-                    searchCategories = listWidgetConfig.searchCategories,
-                    searchResources = listWidgetConfig.searchResources,
-                    searchStatus = listWidgetConfig.searchStatus,
-                    searchClassification = listWidgetConfig.searchClassification,
-                    searchCollection = listWidgetConfig.searchCollection,
-                    searchAccount = listWidgetConfig.searchAccount,
-                    orderBy = listWidgetConfig.orderBy,
-                    sortOrder = listWidgetConfig.sortOrder,
-                    orderBy2 = listWidgetConfig.orderBy2,
-                    sortOrder2 = listWidgetConfig.sortOrder2,
-                    isExcludeDone = listWidgetConfig.isExcludeDone,
-                    isFilterOverdue = listWidgetConfig.isFilterOverdue,
-                    isFilterDueToday = listWidgetConfig.isFilterDueToday,
-                    isFilterDueTomorrow = listWidgetConfig.isFilterDueTomorrow,
-                    isFilterDueFuture = listWidgetConfig.isFilterDueFuture,
-                    isFilterStartInPast = listWidgetConfig.isFilterStartInPast,
-                    isFilterStartToday = listWidgetConfig.isFilterStartToday,
-                    isFilterStartTomorrow = listWidgetConfig.isFilterStartTomorrow,
-                    isFilterStartFuture = listWidgetConfig.isFilterStartFuture,
-                    isFilterNoDatesSet = listWidgetConfig.isFilterNoDatesSet,
-                    isFilterNoStartDateSet = listWidgetConfig.isFilterNoStartDateSet,
-                    isFilterNoDueDateSet = listWidgetConfig.isFilterNoDueDateSet,
-                    isFilterNoCompletedDateSet = listWidgetConfig.isFilterNoCompletedDateSet,
-                    isFilterNoCategorySet = listWidgetConfig.isFilterNoCategorySet,
-                    isFilterNoResourceSet = listWidgetConfig.isFilterNoResourceSet,
-                    flatView = listWidgetConfig.flatView,  // always true in Widget, we handle the flat view in the code
-                    searchSettingShowOneRecurEntryInFuture = listWidgetConfig.showOneRecurEntryInFuture,
-                    hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context)  // protected entries are always hidden
-                )
+        val allEntries = database.getIcal4ListFlow(
+            ICal4List.constructQuery(
+                modules = listOf(listWidgetConfig.module),
+                searchCategories = listWidgetConfig.searchCategories,
+                searchResources = listWidgetConfig.searchResources,
+                searchStatus = listWidgetConfig.searchStatus,
+                searchClassification = listWidgetConfig.searchClassification,
+                searchCollection = listWidgetConfig.searchCollection,
+                searchAccount = listWidgetConfig.searchAccount,
+                orderBy = listWidgetConfig.orderBy,
+                sortOrder = listWidgetConfig.sortOrder,
+                orderBy2 = listWidgetConfig.orderBy2,
+                sortOrder2 = listWidgetConfig.sortOrder2,
+                isExcludeDone = listWidgetConfig.isExcludeDone,
+                isFilterOverdue = listWidgetConfig.isFilterOverdue,
+                isFilterDueToday = listWidgetConfig.isFilterDueToday,
+                isFilterDueTomorrow = listWidgetConfig.isFilterDueTomorrow,
+                isFilterDueFuture = listWidgetConfig.isFilterDueFuture,
+                isFilterStartInPast = listWidgetConfig.isFilterStartInPast,
+                isFilterStartToday = listWidgetConfig.isFilterStartToday,
+                isFilterStartTomorrow = listWidgetConfig.isFilterStartTomorrow,
+                isFilterStartFuture = listWidgetConfig.isFilterStartFuture,
+                isFilterNoDatesSet = listWidgetConfig.isFilterNoDatesSet,
+                isFilterNoStartDateSet = listWidgetConfig.isFilterNoStartDateSet,
+                isFilterNoDueDateSet = listWidgetConfig.isFilterNoDueDateSet,
+                isFilterNoCompletedDateSet = listWidgetConfig.isFilterNoCompletedDateSet,
+                isFilterNoCategorySet = listWidgetConfig.isFilterNoCategorySet,
+                isFilterNoResourceSet = listWidgetConfig.isFilterNoResourceSet,
+                flatView = listWidgetConfig.flatView,  // always true in Widget, we handle the flat view in the code
+                searchSettingShowOneRecurEntryInFuture = listWidgetConfig.showOneRecurEntryInFuture,
+                hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context)  // protected entries are always hidden
             )
+        )
 
 
         val subtasksQuery = ICal4List.getQueryForAllSubEntries(
@@ -113,8 +112,8 @@ class ListWidget : GlanceAppWidget() {
             orderBy = listWidgetConfig.subnotesOrderBy,
             sortOrder = listWidgetConfig.subnotesSortOrder
         )
-        val allSubtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesFlow(subtasksQuery)
-        val allSubnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesFlow(subnotesQuery)
+        val allSubtasks = database.getSubEntriesFlow(subtasksQuery)
+        val allSubnotes = database.getSubEntriesFlow(subnotesQuery)
 
 
         provideContent {
@@ -166,7 +165,6 @@ class ListWidget : GlanceAppWidget() {
                     onCheckedChange = { iCalObjectId, checked ->
                         scope.launch(Dispatchers.IO) {
                             val settingsStateHolder = SettingsStateHolder(context)
-                            val database = ICalDatabase.getInstance(context).iCalDatabaseDao
                             val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return@launch
                             iCalObject.setUpdatedProgress(if(checked) null else 100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
                             database.update(iCalObject)
