@@ -245,8 +245,6 @@
     <string name="edit_recur_week">"週ごと"</string>
     <string name="edit_recur_month">"か月ごと"</string>
     <string name="edit_recur_year">"年ごと"</string>
-    <string name="collections_toast_export_ics_success">"コレクションのエクスポートを正常に完了しました。"</string>
-    <string name="collections_toast_export_ics_error">"選択したコレクションのエクスポート中にエラーが発生しました。"</string>
     <string name="attachment_export_saved_successfully">"保存しました"</string>
     <string name="attachment_export_error_error_occurred">"選択したファイルの保存中にエラーが発生しました！"</string>
     <string name="menu_collections_add_remote_to_sync_app">"リモートのコレクションを追加 (%1$s)"</string>
@@ -327,8 +325,6 @@
     <string name="edit_recur_ends_never">"永久に繰り返し"</string>
     <string name="edit_recur_ends_on">"終了する日時"</string>
     <string name="edit_recur_ends_after">"終了までの回数"</string>
-    <string name="collections_toast_export_all_ics_success">"すべてのコレクションのエクスポートを正常に完了しました。"</string>
-    <string name="collections_toast_export_all_ics_error">"すべてのコレクションのエクスポート中にエラーが発生しました。"</string>
     <string name="menu_collections_export_all">"すべてをエクスポート"</string>
     <string name="more">"詳細"</string>
     <string name="navigation_drawer_buypro">"プロ版を購入"</string>

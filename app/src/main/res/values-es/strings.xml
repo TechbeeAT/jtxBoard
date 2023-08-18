@@ -220,8 +220,6 @@
     <string name="edit_recur_week">"semana(s)"</string>
     <string name="edit_recur_month">"mese(s)"</string>
     <string name="edit_recur_year">"año(s)"</string>
-    <string name="collections_toast_export_ics_success">"Colección exportada correctamente"</string>
-    <string name="collections_toast_export_ics_error">"Ha ocurrido un error mientras se exportaba la colección seleccionada."</string>
     <string name="attachment_export_saved_successfully">"Guardado con éxito"</string>
     <string name="attachment_export_error_error_occurred">"¡Se han producido un error mientras se guardaba el archivo seleccionado!"</string>
     <string name="menu_collection_popup_export_as_ics">"Exportar como .ics"</string>
@@ -295,8 +293,6 @@
     <string name="edit_recur_ends_never">"nunca finaliza"</string>
     <string name="edit_recur_ends_on">"termina el"</string>
     <string name="edit_recur_ends_after">"termina después de"</string>
-    <string name="collections_toast_export_all_ics_success">"Todas las colecciones han sido exportadas correctamente"</string>
-    <string name="collections_toast_export_all_ics_error">"Ocurrió un error durante la exportación de todas las colecciones."</string>
     <string name="menu_collections_export_all">"Exportar todas"</string>
     <string name="more">"Más"</string>
     <string name="navigation_drawer_buypro">"Comprar Pro"</string>

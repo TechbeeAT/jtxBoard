@@ -245,8 +245,6 @@
     <string name="edit_recur_week">"týdnů"</string>
     <string name="edit_recur_month">"měsíců"</string>
     <string name="edit_recur_year">"let"</string>
-    <string name="collections_toast_export_ics_success">"Export sbírky byl úspěšně dokončen."</string>
-    <string name="collections_toast_export_ics_error">"Během exportu vybrané sbírky došlo k chybě."</string>
     <string name="attachment_export_saved_successfully">"Úspěšně úloženo"</string>
     <string name="attachment_export_error_error_occurred">"Při ukládání vybraného souboru došlo k chybě!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Přidat vzdálenou Sbírku (%1$s)"</string>
@@ -327,8 +325,6 @@
     <string name="edit_recur_ends_never">"nikdy nekončí"</string>
     <string name="edit_recur_ends_on">"končí"</string>
     <string name="edit_recur_ends_after">"končí po"</string>
-    <string name="collections_toast_export_all_ics_success">"Export všech sbírek byl úspěšně dokončen."</string>
-    <string name="collections_toast_export_all_ics_error">"Během exportu všech sbírek došlo k chybě."</string>
     <string name="menu_collections_export_all">"Exportovat vše"</string>
     <string name="more">"Více"</string>
     <string name="navigation_drawer_buypro">"Zakoupit Pro"</string>

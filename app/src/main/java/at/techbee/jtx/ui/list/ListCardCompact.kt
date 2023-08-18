@@ -74,7 +74,7 @@ fun ListCardCompact(
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 0.dp)
                 .fillMaxWidth()
         ) {
 
