@@ -11,9 +11,7 @@ package at.techbee.jtx.ui.collections
 
 import android.accounts.Account
 import android.app.Application
-import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -32,7 +30,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.BufferedOutputStream
 import java.io.IOException
-import java.io.OutputStream
 import java.time.LocalTime
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -40,12 +37,12 @@ import java.util.zip.ZipOutputStream
 
 class CollectionsViewModel(application: Application) : AndroidViewModel(application) {
 
-    val database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
+    private val _application = application
+    val database: ICalDatabaseDao = ICalDatabase.getInstance(_application).iCalDatabaseDao()
     val collections = database.getAllCollectionsView()
-    val app = application
 
-    val collectionsICS = MutableLiveData<List<Pair<String, String>>?>(null)
     val isProcessing = MutableLiveData(false)
+    val toastText = MutableLiveData<String>(null)
     val resultInsertedFromICS = MutableLiveData<Pair<Int, Int>?>(null)
 
 
@@ -80,7 +77,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             val objectsToMove = database.getICalObjectIdsToMove(oldCollectionId)
             objectsToMove.forEach {
                 val newId = ICalObject.updateCollectionWithChildren(it, null, newCollectionId, database, getApplication()) ?: return@forEach
-                database.getICalObjectByIdSync(newId)?.recreateRecurring(app)
+                database.getICalObjectByIdSync(newId)?.recreateRecurring(_application)
             }
             objectsToMove.forEach {
                 ICalObject.deleteItemWithChildren(it, database)
@@ -90,67 +87,35 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-
-    fun requestICSForExport(collections: List<CollectionsView>) {
+    fun writeToFile(collections: List<CollectionsView>, resultExportFilepath: Uri) {
         isProcessing.postValue(true)
-        val icsList: MutableList<Pair<String, String>> = mutableListOf()   // first of pair is filename/collectionname, second is ics
-
-        viewModelScope.launch(Dispatchers.IO)  {
-            collections.forEach { collection ->
-                val ics = (Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId))
-                ics?.let { icsList.add(Pair(collection.displayName?:collection.collectionId.toString(), it)) }
-            }
-            collectionsICS.postValue(icsList)
-            isProcessing.postValue(false)
-        }
-    }
-
-    fun exportICSasZIP(resultExportFilepath: Uri?,context: Context) {
-
-        if(resultExportFilepath == null || collectionsICS.value == null)
-            return
-
-        isProcessing.postValue(true)
-        try {
-            val output: OutputStream? = context.contentResolver?.openOutputStream(resultExportFilepath)
-            val bos = BufferedOutputStream(output)
-            ZipOutputStream(bos).use { zos ->
-                collectionsICS.value?.forEach { ics ->
-                    // not available on BufferedOutputStream
-                    zos.putNextEntry(ZipEntry("${ics.first}.ics"))
-                    zos.write(ics.second.toByteArray())
-                    zos.closeEntry()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                _application.contentResolver?.openOutputStream(resultExportFilepath)?.use { outputStream ->
+                    if(collections.size == 1) {
+                        val collection = collections.first()
+                        Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)?.let { ics ->
+                            outputStream.write(ics.toByteArray())
+                        }
+                    } else {
+                        val bos = BufferedOutputStream(outputStream)
+                        ZipOutputStream(bos).use { zos ->
+                            collections.forEach { collection ->
+                                Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)?.let { ics ->
+                                    zos.putNextEntry(ZipEntry("${collection.displayName ?: collection.collectionId.toString()}.ics"))
+                                    zos.write(ics.toByteArray())
+                                    zos.closeEntry()
+                                }
+                            }
+                        }
+                    }
                 }
+                toastText.postValue(_application.getString(R.string.collections_toast_export_success))
+            } catch (e: IOException) {
+                toastText.postValue(_application.getString(R.string.collections_toast_export_error))
+            } finally {
+                isProcessing.postValue(false)
             }
-            output?.flush()
-            output?.close()
-            Toast.makeText(context, R.string.collections_toast_export_all_ics_success, Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
-            Toast.makeText(context, R.string.collections_toast_export_all_ics_error, Toast.LENGTH_LONG).show()
-        } finally {
-            collectionsICS.value = null
-            isProcessing.postValue(false)
-        }
-    }
-
-    fun exportICS(resultExportFilepath: Uri?, context: Context) {
-
-        if(resultExportFilepath == null || collectionsICS.value == null)
-            return
-
-        isProcessing.postValue(true)
-        try {
-            val output: OutputStream? =
-                context.contentResolver?.openOutputStream(resultExportFilepath)
-            output?.write(collectionsICS.value?.first()?.second?.toByteArray())
-            output?.flush()
-            output?.close()
-            Toast.makeText(context, R.string.collections_toast_export_ics_success, Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
-            Toast.makeText(context, R.string.collections_toast_export_ics_error, Toast.LENGTH_LONG).show()
-        } finally {
-            collectionsICS.value = null
-            isProcessing.postValue(false)
         }
     }
 

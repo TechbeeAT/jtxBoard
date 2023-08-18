@@ -77,7 +77,7 @@ import kotlinx.coroutines.launch
 open class ListViewModel(application: Application, val module: Module) : AndroidViewModel(application) {
 
     private val _application = application
-    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
+    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao()
     private val settings = PreferenceManager.getDefaultSharedPreferences(application)
 
     val prefs: SharedPreferences = when (module) {
@@ -174,10 +174,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterOverdue = listSettings.isFilterOverdue.value,
             isFilterDueToday = listSettings.isFilterDueToday.value,
             isFilterDueTomorrow = listSettings.isFilterDueTomorrow.value,
+            isFilterDueWithin7Days = listSettings.isFilterDueWithin7Days.value,
             isFilterDueFuture = listSettings.isFilterDueFuture.value,
             isFilterStartInPast = listSettings.isFilterStartInPast.value,
             isFilterStartToday = listSettings.isFilterStartToday.value,
             isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value,
+            isFilterStartWithin7Days = listSettings.isFilterStartWithin7Days.value,
             isFilterStartFuture = listSettings.isFilterStartFuture.value,
             isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
             isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value,

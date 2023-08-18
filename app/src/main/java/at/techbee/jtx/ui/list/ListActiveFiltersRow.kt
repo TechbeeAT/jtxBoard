@@ -129,6 +129,12 @@ fun ListActiveFiltersRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
+        AnimatedVisibility(listSettings.isFilterStartWithin7Days.value) {
+            ListBadge(
+                text = stringResource(id = if (module == Module.TODO) R.string.list_start_date_within_7_days else R.string.list_date_within_7_days),
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        }
         AnimatedVisibility(listSettings.isFilterStartFuture.value) {
             ListBadge(
                 text = stringResource(id = if (module == Module.TODO) R.string.list_start_date_future else R.string.list_date_future),
@@ -150,6 +156,12 @@ fun ListActiveFiltersRow(
         AnimatedVisibility(listSettings.isFilterDueTomorrow.value) {
             ListBadge(
                 text = stringResource(id = R.string.list_due_tomorrow),
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        }
+        AnimatedVisibility(listSettings.isFilterDueWithin7Days.value) {
+            ListBadge(
+                text = stringResource(id = R.string.list_due_within_7_days),
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }

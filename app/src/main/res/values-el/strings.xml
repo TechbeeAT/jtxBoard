@@ -245,8 +245,6 @@
     <string name="edit_recur_week">"εβδομάδα(ες)"</string>
     <string name="edit_recur_month">"μήνας(ες)"</string>
     <string name="edit_recur_year">"χρόνος(ια)"</string>
-    <string name="collections_toast_export_ics_success">"Η εξαγωγή της συλλογής τελείωσε αποτελεσματικά."</string>
-    <string name="collections_toast_export_ics_error">"Ένα πρόβλημα παρουσιάστηκε κατά την διαδικασία εξαγωγής της επιλεγμένης συλλογής."</string>
     <string name="attachment_export_saved_successfully">"Αποθηκεύτηκε επιτυχώς"</string>
     <string name="attachment_export_error_error_occurred">"Παρουσιάστηκε σφάλμα κατά την αποθήκευση του επιλεγμένου αρχείου!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Προσθήκη απομακρυσμένης συλλογής (%1$s)"</string>
@@ -325,8 +323,6 @@
     <string name="edit_recur_ends_never">"Χωρίς λήξη"</string>
     <string name="edit_recur_ends_on">"Λήξη στις"</string>
     <string name="edit_recur_ends_after">"Λήξη μετά από"</string>
-    <string name="collections_toast_export_all_ics_success">"Η εξαγωγή όλων των συλλογών ολοκληρώθηκε επιτυχώς."</string>
-    <string name="collections_toast_export_all_ics_error">"Εντοπίστηκε ένα πρόβλημα κατά την διαδικασία της εξαγωγής όπλων των συλλογών."</string>
     <string name="menu_collections_export_all">"Εξαγωγή όλων"</string>
     <string name="more">"Περισσοτερα"</string>
     <string name="navigation_drawer_buypro">"Αγορά Pro"</string>
@@ -501,6 +497,7 @@
     <string name="settings_select_language_system">"Προεπιλογή συστήματος"</string>
     <string name="filter_special">"Ειδικά φίλτρα"</string>
     <string name="filter_presets">"Φίλτρο προεπιλογών"</string>
+    <string name="filter_presets_edit_info">"Παρακαλώ προσθέστε/ενημερώστε/διαγράψτε τις προεπιλογές φίλτρων από το μενού φίλτρου στην προβολή λίστας."</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Παρελθοντική ημερομηνία"</string>
     <string name="list_date_today">"Σήμερα"</string>

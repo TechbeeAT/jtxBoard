@@ -162,7 +162,7 @@ class MainActivity2 : AppCompatActivity() {
 
         if(settingsStateHolder.settingSyncOnStart.value) {
             lifecycleScope.launch(Dispatchers.IO) {
-                val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao.getAllRemoteCollections()
+                val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao().getAllRemoteCollections()
                 SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
             }
         }
@@ -313,7 +313,7 @@ fun MainNavHost(
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
     var showOSEDonationDialog by remember { mutableStateOf(false) }
 
-    globalStateHolder.remoteCollections = ICalDatabase.getInstance(activity).iCalDatabaseDao.getAllRemoteCollectionsLive().observeAsState(emptyList())
+    globalStateHolder.remoteCollections = ICalDatabase.getInstance(activity).iCalDatabaseDao().getAllRemoteCollectionsLive().observeAsState(emptyList())
 
     NavHost(
         navController = navController,

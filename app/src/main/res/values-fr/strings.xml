@@ -239,8 +239,6 @@
     <string name="edit_recur_week">"semaine(s)"</string>
     <string name="edit_recur_month">"mois"</string>
     <string name="edit_recur_year">"an(s)"</string>
-    <string name="collections_toast_export_ics_success">"L'exportation de la collection s'est terminée avec succès."</string>
-    <string name="collections_toast_export_ics_error">"Une erreur s'est produite lors de l'exportation de la collection sélectionnée."</string>
     <string name="attachment_export_saved_successfully">"Sauvegarde réussie"</string>
     <string name="attachment_export_error_error_occurred">"Une erreur est survenue lors de l'enregistrement du fichier !"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Ajouter une collection distante (%1$s)"</string>
@@ -319,8 +317,6 @@
     <string name="edit_recur_ends_never">"ne se termine jamais"</string>
     <string name="edit_recur_ends_on">"se termine le"</string>
     <string name="edit_recur_ends_after">"se termine après"</string>
-    <string name="collections_toast_export_all_ics_success">"L'exportation de toutes les collections s'est terminée avec succès."</string>
-    <string name="collections_toast_export_all_ics_error">"Une erreur s'est produite lors de l'exportation de toutes les collections."</string>
     <string name="menu_collections_export_all">"Exporter tout"</string>
     <string name="more">"En savoir plus"</string>
     <string name="navigation_drawer_buypro">"Acheter Pro"</string>
@@ -485,6 +481,7 @@ Merci !"</string>
     <string name="settings_select_language_system">"Système par défaut"</string>
     <string name="filter_special">"Filtres spéciaux"</string>
     <string name="filter_presets">"Filtrer les préréglages"</string>
+    <string name="filter_presets_edit_info">"Veuillez ajouter/mettre à jour/supprimer les présélections de filtres dans la vue liste."</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date dans le passé"</string>
     <string name="list_date_today">"Aujourd'hui"</string>

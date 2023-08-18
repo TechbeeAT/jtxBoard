@@ -158,7 +158,7 @@ class SyncContentProvider : ContentProvider() {
         if (context?.applicationContext == null)
             return false
 
-        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao
+        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao()
         TimeZoneRegistryFactory.getInstance().createRegistry()
 
         return true
@@ -226,13 +226,13 @@ class SyncContentProvider : ContentProvider() {
         // this block updates the count variable. The raw query doesn't return the count of the deleted rows, so we determine it before
         val countQueryString = queryString.replace("DELETE FROM ", "SELECT count(*) FROM ")
         val countQuery = SimpleSQLiteQuery(countQueryString, args.toArray())
-        count = database.deleteRAW(countQuery)
+        count = database.executeRAW(countQuery)
 
         val deleteQuery = SimpleSQLiteQuery(queryString, args.toArray())
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query prepared: $queryString")
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query args prepared: ${args.joinToString(separator = ", ")}")
 
-        database.deleteRAW(deleteQuery)
+        database.executeRAW(deleteQuery)
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
         ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
@@ -434,7 +434,7 @@ class SyncContentProvider : ContentProvider() {
 
         // if the request was for an Attachment, then allow the calling application to access the file by grantUriPermission
         if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR || sUriMatcher.match(uri) == CODE_ATTACHMENT_ITEM) {
-            while (result?.moveToNext() == true) {
+            while (result.moveToNext()) {
                 try {
                     val uriColumnIndex = result.getColumnIndex(COLUMN_ATTACHMENT_URI)
                     val attachmentUriString = result.getString(uriColumnIndex)
@@ -452,7 +452,7 @@ class SyncContentProvider : ContentProvider() {
                     Log.d("attachment", "Cursor for attachments is empty")
                 }
             }
-            result?.moveToPosition(-1)   // reset to beginning
+            result.moveToPosition(-1)   // reset to beginning
         }
         return result
     }
@@ -568,7 +568,7 @@ class SyncContentProvider : ContentProvider() {
 
         // TODO: find a solution to efficiently return the actual count of updated rows (the return value of the RAW-query doesn't work)
         //val count = database.updateRAW(updateQuery)
-        database.updateRAW(updateQuery)
+        database.executeRAW(updateQuery)
 
         // updates on recurring instances through bulk updates should not occur, only updates on single items will update the recurring instances
         if (sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) || values.containsKey(
@@ -594,7 +594,7 @@ class SyncContentProvider : ContentProvider() {
                 database.getAlarmSync(alarmId)?.icalObjectId ?: return 1
             }
 
-            val alarms = database.getAlarmsSync(icalObjectId) ?: emptyList()
+            val alarms = database.getAlarmsSync(icalObjectId)
             val iCalObject = database.getICalObjectByIdSync(alarms.firstOrNull()?.icalObjectId ?: return 1) ?: return 1
 
             alarms.forEach { alarm ->

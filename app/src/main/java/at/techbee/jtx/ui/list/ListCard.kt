@@ -138,7 +138,7 @@ fun ListCard(
         modifier = modifier
     ) {
         Column(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(top = 4.dp, bottom = 0.dp, start = 8.dp, end = 8.dp)
         ) {
 
             ListTopRow(
@@ -209,7 +209,9 @@ fun ListCard(
                                         iCalObject.id,
                                         if (it) 100 else 0
                                     )
-                                })
+                                },
+                                modifier = Modifier.padding(0.dp)
+                            )
                     }
 
                     if (iCalObject.description?.isNotBlank() == true) {
@@ -780,6 +782,108 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            selected = listOf(),
+            onClick = { _, _, _ -> },
+            onLongClick = { _, _ -> },
+            attachments = listOf(),
+            settingShowProgressMaintasks = false,
+            progressIncrement = 1,
+            linkProgressToSubtasks = false,
+            markdownEnabled = false,
+            onProgressChanged = { _, _ -> },
+            onExpandedChanged = { _, _, _, _, _ -> },
+            player = null
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ICalObjectListCardPreview_TASK_one_liner() {
+    MaterialTheme {
+
+        val icalobject = ICal4List.getSample().apply {
+            summary = "Short task"
+            description = null
+            component = Component.VTODO.name
+            module = Module.TODO.name
+            percent = 0
+            status = null
+            classification = Classification.PUBLIC.name
+            uploadPending = false
+            recurid = ""
+            isReadOnly = true
+            numAttachments = 0
+            numAttendees = 0
+            numAlarms = 0
+            numResources = 0
+            numSubtasks = 0
+            numSubnotes = 0
+            numComments = 0
+            colorItem = Color.Blue.toArgb()
+        }
+        ListCard(
+            iCalObject = icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
+            subtasks = emptyList(),
+            subnotes = emptyList(),
+            parents = emptyList(),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            storedStatuses = emptyList(),
+            selected = listOf(),
+            onClick = { _, _, _ -> },
+            onLongClick = { _, _ -> },
+            attachments = listOf(),
+            settingShowProgressMaintasks = false,
+            progressIncrement = 1,
+            linkProgressToSubtasks = false,
+            markdownEnabled = false,
+            onProgressChanged = { _, _ -> },
+            onExpandedChanged = { _, _, _, _, _ -> },
+            player = null
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ICalObjectListCardPreview_NOTE_one_liner() {
+    MaterialTheme {
+
+        val icalobject = ICal4List.getSample().apply {
+            summary = "Short note"
+            description = null
+            component = Component.VJOURNAL.name
+            module = Module.NOTE.name
+            percent = 0
+            status = null
+            classification = Classification.PUBLIC.name
+            uploadPending = false
+            recurid = ""
+            isReadOnly = true
+            numAttachments = 0
+            numAttendees = 0
+            numAlarms = 0
+            numResources = 0
+            numSubtasks = 0
+            numSubnotes = 0
+            numComments = 0
+            colorItem = Color.Blue.toArgb()
+        }
+        ListCard(
+            iCalObject = icalobject,
+            categories = emptyList(),
+            resources = emptyList(),
+            subtasks = emptyList(),
+            subnotes = emptyList(),
+            parents = emptyList(),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            storedStatuses = emptyList(),
             selected = listOf(),
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
