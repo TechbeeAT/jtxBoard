@@ -146,7 +146,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'JOURNAL' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfJournal, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'NOTE' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfNote, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'TODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfTodo, " +
-            "(SELECT group_concat($TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT, \', \') FROM $TABLE_NAME_CATEGORY WHERE main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID GROUP BY $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
+            "(SELECT group_concat(sub.$COLUMN_CATEGORY_TEXT, \', \') FROM (SELECT * FROM $TABLE_NAME_CATEGORY ORDER BY $COLUMN_CATEGORY_TEXT) as sub WHERE main_icalobject.$COLUMN_ID = sub.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
+            "(SELECT group_concat(sub.$COLUMN_RESOURCE_TEXT, \', \') FROM (SELECT * FROM $TABLE_NAME_RESOURCE ORDER BY $COLUMN_RESOURCE_TEXT) as sub WHERE main_icalobject.$COLUMN_ID = sub.$COLUMN_RESOURCE_ICALOBJECT_ID) as resources, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = 'VTODO' AND sub_relatedto.$COLUMN_RELATEDTO_TEXT = main_icalobject.$COLUMN_UID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_icalobject.$COLUMN_DELETED = 0 AND sub_icalobject.$COLUMN_RRULE IS NULL) as numSubtasks, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = 'VJOURNAL' AND sub_relatedto.$COLUMN_RELATEDTO_TEXT = main_icalobject.$COLUMN_UID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_icalobject.$COLUMN_DELETED = 0 AND sub_icalobject.$COLUMN_RRULE IS NULL) as numSubnotes, " +
             "(SELECT count(*) FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAttachments, " +
@@ -225,6 +226,7 @@ data class ICal4List(
     @ColumnInfo var isChildOfTodo: Boolean,
 
     @ColumnInfo var categories: String?,
+    @ColumnInfo var resources: String?,
     @ColumnInfo var numSubtasks: Int,
     @ColumnInfo var numSubnotes: Int,
     @ColumnInfo var numAttachments: Int,
@@ -290,6 +292,7 @@ data class ICal4List(
                 isChildOfNote = false,
                 isChildOfTodo = false,
                 categories = "Category1, Whatever",
+                resources = "Resource1, Resource2",
                 numSubtasks = 3,
                 numSubnotes = 2,
                 numAttachments = 4,

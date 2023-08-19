@@ -63,7 +63,7 @@ data class ICal4ListWidget(
                 parentUID = parentUID,
                 isReadOnly = iCal4List.isReadOnly,
                 categories = iCal4List.categories,
-                resources = null //TODO
+                resources = iCal4List.resources
             )
         }
     }

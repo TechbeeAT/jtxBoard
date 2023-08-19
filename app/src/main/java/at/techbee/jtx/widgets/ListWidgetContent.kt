@@ -114,7 +114,7 @@ fun ListWidgetContent(
 
     val groupedList = when (listWidgetConfig.groupBy) {
         GroupBy.CATEGORY -> sortedList.groupBy { it.categories ?: context.getString(R.string.filter_no_category) }.toSortedMap()
-        GroupBy.RESOURCE -> TODO() //sortedList.groupBy { it.resources ?: context.getString(R.string.filter_no_resource) }.toSortedMap()
+        GroupBy.RESOURCE -> sortedList.groupBy { it.resources ?: context.getString(R.string.filter_no_resource) }.toSortedMap()
         GroupBy.STATUS -> sortedList.groupBy { Status.values().firstOrNull { status -> status.status == it.status }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.status ?: context.getString(R.string.status_no_status) }
         GroupBy.CLASSIFICATION -> sortedList.groupBy { Classification.values().firstOrNull { classif -> classif.classification == it.classification }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.classification ?: context.getString(R.string.classification_no_classification) }
         GroupBy.ACCOUNT -> sortedList.groupBy { it.accountName ?:"" }
