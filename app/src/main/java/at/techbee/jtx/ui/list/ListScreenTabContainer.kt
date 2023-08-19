@@ -158,6 +158,7 @@ fun ListScreenTabContainer(
     }
     val storedCategories by listViewModel.storedCategories.observeAsState(emptyList())
     val storedResources by listViewModel.storedResources.observeAsState(emptyList())
+    val storedListSettings by listViewModel.storedListSettings.observeAsState(emptyList())
 
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, allWriteableCollections.value) {
@@ -620,6 +621,7 @@ fun ListScreenTabContainer(
                                     module = listViewModel.module,
                                     storedCategories = storedCategories,
                                     storedResources = storedResources,
+                                    storedListSettings = storedListSettings,
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                 )
                             }
