@@ -6,6 +6,7 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Desa"</string>
+    <string name="update">"Actualitza"</string>
     <string name="cancel">"Cancel·lar"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Eliminar"</string>
@@ -55,11 +56,14 @@
     <string name="navigation_drawer_privacy_policy">"Política de Privacitat"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Vençut"</string>
+    <string name="list_due_shortly">"Venç d'ací poc"</string>
     <string name="list_due_today">"Venç hui"</string>
     <string name="list_due_tomorrow">"Venç demà"</string>
+    <string name="list_due_within_7_days">"Venç en 7 dies"</string>
     <string name="list_due_inXhours">"Venç en %d hores"</string>
     <string name="list_due_on_weekday">"Venç el %s"</string>
     <string name="list_start_past">"S'inicia en el passat"</string>
+    <string name="list_start_shortly">"S'inicia d'ací poc"</string>
     <string name="list_start_today">"Inici planejat hui"</string>
     <string name="list_start_tomorrow">"S'inicia demà"</string>
     <string name="list_start_inXhours">"Inici planejat en %d hores"</string>
@@ -295,6 +299,7 @@
     <string name="collections_dialog_move_title">"Moure totes les entrades des de \"%1$s\" a"</string>
     <string name="collection_dialog_move_info">"Tingues en compte: Sols les col·leccions amb accés d'escriptura, i les que tinguin suport per als mateixos components (Diaris, Notes i Tasques) poden ser seleccionades."</string>
     <string name="menu_collections_popup_move_entries">"Moure entrades"</string>
+    <string name="setting_no_time">"Sense temps"</string>
     <string name="list_no_dates_set">"Cap data establerta"</string>
     <string name="list_without_start_date">"Sense data d'inici"</string>
     <string name="list_without_due_date">"Sense data de venciment"</string>
@@ -308,6 +313,8 @@
     <string name="filter_no_resource">Sense recursos</string>
     <string name="filter_subtasks_order_by">Ordena sub-tasques per</string>
     <string name="filter_subnotes_order_by">Ordena les notes enllaçades per</string>
+    <string name="filter_no_filter">"Sense filtres"</string>
+    <string name="filter_options_more_entries">"Més (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Per favor, fes clic a la col·lecció a la qual vols afegir l'entrada o entrades!"</string>
     <string name="collections_snackbar_x_items_added">"S'ha afegit %1$d, i s'ha saltat %2$d. (Excloent instàncies d'elements recurrents.)"</string>
     <string name="collections_toast_x_items_added">"S'han afegit %1$d entrades!"</string>
@@ -319,7 +326,15 @@
     <string name="edit_recur_ends_never">"no acaba mai"</string>
     <string name="edit_recur_ends_on">"acaba el"</string>
     <string name="edit_recur_ends_after">"acaba després de"</string>
+    <string name="collections_toast_export_success">"Les col·leccions han sigut exportades"</string>
+    <string name="collections_toast_export_error">"No s'han pogut exportar les col·leccions"</string>
     <string name="menu_collections_export_all">"Exporta-ho tot"</string>
+    <string name="menu_presets_export_presets">"Exporta els valors predefinits"</string>
+    <string name="menu_presets_import_presets">"Importar valors predefinits"</string>
+    <string name="presets_imported">"Valors predefinits importats"</string>
+    <string name="presets_import_invalid_file">"Fitxer invàlid"</string>
+    <string name="presets_saved">"Valors predefinits desats"</string>
+    <string name="presets_export_error">"No s'han pogut desar els valors predefinits"</string>
     <string name="more">"Més"</string>
     <string name="navigation_drawer_buypro">"Comprar Pro"</string>
     <string name="settings_select_theme">"Escollir tema"</string>
@@ -451,6 +466,8 @@ Gràcies!"</string>
     <string name="settings_sync">"Ajusts de Sincronització"</string>
     <string name="settings_default_start_date">"Estableix una data d'inici per defecte"</string>
     <string name="settings_default_due_date">"Estableix una data de venciment per defecte"</string>
+    <string name="settings_default_start_time">"Estableix una hora d'inici per a tasques"</string>
+    <string name="settings_default_due_time">"Estableix una hora de venciment per a tasques"</string>
     <string name="settings_default_date_none">"Cap"</string>
     <string name="settings_default_date_same_day">"El mateix dia"</string>
     <string name="settings_default_date_next_day">"Dia següent"</string>
@@ -491,14 +508,17 @@ Gràcies!"</string>
     <string name="settings_select_language_system">"Predeterminat del sistema"</string>
     <string name="filter_special">"Filtres especials"</string>
     <string name="filter_presets">"Filtres predefinits"</string>
+    <string name="filter_presets_edit_info">"Per favor, afegeix/actualitza/elimina filtres predefinits del menú de filtre des de la visualització de llista."</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data al passat"</string>
     <string name="list_date_today">"Avui"</string>
     <string name="list_date_tomorrow">"Demà"</string>
+    <string name="list_date_within_7_days">"D'ací 7 dies"</string>
     <string name="list_date_future">"Data en el futur"</string>
     <string name="list_start_date_in_past">"S'inicia en el passat"</string>
     <string name="list_start_date_today">"S'inicia avui"</string>
     <string name="list_start_date_tomorrow">"S'inicia demà"</string>
+    <string name="list_start_date_within_7_days">"S'inicia en 7 dies"</string>
     <string name="list_start_date_future">"S'inicia al futur"</string>
     <string name="list_hide_completed_tasks">"Amaga les tasques finalitzades"</string>
     <string name="list_biometric_protected_entries_locked">Entrades protegides per biometria bloquejades</string>
