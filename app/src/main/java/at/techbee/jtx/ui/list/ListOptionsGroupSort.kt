@@ -109,7 +109,7 @@ fun ListOptionsGroupSort(
             OrderBy.getValuesFor(module).forEach { orderBy ->
                 FilterChip(
                     selected = listSettings.orderBy.value == orderBy,
-                    enabled = listSettings.groupBy.value == null,
+                    enabled = listSettings.groupBy.value == null || listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE,
                     onClick = {
                         if (listSettings.orderBy.value != orderBy)
                             listSettings.orderBy.value = orderBy
