@@ -378,8 +378,8 @@
     <string name="date">"Дата"</string>
     <string name="timezone">"Часовой пояс"</string>
     <string name="not_set2">"Не установлено"</string>
-    <string name="invert_selection">"Инвертировать выделение"</string>
-    <string name="clear_selection">"Очистить выделение"</string>
+    <string name="invert_selection">"Инвертировать выделенное"</string>
+    <string name="clear_selection">"Очистить выделенное"</string>
     <string name="preferences">"Настройки"</string>
     <string name="revert">"Сбросить"</string>
     <string name="audio_play">"Воспроизвести"</string>
