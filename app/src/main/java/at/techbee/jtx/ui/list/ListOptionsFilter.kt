@@ -359,8 +359,13 @@ fun ListOptionsFilter(
                 listSettings.searchCategories.clear()
                 listSettings.searchCategories.addAll(missing)
                 onListSettingsChanged()
-            })
-        {
+            },
+            initialAnyAllNone = listSettings.searchCategoriesAnyAllNone.value,
+            onAnyAllNoneChanged = {
+                listSettings.searchCategoriesAnyAllNone.value = it
+                onListSettingsChanged()
+            }
+        ) {
             FilterChip(
                 selected = listSettings.isFilterNoCategorySet.value,
                 onClick = {
@@ -598,8 +603,13 @@ fun ListOptionsFilter(
                     listSettings.searchResources.clear()
                     listSettings.searchResources.addAll(missing)
                     onListSettingsChanged()
-                })
-            {
+                },
+                initialAnyAllNone = listSettings.searchResourcesAnyAllNone.value,
+                onAnyAllNoneChanged = {
+                    listSettings.searchResourcesAnyAllNone.value = it
+                    onListSettingsChanged()
+                }
+            ) {
                 FilterChip(
                     selected = listSettings.isFilterNoResourceSet.value,
                     onClick = {

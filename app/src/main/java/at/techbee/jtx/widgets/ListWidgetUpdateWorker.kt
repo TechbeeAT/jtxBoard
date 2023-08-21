@@ -29,6 +29,7 @@ import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.AnyAllNone
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
@@ -104,7 +105,9 @@ class ListWidgetUpdateWorker(
                         ICal4List.constructQuery(
                             modules = listOf(listWidgetConfig?.module ?: Module.TODO),
                             searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
+                            searchCategoriesAnyAllNone = listWidgetConfig?.searchCategoriesAnyAllNone ?: AnyAllNone.ANY,
                             searchResources = listWidgetConfig?.searchResources ?: emptyList(),
+                            searchResourcesAnyAllNone = listWidgetConfig?.searchResourcesAnyAllNone ?: AnyAllNone.ANY,
                             searchStatus = listWidgetConfig?.searchStatus?: emptyList(),
                             searchXStatus = listWidgetConfig?.searchXStatus?: emptyList(),
                             searchClassification = listWidgetConfig?.searchClassification?: emptyList(),
