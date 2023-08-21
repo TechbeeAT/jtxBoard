@@ -72,14 +72,14 @@ fun CollectionsScreen(
     val toastText = collectionsViewModel.toastText.observeAsState()
 
     /* EXPORT FUNCTIONALITIES */
-    val launcherExportAll = rememberLauncherForActivityResult(CreateDocument("application/zip")) {
+    val launcherExportAll = rememberLauncherForActivityResult(CreateDocument(CollectionsExportMimetype.ZIP.mimeType)) {
         it?.let { uri ->
-            collectionsViewModel.writeToFile(uri)
+            collectionsViewModel.writeToFile(uri, CollectionsExportMimetype.ZIP)
         }
     }
-    val launcherExportSingle = rememberLauncherForActivityResult(CreateDocument("text/calendar")) {
+    val launcherExportSingle = rememberLauncherForActivityResult(CreateDocument(CollectionsExportMimetype.ICS.mimeType)) {
         it?.let { uri ->
-            collectionsViewModel.writeToFile(uri)
+            collectionsViewModel.writeToFile(uri, CollectionsExportMimetype.ICS)
         }
     }
 

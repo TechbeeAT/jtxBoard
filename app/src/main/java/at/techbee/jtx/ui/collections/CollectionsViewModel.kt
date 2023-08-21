@@ -34,6 +34,7 @@ import java.time.LocalTime
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
+enum class CollectionsExportMimetype(val mimeType: String) { ICS("text/calendar"), ZIP("application/zip") }
 
 class CollectionsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -92,7 +93,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
      * Exports the given collections in collectionsToExport to the given uri
      * @param [resultExportFilepath] where the data should be saved.
      */
-    fun writeToFile(resultExportFilepath: Uri) {
+    fun writeToFile(resultExportFilepath: Uri, collectionsExportMimetype: CollectionsExportMimetype) {
         isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -100,19 +101,23 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
                     if(collectionsToExport.value.isNullOrEmpty())
                         throw IOException("Collections to export are empty")
 
-                    if(resultExportFilepath.toString().endsWith(suffix = "ics", ignoreCase = true)) {
-                        val collection = collectionsToExport.value?.first() ?: throw IOException("Collections to export are empty")
-                        Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)?.let { ics ->
-                            outputStream.write(ics.toByteArray())
+                    when(collectionsExportMimetype) {
+                        CollectionsExportMimetype.ICS -> {
+                            val collection = collectionsToExport.value?.first() ?: throw IOException("Collections to export are empty")
+                            Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)?.let { ics ->
+                                outputStream.write(ics.toByteArray())
+                            }
                         }
-                    } else {
-                        val bos = BufferedOutputStream(outputStream)
-                        ZipOutputStream(bos).use { zos ->
-                            collectionsToExport.value?.forEach { collection ->
-                                Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)?.let { ics ->
-                                    zos.putNextEntry(ZipEntry("${collection.displayName ?: collection.collectionId.toString()}.ics"))
-                                    zos.write(ics.toByteArray())
-                                    zos.closeEntry()
+                        CollectionsExportMimetype.ZIP -> {
+                            val bos = BufferedOutputStream(outputStream)
+                            ZipOutputStream(bos).use { zos ->
+                                collectionsToExport.value?.forEach { collection ->
+                                    Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)
+                                        ?.let { ics ->
+                                            zos.putNextEntry(ZipEntry("${collection.displayName ?: collection.collectionId.toString()}.ics"))
+                                            zos.write(ics.toByteArray())
+                                            zos.closeEntry()
+                                        }
                                 }
                             }
                         }
