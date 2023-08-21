@@ -43,7 +43,7 @@ data class ICal4ListRel(
     companion object {
 
         fun getGroupedList(sortedList: List<ICal4ListRel>, groupBy: GroupBy?, context: Context): Map<String, List<ICal4ListRel>> {
-            return when (groupBy) {/*
+            return when (groupBy) {
                 GroupBy.CATEGORY -> mutableMapOf<String, MutableList<ICal4ListRel>>().apply {
 
                     sortedList.forEach { sortedEntry ->
@@ -55,14 +55,13 @@ data class ICal4ListRel(
                                     this[category.text] = mutableListOf(sortedEntry)
                             }
                         } else {
-                            if (this.containsKey("Without category"))
-                                this["Without category"]?.add(sortedEntry)
+                            if (this.containsKey(context.getString(R.string.filter_no_category)))
+                                this[context.getString(R.string.filter_no_category)]?.add(sortedEntry)
                             else
-                                this["Without category"] = mutableListOf(sortedEntry)
+                                this[context.getString(R.string.filter_no_category)] = mutableListOf(sortedEntry)
                         }
                     }
                 }
-
                 GroupBy.RESOURCE -> mutableMapOf<String, MutableList<ICal4ListRel>>().apply {
                     sortedList.forEach { sortedEntry ->
                         if (sortedEntry.resources.isNotEmpty()) {
@@ -70,19 +69,18 @@ data class ICal4ListRel(
                                 if (this.containsKey(resource.text))
                                     this[resource.text]?.add(sortedEntry)
                                 else
-                                    this[resource.text ?: "Without resource"] = mutableListOf(sortedEntry)
+                                    this[resource.text ?: context.getString(R.string.filter_no_resource)] = mutableListOf(sortedEntry)
                             }
                         } else {
-                            if (this.containsKey("Without resource"))
-                                this["Without resource"]?.add(sortedEntry)
+                            if (this.containsKey(context.getString(R.string.filter_no_resource)))
+                                this[context.getString(R.string.filter_no_resource)]?.add(sortedEntry)
                             else
-                                this["Without resource"] = mutableListOf(sortedEntry)
+                                this[context.getString(R.string.filter_no_resource)] = mutableListOf(sortedEntry)
                         }
                     }
                 }
-                */
-                GroupBy.CATEGORY -> sortedList.groupBy { if(it.categories.isEmpty()) context.getString(R.string.filter_no_category) else it.categories.joinToString(separator = ", ") { category -> category.text } }.toSortedMap()
-                GroupBy.RESOURCE -> sortedList.groupBy { if(it.resources.isEmpty()) context.getString(R.string.filter_no_resource) else it.resources.joinToString(separator = ", ") { resource -> resource.text?:"" } }.toSortedMap()
+                //GroupBy.CATEGORY -> sortedList.groupBy { if(it.categories.isEmpty()) context.getString(R.string.filter_no_category) else it.categories.joinToString(separator = ", ") { category -> category.text } }.toSortedMap()
+                //GroupBy.RESOURCE -> sortedList.groupBy { if(it.resources.isEmpty()) context.getString(R.string.filter_no_resource) else it.resources.joinToString(separator = ", ") { resource -> resource.text?:"" } }.toSortedMap()
                 GroupBy.STATUS -> sortedList.groupBy {
                     Status.values().find { status -> status.status == it.iCal4List.status }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.iCal4List.status ?: ""
                 }
