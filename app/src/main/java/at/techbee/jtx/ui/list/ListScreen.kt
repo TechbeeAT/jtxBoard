@@ -16,14 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
@@ -73,27 +70,7 @@ fun ListScreen(
         else -> list.value
     }
 
-    val groupedList = sortedList.groupBy {
-        when (listViewModel.listSettings.groupBy.value) {
-            GroupBy.STATUS -> Status.values().find { status ->  status.status == it.iCal4List.status }?.stringResource?.let { stringRes -> stringResource(id = stringRes)}?: it.iCal4List.status?:""
-            GroupBy.CLASSIFICATION -> Classification.values().find { classif ->  classif.classification == it.iCal4List.classification }?.stringResource?.let { stringRes -> stringResource(id = stringRes)}?: it.iCal4List.classification?:""
-            GroupBy.ACCOUNT -> it.iCal4List.accountName ?:""
-            GroupBy.COLLECTION -> it.iCal4List.collectionDisplayName ?:""
-            GroupBy.PRIORITY -> {
-                when (it.iCal4List.priority) {
-                    null -> stringArrayResource(id = R.array.priority)[0]
-                    in 0..9 -> stringArrayResource(id = R.array.priority)[it.iCal4List.priority!!]
-                    else -> it.iCal4List.priority.toString()
-                }
-            }
-            GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = LocalContext.current)
-            GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = LocalContext.current)
-            GroupBy.DUE -> ICalObject.getDueTextInfo(status = it.iCal4List.status, due = it.iCal4List.due, dueTimezone = it.iCal4List.dueTimezone, percent = it.iCal4List.percent, daysOnly = true, context = LocalContext.current)
-            else -> {
-                it.iCal4List.module
-            }
-        }
-    }
+    val groupedList = ICal4ListRel.getGroupedList(sortedList, listViewModel.listSettings.groupBy.value, context)
 
     fun processOnClick(itemId: Long, ical4list: List<ICal4List>, isReadOnly: Boolean) {
         if (listViewModel.multiselectEnabled.value && isReadOnly)

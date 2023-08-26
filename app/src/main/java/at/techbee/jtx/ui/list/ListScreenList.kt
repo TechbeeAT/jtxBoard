@@ -68,6 +68,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import java.util.UUID
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -164,7 +165,12 @@ fun ListScreenList(
                 if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
                     items(
                         items = group,
-                        key = { item -> item.iCal4List.id }
+                        key = { item ->
+                            if(listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE)
+                                item.iCal4List.id.toString() + UUID.randomUUID()
+                            else
+                                item.iCal4List.id
+                        }
                     ) { iCal4ListRelObject ->
 
                         var currentSubtasks =

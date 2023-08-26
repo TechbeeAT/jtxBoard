@@ -269,6 +269,7 @@
     <string name="status">"Status"</string>
     <string name="classification">"Classification"</string>
     <string name="category">"Category"</string>
+    <string name="resource">"Resource"</string>
     <string name="priority">"Priority"</string>
     <string name="readyonly">"Read only"</string>
     <string name="upload_pending">"Upload pending"</string>
