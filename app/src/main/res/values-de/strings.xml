@@ -258,6 +258,7 @@
     <string name="status">"Status"</string>
     <string name="classification">"Klassifizierung"</string>
     <string name="category">"Kategorie"</string>
+    <string name="resource">"Material"</string>
     <string name="priority">"Priorität"</string>
     <string name="readyonly">"Schreibgeschützt"</string>
     <string name="upload_pending">"Hochladen ausständig"</string>
@@ -509,6 +510,9 @@ Danke!"</string>
     <string name="filter_special">"Spezialfilter"</string>
     <string name="filter_presets">"Filter-Voreinstellungen"</string>
     <string name="filter_presets_edit_info">"Bitte bearbeiten Sie Filter-Voreinstellungen über das Filtermenü in der Listenansicht."</string>
+    <string name="filter_any">"Irgendeine"</string>
+    <string name="filter_all">"Alle"</string>
+    <string name="filter_none">"Keine"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
     <string name="list_date_today">"Heute"</string>
