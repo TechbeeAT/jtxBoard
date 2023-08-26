@@ -34,6 +34,7 @@ import java.time.LocalTime
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
+enum class CollectionsExportMimetype(val mimeType: String) { ICS("text/calendar"), ZIP("application/zip") }
 
 class CollectionsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -44,6 +45,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
     val isProcessing = MutableLiveData(false)
     val toastText = MutableLiveData<String>(null)
     val resultInsertedFromICS = MutableLiveData<Pair<Int, Int>?>(null)
+    val collectionsToExport = MutableLiveData<List<CollectionsView>>(emptyList())
 
 
     /**
@@ -87,24 +89,35 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun writeToFile(collections: List<CollectionsView>, resultExportFilepath: Uri) {
+    /**
+     * Exports the given collections in collectionsToExport to the given uri
+     * @param [resultExportFilepath] where the data should be saved.
+     */
+    fun writeToFile(resultExportFilepath: Uri, collectionsExportMimetype: CollectionsExportMimetype) {
         isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _application.contentResolver?.openOutputStream(resultExportFilepath)?.use { outputStream ->
-                    if(collections.size == 1) {
-                        val collection = collections.first()
-                        Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)?.let { ics ->
-                            outputStream.write(ics.toByteArray())
+                    if(collectionsToExport.value.isNullOrEmpty())
+                        throw IOException("Collections to export are empty")
+
+                    when(collectionsExportMimetype) {
+                        CollectionsExportMimetype.ICS -> {
+                            val collection = collectionsToExport.value?.first() ?: throw IOException("Collections to export are empty")
+                            Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)?.let { ics ->
+                                outputStream.write(ics.toByteArray())
+                            }
                         }
-                    } else {
-                        val bos = BufferedOutputStream(outputStream)
-                        ZipOutputStream(bos).use { zos ->
-                            collections.forEach { collection ->
-                                Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)?.let { ics ->
-                                    zos.putNextEntry(ZipEntry("${collection.displayName ?: collection.collectionId.toString()}.ics"))
-                                    zos.write(ics.toByteArray())
-                                    zos.closeEntry()
+                        CollectionsExportMimetype.ZIP -> {
+                            val bos = BufferedOutputStream(outputStream)
+                            ZipOutputStream(bos).use { zos ->
+                                collectionsToExport.value?.forEach { collection ->
+                                    Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)
+                                        ?.let { ics ->
+                                            zos.putNextEntry(ZipEntry("${collection.displayName ?: collection.collectionId.toString()}.ics"))
+                                            zos.write(ics.toByteArray())
+                                            zos.closeEntry()
+                                        }
                                 }
                             }
                         }
@@ -115,6 +128,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
                 toastText.postValue(_application.getString(R.string.collections_toast_export_error))
             } finally {
                 isProcessing.postValue(false)
+                collectionsToExport.postValue(emptyList())
             }
         }
     }

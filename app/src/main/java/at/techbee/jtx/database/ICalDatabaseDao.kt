@@ -34,6 +34,7 @@ SELECTs (global selects without parameter)
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
      * @return a list of [Category.text] as LiveData<List<String>>
      */
+    @Transaction
     @Query("SELECT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_CATEGORY_TEXT ORDER BY count(*) DESC, $COLUMN_CATEGORY_TEXT ASC")
     fun getAllCategoriesAsText(): LiveData<List<String>>
 
@@ -41,6 +42,7 @@ SELECTs (global selects without parameter)
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
      * @return a list of [Category.text] as LiveData<List<String>>
      */
+    @Transaction
     @Query("SELECT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_RESOURCE_TEXT ORDER BY count(*) DESC, $COLUMN_RESOURCE_TEXT ASC")
     fun getAllResourcesAsText(): LiveData<List<String>>
 
@@ -74,6 +76,7 @@ SELECTs (global selects without parameter)
      * @param module (Module.name) for which there are existing entries for a collection
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
+    @Transaction
     @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID IN (SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollections(module: String): LiveData<List<ICalCollection>>
 
@@ -505,6 +508,7 @@ DELETEs by Object
     @RawQuery
     fun executeRAW(query: SupportSQLiteQuery): Int
 
+    @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4List(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
 
@@ -614,6 +618,7 @@ DELETEs by Object
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertStoredListSetting(storedListSetting: StoredListSetting): Long
 
+    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_STORED_LIST_SETTINGS WHERE $COLUMN_STORED_LIST_SETTING_MODULE IN (:modules) ORDER BY $COLUMN_STORED_LIST_SETTING_ID DESC")
     fun getStoredListSettings(modules: List<String>): LiveData<List<StoredListSetting>>
 
@@ -651,6 +656,7 @@ DELETEs by Object
      * StoredStatus
      */
 
+    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_EXTENDED_STATUS")
     fun getStoredStatuses(): LiveData<List<ExtendedStatus>>
 

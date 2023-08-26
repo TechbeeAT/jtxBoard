@@ -59,6 +59,7 @@
     <string name="list_due_shortly">"Скоро завершится"</string>
     <string name="list_due_today">"Завершается сегодня"</string>
     <string name="list_due_tomorrow">"Завершается завтра"</string>
+    <string name="list_due_within_7_days">"Завершается в теч. 7 дней"</string>
     <string name="list_due_inXhours">"Завершается через %d ч."</string>
     <string name="list_due_on_weekday">"Завершается в %s"</string>
     <string name="list_start_past">"Началось"</string>
@@ -325,7 +326,15 @@
     <string name="edit_recur_ends_never">"повторять всегда"</string>
     <string name="edit_recur_ends_on">"повторять до"</string>
     <string name="edit_recur_ends_after">"повторять раз"</string>
+    <string name="collections_toast_export_success">"Коллекции успешно экспортированы"</string>
+    <string name="collections_toast_export_error">"Ошибка при экспорте коллекций"</string>
     <string name="menu_collections_export_all">"Экспортировать всё"</string>
+    <string name="menu_presets_export_presets">"Экспорт пресетов"</string>
+    <string name="menu_presets_import_presets">"Импорт пресетов"</string>
+    <string name="presets_imported">"Пресеты импортированы"</string>
+    <string name="presets_import_invalid_file">"Недопустимый файл"</string>
+    <string name="presets_saved">"Пресеты сохранены"</string>
+    <string name="presets_export_error">"Ошибка при экспорте пресетов"</string>
     <string name="more">"Ещё"</string>
     <string name="navigation_drawer_buypro">"Купить Pro"</string>
     <string name="settings_select_theme">"Тема"</string>
@@ -369,8 +378,8 @@
     <string name="date">"Дата"</string>
     <string name="timezone">"Часовой пояс"</string>
     <string name="not_set2">"Не установлено"</string>
-    <string name="invert_selection">"Инвертировать выделение"</string>
-    <string name="clear_selection">"Очистить выделение"</string>
+    <string name="invert_selection">"Инвертировать выбранное"</string>
+    <string name="clear_selection">"Очистить выбранное"</string>
     <string name="preferences">"Настройки"</string>
     <string name="revert">"Сбросить"</string>
     <string name="audio_play">"Воспроизвести"</string>
@@ -503,10 +512,12 @@
     <string name="list_date_start_in_past">"Дата в прошлом"</string>
     <string name="list_date_today">"Сегодня"</string>
     <string name="list_date_tomorrow">"Завтра"</string>
+    <string name="list_date_within_7_days">"В течение 7 дней"</string>
     <string name="list_date_future">"Дата в будущем"</string>
     <string name="list_start_date_in_past">"Началось"</string>
     <string name="list_start_date_today">"Начинается сегодня"</string>
     <string name="list_start_date_tomorrow">"Начинается завтра"</string>
+    <string name="list_start_date_within_7_days">"Начинается в теч. 7 дней"</string>
     <string name="list_start_date_future">"Начинается в будущем"</string>
     <string name="list_hide_completed_tasks">"Скрыть выполненное"</string>
     <string name="list_biometric_protected_entries_locked">Защищенные биометрией записи заблокированы</string>

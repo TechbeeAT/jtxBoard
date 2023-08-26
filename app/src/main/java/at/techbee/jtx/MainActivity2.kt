@@ -288,10 +288,10 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     private fun createNotificationChannels() {
-        val alarmChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_ALARMS, NotificationManagerCompat.IMPORTANCE_HIGH)
+        val alarmChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_ALARMS, NotificationManagerCompat.IMPORTANCE_MAX)
             .setName(getString(R.string.notification_channel_alarms_name))
             .build()
-        val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_HIGH)
+        val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_MAX)
             .setName(getString(R.string.notification_channel_geofences_name))
             .build()
         if(BuildFlavor.getCurrent().hasGeofence)
