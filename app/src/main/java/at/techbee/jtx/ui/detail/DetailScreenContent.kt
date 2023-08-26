@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.testTag
@@ -60,6 +61,7 @@ import at.techbee.jtx.ui.reusable.elements.ListBadge
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.util.DateTimeUtils
 import com.arnyminerz.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
@@ -183,11 +185,7 @@ fun DetailScreenContent(
         it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value            // filter remote collections if pro was not purchased
     }
 
-    // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
-    originalICalEntity.value?.property?.eTag.let { iCalObject.eTag = it }
-    originalICalEntity.value?.property?.flags.let { iCalObject.flags = it }
-    originalICalEntity.value?.property?.scheduleTag.let { iCalObject.scheduleTag = it }
-    originalICalEntity.value?.property?.fileName.let { iCalObject.fileName = it }
+    // Update some fields in the background that might have changed (e.g. by creating a copy)
     if ((originalICalEntity.value?.property?.sequence ?: 0) > iCalObject.sequence) {
         iCalObject.status = originalICalEntity.value?.property?.status
         iCalObject.percent = originalICalEntity.value?.property?.percent
@@ -298,7 +296,7 @@ fun DetailScreenContent(
                 Card(
                     colors = CardDefaults.elevatedCardColors(),
                     elevation = CardDefaults.elevatedCardElevation(),
-                    border = color?.let { BorderStroke(1.dp, Color(it)) },
+                    border = color?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
                     modifier = Modifier.fillMaxWidth()
                 ) {
 
@@ -323,7 +321,7 @@ fun DetailScreenContent(
             Card(
                 colors = CardDefaults.elevatedCardColors(),
                 elevation = CardDefaults.elevatedCardElevation(),
-                border = color?.let { BorderStroke(1.dp, Color(it)) },
+                border = color?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
                 modifier = Modifier.fillMaxWidth()
             ) {
 
@@ -860,6 +858,7 @@ fun DetailScreenContent_JOURNAL() {
             Category(2, 1, "My Dog likes Cats", null, null),
             Category(3, 1, "This is a very long category", null, null),
         )
+        entity.property.color = Color.Blue.toArgb()
         val detailSettings = DetailSettings()
 
         DetailScreenContent(

@@ -91,7 +91,7 @@ fun DetailsCardLocation(
     var geoLongText by remember { mutableStateOf(initialGeoLong?.toString() ?: "") }
     var geofenceRadius by remember { mutableStateOf(initialGeofenceRadius) }
 
-    val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao.getAllLocationsLatLng().observeAsState(emptyList())
+    val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao().getAllLocationsLatLng().observeAsState(emptyList())
 
     val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         permissions = listOf(
@@ -164,7 +164,7 @@ fun DetailsCardLocation(
             LocationUpdateState.LOCATION_REQUESTED -> {
                 // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
                 val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                val bestProvider = locationManager.getProviders(true).lastOrNull() ?: return@LaunchedEffect
+                val bestProvider = locationManager.getProviders(true).firstOrNull() ?: return@LaunchedEffect
                 val locListener = LocationListener { }
                 locationManager.requestLocationUpdates(bestProvider, 0, 0f, locListener)
                 locationManager.getLastKnownLocation(bestProvider)?.let { lastKnownLocation ->

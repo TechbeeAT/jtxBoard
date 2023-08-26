@@ -19,20 +19,20 @@
 buildscript {
 
     ext {
-        version_core = "1.12.0-beta01"
+        version_core = "1.12.0-rc01"
         version_coroutine = "1.7.3"
         version_appcompat = "1.6.1"
-        version_gradle = '8.1.0'
-        version_kotlin = "1.8.22"
-        version_room = "2.5.2"
+        version_gradle = "8.1.1"
+        version_kotlin = "1.9.0"
+        version_room = "2.6.0-beta01"
         version_work = "2.8.1"
         version_billing = "6.0.1"
         version_review = "2.0.1"
-        version_compose = "1.4.3"
+        version_compose = "1.5.0"
         version_about_libraries = "10.8.3"
         version_huawei = "1.9.0.300"
         version_huawei_iap = "6.10.0.300"
-        version_accompanist = "0.31.6-rc"
+        version_accompanist = "0.33.1-alpha"
         version_osmdroid = "6.1.16"
     }
 
@@ -55,6 +55,10 @@ buildscript {
         // Huawei - only for use in Huawei branch
         classpath "com.huawei.agconnect:agcp:$version_huawei"
     }
+}
+
+plugins {
+    id 'com.google.devtools.ksp' version '1.9.0-1.0.13' apply false
 }
 
 allprojects {

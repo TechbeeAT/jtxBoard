@@ -4,8 +4,7 @@
     <string name="app_permission_label">"jtx Board synkronoi päiväkirjat, muistiinpanot ja tehtävät"</string>
     <string name="app_permission_desc">"synkronoi jtx Boardin tiedot muulla sovelluksella kuten DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Tallenna"</string>
     <string name="cancel">"Peru"</string>
     <string name="delete">"Poista"</string>

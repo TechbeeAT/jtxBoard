@@ -29,6 +29,7 @@ import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.AnyAllNone
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
@@ -99,12 +100,14 @@ class ListWidgetUpdateWorker(
                 Log.d("ListWidgetUpdateWorker", "GlanceId $glanceId : filterConfig: $listWidgetConfig")
                 //Log.v(TAG, "Loading data ...")
                 val allEntries = ICalDatabase.getInstance(context)
-                    .iCalDatabaseDao
+                    .iCalDatabaseDao()
                     .getIcal4ListSync(
                         ICal4List.constructQuery(
                             modules = listOf(listWidgetConfig?.module ?: Module.TODO),
                             searchCategories = listWidgetConfig?.searchCategories ?: emptyList(),
+                            searchCategoriesAnyAllNone = listWidgetConfig?.searchCategoriesAnyAllNone ?: AnyAllNone.ANY,
                             searchResources = listWidgetConfig?.searchResources ?: emptyList(),
+                            searchResourcesAnyAllNone = listWidgetConfig?.searchResourcesAnyAllNone ?: AnyAllNone.ANY,
                             searchStatus = listWidgetConfig?.searchStatus?: emptyList(),
                             searchXStatus = listWidgetConfig?.searchXStatus?: emptyList(),
                             searchClassification = listWidgetConfig?.searchClassification?: emptyList(),
@@ -150,8 +153,8 @@ class ListWidgetUpdateWorker(
                     parents = entries.map { it.uid ?:"" },
                     orderBy = listWidgetConfig?.subnotesOrderBy ?: OrderBy.CREATED,
                     sortOrder = listWidgetConfig?.subnotesSortOrder ?: SortOrder.ASC)
-                val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subtasksQuery)
-                val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao.getSubEntriesSync(subnotesQuery)
+                val subtasks = ICalDatabase.getInstance(context).iCalDatabaseDao().getSubEntriesSync(subtasksQuery)
+                val subnotes = ICalDatabase.getInstance(context).iCalDatabaseDao().getSubEntriesSync(subnotesQuery)
 
                 val subtasksList = mutableListOf<ICal4ListWidget>().apply {
                     subtasks.forEach { subtask ->

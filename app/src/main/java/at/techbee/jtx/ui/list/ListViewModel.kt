@@ -53,7 +53,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
-import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
@@ -74,7 +73,7 @@ import kotlinx.coroutines.launch
 open class ListViewModel(application: Application, val module: Module) : AndroidViewModel(application) {
 
     private val _application = application
-    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
+    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao()
     private val settings = PreferenceManager.getDefaultSharedPreferences(application)
 
     val prefs: SharedPreferences = when (module) {
@@ -112,7 +111,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val allResources = database.getAllResourcesAsText()
     val allWriteableCollections = database.getAllWriteableCollections()
     val allCollections = database.getAllCollections(module = module.name)
-    val storedListSettings = database.getStoredListSettings(module = module.name)
+    val storedListSettings = database.getStoredListSettings(modules = listOf(module.name))
     val storedCategories = database.getStoredCategories()
     val storedResources = database.getStoredResources()
     val extendedStatuses = database.getStoredStatuses()
@@ -157,7 +156,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
         val query = ICal4List.constructQuery(
             modules = listOf(module),
             searchCategories = listSettings.searchCategories,
+            searchCategoriesAnyAllNone = listSettings.searchCategoriesAnyAllNone.value,
             searchResources = listSettings.searchResources,
+            searchResourcesAnyAllNone = listSettings.searchResourcesAnyAllNone.value,
             searchStatus = listSettings.searchStatus,
             searchXStatus = listSettings.searchXStatus,
             searchClassification = listSettings.searchClassification,
@@ -171,10 +172,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterOverdue = listSettings.isFilterOverdue.value,
             isFilterDueToday = listSettings.isFilterDueToday.value,
             isFilterDueTomorrow = listSettings.isFilterDueTomorrow.value,
+            isFilterDueWithin7Days = listSettings.isFilterDueWithin7Days.value,
             isFilterDueFuture = listSettings.isFilterDueFuture.value,
             isFilterStartInPast = listSettings.isFilterStartInPast.value,
             isFilterStartToday = listSettings.isFilterStartToday.value,
             isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value,
+            isFilterStartWithin7Days = listSettings.isFilterStartWithin7Days.value,
             isFilterStartFuture = listSettings.isFilterStartFuture.value,
             isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
             isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value,
@@ -507,15 +510,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
         }
     }
 
-    fun saveStoredListSettingsData(name: String, config: StoredListSettingData) {
+    fun saveStoredListSetting(storedListSetting: StoredListSetting) {
         viewModelScope.launch(Dispatchers.IO) {
-            database.insertStoredListSetting(
-                StoredListSetting(
-                    module = module,
-                    name = name,
-                    storedListSettingData = config
-                )
-            )
+            database.upsertStoredListSetting(storedListSetting)
         }
     }
 
@@ -615,9 +612,9 @@ open class ListViewModelTodos(application: Application) : ListViewModel(applicat
 
 
 enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String) {
-    START_VTODO(R.string.started, "$COLUMN_COMPLETED IS NOT NULL OR $COLUMN_PERCENT = 100, $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
+    START_VTODO(R.string.started, "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
     START_VJOURNAL(R.string.date, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
-    DUE(R.string.due, "$COLUMN_COMPLETED IS NOT NULL OR $COLUMN_PERCENT = 100, $COLUMN_DUE IS NULL, $COLUMN_DUE "),
+    DUE(R.string.due, "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DUE IS NULL, $COLUMN_DUE "),
     COMPLETED(R.string.completed, "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED "),
     CREATED(R.string.filter_created, "$COLUMN_CREATED "),
     LAST_MODIFIED(R.string.filter_last_modified, "$COLUMN_LAST_MODIFIED "),
@@ -645,6 +642,8 @@ enum class SortOrder(@StringRes val stringResource: Int, val queryAppendix: Stri
 }
 
 enum class GroupBy(@StringRes val stringResource: Int) {
+    CATEGORY(R.string.category),
+    RESOURCE(R.string.resource),
     PRIORITY(R.string.priority),
     STATUS(R.string.status),
     CLASSIFICATION(R.string.classification),
@@ -658,6 +657,7 @@ enum class GroupBy(@StringRes val stringResource: Int) {
         fun getValuesFor(module: Module): Array<GroupBy> =
             when(module) {
                 Module.JOURNAL -> arrayOf(
+                    CATEGORY,
                     DATE,
                     STATUS,
                     CLASSIFICATION,
@@ -665,12 +665,15 @@ enum class GroupBy(@StringRes val stringResource: Int) {
                     COLLECTION
                 )
                 Module.NOTE -> arrayOf(
+                    CATEGORY,
                     STATUS,
                     CLASSIFICATION,
                     ACCOUNT,
                     COLLECTION
                 )
                 Module.TODO -> arrayOf(
+                    CATEGORY,
+                    RESOURCE,
                     START,
                     DUE,
                     STATUS,
@@ -681,6 +684,12 @@ enum class GroupBy(@StringRes val stringResource: Int) {
                 )
             }
     }
+}
+
+enum class AnyAllNone(@StringRes val stringResource: Int) {
+    ANY(R.string.filter_any),
+    ALL(R.string.filter_all),
+    NONE(R.string.filter_none)
 }
 
 enum class ViewMode(@StringRes val stringResource: Int) {

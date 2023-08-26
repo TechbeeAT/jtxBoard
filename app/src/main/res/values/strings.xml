@@ -12,9 +12,9 @@
     <string name="link_jtx_twitter" translatable="false">"https://twitter.com/jtxBoard"</string>
     <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
     <string name="twitter_account_name" translatable="false">"@jtxBoard"</string>
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Save"</string>
+    <string name="update">"Update"</string>
     <string name="cancel">"Cancel"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Delete"</string>
@@ -64,11 +64,14 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Privacy Policy"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Overdue"</string>
+    <string name="list_due_shortly">"Due shortly"</string>
     <string name="list_due_today">"Due today"</string>
     <string name="list_due_tomorrow">"Due tomorrow"</string>
+    <string name="list_due_within_7_days">"Due within 7 days"</string>
     <string name="list_due_inXhours">"Due in %d hours"</string>
     <string name="list_due_on_weekday">"Due on %s"</string>
     <string name="list_start_past">"Start in past"</string>
+    <string name="list_start_shortly">"Start shortly"</string>
     <string name="list_start_today">"Planned start today"</string>
     <string name="list_start_tomorrow">"Start tomorrow"</string>
     <string name="list_start_inXhours">"Planned start in %d hours"</string>
@@ -254,8 +257,6 @@ Global Strings -->
     <string name="edit_recur_week">"week(s)"</string>
     <string name="edit_recur_month">"month(s)"</string>
     <string name="edit_recur_year">"year(s)"</string>
-    <string name="collections_toast_export_ics_success">"Exporting collection finished successfully."</string>
-    <string name="collections_toast_export_ics_error">"An error occurred while exporting the selected collection."</string>
     <string name="attachment_export_saved_successfully">"Saved successfully"</string>
     <string name="attachment_export_error_error_occurred">"An error occurred while saving the selected file!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Add remote Collection (%1$s)"</string>
@@ -268,6 +269,7 @@ Global Strings -->
     <string name="status">"Status"</string>
     <string name="classification">"Classification"</string>
     <string name="category">"Category"</string>
+    <string name="resource">"Resource"</string>
     <string name="priority">"Priority"</string>
     <string name="readyonly">"Read only"</string>
     <string name="upload_pending">"Upload pending"</string>
@@ -323,6 +325,8 @@ Global Strings -->
     <string name="filter_no_resource">Without resources</string>
     <string name="filter_subtasks_order_by">Order subtasks by</string>
     <string name="filter_subnotes_order_by">Order linked notes by</string>
+    <string name="filter_no_filter">"No filter"</string>
+    <string name="filter_options_more_entries">"More (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Please click on the collection to which the entry/entries should be added!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d added, %2$d skipped. (Exclusive instances of recurring entries.)"</string>
     <string name="collections_toast_x_items_added">"%1$d entries added!"</string>
@@ -334,9 +338,15 @@ Global Strings -->
     <string name="edit_recur_ends_never">"ends never"</string>
     <string name="edit_recur_ends_on">"ends on"</string>
     <string name="edit_recur_ends_after">"ends after"</string>
-    <string name="collections_toast_export_all_ics_success">"Exporting all collections finished successfully."</string>
-    <string name="collections_toast_export_all_ics_error">"An error occurred while exporting all collections."</string>
+    <string name="collections_toast_export_success">"Collections successfully exported"</string>
+    <string name="collections_toast_export_error">"Error on exporting collections"</string>
     <string name="menu_collections_export_all">"Export all"</string>
+    <string name="menu_presets_export_presets">"Export presets"</string>
+    <string name="menu_presets_import_presets">"Import presets"</string>
+    <string name="presets_imported">"Presets imported"</string>
+    <string name="presets_import_invalid_file">"Invalid file"</string>
+    <string name="presets_saved">"Presets saved"</string>
+    <string name="presets_export_error">"An error occurred saving presets"</string>
     <string name="more">"More"</string>
     <string name="navigation_drawer_buypro">"Buy Pro"</string>
     <string name="settings_select_theme">"Select theme"</string>
@@ -515,14 +525,20 @@ Thank you!"</string>
     <string name="settings_select_language_system">"System default"</string>
     <string name="filter_special">"Special filters"</string>
     <string name="filter_presets">"Filter presets"</string>
+    <string name="filter_presets_edit_info">"Please add/update/delete filter presets from the filter menu in the list view."</string>
+    <string name="filter_any">"Any"</string>
+    <string name="filter_all">"All"</string>
+    <string name="filter_none">"None"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>
     <string name="list_date_tomorrow">"Tomorrow"</string>
+    <string name="list_date_within_7_days">"Within 7 days"</string>
     <string name="list_date_future">"Date in future"</string>
     <string name="list_start_date_in_past">"Start in past"</string>
     <string name="list_start_date_today">"Start today"</string>
     <string name="list_start_date_tomorrow">"Start tomorrow"</string>
+    <string name="list_start_date_within_7_days">"Start within 7 days"</string>
     <string name="list_start_date_future">"Start in future"</string>
     <string name="list_hide_completed_tasks">"Hide completed tasks"</string>
     <string name="list_biometric_protected_entries_locked">Biometric protected entries locked</string>

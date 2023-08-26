@@ -32,6 +32,7 @@ import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.util.DateTimeUtils
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.util.TimeZone
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,12 +56,9 @@ fun HorizontalDateCard(
 
     Card(
         onClick = {
-            if(isEditMode) {
-                showDatePickerDialog = true
-            } else {
+            if(!isEditMode)
                 toggleEditMode()
-                showDatePickerDialog = true
-            }
+            showDatePickerDialog = true
         },
         shape = if(isEditMode) CardDefaults.outlinedShape else CardDefaults.elevatedShape,
         colors = if(isEditMode) CardDefaults.outlinedCardColors() else CardDefaults.elevatedCardColors(),
@@ -90,7 +88,7 @@ fun HorizontalDateCard(
                     fontStyle = if(!isEditMode) FontStyle.Italic else null,
                     fontWeight = if(!isEditMode) FontWeight.Bold else null
                 )
-                if(!isEditMode && timezone != null && timezone != TZ_ALLDAY && timezone != ZoneId.systemDefault().id) {
+                if(!isEditMode && timezone != null && timezone != TZ_ALLDAY && TimeZone.getTimeZone(timezone).rawOffset != TimeZone.getDefault().rawOffset) {
                     Text(
                         DateTimeUtils.convertLongToFullDateTimeString(
                             datetime,
@@ -195,6 +193,22 @@ fun HorizontalDateCard_Preview_WithTimezone2() {
         HorizontalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = "Africa/Addis_Ababa",
+            isEditMode = false,
+            allowNull = true,
+            dateOnly = false,
+            onDateTimeChanged = { _, _ -> },
+            toggleEditMode = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HorizontalDateCard_Preview_SameOffset() {
+    MaterialTheme {
+        HorizontalDateCard(
+            datetime = System.currentTimeMillis(),
+            timezone = "Europe/Rome",
             isEditMode = false,
             allowNull = true,
             dateOnly = false,

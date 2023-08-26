@@ -53,7 +53,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -93,7 +92,6 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalComposeUiApi::class,
     ExperimentalFoundationApi::class
 )
 @Composable
@@ -160,6 +158,7 @@ fun ListScreenTabContainer(
     }
     val storedCategories by listViewModel.storedCategories.observeAsState(emptyList())
     val storedResources by listViewModel.storedResources.observeAsState(emptyList())
+    val storedListSettings by listViewModel.storedListSettings.observeAsState(emptyList())
 
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, allWriteableCollections.value) {
@@ -334,7 +333,7 @@ fun ListScreenTabContainer(
                         isAuthenticated = globalStateHolder.isAuthenticated.value
                     )
                 },
-                onSaveStoredListSetting = { name, storedListSettingData -> listViewModel.saveStoredListSettingsData(name, storedListSettingData) },
+                onSaveStoredListSetting = { storedListSetting -> listViewModel.saveStoredListSetting(storedListSetting) },
                 onDeleteStoredListSetting = { storedListSetting -> listViewModel.deleteStoredListSetting(storedListSetting) }
             )
         }
@@ -463,10 +462,14 @@ fun ListScreenTabContainer(
                                     topBarMenuExpanded = false
                                 },
                                 onSettingsClicked = {
-                                    if(viewMode ==ViewMode.KANBAN) {
-                                        getActiveViewModel().listSettings.viewMode.value = viewMode
-                                        filterSheetInitialTab = ListOptionsBottomSheetTabs.KANBAN_SETTINGS
-                                        scope.launch { filterSheetState.show() }
+                                    if(viewMode == ViewMode.KANBAN) {
+                                        if(isProPurchased.value) {
+                                            getActiveViewModel().listSettings.viewMode.value = viewMode
+                                            filterSheetInitialTab = ListOptionsBottomSheetTabs.KANBAN_SETTINGS
+                                            scope.launch { filterSheetState.show() }
+                                        } else {
+                                            Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
+                                        }
                                         topBarMenuExpanded = false
                                     }
                                 }
@@ -622,6 +625,7 @@ fun ListScreenTabContainer(
                                     module = listViewModel.module,
                                     storedCategories = storedCategories,
                                     storedResources = storedResources,
+                                    storedListSettings = storedListSettings,
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                 )
                             }

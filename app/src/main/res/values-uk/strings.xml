@@ -2,8 +2,7 @@
 <resources>
     <!-- App title and fragment titles -->
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="ok">"OK"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <!-- Navigation Drawer -->

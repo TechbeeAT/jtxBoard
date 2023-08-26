@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -55,7 +56,7 @@ fun ListOptionsBottomSheet(
     storedListSettingLive: LiveData<List<StoredListSetting>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     onListSettingsChanged: () -> Unit,
-    onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
+    onSaveStoredListSetting: (StoredListSetting) -> Unit,
     onDeleteStoredListSetting: (StoredListSetting) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -88,7 +89,8 @@ fun ListOptionsBottomSheet(
                                 ListOptionsBottomSheetTabs.FILTER -> R.string.filter
                                 ListOptionsBottomSheetTabs.GROUP_SORT -> R.string.filter_group_sort
                                 ListOptionsBottomSheetTabs.KANBAN_SETTINGS -> R.string.kanban_settings
-                            } )
+                            } ),
+                            textAlign = TextAlign.Center
                         )
                     },
                     modifier = Modifier.height(50.dp)
@@ -185,7 +187,7 @@ fun ListOptionsBottomSheet_Preview_TODO() {
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
-            onSaveStoredListSetting = { _, _ -> },
+            onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }
 
         )
@@ -229,7 +231,7 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
-            onSaveStoredListSetting = { _, _ -> },
+            onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }
         )
     }

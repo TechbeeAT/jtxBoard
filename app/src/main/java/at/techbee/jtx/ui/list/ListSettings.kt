@@ -28,7 +28,9 @@ import kotlinx.serialization.json.Json
 class ListSettings {
 
     var searchCategories = mutableStateListOf<String>()
+    var searchCategoriesAnyAllNone = mutableStateOf<AnyAllNone>(AnyAllNone.ANY)
     var searchResources = mutableStateListOf<String>()
+    var searchResourcesAnyAllNone = mutableStateOf<AnyAllNone>(AnyAllNone.ANY)
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
     var searchStatus = mutableStateListOf<Status>()
     var searchXStatus = mutableStateListOf<String>()
@@ -48,10 +50,12 @@ class ListSettings {
     var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueTomorrow: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterDueWithin7Days: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartInPast: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartToday: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartTomorrow: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterStartWithin7Days: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoStartDateSet: MutableState<Boolean> = mutableStateOf(false)
@@ -87,7 +91,9 @@ class ListSettings {
         private const val PREFS_COLLECTION = "prefsCollection"
         private const val PREFS_ACCOUNT = "prefsAccount"
         private const val PREFS_CATEGORIES = "prefsCategories"
+        private const val PREFS_CATEGORIES_ANYALLNONE = "prefsCategoriesAnyAllNone"
         private const val PREFS_RESOURCES = "prefsResources"
+        private const val PREFS_RESOURCES_ANYALLNONE = "prefsResourcesAnyAllNone"
         private const val PREFS_CLASSIFICATION = "prefsClassification"
         private const val PREFS_STATUS = "prefsStatus"
         private const val PREFS_EXTENDED_STATUS = "prefsXStatus"
@@ -104,6 +110,7 @@ class ListSettings {
         private const val PREFS_FILTER_OVERDUE = "prefsFilterOverdue"
         private const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
+        private const val PREFS_FILTER_DUE_WITHIN_7_DAYS = "prefsFilterDueWithin7Days"
         private const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
         private const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
         private const val PREFS_FILTER_NO_START_DATE_SET = "prefsFilterNoStartDateSet"
@@ -112,6 +119,7 @@ class ListSettings {
         private const val PREFS_FILTER_START_IN_PAST = "prefsFilterStartOverdue"
         private const val PREFS_FILTER_START_TODAY = "prefsFilterStartToday"
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
+        private const val PREFS_FILTER_START_WITHIN_7_DAYS = "prefsFilterStartWithin7Days"
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
@@ -149,10 +157,12 @@ class ListSettings {
             isFilterOverdue.value = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
             isFilterDueToday.value = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
             isFilterDueTomorrow.value = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
+            isFilterDueWithin7Days.value = prefs.getBoolean(PREFS_FILTER_DUE_WITHIN_7_DAYS, false)
             isFilterDueFuture.value = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
             isFilterStartInPast.value = prefs.getBoolean(PREFS_FILTER_START_IN_PAST, false)
             isFilterStartToday.value = prefs.getBoolean(PREFS_FILTER_START_TODAY, false)
             isFilterStartTomorrow.value = prefs.getBoolean(PREFS_FILTER_START_TOMORROW, false)
+            isFilterStartWithin7Days.value = prefs.getBoolean(PREFS_FILTER_START_WITHIN_7_DAYS, false)
             isFilterStartFuture.value = prefs.getBoolean(PREFS_FILTER_START_FUTURE, false)
             isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
             isFilterNoStartDateSet.value = prefs.getBoolean(PREFS_FILTER_NO_START_DATE_SET, false)
@@ -163,7 +173,9 @@ class ListSettings {
 
             //searchOrganizers =
             searchCategories.addAll(prefs.getStringSet(PREFS_CATEGORIES, emptySet())?.toList() ?: emptyList())
+            searchCategoriesAnyAllNone.value = prefs.getString(PREFS_CATEGORIES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: AnyAllNone.ANY
             searchResources.addAll(prefs.getStringSet(PREFS_RESOURCES, emptySet())?.toList() ?: emptyList())
+            searchResourcesAnyAllNone.value = prefs.getString(PREFS_RESOURCES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: AnyAllNone.ANY
             searchStatus.addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
             searchXStatus.addAll(prefs.getStringSet(PREFS_EXTENDED_STATUS, emptySet())?.toList() ?: emptyList())
 
@@ -207,10 +219,12 @@ class ListSettings {
             isFilterOverdue.value = listWidgetConfig.isFilterOverdue
             isFilterDueToday.value = listWidgetConfig.isFilterDueToday
             isFilterDueTomorrow.value = listWidgetConfig.isFilterDueTomorrow
+            isFilterDueWithin7Days.value = listWidgetConfig.isFilterDueWithin7Days
             isFilterDueFuture.value = listWidgetConfig.isFilterDueFuture
             isFilterStartInPast.value = listWidgetConfig.isFilterStartInPast
             isFilterStartToday.value = listWidgetConfig.isFilterStartToday
             isFilterStartTomorrow.value = listWidgetConfig.isFilterStartTomorrow
+            isFilterStartWithin7Days.value = listWidgetConfig.isFilterStartWithin7Days
             isFilterStartFuture.value = listWidgetConfig.isFilterStartFuture
             isFilterNoDatesSet.value = listWidgetConfig.isFilterNoDatesSet
             isFilterNoStartDateSet.value = listWidgetConfig.isFilterNoStartDateSet
@@ -220,7 +234,9 @@ class ListSettings {
             isFilterNoResourceSet.value = listWidgetConfig.isFilterNoResourceSet
 
             searchCategories.addAll(listWidgetConfig.searchCategories)
+            searchCategoriesAnyAllNone.value = listWidgetConfig.searchCategoriesAnyAllNone
             searchResources.addAll(listWidgetConfig.searchResources)
+            searchResourcesAnyAllNone.value = listWidgetConfig.searchResourcesAnyAllNone
             searchStatus.addAll(listWidgetConfig.searchStatus)
             searchXStatus.addAll(listWidgetConfig.searchXStatus)
             searchClassification.addAll(listWidgetConfig.searchClassification)
@@ -258,10 +274,12 @@ class ListSettings {
             putBoolean(PREFS_FILTER_OVERDUE, isFilterOverdue.value)
             putBoolean(PREFS_FILTER_DUE_TODAY, isFilterDueToday.value)
             putBoolean(PREFS_FILTER_DUE_TOMORROW, isFilterDueTomorrow.value)
+            putBoolean(PREFS_FILTER_DUE_WITHIN_7_DAYS, isFilterDueWithin7Days.value)
             putBoolean(PREFS_FILTER_DUE_FUTURE, isFilterDueFuture.value)
             putBoolean(PREFS_FILTER_START_IN_PAST, isFilterStartInPast.value)
             putBoolean(PREFS_FILTER_START_TODAY, isFilterStartToday.value)
             putBoolean(PREFS_FILTER_START_TOMORROW, isFilterStartTomorrow.value)
+            putBoolean(PREFS_FILTER_START_WITHIN_7_DAYS, isFilterStartWithin7Days.value)
             putBoolean(PREFS_FILTER_START_FUTURE, isFilterStartFuture.value)
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
             putBoolean(PREFS_FILTER_NO_START_DATE_SET, isFilterNoStartDateSet.value)
@@ -284,7 +302,9 @@ class ListSettings {
             putBoolean(PREFS_EXCLUDE_DONE, isExcludeDone.value)
 
             putStringSet(PREFS_CATEGORIES, searchCategories.toSet())
+            putString(PREFS_CATEGORIES_ANYALLNONE, searchCategoriesAnyAllNone.value.name)
             putStringSet(PREFS_RESOURCES, searchResources.toSet())
+            putString(PREFS_RESOURCES_ANYALLNONE, searchResourcesAnyAllNone.value.name)
             putStringSet(PREFS_STATUS, Status.getStringSetFromList(searchStatus))
             putStringSet(PREFS_EXTENDED_STATUS, searchXStatus.toSet())
             putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(searchClassification))
@@ -310,7 +330,9 @@ class ListSettings {
 
     fun reset() {
         searchCategories.clear()
+        searchCategoriesAnyAllNone.value = AnyAllNone.ANY
         searchResources.clear()
+        searchResourcesAnyAllNone.value = AnyAllNone.ANY
         //searchOrganizer = emptyList()
         searchStatus.clear()
         searchXStatus.clear()
@@ -321,10 +343,12 @@ class ListSettings {
         isFilterStartInPast.value = false
         isFilterStartToday.value = false
         isFilterStartTomorrow.value = false
+        isFilterStartWithin7Days.value = false
         isFilterStartFuture.value = false
         isFilterOverdue.value = false
         isFilterDueToday.value = false
         isFilterDueTomorrow.value = false
+        isFilterDueWithin7Days.value = false
         isFilterDueFuture.value = false
         isFilterNoDatesSet.value = false
         isFilterNoStartDateSet.value = false
@@ -350,10 +374,12 @@ class ListSettings {
                 || isFilterStartInPast.value
                 || isFilterStartToday.value
                 || isFilterStartTomorrow.value
+                || isFilterStartWithin7Days.value
                 || isFilterStartFuture.value
                 || isFilterOverdue.value
                 || isFilterDueToday.value
                 || isFilterDueTomorrow.value
+                || isFilterDueWithin7Days.value
                 || isFilterDueFuture.value
                 || isFilterNoDatesSet.value
                 || isFilterNoStartDateSet.value

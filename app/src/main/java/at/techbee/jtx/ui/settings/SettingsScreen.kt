@@ -82,6 +82,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+enum class SettingsScreenSection { APP_SETTINGS, ACTIVE_MODUES, ITEM_LIST, JOURNALS_SETTINGS, NOTES_SETTINGS, TASKS_SETTINGS, TASKS_SETTINGS_STATUS, SYNC_SETTINGS }
 
 @Composable
 fun SettingsScreen(
@@ -94,6 +95,10 @@ fun SettingsScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    var expandedSection by remember { mutableStateOf<SettingsScreenSection?>(SettingsScreenSection.APP_SETTINGS) }
+    fun expandOrCollapse(selectedSection: SettingsScreenSection) {
+        expandedSection = if (expandedSection == selectedSection) null else selectedSection
+    }
 
     val languageOptions = mutableListOf<Locale?>(null)
     for (language in BuildConfig.TRANSLATION_ARRAY) {
@@ -134,7 +139,8 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_app,
-                        expandedDefault = true, 
+                        expanded = expandedSection == SettingsScreenSection.APP_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.APP_SETTINGS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         
@@ -260,7 +266,8 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_modules,
-                        expandedDefault = true,
+                        expanded = expandedSection == SettingsScreenSection.ACTIVE_MODUES,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.ACTIVE_MODUES) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
 
@@ -296,7 +303,8 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_list,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.ITEM_LIST,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.ITEM_LIST) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         SwitchSettingElement(
@@ -324,7 +332,8 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_journals,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.JOURNALS_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.JOURNALS_SETTINGS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         DropdownSettingElement(
@@ -346,7 +355,8 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_notes,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.NOTES_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.NOTES_SETTINGS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         SwitchSettingElement(
@@ -360,7 +370,8 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_tasks,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.TASKS_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.TASKS_SETTINGS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         DropdownSettingElement(
@@ -459,7 +470,8 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_tasks_status_progress,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.TASKS_SETTINGS_STATUS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.TASKS_SETTINGS_STATUS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         SwitchSettingElement(
@@ -506,7 +518,8 @@ fun SettingsScreen(
 
                     ExpandableSettingsSection(
                         headerText = R.string.settings_sync,
-                        expandedDefault = false,
+                        expanded = expandedSection == SettingsScreenSection.SYNC_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.SYNC_SETTINGS) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         SwitchSettingElement(

@@ -25,7 +25,7 @@ class RestoreNotificationsAtBootReceiver : BroadcastReceiver() {
             CoroutineScope(Dispatchers.IO).launch {
 
                 val notificationManager = NotificationManagerCompat.from(context)
-                val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+                val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
                 val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
                 prefs.getStringSet(NotificationPublisher.PREFS_SCHEDULED_ALARMS, null)
@@ -38,7 +38,7 @@ class RestoreNotificationsAtBootReceiver : BroadcastReceiver() {
                     }
                     ?.forEach { iCalObjectId ->
                         val iCalObject = database.getICalObjectByIdSync(iCalObjectId)
-                        val alarms = database.getAlarmsSync(iCalObjectId) ?: return@launch
+                        val alarms = database.getAlarmsSync(iCalObjectId)
                         if (iCalObject != null
                             && iCalObject.percent != 100
                             && iCalObject.status != Status.COMPLETED.status

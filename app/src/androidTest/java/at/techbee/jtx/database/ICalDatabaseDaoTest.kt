@@ -40,7 +40,7 @@ class ICalDatabaseDaoTest {
     fun createDb() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
         ICalDatabase.switchToInMemory(context)
-        database = ICalDatabase.getInstance(context).iCalDatabaseDao
+        database = ICalDatabase.getInstance(context).iCalDatabaseDao()
         database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
     }
 

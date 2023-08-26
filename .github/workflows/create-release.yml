@@ -70,6 +70,7 @@ jobs:
           files: | 
             release-${{ github.ref_name }}.tar.xz
             jtxBoard-${{ github.ref_name }}.apk
+          generate_release_notes: true
           fail_on_unmatched_files: true
 
       - name: Upload jtxBoard-gplay to Google Play

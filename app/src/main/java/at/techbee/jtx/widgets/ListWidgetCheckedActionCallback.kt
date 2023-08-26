@@ -30,7 +30,7 @@ class ListWidgetCheckedActionCallback: ActionCallback {
     ) {
         val settingsStateHolder = SettingsStateHolder(context)
         val iCalObjectId = parameters[actionWidgetIcalObjectId] ?: return
-        val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+        val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
         val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return
         iCalObject.setUpdatedProgress(if(iCalObject.percent == 100) null else 100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
         database.update(iCalObject)

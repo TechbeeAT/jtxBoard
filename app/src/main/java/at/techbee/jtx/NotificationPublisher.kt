@@ -44,7 +44,7 @@ class NotificationPublisher : BroadcastReceiver() {
         val alarmId = intent.getLongExtra(ALARM_ID,  0L)
         val icalObjectId = intent.getLongExtra(ICALOBJECT_ID, 0L)
         val settingsStateHolder = SettingsStateHolder(context)
-        val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+        val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
 
         // onReceive is triggered when the Alarm Manager calls it (the initial notification, action is null)
         // but also when one of the actions is clicked in the notification (action is one of the defined actions)
@@ -129,7 +129,7 @@ class NotificationPublisher : BroadcastReceiver() {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                 return
 
-            val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+            val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
             val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED).toMutableList()
 
             val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
