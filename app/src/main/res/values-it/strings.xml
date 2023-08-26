@@ -6,6 +6,7 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Salva"</string>
+    <string name="update">"Aggiorna"</string>
     <string name="cancel">"Annulla"</string>
     <string name="ok">"Ok"</string>
     <string name="delete">"Elimina"</string>
@@ -16,10 +17,12 @@
     <string name="longitude">"Longitudine"</string>
     <string name="unlink">"Scollega"</string>
     <string name="off">"Off"</string>
+    <string name="permissions">"Autorizzazioni"</string>
     <string name="current_location">"Posizione attuale"</string>
     <string name="toolbar_text_add_journal">"Inserisci Diario"</string>
     <string name="toolbar_text_add_note">"Inserisci Nota"</string>
     <string name="toolbar_text_add_task">"Inserisci Attività"</string>
+    <string name="toast_sync_requested">"Sincronizzazione richiesta"</string>
     <string name="default_local_collection_name">"Locale"</string>
     <string name="default_local_account_name">"Locale"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -53,11 +56,14 @@
     <string name="navigation_drawer_privacy_policy">"Privacy"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"In ritardo"</string>
+    <string name="list_due_shortly">"Scadenza a breve"</string>
     <string name="list_due_today">"Da fare oggi"</string>
     <string name="list_due_tomorrow">"Per domani"</string>
+    <string name="list_due_within_7_days">"Scadenza entro 7 giorni"</string>
     <string name="list_due_inXhours">"In scadenza tra %d ore"</string>
     <string name="list_due_on_weekday">"Scade il %s"</string>
     <string name="list_start_past">"Iniziati nel passato"</string>
+    <string name="list_start_shortly">"Inizia a breve"</string>
     <string name="list_start_today">"Pianificati per oggi"</string>
     <string name="list_start_tomorrow">"Pianificati per domani"</string>
     <string name="list_start_inXhours">"Pianificato tra %d ore"</string>
@@ -91,6 +97,8 @@
     <string name="edit_take_picture_button_text">"Fai una foto"</string>
     <string name="edit_add_link_button_text">"Aggiungi link allegato"</string>
     <string name="edit_subtasks_add_helper">"Aggiungi una sottoattività"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Aggiunta rapida sottoattività"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Aggiunta rapida subnota"</string>
     <string name="edit_attachment_add_link_dialog">"Aggiungi link allegato"</string>
     <string name="edit_recur_repeat_every_x">"Ripeti ogni"</string>
     <string name="edit_recur_on_weekday">"in poi"</string>
@@ -115,6 +123,7 @@
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Traduzioni"</string>
     <string name="about_tabitem_libraries">"Librerie"</string>
+    <string name="about_tabitem_contributors">"Collaboratori"</string>
     <string name="about_special_thanks">"Ringraziamenti speciali"</string>
     <string name="about_app_version">"Versione: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nome in codice: %1$s"</string>
@@ -131,6 +140,8 @@
     <string name="menu_view_copy_as_todo">"Copia come Attività"</string>
     <string name="menu_view_copy_as_note">"Copia come Nota"</string>
     <string name="menu_view_copy_item">"Crea copia"</string>
+    <string name="notification_channel_alarms_name">"Allarmi"</string>
+    <string name="notification_channel_geofences_name">"Geofences"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Aggiungi Diario"</string>
     <string name="shortcut_addNote_longLabel">"Aggiungi Nota"</string>
@@ -143,6 +154,8 @@
     <string name="settings_select_mimetype_for_audio">"Seleziona Tipo MI per le note audio"</string>
     <!-- Sync fragment -->
     <string name="sync_with_sync_app_heading">"Sincronizza con %1$s"</string>
+    <string name="sync_basic_info">"jtx Board non fornisce la sincronizzazione del server, ma supporta la sincronizzazione tramite DAVx5. Questo metodo ti permetterà di utilizzare un server CalDAV-compatibile di tua scelta per memorizzare, eseguire il backup e sincronizzare i tuoi dati."</string>
+    <string name="sync_ksync_basic_info">"kSync è un'app basata su DAVx5 sviluppata da Infomaniak specialmente per i loro servizi. Mentre DAVx5 è aperto a qualsiasi server CalDAV-compatibile, kSync consente solo account Infomaniak per la sincronizzazione."</string>
     <string name="sync_manageddavx5_basic_info">"Managed DAVx5 rende la funzionalità di DAVx5 disponibile per le organizzazioni e viene fornito con funzionalità aziendali aggiuntive come distribuzione di massa, branding aziendale e impostazioni pre-configurabili."</string>
     <string name="sync_congratulations">"Congratulazioni! :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"Abbiamo rilevato %1$s sul telefono."</string>
@@ -191,7 +204,11 @@
     <string name="collection">"Collezione"</string>
     <string name="collection_owner_displayname">"Proprietario: %1$s"</string>
     <string name="link_to_parent">"Link al genitore"</string>
+    <string name="link_selected_as_parent">"Genitore"</string>
+    <string name="link_selected_as_subtask_note">"Sotto-attività/nota"</string>
+    <string name="link_selected_as">"Collega selezionato come …"</string>
     <string name="navigation_drawer_collections">"Collezioni"</string>
+    <string name="navigation_drawer_presets">"Preimpostazioni"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Data/Ora"</string>
     <string name="alarms_duration">"Durata"</string>
@@ -209,6 +226,7 @@
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Note: %1$s"</string>
     <string name="collections_tasks_num">"Attività: %1$s"</string>
+    <string name="collections_info">"Le collezioni sono un accumulo di voci come cartelle con file. È possibile creare nuove collezioni locali attraverso il menu o è possibile impostare nuove collezioni remote per sincronizzare se si dispone di un'app di sincronizzazione installata (per esempio DAVx⁵)."</string>
     <string name="collections_collection_menu">"Menu collezioni"</string>
     <string name="collections_dialog_add_local_collection_title">"Aggiungi collezione locale"</string>
     <string name="collections_dialog_edit_local_collection_title">"Aggiungi collezione remota"</string>
@@ -240,6 +258,7 @@
     <string name="status">"Stato"</string>
     <string name="classification">"Classificazione"</string>
     <string name="category">"Categoria"</string>
+    <string name="resource">"Risorsa"</string>
     <string name="priority">"Priorità"</string>
     <string name="readyonly">"Sola lettura"</string>
     <string name="upload_pending">"Caricamento in sospeso"</string>
@@ -271,6 +290,7 @@
     <string name="progress">"Progresso"</string>
     <string name="categories">"Categorie"</string>
     <string name="subtasks">"Sottoattività"</string>
+    <string name="linked_parents">"Genitori collegati"</string>
     <string name="priority_7_low">"7 - Basso"</string>
     <string name="priority_8_lower">"8 - Inferiore"</string>
     <string name="priority_9_lowest">"9 - Più basso"</string>
@@ -278,7 +298,9 @@
     <string name="view_share_part_of_series">"Questa voce fa parte di una serie."</string>
     <string name="view_share_repeats">"Questa voce si ripete ogni"</string>
     <string name="collections_dialog_move_title">"Sposta tutte le voci da \"%1$s\" a"</string>
+    <string name="collection_dialog_move_info">"Si prega di notare: possono essere selezionate solo le collezioni e le collezioni scrivibili con supporto per gli stessi componenti (diari, note, attività)."</string>
     <string name="menu_collections_popup_move_entries">"Spostare le voci"</string>
+    <string name="setting_no_time">"Nessuna ora"</string>
     <string name="list_no_dates_set">"Nessuna data fissata"</string>
     <string name="list_without_start_date">"Senza data di inizio"</string>
     <string name="list_without_due_date">"Senza data di scadenza"</string>
@@ -292,6 +314,8 @@
     <string name="filter_no_resource">Senza risorse</string>
     <string name="filter_subtasks_order_by">Ordina sottoattività per</string>
     <string name="filter_subnotes_order_by">Ordina note collegate per</string>
+    <string name="filter_no_filter">"Nessun filtro"</string>
+    <string name="filter_options_more_entries">"Altro (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Per favore, clicca sulla collezione a cui le voci devono essere aggiunte!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d aggiunto, %2$d saltato. (Istanze esclusive di voci ricorrenti)."</string>
     <string name="collections_toast_x_items_added">"%1$d voci aggiunte!"</string>
@@ -303,7 +327,15 @@
     <string name="edit_recur_ends_never">"finisce mai"</string>
     <string name="edit_recur_ends_on">"termina il"</string>
     <string name="edit_recur_ends_after">"termina dopo"</string>
+    <string name="collections_toast_export_success">"Collezioni esportate correttamente"</string>
+    <string name="collections_toast_export_error">"Errore nell'esportazione delle collezioni"</string>
     <string name="menu_collections_export_all">"Esporta tutto"</string>
+    <string name="menu_presets_export_presets">"Esporta preimpostazioni"</string>
+    <string name="menu_presets_import_presets">"Importa preimpostazioni"</string>
+    <string name="presets_imported">"Preimpostazioni importate"</string>
+    <string name="presets_import_invalid_file">"File non valido"</string>
+    <string name="presets_saved">"Preimpostazioni salvate"</string>
+    <string name="presets_export_error">"Errore durante il salvataggio delle preimpostazioni"</string>
     <string name="more">"Di più"</string>
     <string name="navigation_drawer_buypro">"Compra Pro"</string>
     <string name="settings_select_theme">"Seleziona tema"</string>
@@ -363,8 +395,15 @@ Grazie!"</string>
     <string name="list_quickadd_dialog_sr_listening">"Ascoltando …"</string>
     <string name="collections_dialog_buypro_info">"Per favore acquista jtx Board Pro per abilitare le funzionalità di editing per le collezioni remote."</string>
     <string name="list_update_entries_dialog_title">"Aggiorna voci"</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"Attenzione: Le istanze ricorrenti devono essere scollegate dalla sua serie prima di essere spostate in un'altra collezione e saranno ignorate in questo processo."</string>
+    <string name="list_update_entries_dialog_new_parent_info">"Scegli il genitore a cui le voci selezionate devono essere collegate come sotto-attività / note collegate."</string>
+    <string name="link_entry_search_within">"Cerca dentro …"</string>
+    <string name="link_entry_search_within_same_collection">"Stessa collezione"</string>
+    <string name="link_entry_search_within_same_account">"Stesso account"</string>
     <string name="details_link_existing_subentry_dialog_title">"Collega sotto-voci"</string>
+    <string name="details_link_existing_parent_dialog_title">"Collega i genitori"</string>
     <string name="details_link_existing_subentry_dialog_info">"Scegli le sotto-voci che dovrebbero essere collegate."</string>
+    <string name="details_link_existing_parent_dialog_info">"Scegli una voce genitore che dovrebbe essere collegata."</string>
     <string name="details_app_bar_behaviour">"Comportamento barra app"</string>
     <string name="details_show_all_options">"Mostra tutte le opzioni"</string>
     <string name="details_show_hide_elements">Mostra/nascondi elementi</string>
@@ -374,6 +413,9 @@ Grazie!"</string>
     <string name="details_recur_unknown_rrule_dialog_message">"È stata rilevata una regola di ricorrenza sconosciuta o non supportata. Se si continua, la regola di ricorrenza esistente verrà cancellata/soprascritta."</string>
     <string name="details_entry_could_not_be_loaded">"Questa voce è stata cancellata in background o non è stato possibile caricarla."</string>
     <string name="details_attachment_beta_info">"* La sincronizzazione degli allegati è una funzione sperimentale. Si consiglia vivamente di utilizzare solo allegati di piccole dimensioni (fino a 100 KB), poiché quelli più grandi potrebbero causare lunghi tempi di sincronizzazione e comportamenti inaspettati."</string>
+    <string name="details_unchanged_part_of_series">"Questa voce fa parte di una serie. Questa voce copierà tutte le modifiche apportate alla serie."</string>
+    <string name="details_changed_part_of_series">"Questa voce fa parte di una serie ma è stata cambiata. Questa voce non sarà influenzata dalle modifiche della serie."</string>
+    <string name="details_series_attention_subentries">"Attenzione: gli elementi di serie rispecchiano le sottoattività e le note collegate della serie. Se si desidera modificare le sottoattività e le note collegate solo per un elemento serie, si prega di scollegarlo dalla serie prima."</string>
     <string name="details_go_to_series">"Vai alla serie"</string>
     <string name="details_detach_from_series">"Scollega dalla serie"</string>
     <string name="details_detach_all_instances">"Stacca tutte le istanze"</string>
@@ -411,12 +453,19 @@ Grazie!"</string>
     <string name="dialog_sync_app_outdated_message">"La tua versione attuale di %1$s non è compatibile con questa versione di jtx Board. Si prega di aggiornare a %1$s %2$s o successivamente! La sincronizzazione attraverso %1$s è attualmente sospesa."</string>
     <string name="dialog_save_current_filter_config">"Salva la configurazione del filtro corrente"</string>
     <string name="dialog_save_current_filter_my_filter">"Mio filtro"</string>
+    <string name="dialog_edit_stored_category_title">"Aggiungi/modifica preimpostazione categoria"</string>
+    <string name="dialog_edit_stored_resource_title">"Aggiungi/modifica preimpostazione risorsa"</string>
+    <string name="dialog_edit_stored_status_title">"Aggiungi/modifica preimpostato di stato"</string>
     <string name="dialog_add_audio_entry_title">"Aggiungi voce audio"</string>
     <string name="menu_list_viewmode_compact">"Vista compatta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
     <string name="settings_tasks">"Impostazioni delle attività"</string>
+    <string name="settings_tasks_status_progress">"Impostazioni Attività (stato/progresso)"</string>
+    <string name="settings_sync">"Impostazioni Di Sincronizzazione"</string>
     <string name="settings_default_start_date">"Impostare una data di inizio predefinita per le attività"</string>
     <string name="settings_default_due_date">"Impostare una data di scadenza predefinita per le attività"</string>
+    <string name="settings_default_start_time">"Imposta un orario di inizio predefinito per le attività"</string>
+    <string name="settings_default_due_time">"Imposta un tempo di scadenza predefinito per le attività"</string>
     <string name="settings_default_date_none">"Nessuno"</string>
     <string name="settings_default_date_same_day">"Lo stesso giorno"</string>
     <string name="settings_default_date_next_day">"Il giorno dopo"</string>
@@ -433,8 +482,13 @@ Grazie!"</string>
     <string name="settings_progress_step_25">"Incremento di 25 (4 passi)"</string>
     <string name="settings_progress_step_50">"Incremento di 50 (2 passi)"</string>
     <string name="settings_progress_step">"Imposta il passo per il cursore di avanzamento"</string>
+    <string name="settings_disable_alarms_for_readonly">"Disabilita gli allarmi per le collezioni di sola lettura"</string>
+    <string name="settings_link_progress_to_subtasks">"Collega il progresso alle sottoattività"</string>
+    <string name="settings_keep_status_progress_completed_in_sync">"Mantieni lo stato, avanzamento &amp; completato in sincronizzazione"</string>
     <string name="settings_attention_experimental_feature">"Attenzione: Questa è una funzione sperimentale"</string>
     <string name="settings_create_with_current_location">"Crea nuove voci con la posizione corrente"</string>
+    <string name="settings_sticky_alarms_sub">"Mantieni le notifiche fino al termine o al rinvio"</string>
+    <string name="settings_sync_on_start">"Sincronizzazione all'avvio dell'app"</string>
     <string name="sync_button_go_to_collections">"Vai alle Collezioni"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Per abilitare questa funzione, acquistare il pacchetto Pro."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -449,19 +503,33 @@ Grazie!"</string>
     <string name="settings_select_language">"Seleziona lingua"</string>
     <string name="settings_select_language_system">"Sistema predefinito"</string>
     <string name="filter_special">"Filtri speciali"</string>
+    <string name="filter_presets">"Filtro preimpostati"</string>
+    <string name="filter_presets_edit_info">"Si prega di aggiungere/aggiornare/eliminare le preimpostazioni del filtro dal menu filtro nella vista elenco."</string>
+    <string name="filter_any">"Qualsiasi"</string>
+    <string name="filter_all">"Tutti/e"</string>
+    <string name="filter_none">"Nessuno/a"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data nel passato"</string>
     <string name="list_date_today">"Oggi"</string>
     <string name="list_date_tomorrow">"Domani"</string>
+    <string name="list_date_within_7_days">"Entro 7 giorni"</string>
     <string name="list_date_future">"Data futura"</string>
     <string name="list_start_date_in_past">"Inizia nel passato"</string>
     <string name="list_start_date_today">"Inizia oggi"</string>
     <string name="list_start_date_tomorrow">"Inizia domani"</string>
+    <string name="list_start_date_within_7_days">"Inizia entro 7 giorni"</string>
     <string name="list_start_date_future">"Inizia in futuro"</string>
     <string name="list_hide_completed_tasks">"Nascondi attività completate"</string>
+    <string name="list_biometric_protected_entries_locked">Voci biometriche protette bloccate</string>
+    <string name="list_delete_done">"Elimina terminati"</string>
+    <string name="collections_biometric_protected_entries_locked_title">Voci biometriche protette bloccate</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">Si prega di autenticarsi e riprovare</string>
+    <string name="list_biometric_protected_entries_unlocked">Voci biometriche protette sbloccate</string>
     <string name="settings_auto_alarm">"Allarme automatico"</string>
     <string name="alarms_always_ondue">"Sempre in scadenza"</string>
     <string name="settings_auto_alarm_sub">"Attivare per creare automaticamente gli allarmi. Scegliere ´\"Sempre attivo\" per non creare un allarme, ma per essere avvisati in ogni caso quando un'attività è in scadenza."</string>
+    <string name="settings_protect_biometric">"Proteggi le voci con la biometria"</string>
+    <string name="settings_protect_biometric_sub">"Questa funzione nasconde le voci selezionate fino a quando non vengono sbloccate con dati biometrici, ma non crittografa/decifrano i dati in background."</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"Nessuno stato"</string>
     <string name="classification_no_classification">"Nessuna classificazione (pubblico)"</string>
@@ -474,6 +542,7 @@ Grazie!"</string>
     <string name="filter_second_order_by">"Quindi ordinare per"</string>
     <string name="filter_group_by">"Gruppo per"</string>
     <string name="filter_group_by_info">"Il raggruppamento è disponibile per l'elenco e la vista compatta"</string>
+    <string name="filter_save_as_preset">"Salva come preimpostato"</string>
     <string name="menu_list_flat_view">"Vista piana"</string>
     <string name="menu_list_flat_view_sub">"Mostra sempre le voci figli al primo livello dell'elenco"</string>
     <string name="menu_list_limit_recur_entries">"Limita ricorrenze"</string>
@@ -482,6 +551,7 @@ Grazie!"</string>
     <string name="menu_view_autosave">"Salvataggio automatico"</string>
     <string name="next">"Successivo"</string>
     <string name="previous">"Precedente"</string>
+    <string name="preview">"Anteprima"</string>
     <string name="x_selected">%1$d/%2$d selezionati</string>
     <string name="select_all">Seleziona tutto</string>
     <string name="select_none">Seleziona nessuno</string>
@@ -512,6 +582,7 @@ Grazie!"</string>
     <string name="settings_select_theme_true_dark">"Vero Scuro (AMOLED)"</string>
     <string name="settings_select_theme_contrast">"Contrasto (e-Inchiostro)"</string>
     <string name="settings_journals">"Impostazioni diari"</string>
+    <string name="settings_notes">"Impostazioni Delle Note"</string>
     <string name="settings_default_journals_date">"Impostare una data/ora predefinita per i diari"</string>
     <string name="settings_default_journals_date_previous_day">"Giorno precedente"</string>
     <string name="settings_default_journals_date_current_day">"Giorno corrente"</string>
@@ -531,6 +602,26 @@ Grazie!"</string>
     <string name="markdown_horizontal_ruler">"Righello orizzontale"</string>
     <string name="markdown_unordered_list">"Lista"</string>
     <string name="markdown_code">"Codice"</string>
+    <string name="preset_categories">"Categorie preimpostate"</string>
+    <string name="preset_resources">"Risorse preimpostate"</string>
+    <string name="extended_statuses">"Stati estesi"</string>
+    <string name="extended_statuses_for_journals">"… per i diari"</string>
+    <string name="extended_statuses_for_notes">"… per le note"</string>
+    <string name="extended_statuses_for_tasks">"… per le attività"</string>
+    <string name="extended_status_attention">"Attenzione: gli stati estesi non sono compatibili con altre applicazioni, ma mappare a uno stato standard. Altre applicazioni mostreranno solo lo stato standard."</string>
+    <string name="extended_status">\"Stato esteso</string>
     <string name="active_filters">Filtri attivi:</string>
+    <string name="kanban_settings">"Kanban"</string>
+    <string name="kanban_columns_based_on_standard_status">basato su stati standard</string>
+    <string name="kanban_columns_based_on_extended_status">basato su stati estesi</string>
+    <string name="kanban_columns_based_on_first_category">basato sulla prima categoria</string>
     <string name="clear_filters">"Rimuovi filtri"</string>
+    <string name="geofence_radius_meter">"Radius %1$d m"</string>
+    <string name="geofence_radius_feet">"Radius %1$d ft"</string>
+    <string name="geofence_selection">"Geofence: %1$s"</string>
+    <string name="geofence_options">"Opzioni di geofence"</string>
+    <string name="geofence_missing_permission_info">"jtx Board ha bisogno dei permessi per accedere alla tua posizione in background e per inviarti notifiche. Si prega di aggiornare il permesso di posizione per 'Consenti tutto il tempo' e concedere l'autorizzazione di notifica per ottenere una notifica quando si raggiunge la tua geofence!"</string>
+    <string name="geofence_request_permission_dialog_message">"jtx Board può avvisarti quando sei vicino alle coordinate date. Si prega di impostare l'autorizzazione di posizione per 'Consenti tutto il tempo' e concedere l'autorizzazione di notifica per utilizzare questa funzione."</string>
+    <string name="geofence_notification_summary">"Geofence attivato"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board ha bisogno del permesso di pianificare gli avvisi esatti, altrimenti le notifiche di allarme potrebbero essere ritardate. Si prega di concedere questa autorizzazione per utilizzare questa funzione."</string>
 </resources>
