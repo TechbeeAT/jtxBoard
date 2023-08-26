@@ -25,6 +25,7 @@ import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.GroupBy
+import at.techbee.jtx.ui.list.SortOrder
 
 
 data class ICal4ListRel(
@@ -42,7 +43,36 @@ data class ICal4ListRel(
 ) {
     companion object {
 
-        fun getGroupedList(sortedList: List<ICal4ListRel>, groupBy: GroupBy?, context: Context): Map<String, List<ICal4ListRel>> {
+        fun getGroupedList(initialList: List<ICal4ListRel>, groupBy: GroupBy?, sortOrder: SortOrder, module: Module, context: Context): Map<String, List<ICal4ListRel>> {
+            // first apply a proper sort order, then group
+            var sortedList = when (groupBy) {
+                GroupBy.STATUS -> initialList.sortedBy {
+                    if (module == Module.TODO && it.iCal4List.percent != 100)
+                        try {
+                            Status.valueOf(it.iCal4List.status ?: Status.NO_STATUS.name).ordinal
+                        } catch (e: java.lang.IllegalArgumentException) {
+                            -1
+                        }
+                    else
+                        try {
+                            Status.valueOf(it.iCal4List.status ?: Status.FINAL.name).ordinal
+                        } catch (e: java.lang.IllegalArgumentException) {
+                            -1
+                        }
+                }.let { if (sortOrder == SortOrder.DESC) it.asReversed() else it }
+                GroupBy.CLASSIFICATION -> initialList.sortedBy {
+                    try {
+                        Classification.valueOf(it.iCal4List.classification ?: Classification.PUBLIC.name).ordinal
+                    } catch (e: java.lang.IllegalArgumentException) {
+                        -1
+                    }
+                }.let { if (sortOrder == SortOrder.DESC) it.asReversed() else it }
+                else -> initialList
+            }
+
+            if ((groupBy == GroupBy.STATUS || groupBy == GroupBy.CLASSIFICATION) && sortOrder == SortOrder.DESC)
+                sortedList = sortedList.asReversed()
+
             return when (groupBy) {
                 GroupBy.CATEGORY -> mutableMapOf<String, MutableList<ICal4ListRel>>().apply {
 

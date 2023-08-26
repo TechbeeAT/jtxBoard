@@ -33,14 +33,10 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.R
-import at.techbee.jtx.database.Classification
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
-import at.techbee.jtx.ui.list.GroupBy
-import at.techbee.jtx.ui.list.SortOrder
 
 
 @Composable
@@ -61,91 +57,13 @@ fun ListWidgetContent(
 ) {
 
     val context = LocalContext.current
-
-    // first apply a proper sort order, then group
-    var sortedList = when (listWidgetConfig.groupBy) {
-        GroupBy.STATUS -> list.sortedBy {
-            if (listWidgetConfig.module == Module.TODO && it.iCal4List.percent != 100)
-                try {
-                    Status.valueOf(it.iCal4List.status ?: Status.NEEDS_ACTION.name).ordinal
-                } catch (e: java.lang.IllegalArgumentException) {
-                    -1
-                }
-            else
-                try {
-                    Status.valueOf(it.iCal4List.status ?: Status.FINAL.name).ordinal
-                } catch (e: java.lang.IllegalArgumentException) {
-                    -1
-                }
-        }
-        GroupBy.CLASSIFICATION -> list.sortedBy {
-            try {
-                Classification.valueOf(it.iCal4List.classification ?: Classification.PUBLIC.name).ordinal
-            } catch (e: java.lang.IllegalArgumentException) {
-                -1
-            }
-        }
-        else -> list
-    }
-    if ((listWidgetConfig.groupBy == GroupBy.STATUS || listWidgetConfig.groupBy == GroupBy.CLASSIFICATION) && listWidgetConfig.sortOrder == SortOrder.DESC)
-        sortedList = sortedList.asReversed()
-
-    val groupedList = when (listWidgetConfig.groupBy) {
-        GroupBy.CATEGORY -> mutableMapOf<String, MutableList<ICal4ListWidget>>().apply {
-            //TODO: replace by actual list!
-            sortedList.forEach { sortedEntry ->
-                if (!sortedEntry.categories.isNullOrEmpty()) {
-                    sortedEntry.categories!!.split(", ").forEach { category ->
-                        if (this.containsKey(category))
-                            this[category]?.add(sortedEntry)
-                        else
-                            this[category] = mutableListOf(sortedEntry)
-                    }
-                } else {
-                    if (this.containsKey(context.getString(R.string.filter_no_category)))
-                        this[context.getString(R.string.filter_no_category)]?.add(sortedEntry)
-                    else
-                        this[context.getString(R.string.filter_no_category)] = mutableListOf(sortedEntry)
-                }
-            }
-        }
-        GroupBy.RESOURCE -> mutableMapOf<String, MutableList<ICal4ListWidget>>().apply {
-            //TODO: replace by actual list!
-            sortedList.forEach { sortedEntry ->
-                if (!sortedEntry.resources.isNullOrEmpty()) {
-                    sortedEntry.resources!!.split(", ").forEach { resource ->
-                        if (this.containsKey(resource))
-                            this[resource]?.add(sortedEntry)
-                        else
-                            this[resource] = mutableListOf(sortedEntry)
-                    }
-                } else {
-                    if (this.containsKey(context.getString(R.string.filter_no_resource)))
-                        this[context.getString(R.string.filter_no_resource)]?.add(sortedEntry)
-                    else
-                        this[context.getString(R.string.filter_no_resource)] = mutableListOf(sortedEntry)
-                }
-            }
-        }
-        //GroupBy.CATEGORY -> sortedList.groupBy { it.categories ?: context.getString(R.string.filter_no_category) }.toSortedMap()
-        //GroupBy.RESOURCE -> sortedList.groupBy { it.resources ?: context.getString(R.string.filter_no_resource) }.toSortedMap()
-        GroupBy.STATUS -> sortedList.groupBy { Status.values().firstOrNull { status -> status.status == it.iCal4List.status }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.iCal4List.status ?: context.getString(R.string.status_no_status) }
-        GroupBy.CLASSIFICATION -> sortedList.groupBy { Classification.values().firstOrNull { classif -> classif.classification == it.iCal4List.classification }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.iCal4List.classification ?: context.getString(R.string.classification_no_classification) }
-        GroupBy.ACCOUNT -> sortedList.groupBy { it.iCal4List.accountName ?:"" }
-        GroupBy.COLLECTION -> sortedList.groupBy { it.iCal4List.collectionDisplayName ?:"" }
-        GroupBy.PRIORITY -> sortedList.groupBy {
-            when (it.iCal4List.priority) {
-                null -> context.resources.getStringArray(R.array.priority)[0]
-                in 0..9 -> context.resources.getStringArray(R.array.priority)[it.priority ?: 0]
-                else -> it.iCal4List.priority.toString()
-            }
-        }
-        GroupBy.DATE -> sortedList.groupBy { ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = context) }
-        GroupBy.START -> sortedList.groupBy { ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = context) }
-        GroupBy.DUE -> sortedList.groupBy { ICalObject.getDueTextInfo(status = it.iCal4List.status, due = it.iCal4List.due, dueTimezone = it.iCal4List.dueTimezone, percent = it.iCal4List.percent, daysOnly = true, context = context) }
-        null -> sortedList.groupBy { it.module }
-    }
-
+    val groupedList = ICal4ListRel.getGroupedList(
+        initialList = list,
+        groupBy = listWidgetConfig.groupBy,
+        sortOrder = listWidgetConfig.sortOrder,
+        module = listWidgetConfig.module,
+        context = context
+    )
 
     val imageSize = 36.dp
 
