@@ -28,7 +28,9 @@ import kotlinx.serialization.json.Json
 class ListSettings {
 
     var searchCategories = mutableStateListOf<String>()
+    var searchCategoriesAnyAllNone = mutableStateOf<AnyAllNone>(AnyAllNone.ANY)
     var searchResources = mutableStateListOf<String>()
+    var searchResourcesAnyAllNone = mutableStateOf<AnyAllNone>(AnyAllNone.ANY)
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
     var searchStatus = mutableStateListOf<Status>()
     var searchXStatus = mutableStateListOf<String>()
@@ -89,7 +91,9 @@ class ListSettings {
         private const val PREFS_COLLECTION = "prefsCollection"
         private const val PREFS_ACCOUNT = "prefsAccount"
         private const val PREFS_CATEGORIES = "prefsCategories"
+        private const val PREFS_CATEGORIES_ANYALLNONE = "prefsCategoriesAnyAllNone"
         private const val PREFS_RESOURCES = "prefsResources"
+        private const val PREFS_RESOURCES_ANYALLNONE = "prefsResourcesAnyAllNone"
         private const val PREFS_CLASSIFICATION = "prefsClassification"
         private const val PREFS_STATUS = "prefsStatus"
         private const val PREFS_EXTENDED_STATUS = "prefsXStatus"
@@ -169,7 +173,9 @@ class ListSettings {
 
             //searchOrganizers =
             searchCategories.addAll(prefs.getStringSet(PREFS_CATEGORIES, emptySet())?.toList() ?: emptyList())
+            searchCategoriesAnyAllNone.value = prefs.getString(PREFS_CATEGORIES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: AnyAllNone.ANY
             searchResources.addAll(prefs.getStringSet(PREFS_RESOURCES, emptySet())?.toList() ?: emptyList())
+            searchResourcesAnyAllNone.value = prefs.getString(PREFS_RESOURCES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: AnyAllNone.ANY
             searchStatus.addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
             searchXStatus.addAll(prefs.getStringSet(PREFS_EXTENDED_STATUS, emptySet())?.toList() ?: emptyList())
 
@@ -228,7 +234,9 @@ class ListSettings {
             isFilterNoResourceSet.value = listWidgetConfig.isFilterNoResourceSet
 
             searchCategories.addAll(listWidgetConfig.searchCategories)
+            searchCategoriesAnyAllNone.value = listWidgetConfig.searchCategoriesAnyAllNone
             searchResources.addAll(listWidgetConfig.searchResources)
+            searchResourcesAnyAllNone.value = listWidgetConfig.searchResourcesAnyAllNone
             searchStatus.addAll(listWidgetConfig.searchStatus)
             searchXStatus.addAll(listWidgetConfig.searchXStatus)
             searchClassification.addAll(listWidgetConfig.searchClassification)
@@ -294,7 +302,9 @@ class ListSettings {
             putBoolean(PREFS_EXCLUDE_DONE, isExcludeDone.value)
 
             putStringSet(PREFS_CATEGORIES, searchCategories.toSet())
+            putString(PREFS_CATEGORIES_ANYALLNONE, searchCategoriesAnyAllNone.value.name)
             putStringSet(PREFS_RESOURCES, searchResources.toSet())
+            putString(PREFS_RESOURCES_ANYALLNONE, searchResourcesAnyAllNone.value.name)
             putStringSet(PREFS_STATUS, Status.getStringSetFromList(searchStatus))
             putStringSet(PREFS_EXTENDED_STATUS, searchXStatus.toSet())
             putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(searchClassification))
@@ -320,7 +330,9 @@ class ListSettings {
 
     fun reset() {
         searchCategories.clear()
+        searchCategoriesAnyAllNone.value = AnyAllNone.ANY
         searchResources.clear()
+        searchResourcesAnyAllNone.value = AnyAllNone.ANY
         //searchOrganizer = emptyList()
         searchStatus.clear()
         searchXStatus.clear()

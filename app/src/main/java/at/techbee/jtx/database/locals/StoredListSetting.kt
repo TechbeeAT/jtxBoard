@@ -16,6 +16,7 @@ import androidx.room.PrimaryKey
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.ui.list.AnyAllNone
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
@@ -58,7 +59,9 @@ data class StoredListSetting (
 @Serializable
 data class StoredListSettingData(
     var searchCategories: List<String> = emptyList(),
+    var searchCategoriesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
     var searchResources: List<String> = emptyList(),
+    var searchResourcesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
     var searchStatus: List<Status> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
     var searchCollection: List<String> = emptyList(),
@@ -99,7 +102,9 @@ data class StoredListSettingData(
         fun fromListSettings(listSettings: ListSettings): StoredListSettingData {
             return StoredListSettingData(
                 searchCategories = listSettings.searchCategories,
+                searchCategoriesAnyAllNone = listSettings.searchCategoriesAnyAllNone.value,
                 searchResources = listSettings.searchResources,
+                searchResourcesAnyAllNone = listSettings.searchResourcesAnyAllNone.value,
                 searchStatus = listSettings.searchStatus,
                 searchClassification = listSettings.searchClassification,
                 searchCollection = listSettings.searchCollection,
@@ -137,7 +142,9 @@ data class StoredListSettingData(
     fun applyToListSettings(listSettings: ListSettings) {
         listSettings.reset()
         listSettings.searchCategories.addAll(searchCategories)
+        listSettings.searchCategoriesAnyAllNone.value = searchCategoriesAnyAllNone
         listSettings.searchResources.addAll(searchResources)
+        listSettings.searchResourcesAnyAllNone.value = searchResourcesAnyAllNone
         listSettings.searchStatus.addAll(searchStatus)
         listSettings.searchClassification.addAll(searchClassification)
         listSettings.searchCollection.addAll(searchCollection)

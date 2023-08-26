@@ -156,7 +156,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
         val query = ICal4List.constructQuery(
             modules = listOf(module),
             searchCategories = listSettings.searchCategories,
+            searchCategoriesAnyAllNone = listSettings.searchCategoriesAnyAllNone.value,
             searchResources = listSettings.searchResources,
+            searchResourcesAnyAllNone = listSettings.searchResourcesAnyAllNone.value,
             searchStatus = listSettings.searchStatus,
             searchXStatus = listSettings.searchXStatus,
             searchClassification = listSettings.searchClassification,
@@ -676,6 +678,12 @@ enum class GroupBy(@StringRes val stringResource: Int) {
                 )
             }
     }
+}
+
+enum class AnyAllNone(@StringRes val stringResource: Int) {
+    ANY(R.string.filter_any),
+    ALL(R.string.filter_all),
+    NONE(R.string.filter_none)
 }
 
 enum class ViewMode(@StringRes val stringResource: Int) {

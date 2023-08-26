@@ -88,6 +88,7 @@ import at.techbee.jtx.database.properties.TABLE_NAME_CATEGORY
 import at.techbee.jtx.database.properties.TABLE_NAME_COMMENT
 import at.techbee.jtx.database.properties.TABLE_NAME_RELATEDTO
 import at.techbee.jtx.database.properties.TABLE_NAME_RESOURCE
+import at.techbee.jtx.ui.list.AnyAllNone
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.DateTimeUtils
@@ -305,7 +306,9 @@ data class ICal4List(
         fun constructQuery(
             modules: List<Module>,
             searchCategories: List<String> = emptyList(),
+            searchCategoriesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
             searchResources: List<String> = emptyList(),
+            searchResourcesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
             searchStatus: List<Status> = emptyList(),
             searchXStatus: List<String> = emptyList(),
             searchClassification: List<Classification> = emptyList(),
@@ -342,8 +345,6 @@ data class ICal4List(
 
             // Beginning of query string
             var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST "
-            if (searchCategories.isNotEmpty())
-                queryString += "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID "
             if (searchResources.isNotEmpty())
                 queryString += "LEFT JOIN $TABLE_NAME_RESOURCE ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ICALOBJECT_ID "
             if (searchCollection.isNotEmpty() || searchAccount.isNotEmpty())
@@ -375,13 +376,25 @@ data class ICal4List(
             if (searchCategories.isNotEmpty() || isFilterNoCategorySet) {
                 queryString += "AND ("
                 if (searchCategories.isNotEmpty()) {
-                    queryString += searchCategories.joinToString(
-                        prefix = "$TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN (",
-                        separator = ", ",
-                        transform = { "?" },
-                        postfix = ") " + if(isFilterNoCategorySet) "OR " else ""
-                    )
+                    queryString += "("
+                    searchCategories.forEachIndexed { index, _ ->
+                        queryString += when(searchCategoriesAnyAllNone) {
+                            AnyAllNone.ANY -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID IN (SELECT sub.$COLUMN_CATEGORY_ICALOBJECT_ID FROM $TABLE_NAME_CATEGORY sub WHERE sub.$COLUMN_CATEGORY_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_CATEGORY_TEXT = ?) "
+                            AnyAllNone.ALL -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID IN (SELECT sub.$COLUMN_CATEGORY_ICALOBJECT_ID FROM $TABLE_NAME_CATEGORY sub WHERE sub.$COLUMN_CATEGORY_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_CATEGORY_TEXT = ?) "
+                            AnyAllNone.NONE -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT sub.$COLUMN_CATEGORY_ICALOBJECT_ID FROM $TABLE_NAME_CATEGORY sub WHERE sub.$COLUMN_CATEGORY_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_CATEGORY_TEXT = ?) "
+                        }
+                        if(index != searchCategories.lastIndex) {
+                            queryString += when(searchCategoriesAnyAllNone) {
+                                AnyAllNone.ANY -> "OR "
+                                AnyAllNone.ALL, AnyAllNone.NONE -> "AND "
+                            }
+                        }
+                    }
+                    queryString += ") "
                     args.addAll(searchCategories)
+
+                    if(isFilterNoCategorySet)
+                        queryString += "OR "
                 }
                 if (isFilterNoCategorySet)
                     queryString += "$VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID FROM $TABLE_NAME_CATEGORY) "
@@ -392,13 +405,25 @@ data class ICal4List(
             if (searchResources.isNotEmpty() || isFilterNoResourceSet) {
                 queryString += "AND ("
                 if (searchResources.isNotEmpty()) {
-                    queryString += searchResources.joinToString(
-                        prefix = "$TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_TEXT IN (",
-                        separator = ", ",
-                        transform = { "?" },
-                        postfix = ") " + if(isFilterNoResourceSet) "OR " else ""
-                    )
+                    queryString += "("
+                    searchResources.forEachIndexed { index, _ ->
+                        queryString += when(searchResourcesAnyAllNone) {
+                            AnyAllNone.ANY -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID IN (SELECT sub.$COLUMN_RESOURCE_ICALOBJECT_ID FROM $TABLE_NAME_RESOURCE sub WHERE sub.$COLUMN_RESOURCE_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_RESOURCE_TEXT = ?) "
+                            AnyAllNone.ALL -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID IN (SELECT sub.$COLUMN_RESOURCE_ICALOBJECT_ID FROM $TABLE_NAME_RESOURCE sub WHERE sub.$COLUMN_RESOURCE_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_RESOURCE_TEXT = ?) "
+                            AnyAllNone.NONE -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT sub.$COLUMN_RESOURCE_ICALOBJECT_ID FROM $TABLE_NAME_RESOURCE sub WHERE sub.$COLUMN_RESOURCE_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_RESOURCE_TEXT = ?) "
+                        }
+                        if(index != searchResources.lastIndex) {
+                            queryString += when(searchResourcesAnyAllNone) {
+                                AnyAllNone.ANY -> "OR "
+                                AnyAllNone.ALL, AnyAllNone.NONE -> "AND "
+                            }
+                        }
+                    }
+                    queryString += ") "
                     args.addAll(searchResources)
+
+                    if(isFilterNoResourceSet)
+                        queryString += "OR "
                 }
                 if (isFilterNoResourceSet)
                     queryString += "$VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ICALOBJECT_ID FROM $TABLE_NAME_RESOURCE) "
