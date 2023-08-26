@@ -461,10 +461,14 @@ fun ListScreenTabContainer(
                                     topBarMenuExpanded = false
                                 },
                                 onSettingsClicked = {
-                                    if(viewMode ==ViewMode.KANBAN) {
-                                        getActiveViewModel().listSettings.viewMode.value = viewMode
-                                        filterSheetInitialTab = ListOptionsBottomSheetTabs.KANBAN_SETTINGS
-                                        scope.launch { filterSheetState.show() }
+                                    if(viewMode == ViewMode.KANBAN) {
+                                        if(isProPurchased.value) {
+                                            getActiveViewModel().listSettings.viewMode.value = viewMode
+                                            filterSheetInitialTab = ListOptionsBottomSheetTabs.KANBAN_SETTINGS
+                                            scope.launch { filterSheetState.show() }
+                                        } else {
+                                            Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
+                                        }
                                         topBarMenuExpanded = false
                                     }
                                 }
