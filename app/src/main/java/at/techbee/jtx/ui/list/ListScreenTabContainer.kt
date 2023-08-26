@@ -158,6 +158,7 @@ fun ListScreenTabContainer(
     }
     val storedCategories by listViewModel.storedCategories.observeAsState(emptyList())
     val storedResources by listViewModel.storedResources.observeAsState(emptyList())
+    val storedListSettings by listViewModel.storedListSettings.observeAsState(emptyList())
 
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, allWriteableCollections.value) {
@@ -461,10 +462,14 @@ fun ListScreenTabContainer(
                                     topBarMenuExpanded = false
                                 },
                                 onSettingsClicked = {
-                                    if(viewMode ==ViewMode.KANBAN) {
-                                        getActiveViewModel().listSettings.viewMode.value = viewMode
-                                        filterSheetInitialTab = ListOptionsBottomSheetTabs.KANBAN_SETTINGS
-                                        scope.launch { filterSheetState.show() }
+                                    if(viewMode == ViewMode.KANBAN) {
+                                        if(isProPurchased.value) {
+                                            getActiveViewModel().listSettings.viewMode.value = viewMode
+                                            filterSheetInitialTab = ListOptionsBottomSheetTabs.KANBAN_SETTINGS
+                                            scope.launch { filterSheetState.show() }
+                                        } else {
+                                            Toast.makeText(context, R.string.buypro_snackbar_please_purchase_pro, Toast.LENGTH_LONG).show()
+                                        }
                                         topBarMenuExpanded = false
                                     }
                                 }
@@ -620,6 +625,7 @@ fun ListScreenTabContainer(
                                     module = listViewModel.module,
                                     storedCategories = storedCategories,
                                     storedResources = storedResources,
+                                    storedListSettings = storedListSettings,
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                 )
                             }

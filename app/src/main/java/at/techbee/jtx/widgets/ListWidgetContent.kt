@@ -90,26 +90,60 @@ fun ListWidgetContent(
     if ((listWidgetConfig.groupBy == GroupBy.STATUS || listWidgetConfig.groupBy == GroupBy.CLASSIFICATION) && listWidgetConfig.sortOrder == SortOrder.DESC)
         sortedList = sortedList.asReversed()
 
-    val groupedList = sortedList.groupBy {
-        when (listWidgetConfig.groupBy) {
-            GroupBy.STATUS -> Status.values().firstOrNull { status -> status.status == it.iCal4List.status }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.iCal4List.status ?: context.getString(R.string.status_no_status)
-            GroupBy.CLASSIFICATION -> Classification.values().firstOrNull { classif -> classif.classification == it.iCal4List.classification }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.iCal4List.classification ?: context.getString(R.string.classification_no_classification)
-            GroupBy.ACCOUNT -> it.iCal4List.accountName ?:""
-            GroupBy.COLLECTION -> it.iCal4List.collectionDisplayName ?:""
-            GroupBy.PRIORITY -> {
-                when (it.iCal4List.priority) {
-                    null -> context.resources.getStringArray(R.array.priority)[0]
-                    in 0..9 -> context.resources.getStringArray(R.array.priority)[it.iCal4List.priority ?: 0]
-                    else -> it.iCal4List.priority.toString()
+    val groupedList = when (listWidgetConfig.groupBy) {
+        GroupBy.CATEGORY -> mutableMapOf<String, MutableList<ICal4ListWidget>>().apply {
+            //TODO: replace by actual list!
+            sortedList.forEach { sortedEntry ->
+                if (!sortedEntry.categories.isNullOrEmpty()) {
+                    sortedEntry.categories!!.split(", ").forEach { category ->
+                        if (this.containsKey(category))
+                            this[category]?.add(sortedEntry)
+                        else
+                            this[category] = mutableListOf(sortedEntry)
+                    }
+                } else {
+                    if (this.containsKey(context.getString(R.string.filter_no_category)))
+                        this[context.getString(R.string.filter_no_category)]?.add(sortedEntry)
+                    else
+                        this[context.getString(R.string.filter_no_category)] = mutableListOf(sortedEntry)
                 }
             }
-            GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = context)
-            GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = context)
-            GroupBy.DUE -> ICalObject.getDueTextInfo(status = it.iCal4List.status, due = it.iCal4List.due, dueTimezone = it.iCal4List.dueTimezone, percent = it.iCal4List.percent, daysOnly = true, context = context)
-            else -> {
-                it.iCal4List.module
+        }
+        GroupBy.RESOURCE -> mutableMapOf<String, MutableList<ICal4ListWidget>>().apply {
+            //TODO: replace by actual list!
+            sortedList.forEach { sortedEntry ->
+                if (!sortedEntry.resources.isNullOrEmpty()) {
+                    sortedEntry.resources!!.split(", ").forEach { resource ->
+                        if (this.containsKey(resource))
+                            this[resource]?.add(sortedEntry)
+                        else
+                            this[resource] = mutableListOf(sortedEntry)
+                    }
+                } else {
+                    if (this.containsKey(context.getString(R.string.filter_no_resource)))
+                        this[context.getString(R.string.filter_no_resource)]?.add(sortedEntry)
+                    else
+                        this[context.getString(R.string.filter_no_resource)] = mutableListOf(sortedEntry)
+                }
             }
         }
+        //GroupBy.CATEGORY -> sortedList.groupBy { it.categories ?: context.getString(R.string.filter_no_category) }.toSortedMap()
+        //GroupBy.RESOURCE -> sortedList.groupBy { it.resources ?: context.getString(R.string.filter_no_resource) }.toSortedMap()
+        GroupBy.STATUS -> sortedList.groupBy { Status.values().firstOrNull { status -> status.status == it.iCal4List.status }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.iCal4List.status ?: context.getString(R.string.status_no_status) }
+        GroupBy.CLASSIFICATION -> sortedList.groupBy { Classification.values().firstOrNull { classif -> classif.classification == it.iCal4List.classification }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.iCal4List.classification ?: context.getString(R.string.classification_no_classification) }
+        GroupBy.ACCOUNT -> sortedList.groupBy { it.iCal4List.accountName ?:"" }
+        GroupBy.COLLECTION -> sortedList.groupBy { it.iCal4List.collectionDisplayName ?:"" }
+        GroupBy.PRIORITY -> sortedList.groupBy {
+            when (it.iCal4List.priority) {
+                null -> context.resources.getStringArray(R.array.priority)[0]
+                in 0..9 -> context.resources.getStringArray(R.array.priority)[it.priority ?: 0]
+                else -> it.iCal4List.priority.toString()
+            }
+        }
+        GroupBy.DATE -> sortedList.groupBy { ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = context) }
+        GroupBy.START -> sortedList.groupBy { ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = context) }
+        GroupBy.DUE -> sortedList.groupBy { ICalObject.getDueTextInfo(status = it.iCal4List.status, due = it.iCal4List.due, dueTimezone = it.iCal4List.dueTimezone, percent = it.iCal4List.percent, daysOnly = true, context = context) }
+        null -> sortedList.groupBy { it.module }
     }
 
 

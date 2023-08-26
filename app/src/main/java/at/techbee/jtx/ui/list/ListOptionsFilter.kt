@@ -359,8 +359,13 @@ fun ListOptionsFilter(
                 listSettings.searchCategories.clear()
                 listSettings.searchCategories.addAll(missing)
                 onListSettingsChanged()
-            })
-        {
+            },
+            initialAnyAllNone = listSettings.searchCategoriesAnyAllNone.value,
+            onAnyAllNoneChanged = {
+                listSettings.searchCategoriesAnyAllNone.value = it
+                onListSettingsChanged()
+            }
+        ) {
             FilterChip(
                 selected = listSettings.isFilterNoCategorySet.value,
                 onClick = {
@@ -371,8 +376,8 @@ fun ListOptionsFilter(
             )
 
             var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
-
-            allCategories.forEachIndexed { index, category ->
+            val allCategoriesSorted = if(allCategories.size > maxEntries) allCategories else allCategories.sortedBy { it.lowercase() }
+            allCategoriesSorted.forEachIndexed { index, category ->
                 if(index > maxEntries-1)
                     return@forEachIndexed
 
@@ -598,8 +603,13 @@ fun ListOptionsFilter(
                     listSettings.searchResources.clear()
                     listSettings.searchResources.addAll(missing)
                     onListSettingsChanged()
-                })
-            {
+                },
+                initialAnyAllNone = listSettings.searchResourcesAnyAllNone.value,
+                onAnyAllNoneChanged = {
+                    listSettings.searchResourcesAnyAllNone.value = it
+                    onListSettingsChanged()
+                }
+            ) {
                 FilterChip(
                     selected = listSettings.isFilterNoResourceSet.value,
                     onClick = {
@@ -610,8 +620,8 @@ fun ListOptionsFilter(
                 )
 
                 var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
-
-                allResources.forEachIndexed { index, resource ->
+                val allResourcesSorted = if(allResources.size > maxEntries) allResources else allResources.sortedBy { it.lowercase() }
+                allResourcesSorted.forEachIndexed { index, resource ->
                     if(index > maxEntries-1)
                         return@forEachIndexed
 

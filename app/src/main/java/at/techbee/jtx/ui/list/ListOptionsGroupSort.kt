@@ -75,6 +75,8 @@ fun ListOptionsGroupSort(
                             listSettings.groupBy.value = null
 
                         listSettings.orderBy.value = when(listSettings.groupBy.value) {
+                            GroupBy.CATEGORY -> listSettings.orderBy.value
+                            GroupBy.RESOURCE -> listSettings.orderBy.value
                             GroupBy.START -> OrderBy.START_VTODO
                             GroupBy.DATE -> OrderBy.START_VJOURNAL
                             GroupBy.CLASSIFICATION -> OrderBy.CLASSIFICATION
@@ -83,7 +85,7 @@ fun ListOptionsGroupSort(
                             GroupBy.DUE -> OrderBy.DUE
                             GroupBy.ACCOUNT -> OrderBy.ACCOUNT
                             GroupBy.COLLECTION -> OrderBy.COLLECTION
-                            else -> listSettings.orderBy.value
+                            null -> listSettings.orderBy.value
                         }
                         onListSettingsChanged()
                     },
@@ -107,7 +109,7 @@ fun ListOptionsGroupSort(
             OrderBy.getValuesFor(module).forEach { orderBy ->
                 FilterChip(
                     selected = listSettings.orderBy.value == orderBy,
-                    enabled = listSettings.groupBy.value == null,
+                    enabled = listSettings.groupBy.value == null || listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE,
                     onClick = {
                         if (listSettings.orderBy.value != orderBy)
                             listSettings.orderBy.value = orderBy
