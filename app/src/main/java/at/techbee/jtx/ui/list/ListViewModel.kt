@@ -610,9 +610,9 @@ open class ListViewModelTodos(application: Application) : ListViewModel(applicat
 
 
 enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String) {
-    START_VTODO(R.string.started, "$COLUMN_COMPLETED IS NOT NULL OR $COLUMN_PERCENT = 100 OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
+    START_VTODO(R.string.started, "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
     START_VJOURNAL(R.string.date, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
-    DUE(R.string.due, "$COLUMN_COMPLETED IS NOT NULL OR $COLUMN_PERCENT = 100 OR $COLUMN_DUE IS NULL, $COLUMN_DUE "),
+    DUE(R.string.due, "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DUE IS NULL, $COLUMN_DUE "),
     COMPLETED(R.string.completed, "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED "),
     CREATED(R.string.filter_created, "$COLUMN_CREATED "),
     LAST_MODIFIED(R.string.filter_last_modified, "$COLUMN_LAST_MODIFIED "),
