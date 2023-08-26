@@ -22,9 +22,9 @@ buildscript {
         version_core = "1.12.0-rc01"
         version_coroutine = "1.7.3"
         version_appcompat = "1.6.1"
-        version_gradle = "8.1.0"
+        version_gradle = "8.1.1"
         version_kotlin = "1.9.0"
-        version_room = "2.6.0-alpha03"
+        version_room = "2.6.0-beta01"
         version_work = "2.8.1"
         version_billing = "6.0.1"
         version_review = "2.0.1"
@@ -32,7 +32,7 @@ buildscript {
         version_about_libraries = "10.8.3"
         version_huawei = "1.8.1.300"
         version_huawei_iap = "6.10.0.300"
-        version_accompanist = "0.33.0-alpha"
+        version_accompanist = "0.33.1-alpha"
         version_osmdroid = "6.1.16"
     }
 

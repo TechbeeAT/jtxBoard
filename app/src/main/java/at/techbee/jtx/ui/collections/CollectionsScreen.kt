@@ -33,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -72,20 +71,15 @@ fun CollectionsScreen(
     val collections by collectionsViewModel.collections.observeAsState(emptyList())
     val toastText = collectionsViewModel.toastText.observeAsState()
 
-    val collectionsToExport = remember { mutableStateListOf<CollectionsView>() }
-
-
     /* EXPORT FUNCTIONALITIES */
-    val launcherExportAll = rememberLauncherForActivityResult(CreateDocument("application/zip")) {
+    val launcherExportAll = rememberLauncherForActivityResult(CreateDocument(CollectionsExportMimetype.ZIP.mimeType)) {
         it?.let { uri ->
-            collectionsViewModel.writeToFile(collectionsToExport, uri)
-            collectionsToExport.clear()
+            collectionsViewModel.writeToFile(uri, CollectionsExportMimetype.ZIP)
         }
     }
-    val launcherExportSingle = rememberLauncherForActivityResult(CreateDocument("text/calendar")) {
+    val launcherExportSingle = rememberLauncherForActivityResult(CreateDocument(CollectionsExportMimetype.ICS.mimeType)) {
         it?.let { uri ->
-            collectionsViewModel.writeToFile(collectionsToExport, uri)
-            collectionsToExport.clear()
+            collectionsViewModel.writeToFile(uri, CollectionsExportMimetype.ICS)
         }
     }
 
@@ -254,7 +248,7 @@ fun CollectionsScreen(
                             text = { Text(text = stringResource(id = R.string.menu_collections_export_all)) },
                             onClick = {
                                 if(settingsStateHolder.settingProtectBiometric.value == DropdownSettingOption.PROTECT_BIOMETRIC_OFF || globalStateHolder.isAuthenticated.value) {
-                                    collectionsToExport.addAll(collections)
+                                    collectionsViewModel.collectionsToExport.value = collections
                                     launcherExportAll.launch("jtxBoard_${DateTimeUtils.timestampAsFilenameAppendix()}.zip")
                                 } else {
                                     globalStateHolder.biometricPrompt?.authenticate(biometricPromptInfo)
@@ -300,7 +294,7 @@ fun CollectionsScreen(
                         },
                         onExportAsICS = { collection ->
                             if(settingsStateHolder.settingProtectBiometric.value == DropdownSettingOption.PROTECT_BIOMETRIC_OFF || globalStateHolder.isAuthenticated.value) {
-                                collectionsToExport.add(collection)
+                                collectionsViewModel.collectionsToExport.value = listOf(collection)
                                 launcherExportSingle.launch("${collection.displayName ?: collection.collectionId.toString()}_${DateTimeUtils.timestampAsFilenameAppendix()}.ics")
                             } else {
                                 globalStateHolder.biometricPrompt?.authenticate(biometricPromptInfo)

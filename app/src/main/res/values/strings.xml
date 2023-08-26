@@ -526,6 +526,9 @@ Thank you!"</string>
     <string name="filter_special">"Special filters"</string>
     <string name="filter_presets">"Filter presets"</string>
     <string name="filter_presets_edit_info">"Please add/update/delete filter presets from the filter menu in the list view."</string>
+    <string name="filter_any">"Any"</string>
+    <string name="filter_all">"All"</string>
+    <string name="filter_none">"None"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>

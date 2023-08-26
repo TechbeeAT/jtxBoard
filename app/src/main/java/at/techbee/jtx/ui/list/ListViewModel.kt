@@ -156,7 +156,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
         val query = ICal4List.constructQuery(
             modules = listOf(module),
             searchCategories = listSettings.searchCategories,
+            searchCategoriesAnyAllNone = listSettings.searchCategoriesAnyAllNone.value,
             searchResources = listSettings.searchResources,
+            searchResourcesAnyAllNone = listSettings.searchResourcesAnyAllNone.value,
             searchStatus = listSettings.searchStatus,
             searchXStatus = listSettings.searchXStatus,
             searchClassification = listSettings.searchClassification,
@@ -610,9 +612,9 @@ open class ListViewModelTodos(application: Application) : ListViewModel(applicat
 
 
 enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String) {
-    START_VTODO(R.string.started, "$COLUMN_COMPLETED IS NOT NULL OR $COLUMN_PERCENT = 100, $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
+    START_VTODO(R.string.started, "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
     START_VJOURNAL(R.string.date, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
-    DUE(R.string.due, "$COLUMN_COMPLETED IS NOT NULL OR $COLUMN_PERCENT = 100, $COLUMN_DUE IS NULL, $COLUMN_DUE "),
+    DUE(R.string.due, "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DUE IS NULL, $COLUMN_DUE "),
     COMPLETED(R.string.completed, "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED "),
     CREATED(R.string.filter_created, "$COLUMN_CREATED "),
     LAST_MODIFIED(R.string.filter_last_modified, "$COLUMN_LAST_MODIFIED "),
@@ -682,6 +684,12 @@ enum class GroupBy(@StringRes val stringResource: Int) {
                 )
             }
     }
+}
+
+enum class AnyAllNone(@StringRes val stringResource: Int) {
+    ANY(R.string.filter_any),
+    ALL(R.string.filter_all),
+    NONE(R.string.filter_none)
 }
 
 enum class ViewMode(@StringRes val stringResource: Int) {

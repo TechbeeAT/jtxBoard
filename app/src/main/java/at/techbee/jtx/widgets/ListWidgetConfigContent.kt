@@ -51,6 +51,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.ui.list.AnyAllNone
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.ListOptionsFilter
 import at.techbee.jtx.ui.list.ListOptionsGroupSort
@@ -223,7 +224,9 @@ fun ListWidgetConfigContent(
                                 ListWidgetConfig().apply {
                                     module = selectedModule.value
                                     searchCategories = listSettings.searchCategories
+                                    searchCategoriesAnyAllNone = listSettings.searchCategoriesAnyAllNone.value
                                     searchResources = listSettings.searchResources
+                                    searchResourcesAnyAllNone = listSettings.searchResourcesAnyAllNone.value
                                     searchStatus = listSettings.searchStatus
                                     searchXStatus = listSettings.searchXStatus
                                     searchClassification = listSettings.searchClassification
@@ -310,7 +313,9 @@ fun WidgetConfigContent_Preview_not_purchased() {
 data class ListWidgetConfig(
     var module: Module = Module.NOTE,
     var searchCategories: List<String> = emptyList(),
+    var searchCategoriesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
     var searchResources: List<String> = emptyList(),
+    var searchResourcesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
     var searchStatus: List<Status> = emptyList(),
     var searchXStatus: List<String> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
