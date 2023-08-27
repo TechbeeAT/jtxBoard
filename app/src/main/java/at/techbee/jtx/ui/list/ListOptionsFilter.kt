@@ -360,7 +360,7 @@ fun ListOptionsFilter(
                 listSettings.searchCategories.addAll(missing)
                 onListSettingsChanged()
             },
-            initialAnyAllNone = listSettings.searchCategoriesAnyAllNone.value,
+            anyAllNone = listSettings.searchCategoriesAnyAllNone.value,
             onAnyAllNoneChanged = {
                 listSettings.searchCategoriesAnyAllNone.value = it
                 onListSettingsChanged()
@@ -604,7 +604,7 @@ fun ListOptionsFilter(
                     listSettings.searchResources.addAll(missing)
                     onListSettingsChanged()
                 },
-                initialAnyAllNone = listSettings.searchResourcesAnyAllNone.value,
+                anyAllNone = listSettings.searchResourcesAnyAllNone.value,
                 onAnyAllNoneChanged = {
                     listSettings.searchResourcesAnyAllNone.value = it
                     onListSettingsChanged()
