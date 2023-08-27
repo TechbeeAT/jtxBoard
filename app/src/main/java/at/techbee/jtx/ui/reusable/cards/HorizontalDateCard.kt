@@ -32,7 +32,6 @@ import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.util.DateTimeUtils
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.TimeZone
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,16 +82,20 @@ fun HorizontalDateCard(
                 Text(
                     DateTimeUtils.convertLongToFullDateTimeString(
                         datetime,
-                        timezone
+                        when(timezone) {
+                            TZ_ALLDAY -> TZ_ALLDAY
+                            null -> null
+                            else -> ZoneId.systemDefault().id
+                        }
                     ),
                     fontStyle = if(!isEditMode) FontStyle.Italic else null,
                     fontWeight = if(!isEditMode) FontWeight.Bold else null
                 )
-                if(!isEditMode && timezone != null && timezone != TZ_ALLDAY && TimeZone.getTimeZone(timezone).rawOffset != TimeZone.getDefault().rawOffset) {
+                if(isEditMode && timezone != null && timezone != TZ_ALLDAY) {
                     Text(
                         DateTimeUtils.convertLongToFullDateTimeString(
                             datetime,
-                            ZoneId.systemDefault().id
+                            timezone
                         )
                     )
                 }
