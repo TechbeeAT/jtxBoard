@@ -258,6 +258,7 @@
     <string name="status">"Статус"</string>
     <string name="classification">"Классификация"</string>
     <string name="category">"Категория"</string>
+    <string name="resource">"Ресурс"</string>
     <string name="priority">"Приоритет"</string>
     <string name="readyonly">"Только для чтения"</string>
     <string name="upload_pending">"Ожидающие загрузки"</string>
@@ -508,6 +509,9 @@
     <string name="filter_special">"Специальные фильтры"</string>
     <string name="filter_presets">"Пресеты фильтров"</string>
     <string name="filter_presets_edit_info">"Вы можете добавить/обновить/удалить пресеты фильтров через меню фильтров."</string>
+    <string name="filter_any">"Любой"</string>
+    <string name="filter_all">"Все"</string>
+    <string name="filter_none">"Нет"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Дата в прошлом"</string>
     <string name="list_date_today">"Сегодня"</string>
