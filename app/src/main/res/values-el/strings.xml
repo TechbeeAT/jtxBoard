@@ -59,7 +59,7 @@
     <string name="list_due_shortly">"Λήξη σύντομα"</string>
     <string name="list_due_today">"Μέχρι σήμερα"</string>
     <string name="list_due_tomorrow">"Μέχρι αύριο"</string>
-    <string name="list_due_within_7_days">"Μέχρι ημέρες"</string>
+    <string name="list_due_within_7_days">"Μέχρι 7 ημέρες"</string>
     <string name="list_due_inXhours">"Μέχρι %d ώρες"</string>
     <string name="list_due_on_weekday">"Προθεσμία στις %s"</string>
     <string name="list_start_past">"Παρελθοντικά"</string>
@@ -515,10 +515,12 @@
     <string name="list_date_start_in_past">"Παρελθοντική ημερομηνία"</string>
     <string name="list_date_today">"Σήμερα"</string>
     <string name="list_date_tomorrow">"Αύριο"</string>
+    <string name="list_date_within_7_days">"Μέσα σε επτά ημέρες"</string>
     <string name="list_date_future">"Μελλοντική ημερομηνία"</string>
     <string name="list_start_date_in_past">"Έναρξη στο παρελθόν"</string>
     <string name="list_start_date_today">"Έναρξη σήμερα"</string>
     <string name="list_start_date_tomorrow">"Έναρξη αύριο"</string>
+    <string name="list_start_date_within_7_days">"Αρχίζουν σε έως 7 ημέρες"</string>
     <string name="list_start_date_future">"Έναρξη στο μέλλον"</string>
     <string name="list_hide_completed_tasks">"Απόκριψη ολοκληρωμένων εργασιών"</string>
     <string name="list_biometric_protected_entries_locked">Οι βιομετρικές προστατευόμενες καταχωρήσεις κλειδώθηκαν</string>
