@@ -36,7 +36,7 @@ SELECTs (global selects without parameter)
      */
     @Transaction
     @Query("SELECT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_CATEGORY_TEXT ORDER BY count(*) DESC, $COLUMN_CATEGORY_TEXT ASC")
-    fun getAllCategoriesAsText(): LiveData<List<String>>
+    fun getAllCategoriesAsTextLive(): LiveData<List<String>>
 
     /**
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
@@ -44,7 +44,24 @@ SELECTs (global selects without parameter)
      */
     @Transaction
     @Query("SELECT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_RESOURCE_TEXT ORDER BY count(*) DESC, $COLUMN_RESOURCE_TEXT ASC")
-    fun getAllResourcesAsText(): LiveData<List<String>>
+    fun getAllResourcesAsTextLive(): LiveData<List<String>>
+
+    /**
+     * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
+     * @return a list of [Category.text] as List<String>
+     */
+    @Transaction
+    @Query("SELECT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_CATEGORY_TEXT ORDER BY count(*) DESC, $COLUMN_CATEGORY_TEXT ASC")
+    fun getAllCategoriesAsText(): List<String>
+
+    /**
+     * Retrieve an list of all DISTINCT Resource names ([Resource.text]) as a LiveData-List
+     * @return a list of [Resource.text] as List<String>
+     */
+    @Transaction
+    @Query("SELECT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_RESOURCE_TEXT ORDER BY count(*) DESC, $COLUMN_RESOURCE_TEXT ASC")
+    fun getAllResourcesAsText(): List<String>
+
 
 
     /**
@@ -78,7 +95,16 @@ SELECTs (global selects without parameter)
      */
     @Transaction
     @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID IN (SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getAllCollections(module: String): LiveData<List<ICalCollection>>
+    fun getAllCollectionsLive(module: String): LiveData<List<ICalCollection>>
+
+    /**
+     * Retrieve an list of all Collections ([Collection]) that have entries for a given module as a LiveData-List
+     * @param module (Module.name) for which there are existing entries for a collection
+     * @return a list of [Collection] as List<ICalCollection>
+     */
+    @Transaction
+    @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID IN (SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getAllCollections(module: String): List<ICalCollection>
 
 
     /**

@@ -40,9 +40,9 @@ const val MAX_ITEMS_PER_SECTION = 5
 fun ListOptionsFilter(
     module: Module,
     listSettings: ListSettings,
-    allCollectionsLive: LiveData<List<ICalCollection>>,
-    allCategoriesLive: LiveData<List<String>>,
-    allResourcesLive: LiveData<List<String>>,
+    allCollections: List<ICalCollection>,
+    allCategories: List<String>,
+    allResources: List<String>,
     storedListSettingLive: LiveData<List<StoredListSetting>>,
     extendedStatusesLive: LiveData<List<ExtendedStatus>>,
     onListSettingsChanged: () -> Unit,
@@ -51,11 +51,9 @@ fun ListOptionsFilter(
     modifier: Modifier = Modifier,
     isWidgetConfig: Boolean = false
 ) {
-    val allCollectionsState = allCollectionsLive.observeAsState(emptyList())
-    val allCategories by allCategoriesLive.observeAsState(emptyList())
-    val allResources by allResourcesLive.observeAsState(emptyList())
-    val allCollections by remember { derivedStateOf { allCollectionsState.value.map { it.displayName ?: "" }.sortedBy { it.lowercase() } } }
-    val allAccounts by remember { derivedStateOf { allCollectionsState.value.map { it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } } }
+
+    val allCollectionsName = allCollections.map { it.displayName ?: "" }.sortedBy { it.lowercase() }
+    val allAccounts = allCollections.map { it.accountName ?: "" }.distinct().sortedBy { it.lowercase() }
     val storedListSettings by storedListSettingLive.observeAsState(emptyList())
     val extendedStatuses by extendedStatusesLive.observeAsState(initial = emptyList())
     var showSaveListSettingsPresetDialog by remember { mutableStateOf(false) }
@@ -451,7 +449,7 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             },
             onInvertSelection = {
-                val missing = allCollections.toMutableList().apply { removeAll(listSettings.searchCollection) }
+                val missing = allCollectionsName.toMutableList().apply { removeAll(listSettings.searchCollection) }
                 listSettings.searchCollection.clear()
                 listSettings.searchCollection.addAll(missing)
                 onListSettingsChanged()
@@ -459,7 +457,7 @@ fun ListOptionsFilter(
         {
             var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
 
-            allCollections.forEachIndexed { index, collection ->
+            allCollectionsName.forEachIndexed { index, collection ->
                 if(index > maxEntries-1)
                     return@forEachIndexed
 
@@ -476,9 +474,9 @@ fun ListOptionsFilter(
                 )
             }
 
-            if(allCollections.size > maxEntries) {
+            if(allCollectionsName.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
-                    Text(stringResource(R.string.filter_options_more_entries, allCollections.size-maxEntries))
+                    Text(stringResource(R.string.filter_options_more_entries, allCollectionsName.size-maxEntries))
                 }
             }
         }
@@ -665,22 +663,20 @@ fun ListOptionsFilter_Preview_TODO() {
         ListOptionsFilter(
             module = Module.TODO,
             listSettings = listSettings,
-            allCollectionsLive = MutableLiveData(
-                listOf(
-                    ICalCollection(
-                        collectionId = 1L,
-                        displayName = "Collection 1",
-                        accountName = "Account 1"
-                    ),
-                    ICalCollection(
-                        collectionId = 2L,
-                        displayName = "Collection 2",
-                        accountName = "Account 2"
-                    )
+            allCollections = listOf(
+                ICalCollection(
+                    collectionId = 1L,
+                    displayName = "Collection 1",
+                    accountName = "Account 1"
+                ),
+                ICalCollection(
+                    collectionId = 2L,
+                    displayName = "Collection 2",
+                    accountName = "Account 2"
                 )
             ),
-            allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
-            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
+            allCategories = listOf("Category1", "#MyHashTag", "Whatever"),
+            allResources = listOf("Resource1", "Whatever"),
             extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
@@ -706,22 +702,20 @@ fun ListOptionsFilter_Preview_JOURNAL() {
         ListOptionsFilter(
             module = Module.JOURNAL,
             listSettings = listSettings,
-            allCollectionsLive = MutableLiveData(
-                listOf(
-                    ICalCollection(
-                        collectionId = 1L,
-                        displayName = "Collection 1",
-                        accountName = "Account 1"
-                    ),
-                    ICalCollection(
-                        collectionId = 2L,
-                        displayName = "Collection 2",
-                        accountName = "Account 2"
-                    )
+            allCollections = listOf(
+                ICalCollection(
+                    collectionId = 1L,
+                    displayName = "Collection 1",
+                    accountName = "Account 1"
+                ),
+                ICalCollection(
+                    collectionId = 2L,
+                    displayName = "Collection 2",
+                    accountName = "Account 2"
                 )
             ),
-            allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
-            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
+            allCategories = listOf("Category1", "#MyHashTag", "Whatever"),
+            allResources = listOf("Resource1", "Whatever"),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             onListSettingsChanged = { },

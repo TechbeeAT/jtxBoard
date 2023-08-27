@@ -107,10 +107,10 @@ open class ListViewModel(application: Application, val module: Module) : Android
         return@map list.groupBy { it.icalObjectId }
     }
 
-    val allCategories = database.getAllCategoriesAsText()
-    val allResources = database.getAllResourcesAsText()
+    val allCategories = database.getAllCategoriesAsTextLive()
+    val allResources = database.getAllResourcesAsTextLive()
     val allWriteableCollections = database.getAllWriteableCollections()
-    val allCollections = database.getAllCollections(module = module.name)
+    val allCollections = database.getAllCollectionsLive(module = module.name)
     val storedListSettings = database.getStoredListSettings(modules = listOf(module.name))
     val storedCategories = database.getStoredCategories()
     val storedResources = database.getStoredResources()

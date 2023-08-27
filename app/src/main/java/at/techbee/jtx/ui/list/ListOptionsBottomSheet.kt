@@ -20,6 +20,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,12 +37,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -49,9 +54,6 @@ fun ListOptionsBottomSheet(
     module: Module,
     initialTab: ListOptionsBottomSheetTabs,
     listSettings: ListSettings,
-    allCollectionsLive: LiveData<List<ICalCollection>>,
-    allCategoriesLive: LiveData<List<String>>,
-    allResourcesLive: LiveData<List<String>>,
     storedStatusesLive: LiveData<List<ExtendedStatus>>,
     storedListSettingLive: LiveData<List<StoredListSetting>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
@@ -62,6 +64,7 @@ fun ListOptionsBottomSheet(
 ) {
 
     val scope = rememberCoroutineScope()
+    val db = ICalDatabase.getInstance(LocalContext.current).iCalDatabaseDao()
 
     val listOptionTabs = if(listSettings.viewMode.value == ViewMode.KANBAN)
         listOf(ListOptionsBottomSheetTabs.FILTER, ListOptionsBottomSheetTabs.GROUP_SORT, ListOptionsBottomSheetTabs.KANBAN_SETTINGS )
@@ -69,6 +72,22 @@ fun ListOptionsBottomSheet(
         listOf(ListOptionsBottomSheetTabs.FILTER, ListOptionsBottomSheetTabs.GROUP_SORT)
 
     val pagerState = rememberPagerState(initialPage = listOptionTabs.indexOf(initialTab), pageCount = { listOptionTabs.size })
+
+    val allCollections = remember { mutableStateListOf<ICalCollection>() }
+    val allCategories = remember { mutableStateListOf<String>() }
+    val allResources = remember { mutableStateListOf<String>() }
+
+    LaunchedEffect(pagerState.currentPage) {
+
+        this.launch(Dispatchers.IO) {
+            allCollections.clear()
+            allCollections.addAll(db.getAllCollections(module.name))
+            allCategories.clear()
+            allCategories.addAll(db.getAllCategoriesAsText())
+            allResources.clear()
+            allResources.addAll(db.getAllCategoriesAsText())
+        }
+    }
 
     Column(
         modifier = modifier
@@ -107,9 +126,9 @@ fun ListOptionsBottomSheet(
                     ListOptionsFilter(
                         module = module,
                         listSettings = listSettings,
-                        allCollectionsLive = allCollectionsLive,
-                        allCategoriesLive = allCategoriesLive,
-                        allResourcesLive = allResourcesLive,
+                        allCollections = allCollections,
+                        allCategories = allCategories,
+                        allResources = allResources,
                         extendedStatusesLive = storedStatusesLive,
                         storedListSettingLive = storedListSettingLive,
                         onListSettingsChanged = onListSettingsChanged,
@@ -167,22 +186,6 @@ fun ListOptionsBottomSheet_Preview_TODO() {
             module = Module.TODO,
             initialTab = ListOptionsBottomSheetTabs.FILTER,
             listSettings = listSettings,
-            allCollectionsLive = MutableLiveData(
-                listOf(
-                    ICalCollection(
-                        collectionId = 1L,
-                        displayName = "Collection 1",
-                        accountName = "Account 1"
-                    ),
-                    ICalCollection(
-                        collectionId = 2L,
-                        displayName = "Collection 2",
-                        accountName = "Account 2"
-                    )
-                )
-            ),
-            allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
-            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
@@ -211,22 +214,6 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
             module = Module.JOURNAL,
             initialTab = ListOptionsBottomSheetTabs.FILTER,
             listSettings = listSettings,
-            allCollectionsLive = MutableLiveData(
-                listOf(
-                    ICalCollection(
-                        collectionId = 1L,
-                        displayName = "Collection 1",
-                        accountName = "Account 1"
-                    ),
-                    ICalCollection(
-                        collectionId = 2L,
-                        displayName = "Collection 2",
-                        accountName = "Account 2"
-                    )
-                )
-            ),
-            allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
-            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
             storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),

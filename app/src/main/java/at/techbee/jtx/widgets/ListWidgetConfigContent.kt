@@ -35,6 +35,8 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -48,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
@@ -59,6 +62,7 @@ import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.ui.list.ViewMode
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -72,7 +76,7 @@ fun ListWidgetConfigContent(
 ) {
 
     val context = LocalContext.current
-    val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
+    val db = ICalDatabase.getInstance(context).iCalDatabaseDao()
 
     val selectedModule = remember { mutableStateOf(initialConfig.module) }
     val listSettings = ListSettings.fromListWidgetConfig(initialConfig)
@@ -85,6 +89,21 @@ fun ListWidgetConfigContent(
     val scope = rememberCoroutineScope()
 
     val buyProToast = Toast.makeText(context, R.string.widget_list_configuration_pro_info, Toast.LENGTH_LONG)
+
+    val allCollections = remember { mutableStateListOf<ICalCollection>() }
+    val allCategories = remember { mutableStateListOf<String>() }
+    val allResources = remember { mutableStateListOf<String>() }
+
+    LaunchedEffect(pagerState.currentPage) {
+        this.launch(Dispatchers.IO) {
+            allCollections.clear()
+            allCollections.addAll(db.getAllCollections(selectedModule.value.name))
+            allCategories.clear()
+            allCategories.addAll(db.getAllCategoriesAsText())
+            allResources.clear()
+            allResources.addAll(db.getAllCategoriesAsText())
+        }
+    }
 
 
     Scaffold(
@@ -186,11 +205,11 @@ fun ListWidgetConfigContent(
                             ListOptionsFilter(
                                 module = selectedModule.value,
                                 listSettings = listSettings,
-                                allCollectionsLive = database.getAllCollections(module = selectedModule.value.name),
-                                allCategoriesLive = database.getAllCategoriesAsText(),
-                                allResourcesLive = database.getAllResourcesAsText(),
-                                extendedStatusesLive = database.getStoredStatuses(),
-                                storedListSettingLive = database.getStoredListSettings(modules = listOf(selectedModule.value.name)),
+                                allCollections = allCollections,
+                                allCategories = allCategories,
+                                allResources = allResources,
+                                extendedStatusesLive = db.getStoredStatuses(),
+                                storedListSettingLive = db.getStoredListSettings(modules = listOf(selectedModule.value.name)),
                                 onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
                                 isWidgetConfig = true,
                                 onSaveStoredListSetting = { /* no saving option in list widget config*/ },
