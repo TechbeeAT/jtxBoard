@@ -509,6 +509,9 @@ Gràcies!"</string>
     <string name="filter_special">"Filtres especials"</string>
     <string name="filter_presets">"Filtres predefinits"</string>
     <string name="filter_presets_edit_info">"Per favor, afegeix/actualitza/elimina filtres predefinits del menú de filtre des de la visualització de llista."</string>
+    <string name="filter_any">"Cualsevol"</string>
+    <string name="filter_all">"Tots"</string>
+    <string name="filter_none">"Cap"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data al passat"</string>
     <string name="list_date_today">"Avui"</string>
