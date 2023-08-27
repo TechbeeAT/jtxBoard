@@ -59,6 +59,7 @@
     <string name="list_due_shortly">"間もなく締め切り"</string>
     <string name="list_due_today">"今日が締め切り"</string>
     <string name="list_due_tomorrow">"明日が締め切り"</string>
+    <string name="list_due_within_7_days">"7 日以内に締め切り"</string>
     <string name="list_due_inXhours">"締め切りまで %d 時間"</string>
     <string name="list_due_on_weekday">"%s に締め切り"</string>
     <string name="list_start_past">"過去に着手"</string>
@@ -257,6 +258,7 @@
     <string name="status">"ステータス"</string>
     <string name="classification">"公開設定"</string>
     <string name="category">"カテゴリー"</string>
+    <string name="resource">"必要なもの"</string>
     <string name="priority">"優先度"</string>
     <string name="readyonly">"読み取り専用"</string>
     <string name="upload_pending">"アップロードの待機中"</string>
@@ -325,7 +327,15 @@
     <string name="edit_recur_ends_never">"永久に繰り返し"</string>
     <string name="edit_recur_ends_on">"終了する日時"</string>
     <string name="edit_recur_ends_after">"終了までの回数"</string>
+    <string name="collections_toast_export_success">"コレクションは正常に削除されました"</string>
+    <string name="collections_toast_export_error">"コレクションのエクスポート中にエラーが発生しました"</string>
     <string name="menu_collections_export_all">"すべてをエクスポート"</string>
+    <string name="menu_presets_export_presets">"プリセットをエクスポート"</string>
+    <string name="menu_presets_import_presets">"プリセットをインポート"</string>
+    <string name="presets_imported">"プリセットをインポートしました"</string>
+    <string name="presets_import_invalid_file">"無効なファイルです"</string>
+    <string name="presets_saved">"プリセットが保存されました"</string>
+    <string name="presets_export_error">"プリセットの保存中にエラーが発生しました！"</string>
     <string name="more">"詳細"</string>
     <string name="navigation_drawer_buypro">"プロ版を購入"</string>
     <string name="settings_select_theme">"テーマを選択"</string>
@@ -499,14 +509,19 @@
     <string name="filter_special">"汎用フィルター"</string>
     <string name="filter_presets">"プリセットのフィルター"</string>
     <string name="filter_presets_edit_info">"リスト表示のフィルターメニューから、フィルターのプリセットを追加/更新/削除。"</string>
+    <string name="filter_any">"任意"</string>
+    <string name="filter_all">"すべて"</string>
+    <string name="filter_none">"なし"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"過去の日付"</string>
     <string name="list_date_today">"今日"</string>
     <string name="list_date_tomorrow">"明日"</string>
+    <string name="list_date_within_7_days">"7 日以内"</string>
     <string name="list_date_future">"未来の日付"</string>
     <string name="list_start_date_in_past">"過去に着手"</string>
     <string name="list_start_date_today">"今日から着手"</string>
     <string name="list_start_date_tomorrow">"明日から着手"</string>
+    <string name="list_start_date_within_7_days">"7 日以内に着手"</string>
     <string name="list_start_date_future">"今後に着手"</string>
     <string name="list_hide_completed_tasks">"完了した ToDo を非表示"</string>
     <string name="list_biometric_protected_entries_locked">生体認証で保護されたエントリーはロックされています</string>
