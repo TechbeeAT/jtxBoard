@@ -314,6 +314,8 @@
     <string name="filter_no_resource">Χωρίς πηγές</string>
     <string name="filter_subtasks_order_by">Ταξινόμηση υποεργασιών κατά</string>
     <string name="filter_subnotes_order_by">Ταξινόμηση συνδεδεμένων σημειώσεων κατά</string>
+    <string name="filter_no_filter">"Χωρίς φίλτρο"</string>
+    <string name="filter_options_more_entries">"Περισσότερα (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Κάντε κλικ στη συλλογή στην οποία πρέπει να προστεθούν οι καταχωρήσεις/καταχωρήσεις!"</string>
     <string name="collections_snackbar_x_items_added">"Προστέθηκε %1$d, παράβλεψη %2$d. (Αποκλειστικές περιπτώσεις επαναλαμβανόμενων εγγραφών.)"</string>
     <string name="collections_toast_x_items_added">"%1$d καταχωρήσεις προστέθηκαν!"</string>
@@ -508,14 +510,14 @@
     <string name="filter_special">"Ειδικά φίλτρα"</string>
     <string name="filter_presets">"Φίλτρο προεπιλογών"</string>
     <string name="filter_presets_edit_info">"Παρακαλώ προσθέστε/ενημερώστε/διαγράψτε τις προεπιλογές φίλτρων από το μενού φίλτρου στην προβολή λίστας."</string>
-    <string name="filter_any">"Όλες"</string>
+    <string name="filter_any">"Οποιαδήποτε"</string>
     <string name="filter_all">"Όλα"</string>
     <string name="filter_none">"Καμία"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Παρελθοντική ημερομηνία"</string>
     <string name="list_date_today">"Σήμερα"</string>
     <string name="list_date_tomorrow">"Αύριο"</string>
-    <string name="list_date_within_7_days">"Μέσα σε επτά ημέρες"</string>
+    <string name="list_date_within_7_days">"Μέσα σε 7 ημέρες"</string>
     <string name="list_date_future">"Μελλοντική ημερομηνία"</string>
     <string name="list_start_date_in_past">"Έναρξη στο παρελθόν"</string>
     <string name="list_start_date_today">"Έναρξη σήμερα"</string>
