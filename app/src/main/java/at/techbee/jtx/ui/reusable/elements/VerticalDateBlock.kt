@@ -28,7 +28,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
-import java.util.*
+import java.util.TimeZone
 
 
 @Composable
@@ -81,12 +81,10 @@ fun VerticalDateBlock(
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-            if (timezone != ICalObject.TZ_ALLDAY && timezone?.isNotEmpty() == true && TimeZone.getTimeZone(
-                    timezone
-                ).getDisplayName(true, TimeZone.SHORT) != null
+            if (timezone != ICalObject.TZ_ALLDAY && timezone?.isNotEmpty() == true
             )
                 Text(
-                    TimeZone.getTimeZone(timezone).getDisplayName(true, TimeZone.SHORT),
+                    TimeZone.getDefault().getDisplayName(true, TimeZone.SHORT),
                     style = Typography.labelSmall,
                     fontStyle = FontStyle.Italic,
                     textAlign = TextAlign.Center
