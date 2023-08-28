@@ -504,10 +504,12 @@ Köszönjük!"</string>
     <string name="list_date_start_in_past">"Múltbéli kezdés"</string>
     <string name="list_date_today">"Ma"</string>
     <string name="list_date_tomorrow">"Holnap"</string>
+    <string name="list_date_within_7_days">"Hét napon belül"</string>
     <string name="list_date_future">"Jövőbeni dátum"</string>
     <string name="list_start_date_in_past">"Múltbéli kezdés"</string>
     <string name="list_start_date_today">"Kezdés ma"</string>
     <string name="list_start_date_tomorrow">"Kezdés holnap"</string>
+    <string name="list_start_date_within_7_days">"Kezdés 7 napon belül"</string>
     <string name="list_start_date_future">"Jövőbeni kezdés"</string>
     <string name="list_hide_completed_tasks">"Befejezett feladatok elrejtése"</string>
     <string name="list_biometric_protected_entries_locked">A biometrikusan védett bejegyzések zárolva</string>
