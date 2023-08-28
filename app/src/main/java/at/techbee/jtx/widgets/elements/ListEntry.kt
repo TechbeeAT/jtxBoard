@@ -12,14 +12,24 @@ import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.glance.*
+import androidx.glance.GlanceModifier
+import androidx.glance.Image
+import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.CheckBox
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
-import androidx.glance.layout.*
+import androidx.glance.background
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.Column
+import androidx.glance.layout.Row
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import androidx.glance.text.FontStyle
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
@@ -98,7 +108,7 @@ fun ListEntry(
                                 modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
                             )
                             Text(
-                                text = DateTimeUtils.convertLongToMediumDateShortTimeString(
+                                text = DateTimeUtils.convertLongToLocalMediumDateShortTimeString(
                                     obj.dtstart,
                                     obj.dtstartTimezone
                                 ),
@@ -113,7 +123,7 @@ fun ListEntry(
                                 modifier = GlanceModifier.size(imageSize).padding(end = 4.dp)
                             )
                             Text(
-                                text = DateTimeUtils.convertLongToMediumDateShortTimeString(
+                                text = DateTimeUtils.convertLongToLocalMediumDateShortTimeString(
                                     obj.due,
                                     obj.dueTimezone
                                 ),

@@ -95,7 +95,7 @@ fun SubnoteCard(
 
                 if(subnote.dtstart != null) {
                     Text(
-                        text = DateTimeUtils.convertLongToShortDateTimeString(subnote.dtstart, subnote.dtstartTimezone),
+                        text = DateTimeUtils.convertLongToLocalShortDateTimeString(subnote.dtstart, subnote.dtstartTimezone),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }

@@ -885,15 +885,15 @@ data class ICalObject(
                      ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> context.getString(R.string.list_start_past)
                      ChronoUnit.HOURS.between(localNow, localStart) < 1L -> context.getString(R.string.list_start_shortly)
                      localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
-                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
-                     ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                     else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
+                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow) + if(dtstartTimezone != TZ_ALLDAY) " ${DateTimeUtils.convertLongToTimeString(dtstart, dtstartTimezone)}" else ""
+                     ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())) + if(dtstartTimezone != TZ_ALLDAY) " ${DateTimeUtils.convertLongToTimeString(dtstart, dtstartTimezone)}" else ""
+                     else -> DateTimeUtils.convertLongToLocalMediumDateShortTimeString(dtstart, dtstartTimezone)
                 }
             } else {
                 when {
-                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_date_today)
-                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_date_tomorrow)
-                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_date_today) + if(dtstartTimezone != TZ_ALLDAY) " ${DateTimeUtils.convertLongToTimeString(dtstart, dtstartTimezone)}" else ""
+                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_date_tomorrow) + if(dtstartTimezone != TZ_ALLDAY) " ${DateTimeUtils.convertLongToTimeString(dtstart, dtstartTimezone)}" else ""
+                    else -> DateTimeUtils.convertLongToLocalMediumDateShortTimeString(dtstart, dtstartTimezone)
                 }
             }
         }
@@ -914,9 +914,9 @@ data class ICalObject(
                 ChronoUnit.MINUTES.between(localNow, localDue) < 0L -> context.getString(R.string.list_due_overdue)
                 ChronoUnit.HOURS.between(localNow, localDue) < 1L -> context.getString(R.string.list_due_shortly)
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, ChronoUnit.HOURS.between(localNow, localDue))
-                localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
-                ChronoUnit.DAYS.between(localNow, localDue) <= 7 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                else -> DateTimeUtils.convertLongToMediumDateShortTimeString(due, dueTimezone)
+                localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow) + if(dueTimezone != TZ_ALLDAY) " ${DateTimeUtils.convertLongToTimeString(due, dueTimezone)}" else ""
+                ChronoUnit.DAYS.between(localNow, localDue) <= 7 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())) + if(dueTimezone != TZ_ALLDAY) " ${DateTimeUtils.convertLongToTimeString(due, dueTimezone)}" else ""
+                else -> DateTimeUtils.convertLongToLocalMediumDateShortTimeString(due, dueTimezone)
             }
         }
 

@@ -524,7 +524,7 @@ fun DetailsCardRecur(
                                 onClick = { showDatepicker = true },
                                 label = {
                                     Text(
-                                        DateTimeUtils.convertLongToFullDateString(
+                                        DateTimeUtils.convertLongToFullLocalDateString(
                                             until?.time,
                                             TZ_ALLDAY
                                         )

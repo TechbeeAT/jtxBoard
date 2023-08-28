@@ -25,6 +25,11 @@ import java.util.Locale
 
 object DateTimeUtils {
 
+    private fun getLocalZonedDateTime(datetime: Long?, timezone: String?) =
+        datetime?.let {
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(datetime), requireTzId(timezone)).withZoneSameInstant(ZoneId.systemDefault())
+        }
+
     fun convertLongToFullDateTimeString(date: Long?, timezone: String?): String {
         if (date == null || date == 0L)
             return ""
@@ -44,10 +49,7 @@ object DateTimeUtils {
         return zonedDateTime.format(formatter)
     }
 
-    fun convertLongToShortDateTimeString(date: Long?, timezone: String?): String {
-        if (date == null || date == 0L)
-            return ""
-        val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+    fun convertLongToLocalShortDateTimeString(date: Long?, timezone: String?): String {
         val formatter = when (timezone) {
             null -> DateTimeFormatter.ofLocalizedDateTime(
                 FormatStyle.SHORT,
@@ -59,86 +61,59 @@ object DateTimeUtils {
                 FormatStyle.LONG
             )  // FormatStyle.LONG also shows seconds, maybe a solution could be found to remove this in the future
         }
-        return zonedDateTime.format(formatter)
+        return getLocalZonedDateTime(date, timezone)?.format(formatter) ?:""
     }
 
-    fun convertLongToFullDateString(date: Long?, timezone: String?): String {
-        if (date == null || date == 0L)
-            return ""
-        val zonedDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+    fun convertLongToFullLocalDateString(date: Long?, timezone: String?): String {
         val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
-        return zonedDateTime.format(formatter)
+        return getLocalZonedDateTime(date, timezone)?.format(formatter) ?:""
     }
 
-    fun convertLongToMediumDateShortTimeString(date: Long?, timezone: String?): String {
-        return convertLongToMediumDateString(date, timezone) + if(timezone != TZ_ALLDAY) " " + convertLongToTimeString(date, timezone) else ""
+    fun convertLongToLocalMediumDateShortTimeString(date: Long?, timezone: String?): String {
+        return convertLongToLocalMediumDateString(date, timezone) + if(timezone != TZ_ALLDAY) " " + convertLongToTimeString(date, timezone) else ""
     }
 
-    private fun convertLongToMediumDateString(date: Long?, timezone: String?): String {
-        if (date == null || date == 0L)
-            return ""
-        val zonedDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+    private fun convertLongToLocalMediumDateString(date: Long?, timezone: String?): String {
         val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-        return zonedDateTime.format(formatter)
+        return getLocalZonedDateTime(date, timezone)?.format(formatter) ?:""
     }
 
     fun convertLongToTimeString(time: Long?, timezone: String?): String {
         if (time == null || time == 0L || timezone == TZ_ALLDAY)
             return ""
-        val zonedDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), requireTzId(timezone))
         val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        return zonedDateTime.toLocalTime().format(formatter)
+        return getLocalZonedDateTime(time, timezone)?.format(formatter) ?:""
     }
 
     fun convertLongToDayString(date: Long?, timezone: String?): String {
-        if (date == null || date == 0L)
-            return ""
-        val zonedDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
         val formatter = DateTimeFormatter.ofPattern("dd", Locale.getDefault())
-        return zonedDateTime.toLocalDateTime().format(formatter)
+        return getLocalZonedDateTime(date, timezone)?.format(formatter) ?:""
     }
 
     fun convertLongToWeekdayString(date: Long?, timezone: String?): String {
-        if (date == null || date == 0L)
-            return ""
-        val zonedDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
         val formatter = DateTimeFormatter.ofPattern("eeee", Locale.getDefault())
-        return zonedDateTime.toLocalDateTime().format(formatter)
+        return getLocalZonedDateTime(date, timezone)?.format(formatter) ?:""
     }
 
 
     fun convertLongToMonthString(date: Long?, timezone: String?): String {
-        if (date == null || date == 0L)
-            return ""
-        val zonedDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
         val formatter = DateTimeFormatter.ofPattern("MMMM", Locale.getDefault())
-        return zonedDateTime.toLocalDateTime().format(formatter)
+        return getLocalZonedDateTime(date, timezone)?.format(formatter) ?:""
     }
 
 
     fun convertLongToYearString(date: Long?, timezone: String?): String {
-        if (date == null || date == 0L)
-            return ""
-        val zonedDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
         val formatter = DateTimeFormatter.ofPattern("yyyy", Locale.getDefault())
-        return zonedDateTime.toLocalDateTime().format(formatter)
+        return getLocalZonedDateTime(date, timezone)?.format(formatter) ?:""
     }
 
     fun convertLongToYYYYMMDDString(date: Long?, timezone: String?): String {
-        if (date == null || date == 0L)
-            return ""
-        val zonedDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
-        return zonedDateTime.toLocalDateTime().format(formatter)
+        return getLocalZonedDateTime(date, timezone)?.format(formatter) ?:""
     }
+
+    fun getFormattedDateTime(date: Long?, timezone: String?, formatter: DateTimeFormatter) =
+        getLocalZonedDateTime(date, timezone)?.format(formatter) ?:""
 
     fun timestampAsFilenameAppendix(): String = convertLongToYYYYMMDDString(System.currentTimeMillis(),null)
 
