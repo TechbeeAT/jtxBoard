@@ -59,6 +59,7 @@
     <string name="list_due_shortly">"Hamarosan esedékes"</string>
     <string name="list_due_today">"Mai határidő"</string>
     <string name="list_due_tomorrow">"Holnapi határidő"</string>
+    <string name="list_due_within_7_days">"Határidő 7 napon belül"</string>
     <string name="list_due_inXhours">"%d órán belül esedékes"</string>
     <string name="list_due_on_weekday">"Határidő: %s"</string>
     <string name="list_start_past">"Múltbéli kezdés"</string>
@@ -257,6 +258,7 @@
     <string name="status">"Státusz"</string>
     <string name="classification">"Besoroláls"</string>
     <string name="category">"Kategória"</string>
+    <string name="resource">"Erőforrás"</string>
     <string name="priority">"Prioritás"</string>
     <string name="readyonly">"Csak olvasható"</string>
     <string name="upload_pending">"Feltöltés függőben"</string>
@@ -324,6 +326,8 @@
     <string name="edit_recur_ends_never">"vég nélkül"</string>
     <string name="edit_recur_ends_on">"befejezés"</string>
     <string name="edit_recur_ends_after">"ismétlés"</string>
+    <string name="collections_toast_export_success">"Gyűjtemények exportálása sikeres"</string>
+    <string name="collections_toast_export_error">"Gyűjtemények exportálása sikertelen"</string>
     <string name="menu_collections_export_all">"Az összes exportálása"</string>
     <string name="more">"Tovább"</string>
     <string name="navigation_drawer_buypro">"Pro verzó megvásárlása"</string>
@@ -504,7 +508,7 @@ Köszönjük!"</string>
     <string name="list_start_date_in_past">"Múltbéli kezdés"</string>
     <string name="list_start_date_today">"Kezdés ma"</string>
     <string name="list_start_date_tomorrow">"Kezdés holnap"</string>
-    <string name="list_start_date_future">"Jjövőbeni kezdés"</string>
+    <string name="list_start_date_future">"Jövőbeni kezdés"</string>
     <string name="list_hide_completed_tasks">"Befejezett feladatok elrejtése"</string>
     <string name="list_biometric_protected_entries_locked">A biometrikusan védett bejegyzések zárolva</string>
     <string name="list_delete_done">"Késznek jelölt feladatok törlése"</string>
