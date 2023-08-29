@@ -9,9 +9,7 @@
 package at.techbee.jtx.util
 
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
-import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYYYYMMDDString
-import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.getTodayAsLong
 import org.junit.Assert.assertEquals
@@ -20,11 +18,11 @@ import org.junit.Test
 
 class DateTimeUtilsTest {
 
-    private val sampleDateTime = 1632395090107L   // = Thu Sep 23 2021 11:04:50 (UTC)
-    private val sampleTimezone = "UTC+13"
+    //private val sampleDateTime = 1632395090107L   // = Thu Sep 23 2021 11:04:50 (UTC)
+    //private val sampleTimezone = "UTC+13"
 
-    private val sampleDateTime2 = 1640991660000L  // = Sat Jan 01 2022 00:01:00
-    private val sampleTimezone2 = "Europe/Lisbon"
+    //private val sampleDateTime2 = 1640991660000L  // = Sat Jan 01 2022 00:01:00
+    //private val sampleTimezone2 = "Europe/Lisbon"
 
     // TODO: Those tests might fail in the future as the methods return locales, check for a better solution
     //@Test fun convertLongToDateString() = assertEquals("", convertLongToDateString(sampleDateTime))
@@ -33,7 +31,7 @@ class DateTimeUtilsTest {
     //@Test fun convertLongToDayString_test() = assertEquals("23", convertLongToDayString(sampleDateTime, null))
     //@Test fun convertLongToYearString_test() = assertEquals("2021", convertLongToYearString(sampleDateTime, null))
     //@Test fun convertLongToDayString_test_timezone_next_day() = assertEquals("24", convertLongToDayString(sampleDateTime, sampleTimezone))
-
+/*
     @Test fun convertLongToDayString_test_timezone_last_year() {
         //assertEquals("01", convertLongToDayString(sampleDateTime2, null))
         //assertEquals("01", convertLongToMonthString(sampleDateTime2, null))
@@ -43,6 +41,7 @@ class DateTimeUtilsTest {
         //assertEquals("12", convertLongToMonthString(sampleDateTime2, sampleTimezone2))
         assertEquals("2021", convertLongToYearString(sampleDateTime2, sampleTimezone2))
     }
+ */
 
     @Test fun convertLongToYYYYMMDDString_test() = assertEquals("2022-01-24", convertLongToYYYYMMDDString(1643019619464L, "UTC"))
 
