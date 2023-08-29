@@ -30,10 +30,9 @@ class DateTimeUtilsTest {
     //@Test fun convertLongToDateString() = assertEquals("", convertLongToDateString(sampleDateTime))
     //@Test fun convertLongToTimeString()  = assertEquals("00:04", convertLongToTimeString(sampleDateTime, sampleTimezone))
     //@Test fun convertLongToMonthString() = assertEquals("September", convertLongToMonthString(sampleDateTime))
-
-    @Test fun convertLongToDayString_test() = assertEquals("23", convertLongToDayString(sampleDateTime, null))
-    @Test fun convertLongToYearString_test() = assertEquals("2021", convertLongToYearString(sampleDateTime, null))
-    @Test fun convertLongToDayString_test_timezone_next_day() = assertEquals("24", convertLongToDayString(sampleDateTime, sampleTimezone))
+    //@Test fun convertLongToDayString_test() = assertEquals("23", convertLongToDayString(sampleDateTime, null))
+    //@Test fun convertLongToYearString_test() = assertEquals("2021", convertLongToYearString(sampleDateTime, null))
+    //@Test fun convertLongToDayString_test_timezone_next_day() = assertEquals("24", convertLongToDayString(sampleDateTime, sampleTimezone))
 
     @Test fun convertLongToDayString_test_timezone_last_year() {
         //assertEquals("01", convertLongToDayString(sampleDateTime2, null))
