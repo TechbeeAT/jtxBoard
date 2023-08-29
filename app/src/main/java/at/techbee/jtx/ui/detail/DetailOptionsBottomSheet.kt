@@ -9,13 +9,21 @@
 package at.techbee.jtx.ui.detail
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -62,7 +70,7 @@ fun DetailOptionsBottomSheet(
                         },
                         label = { Text(stringResource(id = setting.stringResource)) },
                         trailingIcon = {
-                            Crossfade(enabled) {
+                            Crossfade(enabled, label = "${setting.key}_enabed") {
                                 if (it)
                                     Icon(Icons.Outlined.Visibility, stringResource(id = R.string.visible))
                                 else

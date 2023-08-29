@@ -438,7 +438,7 @@ fun DetailScreenContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                AnimatedVisibility(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true) {
+                AnimatedVisibility(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true || showAllOptions) {
                     OutlinedTextField(
                         value = summary,
                         onValueChange = {
@@ -458,7 +458,7 @@ fun DetailScreenContent(
                     )
                 }
 
-                AnimatedVisibility(description.text.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == true) {
+                AnimatedVisibility(description.text.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == true || showAllOptions) {
                     OutlinedTextField(
                         value = description,
                         onValueChange = {
