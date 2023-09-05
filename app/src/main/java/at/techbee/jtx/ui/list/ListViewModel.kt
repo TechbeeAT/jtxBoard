@@ -92,10 +92,10 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     private var allSubtasksQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubtasks: LiveData<List<ICal4ListRel>> = allSubtasksQuery.switchMap { database.getSubEntries(it) }
+    var allSubtasks: LiveData<List<ICal4ListRel>> = allSubtasksQuery.switchMap { database.getIcal4ListRel(it) }
 
     private var allSubnotesQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubnotes: LiveData<List<ICal4ListRel>> = allSubnotesQuery.switchMap { database.getSubEntries(it) }
+    var allSubnotes: LiveData<List<ICal4ListRel>> = allSubnotesQuery.switchMap { database.getIcal4ListRel(it) }
 
     var allParents: LiveData<List<ICal4ListRel>> = database.getAllParents()
 
@@ -615,7 +615,7 @@ enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String
     START_VTODO(R.string.started, "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
     START_VJOURNAL(R.string.date, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
     DUE(R.string.due, "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DUE IS NULL, $COLUMN_DUE "),
-    COMPLETED(R.string.completed, "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED "),
+    COMPLETED(R.string.completed,  "$COLUMN_COMPLETED "),
     CREATED(R.string.filter_created, "$COLUMN_CREATED "),
     LAST_MODIFIED(R.string.filter_last_modified, "$COLUMN_LAST_MODIFIED "),
     SUMMARY(R.string.summary, "UPPER($COLUMN_SUMMARY) "),
