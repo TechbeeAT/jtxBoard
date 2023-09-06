@@ -16,9 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!-- START remove permissions would be merged by the ical4android manifest and that are not needed -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- START remove permissions would be merged by the ical4android manifest and that are not needed -->
     <uses-permission
         android:name="android.permission.READ_CALENDAR"
         tools:node="remove" />
@@ -42,9 +40,7 @@
         tools:node="remove" />
     <uses-permission
         android:name="at.techbee.jtx.permission.WRITE"
-        tools:node="remove" />
-    <!-- END remove permissions would be merged by the ical4android manifest and that are not needed -->
-
+        tools:node="remove" /> <!-- END remove permissions would be merged by the ical4android manifest and that are not needed -->
     <permission-tree
         android:name="${applicationId}.permission"
         android:icon="@drawable/ic_jtx"
@@ -74,6 +70,7 @@
         android:required="false" />
 
     <queries>
+
         <!-- package visiblity – which apps do we need to see? -->
         <package android:name="at.bitfire.davdroid" />
         <package android:name="com.infomaniak.sync" />
@@ -93,6 +90,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+
         <profileable
             android:shell="true"
             tools:targetApi="q" />
@@ -160,9 +158,16 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".AlarmFullscreenActivity"
+            android:clearTaskOnLaunch="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance" />
 
         <receiver android:name=".NotificationPublisher" />
-        <receiver android:name=".GeofenceBroadcastReceiver"/>
+        <receiver android:name=".GeofenceBroadcastReceiver" />
         <receiver
             android:name=".widgets.ListWidgetReceiver"
             android:enabled="@bool/list_widget_enabled"
@@ -189,6 +194,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_geo_api_key" />
+
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
             android:enabled="false"

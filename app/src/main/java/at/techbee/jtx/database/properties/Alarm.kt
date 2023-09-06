@@ -24,6 +24,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import at.techbee.jtx.AlarmFullscreenActivity
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.MainActivity2.Companion.INTENT_ACTION_OPEN_ICALOBJECT
 import at.techbee.jtx.MainActivity2.Companion.INTENT_EXTRA_ITEM2SHOW
@@ -279,12 +280,16 @@ data class Alarm(
                 )
             }
 
+            val fullScreenIntent = Intent(context, AlarmFullscreenActivity::class.java)
+            val fullScreenPendingIntent = PendingIntent.getActivity(context, iCalObjectId.toInt(), fullScreenIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
             // this is the notification itself that will be put as an Extra into the notificationIntent
             val notification = NotificationCompat.Builder(context, notificationChannel).apply {
                 setSmallIcon(R.drawable.ic_notification)
                 notificationSummary?.let { setContentTitle(it) }
                 notificationDescription?.let { setContentText(it) }
                 setContentIntent(contentIntent)
+                setFullScreenIntent(fullScreenPendingIntent, true)
                 priority = NotificationCompat.PRIORITY_MAX
                 setCategory(NotificationCompat.CATEGORY_REMINDER)     //  CATEGORY_REMINDER might also be an alternative
                 if (isSticky) {
