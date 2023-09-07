@@ -6,6 +6,7 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Opslaan"</string>
+    <string name="update">"Bijwerken"</string>
     <string name="cancel">"Annuleren"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Verwijderen"</string>
@@ -55,11 +56,14 @@
     <string name="navigation_drawer_privacy_policy">"Privacybeleid"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Achterstallig"</string>
+    <string name="list_due_shortly">"Binnenkort te betalen"</string>
     <string name="list_due_today">"Vervalt vandaag"</string>
     <string name="list_due_tomorrow">"Vervalt Morgen"</string>
+    <string name="list_due_within_7_days">"Vervalt binnen 7 dagen"</string>
     <string name="list_due_inXhours">"Vervalt binnen %d uur"</string>
     <string name="list_due_on_weekday">"Vervalt op %s"</string>
     <string name="list_start_past">"Start in verleden"</string>
+    <string name="list_start_shortly">"Binnenkort beginnen"</string>
     <string name="list_start_today">"Start vandaag gepland"</string>
     <string name="list_start_tomorrow">"Start morgen"</string>
     <string name="list_start_inXhours">"Geplande start over %d uur"</string>
