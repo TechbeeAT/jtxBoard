@@ -70,6 +70,7 @@
     <!-- Buy Pro fragment -->
     <string name="buypro_purchase_header">"Uppgradera till jtx Board Pro"</string>
     <string name="buypro_success_thankyou">"Tack!"</string>
+    <string name="buypro_purchase_init_error_message">"Kontrollera din internetanslutning eller försök igen senare!"</string>
     <string name="timezone">"Tidszon"</string>
     <string name="audio_pause">"Pausa"</string>
     <string name="invalid_url_message">"Vänligen ange en giltig URL!"</string>
@@ -85,6 +86,7 @@
     <string name="list_date_today">"I dag"</string>
     <string name="list_date_tomorrow">"I morgon"</string>
     <string name="list_date_within_7_days">"Inom 7 dagar"</string>
+    <string name="collections_biometric_protected_entries_locked_subtitle">Vänligen autentisera och försök igen</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="next">"Nästa"</string>
     <string name="widget_list_show_description">"Visa beskrivning"</string>
