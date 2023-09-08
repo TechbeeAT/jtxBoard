@@ -18,9 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.SwapHoriz
 import androidx.compose.material3.DropdownMenu
@@ -170,7 +170,7 @@ fun FilterSection_Preview() {
 fun FilterSection_Preview_Category() {
     MaterialTheme {
         FilterSection(
-            icon = Icons.Outlined.Label,
+            icon = Icons.AutoMirrored.Outlined.Label,
             headline = stringResource(id = R.string.category),
             //subtitle = "Here comes the subtitle",
             anyAllNone = AnyAllNone.ANY,

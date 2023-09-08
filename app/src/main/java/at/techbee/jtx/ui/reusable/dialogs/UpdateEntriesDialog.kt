@@ -23,9 +23,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.LabelOff
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.LabelOff
 import androidx.compose.material.icons.outlined.NewLabel
 import androidx.compose.material.icons.outlined.WorkOff
 import androidx.compose.material.icons.outlined.WorkOutline
@@ -226,7 +226,7 @@ fun UpdateEntriesDialog(
                                 label = { Text(category) },
                                 leadingIcon = {
                                     if (removedCategories.contains(category))
-                                        Icon(Icons.Outlined.LabelOff, stringResource(id = R.string.delete), tint = MaterialTheme.colorScheme.error)
+                                        Icon(Icons.AutoMirrored.Outlined.LabelOff, stringResource(id = R.string.delete), tint = MaterialTheme.colorScheme.error)
                                     else
                                         Icon(
                                             Icons.Outlined.NewLabel,
