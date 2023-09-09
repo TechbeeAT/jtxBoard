@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -346,7 +347,7 @@ fun ListOptionsFilter(
 
         ////// CATEGORIES
         FilterSection(
-            icon = Icons.Outlined.Label,
+            icon = Icons.AutoMirrored.Outlined.Label,
             headline = stringResource(id = R.string.category),
             onResetSelection = {
                 listSettings.isFilterNoCategorySet.value = false
@@ -590,7 +591,7 @@ fun ListOptionsFilter(
         ////// RESOURCES
         if (module == Module.TODO) {
             FilterSection(
-                icon = Icons.Outlined.Label,
+                icon = Icons.AutoMirrored.Outlined.Label,
                 headline = stringResource(id = R.string.resources),
                 onResetSelection = {
                     listSettings.isFilterNoResourceSet.value = false
