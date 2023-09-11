@@ -22,8 +22,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.NewLabel
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ElevatedAssistChip
@@ -88,7 +88,7 @@ fun DetailsCardCategories(
                 .padding(8.dp),
         ) {
 
-            HeadlineWithIcon(icon = Icons.Outlined.Label, iconDesc = headline, text = headline)
+            HeadlineWithIcon(icon = Icons.AutoMirrored.Outlined.Label, iconDesc = headline, text = headline)
 
             AnimatedVisibility(categories.isNotEmpty()) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -167,12 +167,12 @@ fun DetailsCardCategories(
                 }
             }
 
-            Crossfade(isEditMode) {
+            Crossfade(isEditMode, label = "categoryEditMode") {
                 if (it) {
 
                     OutlinedTextField(
                         value = newCategory,
-                        leadingIcon = { Icon(Icons.Outlined.Label, headline) },
+                        leadingIcon = { Icon(Icons.AutoMirrored.Outlined.Label, headline) },
                         trailingIcon = {
                             if (newCategory.isNotEmpty()) {
                                 IconButton(onClick = {

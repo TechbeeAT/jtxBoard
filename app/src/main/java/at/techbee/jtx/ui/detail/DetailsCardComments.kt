@@ -17,8 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.outlined.AddComment
-import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -66,7 +66,7 @@ fun DetailsCardComments(
                 .padding(8.dp),
         ) {
 
-            HeadlineWithIcon(icon = Icons.Outlined.Comment, iconDesc = headline, text = headline)
+            HeadlineWithIcon(icon = Icons.AutoMirrored.Outlined.Comment, iconDesc = headline, text = headline)
 
             AnimatedVisibility(comments.isNotEmpty()) {
                 Column(

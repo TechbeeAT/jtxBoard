@@ -16,9 +16,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Note
 import androidx.compose.material.icons.outlined.EditNote
 import androidx.compose.material.icons.outlined.Mic
-import androidx.compose.material.icons.outlined.Note
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -88,7 +88,7 @@ fun DetailsCardSubnotes(
                 modifier = Modifier.fillMaxWidth(), 
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HeadlineWithIcon(icon = Icons.Outlined.Note, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
+                HeadlineWithIcon(icon = Icons.AutoMirrored.Outlined.Note, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
                 
                 AnimatedVisibility(isEditMode.value) {
                         IconButton(onClick = { onShowLinkExistingDialog() }) {
