@@ -36,11 +36,14 @@ import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
@@ -61,6 +64,8 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 
 
+const val DEFAULT_MAX_RESOURCES = 5
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun DetailsCardResources(
@@ -79,6 +84,7 @@ fun DetailsCardResources(
     val mergedResources = mutableListOf<StoredResource>()
     mergedResources.addAll(storedResources)
     allResources.forEach { resource -> if(mergedResources.none { it.resource == resource }) mergedResources.add(StoredResource(resource, null)) }
+    var maxEntries by rememberSaveable { mutableIntStateOf(DEFAULT_MAX_CATEGORIES) }
 
     fun addResource() {
         if (newResource.isNotEmpty() && resources.none { existing -> existing.text == newResource }) {
@@ -148,7 +154,15 @@ fun DetailsCardResources(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(resourcesToSelectFiltered) { resource ->
+
+                    val resourcesToSelectFilteredSorted =
+                        if(resourcesToSelectFiltered.size > maxEntries)
+                            resourcesToSelectFiltered.subList(0, DEFAULT_MAX_CATEGORIES)
+                        else
+                            resourcesToSelectFiltered.sortedBy { it.resource }
+
+
+                    items(resourcesToSelectFilteredSorted) { resource ->
                         InputChip(
                             onClick = {
                                 resources.add(Resource(text = resource.resource))
@@ -169,6 +183,21 @@ fun DetailsCardResources(
                             ) }?: InputChipDefaults.inputChipColors(),
                             modifier = Modifier.alpha(0.4f)
                         )
+                    }
+
+                    if(resourcesToSelectFiltered.size > maxEntries) {
+                        item {
+                            TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
+                                Text(stringResource(R.string.filter_options_more_entries, resourcesToSelectFiltered.size - maxEntries))
+                            }
+                        }
+                    }
+                    if(maxEntries == Int.MAX_VALUE) {
+                        item {
+                            TextButton(onClick = { maxEntries = DEFAULT_MAX_RESOURCES }) {
+                                Text(stringResource(R.string.filter_options_less_entries))
+                            }
+                        }
                     }
                 }
             }

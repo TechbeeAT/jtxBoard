@@ -36,11 +36,14 @@ import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
@@ -59,6 +62,8 @@ import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
+
+const val DEFAULT_MAX_CATEGORIES = 5
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -79,6 +84,7 @@ fun DetailsCardCategories(
     val mergedCategories = mutableListOf<StoredCategory>()
     mergedCategories.addAll(storedCategories)
     allCategories.forEach { cat -> if(mergedCategories.none { it.category == cat }) mergedCategories.add(StoredCategory(cat, null)) }
+    var maxEntries by rememberSaveable { mutableIntStateOf(DEFAULT_MAX_CATEGORIES) }
 
     fun addCategory() {
         if (newCategory.isNotEmpty() && categories.none { existing -> existing.text == newCategory }) {
@@ -148,13 +154,19 @@ fun DetailsCardCategories(
                 all.category.lowercase().contains(newCategory.lowercase())
                         && categories.none { existing -> existing.text.lowercase() == all.category.lowercase() }
             }
+            val categoriesToSelectFilteredSorted =
+                if(categoriesToSelectFiltered.size > maxEntries)
+                    categoriesToSelectFiltered.subList(0, DEFAULT_MAX_CATEGORIES)
+                else
+                    categoriesToSelectFiltered.sortedBy { it.category }
+
             AnimatedVisibility(categoriesToSelectFiltered.isNotEmpty() && isEditMode) {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
 
-                    items(categoriesToSelectFiltered) { category ->
+                    items(categoriesToSelectFilteredSorted) { category ->
                         InputChip(
                             onClick = {
                                 categories.add(Category(text = category.category))
@@ -175,6 +187,21 @@ fun DetailsCardCategories(
                             ) }?: InputChipDefaults.inputChipColors(),
                             modifier = Modifier.alpha(0.4f)
                         )
+                    }
+
+                    if(categoriesToSelectFiltered.size > maxEntries) {
+                        item {
+                            TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
+                                Text(stringResource(R.string.filter_options_more_entries, categoriesToSelectFiltered.size - maxEntries))
+                            }
+                        }
+                    }
+                    if(maxEntries == Int.MAX_VALUE) {
+                        item {
+                            TextButton(onClick = { maxEntries = DEFAULT_MAX_CATEGORIES }) {
+                                Text(stringResource(R.string.filter_options_less_entries))
+                            }
+                        }
                     }
                 }
             }
