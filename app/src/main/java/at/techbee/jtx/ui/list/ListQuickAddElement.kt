@@ -78,7 +78,7 @@ fun ListQuickAddElement(
     presetCollectionId: Long,
     player: MediaPlayer?,
     onSaveEntry: (module: Module, newEntryText: String, attachments: List<Attachment>, collectionId: Long, editAfterSaving: Boolean) -> Unit,
-    onDismiss: () -> Unit,
+    onDismiss: (String) -> Unit,
     keepDialogOpen: () -> Unit
 ) {
 
@@ -179,7 +179,7 @@ fun ListQuickAddElement(
         onSaveEntry(currentModule!!, currentText.text, currentAttachments.filterNotNull(), currentCollection!!.collectionId, goToEdit)
         currentText = TextFieldValue(text = "")
         if(goToEdit)
-            onDismiss()
+            onDismiss("")
     }
 
     @Suppress("DEPRECATION") val recorder = remember {
@@ -193,7 +193,7 @@ fun ListQuickAddElement(
 
     AlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
-        onDismissRequest = onDismiss,
+        onDismissRequest = { onDismiss(currentText.text) },
         text = {
             Column(modifier = modifier.verticalScroll(rememberScrollState())) {
 
@@ -267,7 +267,7 @@ fun ListQuickAddElement(
                                     sr.startListening(srIntent)
                                 }
                             }) {
-                                Crossfade(srListening) { listening ->
+                                Crossfade(srListening, label = "quickAddSrListening") { listening ->
                                     if (listening)
                                         Icon(Icons.Outlined.Mic, stringResource(id = R.string.list_quickadd_dialog_sr_listening), tint = MaterialTheme.colorScheme.primary)
                                     else
@@ -370,7 +370,7 @@ fun ListQuickAddElement(
                             onClick = {
                                 sr?.destroy()
                                 saveEntry(goToEdit = false)
-                                onDismiss()
+                                onDismiss("")
                             },
                             enabled = (currentText.text.isNotEmpty() || currentAttachments.isNotEmpty()) && currentCollection?.readonly == false
                         ) {
@@ -380,7 +380,7 @@ fun ListQuickAddElement(
                         TextButton(
                             onClick = {
                                 sr?.destroy()
-                                onDismiss()
+                                onDismiss("")
                             }
                         ) {
                             Text(stringResource(id = R.string.close), textAlign = TextAlign.Center)
