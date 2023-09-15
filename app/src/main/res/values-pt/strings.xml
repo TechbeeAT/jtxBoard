@@ -65,7 +65,12 @@
     <string name="edit_attachment_add_link_dialog">"Adicionar link de anexo"</string>
     <string name="edit_recur_repeat_every_x">"Repetir a cada"</string>
     <string name="edit_recur_x_day_of_the_month">"dia do mês"</string>
+    <string name="edit_fragment_app_permission">"Permissão da aplicação"</string>
     <!-- fragment_about -->
+    <string name="about_tabitem_translations">"Traduções"</string>
+    <string name="about_tabitem_libraries">"Bibliotecas"</string>
+    <string name="about_tabitem_contributors">"Contribuidores"</string>
+    <string name="about_special_thanks">"Agradecimentos especiais"</string>
     <!-- menus -->
     <!-- Shortcuts -->
     <!-- Settings fragment -->
