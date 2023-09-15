@@ -80,6 +80,17 @@ fun DetailsCardResources(
     mergedResources.addAll(storedResources)
     allResources.forEach { resource -> if(mergedResources.none { it.resource == resource }) mergedResources.add(StoredResource(resource, null)) }
 
+    fun addResource() {
+        if (newResource.isNotEmpty() && resources.none { existing -> existing.text == newResource }) {
+            val caseSensitiveResource =
+                allResources.firstOrNull { it == newResource }
+                    ?: allResources.firstOrNull { it.lowercase() == newResource.lowercase() }
+                    ?: newResource
+            resources.add(Resource(text = caseSensitiveResource))
+            onResourcesUpdated()
+        }
+        newResource = ""
+    }
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -163,7 +174,7 @@ fun DetailsCardResources(
             }
 
 
-            Crossfade(isEditMode) {
+            Crossfade(isEditMode, label = "newResourceIsEditMode") {
                 if (it) {
 
                     OutlinedTextField(
@@ -172,9 +183,7 @@ fun DetailsCardResources(
                         trailingIcon = {
                             if (newResource.isNotEmpty()) {
                                 IconButton(onClick = {
-                                    resources.add(Resource(text = newResource))
-                                    onResourcesUpdated()
-                                    newResource = ""
+                                    addResource()
                                 }) {
                                     Icon(
                                         Icons.Outlined.NewLabel,
@@ -192,10 +201,7 @@ fun DetailsCardResources(
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
-                            if(newResource.isNotEmpty() && resources.none { existing -> existing.text == newResource } ) {
-                                resources.add(Resource(text = newResource))
-                            }
-                            newResource = ""
+                            addResource()
                         })
                     )
                 }

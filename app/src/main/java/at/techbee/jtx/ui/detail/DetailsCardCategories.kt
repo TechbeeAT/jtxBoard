@@ -80,6 +80,18 @@ fun DetailsCardCategories(
     mergedCategories.addAll(storedCategories)
     allCategories.forEach { cat -> if(mergedCategories.none { it.category == cat }) mergedCategories.add(StoredCategory(cat, null)) }
 
+    fun addCategory() {
+        if (newCategory.isNotEmpty() && categories.none { existing -> existing.text == newCategory }) {
+            val careSensitiveCategory =
+                allCategories.firstOrNull { it == newCategory }
+                    ?: allCategories.firstOrNull { it.lowercase() == newCategory.lowercase() }
+                    ?: newCategory
+            categories.add(Category(text = careSensitiveCategory))
+            onCategoriesUpdated()
+        }
+        newCategory = ""
+    }
+
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -176,9 +188,7 @@ fun DetailsCardCategories(
                         trailingIcon = {
                             if (newCategory.isNotEmpty()) {
                                 IconButton(onClick = {
-                                    categories.add(Category(text = newCategory))
-                                    onCategoriesUpdated()
-                                    newCategory = ""
+                                    addCategory()
                                 }) {
                                     Icon(
                                         Icons.Outlined.NewLabel,
@@ -198,9 +208,7 @@ fun DetailsCardCategories(
                             imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions(onDone = {
-                            if (newCategory.isNotEmpty() && categories.none { existing -> existing.text == newCategory })
-                                categories.add(Category(text = newCategory))
-                            newCategory = ""
+                            addCategory()
                         })
                     )
                 }
