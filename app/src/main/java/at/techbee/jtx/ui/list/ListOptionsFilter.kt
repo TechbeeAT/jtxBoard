@@ -158,6 +158,11 @@ fun ListOptionsFilter(
                     Text(stringResource(R.string.filter_options_more_entries, storedListSettings.size-maxEntries))
                 }
             }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
+                }
+            }
         }
 
         ////// QuickFilters
@@ -400,6 +405,11 @@ fun ListOptionsFilter(
                     Text(stringResource(R.string.filter_options_more_entries, allCategories.size-maxEntries))
                 }
             }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
+                }
+            }
         }
 
         ////// ACCOUNTS
@@ -441,6 +451,11 @@ fun ListOptionsFilter(
                     Text(stringResource(R.string.filter_options_more_entries, allAccounts.size-maxEntries))
                 }
             }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
+                }
+            }
         }
 
         ////// COLLECTIONS
@@ -480,6 +495,11 @@ fun ListOptionsFilter(
             if(allCollections.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
                     Text(stringResource(R.string.filter_options_more_entries, allCollections.size-maxEntries))
+                }
+            }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
                 }
             }
         }
@@ -551,6 +571,11 @@ fun ListOptionsFilter(
                 if(extendedStatuses.size > maxEntries) {
                     TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
                         Text(stringResource(R.string.filter_options_more_entries, extendedStatuses.size-maxEntries))
+                    }
+                }
+                if(maxEntries == Int.MAX_VALUE) {
+                    TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                        Text(stringResource(R.string.filter_options_less_entries))
                     }
                 }
             }
@@ -642,6 +667,11 @@ fun ListOptionsFilter(
                 if(allResources.size > maxEntries) {
                     TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
                         Text(stringResource(R.string.filter_options_more_entries, allResources.size-maxEntries))
+                    }
+                }
+                if(maxEntries == Int.MAX_VALUE) {
+                    TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                        Text(stringResource(R.string.filter_options_less_entries))
                     }
                 }
             }
