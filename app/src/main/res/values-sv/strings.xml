@@ -15,6 +15,7 @@
     <string name="navigation_drawer_synchronization">"Synkronisering"</string>
     <string name="navigation_drawer_about">"Om / Licens"</string>
     <string name="navigation_drawer_settings">"Inställningar"</string>
+    <string name="navigation_drawer_news_updates">"Nyheter &amp; uppdateringar"</string>
     <string name="navigation_drawer_donate">"Donera"</string>
     <string name="navigation_drawer_privacy_policy">"Integritetspolicy"</string>
     <!-- fragment_ical_list -->
