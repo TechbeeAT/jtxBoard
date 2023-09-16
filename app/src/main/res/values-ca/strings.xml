@@ -315,6 +315,7 @@
     <string name="filter_subnotes_order_by">Ordena les notes enllaçades per</string>
     <string name="filter_no_filter">"Sense filtres"</string>
     <string name="filter_options_more_entries">"Més (%1$d)"</string>
+    <string name="filter_options_less_entries">"Menys"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Per favor, fes clic a la col·lecció a la qual vols afegir l'entrada o entrades!"</string>
     <string name="collections_snackbar_x_items_added">"S'ha afegit %1$d, i s'ha saltat %2$d. (Excloent instàncies d'elements recurrents.)"</string>
     <string name="collections_toast_x_items_added">"S'han afegit %1$d entrades!"</string>
