@@ -78,6 +78,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"最初の行は概要、残りは詳細として解釈されます。ハッシュタグはカテゴリーとして解釈されます (例: #カテゴリー)。"</string>
     <string name="list_item_recurring">"繰り返しのあるエントリー"</string>
     <string name="list_item_edited_recurring">"編集された繰り返しのあるエントリー"</string>
+    <string name="list_scroll_to_top">"一番上にスクロール"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"アプリの権限"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board は音声を録音する権限または音声文字変換を使用する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
