@@ -147,7 +147,10 @@ fun ListCard(
                 resources = resources,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
-                extendedStatuses = storedStatuses
+                extendedStatuses = storedStatuses,
+                showAttachments = false,
+                showSubtasks = false,
+                showSubnotes = false
             )
 
             Row(
