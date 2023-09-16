@@ -59,6 +59,7 @@
     <string name="list_due_shortly">"Echéance proche"</string>
     <string name="list_due_today">"Échéance aujourd'hui"</string>
     <string name="list_due_tomorrow">"Échéance demain"</string>
+    <string name="list_due_within_7_days">"Échéance dans les 7 prochains jours"</string>
     <string name="list_due_inXhours">"Échéance dans %d heures"</string>
     <string name="list_due_on_weekday">"Échéance le %s"</string>
     <string name="list_start_past">"Début dans le passé"</string>
@@ -96,6 +97,8 @@
     <string name="edit_take_picture_button_text">"Prendre une photo"</string>
     <string name="edit_add_link_button_text">"Ajouter un lien vers une pièce jointe"</string>
     <string name="edit_subtasks_add_helper">"Ajouter une sous-tâche"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Ajout rapide d'une sous-tâche"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Ajout rapide d'une sous-note"</string>
     <string name="edit_attachment_add_link_dialog">"Ajouter un lien vers une pièce jointe"</string>
     <string name="edit_recur_repeat_every_x">"Répéter chaque"</string>
     <string name="edit_recur_on_weekday">"le"</string>
@@ -153,6 +156,7 @@
     <string name="sync_with_sync_app_heading">"Synchroniser avec %1$s"</string>
     <string name="sync_basic_info">"jtx Board n'assure pas lui-même la synchronisation serveur, mais prend en charge la synchronisation via DAVx⁵. Cette méthode vous permettra d'utiliser un serveur CalDAV compatible de votre choix pour stocker, sauvegarder et synchroniser vos données."</string>
     <string name="sync_ksync_basic_info">"kSync est une application basée sur DAVx5 développée par Infomaniak spécialement pour leurs services. Tandis que DAVx5 est ouvert à tout serveur CalDAV-compatible, kSync permet uniquement la synchronisation des comptes Infomaniak."</string>
+    <string name="sync_manageddavx5_basic_info">"Managed DAVx5 rend les fonctionnalités de DAVx5 disponibles pour les organisations et est fourni avec d'autres fonctionnalités d'entreprise telles que le déploiement de masse, le marquage de la société et les paramètres préconfigurables."</string>
     <string name="sync_congratulations">"Félicitations ! :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"Nous avons détecté %1$s sur votre appareil."</string>
     <string name="sync_setup_instructions">"Instructions de configuration"</string>
@@ -200,6 +204,9 @@
     <string name="collection">"Collection"</string>
     <string name="collection_owner_displayname">"Propriétaire : %1$s"</string>
     <string name="link_to_parent">"Lier à un parent"</string>
+    <string name="link_selected_as_parent">"Parent"</string>
+    <string name="link_selected_as_subtask_note">"Sous-tâche/note"</string>
+    <string name="link_selected_as">"Lier la sélection comme …"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
     <string name="navigation_drawer_presets">"Préconfigurations"</string>
     <!-- alarms -->
@@ -251,6 +258,7 @@
     <string name="status">"Statut"</string>
     <string name="classification">"Classification"</string>
     <string name="category">"Catégorie"</string>
+    <string name="resource">"Ressource"</string>
     <string name="priority">"Priorité"</string>
     <string name="readyonly">"Lecture seulement"</string>
     <string name="upload_pending">"Téléchargement en cours"</string>
@@ -282,6 +290,7 @@
     <string name="progress">"Progrès"</string>
     <string name="categories">"Catégories"</string>
     <string name="subtasks">"Sous-tâches"</string>
+    <string name="linked_parents">"Parents liés"</string>
     <string name="priority_7_low">"7 - Bas"</string>
     <string name="priority_8_lower">"8 - Plus bas"</string>
     <string name="priority_9_lowest">"9 - Le plus bas"</string>
@@ -291,6 +300,7 @@
     <string name="collections_dialog_move_title">"Déplacer toutes les entrées de \"%1$s\" à"</string>
     <string name="collection_dialog_move_info">"Attention : seules les collections inscriptibles et les collections supportant les mêmes composants (Journaux, Notes, Tâches) peuvent être sélectionnées."</string>
     <string name="menu_collections_popup_move_entries">"Déplacer les entrées"</string>
+    <string name="setting_no_time">"Pas d'heure"</string>
     <string name="list_no_dates_set">"Aucune date n'a été fixée"</string>
     <string name="list_without_start_date">"Sans date de début"</string>
     <string name="list_without_due_date">"Sans date d'échéance"</string>
@@ -317,7 +327,15 @@
     <string name="edit_recur_ends_never">"ne se termine jamais"</string>
     <string name="edit_recur_ends_on">"se termine le"</string>
     <string name="edit_recur_ends_after">"se termine après"</string>
+    <string name="collections_toast_export_success">"Collections correctement exportées"</string>
+    <string name="collections_toast_export_error">"Erreur lors de l'exportation des collections"</string>
     <string name="menu_collections_export_all">"Exporter tout"</string>
+    <string name="menu_presets_export_presets">"Exporter les préréglages"</string>
+    <string name="menu_presets_import_presets">"Importer des préréglages"</string>
+    <string name="presets_imported">"Préréglages importés"</string>
+    <string name="presets_import_invalid_file">"Fichier invalide"</string>
+    <string name="presets_saved">"Préréglages sauvegardés"</string>
+    <string name="presets_export_error">"Une erreur s'est produite lors de l'enregistrement des préréglages"</string>
     <string name="more">"En savoir plus"</string>
     <string name="navigation_drawer_buypro">"Acheter Pro"</string>
     <string name="settings_select_theme">"Sélectionner le thème"</string>
@@ -379,8 +397,14 @@ Merci !"</string>
     <string name="list_update_entries_dialog_title">"Mettre à jour les entrées"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Attention : les instances récurrentes doivent être dissociées de sa série avant d'être déplacées vers une autre collection et seront ignorées dans ce processus."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Choisir le parent auquel les entrées sélectionnées doivent être liées en tant que sous-tâches/notes liées."</string>
+    <string name="link_entry">"Lier l'entrée"</string>
+    <string name="link_entry_search_within">"Rechercher dans …"</string>
+    <string name="link_entry_search_within_same_collection">"La même collection"</string>
+    <string name="link_entry_search_within_same_account">"Le même compte"</string>
     <string name="details_link_existing_subentry_dialog_title">"Lier les sous-entrées"</string>
+    <string name="details_link_existing_parent_dialog_title">"Lier parents"</string>
     <string name="details_link_existing_subentry_dialog_info">"Choisissez les sous-entrées qui doivent être liées."</string>
+    <string name="details_link_existing_parent_dialog_info">"Choisissez une entrée parente qui doit être liée."</string>
     <string name="details_app_bar_behaviour">"Comportement de la barre d'application"</string>
     <string name="details_show_all_options">"Afficher toutes les options"</string>
     <string name="details_show_hide_elements">Afficher/masquer des éléments</string>
@@ -442,6 +466,8 @@ Merci !"</string>
     <string name="settings_sync">"Paramètres de synchronisation"</string>
     <string name="settings_default_start_date">"Définir une date de début par défaut pour les tâches"</string>
     <string name="settings_default_due_date">"Définir une date d'échéance par défaut pour les tâches"</string>
+    <string name="settings_default_start_time">"Définir une heure de début par défaut pour les tâches"</string>
+    <string name="settings_default_due_time">"Définir une heure d'échéance par défaut pour les tâches"</string>
     <string name="settings_default_date_none">"Aucun"</string>
     <string name="settings_default_date_same_day">"Le même jour"</string>
     <string name="settings_default_date_next_day">"Le jour suivant"</string>
@@ -466,6 +492,7 @@ Merci !"</string>
     <string name="settings_sticky_alarms">"Alarmes épinglées"</string>
     <string name="settings_sticky_alarms_sub">"Garder les notifications jusqu'à la fin ou les reporter"</string>
     <string name="settings_sync_on_start">"Synchroniser au démarrage de l'appli"</string>
+    <string name="settings_sync_on_pull_refresh">"Synchroniser lors du tirage au sort"</string>
     <string name="sync_button_go_to_collections">"Aller aux collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Veuillez acheter jtx Board Pro pour activer cette fonction."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -482,14 +509,19 @@ Merci !"</string>
     <string name="filter_special">"Filtres spéciaux"</string>
     <string name="filter_presets">"Filtrer les préréglages"</string>
     <string name="filter_presets_edit_info">"Veuillez ajouter/mettre à jour/supprimer les présélections de filtres dans la vue liste."</string>
+    <string name="filter_any">"N'importe laquelle"</string>
+    <string name="filter_all">"Toutes"</string>
+    <string name="filter_none">"Aucune"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date dans le passé"</string>
     <string name="list_date_today">"Aujourd'hui"</string>
     <string name="list_date_tomorrow">"Demain"</string>
+    <string name="list_date_within_7_days">"Dans les 7 jours"</string>
     <string name="list_date_future">"Date dans le futur"</string>
     <string name="list_start_date_in_past">"Début dans le passé"</string>
     <string name="list_start_date_today">"Début aujourd'hui"</string>
     <string name="list_start_date_tomorrow">"Début demain"</string>
+    <string name="list_start_date_within_7_days">"Commence dans les prochains 7 jours"</string>
     <string name="list_start_date_future">"Début dans le futur"</string>
     <string name="list_hide_completed_tasks">"Masquer les tâches terminées"</string>
     <string name="list_biometric_protected_entries_locked">Entrées biométriques protégées verrouillées</string>
@@ -595,4 +627,6 @@ Merci !"</string>
     <string name="geofence_options">"Options de géorepérage"</string>
     <string name="geofence_missing_permission_info">"jtx Board a besoin des autorisations pour accéder à votre position en arrière-plan et vous envoyer des notifications. Veuillez mettre à jour l’autorisation de localisation pour « Toujours autoriser» et accorder l’autorisation de notification afin d’être notifié lorsque vous atteignez votre repère géographique!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board peut vous avertir lorsque vous êtes proche des coordonnées indiquées. Veuillez définir l’autorisation de localisation pour «Toujours autoriser et autoriser les notifications à utiliser cette fonctionnalité."</string>
+    <string name="geofence_notification_summary">"Geofence activé"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board a besoin de l'autorisation pour programmer des alarmes exactes, sinon les notifications d'alarme pourraient être retardées. Veuillez accorder cette autorisation afin d'utiliser cette fonctionnalité."</string>
 </resources>

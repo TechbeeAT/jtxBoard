@@ -19,6 +19,9 @@ import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.EventNote
+import androidx.compose.material.icons.automirrored.outlined.Note
+import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -312,7 +315,7 @@ fun DetailsScreen(
                             },
                             leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.Outlined.NoteAdd,
+                                    imageVector = Icons.AutoMirrored.Outlined.NoteAdd,
                                     contentDescription = null,
                                     tint = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                                 )
@@ -414,7 +417,7 @@ fun DetailsScreen(
                                     onClick = { detailViewModel.convertTo(Module.JOURNAL) },
                                     leadingIcon = {
                                         Icon(
-                                            imageVector = Icons.Outlined.EventNote,
+                                            imageVector = Icons.AutoMirrored.Outlined.EventNote,
                                             contentDescription = null,
                                             tint = MaterialTheme.colorScheme.onSurface
                                         )
@@ -427,7 +430,7 @@ fun DetailsScreen(
                                     onClick = { detailViewModel.convertTo(Module.NOTE) },
                                     leadingIcon = {
                                         Icon(
-                                            imageVector = Icons.Outlined.Note,
+                                            imageVector = Icons.AutoMirrored.Outlined.Note,
                                             contentDescription = null,
                                             tint = MaterialTheme.colorScheme.onSurface
                                         )

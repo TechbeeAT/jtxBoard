@@ -31,8 +31,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 205050001
-        versionName "2.05.05-alpha01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 205060004
+        versionName "2.05.06-beta02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -95,7 +95,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.5.2"
+        kotlinCompilerExtensionVersion "1.5.3"
     }
 
     packagingOptions {
@@ -164,7 +164,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
 
     // Android Annotations
-    implementation "androidx.annotation:annotation:1.6.0"
+    implementation "androidx.annotation:annotation:1.7.0"
 
     // Room dependencies
     implementation "androidx.room:room-runtime:$version_room"
@@ -188,7 +188,7 @@ dependencies {
 
     // Amazon billing & maps support
     amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.4'
-    amazonImplementation "com.google.maps.android:maps-compose:2.14.0"
+    amazonImplementation "com.google.maps.android:maps-compose:2.14.1"
     amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
 
@@ -196,7 +196,7 @@ dependencies {
     //huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
 
     // Google Maps
-    gplayImplementation "com.google.maps.android:maps-compose:2.14.0"
+    gplayImplementation "com.google.maps.android:maps-compose:2.14.1"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
     gplayImplementation "com.google.android.gms:play-services-location:21.0.1"
 
@@ -243,16 +243,15 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$version_appcompat"
 
     // jetpack compose
-    implementation 'androidx.core:core-ktx:1.10.1'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation "androidx.compose.material3:material3:1.2.0-alpha06"
-    implementation "androidx.compose.material:material-icons-extended:1.5.0"
-    implementation "androidx.compose.material:material:1.5.0"
+    implementation "androidx.compose.material3:material3:1.2.0-alpha07"
+    implementation "androidx.compose.material:material-icons-extended:1.5.1"
+    implementation "androidx.compose.material:material:1.5.1"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    implementation "androidx.navigation:navigation-compose:2.7.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
+    implementation "androidx.navigation:navigation-compose:2.7.2"
     implementation "com.arnyminerz.markdowntext:markdowntext:1.3.2"
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"

@@ -12,6 +12,7 @@ package at.techbee.jtx.ui.list
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -57,7 +58,7 @@ fun ListActiveFiltersRow(
 
             listSettings.searchCategories.forEach { category ->
                 ListBadge(
-                    icon = Icons.Outlined.Label,
+                    icon = Icons.AutoMirrored.Outlined.Label,
                     iconDesc = stringResource(R.string.category),
                     text = category,
                     containerColor = StoredCategory.getColorForCategory(category, storedCategories) ?: MaterialTheme.colorScheme.primaryContainer,

@@ -520,17 +520,19 @@ DELETEs by Object
 
     @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
-    suspend fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4ListRel>
-
+    suspend fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4List>
 
     @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4ListFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
 
-
     @Transaction
     @RawQuery(observedEntities = [ICal4ListRel::class])
     fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
+
+    @Transaction
+    @RawQuery(observedEntities = [ICal4ListRel::class])
+    fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4ListRel>
 
     @Transaction
     @RawQuery(observedEntities = [ICal4ListRel::class])
