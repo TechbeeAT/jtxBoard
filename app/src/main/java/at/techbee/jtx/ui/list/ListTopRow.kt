@@ -58,7 +58,10 @@ fun ListTopRow(
     extendedStatuses: List<ExtendedStatus>,
     modifier: Modifier = Modifier,
     includeJournalDate: Boolean = false,
-    enableScroll: Boolean = true
+    enableScroll: Boolean = true,
+    showAttachments: Boolean = true,
+    showSubtasks: Boolean = true,
+    showSubnotes: Boolean = true
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(3.dp),
@@ -212,7 +215,7 @@ fun ListTopRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        AnimatedVisibility(ical4List.numAttachments > 0) {
+        AnimatedVisibility(showAttachments && ical4List.numAttachments > 0) {
             ListBadge(
                 icon = Icons.Outlined.Attachment,
                 iconDesc = stringResource(id = R.string.attachments),
@@ -274,7 +277,7 @@ fun ListTopRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        AnimatedVisibility(ical4List.numSubtasks > 0) {
+        AnimatedVisibility(showSubtasks && ical4List.numSubtasks > 0) {
             ListBadge(
                 icon = Icons.Outlined.TaskAlt,
                 iconDesc = stringResource(id = R.string.subtasks),
@@ -282,7 +285,7 @@ fun ListTopRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        AnimatedVisibility(ical4List.numSubnotes > 0) {
+        AnimatedVisibility(showSubnotes && ical4List.numSubnotes > 0) {
             ListBadge(
                 icon = Icons.AutoMirrored.Outlined.Note,
                 iconDesc = stringResource(id = R.string.note),
