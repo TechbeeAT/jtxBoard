@@ -18,8 +18,6 @@ import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.glance.appwidget.GlanceAppWidgetManager
-import androidx.glance.appwidget.compose
 import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -294,7 +292,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun deleteSelected() {
         viewModelScope.launch(Dispatchers.IO) {
-            val selectedICal4List = database.getIcal4ListSync(
+            val selectedICal4List = database.getIcal4ListRelSync(
                 SupportSQLiteQueryBuilder
                     .builder(VIEW_NAME_ICAL4LIST)
                     .selection("$COLUMN_ID IN (${selectedEntries.joinToString(separator = ",", transform = { "?"})})", selectedEntries.toTypedArray())

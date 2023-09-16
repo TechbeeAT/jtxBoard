@@ -520,7 +520,7 @@ DELETEs by Object
 
     @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
-    suspend fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4List>
+    suspend fun getIcal4ListRelSync(query: SupportSQLiteQuery): List<ICal4ListRel>
 
     @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
