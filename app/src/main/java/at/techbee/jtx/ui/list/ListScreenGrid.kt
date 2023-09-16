@@ -9,20 +9,28 @@
 package at.techbee.jtx.ui.list
 
 import android.media.MediaPlayer
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.VerticalAlignTop
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,16 +38,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
@@ -51,6 +63,7 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -79,6 +92,7 @@ fun ListScreenGrid(
     val storedResources by storedResourcesLive.observeAsState(emptyList())
     val storedStatuses by storedStatusesLive.observeAsState(emptyList())
     val gridState = rememberLazyStaggeredGridState()
+    val scope = rememberCoroutineScope()
 
     if (scrollId != null) {
         LaunchedEffect(list) {
@@ -99,6 +113,7 @@ fun ListScreenGrid(
     ) {
 
         LazyVerticalStaggeredGrid(
+            state = gridState,
             columns = StaggeredGridCells.Adaptive(150.dp),
             contentPadding = PaddingValues(8.dp),
             verticalItemSpacing = 8.dp,
@@ -146,6 +161,24 @@ fun ListScreenGrid(
             refreshing = false,
             state = pullRefreshState
         )
+
+
+        AnimatedVisibility(gridState.canScrollBackward) {
+            Box(
+                contentAlignment = Alignment.BottomCenter,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Button(
+                    onClick = {
+                        scope.launch { gridState.animateScrollToItem(0) }
+                    },
+                    colors = ButtonDefaults.filledTonalButtonColors(),
+                    modifier = Modifier.padding(8.dp).alpha(0.33f)
+                ) {
+                    Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
+                }
+            }
+        }
     }
 }
 
