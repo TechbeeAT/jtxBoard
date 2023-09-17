@@ -400,7 +400,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
              attachments: List<Attachment>,
              alarms: List<Alarm>
     ) {
-        withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
+        withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
 
         try {
             if (icalEntity.value?.categories != categories || icalEntity.value?.property?.id != icalObject.id) {
