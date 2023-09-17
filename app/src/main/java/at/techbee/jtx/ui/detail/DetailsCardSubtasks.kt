@@ -49,6 +49,7 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubtasks(
     subtasks: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
+    enforceSavingSubtask: Boolean,
     sliderIncrement: Int,
     showSlider: Boolean,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
@@ -64,6 +65,10 @@ fun DetailsCardSubtasks(
     val headline = stringResource(id = R.string.subtasks)
     var newSubtaskText by rememberSaveable { mutableStateOf("") }
 
+    if(enforceSavingSubtask && newSubtaskText.isNotEmpty()) {
+        onSubtaskAdded(ICalObject.createTask(newSubtaskText))
+        newSubtaskText = ""
+    }
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -116,17 +121,17 @@ fun DetailsCardSubtasks(
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
-                                onClick = {
-                                    if(!isEditMode.value)
-                                        goToDetail(subtask.id, false, subtasks.map { it.id })
-                                    else
-                                        showEditSubtaskDialog = true
-                                          },
-                                onLongClick = {
-                                    if (!isEditMode.value &&!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToDetail(subtask.id, true, subtasks.map { it.id })
-                                }
-                            )
+                                    onClick = {
+                                        if (!isEditMode.value)
+                                            goToDetail(subtask.id, false, subtasks.map { it.id })
+                                        else
+                                            showEditSubtaskDialog = true
+                                    },
+                                    onLongClick = {
+                                        if (!isEditMode.value && !subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                            goToDetail(subtask.id, true, subtasks.map { it.id })
+                                    }
+                                )
                         )
                     }
                 }
@@ -181,6 +186,7 @@ fun DetailsCardSubtasks_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
+            enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = true,
             onSubtaskAdded = { },
@@ -208,6 +214,7 @@ fun DetailsCardSubtasks_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
+            enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = true,
             onSubtaskAdded = { },
@@ -235,6 +242,7 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
+            enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = false,
             onSubtaskAdded = { },
