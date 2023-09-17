@@ -78,6 +78,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línia s'interpreta com a sumari, la resta com a la descripció. Els coixinets s'interpreten com a categories (ex #categoria)."</string>
     <string name="list_item_recurring">"Entrada recurrent"</string>
     <string name="list_item_edited_recurring">"Entrada recurrent editada"</string>
+    <string name="list_scroll_to_top">"Torna a dalt"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Permís d'App"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board necessita permís per a gravar àudio o fer ús de les funcions de parla a text. Per favor, accepta la sol·licitud per a fer ús d'aquesta funció."</string>
