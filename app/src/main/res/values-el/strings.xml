@@ -78,6 +78,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"Η πρώτη γραμμή ερμηνεύεται ως περίληψη, η υπόλοιπη ως περιγραφή. Τα hashtags ερμηνεύονται ως κατηγορίες (πχ. #category)."</string>
     <string name="list_item_recurring">"Επαναλαμβανόμενη καταχώρηση"</string>
     <string name="list_item_edited_recurring">"Το επαναλαμβανόμενο γεγονός τροποποιήθηκε"</string>
+    <string name="list_scroll_to_top">"Μετακίνηση στην αρχή"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Άδεια εφαρμογής"</string>
     <string name="view_fragment_audio_permission_message">"Η εφαρμογή jtx Board χρειάζεται την άδεια σας για την εγγραφή ήχου. Παρακαλούμε παραχωρήστε την άδεια χρήσης αυτής της δυνατότητας."</string>
