@@ -78,6 +78,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línia s'interpreta com a sumari, la resta com a la descripció. Els coixinets s'interpreten com a categories (ex #categoria)."</string>
     <string name="list_item_recurring">"Entrada recurrent"</string>
     <string name="list_item_edited_recurring">"Entrada recurrent editada"</string>
+    <string name="list_scroll_to_top">"Torna a dalt"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Permís d'App"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board necessita permís per a gravar àudio o fer ús de les funcions de parla a text. Per favor, accepta la sol·licitud per a fer ús d'aquesta funció."</string>
@@ -315,6 +316,7 @@
     <string name="filter_subnotes_order_by">Ordena les notes enllaçades per</string>
     <string name="filter_no_filter">"Sense filtres"</string>
     <string name="filter_options_more_entries">"Més (%1$d)"</string>
+    <string name="filter_options_less_entries">"Menys"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Per favor, fes clic a la col·lecció a la qual vols afegir l'entrada o entrades!"</string>
     <string name="collections_snackbar_x_items_added">"S'ha afegit %1$d, i s'ha saltat %2$d. (Excloent instàncies d'elements recurrents.)"</string>
     <string name="collections_toast_x_items_added">"S'han afegit %1$d entrades!"</string>

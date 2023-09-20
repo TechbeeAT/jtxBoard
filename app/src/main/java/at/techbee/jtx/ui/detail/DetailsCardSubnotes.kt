@@ -51,6 +51,7 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
+    enforceSavingSubnote: Boolean,
     onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
@@ -72,6 +73,11 @@ fun DetailsCardSubnotes(
             onConfirm = { newEntry, attachment -> onSubnoteAdded(newEntry, attachment) },
             onDismiss = { showAddAudioNoteDialog = false }
         )
+    }
+
+    if (enforceSavingSubnote && newSubnoteText.isNotEmpty()) {
+        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+        newSubnoteText = ""
     }
 
 
@@ -202,6 +208,7 @@ fun DetailsCardSubnotes_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
+            enforceSavingSubnote = false,
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
@@ -227,6 +234,7 @@ fun DetailsCardSubnotes_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
+            enforceSavingSubnote = false,
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },

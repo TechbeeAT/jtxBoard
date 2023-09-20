@@ -610,6 +610,7 @@ fun DetailScreenContent(
             DetailsCardSubtasks(
                 subtasks = subtasks.value,
                 isEditMode = isEditMode,
+                enforceSavingSubtask = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgressForSubTasks,
                 onProgressChanged = { itemId, newPercent ->
@@ -633,6 +634,7 @@ fun DetailScreenContent(
             DetailsCardSubnotes(
                 subnotes = subnotes.value,
                 isEditMode = isEditMode,
+                enforceSavingSubnote = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
                 onSubnoteAdded = { subnote, attachment ->
                     onSubEntryAdded(
                         subnote,

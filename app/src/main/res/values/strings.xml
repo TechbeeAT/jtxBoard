@@ -86,6 +86,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
     <string name="list_item_recurring">"Recurring entry"</string>
     <string name="list_item_edited_recurring">"Edited recurring entry"</string>
+    <string name="list_scroll_to_top">"Scroll to top"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"App Permission"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature."</string>
