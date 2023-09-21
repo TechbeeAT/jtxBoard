@@ -8,47 +8,10 @@
 
 package at.techbee.jtx.widgets
 
-import android.content.Context
-import android.os.Build
-import android.util.Log
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.OutOfQuotaPolicy
-import androidx.work.WorkManager
-import kotlin.time.Duration
-import kotlin.time.toJavaDuration
-
-private const val TAG = "ListWidgetRec"
 
 
 class ListWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = ListWidget()
-
-    companion object {
-
-        /**
-         * Sets a worker to update the widget
-         * @param delay: null updates immediately, otherwise updates after the given Kotlin Duration
-         */
-        fun setOneTimeWork(context: Context, delay: Duration? = null) {
-            val work: OneTimeWorkRequest = OneTimeWorkRequestBuilder<ListWidgetUpdateWorker>()
-                .apply {
-                    if (delay != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                        setInitialDelay(delay.toJavaDuration())
-                    if(delay == null)
-                        setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                }.build()
-            WorkManager
-                .getInstance(context)
-                .enqueueUniqueWork(
-                    "listWidgetOneTimeWorker",
-                    ExistingWorkPolicy.APPEND_OR_REPLACE,
-                    work
-                )
-            Log.d(TAG, "Work enqueued")
-        }
-    }
 }
