@@ -11,13 +11,14 @@ package at.techbee.jtx.widgets
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -26,11 +27,10 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.state.getAppWidgetState
 import androidx.glance.background
+import androidx.glance.currentState
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
-import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.ListWidgetConfigActivity
 import at.techbee.jtx.MainActivity2
@@ -56,6 +56,8 @@ class ListWidget : GlanceAppWidget() {
     }
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+
+        /*
         Log.d("provideGlance", "GlanceId on updateWidgetState: $id")
 
         val listWidgetConfig =
@@ -63,62 +65,81 @@ class ListWidget : GlanceAppWidget() {
                 ?: ListWidgetConfig()
         Log.d("provideGlance", "GlanceId $id : filterConfig: $listWidgetConfig")
         //Log.v(TAG, "Loading data ...")
-        val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
-
-        val allEntries = database.getIcal4ListFlow(
-            ICal4List.constructQuery(
-                modules = listOf(listWidgetConfig.module),
-                searchCategories = listWidgetConfig.searchCategories,
-                searchResources = listWidgetConfig.searchResources,
-                searchStatus = listWidgetConfig.searchStatus,
-                searchClassification = listWidgetConfig.searchClassification,
-                searchCollection = listWidgetConfig.searchCollection,
-                searchAccount = listWidgetConfig.searchAccount,
-                orderBy = listWidgetConfig.orderBy,
-                sortOrder = listWidgetConfig.sortOrder,
-                orderBy2 = listWidgetConfig.orderBy2,
-                sortOrder2 = listWidgetConfig.sortOrder2,
-                isExcludeDone = listWidgetConfig.isExcludeDone,
-                isFilterOverdue = listWidgetConfig.isFilterOverdue,
-                isFilterDueToday = listWidgetConfig.isFilterDueToday,
-                isFilterDueTomorrow = listWidgetConfig.isFilterDueTomorrow,
-                isFilterDueFuture = listWidgetConfig.isFilterDueFuture,
-                isFilterStartInPast = listWidgetConfig.isFilterStartInPast,
-                isFilterStartToday = listWidgetConfig.isFilterStartToday,
-                isFilterStartTomorrow = listWidgetConfig.isFilterStartTomorrow,
-                isFilterStartFuture = listWidgetConfig.isFilterStartFuture,
-                isFilterNoDatesSet = listWidgetConfig.isFilterNoDatesSet,
-                isFilterNoStartDateSet = listWidgetConfig.isFilterNoStartDateSet,
-                isFilterNoDueDateSet = listWidgetConfig.isFilterNoDueDateSet,
-                isFilterNoCompletedDateSet = listWidgetConfig.isFilterNoCompletedDateSet,
-                isFilterNoCategorySet = listWidgetConfig.isFilterNoCategorySet,
-                isFilterNoResourceSet = listWidgetConfig.isFilterNoResourceSet,
-                flatView = listWidgetConfig.flatView,  // always true in Widget, we handle the flat view in the code
-                searchSettingShowOneRecurEntryInFuture = listWidgetConfig.showOneRecurEntryInFuture,
-                hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context)  // protected entries are always hidden
-            )
-        )
-
-
-        val subtasksQuery = ICal4List.getQueryForAllSubEntries(
-            component = Component.VTODO,
-            hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
-            orderBy = listWidgetConfig.subtasksOrderBy,
-            sortOrder = listWidgetConfig.subtasksSortOrder
-        )
-        val subnotesQuery = ICal4List.getQueryForAllSubEntries(
-            component = Component.VJOURNAL,
-            hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
-            orderBy = listWidgetConfig.subnotesOrderBy,
-            sortOrder = listWidgetConfig.subnotesSortOrder
-        )
-        val allSubtasks = database.getSubEntriesFlow(subtasksQuery)
-        val allSubnotes = database.getSubEntriesFlow(subnotesQuery)
-
+         */
 
         provideContent {
             //Log.d("ListWidget", "appWidgetId in ListWidget: ${GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)}")
             //Log.d("ListWidget", "glanceId in ListWidget: ${LocalGlanceId.current}")
+            val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
+
+            val state = currentState<Preferences>()
+            val listWidgetConfig = remember(state) {
+                state[filterConfig]?.let {
+                    Json.decodeFromString<ListWidgetConfig>(it)
+                } ?: ListWidgetConfig()
+            }
+
+            val listQuery = remember(listWidgetConfig) {
+                ICal4List.constructQuery(
+                    modules = listOf(listWidgetConfig.module),
+                    searchCategories = listWidgetConfig.searchCategories,
+                    searchResources = listWidgetConfig.searchResources,
+                    searchStatus = listWidgetConfig.searchStatus,
+                    searchClassification = listWidgetConfig.searchClassification,
+                    searchCollection = listWidgetConfig.searchCollection,
+                    searchAccount = listWidgetConfig.searchAccount,
+                    orderBy = listWidgetConfig.orderBy,
+                    sortOrder = listWidgetConfig.sortOrder,
+                    orderBy2 = listWidgetConfig.orderBy2,
+                    sortOrder2 = listWidgetConfig.sortOrder2,
+                    isExcludeDone = listWidgetConfig.isExcludeDone,
+                    isFilterOverdue = listWidgetConfig.isFilterOverdue,
+                    isFilterDueToday = listWidgetConfig.isFilterDueToday,
+                    isFilterDueTomorrow = listWidgetConfig.isFilterDueTomorrow,
+                    isFilterDueWithin7Days = listWidgetConfig.isFilterDueWithin7Days,
+                    isFilterDueFuture = listWidgetConfig.isFilterDueFuture,
+                    isFilterStartInPast = listWidgetConfig.isFilterStartInPast,
+                    isFilterStartToday = listWidgetConfig.isFilterStartToday,
+                    isFilterStartTomorrow = listWidgetConfig.isFilterStartTomorrow,
+                    isFilterStartWithin7Days = listWidgetConfig.isFilterStartWithin7Days,
+                    isFilterStartFuture = listWidgetConfig.isFilterStartFuture,
+                    isFilterNoDatesSet = listWidgetConfig.isFilterNoDatesSet,
+                    isFilterNoStartDateSet = listWidgetConfig.isFilterNoStartDateSet,
+                    isFilterNoDueDateSet = listWidgetConfig.isFilterNoDueDateSet,
+                    isFilterNoCompletedDateSet = listWidgetConfig.isFilterNoCompletedDateSet,
+                    isFilterNoCategorySet = listWidgetConfig.isFilterNoCategorySet,
+                    isFilterNoResourceSet = listWidgetConfig.isFilterNoResourceSet,
+                    flatView = listWidgetConfig.flatView,  // always true in Widget, we handle the flat view in the code
+                    searchSettingShowOneRecurEntryInFuture = listWidgetConfig.showOneRecurEntryInFuture,
+                    hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context)  // protected entries are always hidden
+                )
+            }
+            val list by remember(listQuery) { database.getIcal4ListFlow(listQuery) }.collectAsState(initial = emptyList())
+
+
+
+            val subtasksQuery = remember(listWidgetConfig) {
+                ICal4List.getQueryForAllSubEntries(
+                    component = Component.VTODO,
+                    hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
+                    orderBy = listWidgetConfig.subtasksOrderBy,
+                    sortOrder = listWidgetConfig.subtasksSortOrder
+                )
+            }
+
+            val subnotesQuery = remember(listWidgetConfig) {
+                ICal4List.getQueryForAllSubEntries(
+                    component = Component.VJOURNAL,
+                    hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
+                    orderBy = listWidgetConfig.subnotesOrderBy,
+                    sortOrder = listWidgetConfig.subnotesSortOrder
+                )
+            }
+            val subtasks by remember(subtasksQuery) { database.getSubEntriesFlow(subtasksQuery) }.collectAsState(initial = emptyList())
+            val subnotes by remember(subnotesQuery) { database.getSubEntriesFlow(subnotesQuery) }.collectAsState(initial = emptyList())
+
+
+
             val scope = rememberCoroutineScope()
 
             val backgorundColor = if (listWidgetConfig.widgetAlpha == 1F && listWidgetConfig.widgetColor == null)
@@ -146,11 +167,6 @@ class ListWidget : GlanceAppWidget() {
                 ColorProvider(MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(listWidgetConfig.widgetColorEntries!!).copy(alpha = listWidgetConfig.widgetAlphaEntries)))
 
             val entryOverdueTextColor = GlanceTheme.colors.error
-
-            val list by allEntries.collectAsState(initial = emptyList())
-            val subtasks by allSubtasks.collectAsState(initial = emptyList())
-            val subnotes by allSubnotes.collectAsState(initial = emptyList())
-
 
             GlanceTheme {
                 ListWidgetContent(
