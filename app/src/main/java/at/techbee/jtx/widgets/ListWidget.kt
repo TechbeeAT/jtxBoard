@@ -11,7 +11,6 @@ package at.techbee.jtx.widgets
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -42,7 +41,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.settings.SettingsStateHolder
-import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
+import at.techbee.jtx.util.UiUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
@@ -142,29 +141,51 @@ class ListWidget : GlanceAppWidget() {
 
             val scope = rememberCoroutineScope()
 
-            val backgorundColor = if (listWidgetConfig.widgetAlpha == 1F && listWidgetConfig.widgetColor == null)
-                GlanceTheme.colors.primaryContainer
-            else if ((listWidgetConfig.widgetAlpha) < 1F && listWidgetConfig.widgetColor == null)
-                ColorProvider(GlanceTheme.colors.primaryContainer.getColor(context).copy(alpha = listWidgetConfig.widgetAlpha))
-            else
-                ColorProvider(Color(listWidgetConfig.widgetColor!!).copy(alpha = listWidgetConfig.widgetAlpha))
+            val defaultBackgroundColor = GlanceTheme.colors.primaryContainer
+            val backgorundColor = remember(listWidgetConfig) {
+                if (listWidgetConfig.widgetAlpha == 1F && listWidgetConfig.widgetColor == null)
+                    defaultBackgroundColor
+                else if ((listWidgetConfig.widgetAlpha) < 1F && listWidgetConfig.widgetColor == null)
+                    ColorProvider(defaultBackgroundColor.getColor(context).copy(alpha = listWidgetConfig.widgetAlpha))
+                else
+                    ColorProvider(Color(listWidgetConfig.widgetColor!!).copy(alpha = listWidgetConfig.widgetAlpha))
+            }
 
-            val textColor = if (listWidgetConfig.widgetColor == null)
-                GlanceTheme.colors.onPrimaryContainer
-            else
-                ColorProvider(MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(listWidgetConfig.widgetColor!!).copy(alpha = listWidgetConfig.widgetAlpha)))
+            val defaultTextColor = GlanceTheme.colors.onPrimaryContainer
+            val textColor = remember(listWidgetConfig) {
+                if (listWidgetConfig.widgetColor == null)
+                    defaultTextColor
+                else
+                    ColorProvider(
+                        if(UiUtil.isDarkColor(defaultBackgroundColor.getColor(context)))
+                            Color.White.copy(alpha = listWidgetConfig.widgetAlpha)
+                        else
+                            Color.Black.copy(alpha = listWidgetConfig.widgetAlpha)
+                    )
+            }
 
-            val entryColor = if (listWidgetConfig.widgetAlphaEntries == 1F && listWidgetConfig.widgetColorEntries == null)
-                GlanceTheme.colors.surface
-            else if (listWidgetConfig.widgetAlphaEntries < 1F && listWidgetConfig.widgetColorEntries == null)
-                ColorProvider(GlanceTheme.colors.surface.getColor(context).copy(alpha = listWidgetConfig.widgetAlphaEntries))
-            else
-                ColorProvider(Color(listWidgetConfig.widgetColorEntries!!).copy(alpha = listWidgetConfig.widgetAlphaEntries))
+            val defaultSurfaceColor = GlanceTheme.colors.surface
+            val entryColor = remember(listWidgetConfig) {
+                if (listWidgetConfig.widgetAlphaEntries == 1F && listWidgetConfig.widgetColorEntries == null)
+                    defaultSurfaceColor
+                else if (listWidgetConfig.widgetAlphaEntries < 1F && listWidgetConfig.widgetColorEntries == null)
+                    ColorProvider(defaultSurfaceColor.getColor(context).copy(alpha = listWidgetConfig.widgetAlphaEntries))
+                else
+                    ColorProvider(Color(listWidgetConfig.widgetColorEntries!!).copy(alpha = listWidgetConfig.widgetAlphaEntries))
+            }
 
-            val entryTextColor = if (listWidgetConfig.widgetColorEntries == null)
-                GlanceTheme.colors.onSurface
-            else
-                ColorProvider(MaterialTheme.colorScheme.getContrastSurfaceColorFor(Color(listWidgetConfig.widgetColorEntries!!).copy(alpha = listWidgetConfig.widgetAlphaEntries)))
+            val defaultOnSurfaceColor = GlanceTheme.colors.onSurface
+            val entryTextColor = remember(listWidgetConfig) {
+                if (listWidgetConfig.widgetColorEntries == null)
+                    defaultOnSurfaceColor
+                else
+                    ColorProvider(
+                        if(UiUtil.isDarkColor(defaultSurfaceColor.getColor(context)))
+                            Color.White.copy(alpha = listWidgetConfig.widgetAlphaEntries)
+                        else
+                            Color.Black.copy(alpha = listWidgetConfig.widgetAlphaEntries)
+                    )
+            }
 
             val entryOverdueTextColor = GlanceTheme.colors.error
 
