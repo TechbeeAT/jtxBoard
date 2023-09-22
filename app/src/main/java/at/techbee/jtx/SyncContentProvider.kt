@@ -79,12 +79,10 @@ import at.techbee.jtx.database.properties.Unknown
 import at.techbee.jtx.flavored.GeofenceClient
 import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
-import at.techbee.jtx.widgets.ListWidgetReceiver
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.io.File
 import java.io.IOException
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 
 private const val CODE_ICALOBJECTS_DIR = 1
@@ -235,7 +233,6 @@ class SyncContentProvider : ContentProvider() {
         database.executeRAW(deleteQuery)
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
-        ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
 
@@ -348,8 +345,6 @@ class SyncContentProvider : ContentProvider() {
 
         if(sUriMatcher.match(uri) == CODE_ALARM_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)
             NotificationPublisher.scheduleNextNotifications(context!!)
-
-        ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
@@ -623,8 +618,6 @@ class SyncContentProvider : ContentProvider() {
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
-
-        ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
         return 1
     }
