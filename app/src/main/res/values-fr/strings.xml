@@ -569,7 +569,6 @@ Merci !"</string>
     <string name="widget_list_no_entries_found">"Aucune entrée trouvée correspondant à vos critères de filtres"</string>
     <string name="widget_list_view_settings">"Paramètres des vues"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attention : Actuellement, un seul niveau de hiérarchie est pris en charge dans le widget. Afin de voir les entrées de niveaux inférieurs, veuillez utiliser la vue à plat à la place."</string>
-    <string name="widget_list_maximum_entries_reached">"Nombre maximum d'entrées dans le widget atteint(%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Mettre à jour le widget"</string>
     <string name="widget_list_opacity_warning">"Note : Ceci est une fonctionnalité expérimentale! Des changements d'opacité réduits dans le thème de couleur peuvent ne pas être reflétés immédiatement!"</string>
     <string name="widget_list_color_warning">"Note : Ceci est une fonctionnalité expérimentale ! Les changements dans le thème de couleur ne seront pas reflétés ! Ne choisissez aucune couleur pour revenir à la valeur par défaut du système."</string>
