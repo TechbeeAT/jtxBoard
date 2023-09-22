@@ -571,7 +571,6 @@ Köszönjük!"</string>
     <string name="widget_list_no_entries_found">"Nincs a szűrési feltéteknek megfelelő elem"</string>
     <string name="widget_list_view_settings">"Beállítások megtekintése"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Figyelem! A widget jelenleg csak egy hierarchiaszintet támogat. Az mélyebb szinteken lévő bejegyzések megtekintéséhez kérjük, használja az egyszintű nézetet."</string>
-    <string name="widget_list_maximum_entries_reached">"A bejegyzések száma elérte a widgetre vonatkozó maximumot (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Widget frissítése"</string>
     <string name="widget_list_opacity_warning">"Megjegyzés: Ez egy kísérleti funkció! Az áttetszőséggel a színtéma változásai nem feltétlenül jelennek meg azonnal!"</string>
     <string name="widget_list_color_warning">"Megjegyzés: Ez egy kísérleti funkció! A színtéma változásai nem fognak tükröződni! Válassza a \"nincs színt\" a rendszer alapértelmezett állapotához való visszatéréshez."</string>
