@@ -10,7 +10,7 @@ package at.techbee.jtx.ui.list
 
 import android.content.Context
 import android.media.MediaPlayer
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -237,19 +237,21 @@ fun ListScreenCompact(
             state = pullRefreshState
         )
 
-        AnimatedVisibility(listState.canScrollBackward) {
-            Box(
-                contentAlignment = Alignment.BottomCenter,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Button(
-                    onClick = {
-                        scope.launch { listState.animateScrollToItem(0) }
-                    },
-                    colors = ButtonDefaults.filledTonalButtonColors(),
-                    modifier = Modifier.padding(8.dp).alpha(0.33f)
+        Crossfade(listState.canScrollBackward, label = "showScrollUp") {
+            if(it) {
+                Box(
+                    contentAlignment = Alignment.BottomCenter,
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
+                    Button(
+                        onClick = {
+                            scope.launch { listState.animateScrollToItem(0) }
+                        },
+                        colors = ButtonDefaults.filledTonalButtonColors(),
+                        modifier = Modifier.padding(8.dp).alpha(0.33f)
+                    ) {
+                        Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
+                    }
                 }
             }
         }
