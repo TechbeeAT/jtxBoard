@@ -572,7 +572,6 @@ Danke!"</string>
     <string name="widget_list_no_entries_found">"Keine Einträge gefunden, die den Filterkriterien entsprechen"</string>
     <string name="widget_list_view_settings">"Ansichtsoptionen"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Achtung: Aktuell wird nur eine Hierarchieebene im Widget unterstützt. Um Einträge weiterer Ebenen zu sehen, benutzen Sie bitte die flache Ansicht."</string>
-    <string name="widget_list_maximum_entries_reached">"Maximale Anzahl an Einträgen im Widget erreicht (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualisiere Widget"</string>
     <string name="widget_list_opacity_warning">"Hinweis: Dies ist eine experimentelle Funktion. Mit reduzierter Deckkraft werden Änderungen im System-Farbschema möglicherweise nicht sofort übernommen!"</string>
     <string name="widget_list_color_warning">"Hinweis: Dies ist eine experimentelle Funktion. Änderungen im System-Farbschema werden nicht übernommen! Wählen Sie keine Farbe, um zum Systemstandard zurückzukehren."</string>
