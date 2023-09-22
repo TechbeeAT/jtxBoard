@@ -554,7 +554,6 @@ Děkujeme vám!"</string>
     <string name="widget_list_no_entries_found">"Nebyly nalezeny žádné záznamy odpovídající kritériím filtru"</string>
     <string name="widget_list_view_settings">"Nastavení zobrazení"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Pozor: V současné době je ve widgetu podporována pouze jedna úroveň hierarchie. Pro zobrazení záznamů nižších úrovní použijte místo toho ploché zobrazení."</string>
-    <string name="widget_list_maximum_entries_reached">"Dosažen maximální počet záznamů ve widgetu (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualizace widgetu"</string>
     <string name="widget_list_opacity_warning">"Poznámka: Toto je experimentální funkce! Změny snížení průhlednosti v barevném motivu se nemusí projevit okamžitě!"</string>
     <string name="widget_list_color_warning">"Poznámka: Toto je experimentální funkce! Změny v barevném motivu se neprojeví! Pro návrat k výchozímu nastavení systému, zvolte možnost bez barvy."</string>
