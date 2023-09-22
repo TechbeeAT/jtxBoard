@@ -571,7 +571,6 @@ Gràcies!"</string>
     <string name="widget_list_no_entries_found">"No s'ha trobat cap entrada amb el teu criteri de filtre"</string>
     <string name="widget_list_view_settings">"Mostra la configuració"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Atenció: Sols està suportat un nivell d'herència al widget. Per a veure les entrades de nivells inferior, per favor, fes servir la visió plana."</string>
-    <string name="widget_list_maximum_entries_reached">"S'ha assolit el número màxim de widgets (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Actualitzant el widget"</string>
     <string name="widget_list_opacity_warning">"Nota: Aquesta és una funció experimental! Amb canvis d'opacitat subtils en el tema de color pot ser no es mostren els canvis inmediatament!"</string>
     <string name="widget_list_color_warning">"Nota: Aquesta és una funció experimental! Els canvis al tema de color no es veuran reflectits! No tries cap color per a tornar al predefinit pel sistema."</string>
