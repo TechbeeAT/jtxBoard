@@ -56,16 +56,6 @@ class ListWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
 
-        /*
-        Log.d("provideGlance", "GlanceId on updateWidgetState: $id")
-
-        val listWidgetConfig =
-            getAppWidgetState(context, PreferencesGlanceStateDefinition, id)[filterConfig]?.let { filterConfig -> Json.decodeFromString<ListWidgetConfig>(filterConfig) }
-                ?: ListWidgetConfig()
-        Log.d("provideGlance", "GlanceId $id : filterConfig: $listWidgetConfig")
-        //Log.v(TAG, "Loading data ...")
-         */
-
         provideContent {
             //Log.d("ListWidget", "appWidgetId in ListWidget: ${GlanceAppWidgetManager(context).getAppWidgetId(LocalGlanceId.current)}")
             //Log.d("ListWidget", "glanceId in ListWidget: ${LocalGlanceId.current}")
@@ -115,8 +105,6 @@ class ListWidget : GlanceAppWidget() {
             }
             val list by remember(listQuery) { database.getIcal4ListFlow(listQuery) }.collectAsState(initial = emptyList())
 
-
-
             val subtasksQuery = remember(listWidgetConfig) {
                 ICal4List.getQueryForAllSubEntries(
                     component = Component.VTODO,
@@ -125,7 +113,6 @@ class ListWidget : GlanceAppWidget() {
                     sortOrder = listWidgetConfig.subtasksSortOrder
                 )
             }
-
             val subnotesQuery = remember(listWidgetConfig) {
                 ICal4List.getQueryForAllSubEntries(
                     component = Component.VJOURNAL,
@@ -136,8 +123,6 @@ class ListWidget : GlanceAppWidget() {
             }
             val subtasks by remember(subtasksQuery) { database.getSubEntriesFlow(subtasksQuery) }.collectAsState(initial = emptyList())
             val subnotes by remember(subnotesQuery) { database.getSubEntriesFlow(subnotesQuery) }.collectAsState(initial = emptyList())
-
-
 
             val scope = rememberCoroutineScope()
 
@@ -211,7 +196,7 @@ class ListWidget : GlanceAppWidget() {
                                 }
                             }
                             NotificationPublisher.scheduleNextNotifications(context)
-                            super.update(context, id)
+                            //super.update(context, id)
                             //ListWidget().updateAll(context)
                             //ListWidget().compose(context, glanceId)
                         }
