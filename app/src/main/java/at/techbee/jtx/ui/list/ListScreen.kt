@@ -13,13 +13,11 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import at.techbee.jtx.database.Classification
-import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
@@ -42,35 +40,14 @@ fun ListScreen(
         listViewModel.toastMessage.value = null
     }
 
-    val list = listViewModel.iCal4ListRel.observeAsState(emptyList())
-
-    // first apply a proper sort order, then group
-    val sortedList = when (listViewModel.listSettings.groupBy.value) {
-        GroupBy.STATUS -> list.value.sortedBy {
-            if (listViewModel.module == Module.TODO && it.iCal4List.percent != 100)
-                try {
-                    Status.valueOf(it.iCal4List.status ?: Status.NO_STATUS.name).ordinal
-                } catch (e: java.lang.IllegalArgumentException) {
-                    -1
-                }
-            else
-                try {
-                    Status.valueOf(it.iCal4List.status ?: Status.FINAL.name).ordinal
-                } catch (e: java.lang.IllegalArgumentException) {
-                    -1
-                }
-        }.let { if (listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
-        GroupBy.CLASSIFICATION -> list.value.sortedBy {
-            try {
-                Classification.valueOf(it.iCal4List.classification ?: Classification.PUBLIC.name).ordinal
-            } catch (e: java.lang.IllegalArgumentException) {
-                -1
-            }
-        }.let { if (listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
-        else -> list.value
-    }
-
-    val groupedList = ICal4ListRel.getGroupedList(sortedList, listViewModel.listSettings.groupBy.value, context)
+    val list by listViewModel.iCal4ListRel.observeAsState(emptyList())
+    val groupedList = ICal4ListRel.getGroupedList(
+        initialList = list,
+        groupBy = listViewModel.listSettings.groupBy.value,
+        sortOrder = listViewModel.listSettings.sortOrder.value,
+        module = listViewModel.module,
+        context = context
+    )
 
     fun processOnClick(itemId: Long, ical4list: List<ICal4List>, isReadOnly: Boolean) {
         if (listViewModel.multiselectEnabled.value && isReadOnly)
@@ -138,7 +115,7 @@ fun ListScreen(
             }
             ViewMode.GRID -> {
                 ListScreenGrid(
-                    list = list.value,
+                    list = list,
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
                     storedResourcesLive = listViewModel.storedResources,
@@ -180,7 +157,7 @@ fun ListScreen(
             ViewMode.KANBAN -> {
                 ListScreenKanban(
                     module = listViewModel.module,
-                    list = list.value,
+                    list = list,
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
                     storedResourcesLive = listViewModel.storedResources,
