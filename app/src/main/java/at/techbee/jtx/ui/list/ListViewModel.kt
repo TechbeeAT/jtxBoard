@@ -660,8 +660,8 @@ enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String
 }
 
 enum class SortOrder(@StringRes val stringResource: Int, val queryAppendix: String) {
-    ASC(R.string.filter_asc, "ASC"),
-    DESC(R.string.filter_desc, "DESC")
+    ASC(R.string.filter_asc, "ASC "),
+    DESC(R.string.filter_desc, "DESC ")
 }
 
 enum class GroupBy(@StringRes val stringResource: Int) {

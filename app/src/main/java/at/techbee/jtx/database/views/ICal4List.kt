@@ -341,7 +341,8 @@ data class ICal4List(
             searchText: String? = null,
             flatView: Boolean = false,
             searchSettingShowOneRecurEntryInFuture: Boolean = false,
-            hideBiometricProtected: List<Classification>
+            hideBiometricProtected: List<Classification>,
+            limit: Int? = null
         ): SimpleSQLiteQuery {
 
             val args = arrayListOf<String>()
@@ -547,6 +548,8 @@ data class ICal4List(
             queryString += ", "
             queryString += orderBy2.queryAppendix
             sortOrder2.let { queryString += it.queryAppendix }
+
+            limit?.let { queryString += "LIMIT $it" }
 
             Log.println(Log.INFO, "queryString", queryString)
             //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))

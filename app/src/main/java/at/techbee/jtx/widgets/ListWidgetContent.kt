@@ -30,6 +30,7 @@ import androidx.glance.layout.size
 import androidx.glance.text.FontStyle
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.R
@@ -230,6 +231,21 @@ fun ListWidgetContent(
                                 }
                             }
                         }
+                    }
+                }
+
+                if (list.size == MAX_WIDGET_ENTRIES) {
+                    item {
+                        Text(
+                            text = context.getString(R.string.widget_list_maximum_entries_reached, MAX_WIDGET_ENTRIES),
+                            style = TextStyle(
+                                color = textColor,
+                                fontSize = 10.sp,
+                                fontStyle = FontStyle.Italic,
+                                textAlign = TextAlign.Center
+                            ),
+                            modifier = GlanceModifier.fillMaxWidth().padding(8.dp)
+                        )
                     }
                 }
             }

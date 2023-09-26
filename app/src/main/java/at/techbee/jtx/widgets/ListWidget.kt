@@ -47,6 +47,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+const val MAX_WIDGET_ENTRIES = 50
 
 class ListWidget : GlanceAppWidget() {
 
@@ -100,7 +101,8 @@ class ListWidget : GlanceAppWidget() {
                     isFilterNoResourceSet = listWidgetConfig.isFilterNoResourceSet,
                     flatView = listWidgetConfig.flatView,  // always true in Widget, we handle the flat view in the code
                     searchSettingShowOneRecurEntryInFuture = listWidgetConfig.showOneRecurEntryInFuture,
-                    hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context)  // protected entries are always hidden
+                    hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
+                    limit = MAX_WIDGET_ENTRIES
                 )
             }
             val list by remember(listQuery) { database.getIcal4ListFlow(listQuery) }.collectAsState(initial = emptyList())
