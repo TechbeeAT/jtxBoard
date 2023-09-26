@@ -211,8 +211,10 @@ open class ListViewModel(application: Application, val module: Module) : Android
             )
         )
         if(saveListSettings)
-            listSettings.saveToPrefs(prefs)
+            saveListSettings()
     }
+
+    fun saveListSettings() = listSettings.saveToPrefs(prefs)
 
     fun updateSelectFromAllListQuery(searchText: String, isAuthenticated: Boolean) {
         selectFromAllListQuery.postValue(ICal4List.constructQuery(

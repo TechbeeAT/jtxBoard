@@ -107,7 +107,8 @@ fun ListScreenList(
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
-    onSyncRequested: () -> Unit
+    onSyncRequested: () -> Unit,
+    onSaveListSettings: () -> Unit,
 ) {
 
     val subtasks by subtasksLive.observeAsState(emptyList())
@@ -121,7 +122,6 @@ fun ListScreenList(
     val scope = rememberCoroutineScope()
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
-    val itemsCollapsed = remember { mutableStateListOf<String>() }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
         onRefresh = { onSyncRequested() }
@@ -155,10 +155,11 @@ fun ListScreenList(
 
                         ) {
                             TextButton(onClick = {
-                                if (itemsCollapsed.contains(groupName))
-                                    itemsCollapsed.remove(groupName)
+                                if (listSettings.collapsedGroups.contains(groupName))
+                                    listSettings.collapsedGroups.remove(groupName)
                                 else
-                                    itemsCollapsed.add(groupName)
+                                    listSettings.collapsedGroups.add(groupName)
+                                onSaveListSettings()
                             }) {
                                 Text(
                                     text = groupName,
@@ -166,7 +167,7 @@ fun ListScreenList(
                                     modifier = Modifier.padding(horizontal = 4.dp)
                                 )
 
-                                if (itemsCollapsed.contains(groupName))
+                                if (listSettings.collapsedGroups.contains(groupName))
                                     Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
                                 else
                                     Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
@@ -175,7 +176,7 @@ fun ListScreenList(
                     }
                 }
 
-                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
+                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !listSettings.collapsedGroups.contains(groupName))) {
                     items(
                         items = group,
                         key = { item ->
@@ -361,7 +362,8 @@ fun ListScreenList_TODO() {
             onLongClick = { _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            onSaveListSettings = { }
         )
     }
 }
@@ -438,7 +440,8 @@ fun ListScreenList_JOURNAL() {
             onLongClick = { _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            onSaveListSettings = { }
         )
     }
 }

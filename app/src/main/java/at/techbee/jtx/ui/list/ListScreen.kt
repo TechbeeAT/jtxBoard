@@ -110,7 +110,8 @@ fun ListScreen(
                             isAttachmentsExpanded
                         )
                     },
-                    onSyncRequested = { listViewModel.syncAccounts() }
+                    onSyncRequested = { listViewModel.syncAccounts() },
+                    onSaveListSettings = { listViewModel.saveListSettings() }
                 )
             }
             ViewMode.GRID -> {
@@ -151,7 +152,8 @@ fun ListScreen(
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent -> processOnProgressChanged(itemId, newPercent) },
-                    onSyncRequested = { listViewModel.syncAccounts() }
+                    onSyncRequested = { listViewModel.syncAccounts() },
+                    onSaveListSettings = { listViewModel.saveListSettings() }
                 )
             }
             ViewMode.KANBAN -> {
