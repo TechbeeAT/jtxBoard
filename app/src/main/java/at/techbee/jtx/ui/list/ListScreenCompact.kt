@@ -92,7 +92,8 @@ fun ListScreenCompact(
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onSyncRequested: () -> Unit
+    onSyncRequested: () -> Unit,
+    onSaveListSettings: () -> Unit
 ) {
 
     val subtasks by subtasksLive.observeAsState(emptyList())
@@ -102,8 +103,6 @@ fun ListScreenCompact(
     val storedStatuses by extendedStatusesLive.observeAsState(emptyList())
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-
-    val itemsCollapsed = remember { mutableStateListOf<String>() }
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
@@ -132,10 +131,11 @@ fun ListScreenCompact(
 
                         ) {
                             TextButton(onClick = {
-                                if (itemsCollapsed.contains(groupName))
-                                    itemsCollapsed.remove(groupName)
+                                if (listSettings.collapsedGroups.contains(groupName))
+                                    listSettings.collapsedGroups.remove(groupName)
                                 else
-                                    itemsCollapsed.add(groupName)
+                                    listSettings.collapsedGroups.add(groupName)
+                                onSaveListSettings()
                             }) {
                                 Text(
                                     text = groupName,
@@ -143,7 +143,7 @@ fun ListScreenCompact(
                                     modifier = Modifier.padding(horizontal = 4.dp)
                                 )
 
-                                if (itemsCollapsed.contains(groupName))
+                                if (listSettings.collapsedGroups.contains(groupName))
                                     Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
                                 else
                                     Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
@@ -152,7 +152,7 @@ fun ListScreenCompact(
                     }
                 }
 
-                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
+                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !listSettings.collapsedGroups.contains(groupName))) {
                     items(
                         items = group,
                         key = { item ->
@@ -317,7 +317,8 @@ fun ListScreenCompact_TODO() {
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            onSaveListSettings = { }
         )
     }
 }
@@ -382,7 +383,8 @@ fun ListScreenCompact_JOURNAL() {
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            onSaveListSettings = { }
         )
     }
 }
