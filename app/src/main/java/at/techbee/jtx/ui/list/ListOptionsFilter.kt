@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -155,6 +156,11 @@ fun ListOptionsFilter(
             if(storedListSettings.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
                     Text(stringResource(R.string.filter_options_more_entries, storedListSettings.size-maxEntries))
+                }
+            }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
                 }
             }
         }
@@ -346,7 +352,7 @@ fun ListOptionsFilter(
 
         ////// CATEGORIES
         FilterSection(
-            icon = Icons.Outlined.Label,
+            icon = Icons.AutoMirrored.Outlined.Label,
             headline = stringResource(id = R.string.category),
             onResetSelection = {
                 listSettings.isFilterNoCategorySet.value = false
@@ -360,7 +366,7 @@ fun ListOptionsFilter(
                 listSettings.searchCategories.addAll(missing)
                 onListSettingsChanged()
             },
-            initialAnyAllNone = listSettings.searchCategoriesAnyAllNone.value,
+            anyAllNone = listSettings.searchCategoriesAnyAllNone.value,
             onAnyAllNoneChanged = {
                 listSettings.searchCategoriesAnyAllNone.value = it
                 onListSettingsChanged()
@@ -397,6 +403,11 @@ fun ListOptionsFilter(
             if(allCategories.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
                     Text(stringResource(R.string.filter_options_more_entries, allCategories.size-maxEntries))
+                }
+            }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
                 }
             }
         }
@@ -440,6 +451,11 @@ fun ListOptionsFilter(
                     Text(stringResource(R.string.filter_options_more_entries, allAccounts.size-maxEntries))
                 }
             }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
+                }
+            }
         }
 
         ////// COLLECTIONS
@@ -479,6 +495,11 @@ fun ListOptionsFilter(
             if(allCollections.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
                     Text(stringResource(R.string.filter_options_more_entries, allCollections.size-maxEntries))
+                }
+            }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
                 }
             }
         }
@@ -552,6 +573,11 @@ fun ListOptionsFilter(
                         Text(stringResource(R.string.filter_options_more_entries, extendedStatuses.size-maxEntries))
                     }
                 }
+                if(maxEntries == Int.MAX_VALUE) {
+                    TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                        Text(stringResource(R.string.filter_options_less_entries))
+                    }
+                }
             }
         }
 
@@ -590,7 +616,7 @@ fun ListOptionsFilter(
         ////// RESOURCES
         if (module == Module.TODO) {
             FilterSection(
-                icon = Icons.Outlined.Label,
+                icon = Icons.AutoMirrored.Outlined.Label,
                 headline = stringResource(id = R.string.resources),
                 onResetSelection = {
                     listSettings.isFilterNoResourceSet.value = false
@@ -604,7 +630,7 @@ fun ListOptionsFilter(
                     listSettings.searchResources.addAll(missing)
                     onListSettingsChanged()
                 },
-                initialAnyAllNone = listSettings.searchResourcesAnyAllNone.value,
+                anyAllNone = listSettings.searchResourcesAnyAllNone.value,
                 onAnyAllNoneChanged = {
                     listSettings.searchResourcesAnyAllNone.value = it
                     onListSettingsChanged()
@@ -641,6 +667,11 @@ fun ListOptionsFilter(
                 if(allResources.size > maxEntries) {
                     TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
                         Text(stringResource(R.string.filter_options_more_entries, allResources.size-maxEntries))
+                    }
+                }
+                if(maxEntries == Int.MAX_VALUE) {
+                    TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                        Text(stringResource(R.string.filter_options_less_entries))
                     }
                 }
             }

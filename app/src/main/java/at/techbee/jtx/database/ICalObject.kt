@@ -886,7 +886,7 @@ data class ICalObject(
                      ChronoUnit.HOURS.between(localNow, localStart) < 1L -> context.getString(R.string.list_start_shortly)
                      localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
                      localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
-                     ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                     ChronoUnit.DAYS.between(localNow, localStart) < 6 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
                      else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
                 }
             } else {
@@ -915,7 +915,7 @@ data class ICalObject(
                 ChronoUnit.HOURS.between(localNow, localDue) < 1L -> context.getString(R.string.list_due_shortly)
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, ChronoUnit.HOURS.between(localNow, localDue))
                 localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
-                ChronoUnit.DAYS.between(localNow, localDue) <= 7 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                ChronoUnit.DAYS.between(localNow, localDue) < 6 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
                 else -> DateTimeUtils.convertLongToMediumDateShortTimeString(due, dueTimezone)
             }
         }

@@ -10,12 +10,14 @@ package at.techbee.jtx.ui.list
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,9 +27,12 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowDropUp
+import androidx.compose.material.icons.outlined.VerticalAlignTop
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,6 +70,7 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 
@@ -85,7 +92,8 @@ fun ListScreenCompact(
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onSyncRequested: () -> Unit
+    onSyncRequested: () -> Unit,
+    onSaveListSettings: () -> Unit
 ) {
 
     val subtasks by subtasksLive.observeAsState(emptyList())
@@ -94,8 +102,7 @@ fun ListScreenCompact(
     val storedResources by storedResourcesLive.observeAsState(emptyList())
     val storedStatuses by extendedStatusesLive.observeAsState(emptyList())
     val listState = rememberLazyListState()
-
-    val itemsCollapsed = remember { mutableStateListOf<String>() }
+    val scope = rememberCoroutineScope()
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
@@ -124,10 +131,11 @@ fun ListScreenCompact(
 
                         ) {
                             TextButton(onClick = {
-                                if (itemsCollapsed.contains(groupName))
-                                    itemsCollapsed.remove(groupName)
+                                if (listSettings.collapsedGroups.contains(groupName))
+                                    listSettings.collapsedGroups.remove(groupName)
                                 else
-                                    itemsCollapsed.add(groupName)
+                                    listSettings.collapsedGroups.add(groupName)
+                                onSaveListSettings()
                             }) {
                                 Text(
                                     text = groupName,
@@ -135,7 +143,7 @@ fun ListScreenCompact(
                                     modifier = Modifier.padding(horizontal = 4.dp)
                                 )
 
-                                if (itemsCollapsed.contains(groupName))
+                                if (listSettings.collapsedGroups.contains(groupName))
                                     Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
                                 else
                                     Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
@@ -144,7 +152,7 @@ fun ListScreenCompact(
                     }
                 }
 
-                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
+                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !listSettings.collapsedGroups.contains(groupName))) {
                     items(
                         items = group,
                         key = { item ->
@@ -228,6 +236,25 @@ fun ListScreenCompact(
             refreshing = false,
             state = pullRefreshState
         )
+
+        Crossfade(listState.canScrollBackward, label = "showScrollUp") {
+            if(it) {
+                Box(
+                    contentAlignment = Alignment.BottomCenter,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Button(
+                        onClick = {
+                            scope.launch { listState.animateScrollToItem(0) }
+                        },
+                        colors = ButtonDefaults.filledTonalButtonColors(),
+                        modifier = Modifier.padding(8.dp).alpha(0.33f)
+                    ) {
+                        Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -290,7 +317,8 @@ fun ListScreenCompact_TODO() {
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            onSaveListSettings = { }
         )
     }
 }
@@ -355,7 +383,8 @@ fun ListScreenCompact_JOURNAL() {
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            onSaveListSettings = { }
         )
     }
 }

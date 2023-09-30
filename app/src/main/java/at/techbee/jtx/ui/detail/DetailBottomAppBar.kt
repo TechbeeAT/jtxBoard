@@ -21,6 +21,8 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.outlined.*
@@ -281,7 +283,7 @@ fun DetailBottomAppBar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = { markdownState.value = MarkdownState.CLOSED }) {
-                        Icon(Icons.Outlined.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, stringResource(R.string.back))
                     }
                     VerticalDivider(modifier = Modifier.height(40.dp))
                 }
@@ -320,7 +322,7 @@ fun DetailBottomAppBar(
                         Icon(Icons.Outlined.HorizontalRule, stringResource(R.string.markdown_horizontal_ruler))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.UNORDEREDLIST  }) {
-                        Icon(Icons.Outlined.List, stringResource(R.string.markdown_unordered_list))
+                        Icon(Icons.AutoMirrored.Outlined.List, stringResource(R.string.markdown_unordered_list))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.CODE  }) {
                         Icon(Icons.Outlined.Code, stringResource(R.string.markdown_code))

@@ -78,6 +78,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línia s'interpreta com a sumari, la resta com a la descripció. Els coixinets s'interpreten com a categories (ex #categoria)."</string>
     <string name="list_item_recurring">"Entrada recurrent"</string>
     <string name="list_item_edited_recurring">"Entrada recurrent editada"</string>
+    <string name="list_scroll_to_top">"Torna a dalt"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Permís d'App"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board necessita permís per a gravar àudio o fer ús de les funcions de parla a text. Per favor, accepta la sol·licitud per a fer ús d'aquesta funció."</string>
@@ -315,6 +316,7 @@
     <string name="filter_subnotes_order_by">Ordena les notes enllaçades per</string>
     <string name="filter_no_filter">"Sense filtres"</string>
     <string name="filter_options_more_entries">"Més (%1$d)"</string>
+    <string name="filter_options_less_entries">"Menys"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Per favor, fes clic a la col·lecció a la qual vols afegir l'entrada o entrades!"</string>
     <string name="collections_snackbar_x_items_added">"S'ha afegit %1$d, i s'ha saltat %2$d. (Excloent instàncies d'elements recurrents.)"</string>
     <string name="collections_toast_x_items_added">"S'han afegit %1$d entrades!"</string>
@@ -509,6 +511,9 @@ Gràcies!"</string>
     <string name="filter_special">"Filtres especials"</string>
     <string name="filter_presets">"Filtres predefinits"</string>
     <string name="filter_presets_edit_info">"Per favor, afegeix/actualitza/elimina filtres predefinits del menú de filtre des de la visualització de llista."</string>
+    <string name="filter_any">"Cualsevol"</string>
+    <string name="filter_all">"Tots"</string>
+    <string name="filter_none">"Cap"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data al passat"</string>
     <string name="list_date_today">"Avui"</string>
@@ -566,7 +571,7 @@ Gràcies!"</string>
     <string name="widget_list_no_entries_found">"No s'ha trobat cap entrada amb el teu criteri de filtre"</string>
     <string name="widget_list_view_settings">"Mostra la configuració"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Atenció: Sols està suportat un nivell d'herència al widget. Per a veure les entrades de nivells inferior, per favor, fes servir la visió plana."</string>
-    <string name="widget_list_maximum_entries_reached">"S'ha assolit el número màxim de widgets (%1$d)."</string>
+    <string name="widget_list_maximum_entries_reached">"S'ha assolit el nombre màxim d'entrades al widget (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Actualitzant el widget"</string>
     <string name="widget_list_opacity_warning">"Nota: Aquesta és una funció experimental! Amb canvis d'opacitat subtils en el tema de color pot ser no es mostren els canvis inmediatament!"</string>
     <string name="widget_list_color_warning">"Nota: Aquesta és una funció experimental! Els canvis al tema de color no es veuran reflectits! No tries cap color per a tornar al predefinit pel sistema."</string>

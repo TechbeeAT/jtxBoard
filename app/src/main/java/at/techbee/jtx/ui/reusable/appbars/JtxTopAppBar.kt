@@ -3,7 +3,7 @@ package at.techbee.jtx.ui.reusable.appbars
 import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.*
@@ -39,10 +39,10 @@ fun JtxTopAppBar(
                     if(drawerState.isClosed) drawerState.open() else drawerState.close()
                 }
             }) {
-                Crossfade(targetState = drawerState) {
+                Crossfade(targetState = drawerState, label = "JtxTopAppBarDrawerState") {
                     when (it.targetValue) {
                         DrawerValue.Open -> Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = stringResource(id = R.string.navigation_drawer_open)
                         )
                         DrawerValue.Closed -> Icon(

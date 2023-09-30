@@ -51,6 +51,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -203,6 +204,7 @@ fun ListScreenTabContainer(
 
     var showSearch by remember { mutableStateOf(false) }
     val showQuickAdd = remember { mutableStateOf(false) }
+    var quickAddBackupText by rememberSaveable { mutableStateOf("") }
 
     if (showDeleteSelectedDialog) {
         DeleteSelectedDialog(
@@ -641,8 +643,7 @@ fun ListScreenTabContainer(
                                     else
                                         globalStateHolder.icalFromIntentModule.value ?: getActiveViewModel().module,   // coming from intent
                                     enabledModules = enabledTabs.map { it.module },
-                                    presetText = globalStateHolder.icalFromIntentString.value
-                                        ?: "",    // only relevant when coming from intent
+                                    presetText = globalStateHolder.icalFromIntentString.value ?: quickAddBackupText,    // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allWriteableCollections = allUsableCollections,
                                     presetCollectionId = globalStateHolder.icalFromIntentCollection.value?.let {fromIntent ->
@@ -667,8 +668,9 @@ fun ListScreenTabContainer(
                                                 pagerState.animateScrollToPage(index)
                                         }
                                     },
-                                    onDismiss = {
+                                    onDismiss = { text ->
                                         showQuickAdd.value = false  // origin was button
+                                        quickAddBackupText = text
                                         globalStateHolder.icalFromIntentString.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentModule.value = null

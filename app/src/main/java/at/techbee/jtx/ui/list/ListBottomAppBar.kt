@@ -16,17 +16,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.EventNote
+import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DeleteSweep
-import androidx.compose.material.icons.outlined.EventNote
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FilterListOff
 import androidx.compose.material.icons.outlined.LibraryAddCheck
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.SyncProblem
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DropdownMenuItem
@@ -319,8 +319,8 @@ fun ListBottomAppBar(
                 ) {
                     Crossfade(module, label = "fab_content_list") {
                         when (it) {
-                            Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
-                            Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
+                            Module.JOURNAL -> Icon(Icons.AutoMirrored.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
+                            Module.NOTE -> Icon(Icons.AutoMirrored.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
                             Module.TODO -> Icon(Icons.Outlined.AddTask, stringResource(R.string.toolbar_text_add_task))
                         }
                     }

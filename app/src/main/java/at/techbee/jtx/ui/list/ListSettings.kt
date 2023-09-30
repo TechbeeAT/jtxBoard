@@ -28,9 +28,9 @@ import kotlinx.serialization.json.Json
 class ListSettings {
 
     var searchCategories = mutableStateListOf<String>()
-    var searchCategoriesAnyAllNone = mutableStateOf<AnyAllNone>(AnyAllNone.ANY)
+    var searchCategoriesAnyAllNone = mutableStateOf(AnyAllNone.ANY)
     var searchResources = mutableStateListOf<String>()
-    var searchResourcesAnyAllNone = mutableStateOf<AnyAllNone>(AnyAllNone.ANY)
+    var searchResourcesAnyAllNone = mutableStateOf(AnyAllNone.ANY)
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
     var searchStatus = mutableStateListOf<Status>()
     var searchXStatus = mutableStateListOf<String>()
@@ -75,6 +75,7 @@ class ListSettings {
     var kanbanColumnsStatus = mutableStateListOf<String?>()
     var kanbanColumnsXStatus = mutableStateListOf<String>()
     var kanbanColumnsCategory = mutableStateListOf<String>()
+    var collapsedGroups = mutableStateListOf<String>()
 
 
     var widgetHeader: MutableState<String> = mutableStateOf("") //widgetOnly
@@ -138,6 +139,7 @@ class ListSettings {
         private const val PREFS_KANBAN_COLUMNS_STATUS2 = "kanbanColumnsStatus2"
         private const val PREFS_KANBAN_COLUMNS_EXTENDED_STATUS2 = "kanbanColumnsXStatus2"
         private const val PREFS_KANBAN_COLUMNS_CATEGORY2 = "kanbanColumnsCategory2"
+        private const val PREFS_COLLAPSED_GROUPS = "collapsedGroups"
 
         //private const val PREFS_CHECKBOX_POSITION_END = "prefsCheckboxPosition"
         //private const val PREFS_WIDGET_ALPHA = "prefsWidgetAlpha"
@@ -178,7 +180,6 @@ class ListSettings {
             searchResourcesAnyAllNone.value = prefs.getString(PREFS_RESOURCES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: AnyAllNone.ANY
             searchStatus.addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
             searchXStatus.addAll(prefs.getStringSet(PREFS_EXTENDED_STATUS, emptySet())?.toList() ?: emptyList())
-
             searchClassification.addAll(Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null)))
             searchCollection.addAll(prefs.getStringSet(PREFS_COLLECTION, emptySet())?.toList() ?: emptyList())
             searchAccount.addAll(prefs.getStringSet(PREFS_ACCOUNT, emptySet())?.toList() ?: emptyList())
@@ -206,6 +207,7 @@ class ListSettings {
             kanbanColumnsStatus.addAll(prefs.getString(PREFS_KANBAN_COLUMNS_STATUS2, null)?.let { Json.decodeFromString(it) }?: emptyList())
             kanbanColumnsXStatus.addAll(prefs.getString(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS2, null)?.let { Json.decodeFromString(it) }?: emptyList())
             kanbanColumnsCategory.addAll(prefs.getString(PREFS_KANBAN_COLUMNS_CATEGORY2, null)?.let { Json.decodeFromString(it) }?: emptyList())
+            collapsedGroups.addAll(prefs.getString(PREFS_COLLAPSED_GROUPS, null)?.let { Json.decodeFromString(it) }?: emptyList())
 
             showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
 
@@ -320,6 +322,7 @@ class ListSettings {
             putString(PREFS_KANBAN_COLUMNS_STATUS2, Json.encodeToString(kanbanColumnsStatus.toList()))
             putString(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS2, Json.encodeToString(kanbanColumnsXStatus.toList()))
             putString(PREFS_KANBAN_COLUMNS_CATEGORY2, Json.encodeToString(kanbanColumnsCategory.toList()))
+            putString(PREFS_COLLAPSED_GROUPS, Json.encodeToString(collapsedGroups.toList()))
 
             putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
 

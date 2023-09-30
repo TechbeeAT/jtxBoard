@@ -18,9 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.SwapHoriz
 import androidx.compose.material3.DropdownMenu
@@ -52,7 +52,7 @@ fun FilterSection(
     headline: String,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
-    initialAnyAllNone: AnyAllNone? = null,
+    anyAllNone: AnyAllNone? = null,
     showDefaultMenu: Boolean = true,
     customMenu: @Composable () -> Unit = { },
     onResetSelection: () -> Unit,
@@ -62,7 +62,7 @@ fun FilterSection(
     ) {
 
     var expanded by remember { mutableStateOf(false) }
-    var currentAnyAllNone by remember { mutableStateOf(initialAnyAllNone ?: AnyAllNone.values().first()) }
+    //var currentAnyAllNone by remember { mutableStateOf(anyAllNone ?: AnyAllNone.values().first()) }
     
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -91,30 +91,14 @@ fun FilterSection(
                 }
             }
 
-            if(initialAnyAllNone != null) {
+            if(anyAllNone != null) {
                 FilterChip(
                     selected = false,
                     onClick = {
-                        currentAnyAllNone = AnyAllNone.values()[(AnyAllNone.values().indexOf(currentAnyAllNone)+1)%AnyAllNone.values().size]
-                        onAnyAllNoneChanged(currentAnyAllNone)
+                        onAnyAllNoneChanged(AnyAllNone.values()[(AnyAllNone.values().indexOf(anyAllNone)+1)%AnyAllNone.values().size])
                     },
-                    label = { Text(stringResource(id = currentAnyAllNone.stringResource)) }
+                    label = { Text(stringResource(id = anyAllNone.stringResource)) }
                 )
-
-                /*
-                AllAnyNone.values().forEach { allAnyNone ->
-                    FilterChip(
-                        selected = allAnyNone == currentAllAnyNone,
-                        onClick = {
-                            currentAllAnyNone = allAnyNone
-                            onAllAnyNoneChanged(allAnyNone)
-                            expanded = false
-                        },
-                        label = { Text(currentAllAnyNone.name) }
-                    )
-                }
-
-                 */
             }
 
             if(showDefaultMenu) {
@@ -186,10 +170,10 @@ fun FilterSection_Preview() {
 fun FilterSection_Preview_Category() {
     MaterialTheme {
         FilterSection(
-            icon = Icons.Outlined.Label,
+            icon = Icons.AutoMirrored.Outlined.Label,
             headline = stringResource(id = R.string.category),
             //subtitle = "Here comes the subtitle",
-            initialAnyAllNone = AnyAllNone.ANY,
+            anyAllNone = AnyAllNone.ANY,
             onAnyAllNoneChanged = { },
             onResetSelection = {  },
             onInvertSelection = {  },

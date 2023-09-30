@@ -11,6 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.EventNote
+import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -75,10 +78,10 @@ fun ListTopAppBar(
                 shape = RoundedCornerShape(32.dp),
                 textStyle = MaterialTheme.typography.bodyLarge,
                 placeholder = {
-                    Crossfade(listTopAppBarMode) { mode ->
+                    Crossfade(listTopAppBarMode, label = "listTopAppBarMode") { mode ->
                         when(mode) {
                             ListTopAppBarMode.SEARCH -> {
-                                Crossfade(module) { module ->
+                                Crossfade(module, label = "listTopAppBarModeSearchPerModule") { module ->
                                     Text(
                                         when (module) {
                                             Module.JOURNAL -> stringResource(id = R.string.search_journals)
@@ -89,7 +92,7 @@ fun ListTopAppBar(
                                 }
                             }
                             ListTopAppBarMode.ADD_ENTRY -> {
-                                Crossfade(module) { module ->
+                                Crossfade(module, label = "listTopAppBarModeAddEntryPerModule") { module ->
                                     Text(
                                         when (module) {
                                             Module.JOURNAL -> stringResource(id = R.string.toolbar_text_add_journal)
@@ -113,10 +116,10 @@ fun ListTopAppBar(
                         },
                         modifier = Modifier.padding(start = 4.dp)
                     ) {
-                        Crossfade(targetState = drawerState) {
+                        Crossfade(targetState = drawerState, label = "NavigationDrawerState") {
                             when (it.targetValue) {
                                 DrawerValue.Open -> Icon(
-                                    imageVector = Icons.Outlined.ArrowBack,
+                                    imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                                     contentDescription = stringResource(id = R.string.navigation_drawer_open)
                                 )
                                 DrawerValue.Closed -> Icon(
@@ -139,10 +142,10 @@ fun ListTopAppBar(
                                 onCreateNewEntry(newEntryText.value)
                                 newEntryText.value = ""
                             }) {
-                                Crossfade(module) {
+                                Crossfade(module, label = "QuickActionPerModule") {
                                     when (it) {
-                                        Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
-                                        Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
+                                        Module.JOURNAL -> Icon(Icons.AutoMirrored.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
+                                        Module.NOTE -> Icon(Icons.AutoMirrored.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
                                         Module.TODO -> Icon(Icons.Outlined.AddTask, stringResource(R.string.toolbar_text_add_task))
                                     }
                                 }

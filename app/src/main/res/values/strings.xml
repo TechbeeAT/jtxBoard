@@ -86,6 +86,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
     <string name="list_item_recurring">"Recurring entry"</string>
     <string name="list_item_edited_recurring">"Edited recurring entry"</string>
+    <string name="list_scroll_to_top">"Scroll to top"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"App Permission"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature."</string>
@@ -327,6 +328,7 @@
     <string name="filter_subnotes_order_by">Order linked notes by</string>
     <string name="filter_no_filter">"No filter"</string>
     <string name="filter_options_more_entries">"More (%1$d)"</string>
+    <string name="filter_options_less_entries">"Less"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Please click on the collection to which the entry/entries should be added!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d added, %2$d skipped. (Exclusive instances of recurring entries.)"</string>
     <string name="collections_toast_x_items_added">"%1$d entries added!"</string>

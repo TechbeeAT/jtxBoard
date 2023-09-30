@@ -17,10 +17,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.NavigateBefore
+import androidx.compose.material.icons.automirrored.outlined.NavigateNext
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.FolderOpen
-import androidx.compose.material.icons.outlined.NavigateBefore
-import androidx.compose.material.icons.outlined.NavigateNext
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -438,7 +438,7 @@ fun DetailScreenContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                AnimatedVisibility(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true) {
+                AnimatedVisibility(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true || showAllOptions) {
                     OutlinedTextField(
                         value = summary,
                         onValueChange = {
@@ -458,7 +458,7 @@ fun DetailScreenContent(
                     )
                 }
 
-                AnimatedVisibility(description.text.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == true) {
+                AnimatedVisibility(description.text.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == true || showAllOptions) {
                     OutlinedTextField(
                         value = description,
                         onValueChange = {
@@ -610,6 +610,7 @@ fun DetailScreenContent(
             DetailsCardSubtasks(
                 subtasks = subtasks.value,
                 isEditMode = isEditMode,
+                enforceSavingSubtask = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
                 sliderIncrement = sliderIncrement,
                 showSlider = showProgressForSubTasks,
                 onProgressChanged = { itemId, newPercent ->
@@ -633,6 +634,7 @@ fun DetailScreenContent(
             DetailsCardSubnotes(
                 subnotes = subnotes.value,
                 isEditMode = isEditMode,
+                enforceSavingSubnote = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
                 onSubnoteAdded = { subnote, attachment ->
                     onSubEntryAdded(
                         subnote,
@@ -817,7 +819,7 @@ fun DetailScreenContent(
                                 true
                             )
                         }) {
-                            Icon(Icons.Outlined.NavigateBefore, stringResource(id = R.string.previous))
+                            Icon(Icons.AutoMirrored.Outlined.NavigateBefore, stringResource(id = R.string.previous))
                         }
                     } else {
                         Spacer(modifier = Modifier.size(48.dp))
@@ -832,7 +834,7 @@ fun DetailScreenContent(
                                 true
                             )
                         }) {
-                            Icon(Icons.Outlined.NavigateNext, stringResource(id = R.string.next))
+                            Icon(Icons.AutoMirrored.Outlined.NavigateNext, stringResource(id = R.string.next))
                         }
                     } else {
                         Spacer(modifier = Modifier.size(48.dp))

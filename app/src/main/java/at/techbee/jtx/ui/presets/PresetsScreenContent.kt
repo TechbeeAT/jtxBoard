@@ -10,8 +10,8 @@ package at.techbee.jtx.ui.presets
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.DashboardCustomize
-import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.*
@@ -114,7 +114,7 @@ fun PresetsScreenContent(
         modifier = modifier
     ) {
 
-        HeadlineWithIcon(icon = Icons.Outlined.Label, iconDesc = null, text = stringResource(R.string.preset_categories))
+        HeadlineWithIcon(icon = Icons.AutoMirrored.Outlined.Label, iconDesc = null, text = stringResource(R.string.preset_categories))
 
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(3.dp)
