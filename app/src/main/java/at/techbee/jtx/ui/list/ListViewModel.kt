@@ -117,6 +117,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val storedCategories = database.getStoredCategories()
     val storedResources = database.getStoredResources()
     val extendedStatuses = database.getStoredStatuses()
+    val numAllEntries = database.getICal4ListCount(module.name)
 
     var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)
