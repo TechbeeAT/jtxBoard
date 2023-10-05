@@ -2,8 +2,7 @@
 <resources>
     <!-- App title and fragment titles -->
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <!-- Strings for values in properties of an ICalObject -->
     <!-- Navigation Drawer -->
     <!-- fragment_ical_list -->
@@ -11,7 +10,6 @@ Global Strings -->
     <!-- fragment_ical_edit -->
     <!-- fragment_about -->
     <!-- menus -->
-    <!-- Notification channel for Reminders -->
     <!-- Shortcuts -->
     <!-- Settings fragment -->
     <!-- Sync fragment -->
@@ -20,8 +18,6 @@ Global Strings -->
     <!-- Permissions -->
     <!-- alarms -->
     <!-- fragment_collections -->
-    <!-- Fuzzy -->
-    <!-- Fuzzy -->
     <!-- Fuzzy -->
     <!-- Buy Pro fragment -->
     <!-- alarms -->
