@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
+    <string name="app_permission_desc">"đồng bộ nội dung jtx Board với các ứng dụng khác như DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
+    <string name="save">"Lưu lại"</string>
+    <string name="update">"Cập nhật"</string>
+    <string name="cancel">"Hủy bỏ"</string>
+    <string name="ok">"OK"</string>
+    <string name="delete">"Xóa"</string>
+    <string name="discard">"Bỏ qua"</string>
+    <string name="cont">"Tiếp tục"</string>
+    <string name="website">"Trang web"</string>
+    <string name="latitude">"Vĩ độ"</string>
+    <string name="longitude">"Vĩ độ"</string>
+    <string name="unlink">"Gỡ liên kết"</string>
+    <string name="off">"Tắt"</string>
+    <string name="permissions">"Cấp phép"</string>
+    <string name="current_location">"Vị trí hiện tại"</string>
+    <string name="toolbar_text_add_journal">"Thêm Nhật ký"</string>
+    <string name="toolbar_text_add_note">"Thêm Ghi chú"</string>
+    <string name="toolbar_text_add_task">"Thêm Nhiệm vụ"</string>
+    <string name="toast_sync_requested">"Đã yêu cầu đồng bộ hóa"</string>
+    <string name="default_local_collection_name">"Cục bộ"</string>
+    <string name="default_local_account_name">"Cục bộ"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Bản nháp"</string>
+    <string name="journal_status_final">"Cuối cùng"</string>
+    <string name="journal_status_cancelled">"Đã hủy bỏ"</string>
+    <string name="todo_status_needsaction">"Cần thực hiện"</string>
+    <string name="todo_status_completed">"Đã hoàn thành"</string>
+    <string name="todo_status_inprocess">"Đang xử lý"</string>
+    <string name="todo_status_cancelled">"Đã hủy bỏ"</string>
+    <string name="classification_public">"Công khai"</string>
+    <string name="classification_private">"Riêng tư"</string>
+    <string name="classification_confidential">"Riêng tư"</string>
     <!-- Navigation Drawer -->
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
