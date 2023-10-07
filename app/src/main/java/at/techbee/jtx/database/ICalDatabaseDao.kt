@@ -168,6 +168,16 @@ SELECTs (global selects without parameter)
     fun getCount(): Int
 
     /**
+     * Retrieve the number of items in the table of [ICal4List] for a specific module as Int.
+     * @param
+     * @return Int with the total number of [ICal4List] in the table for the given module.
+     */
+    @Query("SELECT count(*) FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_MODULE = :module AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 ")
+    fun getICal4ListCount(module: String): LiveData<Int?>
+
+
+
+    /**
      * Retrieve an [ICalObject] by Id asynchronously (suspend)
      *
      * @param id The id of the [ICalObject] in the DB

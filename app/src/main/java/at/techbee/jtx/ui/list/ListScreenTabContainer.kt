@@ -161,6 +161,9 @@ fun ListScreenTabContainer(
     val storedResources by listViewModel.storedResources.observeAsState(emptyList())
     val storedListSettings by listViewModel.storedListSettings.observeAsState(emptyList())
 
+    val iCal4ListRel by listViewModel.iCal4ListRel.observeAsState(initial = emptyList())
+    val numAllEntries by listViewModel.numAllEntries.observeAsState(initial = 0)
+
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, allWriteableCollections.value) {
         if (!timeout) {
@@ -522,7 +525,7 @@ fun ListScreenTabContainer(
                 }) {
                 ListBottomAppBar(
                     module = listViewModel.module,
-                    iCal4ListRelLive = listViewModel.iCal4ListRel,
+                    iCal4ListRel = iCal4ListRel,
                     allowNewEntries = allUsableCollections.any { collection ->
                         ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
@@ -621,16 +624,18 @@ fun ListScreenTabContainer(
                                 }
                             }
 
-                            AnimatedVisibility(listViewModel.listSettings.isFilterActive()) {
-                                ListActiveFiltersRow(
-                                    listSettings = listViewModel.listSettings,
-                                    module = listViewModel.module,
-                                    storedCategories = storedCategories,
-                                    storedResources = storedResources,
-                                    storedListSettings = storedListSettings,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                )
-                            }
+
+                            ListActiveFiltersRow(
+                                listSettings = listViewModel.listSettings,
+                                module = listViewModel.module,
+                                storedCategories = storedCategories,
+                                storedResources = storedResources,
+                                storedListSettings = storedListSettings,
+                                numShownEntries = iCal4ListRel.size,
+                                numAllEntries = numAllEntries,
+                                isFilterActive = listViewModel.listSettings.isFilterActive(),
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                            )
 
                             AnimatedVisibility(
                                 allUsableCollections.isNotEmpty() &&
