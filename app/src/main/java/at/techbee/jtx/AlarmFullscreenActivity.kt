@@ -50,7 +50,7 @@ class AlarmFullscreenActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     FullscreenAlarmScreen(
                         iCalObject = ICalObject.createNote("TODO!!!!"),
-                        alarm = TODO("not yet implemented"),
+                        alarm = Alarm.createDisplayAlarm(), //TODO("not yet implemented"),
                         isReadOnly = false,
                         onDismiss = {
                             setResult(Activity.RESULT_CANCELED)

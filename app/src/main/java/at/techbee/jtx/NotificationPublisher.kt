@@ -67,7 +67,10 @@ class NotificationPublisher : BroadcastReceiver() {
                         && ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
                         && notification != null
                     ) {
+                        val canUseFullScreenIntent = notificationManager.canUseFullScreenIntent()
                         notificationManager.notify(icalObjectId.toInt(), notification)
+                        Log.d("notificationManager", "Can use FullScreenIntent: $canUseFullScreenIntent")
+                        //context.startActivity(Intent(context, AlarmFullscreenActivity::class.java).apply { flags += Intent.FLAG_ACTIVITY_NEW_TASK })
                     } else {
                         Log.d("notificationManager", "Notification skipped")
                     }
