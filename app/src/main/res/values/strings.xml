@@ -481,6 +481,7 @@ Thank you!"</string>
     <string name="settings_audio_format_ogg" translatable="false">"OGG (audio/ogg)"</string>
     <string name="settings_audio_format_mp4" translatable="false">"MP4 (audio/mp4)"</string>
     <string name="settings_tasks">"Tasks Settings"</string>
+    <string name="settings_alarms">"Alarms Settings"</string>
     <string name="settings_tasks_status_progress">"Tasks Settings (status/progress)"</string>
     <string name="settings_sync">"Sync Settings"</string>
     <string name="settings_default_start_date">"Set a default start date for tasks"</string>
@@ -510,6 +511,9 @@ Thank you!"</string>
     <string name="settings_create_with_current_location">"Create new entries with current location"</string>
     <string name="settings_sticky_alarms">"Sticky alarms"</string>
     <string name="settings_sticky_alarms_sub">"Keep notifications until done or postponed"</string>
+    <string name="settings_fullscreen_alarms">"Full screen alarms"</string>
+    <string name="settings_fullscreen_alarms_sub">"Shows alarms in full screen when the device is locked"</string>
+    <string name="settings_fullscreen_alarms_toast">"Please grant full screen notification permission in the system settings."</string>
     <string name="settings_sync_on_start">"Sync on app start"</string>
     <string name="settings_sync_on_pull_refresh">"Sync on pull down"</string>
     <string name="sync_button_go_to_collections">"Go to Collections"</string>

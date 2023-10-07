@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.AlarmOff
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.DoneAll
+import androidx.compose.material.icons.outlined.Fullscreen
 import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.RestartAlt
@@ -137,6 +138,13 @@ enum class SwitchSetting(
         icon = { Icon(Icons.Outlined.Alarm, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_sticky_alarms,
         subtitle = R.string.settings_sticky_alarms_sub,
+        default = false
+    ),
+    SETTING_FULLSCREEN_ALARMS(
+        key = "settings_fullscreen_alarms",
+        icon = { Icon(Icons.Outlined.Fullscreen, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_fullscreen_alarms,
+        subtitle = R.string.settings_fullscreen_alarms_sub,
         default = false
     ),
     SETTING_SYNC_ON_START(

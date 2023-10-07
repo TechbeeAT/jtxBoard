@@ -54,6 +54,7 @@ class SettingsStateHolder(val context: Context) {
     var settingSetDefaultCurrentLocationTasks = mutableStateOf(SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
 
     var settingStickyAlarms = mutableStateOf(SwitchSetting.SETTING_STICKY_ALARMS.getSetting(prefs))
+    var settingFullscreenAlarms = mutableStateOf(SwitchSetting.SETTING_FULLSCREEN_ALARMS.getSetting(prefs))
 
     var settingSyncOnStart = mutableStateOf(SwitchSetting.SETTING_SYNC_ON_START.getSetting(prefs))
     var settingSyncOnPullRefresh = mutableStateOf(SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH.getSetting(prefs))

@@ -8,6 +8,10 @@
 
 package at.techbee.jtx.ui.settings
 
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -44,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -68,6 +73,7 @@ import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READO
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_ENABLE_JOURNALS
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_ENABLE_NOTES
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_ENABLE_TASKS
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_FULLSCREEN_ALARMS
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS
@@ -82,7 +88,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-enum class SettingsScreenSection { APP_SETTINGS, ACTIVE_MODUES, ITEM_LIST, JOURNALS_SETTINGS, NOTES_SETTINGS, TASKS_SETTINGS, TASKS_SETTINGS_STATUS, SYNC_SETTINGS }
+
+enum class SettingsScreenSection { APP_SETTINGS, ACTIVE_MODUES, ITEM_LIST, JOURNALS_SETTINGS, NOTES_SETTINGS, TASKS_SETTINGS, TASKS_SETTINGS_STATUS, ALARMS_SETTINGS, SYNC_SETTINGS }
 
 @Composable
 fun SettingsScreen(
@@ -274,7 +281,7 @@ fun SettingsScreen(
 
                         SwitchSettingElement(
                             setting = SETTING_ENABLE_JOURNALS,
-                            initiallyChecked = settingsStateHolder.settingEnableJournals.value,
+                            checked = settingsStateHolder.settingEnableJournals,
                             onCheckedChanged = {
                                 settingsStateHolder.settingEnableJournals.value = it
                                 SETTING_ENABLE_JOURNALS.saveSetting(it, settingsStateHolder.prefs)
@@ -283,7 +290,7 @@ fun SettingsScreen(
                         )
                         SwitchSettingElement(
                             setting = SETTING_ENABLE_NOTES,
-                            initiallyChecked = settingsStateHolder.settingEnableNotes.value,
+                            checked = settingsStateHolder.settingEnableNotes,
                             onCheckedChanged = {
                                 settingsStateHolder.settingEnableNotes.value = it
                                 SETTING_ENABLE_NOTES.saveSetting(it, settingsStateHolder.prefs)
@@ -292,7 +299,7 @@ fun SettingsScreen(
                         )
                         SwitchSettingElement(
                             setting = SETTING_ENABLE_TASKS,
-                            initiallyChecked = settingsStateHolder.settingEnableTasks.value,
+                            checked = settingsStateHolder.settingEnableTasks,
                             onCheckedChanged = {
                                 settingsStateHolder.settingEnableTasks.value = it
                                 SETTING_ENABLE_TASKS.saveSetting(it, settingsStateHolder.prefs)
@@ -309,21 +316,21 @@ fun SettingsScreen(
                     ) {
                         SwitchSettingElement(
                             setting = SETTING_AUTO_EXPAND_SUBTASKS,
-                            initiallyChecked = settingsStateHolder.settingAutoExpandSubtasks.value,
+                            checked = settingsStateHolder.settingAutoExpandSubtasks,
                             onCheckedChanged = {
                                 settingsStateHolder.settingAutoExpandSubtasks.value = it
                                 SETTING_AUTO_EXPAND_SUBTASKS.saveSetting(it, settingsStateHolder.prefs)
                             })
                         SwitchSettingElement(
                             setting = SETTING_AUTO_EXPAND_SUBNOTES,
-                            initiallyChecked = settingsStateHolder.settingAutoExpandSubnotes.value,
+                            checked = settingsStateHolder.settingAutoExpandSubnotes,
                             onCheckedChanged = {
                                 settingsStateHolder.settingAutoExpandSubnotes.value = it
                                 SETTING_AUTO_EXPAND_SUBNOTES.saveSetting(it, settingsStateHolder.prefs)
                             })
                         SwitchSettingElement(
                             setting = SETTING_AUTO_EXPAND_ATTACHMENTS,
-                            initiallyChecked = settingsStateHolder.settingAutoExpandAttachments.value,
+                            checked = settingsStateHolder.settingAutoExpandAttachments,
                             onCheckedChanged = {
                                 settingsStateHolder.settingAutoExpandAttachments.value = it
                                 SETTING_AUTO_EXPAND_ATTACHMENTS.saveSetting(it, settingsStateHolder.prefs)
@@ -346,7 +353,7 @@ fun SettingsScreen(
                         )
                         SwitchSettingElement(
                             setting = SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION,
-                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationJournals.value,
+                            checked = settingsStateHolder.settingSetDefaultCurrentLocationJournals,
                             onCheckedChanged = {
                                 settingsStateHolder.settingSetDefaultCurrentLocationJournals.value = it
                                 SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
@@ -361,7 +368,7 @@ fun SettingsScreen(
                     ) {
                         SwitchSettingElement(
                             setting = SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION,
-                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationNotes.value,
+                            checked = settingsStateHolder.settingSetDefaultCurrentLocationNotes,
                             onCheckedChanged = {
                                 settingsStateHolder.settingSetDefaultCurrentLocationNotes.value = it
                                 SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
@@ -433,33 +440,8 @@ fun SettingsScreen(
                         }
 
                         SwitchSettingElement(
-                            setting = SETTING_DISABLE_ALARMS_FOR_READONLY,
-                            initiallyChecked = settingsStateHolder.settingDisableAlarmsReadonly.value,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingDisableAlarmsReadonly.value = it
-                                SETTING_DISABLE_ALARMS_FOR_READONLY.saveSetting(it, settingsStateHolder.prefs)
-                            }
-                        )
-                        DropdownSettingElement(
-                            setting = SETTING_AUTO_ALARM,
-                            selected = settingsStateHolder.settingAutoAlarm.value,
-                            onSelectionChanged = { selection ->
-                                settingsStateHolder.settingAutoAlarm.value = selection
-                                SETTING_AUTO_ALARM.saveSetting(selection, settingsStateHolder.prefs)
-                                scope.launch(Dispatchers.IO) { NotificationPublisher.scheduleNextNotifications(context) }
-                            }
-                        )
-                        SwitchSettingElement(
-                            setting = SETTING_STICKY_ALARMS,
-                            initiallyChecked = settingsStateHolder.settingStickyAlarms.value,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingStickyAlarms.value = it
-                                SETTING_STICKY_ALARMS.saveSetting(it, settingsStateHolder.prefs)
-                            }
-                        )
-                        SwitchSettingElement(
                             setting = SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION,
-                            initiallyChecked = settingsStateHolder.settingSetDefaultCurrentLocationTasks.value,
+                            checked = settingsStateHolder.settingSetDefaultCurrentLocationTasks,
                             onCheckedChanged = {
                                 settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = it
                                 SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
@@ -476,7 +458,7 @@ fun SettingsScreen(
                     ) {
                         SwitchSettingElement(
                             setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS,
-                            initiallyChecked = settingsStateHolder.settingShowProgressForMainTasks.value,
+                            checked = settingsStateHolder.settingShowProgressForMainTasks,
                             onCheckedChanged = {
                                 settingsStateHolder.settingShowProgressForMainTasks.value = it
                                 SETTING_SHOW_PROGRESS_FOR_MAINTASKS.saveSetting(it, settingsStateHolder.prefs)
@@ -484,7 +466,7 @@ fun SettingsScreen(
                         )
                         SwitchSettingElement(
                             setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
-                            initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
+                            checked = settingsStateHolder.settingShowProgressForSubTasks,
                             onCheckedChanged = {
                                 settingsStateHolder.settingShowProgressForSubTasks.value = it
                                 SETTING_SHOW_PROGRESS_FOR_SUBTASKS.saveSetting(it, settingsStateHolder.prefs)
@@ -500,7 +482,7 @@ fun SettingsScreen(
                         )
                         SwitchSettingElement(
                             setting = SETTING_LINK_PROGRESS_TO_SUBTASKS,
-                            initiallyChecked = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                            checked = settingsStateHolder.settingLinkProgressToSubtasks,
                             onCheckedChanged = {
                                 settingsStateHolder.settingLinkProgressToSubtasks.value = it
                                 SETTING_LINK_PROGRESS_TO_SUBTASKS.saveSetting(it, settingsStateHolder.prefs)
@@ -508,10 +490,72 @@ fun SettingsScreen(
                         )
                         SwitchSettingElement(
                             setting = SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC,
-                            initiallyChecked = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
+                            checked = settingsStateHolder.settingKeepStatusProgressCompletedInSync,
                             onCheckedChanged = {
                                 settingsStateHolder.settingKeepStatusProgressCompletedInSync.value = it
                                 SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.saveSetting(it, settingsStateHolder.prefs)
+                            }
+                        )
+                    }
+
+                    ExpandableSettingsSection(
+                        headerText = R.string.settings_alarms,
+                        expanded = expandedSection == SettingsScreenSection.ALARMS_SETTINGS,
+                        onToggle = { expandOrCollapse(SettingsScreenSection.ALARMS_SETTINGS) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        SwitchSettingElement(
+                            setting = SETTING_DISABLE_ALARMS_FOR_READONLY,
+                            checked = settingsStateHolder.settingDisableAlarmsReadonly,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingDisableAlarmsReadonly.value = it
+                                SETTING_DISABLE_ALARMS_FOR_READONLY.saveSetting(it, settingsStateHolder.prefs)
+                            }
+                        )
+                        DropdownSettingElement(
+                            setting = SETTING_AUTO_ALARM,
+                            selected = settingsStateHolder.settingAutoAlarm.value,
+                            onSelectionChanged = { selection ->
+                                settingsStateHolder.settingAutoAlarm.value = selection
+                                SETTING_AUTO_ALARM.saveSetting(selection, settingsStateHolder.prefs)
+                                scope.launch(Dispatchers.IO) { NotificationPublisher.scheduleNextNotifications(context) }
+                            }
+                        )
+                        SwitchSettingElement(
+                            setting = SETTING_STICKY_ALARMS,
+                            checked = settingsStateHolder.settingStickyAlarms,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingStickyAlarms.value = it
+                                SETTING_STICKY_ALARMS.saveSetting(it, settingsStateHolder.prefs)
+                            }
+                        )
+                        SwitchSettingElement(
+                            setting = SETTING_FULLSCREEN_ALARMS,
+                            checked = settingsStateHolder.settingFullscreenAlarms,
+                            onCheckedChanged = {
+                                if(it && !NotificationManagerCompat.from(context).canUseFullScreenIntent()) {
+                                    Toast.makeText(context, R.string.settings_fullscreen_alarms_toast, Toast.LENGTH_LONG).show()
+                                    val intent = Intent().apply {
+                                        when {
+                                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                                                action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                                                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                                                //putExtra(Settings.EXTRA_CHANNEL_ID, MainActivity2.NOTIFICATION_CHANNEL_ALARMS)
+                                            }
+                                            else -> {
+                                                action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                                                putExtra("app_package", context.packageName)
+                                                putExtra("app_uid", context.applicationInfo.uid)
+                                            }
+                                        }
+                                    }
+                                    settingsStateHolder.settingFullscreenAlarms.value = false
+                                    SETTING_FULLSCREEN_ALARMS.saveSetting(false, settingsStateHolder.prefs)
+                                    context.startActivity(intent)
+                                } else {
+                                    settingsStateHolder.settingFullscreenAlarms.value = it
+                                    SETTING_FULLSCREEN_ALARMS.saveSetting(it, settingsStateHolder.prefs)
+                                }
                             }
                         )
                     }
@@ -524,7 +568,7 @@ fun SettingsScreen(
                     ) {
                         SwitchSettingElement(
                             setting = SETTING_SYNC_ON_START,
-                            initiallyChecked = settingsStateHolder.settingSyncOnStart.value,
+                            checked = settingsStateHolder.settingSyncOnStart,
                             onCheckedChanged = {
                                 settingsStateHolder.settingSyncOnStart.value = it
                                 SETTING_SYNC_ON_START.saveSetting(it, settingsStateHolder.prefs)
@@ -532,7 +576,7 @@ fun SettingsScreen(
                         )
                         SwitchSettingElement(
                             setting = SETTING_SYNC_ON_PULL_REFRESH,
-                            initiallyChecked = settingsStateHolder.settingSyncOnPullRefresh.value,
+                            checked = settingsStateHolder.settingSyncOnPullRefresh,
                             onCheckedChanged = {
                                 settingsStateHolder.settingSyncOnPullRefresh.value = it
                                 SETTING_SYNC_ON_PULL_REFRESH.saveSetting(it, settingsStateHolder.prefs)
