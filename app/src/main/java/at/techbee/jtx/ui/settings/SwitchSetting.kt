@@ -143,7 +143,7 @@ enum class SwitchSetting(
         key = "settings_sync_on_start",
         icon = { Icon(Icons.Outlined.RestartAlt, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_sync_on_start,
-        default = true
+        default = false
     ),
     SETTING_SYNC_ON_PULL_REFRESH(
         key = "settings_sync_on_pull_refresh",
