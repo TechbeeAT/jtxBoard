@@ -46,6 +46,7 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.regex.Pattern
 
 
 /** The name of the the table for Attachments that are linked to an ICalObject.
@@ -332,7 +333,7 @@ data class Attachment (
 
         try {
             val uri = Uri.parse(uri)
-            if (filename.isNullOrBlank())
+            if (filename.isNullOrBlank() && Pattern.compile("^[\\w,\\s-]+\\.[A-Za-z]{2,3}\$").matcher(uri.lastPathSegment?:"").matches())
                 filename = uri.lastPathSegment
         } catch (e: NullPointerException) {
             if(binary.isNullOrEmpty())

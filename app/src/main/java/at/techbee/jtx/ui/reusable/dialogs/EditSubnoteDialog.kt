@@ -12,8 +12,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Note
-import androidx.compose.material3.*
+import androidx.compose.material.icons.automirrored.outlined.Note
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,7 +58,7 @@ fun EditSubnoteDialog(
                         currentText = newText
                     },
                     maxLines = 4,
-                    leadingIcon = { Icon(Icons.Outlined.Note, null) }
+                    leadingIcon = { Icon(Icons.AutoMirrored.Outlined.Note, null) }
                 )
             }
         },

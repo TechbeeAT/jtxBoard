@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Sort
+import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.outlined.ViewHeadline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -98,7 +98,7 @@ fun ListOptionsGroupSort(
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
         HeadlineWithIcon(
-            icon = Icons.Outlined.Sort,
+            icon = Icons.AutoMirrored.Outlined.Sort,
             iconDesc = stringResource(id = R.string.filter_order_by),
             text = stringResource(id = R.string.filter_order_by),
             modifier = Modifier.padding(top = 8.dp)
@@ -137,7 +137,7 @@ fun ListOptionsGroupSort(
 
         // SORT ORDER 2
         HeadlineWithIcon(
-            icon = Icons.Outlined.Sort,
+            icon = Icons.AutoMirrored.Outlined.Sort,
             iconDesc = stringResource(id = R.string.filter_second_order_by),
             text = stringResource(id = R.string.filter_second_order_by),
             modifier = Modifier.padding(top = 8.dp)
@@ -177,7 +177,7 @@ fun ListOptionsGroupSort(
 
         // SORT ORDER FOR SUBTASKS
         HeadlineWithIcon(
-            icon = Icons.Outlined.Sort,
+            icon = Icons.AutoMirrored.Outlined.Sort,
             iconDesc = null,
             text = stringResource(id = R.string.filter_subtasks_order_by),
             modifier = Modifier.padding(top = 8.dp)
@@ -216,7 +216,7 @@ fun ListOptionsGroupSort(
 
         // SORT ORDER FOR SUBNOTES
         HeadlineWithIcon(
-            icon = Icons.Outlined.Sort,
+            icon = Icons.AutoMirrored.Outlined.Sort,
             iconDesc = null,
             text = stringResource(id = R.string.filter_subnotes_order_by),
             modifier = Modifier.padding(top = 8.dp)

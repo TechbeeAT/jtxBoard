@@ -78,6 +78,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"Первая строка интерпретируется как название, остальные — как описание. Хэштеги интерпретируются как категории (например, #категория)."</string>
     <string name="list_item_recurring">"Повторяющаяся запись"</string>
     <string name="list_item_edited_recurring">"Повторяющаяся запись изменена"</string>
+    <string name="list_scroll_to_top">"Наверх"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Разрешение приложения"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board требуется разрешение для записи звука или использования функций преобразования речи в текст. Предоставьте разрешение на использование этой функции."</string>
@@ -315,7 +316,8 @@
     <string name="filter_subtasks_order_by">Сортировать подзадачи по</string>
     <string name="filter_subnotes_order_by">Сортировать связанные заметки по</string>
     <string name="filter_no_filter">"Без фильтра"</string>
-    <string name="filter_options_more_entries">"Больше (%1$d)"</string>
+    <string name="filter_options_more_entries">"Развернуть (%1$d)"</string>
+    <string name="filter_options_less_entries">"Свернуть"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Пожалуйста, нажмите на коллекцию, в которую следует добавить запись/записи!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d добавлено, %2$d пропущено. (исключения в повторяющихся записях)"</string>
     <string name="collections_toast_x_items_added">"%1$d записей добавлено!"</string>
@@ -509,9 +511,9 @@
     <string name="filter_special">"Специальные фильтры"</string>
     <string name="filter_presets">"Пресеты фильтров"</string>
     <string name="filter_presets_edit_info">"Вы можете добавить/обновить/удалить пресеты фильтров через меню фильтров."</string>
-    <string name="filter_any">"Любой"</string>
-    <string name="filter_all">"Все"</string>
-    <string name="filter_none">"Нет"</string>
+    <string name="filter_any">"Любое из"</string>
+    <string name="filter_all">"Все из"</string>
+    <string name="filter_none">"Ничего из"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Дата в прошлом"</string>
     <string name="list_date_today">"Сегодня"</string>
@@ -569,7 +571,7 @@
     <string name="widget_list_no_entries_found">"Не найдено записей, соответствующих вашим критериям"</string>
     <string name="widget_list_view_settings">"Показать настройки"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Внимание: В настоящее время в виджете поддерживается только первый уровень иерархии. Чтобы увидеть записи более низких уровней, выберите настройку Без иерархии."</string>
-    <string name="widget_list_maximum_entries_reached">"Достигнуто максимальное количество записей в виджете (%1$d)."</string>
+    <string name="widget_list_maximum_entries_reached">"Достигнуто максимальное число записей в виджете (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Обновление виджета"</string>
     <string name="widget_list_opacity_warning">"Примечание: Это экспериментальная функция! Изменения параметров непрозрачности могут отобразиться не сразу!"</string>
     <string name="widget_list_color_warning">"Примечание: Это экспериментальная функция! Системные настройки цветового оформления будут переопределены! Удалите выбор цвета для возврата к системному цветовому оформлению."</string>

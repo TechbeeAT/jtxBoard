@@ -7,19 +7,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Comment
+import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.automirrored.outlined.Note
 import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.CloudSync
-import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material.icons.outlined.ContactMail
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.Group
-import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.outlined.Note
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.TaskAlt
@@ -58,7 +58,10 @@ fun ListTopRow(
     extendedStatuses: List<ExtendedStatus>,
     modifier: Modifier = Modifier,
     includeJournalDate: Boolean = false,
-    enableScroll: Boolean = true
+    enableScroll: Boolean = true,
+    showAttachments: Boolean = true,
+    showSubtasks: Boolean = true,
+    showSubnotes: Boolean = true
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(3.dp),
@@ -149,7 +152,7 @@ fun ListTopRow(
 
         categories.forEach { category ->
             ListBadge(
-                icon = Icons.Outlined.Label,
+                icon = Icons.AutoMirrored.Outlined.Label,
                 iconDesc = stringResource(id = R.string.category),
                 text = category.text,
                 containerColor = StoredCategory.getColorForCategory(category.text, storedCategories) ?: MaterialTheme.colorScheme.primaryContainer,
@@ -212,7 +215,7 @@ fun ListTopRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        AnimatedVisibility(ical4List.numAttachments > 0) {
+        AnimatedVisibility(showAttachments && ical4List.numAttachments > 0) {
             ListBadge(
                 icon = Icons.Outlined.Attachment,
                 iconDesc = stringResource(id = R.string.attachments),
@@ -222,7 +225,7 @@ fun ListTopRow(
         }
         AnimatedVisibility(ical4List.numComments > 0) {
             ListBadge(
-                icon = Icons.Outlined.Comment,
+                icon = Icons.AutoMirrored.Outlined.Comment,
                 iconDesc = stringResource(id = R.string.comments),
                 text = ical4List.numComments.toString(),
                 modifier = Modifier.padding(vertical = 2.dp)
@@ -274,7 +277,7 @@ fun ListTopRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        AnimatedVisibility(ical4List.numSubtasks > 0) {
+        AnimatedVisibility(showSubtasks && ical4List.numSubtasks > 0) {
             ListBadge(
                 icon = Icons.Outlined.TaskAlt,
                 iconDesc = stringResource(id = R.string.subtasks),
@@ -282,9 +285,9 @@ fun ListTopRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        AnimatedVisibility(ical4List.numSubnotes > 0) {
+        AnimatedVisibility(showSubnotes && ical4List.numSubnotes > 0) {
             ListBadge(
-                icon = Icons.Outlined.Note,
+                icon = Icons.AutoMirrored.Outlined.Note,
                 iconDesc = stringResource(id = R.string.note),
                 text = ical4List.numSubnotes.toString(),
                 modifier = Modifier.padding(vertical = 2.dp)

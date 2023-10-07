@@ -51,6 +51,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -160,6 +161,9 @@ fun ListScreenTabContainer(
     val storedResources by listViewModel.storedResources.observeAsState(emptyList())
     val storedListSettings by listViewModel.storedListSettings.observeAsState(emptyList())
 
+    val iCal4ListRel by listViewModel.iCal4ListRel.observeAsState(initial = emptyList())
+    val numAllEntries by listViewModel.numAllEntries.observeAsState(initial = 0)
+
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, allWriteableCollections.value) {
         if (!timeout) {
@@ -203,6 +207,7 @@ fun ListScreenTabContainer(
 
     var showSearch by remember { mutableStateOf(false) }
     val showQuickAdd = remember { mutableStateOf(false) }
+    var quickAddBackupText by rememberSaveable { mutableStateOf("") }
 
     if (showDeleteSelectedDialog) {
         DeleteSelectedDialog(
@@ -520,7 +525,7 @@ fun ListScreenTabContainer(
                 }) {
                 ListBottomAppBar(
                     module = listViewModel.module,
-                    iCal4ListRelLive = listViewModel.iCal4ListRel,
+                    iCal4ListRel = iCal4ListRel,
                     allowNewEntries = allUsableCollections.any { collection ->
                         ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
@@ -619,16 +624,18 @@ fun ListScreenTabContainer(
                                 }
                             }
 
-                            AnimatedVisibility(listViewModel.listSettings.isFilterActive()) {
-                                ListActiveFiltersRow(
-                                    listSettings = listViewModel.listSettings,
-                                    module = listViewModel.module,
-                                    storedCategories = storedCategories,
-                                    storedResources = storedResources,
-                                    storedListSettings = storedListSettings,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                )
-                            }
+
+                            ListActiveFiltersRow(
+                                listSettings = listViewModel.listSettings,
+                                module = listViewModel.module,
+                                storedCategories = storedCategories,
+                                storedResources = storedResources,
+                                storedListSettings = storedListSettings,
+                                numShownEntries = iCal4ListRel.size,
+                                numAllEntries = numAllEntries,
+                                isFilterActive = listViewModel.listSettings.isFilterActive(),
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                            )
 
                             AnimatedVisibility(
                                 allUsableCollections.isNotEmpty() &&
@@ -641,8 +648,7 @@ fun ListScreenTabContainer(
                                     else
                                         globalStateHolder.icalFromIntentModule.value ?: getActiveViewModel().module,   // coming from intent
                                     enabledModules = enabledTabs.map { it.module },
-                                    presetText = globalStateHolder.icalFromIntentString.value
-                                        ?: "",    // only relevant when coming from intent
+                                    presetText = globalStateHolder.icalFromIntentString.value ?: quickAddBackupText,    // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allWriteableCollections = allUsableCollections,
                                     presetCollectionId = globalStateHolder.icalFromIntentCollection.value?.let {fromIntent ->
@@ -667,8 +673,9 @@ fun ListScreenTabContainer(
                                                 pagerState.animateScrollToPage(index)
                                         }
                                     },
-                                    onDismiss = {
+                                    onDismiss = { text ->
                                         showQuickAdd.value = false  // origin was button
+                                        quickAddBackupText = text
                                         globalStateHolder.icalFromIntentString.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentModule.value = null

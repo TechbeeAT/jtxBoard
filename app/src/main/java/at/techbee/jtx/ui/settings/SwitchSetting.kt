@@ -11,15 +11,15 @@ package at.techbee.jtx.ui.settings
 import android.content.SharedPreferences
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.EventNote
+import androidx.compose.material.icons.automirrored.outlined.Note
+import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.AlarmOff
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.DoneAll
-import androidx.compose.material.icons.outlined.EventNote
 import androidx.compose.material.icons.outlined.MyLocation
-import androidx.compose.material.icons.outlined.Note
-import androidx.compose.material.icons.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.RestartAlt
 import androidx.compose.material.icons.outlined.SwipeDown
@@ -40,13 +40,13 @@ enum class SwitchSetting(
 ) {
     SETTING_ENABLE_JOURNALS(
         key = "settings_enable_journals",
-        icon = { Icon(Icons.Outlined.EventNote, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        icon = { Icon(Icons.AutoMirrored.Outlined.EventNote, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_modules_enable_journals,
         default = true
     ),
     SETTING_ENABLE_NOTES(
         key = "settings_enable_notes",
-        icon = { Icon(Icons.Outlined.NoteAdd, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        icon = { Icon(Icons.AutoMirrored.Outlined.NoteAdd, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_modules_enable_notes,
         default = true
     ),
@@ -64,7 +64,7 @@ enum class SwitchSetting(
     ),
     SETTING_AUTO_EXPAND_SUBNOTES(
         key = "settings_auto_expand_subnotes",
-        icon = { Icon(Icons.Outlined.Note, null, modifier = Modifier.padding(16.dp)) },
+        icon = { Icon(Icons.AutoMirrored.Outlined.Note, null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_default_expand_subnotes,
         default = false
     ),

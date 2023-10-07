@@ -6,6 +6,7 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Opslaan"</string>
+    <string name="update">"Bijwerken"</string>
     <string name="cancel">"Annuleren"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Verwijderen"</string>
@@ -55,11 +56,14 @@
     <string name="navigation_drawer_privacy_policy">"Privacybeleid"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Achterstallig"</string>
+    <string name="list_due_shortly">"Binnenkort te betalen"</string>
     <string name="list_due_today">"Vervalt vandaag"</string>
     <string name="list_due_tomorrow">"Vervalt Morgen"</string>
+    <string name="list_due_within_7_days">"Vervalt binnen 7 dagen"</string>
     <string name="list_due_inXhours">"Vervalt binnen %d uur"</string>
     <string name="list_due_on_weekday">"Vervalt op %s"</string>
     <string name="list_start_past">"Start in verleden"</string>
+    <string name="list_start_shortly">"Binnenkort beginnen"</string>
     <string name="list_start_today">"Start vandaag gepland"</string>
     <string name="list_start_tomorrow">"Start morgen"</string>
     <string name="list_start_inXhours">"Geplande start over %d uur"</string>
@@ -182,7 +186,7 @@
     <string name="list_welcome_entry_todo_summary">"Gefeliciteerd, dit is je eerste taak-item :-)"</string>
     <string name="list_welcome_entry_todo_description">"Daarnaast kunnen taken een geplande start-, een vervaldatum, en een vervaldatum hebben. Ze kunnen worden gecontroleerd wanneer ze klaar zijn of er kan een voortgang worden ingesteld. Bewerk dit item om alle opties te bekijken :-)"</string>
     <string name="list_welcome_category">"#EersteStappen"</string>
-    <string name="save_and_edit">"Opslaan &amp; afsluiten"</string>
+    <string name="save_and_edit">"Opslaan &amp; bewerken"</string>
     <string name="save_and_new">"Opslaan &amp; nieuw"</string>
     <string name="save_and_close">"Opslaan &amp; sluiten"</string>
     <string name="list_quickadd_add_audio_attachment">"Geluid opnemen"</string>
@@ -545,7 +549,6 @@ Dank u!"</string>
     <string name="widget_list_no_entries_found">"Er zijn geen items gevonden die voldoen aan uw filtercriteria"</string>
     <string name="widget_list_view_settings">"Uiterlijk-instellingen"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Opgelet: Momenteel wordt slechts één hiërarchieniveau ondersteund in de widget. Om de items van lagere niveaus te zien, gebruik in plaats daarvan de platte weergave."</string>
-    <string name="widget_list_maximum_entries_reached">"Maximum aantal items in widget bereikt (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Widget bijwerken"</string>
     <string name="widget_list_opacity_warning">"Opmerking: Dit is een experimentele functie! Lagere doorzichtigheid in het kleurthema wordt mogelijk niet onmiddellijk weergegeven!"</string>
     <string name="widget_list_color_warning">"Opmerking: Dit is een experimentele functie! Wijzigingen in het kleurthema zullen niet worden weergegeven! Kies geen kleur om terug te keren naar systeem standaard."</string>

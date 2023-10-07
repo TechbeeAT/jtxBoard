@@ -36,9 +36,9 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.widgets.ListWidget
 import at.techbee.jtx.widgets.ListWidgetConfig
 import at.techbee.jtx.widgets.ListWidgetConfigContent
-import at.techbee.jtx.widgets.ListWidgetReceiver
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -87,7 +87,7 @@ class ListWidgetConfigActivity : ComponentActivity() {
                     val isPurchased by BillingManager.getInstance().isProPurchased.observeAsState(false)
 
                     LaunchedEffect(true) {
-                        currentFilterConfig = getAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId)[ListWidgetReceiver.filterConfig]?.let { filterConfig -> Json.decodeFromString<ListWidgetConfig>(filterConfig) } ?: ListWidgetConfig()
+                        currentFilterConfig = getAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId)[ListWidget.filterConfig]?.let { filterConfig -> Json.decodeFromString<ListWidgetConfig>(filterConfig) } ?: ListWidgetConfig()
                     }
 
                     currentFilterConfig?.let {
@@ -104,11 +104,12 @@ class ListWidgetConfigActivity : ComponentActivity() {
                                         glanceId
                                     ) { pref ->
                                         pref.toMutablePreferences().apply {
-                                            this[ListWidgetReceiver.filterConfig] =
+                                            this[ListWidget.filterConfig] =
                                                 Json.encodeToString(listWidgetConfig)
                                         }
                                     }
-                                    ListWidgetReceiver.setOneTimeWork(context)
+                                    ListWidget().update(context, glanceId)
+                                    //ListWidget().updateAll(context)
                                     Log.d(TAG, "Widget update requested")
 
                                     val resultValue = Intent().putExtra(

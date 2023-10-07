@@ -10,12 +10,14 @@ package at.techbee.jtx.ui.list
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,9 +27,12 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowDropUp
+import androidx.compose.material.icons.outlined.VerticalAlignTop
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,9 +45,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -68,6 +75,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 
@@ -99,7 +107,8 @@ fun ListScreenList(
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
-    onSyncRequested: () -> Unit
+    onSyncRequested: () -> Unit,
+    onSaveListSettings: () -> Unit,
 ) {
 
     val subtasks by subtasksLive.observeAsState(emptyList())
@@ -110,20 +119,24 @@ fun ListScreenList(
     val storedResources by storedResourcesLive.observeAsState(emptyList())
     val storedStatuses by storedStatusesLive.observeAsState(emptyList())
 
+    val scope = rememberCoroutineScope()
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
-    val itemsCollapsed = remember { mutableStateListOf<String>() }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
         onRefresh = { onSyncRequested() }
     )
 
     Box(
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier.fillMaxSize()
     ) {
+
         LazyColumn(
             modifier = if(isPullRefreshEnabled)
-                    Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp).pullRefresh(pullRefreshState)
+                Modifier
+                    .padding(start = 8.dp, end = 8.dp, top = 4.dp)
+                    .pullRefresh(pullRefreshState)
                 else
                     Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
             state = listState,
@@ -142,10 +155,11 @@ fun ListScreenList(
 
                         ) {
                             TextButton(onClick = {
-                                if (itemsCollapsed.contains(groupName))
-                                    itemsCollapsed.remove(groupName)
+                                if (listSettings.collapsedGroups.contains(groupName))
+                                    listSettings.collapsedGroups.remove(groupName)
                                 else
-                                    itemsCollapsed.add(groupName)
+                                    listSettings.collapsedGroups.add(groupName)
+                                onSaveListSettings()
                             }) {
                                 Text(
                                     text = groupName,
@@ -153,7 +167,7 @@ fun ListScreenList(
                                     modifier = Modifier.padding(horizontal = 4.dp)
                                 )
 
-                                if (itemsCollapsed.contains(groupName))
+                                if (listSettings.collapsedGroups.contains(groupName))
                                     Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
                                 else
                                     Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
@@ -162,7 +176,7 @@ fun ListScreenList(
                     }
                 }
 
-                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
+                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !listSettings.collapsedGroups.contains(groupName))) {
                     items(
                         items = group,
                         key = { item ->
@@ -257,6 +271,25 @@ fun ListScreenList(
             refreshing = false,
             state = pullRefreshState
         )
+
+        Crossfade(listState.canScrollBackward, label = "showScrollUp") {
+            if (it) {
+                Box(
+                    contentAlignment = Alignment.BottomCenter,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Button(
+                        onClick = {
+                            scope.launch { listState.animateScrollToItem(0) }
+                        },
+                        colors = ButtonDefaults.filledTonalButtonColors(),
+                        modifier = Modifier.padding(8.dp).alpha(0.33f)
+                    ) {
+                        Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -329,7 +362,8 @@ fun ListScreenList_TODO() {
             onLongClick = { _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            onSaveListSettings = { }
         )
     }
 }
@@ -406,7 +440,8 @@ fun ListScreenList_JOURNAL() {
             onLongClick = { _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            onSaveListSettings = { }
         )
     }
 }

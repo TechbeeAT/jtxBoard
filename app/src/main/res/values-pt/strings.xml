@@ -55,9 +55,22 @@
     <string name="navigation_drawer_privacy_policy">"Política de Privacidade"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Em atraso"</string>
+    <string name="list_tabitem_journals">"Diários"</string>
+    <string name="list_tabitem_notes">"Notas"</string>
     <!-- fragment_ical_view -->
+    <string name="view_fragment_audio_permission">"Permissões da aplicação"</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board precisa de permissão para gravar áudio ou usar as funcionalidades da fala em texto. Por favor, conceda permissão para usar este recurso."</string>
+    <string name="view_completed">"Concluído"</string>
     <!-- fragment_ical_edit -->
+    <string name="edit_attachment_add_link_dialog">"Adicionar link de anexo"</string>
+    <string name="edit_recur_repeat_every_x">"Repetir a cada"</string>
+    <string name="edit_recur_x_day_of_the_month">"dia do mês"</string>
+    <string name="edit_fragment_app_permission">"Permissão da aplicação"</string>
     <!-- fragment_about -->
+    <string name="about_tabitem_translations">"Traduções"</string>
+    <string name="about_tabitem_libraries">"Bibliotecas"</string>
+    <string name="about_tabitem_contributors">"Contribuidores"</string>
+    <string name="about_special_thanks">"Agradecimentos especiais"</string>
     <!-- menus -->
     <!-- Shortcuts -->
     <!-- Settings fragment -->

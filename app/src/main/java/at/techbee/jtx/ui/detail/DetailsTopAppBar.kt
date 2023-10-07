@@ -11,9 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.AddTask
-import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.NoteAdd
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -75,7 +75,7 @@ fun DetailsTopAppBar(
                 leadingIcon = {
                     IconButton(onClick = { goBack() }) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = stringResource(id = R.string.back)
                         )
                     }
@@ -92,10 +92,10 @@ fun DetailsTopAppBar(
                                 }
                                 textFieldText = ""
                             }) {
-                                Crossfade(detailTopAppBarMode) {
+                                Crossfade(detailTopAppBarMode, label = "detailTopAppBarMode") {
                                     when(it) {
                                         DetailTopAppBarMode.ADD_SUBTASK -> Icon(Icons.Outlined.AddTask, stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
-                                        DetailTopAppBarMode.ADD_SUBNOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
+                                        DetailTopAppBarMode.ADD_SUBNOTE -> Icon(Icons.AutoMirrored.Outlined.NoteAdd, stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
                                     }
                                 }
                             }

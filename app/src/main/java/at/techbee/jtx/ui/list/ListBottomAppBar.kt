@@ -16,17 +16,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.EventNote
+import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DeleteSweep
-import androidx.compose.material.icons.outlined.EventNote
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FilterListOff
 import androidx.compose.material.icons.outlined.LibraryAddCheck
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.SyncProblem
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DropdownMenuItem
@@ -41,7 +41,6 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,8 +54,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.relations.ICal4ListRel
@@ -73,7 +70,7 @@ import java.time.ZonedDateTime
 @Composable
 fun ListBottomAppBar(
     module: Module,
-    iCal4ListRelLive: LiveData<List<ICal4ListRel>>,
+    iCal4ListRel: List<ICal4ListRel>,
     listSettings: ListSettings,
     showQuickEntry: MutableState<Boolean>,
     multiselectEnabled: MutableState<Boolean>,
@@ -95,7 +92,6 @@ fun ListBottomAppBar(
     var showSyncAppIncompatibleDialog by remember { mutableStateOf(false) }
     var showDeleteDoneDialog by remember { mutableStateOf(false) }
     val showMoreActionsMenu = remember { mutableStateOf(false) }
-    val iCal4List by iCal4ListRelLive.observeAsState(emptyList())
 
     if(showGoToDatePicker) {
         DatePickerDialog(
@@ -105,7 +101,7 @@ fun ListBottomAppBar(
             onConfirm = { selectedDate, _ ->
                 val selectedZoned = selectedDate?.let {ZonedDateTime.ofInstant(Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault()) } ?: return@DatePickerDialog
 
-                var match = iCal4List.firstOrNull {
+                var match = iCal4ListRel.firstOrNull {
                     val dtstartZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.iCal4List.dtstart!!), DateTimeUtils.requireTzId(it.iCal4List.dtstartTimezone))
                     if(listSettings.sortOrder.value == SortOrder.ASC)
                         dtstartZoned.year >= selectedZoned.year && dtstartZoned.monthValue >= selectedZoned.monthValue && dtstartZoned.dayOfMonth >= selectedZoned.dayOfMonth
@@ -114,15 +110,15 @@ fun ListBottomAppBar(
                 }
 
                 if(match == null && listSettings.sortOrder.value == SortOrder.ASC) // no match found, sort order ascending, so the date must be after the last one!
-                    match = iCal4List.lastOrNull()
+                    match = iCal4ListRel.lastOrNull()
                 else if(match == null && listSettings.sortOrder.value == SortOrder.DESC) // no match found, sort order descending, so the date must be before the last one!
-                    match = iCal4List.lastOrNull()
+                    match = iCal4ListRel.lastOrNull()
 
                 match?.let { closest -> onGoToDateSelected(closest.iCal4List.id) }
             },
             onDismiss = { showGoToDatePicker = false },
             dateOnly = true,
-            minDate = iCal4List.minByOrNull { it.iCal4List.dtstart ?: Long.MAX_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC"))},
+            minDate = iCal4ListRel.minByOrNull { it.iCal4List.dtstart ?: Long.MAX_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC"))},
             //maxDate = iCal4List.maxByOrNull { it.iCal4List.dtstart ?: Long.MIN_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())},
         )
     }
@@ -283,7 +279,7 @@ fun ListBottomAppBar(
                     }
 
                     Text(
-                        text = stringResource(R.string.x_selected, selectedEntries.size, iCal4List.size),
+                        text = stringResource(R.string.x_selected, selectedEntries.size, iCal4ListRel.size),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 8.dp)
@@ -291,18 +287,18 @@ fun ListBottomAppBar(
 
                     TextButton(onClick = {
                         when(selectedEntries.size) {
-                            0 -> selectedEntries.addAll(iCal4List.map { it.iCal4List.id })
-                            iCal4List.size -> selectedEntries.clear()
+                            0 -> selectedEntries.addAll(iCal4ListRel.map { it.iCal4List.id })
+                            iCal4ListRel.size -> selectedEntries.clear()
                             else -> {
                                 selectedEntries.clear()
-                                selectedEntries.addAll(iCal4List.map { it.iCal4List.id })
+                                selectedEntries.addAll(iCal4ListRel.map { it.iCal4List.id })
                             }
                         }
                     }) {
                         Crossfade(selectedEntries.size, label = "selectall_selectnone") {
                             when (it) {
                                 0 -> Text(stringResource(R.string.select_all))
-                                iCal4List.size -> Text(stringResource(R.string.select_none))
+                                iCal4ListRel.size -> Text(stringResource(R.string.select_none))
                                 else -> Text(stringResource(R.string.select_all))
                             }
                         }
@@ -319,8 +315,8 @@ fun ListBottomAppBar(
                 ) {
                     Crossfade(module, label = "fab_content_list") {
                         when (it) {
-                            Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
-                            Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
+                            Module.JOURNAL -> Icon(Icons.AutoMirrored.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
+                            Module.NOTE -> Icon(Icons.AutoMirrored.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
                             Module.TODO -> Icon(Icons.Outlined.AddTask, stringResource(R.string.toolbar_text_add_task))
                         }
                     }
@@ -342,7 +338,7 @@ fun ListBottomAppBar_Preview_Journal() {
 
         ListBottomAppBar(
             module = Module.JOURNAL,
-            iCal4ListRelLive = MutableLiveData(emptyList()),
+            iCal4ListRel = emptyList(),
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = false,
@@ -373,7 +369,7 @@ fun ListBottomAppBar_Preview_Note() {
 
         ListBottomAppBar(
             module = Module.NOTE,
-            iCal4ListRelLive = MutableLiveData(emptyList()),
+            iCal4ListRel = emptyList(),
             listSettings = listSettings,
             allowNewEntries = false,
             isBiometricsEnabled = false,
@@ -404,7 +400,7 @@ fun ListBottomAppBar_Preview_Todo() {
 
         ListBottomAppBar(
             module = Module.TODO,
-            iCal4ListRelLive = MutableLiveData(emptyList()),
+            iCal4ListRel = emptyList(),
             listSettings = listSettings,
             allowNewEntries = true,
             incompatibleSyncApps = listOf(SyncApp.DAVX5),
@@ -436,7 +432,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
 
         ListBottomAppBar(
             module = Module.TODO,
-            iCal4ListRelLive = MutableLiveData(emptyList()),
+            iCal4ListRel = emptyList(),
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = true,

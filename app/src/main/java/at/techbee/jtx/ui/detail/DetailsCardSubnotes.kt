@@ -16,9 +16,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Note
 import androidx.compose.material.icons.outlined.EditNote
 import androidx.compose.material.icons.outlined.Mic
-import androidx.compose.material.icons.outlined.Note
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +51,7 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
+    enforceSavingSubnote: Boolean,
     onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
@@ -74,6 +75,11 @@ fun DetailsCardSubnotes(
         )
     }
 
+    if (enforceSavingSubnote && newSubnoteText.isNotEmpty()) {
+        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+        newSubnoteText = ""
+    }
+
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -88,7 +94,7 @@ fun DetailsCardSubnotes(
                 modifier = Modifier.fillMaxWidth(), 
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HeadlineWithIcon(icon = Icons.Outlined.Note, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
+                HeadlineWithIcon(icon = Icons.AutoMirrored.Outlined.Note, iconDesc = headline, text = headline, modifier = Modifier.weight(1f))
                 
                 AnimatedVisibility(isEditMode.value) {
                         IconButton(onClick = { onShowLinkExistingDialog() }) {
@@ -202,6 +208,7 @@ fun DetailsCardSubnotes_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
+            enforceSavingSubnote = false,
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
@@ -227,6 +234,7 @@ fun DetailsCardSubnotes_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
+            enforceSavingSubnote = false,
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },

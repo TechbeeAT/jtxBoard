@@ -78,6 +78,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"Az első sort összefoglalóként, a többit leírásként lesz értelmezve. A hashtageket kategóriaként értelmezzük (pl. #kategória)."</string>
     <string name="list_item_recurring">"Ismétlődő bejegyzés"</string>
     <string name="list_item_edited_recurring">"Ismétlődő bejegyzés szerkeszve"</string>
+    <string name="list_scroll_to_top">"Ugrás az elejére"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Engedélyek"</string>
     <string name="view_fragment_audio_permission_message">"A hangfelvételt készítéséhez és a hangfelismerés funkció használatához szükség van erre az engedélyre. Kérjük, adja meg az engedélyt, ha szeretné használni ezeket a funkciókat."</string>
@@ -268,6 +269,7 @@
     <string name="resources">"Erőforrások"</string>
     <string name="organizer">"Szervező"</string>
     <string name="contact">"Névjegy"</string>
+    <string name="relatedto">"Kapcsolódó"</string>
     <string name="comments">"Megjegyzések"</string>
     <string name="attachments">"Csatolmányok"</string>
     <string name="alarms">"Riasztások"</string>
@@ -315,6 +317,7 @@
     <string name="filter_subnotes_order_by">Csatolt jegyzetek rendezési szempontja</string>
     <string name="filter_no_filter">"Nincs szűrés"</string>
     <string name="filter_options_more_entries">"Következő (%1$d)"</string>
+    <string name="filter_options_less_entries">"Kevesebb"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Kérjük, válassza ki a gyűjteményt, amiben a bejegyzést vagy bejegyzéseket létre akarja hozni!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d hozzáadva, %2$d kihagyva. (Ismétlődő bejegyzések kivételes példányai.)"</string>
     <string name="collections_toast_x_items_added">"%1$d hozzáadva!"</string>
@@ -329,6 +332,12 @@
     <string name="collections_toast_export_success">"Gyűjtemények exportálása sikeres"</string>
     <string name="collections_toast_export_error">"Gyűjtemények exportálása sikertelen"</string>
     <string name="menu_collections_export_all">"Az összes exportálása"</string>
+    <string name="menu_presets_export_presets">"Egyéni jellemzők mentése"</string>
+    <string name="menu_presets_import_presets">"Egyéni jellemzők betöltése"</string>
+    <string name="presets_imported">"Egyéni jellemzők betöltve"</string>
+    <string name="presets_import_invalid_file">"Nem megfelelő a fájl tartalma"</string>
+    <string name="presets_saved">"Egyéni jellemzők elmentve"</string>
+    <string name="presets_export_error">"Az egyéni jellemzők mentése során hiba történt"</string>
     <string name="more">"Tovább"</string>
     <string name="navigation_drawer_buypro">"Pro verzó megvásárlása"</string>
     <string name="settings_select_theme">"Megjelenítési mód kiválasztása"</string>
@@ -385,6 +394,7 @@ Köszönjük!"</string>
     <string name="invalid_timezone_message">"Kérjük, válasszon egy érvényes időzónát!"</string>
     <string name="invalid_url_message">"Kérjük, adjon meg egy érvényes URL-t!"</string>
     <string name="list_quickadd_dialog_sr_start">"Hangfelismerés indítása"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Hangfelismerés folyamatban…"</string>
     <string name="collections_dialog_buypro_info">"Kérjük, vásárolja meg a jtx Board Pro verzióját, ha szeretne távoli gyűjtökben lévő bejegyzéseket szerkeszteni."</string>
     <string name="list_update_entries_dialog_title">"Bejegyzések frissítése"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Figyelem! Az ismétlődő példányokat el kell távolítani a sorozatuktól, mielőtt egy másik gyűjteménybe helyeznék át, különben ebben a folyamatban ki lesznek hagyva."</string>
@@ -500,6 +510,10 @@ Köszönjük!"</string>
     <string name="settings_select_language_system">"Rendszernyelv"</string>
     <string name="filter_special">"Speciális szűrők"</string>
     <string name="filter_presets">"Mentett szűrőbeállítások"</string>
+    <string name="filter_presets_edit_info">"A szűrőbeállítások hozzáadása/frissítése/törlése a listanézet szűrőmenüjéből lehetséges."</string>
+    <string name="filter_any">"Bármelyik"</string>
+    <string name="filter_all">"Mind"</string>
+    <string name="filter_none">"Egyik sem"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Múltbéli kezdés"</string>
     <string name="list_date_today">"Ma"</string>
@@ -557,7 +571,7 @@ Köszönjük!"</string>
     <string name="widget_list_no_entries_found">"Nincs a szűrési feltéteknek megfelelő elem"</string>
     <string name="widget_list_view_settings">"Beállítások megtekintése"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Figyelem! A widget jelenleg csak egy hierarchiaszintet támogat. Az mélyebb szinteken lévő bejegyzések megtekintéséhez kérjük, használja az egyszintű nézetet."</string>
-    <string name="widget_list_maximum_entries_reached">"A bejegyzések száma elérte a widgetre vonatkozó maximumot (%1$d)."</string>
+    <string name="widget_list_maximum_entries_reached">"A bejegyzések száma a widgetben elérte maximumot (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Widget frissítése"</string>
     <string name="widget_list_opacity_warning">"Megjegyzés: Ez egy kísérleti funkció! Az áttetszőséggel a színtéma változásai nem feltétlenül jelennek meg azonnal!"</string>
     <string name="widget_list_color_warning">"Megjegyzés: Ez egy kísérleti funkció! A színtéma változásai nem fognak tükröződni! Válassza a \"nincs színt\" a rendszer alapértelmezett állapotához való visszatéréshez."</string>

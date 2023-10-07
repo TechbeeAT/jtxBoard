@@ -78,6 +78,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"Η πρώτη γραμμή ερμηνεύεται ως περίληψη, η υπόλοιπη ως περιγραφή. Τα hashtags ερμηνεύονται ως κατηγορίες (πχ. #category)."</string>
     <string name="list_item_recurring">"Επαναλαμβανόμενη καταχώρηση"</string>
     <string name="list_item_edited_recurring">"Το επαναλαμβανόμενο γεγονός τροποποιήθηκε"</string>
+    <string name="list_scroll_to_top">"Μετακίνηση στην αρχή"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Άδεια εφαρμογής"</string>
     <string name="view_fragment_audio_permission_message">"Η εφαρμογή jtx Board χρειάζεται την άδεια σας για την εγγραφή ήχου. Παρακαλούμε παραχωρήστε την άδεια χρήσης αυτής της δυνατότητας."</string>
@@ -399,7 +400,7 @@
     <string name="list_update_entries_dialog_attention_collection_update">"Προσοχή: Τα επαναλαμβανόμενα στιγμιότυπα πρέπει να αποσυνδέονται από τη σειρά τους πριν μεταφερθούν σε άλλη συλλογή και θα αγνοηθούν σε αυτή τη διαδικασία."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Επιλέξτε την κύρια εγγραφή με την οποία οι επιλεγμένες καταχωρήσεις θα συνδέονται ως υποεργασίες/συνδεδεμένες σημειώσεις."</string>
     <string name="link_entry">"Σύνδεση καταχώρησης"</string>
-    <string name="link_entry_search_within">"Αναζήτηση μεταξύ ..."</string>
+    <string name="link_entry_search_within">"Αναζήτηση μεταξύ …"</string>
     <string name="link_entry_search_within_same_collection">"Ίδια συλλογή"</string>
     <string name="link_entry_search_within_same_account">"Ίδιος λογαριασμός"</string>
     <string name="details_link_existing_subentry_dialog_title">"Σύνδεση υπο-καταχωρήσεων"</string>
@@ -570,7 +571,7 @@
     <string name="widget_list_no_entries_found">"Δεν βρέθηκαν καταχωρήσεις που να ταιριάζουν με τα κριτήρια φίλτρου σας"</string>
     <string name="widget_list_view_settings">"Προβολή ρυθμίσεων"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Προσοχή: Προς το παρόν μόνο ένα επίπεδο ιεραρχίας υποστηρίζεται στο γραφικό στοιχείο. Για να δείτε τις καταχωρήσεις των χαμηλότερων επιπέδων, χρησιμοποιήστε την επίπεδη προβολή."</string>
-    <string name="widget_list_maximum_entries_reached">"Συμπληρώθηκε ο μέγιστος αριθμός καταχωρίσεων στο γραφικό στοιχείο (%1$d)."</string>
+    <string name="widget_list_maximum_entries_reached">"Επιτεύχθηκε μέγιστος αριθμός καταχωρήσεων στο widget (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Ενημέρωση widget"</string>
     <string name="widget_list_opacity_warning">"Σημείωση: Αυτό είναι ένα πειραματικό χαρακτηριστικό! Με μειωμένες αλλαγές αδιαφάνειας στο χρωματικό θέμα μπορεί να μην αντικατοπτρίζονται αμέσως!"</string>
     <string name="widget_list_color_warning">"Σημείωση: Αυτό είναι ένα πειραματικό χαρακτηριστικό! Οι αλλαγές στο χρώμα θέμα δε θα αντικατοπτρίζονται! Επιλέξτε κανένα χρώμα για να επιστρέψετε στην προεπιλογή συστήματος."</string>

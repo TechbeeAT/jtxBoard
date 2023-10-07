@@ -20,6 +20,7 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.*
 import at.techbee.jtx.ui.detail.LocationLatLng
 import at.techbee.jtx.ui.presets.XStatusStatusPair
+import kotlinx.coroutines.flow.Flow
 
 
 
@@ -165,6 +166,16 @@ SELECTs (global selects without parameter)
      */
     @Query("SELECT count(*) FROM $TABLE_NAME_ICALOBJECT")
     fun getCount(): Int
+
+    /**
+     * Retrieve the number of items in the table of [ICal4List] for a specific module as Int.
+     * @param
+     * @return Int with the total number of [ICal4List] in the table for the given module.
+     */
+    @Query("SELECT count(*) FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_MODULE = :module AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 ")
+    fun getICal4ListCount(module: String): LiveData<Int?>
+
+
 
     /**
      * Retrieve an [ICalObject] by Id asynchronously (suspend)
@@ -519,11 +530,23 @@ DELETEs by Object
 
     @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
-    fun getIcal4ListSync(query: SupportSQLiteQuery): List<ICal4List>
+    suspend fun getIcal4ListRelSync(query: SupportSQLiteQuery): List<ICal4ListRel>
+
+    @Transaction
+    @RawQuery(observedEntities = [ICal4List::class])
+    fun getIcal4ListFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
+
+    @Transaction
+    @RawQuery(observedEntities = [ICal4ListRel::class])
+    fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
 
     @Transaction
     @RawQuery(observedEntities = [ICal4ListRel::class])
     fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4ListRel>
+
+    @Transaction
+    @RawQuery(observedEntities = [ICal4ListRel::class])
+    fun getSubEntriesFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
 
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")
