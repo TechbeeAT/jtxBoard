@@ -253,11 +253,12 @@ data class Alarm(
             notificationDescription: String?,
             isReadOnly: Boolean,
             notificationChannel: String,
-            context: Context
+            context: Context,
+            ignoreStickySetting: Boolean = false,
         ): Notification {
 
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            val isSticky = prefs.getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default)
+            val isSticky = prefs.getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default) && !ignoreStickySetting
             val isFullScreen = prefs.getBoolean(SwitchSetting.SETTING_FULLSCREEN_ALARMS.key, SwitchSetting.SETTING_FULLSCREEN_ALARMS.default)
 
             val intent = Intent(context, MainActivity2::class.java).apply {
