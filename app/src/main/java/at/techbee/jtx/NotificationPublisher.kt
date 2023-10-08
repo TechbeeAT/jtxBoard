@@ -152,6 +152,8 @@ class NotificationPublisher : BroadcastReceiver() {
             val alarm = database.getAlarmSync(alarmId) ?: return
             alarm.alarmId = 0L   //  we insert a new alarm
             alarm.triggerTime = System.currentTimeMillis() + delay
+            alarm.triggerRelativeTo = null
+            alarm.triggerRelativeDuration = null
             alarm.alarmId = database.insertAlarm(alarm)
             database.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
             SyncUtil.notifyContentObservers(context)

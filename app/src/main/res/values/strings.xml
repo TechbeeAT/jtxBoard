@@ -19,6 +19,8 @@
     <string name="ok">"OK"</string>
     <string name="delete">"Delete"</string>
     <string name="discard">"Discard"</string>
+    <string name="dismiss">"Dismiss"</string>
+    <string name="open">"Open"</string>
     <string name="cont">"Continue"</string>
     <string name="website">"Website"</string>
     <string name="latitude">"Latitude"</string>
