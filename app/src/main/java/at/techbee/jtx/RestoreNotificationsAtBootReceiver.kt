@@ -13,7 +13,6 @@ import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.flavored.GeofenceClient
-import at.techbee.jtx.ui.settings.SwitchSetting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,7 +51,6 @@ class RestoreNotificationsAtBootReceiver : BroadcastReceiver() {
                                 iCalObject.description,
                                 true,
                                 MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
-                                PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default),
                                 context
                             )
                             notificationManager.notify(iCalObjectId.toInt(), notification)
