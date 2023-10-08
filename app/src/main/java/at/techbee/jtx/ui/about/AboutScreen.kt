@@ -75,7 +75,7 @@ fun AboutScreen(
                 drawerState = drawerState,
                 mainContent = {
                     Column {
-                        TabRow(selectedTabIndex = pagerState.currentPage) {
+                        PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
                             screens.forEachIndexed { index, screen ->
                                 Tab(selected = pagerState.currentPage == index,
                                     onClick = {
