@@ -2,8 +2,8 @@ package at.techbee.jtx
 
 import android.app.Activity
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -41,22 +43,38 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 
-class AlarmFullscreenActivity : ComponentActivity() {
+class AlarmFullscreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val alarmId = intent.getLongExtra(NotificationPublisher.ALARM_ID,  0L)
+        val icalObjectId = intent.getLongExtra(NotificationPublisher.ICALOBJECT_ID, 0L)
+        val database = ICalDatabase.getInstance(this).iCalDatabaseDao()
+
+        if(alarmId == 0L && icalObjectId == 0L) {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+        }
+
         setContent {
             JtxBoardTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    FullscreenAlarmScreen(
-                        iCalObject = ICalObject.createNote("TODO!!!!"),
-                        alarm = Alarm.createDisplayAlarm(), //TODO("not yet implemented"),
-                        isReadOnly = false,
-                        onDismiss = {
-                            setResult(Activity.RESULT_CANCELED)
-                            finish()
-                        }
-                    )
+                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background.copy(alpha = 0.4f)) {
+
+                    val alarm = database.getAlarm(alarmId).observeAsState(initial = null)
+                    val icalObject = database.getICalObject(icalObjectId).observeAsState(initial = null)
+
+                    if(icalObject.value != null) {
+                        FullscreenAlarmScreen(
+                            iCalObject = icalObject.value!!,
+                            alarm = alarm.value,
+                            isReadOnly = false,
+                            onDismiss = {
+                                setResult(Activity.RESULT_CANCELED)
+                                finish()
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -67,7 +85,7 @@ class AlarmFullscreenActivity : ComponentActivity() {
 @Composable
 fun FullscreenAlarmScreen(
     iCalObject: ICalObject,
-    alarm: Alarm,
+    alarm: Alarm?,
     isReadOnly: Boolean,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
@@ -134,25 +152,28 @@ fun FullscreenAlarmScreen(
             }
         }
 
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            if (!isReadOnly && alarm.alarmId != 0L)
-                ElevatedAssistChip(
-                    onClick = { scope.launch(Dispatchers.IO) { NotificationPublisher.addPostponedAlarm(alarm.alarmId, (1).hours.inWholeMilliseconds, context) }  },
-                    label = { Text(stringResource(id = R.string.notification_add_1h)) }
-                )
-            if (!isReadOnly && alarm.alarmId != 0L)
-                ElevatedAssistChip(
-                    onClick = { scope.launch(Dispatchers.IO) { NotificationPublisher.addPostponedAlarm(alarm.alarmId, (1).hours.inWholeMilliseconds, context) } },
-                    label = { Text(stringResource(id = R.string.notification_add_1d)) })
-            if (!isReadOnly)
+        if(!isReadOnly) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (alarm != null && alarm.alarmId != 0L) {
+                    ElevatedAssistChip(
+                        onClick = { scope.launch(Dispatchers.IO) { NotificationPublisher.addPostponedAlarm(alarm.alarmId, (1).hours.inWholeMilliseconds, context) }  },
+                        label = { Text(stringResource(id = R.string.notification_add_1h)) }
+                    )
+                    ElevatedAssistChip(
+                        onClick = { scope.launch(Dispatchers.IO) { NotificationPublisher.addPostponedAlarm(alarm.alarmId, (1).hours.inWholeMilliseconds, context) } },
+                        label = { Text(stringResource(id = R.string.notification_add_1d)) }
+                    )
+                }
+
                 ElevatedAssistChip(
                     onClick = {
                         val settingsStateHolder = SettingsStateHolder(context)
                         scope.launch {
-                            NotificationPublisher.setToDone(alarm.alarmId, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value, settingsStateHolder.settingLinkProgressToSubtasks.value, context) }
+                            NotificationPublisher.setToDone(iCalObject.id, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value, settingsStateHolder.settingLinkProgressToSubtasks.value, context) }
                               },
                     label = { Text(stringResource(id = R.string.notification_done)) }
                 )
+            }
         }
 
         ElevatedAssistChip(

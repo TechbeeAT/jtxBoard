@@ -555,6 +555,7 @@ fun SettingsScreen(
                                 } else {
                                     settingsStateHolder.settingFullscreenAlarms.value = it
                                     SETTING_FULLSCREEN_ALARMS.saveSetting(it, settingsStateHolder.prefs)
+                                    NotificationPublisher.scheduleNextNotifications(context)
                                 }
                             }
                         )

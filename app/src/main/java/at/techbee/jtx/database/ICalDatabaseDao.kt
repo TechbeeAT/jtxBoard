@@ -175,6 +175,14 @@ SELECTs (global selects without parameter)
     @Query("SELECT count(*) FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_MODULE = :module AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 ")
     fun getICal4ListCount(module: String): LiveData<Int?>
 
+    /**
+     * Retrieve an [ICalObject] by Id as LiveData
+     *
+     * @param id The id of the [ICalObject] in the DB
+     * @return the [ICalObject] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
+    fun getICalObject(id: Long): LiveData<ICalObject?>
 
 
     /**
@@ -558,7 +566,10 @@ DELETEs by Object
     fun getSync(key: Long): ICalEntity?
 
 
-    @Query("SELECT * from alarm WHERE _id = :key")
+    @Query("SELECT * from $TABLE_NAME_ALARM WHERE _id = :key")
+    fun getAlarm(key: Long): LiveData<Alarm?>
+
+    @Query("SELECT * from $TABLE_NAME_ALARM WHERE _id = :key")
     fun getAlarmSync(key: Long): Alarm?
 
     @Query("SELECT * from $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = :icalobjectId")
