@@ -223,7 +223,7 @@ fun DetailsCardAttendees(
             }
 
 
-            Crossfade(isEditMode) {
+            Crossfade(isEditMode, label = "crossfade_attendee_edit") {
                 if (it) {
 
                     OutlinedTextField(
@@ -281,7 +281,7 @@ fun DetailsCardAttendees(
                 }
             }
 
-            Crossfade(isEditMode) {
+            Crossfade(isEditMode, label = "crossfade_attendee_info") {
                 if(it) {
                     Text(
                         text = stringResource(id = R.string.details_attendees_processing_info),
