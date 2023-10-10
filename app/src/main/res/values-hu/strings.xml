@@ -11,6 +11,8 @@
     <string name="ok">"OK"</string>
     <string name="delete">"Törlés"</string>
     <string name="discard">"Elvetés"</string>
+    <string name="dismiss">"Bezárás"</string>
+    <string name="open">"Megnyitás"</string>
     <string name="cont">"Tovább"</string>
     <string name="website">"Honlap"</string>
     <string name="latitude">"Szélesség"</string>
@@ -464,6 +466,7 @@ Köszönjük!"</string>
     <string name="menu_list_viewmode_compact">"Komapakt nézet"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-nézet"</string>
     <string name="settings_tasks">"Feladat beállítások"</string>
+    <string name="settings_alarms">"Riasztások beállításai"</string>
     <string name="settings_tasks_status_progress">"Feladatok beállításai (státusz/készültség)"</string>
     <string name="settings_sync">"Szinkronizációs beállítások"</string>
     <string name="settings_default_start_date">"A feladatok alapértelmezett kezdési dátumának megadása"</string>
@@ -493,6 +496,9 @@ Köszönjük!"</string>
     <string name="settings_create_with_current_location">"Az új bejegyzéseknél az aktuális hely rögzítése"</string>
     <string name="settings_sticky_alarms">"Perzisztens riasztások"</string>
     <string name="settings_sticky_alarms_sub">"Az emlékeztetők megőrzése az elkészülésig vagy elhalasztásig"</string>
+    <string name="settings_fullscreen_alarms">"Teljes képernyős riasztások"</string>
+    <string name="settings_fullscreen_alarms_sub">"A riasztások a teljes képernyőt foglalják el, ha az eszköz zárolva van"</string>
+    <string name="settings_fullscreen_alarms_toast">"Kérjük, a rendszerbeállításoknál adja meg a teljes képernyős értesítésekhez szükséges engedélyt."</string>
     <string name="settings_sync_on_start">"Szinkronizálás az alkalmazás indításakor"</string>
     <string name="settings_sync_on_pull_refresh">"Szinkronizálás lehúzás-gesztussal"</string>
     <string name="sync_button_go_to_collections">"Ugrás a Gyűjteményekhez"</string>

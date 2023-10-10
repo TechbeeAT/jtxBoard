@@ -11,6 +11,8 @@
     <string name="ok">"OK"</string>
     <string name="delete">"Löschen"</string>
     <string name="discard">"Verwerfen"</string>
+    <string name="dismiss">"Verwerfen"</string>
+    <string name="open">"Öffnen"</string>
     <string name="cont">"Weiter"</string>
     <string name="website">"Webseite"</string>
     <string name="latitude">"Breitengrad"</string>
@@ -465,6 +467,7 @@ Danke!"</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
     <string name="settings_tasks">"Aufgaben-Einstellungen"</string>
+    <string name="settings_alarms">"Alarm-Einstellungen"</string>
     <string name="settings_tasks_status_progress">"Aufgaben-Einstellungen (Status/Fortschritt)"</string>
     <string name="settings_sync">"Sync-Einstellungen"</string>
     <string name="settings_default_start_date">"Standard-Startdatum für Aufgaben"</string>
@@ -494,6 +497,9 @@ Danke!"</string>
     <string name="settings_create_with_current_location">"Neue Einträge mit aktuellem Standort erstellen"</string>
     <string name="settings_sticky_alarms">"Fixierte Alarme"</string>
     <string name="settings_sticky_alarms_sub">"Benachrichtigungen erhalten bis erledigt oder verschoben"</string>
+    <string name="settings_fullscreen_alarms">"Vollbild-Alarme"</string>
+    <string name="settings_fullscreen_alarms_sub">"Zeigt Alarme im Vollbild, wenn das Gerät gesperrt ist"</string>
+    <string name="settings_fullscreen_alarms_toast">"Bitte erteilen Sie in den Systemeinstellungen die Vollbild-Benachrichtigungsberechtigung."</string>
     <string name="settings_sync_on_start">"Synchronisieren beim Start der App"</string>
     <string name="settings_sync_on_pull_refresh">"Synchronisieren beim Herunterziehen"</string>
     <string name="sync_button_go_to_collections">"Zu den Collections"</string>
