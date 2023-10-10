@@ -11,6 +11,8 @@
     <string name="ok">"OK"</string>
     <string name="delete">"Supprimer"</string>
     <string name="discard">"Rejeter"</string>
+    <string name="dismiss">"Ignorer"</string>
+    <string name="open">"Ouvrir"</string>
     <string name="cont">"Continuer"</string>
     <string name="website">"Site web"</string>
     <string name="latitude">"Latitude"</string>
@@ -462,6 +464,7 @@ Merci !"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
     <string name="settings_tasks">"Paramètres des tâches"</string>
+    <string name="settings_alarms">"Paramètres d'alarme"</string>
     <string name="settings_tasks_status_progress">"Paramètres des tâches (statut/progression)"</string>
     <string name="settings_sync">"Paramètres de synchronisation"</string>
     <string name="settings_default_start_date">"Définir une date de début par défaut pour les tâches"</string>
@@ -491,6 +494,9 @@ Merci !"</string>
     <string name="settings_create_with_current_location">"Créer de nouvelles entrées avec l'emplacement actuel"</string>
     <string name="settings_sticky_alarms">"Alarmes épinglées"</string>
     <string name="settings_sticky_alarms_sub">"Garder les notifications jusqu'à la fin ou les reporter"</string>
+    <string name="settings_fullscreen_alarms">"Alarmes en plein écran"</string>
+    <string name="settings_fullscreen_alarms_sub">"Affiche les alarmes en plein écran lorsque l'appareil est verrouillé"</string>
+    <string name="settings_fullscreen_alarms_toast">"Veuillez autoriser les notifications en plein écran dans les paramètres du système."</string>
     <string name="settings_sync_on_start">"Synchroniser au démarrage de l'appli"</string>
     <string name="settings_sync_on_pull_refresh">"Synchroniser lors du tirage au sort"</string>
     <string name="sync_button_go_to_collections">"Aller aux collections"</string>
