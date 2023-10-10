@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,7 @@ import androidx.core.app.NotificationManagerCompat
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.DateTimeUtils
@@ -57,15 +59,28 @@ class AlarmFullscreenActivity : AppCompatActivity() {
 
         val alarmId = intent.getLongExtra(NotificationPublisher.ALARM_ID,  0L)
         val icalObjectId = intent.getLongExtra(NotificationPublisher.ICALOBJECT_ID, 0L)
-        val database = ICalDatabase.getInstance(this).iCalDatabaseDao()
 
         if(alarmId == 0L && icalObjectId == 0L) {
             setResult(Activity.RESULT_CANCELED)
             finish()
         }
 
+        val database = ICalDatabase.getInstance(this).iCalDatabaseDao()
+        val settingsStateHolder = SettingsStateHolder(this)
+
+
         setContent {
-            JtxBoardTheme {
+            JtxBoardTheme(
+                darkTheme = when (settingsStateHolder.settingTheme.value) {
+                    DropdownSettingOption.THEME_LIGHT -> false
+                    DropdownSettingOption.THEME_DARK -> true
+                    DropdownSettingOption.THEME_TRUE_DARK -> true
+                    else -> isSystemInDarkTheme()
+                },
+                contrastTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_CONTRAST,
+                trueDarkTheme = settingsStateHolder.settingTheme.value == DropdownSettingOption.THEME_TRUE_DARK,
+                dynamicColor = true
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background.copy(alpha = 0.4f)) {
 
