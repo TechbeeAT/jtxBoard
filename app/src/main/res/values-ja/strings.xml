@@ -11,6 +11,7 @@
     <string name="ok">"OK"</string>
     <string name="delete">"削除"</string>
     <string name="discard">"破棄"</string>
+    <string name="open">"開く"</string>
     <string name="cont">"続行"</string>
     <string name="website">"ウェブサイト"</string>
     <string name="latitude">"緯度"</string>
@@ -463,6 +464,7 @@
     <string name="menu_list_viewmode_compact">"コンパクト表示"</string>
     <string name="menu_list_viewmode_kanban">"カンバン表示"</string>
     <string name="settings_tasks">"ToDo の設定"</string>
+    <string name="settings_alarms">"アラームの設定"</string>
     <string name="settings_tasks_status_progress">"ToDo の設定 (ステータス/進捗)"</string>
     <string name="settings_sync">"同期設定"</string>
     <string name="settings_default_start_date">"ToDo のデフォルトの着手日"</string>
@@ -492,6 +494,9 @@
     <string name="settings_create_with_current_location">"新規作成するエントリーに現在の位置情報を設定"</string>
     <string name="settings_sticky_alarms">"固定アラーム"</string>
     <string name="settings_sticky_alarms_sub">"完了または延期されるまで通知を維持します"</string>
+    <string name="settings_fullscreen_alarms">"全画面アラーム"</string>
+    <string name="settings_fullscreen_alarms_sub">"端末がロックされているときに全画面でアラームを表示する"</string>
+    <string name="settings_fullscreen_alarms_toast">"システム設定で全画面通知の権限を付与してください。"</string>
     <string name="settings_sync_on_start">"アプリを起動したときに同期"</string>
     <string name="settings_sync_on_pull_refresh">"プルダウンで同期"</string>
     <string name="sync_button_go_to_collections">"コレクションに移動"</string>
