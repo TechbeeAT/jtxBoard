@@ -37,5 +37,7 @@ class BaselineProfileGenerator {
         device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
         device.findObject(By.res(BENCHMARK_TAG_LISTCARD)).click()
         device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 30_000)
+        device.findObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)).click()
+        device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARYCARDEDIT)), 30_000)
     }
 }

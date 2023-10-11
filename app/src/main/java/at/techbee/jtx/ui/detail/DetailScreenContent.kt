@@ -394,7 +394,7 @@ fun DetailScreenContent(
                         if (originalICalEntity.value?.ICalCollection?.readonly == false)
                             isEditMode.value = true
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().testTag("benchmark:DetailSummary")
                 ) {
 
                     if (summary.isNotBlank())
@@ -402,8 +402,7 @@ fun DetailScreenContent(
                             summary.trim(),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(8.dp)
-                                .testTag("benchmark:DetailSummary"),
+                                .padding(8.dp),
                             style = MaterialTheme.typography.titleMedium
                         )
 
@@ -435,7 +434,7 @@ fun DetailScreenContent(
         AnimatedVisibility(isEditMode.value) {
 
             ElevatedCard(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("benchmark:DetailSummaryCardEdit")
             ) {
 
                 AnimatedVisibility(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true || showAllOptions) {
