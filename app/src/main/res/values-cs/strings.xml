@@ -11,6 +11,8 @@
     <string name="ok">"OK"</string>
     <string name="delete">"Odstranit"</string>
     <string name="discard">"Zahodit"</string>
+    <string name="dismiss">"Zrušit"</string>
+    <string name="open">"Otevřít"</string>
     <string name="cont">"Pokračovat"</string>
     <string name="website">"Webová stránka"</string>
     <string name="latitude">"Zeměpisná šířka"</string>
@@ -59,6 +61,7 @@
     <string name="list_due_shortly">"Brzy vyprší"</string>
     <string name="list_due_today">"Termín dnes"</string>
     <string name="list_due_tomorrow">"Termín zítra"</string>
+    <string name="list_due_within_7_days">"Termín do 7 dní"</string>
     <string name="list_due_inXhours">"Termín za %d hodin"</string>
     <string name="list_due_on_weekday">"Splnit do %s"</string>
     <string name="list_start_past">"Začít v minulosti"</string>
@@ -77,6 +80,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"První řádek je interpretován jako souhrn, zbytek jako popis. Hashtagy jsou interpretovány jako kategorie (např. #kategorie)."</string>
     <string name="list_item_recurring">"Opakující se záznam"</string>
     <string name="list_item_edited_recurring">"Upravený opakující se záznam"</string>
+    <string name="list_scroll_to_top">"Posunout na začátek"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Oprávnění aplikace"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board potřebuje oprávnění k nahrávání zvuku nebo používání funkcí převodu řeči na text. Udělte prosím oprávnění k používání této funkce."</string>
@@ -257,6 +261,7 @@
     <string name="status">"Stav"</string>
     <string name="classification">"Zařazení"</string>
     <string name="category">"Kategorie"</string>
+    <string name="resource">"Zdroj"</string>
     <string name="priority">"Priorita"</string>
     <string name="readyonly">"Pouze ke čtení"</string>
     <string name="upload_pending">"Čekající na nahrání"</string>
@@ -314,6 +319,7 @@
     <string name="filter_subnotes_order_by">Řadit propojené poznámky podle</string>
     <string name="filter_no_filter">"Žádný filtr"</string>
     <string name="filter_options_more_entries">"Více (%1$d)"</string>
+    <string name="filter_options_less_entries">"Méně"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Klikněte na sbírku, do které by měly být záznamy přidány!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d přidáno, %2$d přeskočeno. (Výhradní případy opakujících se záznamů.)"</string>
     <string name="collections_toast_x_items_added">"Přidáno %1$d položek!"</string>
@@ -325,7 +331,15 @@
     <string name="edit_recur_ends_never">"nikdy nekončí"</string>
     <string name="edit_recur_ends_on">"končí"</string>
     <string name="edit_recur_ends_after">"končí po"</string>
+    <string name="collections_toast_export_success">"Sbírky úspěšně exportovány"</string>
+    <string name="collections_toast_export_error">"Chyba při exportu sbírek"</string>
     <string name="menu_collections_export_all">"Exportovat vše"</string>
+    <string name="menu_presets_export_presets">"Exportovat přednastavení"</string>
+    <string name="menu_presets_import_presets">"Importovat přednastavení"</string>
+    <string name="presets_imported">"Přednastavení importováno"</string>
+    <string name="presets_import_invalid_file">"Neplatný soubor"</string>
+    <string name="presets_saved">"Přednastavení uložena"</string>
+    <string name="presets_export_error">"Při ukládání přednastavení došlo k chybě"</string>
     <string name="more">"Více"</string>
     <string name="navigation_drawer_buypro">"Zakoupit Pro"</string>
     <string name="settings_select_theme">"Vybrat motiv"</string>
@@ -452,6 +466,7 @@ Děkujeme vám!"</string>
     <string name="menu_list_viewmode_compact">"Kompaktní zobrazení"</string>
     <string name="menu_list_viewmode_kanban">"Zobrazení Kanban"</string>
     <string name="settings_tasks">"Nastavení Úkolů"</string>
+    <string name="settings_alarms">"Nastavení budíků"</string>
     <string name="settings_tasks_status_progress">"Nastavení úkolů (stav nebo průběh)"</string>
     <string name="settings_sync">"Nastavení synchronizace"</string>
     <string name="settings_default_start_date">"Nastavit výchozí datum zahájení úkolů"</string>
@@ -481,6 +496,9 @@ Děkujeme vám!"</string>
     <string name="settings_create_with_current_location">"Vytvořit nové položky s aktuální polohou"</string>
     <string name="settings_sticky_alarms">"Rychlé budíky"</string>
     <string name="settings_sticky_alarms_sub">"Ponechat oznámení dokud není dokončeno nebo odloženo"</string>
+    <string name="settings_fullscreen_alarms">"Budíky přes celou obrazovku"</string>
+    <string name="settings_fullscreen_alarms_sub">"Zobrazí budíky přes celou obrazovku, když je zařízení uzamčeno"</string>
+    <string name="settings_fullscreen_alarms_toast">"Udělte oprávnění k oznámení přes celou obrazovku v nastavení systému."</string>
     <string name="settings_sync_on_start">"Synchronizovat při spuštění aplikace"</string>
     <string name="settings_sync_on_pull_refresh">"Synchronizovat při potažení dolů"</string>
     <string name="sync_button_go_to_collections">"Přejít na Sbírky"</string>
@@ -499,14 +517,19 @@ Děkujeme vám!"</string>
     <string name="filter_special">"Speciální filtry"</string>
     <string name="filter_presets">"Předvolby filtrů"</string>
     <string name="filter_presets_edit_info">"Přidejte, aktualizujte nebo odstraňte přednastavení filtrů z nabídky filtrů v zobrazení seznamu."</string>
+    <string name="filter_any">"Jakýkoliv"</string>
+    <string name="filter_all">"Vše"</string>
+    <string name="filter_none">"Žádný"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum v minulosti"</string>
     <string name="list_date_today">"Dnes"</string>
     <string name="list_date_tomorrow">"Zítra"</string>
+    <string name="list_date_within_7_days">"Do 7 dní"</string>
     <string name="list_date_future">"Datum v budoucnosti"</string>
     <string name="list_start_date_in_past">"Začít v minulosti"</string>
     <string name="list_start_date_today">"Začít dnes"</string>
     <string name="list_start_date_tomorrow">"Začít zítra"</string>
+    <string name="list_start_date_within_7_days">"Začne do 7 dní"</string>
     <string name="list_start_date_future">"Začít v budoucnosti"</string>
     <string name="list_hide_completed_tasks">"Skrýt dokončené úkoly"</string>
     <string name="list_biometric_protected_entries_locked">Položky chráněné biometrikou uzamčeny</string>
@@ -554,6 +577,7 @@ Děkujeme vám!"</string>
     <string name="widget_list_no_entries_found">"Nebyly nalezeny žádné záznamy odpovídající kritériím filtru"</string>
     <string name="widget_list_view_settings">"Nastavení zobrazení"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Pozor: V současné době je ve widgetu podporována pouze jedna úroveň hierarchie. Pro zobrazení záznamů nižších úrovní použijte místo toho ploché zobrazení."</string>
+    <string name="widget_list_maximum_entries_reached">"Dosažen maximální počet záznamů ve widgetu (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualizace widgetu"</string>
     <string name="widget_list_opacity_warning">"Poznámka: Toto je experimentální funkce! Změny snížení průhlednosti v barevném motivu se nemusí projevit okamžitě!"</string>
     <string name="widget_list_color_warning">"Poznámka: Toto je experimentální funkce! Změny v barevném motivu se neprojeví! Pro návrat k výchozímu nastavení systému, zvolte možnost bez barvy."</string>
