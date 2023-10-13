@@ -610,7 +610,10 @@ data class ICal4List(
      */
     fun getAudioAttachmentAsUri(): Uri? {
         return try {
-            Uri.parse(audioAttachment)
+            if(audioAttachment?.startsWith("content://") == true)
+                Uri.parse(audioAttachment)
+            else
+                null
         } catch (e: Exception) {
             null
         }
