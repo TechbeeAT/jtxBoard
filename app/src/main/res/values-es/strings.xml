@@ -6,19 +6,25 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Guardar"</string>
+    <string name="update">"Actualizar"</string>
     <string name="cancel">"Cancelar"</string>
     <string name="ok">"Aceptar"</string>
     <string name="delete">"Eliminar"</string>
     <string name="discard">"Descartar"</string>
+    <string name="dismiss">"Rechazar"</string>
+    <string name="open">"Abrir"</string>
     <string name="cont">"Continuar"</string>
     <string name="website">"Sitio web"</string>
     <string name="latitude">"Latitud"</string>
     <string name="longitude">"Longitud"</string>
     <string name="unlink">"Desvincular"</string>
+    <string name="off">"Desactivado"</string>
+    <string name="permissions">"Permisos"</string>
     <string name="current_location">"Ubicación actual"</string>
     <string name="toolbar_text_add_journal">"Añadir Diario"</string>
     <string name="toolbar_text_add_note">"Añadir Nota"</string>
     <string name="toolbar_text_add_task">"Añadir Tarea"</string>
+    <string name="toast_sync_requested">"Sincronización requerida"</string>
     <string name="default_local_collection_name">"Local"</string>
     <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -52,11 +58,14 @@
     <string name="navigation_drawer_privacy_policy">"Política de privacidad"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Atrasado"</string>
+    <string name="list_due_shortly">"Vence en breve"</string>
     <string name="list_due_today">"Vence hoy"</string>
     <string name="list_due_tomorrow">"Vence mañana"</string>
+    <string name="list_due_within_7_days">"Vence en 7 días"</string>
     <string name="list_due_inXhours">"Vence en %d horas"</string>
     <string name="list_due_on_weekday">"Vence en %s"</string>
     <string name="list_start_past">"Empezar en el pasado"</string>
+    <string name="list_start_shortly">"Comienza en breve"</string>
     <string name="list_start_today">"Planeadas para empezar hoy"</string>
     <string name="list_start_tomorrow">"Empezar mañana"</string>
     <string name="list_start_inXhours">"Planeadas para empezar en %d horas"</string>
@@ -71,6 +80,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línea es interpretada como resumen, el resto como descripción. Las etiquetas son interpretadas como categorías (ejemplo: #categoría)."</string>
     <string name="list_item_recurring">"Entrada recurrente"</string>
     <string name="list_item_edited_recurring">"Evento periódico editado"</string>
+    <string name="list_scroll_to_top">"Desplazarse hasta el inicio"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Permisos de la aplicación"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board necesita permiso para poder grabar audio o utilizar las funcionalidades de conversión de voz a texto. Por favor, conceda permiso para utilizar esta característica."</string>
@@ -90,6 +100,8 @@
     <string name="edit_take_picture_button_text">"Capturar foto"</string>
     <string name="edit_add_link_button_text">"Añadir enlace a adjunto"</string>
     <string name="edit_subtasks_add_helper">"Añadir una subtarea"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Añadir subtarea rápida"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Añadir subnota rápida"</string>
     <string name="edit_attachment_add_link_dialog">"Añadir enlace a adjunto"</string>
     <string name="edit_recur_repeat_every_x">"Repetir cada"</string>
     <string name="edit_recur_on_weekday">"en"</string>
@@ -114,6 +126,7 @@
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Traducciones"</string>
     <string name="about_tabitem_libraries">"Librerías"</string>
+    <string name="about_tabitem_contributors">"Colaboradores"</string>
     <string name="about_special_thanks">"Agradecimiento especial"</string>
     <string name="about_app_version">"Versión: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nombre en clave: %1$s"</string>
@@ -130,6 +143,8 @@
     <string name="menu_view_copy_as_todo">"Copiar como Tarea"</string>
     <string name="menu_view_copy_as_note">"Copiar como Nota"</string>
     <string name="menu_view_copy_item">"Crear copia"</string>
+    <string name="notification_channel_alarms_name">"Alarmas"</string>
+    <string name="notification_channel_geofences_name">"Área geográfica"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Agregar Diario"</string>
     <string name="shortcut_addNote_longLabel">"Agregar Nota"</string>
@@ -143,10 +158,16 @@
     <!-- Sync fragment -->
     <string name="sync_with_sync_app_heading">"Sincronizar con %1$s"</string>
     <string name="sync_basic_info">"jtx Board no proporciona sincronización de servidor por sí mismo, pero soporta la sincronización a través de DAVx⁵. Este método le permitirá usar un servidor CalDAV compatible de su elección para almacenar, respaldar y sincronizar sus datos."</string>
+    <string name="sync_ksync_basic_info">"kSync es una app basada en DAVx⁵ desarrollada por Infomaniak especialmente para sus servicios. Mientras que DAVx⁵ está abierto a cualquier servidor compatible de CalDAV, kSync sólo permite la sincronización de cuentas de Infomaniak."</string>
+    <string name="sync_manageddavx5_basic_info">"DAVx⁵ gestionado hace que la funcionalidad de DAVx⁵ esté disponible para organizaciones y viene con características empresariales adicionales como despliegue masivo, logo de empresa y configuración preajustable."</string>
     <string name="sync_congratulations">"¡Felicidades! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"Hemos detectado %1$s en su teléfono."</string>
     <string name="sync_setup_instructions">"Instrucciones de configuración"</string>
     <string name="sync_check_out_sync_app">"¡Eche un vistazo a %1$s!"</string>
+    <string name="sync_sync_app_not_found">"No hemos detectado %1$s en su teléfono."</string>
+    <string name="sync_more_about_sync_app">"Sabe más acerca de %1$s"</string>
     <string name="sync_download_sync_app">"Descargar %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Añadir cuenta en %1$s"</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Hola, soy Patrick, el desarrollador de jtx Board. Estoy poniendo mucho tiempo y esfuerzo en esta aplicación que te estoy ofreciendo gratis. Si te gusta mi aplicación, ¡por favor envía un poco de amor y haz una pequeña donación!"</string>
     <string name="donate_thank_you">"¡Gracias!"</string>
@@ -181,7 +202,11 @@
     <string name="apply">"Aplicar"</string>
     <string name="not_available_abbreviation">"n/a"</string>
     <string name="collection">"Colección"</string>
+    <string name="collection_owner_displayname">"Propietario: %1$s"</string>
     <string name="link_to_parent">"Vincular al nivel superior"</string>
+    <string name="link_selected_as_parent">"Principal"</string>
+    <string name="link_selected_as_subtask_note">"Subtarea/Subnota"</string>
+    <string name="link_selected_as">"Enlazar lo seleccionado como…"</string>
     <string name="navigation_drawer_collections">"Colecciones"</string>
     <string name="navigation_drawer_presets">"Ajustes por defecto"</string>
     <!-- alarms -->
@@ -222,6 +247,7 @@
     <string name="edit_recur_year">"año(s)"</string>
     <string name="attachment_export_saved_successfully">"Guardado con éxito"</string>
     <string name="attachment_export_error_error_occurred">"¡Se han producido un error mientras se guardaba el archivo seleccionado!"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"Añadir colección remota (%1$s)"</string>
     <string name="menu_collection_popup_export_as_ics">"Exportar como .ics"</string>
     <string name="journal">"Diario"</string>
     <string name="note">"Nota"</string>
@@ -230,6 +256,7 @@
     <string name="status">"Estatus"</string>
     <string name="classification">"Clasificación"</string>
     <string name="category">"Categoría"</string>
+    <string name="resource">"Recurso"</string>
     <string name="priority">"Prioridad"</string>
     <string name="readyonly">"Solo lectura"</string>
     <string name="upload_pending">"Subida pendiente"</string>
@@ -282,6 +309,7 @@
     <string name="filter_no_resource">Sin recursos</string>
     <string name="filter_subtasks_order_by">Ordenar subtareas por</string>
     <string name="filter_subnotes_order_by">Ordenar notas vinculadas por</string>
+    <string name="filter_options_less_entries">"Menos"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"¡Haga clic en la colección a la que debe añadirse la entrada o entradas!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d añadidas, %2$d skipped. (Instancias exclusivas de entradas recurrentes)."</string>
     <string name="collections_toast_x_items_added">"¡%1$d entradas añadidas!"</string>
@@ -294,6 +322,9 @@
     <string name="edit_recur_ends_on">"termina el"</string>
     <string name="edit_recur_ends_after">"termina después de"</string>
     <string name="menu_collections_export_all">"Exportar todas"</string>
+    <string name="presets_import_invalid_file">"Archivo no válido"</string>
+    <string name="presets_saved">"Ajustes guardados"</string>
+    <string name="presets_export_error">"Se ha producido un error al guardar los ajustes"</string>
     <string name="more">"Más"</string>
     <string name="navigation_drawer_buypro">"Comprar Pro"</string>
     <string name="settings_select_theme">"Seleccionar tema"</string>
@@ -356,6 +387,7 @@
     <string name="list_update_entries_dialog_title">"Actualizar entradas"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Atención: las instancias recurrentes deben ser desvinculadas de su serie antes de ser movidas a otra colección y serán ignoradas en este proceso."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Elija el nivel superior al que las entradas seleccionadas deben estar enlazadas como subtareas/notas enlazadas."</string>
+    <string name="link_entry_search_within_same_account">"Misma cuenta"</string>
     <string name="details_link_existing_subentry_dialog_title">"Enlazar subentradas"</string>
     <string name="details_link_existing_subentry_dialog_info">"Elija las subentradas que deben estar enlazadas."</string>
     <string name="details_app_bar_behaviour">"Comportamiento de la barra app"</string>
@@ -402,6 +434,7 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="menu_list_viewmode_compact">"Vista compacta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
     <string name="settings_tasks">"Ajustes de Tareas"</string>
+    <string name="settings_sync">"Ajustes de sincronización"</string>
     <string name="settings_default_start_date">"Establecer una fecha de inicio por defecto para las tareas"</string>
     <string name="settings_default_due_date">"Establecer una fecha de vencimiento por defecto para las tareas"</string>
     <string name="settings_default_date_none">"Ninguno"</string>
@@ -432,9 +465,15 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="menu_view_share_mail">"Compartir como correo electrónico"</string>
     <string name="menu_view_copy_to_clipboard">"Copiar al portapapeles"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Copiado"</string>
+    <string name="menu_view_convert_to_journal">"Convertir en diario"</string>
+    <string name="menu_view_convert_to_note">"Convertir a nota"</string>
+    <string name="menu_view_convert_to_task">"Convertir en tarea"</string>
     <string name="settings_select_language">"Seleccionar idioma"</string>
     <string name="settings_select_language_system">"Idioma por defecto"</string>
     <string name="filter_special">"Filtros especiales"</string>
+    <string name="filter_any">"Cualquiera"</string>
+    <string name="filter_all">"Todo"</string>
+    <string name="filter_none">"Ninguno"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Fecha del pasado"</string>
     <string name="list_date_today">"Hoy"</string>
@@ -486,9 +525,20 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="widget_list_configuration_checkbox_position">"Posición de la casilla de verificación"</string>
     <string name="widget_list_no_entries_found">"No se han encontrado entradas que coincidan con sus criterios de filtrado"</string>
     <string name="widget_list_view_settings">"Ver configuración"</string>
+    <string name="widget_list_compat_updating_widget_notification">"Actualizando widget"</string>
+    <string name="opacity">"Opacidad"</string>
+    <string name="general">"General"</string>
     <string name="edit_recur_second">"segundo(s)"</string>
     <string name="edit_recur_minute">"minuto(s)"</string>
     <string name="edit_recur_hour">"hora(s)"</string>
+    <string name="settings_select_theme_contrast">"Contraste (e-Ink)"</string>
+    <string name="settings_notes">"Ajustes de Notas"</string>
+    <string name="settings_default_journals_date_previous_day">"Día anterior"</string>
+    <string name="settings_default_journals_date_current_day">"Día actual"</string>
+    <string name="settings_default_journals_date_current_hour">"Hora actual"</string>
+    <string name="settings_default_journals_date_current_15min">"Actuales 15 minutos"</string>
+    <string name="settings_default_journals_date_current_5min">"Actuales 5 minutos"</string>
+    <string name="settings_default_journals_date_current_min">"Minuto actual"</string>
     <string name="markdown_bold">"Negrita"</string>
     <string name="markdown_italic">"Cursiva"</string>
     <string name="markdown_underlined">"Subrayado"</string>
@@ -499,4 +549,8 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="markdown_horizontal_ruler">"Regla horizontal"</string>
     <string name="markdown_unordered_list">"Lista"</string>
     <string name="markdown_code">"Código"</string>
+    <string name="extended_status_attention">"Atención: Los estados ampliados no son compatibles con otras aplicaciones, sino que asignan un estado estándar. Otras aplicaciones sólo mostrarán el estado estándar."</string>
+    <string name="extended_status">Estado ampliado</string>
+    <string name="active_filters">Filtros activos:</string>
+    <string name="clear_filters">"Quitar filtros"</string>
 </resources>
