@@ -77,7 +77,7 @@ class SettingsStateHolder(val context: Context) {
         }
 
     val detailTopAppBarMode = mutableStateOf(
-        DetailTopAppBarMode.values().find { it.name == prefs.getString(PREFS_DETAIL_TOP_APP_BAR_MODE, null) }?: DetailTopAppBarMode.ADD_SUBTASK
+        DetailTopAppBarMode.entries.find { it.name == prefs.getString(PREFS_DETAIL_TOP_APP_BAR_MODE, null) }?: DetailTopAppBarMode.ADD_SUBTASK
     )
     fun setDetailTopAppBarMode(mode: DetailTopAppBarMode) {
         detailTopAppBarMode.value = mode

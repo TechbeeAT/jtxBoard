@@ -454,7 +454,7 @@ fun ListScreenTabContainer(
                             )
                             HorizontalDivider()
                         }
-                        ViewMode.values().forEach { viewMode ->
+                        ViewMode.entries.forEach { viewMode ->
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
                                 isSelected = getActiveViewModel().listSettings.viewMode.value == viewMode,
