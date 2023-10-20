@@ -409,6 +409,16 @@ fun SettingsScreen(
                                 }
                             )
                         }
+                        AnimatedVisibility(settingsStateHolder.settingDefaultStartDate.value != DropdownSettingOption.DEFAULT_DATE_NONE && settingsStateHolder.settingDefaultStartTime.value != null) {
+                            DropdownSettingTimezoneElement(
+                                setting = DropdownSettingTimezone.SETTING_DEFAULT_START_TIMEZONE,
+                                selected = settingsStateHolder.settingDefaultStartTimezone.value,
+                                onSelectionChanged = { selection ->
+                                    settingsStateHolder.settingDefaultStartTimezone.value = selection
+                                    DropdownSettingTimezone.SETTING_DEFAULT_START_TIMEZONE.saveSetting(selection, settingsStateHolder.prefs)
+                                }
+                            )
+                        }
 
                         DropdownSettingElement(
                             setting = SETTING_DEFAULT_DUE_DATE,
@@ -435,6 +445,17 @@ fun SettingsScreen(
                                             TimeSetting.SETTING_DEFAULT_START_TIME.saveSetting(selectedTime, settingsStateHolder.prefs)
                                         }
                                     }
+                                }
+                            )
+                        }
+
+                        AnimatedVisibility(settingsStateHolder.settingDefaultDueDate.value != DropdownSettingOption.DEFAULT_DATE_NONE && settingsStateHolder.settingDefaultDueTime.value != null) {
+                            DropdownSettingTimezoneElement(
+                                setting = DropdownSettingTimezone.SETTING_DEFAULT_DUE_TIMEZONE,
+                                selected = settingsStateHolder.settingDefaultDueTimezone.value,
+                                onSelectionChanged = { selection ->
+                                    settingsStateHolder.settingDefaultDueTimezone.value = selection
+                                    DropdownSettingTimezone.SETTING_DEFAULT_DUE_TIMEZONE.saveSetting(selection, settingsStateHolder.prefs)
                                 }
                             )
                         }

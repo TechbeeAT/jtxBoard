@@ -487,7 +487,9 @@ Thank you!"</string>
     <string name="settings_tasks_status_progress">"Tasks Settings (status/progress)"</string>
     <string name="settings_sync">"Sync Settings"</string>
     <string name="settings_default_start_date">"Set a default start date for tasks"</string>
+    <string name="settings_default_start_timezone">"Set a default start timezone for tasks"</string>
     <string name="settings_default_due_date">"Set a default due date for tasks"</string>
+    <string name="settings_default_due_timezone">"Set a default due timezone for tasks"</string>
     <string name="settings_default_start_time">"Set a default start time for tasks"</string>
     <string name="settings_default_due_time">"Set a default due time for tasks"</string>
     <string name="settings_default_date_none">"None"</string>

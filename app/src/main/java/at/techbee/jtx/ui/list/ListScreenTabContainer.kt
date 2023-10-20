@@ -289,8 +289,10 @@ fun ListScreenTabContainer(
             settingsStateHolder.settingDefaultJournalsDate.value,
             settingsStateHolder.settingDefaultStartDate.value,
             settingsStateHolder.settingDefaultStartTime.value,
+            settingsStateHolder.settingDefaultStartTimezone.value,
             settingsStateHolder.settingDefaultDueDate.value,
-            settingsStateHolder.settingDefaultDueTime.value
+            settingsStateHolder.settingDefaultDueTime.value,
+            settingsStateHolder.settingDefaultDueTimezone.value,
         )
         val categories = Category.extractHashtagsFromText(text)
 

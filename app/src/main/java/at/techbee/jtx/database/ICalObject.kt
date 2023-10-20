@@ -604,8 +604,10 @@ data class ICalObject(
             defaultJournalDateSettingOption: DropdownSettingOption,
             defaultStartDateSettingOption: DropdownSettingOption,
             defaultStartTime: LocalTime?,
+            defaultStartTimezone: String?,
             defaultDueDateSettingOption: DropdownSettingOption,
             defaultDueTime: LocalTime?,
+            defaultDueTimezone: String?
         ): ICalObject {
             val iCalObject = when(module) {
                 Module.JOURNAL -> createJournal()
@@ -616,8 +618,8 @@ data class ICalObject(
                 iCalObject.setDefaultJournalDateFromSettings(defaultJournalDateSettingOption)
             }
             if(module == Module.TODO) {
-                iCalObject.setDefaultStartDateFromSettings(defaultStartDateSettingOption, defaultStartTime)
-                iCalObject.setDefaultDueDateFromSettings(defaultDueDateSettingOption, defaultDueTime)
+                iCalObject.setDefaultStartDateFromSettings(defaultStartDateSettingOption, defaultStartTime, defaultStartTimezone)
+                iCalObject.setDefaultDueDateFromSettings(defaultDueDateSettingOption, defaultDueTime, defaultDueTimezone)
             }
             iCalObject.parseSummaryAndDescription(text)
             iCalObject.parseURL(text)
@@ -1548,7 +1550,7 @@ data class ICalObject(
         }
     }
 
-    fun setDefaultStartDateFromSettings(defaultStartDate: DropdownSettingOption, defaultStartTime: LocalTime?) {
+    fun setDefaultStartDateFromSettings(defaultStartDate: DropdownSettingOption, defaultStartTime: LocalTime?, defaultStartTimezone: String?) {
         if(defaultStartDate == DropdownSettingOption.DEFAULT_DATE_NONE)
             return
         try {
@@ -1557,14 +1559,14 @@ data class ICalObject(
                 this.dtstartTimezone = TZ_ALLDAY
             } else {
                 this.dtstart = this.dtstart!! + defaultStartTime.toSecondOfDay()*1000
-                this.dtstartTimezone = null
+                this.dtstartTimezone = defaultStartTimezone
             }
         } catch (e: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
 
-    fun setDefaultDueDateFromSettings(defaultDueDate: DropdownSettingOption, defaultDueTime: LocalTime?) {
+    fun setDefaultDueDateFromSettings(defaultDueDate: DropdownSettingOption, defaultDueTime: LocalTime?, defaultStartTimezone: String?) {
         if(defaultDueDate == DropdownSettingOption.DEFAULT_DATE_NONE)
             return
         try {
@@ -1573,7 +1575,7 @@ data class ICalObject(
                 this.dueTimezone = TZ_ALLDAY
             } else {
                 this.due = this.due!! + defaultDueTime.toSecondOfDay()*1000
-                this.dueTimezone = null
+                this.dueTimezone = defaultStartTimezone
             }
         } catch (e: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
