@@ -40,8 +40,10 @@ class SettingsStateHolder(val context: Context) {
     var settingDefaultJournalsDate = mutableStateOf(DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.getSetting(prefs))
     var settingDefaultStartDate = mutableStateOf(DropdownSetting.SETTING_DEFAULT_START_DATE.getSetting(prefs))
     var settingDefaultStartTime = mutableStateOf(TimeSetting.SETTING_DEFAULT_START_TIME.getSetting(prefs))
+    var settingDefaultStartTimezone = mutableStateOf(DropdownSettingTimezone.SETTING_DEFAULT_START_TIMEZONE.getSetting(prefs))
     var settingDefaultDueDate = mutableStateOf(DropdownSetting.SETTING_DEFAULT_DUE_DATE.getSetting(prefs))
     var settingDefaultDueTime = mutableStateOf(TimeSetting.SETTING_DEFAULT_DUE_TIME.getSetting(prefs))
+    var settingDefaultDueTimezone = mutableStateOf(DropdownSettingTimezone.SETTING_DEFAULT_DUE_TIMEZONE.getSetting(prefs))
     var settingStepForProgress = mutableStateOf(DropdownSetting.SETTING_PROGRESS_STEP.getSetting(prefs))
     var settingDisableAlarmsReadonly = mutableStateOf(SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.getSetting(prefs))
     var settingAutoAlarm = mutableStateOf(DropdownSetting.SETTING_AUTO_ALARM.getSetting(prefs))
@@ -75,7 +77,7 @@ class SettingsStateHolder(val context: Context) {
         }
 
     val detailTopAppBarMode = mutableStateOf(
-        DetailTopAppBarMode.values().find { it.name == prefs.getString(PREFS_DETAIL_TOP_APP_BAR_MODE, null) }?: DetailTopAppBarMode.ADD_SUBTASK
+        DetailTopAppBarMode.entries.find { it.name == prefs.getString(PREFS_DETAIL_TOP_APP_BAR_MODE, null) }?: DetailTopAppBarMode.ADD_SUBTASK
     )
     fun setDetailTopAppBarMode(mode: DetailTopAppBarMode) {
         detailTopAppBarMode.value = mode

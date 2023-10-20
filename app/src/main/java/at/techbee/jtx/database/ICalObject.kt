@@ -604,8 +604,10 @@ data class ICalObject(
             defaultJournalDateSettingOption: DropdownSettingOption,
             defaultStartDateSettingOption: DropdownSettingOption,
             defaultStartTime: LocalTime?,
+            defaultStartTimezone: String?,
             defaultDueDateSettingOption: DropdownSettingOption,
             defaultDueTime: LocalTime?,
+            defaultDueTimezone: String?
         ): ICalObject {
             val iCalObject = when(module) {
                 Module.JOURNAL -> createJournal()
@@ -616,8 +618,8 @@ data class ICalObject(
                 iCalObject.setDefaultJournalDateFromSettings(defaultJournalDateSettingOption)
             }
             if(module == Module.TODO) {
-                iCalObject.setDefaultStartDateFromSettings(defaultStartDateSettingOption, defaultStartTime)
-                iCalObject.setDefaultDueDateFromSettings(defaultDueDateSettingOption, defaultDueTime)
+                iCalObject.setDefaultStartDateFromSettings(defaultStartDateSettingOption, defaultStartTime, defaultStartTimezone)
+                iCalObject.setDefaultDueDateFromSettings(defaultDueDateSettingOption, defaultDueTime, defaultDueTimezone)
             }
             iCalObject.parseSummaryAndDescription(text)
             iCalObject.parseURL(text)
@@ -1039,7 +1041,7 @@ data class ICalObject(
         else if (this.component == Component.VTODO.name)
             this.module = Module.TODO.name
         else
-            throw IllegalArgumentException("Unsupported component: ${this.component}. Supported components: ${Component.values()}.")
+            throw IllegalArgumentException("Unsupported component: ${this.component}. Supported components: ${Component.entries.toTypedArray()}.")
 
         if(recurid != null && sequence <= 0)
             sequence = 1     // mark changed instances with a sequence if missing!
@@ -1548,7 +1550,7 @@ data class ICalObject(
         }
     }
 
-    fun setDefaultStartDateFromSettings(defaultStartDate: DropdownSettingOption, defaultStartTime: LocalTime?) {
+    fun setDefaultStartDateFromSettings(defaultStartDate: DropdownSettingOption, defaultStartTime: LocalTime?, defaultStartTimezone: String?) {
         if(defaultStartDate == DropdownSettingOption.DEFAULT_DATE_NONE)
             return
         try {
@@ -1557,14 +1559,14 @@ data class ICalObject(
                 this.dtstartTimezone = TZ_ALLDAY
             } else {
                 this.dtstart = this.dtstart!! + defaultStartTime.toSecondOfDay()*1000
-                this.dtstartTimezone = null
+                this.dtstartTimezone = defaultStartTimezone
             }
         } catch (e: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
 
-    fun setDefaultDueDateFromSettings(defaultDueDate: DropdownSettingOption, defaultDueTime: LocalTime?) {
+    fun setDefaultDueDateFromSettings(defaultDueDate: DropdownSettingOption, defaultDueTime: LocalTime?, defaultStartTimezone: String?) {
         if(defaultDueDate == DropdownSettingOption.DEFAULT_DATE_NONE)
             return
         try {
@@ -1573,7 +1575,7 @@ data class ICalObject(
                 this.dueTimezone = TZ_ALLDAY
             } else {
                 this.due = this.due!! + defaultDueTime.toSecondOfDay()*1000
-                this.dueTimezone = null
+                this.dueTimezone = defaultStartTimezone
             }
         } catch (e: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
@@ -1615,7 +1617,7 @@ enum class Status(val status: String?, @StringRes val stringResource: Int) : Par
 
     companion object {
 
-        fun getStatusFromString(stringStatus: String?) = Status.values().find { it.status == stringStatus }
+        fun getStatusFromString(stringStatus: String?) = entries.find { it.status == stringStatus }
 
         fun valuesFor(module: Module): List<Status> {
             return when (module) {
@@ -1627,7 +1629,7 @@ enum class Status(val status: String?, @StringRes val stringResource: Int) : Par
         fun getListFromStringList(stringList: Set<String>?): MutableList<Status> {
             val list = mutableListOf<Status>()
             stringList?.forEach { string ->
-                values().find { it.status == string || it.name == string }?.let { status -> list.add(status) }
+                entries.find { it.status == string || it.name == string }?.let { status -> list.add(status) }
             }
             return list
         }
@@ -1655,12 +1657,12 @@ enum class Classification(val classification: String?, @StringRes val stringReso
     CONFIDENTIAL("CONFIDENTIAL", R.string.classification_confidential);
 
     companion object {
-        fun getClassificationFromString(stringClassification: String?) = Classification.values().find { it.classification == stringClassification }
+        fun getClassificationFromString(stringClassification: String?) = entries.find { it.classification == stringClassification }
 
         fun getListFromStringList(stringList: Set<String>?): MutableList<Classification> {
             val list = mutableListOf<Classification>()
             stringList?.forEach { string ->
-                values().find { it.classification == string || it.name == string }?.let { status -> list.add(status) }
+                entries.find { it.classification == string || it.name == string }?.let { status -> list.add(status) }
             }
             return list
         }

@@ -148,8 +148,10 @@ fun CollectionsScreen(
                         defaultJournalDateSettingOption = settingsStateHolder.settingDefaultJournalsDate.value,
                         defaultStartDateSettingOption = settingsStateHolder.settingDefaultStartDate.value,
                         defaultStartTime = settingsStateHolder.settingDefaultStartTime.value,
+                        defaultStartTimezone = settingsStateHolder.settingDefaultStartTimezone.value,
                         defaultDueDateSettingOption = settingsStateHolder.settingDefaultDueDate.value,
-                        defaultDueTime = settingsStateHolder.settingDefaultDueTime.value
+                        defaultDueTime = settingsStateHolder.settingDefaultDueTime.value,
+                        defaultDueTimezone = settingsStateHolder.settingDefaultDueTimezone.value
                     )
                     it.close()
                 }

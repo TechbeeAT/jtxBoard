@@ -289,8 +289,10 @@ fun ListScreenTabContainer(
             settingsStateHolder.settingDefaultJournalsDate.value,
             settingsStateHolder.settingDefaultStartDate.value,
             settingsStateHolder.settingDefaultStartTime.value,
+            settingsStateHolder.settingDefaultStartTimezone.value,
             settingsStateHolder.settingDefaultDueDate.value,
-            settingsStateHolder.settingDefaultDueTime.value
+            settingsStateHolder.settingDefaultDueTime.value,
+            settingsStateHolder.settingDefaultDueTimezone.value,
         )
         val categories = Category.extractHashtagsFromText(text)
 
@@ -452,7 +454,7 @@ fun ListScreenTabContainer(
                             )
                             HorizontalDivider()
                         }
-                        ViewMode.values().forEach { viewMode ->
+                        ViewMode.entries.forEach { viewMode ->
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
                                 isSelected = getActiveViewModel().listSettings.viewMode.value == viewMode,
