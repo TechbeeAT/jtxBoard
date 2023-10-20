@@ -841,11 +841,11 @@ data class ICalObject(
         /**
          * @param geoLat  Latitude as Double
          * @param geoLong  Longitude as Double
-         * @return A textual representation of the Latitude and Logitude e.g. (1.23400, 5.67700)
+         * @return A textual representation of the Latitude and Longitude e.g. (1.23400, 5.67700)
          */
         fun getLatLongString(geoLat: Double?, geoLong: Double?): String? {
             return if(geoLat != null && geoLong != null) {
-                "(" + "%.5f".format(Locale.ENGLISH, geoLat)  + ","  + "%.5f".format(Locale.ENGLISH, geoLong) + ")"
+                "(" + "%.5f".format(Locale.getDefault(), geoLat)  + ","  + "%.5f".format(Locale.getDefault(), geoLong) + ")"
             } else {
                null
             }
@@ -1039,7 +1039,7 @@ data class ICalObject(
         else if (this.component == Component.VTODO.name)
             this.module = Module.TODO.name
         else
-            throw IllegalArgumentException("Unsupported component: ${this.component}. Supported components: ${Component.values()}.")
+            throw IllegalArgumentException("Unsupported component: ${this.component}. Supported components: ${Component.entries.toTypedArray()}.")
 
         if(recurid != null && sequence <= 0)
             sequence = 1     // mark changed instances with a sequence if missing!
@@ -1615,7 +1615,7 @@ enum class Status(val status: String?, @StringRes val stringResource: Int) : Par
 
     companion object {
 
-        fun getStatusFromString(stringStatus: String?) = Status.values().find { it.status == stringStatus }
+        fun getStatusFromString(stringStatus: String?) = entries.find { it.status == stringStatus }
 
         fun valuesFor(module: Module): List<Status> {
             return when (module) {
@@ -1627,7 +1627,7 @@ enum class Status(val status: String?, @StringRes val stringResource: Int) : Par
         fun getListFromStringList(stringList: Set<String>?): MutableList<Status> {
             val list = mutableListOf<Status>()
             stringList?.forEach { string ->
-                values().find { it.status == string || it.name == string }?.let { status -> list.add(status) }
+                entries.find { it.status == string || it.name == string }?.let { status -> list.add(status) }
             }
             return list
         }
@@ -1655,12 +1655,12 @@ enum class Classification(val classification: String?, @StringRes val stringReso
     CONFIDENTIAL("CONFIDENTIAL", R.string.classification_confidential);
 
     companion object {
-        fun getClassificationFromString(stringClassification: String?) = Classification.values().find { it.classification == stringClassification }
+        fun getClassificationFromString(stringClassification: String?) = entries.find { it.classification == stringClassification }
 
         fun getListFromStringList(stringList: Set<String>?): MutableList<Classification> {
             val list = mutableListOf<Classification>()
             stringList?.forEach { string ->
-                values().find { it.classification == string || it.name == string }?.let { status -> list.add(status) }
+                entries.find { it.classification == string || it.name == string }?.let { status -> list.add(status) }
             }
             return list
         }
