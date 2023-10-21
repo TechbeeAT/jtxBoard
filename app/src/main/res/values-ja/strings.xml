@@ -308,6 +308,7 @@
     <string name="list_without_start_date">"着手日なし"</string>
     <string name="list_without_due_date">"締切日なし"</string>
     <string name="list_without_completed_date">"完了日なし"</string>
+    <string name="list_show_only_search_matching_subentries">"検索に一致するサブエントリーのみを表示する"</string>
     <string name="filter_order_by">"…で並べ替え"</string>
     <string name="filter_asc">"昇順"</string>
     <string name="filter_desc">"降順"</string>
