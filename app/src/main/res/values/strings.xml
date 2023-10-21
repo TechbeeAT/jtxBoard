@@ -319,6 +319,7 @@
     <string name="list_without_start_date">"Without start date"</string>
     <string name="list_without_due_date">"Without due date"</string>
     <string name="list_without_completed_date">"Without completed date"</string>
+    <string name="list_show_only_search_matching_subentries">"Show only search matching sub-entries"</string>
     <string name="filter_order_by">"Order by"</string>
     <string name="filter_asc">"Ascending"</string>
     <string name="filter_desc">"Descending"</string>

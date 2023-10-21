@@ -42,6 +42,7 @@ class ListSettings {
     var orderBy2: MutableState<OrderBy> = mutableStateOf(OrderBy.SUMMARY)
     var sortOrder2: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var groupBy: MutableState<GroupBy?> = mutableStateOf(null)
+    var showOnlySearchMatchingSubentries: MutableState<Boolean> = mutableStateOf(false)
     var subtasksOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
     var subtasksSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var subnotesOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
@@ -108,6 +109,7 @@ class ListSettings {
         private const val PREFS_SUBTASKS_SORTORDER = "prefsSubtasksSortOrder"
         private const val PREFS_SUBNOTES_ORDERBY = "prefsSubnotesOrderBy"
         private const val PREFS_SUBNOTES_SORTORDER = "prefsSubnotesSortOrder"
+        private const val PREFS_SHOW_ONLY_SEARCH_MATCHING_SUBENTRIES = "prefsShowOnlySearchMatchingSubentries"
         private const val PREFS_FILTER_OVERDUE = "prefsFilterOverdue"
         private const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
@@ -147,7 +149,7 @@ class ListSettings {
 
         fun getProtectedClassificationsFromSettings(context: Context) =
             when(SettingsStateHolder(context).settingProtectBiometric.value) {
-                DropdownSettingOption.PROTECT_BIOMETRIC_ALL -> Classification.values().toList()
+                DropdownSettingOption.PROTECT_BIOMETRIC_ALL -> Classification.entries
                 DropdownSettingOption.PROTECT_BIOMETRIC_CONFIDENTIAL -> listOf(Classification.CONFIDENTIAL)
                 DropdownSettingOption.PROTECT_BIOMETRIC_PRIVATE_CONFIDENTIAL -> listOf(Classification.PRIVATE, Classification.CONFIDENTIAL)
                 else -> emptyList()
@@ -189,6 +191,7 @@ class ListSettings {
             orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
             sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
             groupBy.value = prefs.getString(PREFS_GROUPBY, null)?.let { try { GroupBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } }
+            showOnlySearchMatchingSubentries.value = prefs.getBoolean(PREFS_SHOW_ONLY_SEARCH_MATCHING_SUBENTRIES, false)
 
             subtasksOrderBy.value = prefs.getString(PREFS_SUBTASKS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
             subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
@@ -295,6 +298,7 @@ class ListSettings {
             putString(PREFS_ORDERBY2, orderBy2.value.name)
             putString(PREFS_SORTORDER2, sortOrder2.value.name)
             groupBy.value?.name?.let { putString(PREFS_GROUPBY, it) } ?: remove(PREFS_GROUPBY)
+            putBoolean(PREFS_SHOW_ONLY_SEARCH_MATCHING_SUBENTRIES, showOnlySearchMatchingSubentries.value)
 
             putString(PREFS_SUBTASKS_ORDERBY, subtasksOrderBy.value.name)
             putString(PREFS_SUBTASKS_SORTORDER, subtasksSortOrder.value.name)

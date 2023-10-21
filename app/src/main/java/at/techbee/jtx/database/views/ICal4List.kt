@@ -81,6 +81,7 @@ import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_RELTYPE
 import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_TEXT
 import at.techbee.jtx.database.properties.COLUMN_RESOURCE_ICALOBJECT_ID
 import at.techbee.jtx.database.properties.COLUMN_RESOURCE_TEXT
+import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.properties.TABLE_NAME_ALARM
 import at.techbee.jtx.database.properties.TABLE_NAME_ATTACHMENT
 import at.techbee.jtx.database.properties.TABLE_NAME_ATTENDEE
@@ -564,21 +565,35 @@ data class ICal4List(
          */
         fun getQueryForAllSubEntries(component: Component,
                                      hideBiometricProtected: List<Classification>,
+                                     searchText: String?,
                                      orderBy: OrderBy,
                                      sortOrder: SortOrder
-        ): SimpleSQLiteQuery = SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* " +
+        ): SimpleSQLiteQuery {
+
+            val queryArgs = mutableListOf<String>()
+            var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* " +
                     "from $VIEW_NAME_ICAL4LIST " +
                     "INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID " +
-                    "WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' " +
-                    if(hideBiometricProtected.isNotEmpty()) {
-                        if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
-                            "AND ($COLUMN_CLASSIFICATION IS NOT NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
-                        } else {
-                            "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
-                        }
-                    } else
-                        ""
-                    + "ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+                    "WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = '${Reltype.PARENT.name}' "
+
+            if(hideBiometricProtected.isNotEmpty()) {
+                queryString += if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
+                    "AND ($COLUMN_CLASSIFICATION IS NOT NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                } else {
+                    "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                }
+            }
+
+            if ((searchText?.length?:0) >= 2) {
+                queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ? )"
+                queryArgs.add("%${searchText!!}%")
+                queryArgs.add("%${searchText}%")
+            }
+
+            queryString += "ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}"
+
+            return SimpleSQLiteQuery(queryString, queryArgs.toTypedArray())
+        }
 
         fun getQueryForAllSubentriesForParentUID(
             parentUid: String,
