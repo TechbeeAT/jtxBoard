@@ -506,7 +506,7 @@ fun DetailsCardLocation_Preview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, locale = "EN-en")
 @Composable
 fun DetailsCardLocation_Preview_withGeo() {
     MaterialTheme {
