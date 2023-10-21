@@ -826,7 +826,7 @@ class ICalObjectTest {
         assertNull(ICalObject.getMapLink(null, null, BuildFlavor.OSE))
     }
 
-    @Test fun getLatLongString1() = assertEquals("(1.11100,12345.12312)", ICalObject.getLatLongString(1.111, 12345.123123123))
+    @Test fun getLatLongString1() = assertEquals("(1.11100, 12345.12312)", ICalObject.getLatLongString(1.111, 12345.123123123))
     @Test fun getLatLongString_null() = assertNull(ICalObject.getLatLongString(null, 2.222))
 
     @Test fun getAsRecurId_1() = assertEquals("20230101T000000", ICalObject.getAsRecurId(1672527600000L, "Europe/Vienna"))
