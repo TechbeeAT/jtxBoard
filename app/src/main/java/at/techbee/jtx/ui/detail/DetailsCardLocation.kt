@@ -506,9 +506,26 @@ fun DetailsCardLocation_Preview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, locale = "EN-en")
 @Composable
-fun DetailsCardLocation_Preview_withGEo() {
+fun DetailsCardLocation_Preview_withGeo() {
+    MaterialTheme {
+        DetailsCardLocation(
+            initialLocation = "Vienna, Stephansplatz",
+            initialGeoLat = 23.447378,
+            initialGeoLong = 73.272838,
+            initialGeofenceRadius = null,
+            isEditMode = false,
+            setCurrentLocation = false,
+            onLocationUpdated = { _, _, _ -> },
+            onGeofenceRadiusUpdatd = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, locale = "DE-de")
+@Composable
+fun DetailsCardLocation_Preview_withGeoDE() {
     MaterialTheme {
         DetailsCardLocation(
             initialLocation = "Vienna, Stephansplatz",
