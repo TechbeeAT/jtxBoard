@@ -307,6 +307,7 @@
     <string name="list_without_start_date">"Sin fecha de inicio"</string>
     <string name="list_without_due_date">"Sin fecha de vencimiento"</string>
     <string name="list_without_completed_date">"Sin fecha de completado"</string>
+    <string name="list_show_only_search_matching_subentries">"Mostrar solo búsquedas que coincidan con las sub-entradas"</string>
     <string name="filter_order_by">"Ordenar por"</string>
     <string name="filter_asc">"Ascendente"</string>
     <string name="filter_desc">"Descendente"</string>
