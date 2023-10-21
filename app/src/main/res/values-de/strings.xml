@@ -308,6 +308,7 @@
     <string name="list_without_start_date">"Ohne Start"</string>
     <string name="list_without_due_date">"Ohne Fälligkeit"</string>
     <string name="list_without_completed_date">"Ohne Fertigstellungsdatum"</string>
+    <string name="list_show_only_search_matching_subentries">"Zeige nur suchtreffende Untereinträge"</string>
     <string name="filter_order_by">"Sortieren nach"</string>
     <string name="filter_asc">"Aufsteigend"</string>
     <string name="filter_desc">"Absteigend"</string>
