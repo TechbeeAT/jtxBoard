@@ -11,6 +11,7 @@
     <string name="ok">"OK"</string>
     <string name="delete">"削除"</string>
     <string name="discard">"破棄"</string>
+    <string name="dismiss">"閉じる"</string>
     <string name="open">"開く"</string>
     <string name="cont">"続行"</string>
     <string name="website">"ウェブサイト"</string>
@@ -318,6 +319,7 @@
     <string name="filter_subnotes_order_by">リンクされたメモの並べ替え</string>
     <string name="filter_no_filter">"フィルターなし"</string>
     <string name="filter_options_more_entries">"詳細 (%1$d)"</string>
+    <string name="filter_options_less_entries">"表示を減らす"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"エントリーを追加するコレクションをクリックしてください！"</string>
     <string name="collections_snackbar_x_items_added">"追加 %1$d 件、 スキップ %2$d 件 (繰り返しのあるエントリーを含む)"</string>
     <string name="collections_toast_x_items_added">"%1$d 件のエントリーが追加されました！"</string>
@@ -468,7 +470,9 @@
     <string name="settings_tasks_status_progress">"ToDo の設定 (ステータス/進捗)"</string>
     <string name="settings_sync">"同期設定"</string>
     <string name="settings_default_start_date">"ToDo のデフォルトの着手日"</string>
+    <string name="settings_default_start_timezone">"ToDo のデフォルトの着手タイムゾーン"</string>
     <string name="settings_default_due_date">"ToDo のデフォルトの締切日"</string>
+    <string name="settings_default_due_timezone">"ToDo のデフォルトの締切タイムゾーン"</string>
     <string name="settings_default_start_time">"ToDo のデフォルトの着手時間"</string>
     <string name="settings_default_due_time">"ToDo のデフォルトの締切時間"</string>
     <string name="settings_default_date_none">"なし"</string>
