@@ -470,7 +470,9 @@
     <string name="settings_tasks_status_progress">"Настройки задач (статус/прогресс)"</string>
     <string name="settings_sync">"Настройки синхронизации"</string>
     <string name="settings_default_start_date">"Установить дату начала задачи по умолчанию"</string>
+    <string name="settings_default_start_timezone">"Установить часовой пояс начала задачи по умолчанию"</string>
     <string name="settings_default_due_date">"Установить дату завершения задачи по умолчанию"</string>
+    <string name="settings_default_due_timezone">"Установить часовой пояс завершения задачи по умолчанию"</string>
     <string name="settings_default_start_time">"Установить время начала задачи по умолчанию"</string>
     <string name="settings_default_due_time">"Установить время завершения задачи по умолчанию"</string>
     <string name="settings_default_date_none">"Нет"</string>
