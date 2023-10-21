@@ -308,6 +308,7 @@
     <string name="list_without_start_date">"Kezdési dátum nélkül"</string>
     <string name="list_without_due_date">"Határidő nélkül"</string>
     <string name="list_without_completed_date">"Befejezési idő nélkül"</string>
+    <string name="list_show_only_search_matching_subentries">"Csak a keresésnek megfelelő albejegyzések megjelenítése"</string>
     <string name="filter_order_by">"Elsődleges rendezési szempont"</string>
     <string name="filter_asc">"Növekvő"</string>
     <string name="filter_desc">"Csökkenő"</string>
@@ -470,9 +471,11 @@ Köszönjük!"</string>
     <string name="settings_tasks_status_progress">"Feladatok beállításai (státusz/készültség)"</string>
     <string name="settings_sync">"Szinkronizációs beállítások"</string>
     <string name="settings_default_start_date">"A feladatok alapértelmezett kezdési dátumának megadása"</string>
-    <string name="settings_default_due_date">"Feladatok alapértelemezett határidejének beállítása"</string>
+    <string name="settings_default_start_timezone">"A feladatok alapértelmezett kezdési idejéhez tartozó időzóna megadása"</string>
+    <string name="settings_default_due_date">"Feladatok alapértelmezett határidejének megadása"</string>
+    <string name="settings_default_due_timezone">"Feladatok alapértelmezett határidejéhez tartozó időzóna megadása"</string>
     <string name="settings_default_start_time">"A feladatok alapértelmezett kezdési idejének megadása"</string>
-    <string name="settings_default_due_time">"Feladatok alapértelemezett határidejének beállítása"</string>
+    <string name="settings_default_due_time">"Feladatok alapértelmezett határidejének beállítása"</string>
     <string name="settings_default_date_none">"Nincs"</string>
     <string name="settings_default_date_same_day">"Mai nap"</string>
     <string name="settings_default_date_next_day">"Holnap"</string>
