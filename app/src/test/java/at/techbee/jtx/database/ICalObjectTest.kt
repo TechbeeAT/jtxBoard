@@ -837,6 +837,7 @@ class ICalObjectTest {
         iCalObject.setDefaultStartDateFromSettings(
             DropdownSettingOption.DEFAULT_DATE_SAME_DAY,
             LocalTime.of(15,0),
+            "GMT"
         )
 
         val now = LocalDateTime.now().withHour(15).withMinute(0)
@@ -853,6 +854,7 @@ class ICalObjectTest {
         iCalObject.setDefaultDueDateFromSettings(
             DropdownSettingOption.DEFAULT_DATE_NEXT_DAY,
             LocalTime.of(22,15),
+            "GMT"
         )
 
         val now = LocalDateTime.now().plusDays(1).withHour(22).withMinute(15)
