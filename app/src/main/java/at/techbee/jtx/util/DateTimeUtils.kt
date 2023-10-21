@@ -89,8 +89,8 @@ object DateTimeUtils {
             return ""
         val zonedDateTime =
             ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), requireTzId(timezone))
-        val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        return zonedDateTime.toLocalTime().format(formatter)
+        val formatter = if(timezone == null) DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT) else  DateTimeFormatter.ofLocalizedTime(FormatStyle.LONG)
+        return zonedDateTime.format(formatter)
     }
 
     fun convertLongToDayString(date: Long?, timezone: String?): String {
