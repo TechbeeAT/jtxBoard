@@ -847,7 +847,7 @@ data class ICalObject(
          */
         fun getLatLongString(geoLat: Double?, geoLong: Double?): String? {
             return if(geoLat != null && geoLong != null) {
-                "(" + "%.5f".format(Locale.getDefault(), geoLat)  + ", "  + "%.5f".format(Locale.getDefault(), geoLong) + ")"
+                "(" + "%.5f".format(Locale.ENGLISH, geoLat)  + ", "  + "%.5f".format(Locale.ENGLISH, geoLong) + ")"
             } else {
                null
             }
