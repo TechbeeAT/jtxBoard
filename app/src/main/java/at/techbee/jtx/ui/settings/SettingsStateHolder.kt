@@ -50,6 +50,8 @@ class SettingsStateHolder(val context: Context) {
     var settingLinkProgressToSubtasks = mutableStateOf(SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS.getSetting(prefs))
     var settingKeepStatusProgressCompletedInSync = mutableStateOf(SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.getSetting(prefs))
     var settingProtectBiometric = mutableStateOf(DropdownSetting.SETTING_PROTECT_BIOMETRIC.getSetting(prefs))
+    var settingDisplayTimezone = mutableStateOf(DropdownSetting.SETTING_DISPLAY_TIMEZONE.getSetting(prefs))
+
 
     var settingSetDefaultCurrentLocationJournals = mutableStateOf(SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
     var settingSetDefaultCurrentLocationNotes = mutableStateOf(SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))

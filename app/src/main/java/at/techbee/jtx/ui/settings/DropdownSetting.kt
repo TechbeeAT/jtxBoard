@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.EditCalendar
 import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.FormatPaint
 import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.ui.graphics.vector.ImageVector
 import at.techbee.jtx.R
@@ -146,12 +147,23 @@ enum class DropdownSetting(
         ),
         default = DropdownSettingOption.PROTECT_BIOMETRIC_OFF
     ),
+    SETTING_DISPLAY_TIMEZONE(
+        key = "setting_display_timezone",
+        icon = Icons.Outlined.Public,
+        title = R.string.settings_timezone_display,
+        options = listOf(
+            DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL,
+            DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
+        ),
+        default = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
+    )
     ;
 
     fun saveSetting(newDropdownSettingOption: DropdownSettingOption, prefs: SharedPreferences) =
         prefs.edit().putString(key, newDropdownSettingOption.key).apply()
 
-    fun getSetting(prefs: SharedPreferences) = DropdownSettingOption.values().find { setting ->
+    fun getSetting(prefs: SharedPreferences) = DropdownSettingOption.entries.find { setting ->
         setting.key == prefs.getString(key, default.key)
     } ?: default
 }

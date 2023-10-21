@@ -63,6 +63,7 @@ import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_AUTO_ALARM
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_DUE_DATE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_START_DATE
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DISPLAY_TIMEZONE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROGRESS_STEP
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROTECT_BIOMETRIC
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_THEME
@@ -269,6 +270,15 @@ fun SettingsScreen(
                                 }
                             )
                         }
+
+                        DropdownSettingElement(
+                            setting = SETTING_DISPLAY_TIMEZONE,
+                            selected = settingsStateHolder.settingDisplayTimezone.value,
+                            onSelectionChanged = { selection ->
+                                settingsStateHolder.settingDisplayTimezone.value = selection
+                                SETTING_DISPLAY_TIMEZONE.saveSetting(selection, settingsStateHolder.prefs)
+                            }
+                        )
                     }
 
                     ExpandableSettingsSection(
