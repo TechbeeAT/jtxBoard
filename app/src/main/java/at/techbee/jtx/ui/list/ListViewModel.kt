@@ -200,7 +200,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 component = Component.VTODO,
                 hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application),
                 orderBy = listSettings.subtasksOrderBy.value,
-                sortOrder = listSettings.subtasksSortOrder.value
+                sortOrder = listSettings.subtasksSortOrder.value,
+                searchText = if(listSettings.showOnlySearchMatchingSubentries.value) listSettings.searchText.value else null
             )
         )
         allSubnotesQuery.postValue(
@@ -208,7 +209,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 component = Component.VJOURNAL,
                 hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application),
                 orderBy = listSettings.subnotesOrderBy.value,
-                sortOrder = listSettings.subnotesSortOrder.value
+                sortOrder = listSettings.subnotesSortOrder.value,
+                searchText = if(listSettings.showOnlySearchMatchingSubentries.value) listSettings.searchText.value else null
             )
         )
         if(saveListSettings)

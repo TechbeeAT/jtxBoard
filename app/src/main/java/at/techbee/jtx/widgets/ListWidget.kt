@@ -112,7 +112,8 @@ class ListWidget : GlanceAppWidget() {
                     component = Component.VTODO,
                     hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
                     orderBy = listWidgetConfig.subtasksOrderBy,
-                    sortOrder = listWidgetConfig.subtasksSortOrder
+                    sortOrder = listWidgetConfig.subtasksSortOrder,
+                    searchText = null
                 )
             }
             val subnotesQuery = remember(listWidgetConfig) {
@@ -120,7 +121,8 @@ class ListWidget : GlanceAppWidget() {
                     component = Component.VJOURNAL,
                     hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
                     orderBy = listWidgetConfig.subnotesOrderBy,
-                    sortOrder = listWidgetConfig.subnotesSortOrder
+                    sortOrder = listWidgetConfig.subnotesSortOrder,
+                    searchText = null
                 )
             }
             val subtasks by remember(subtasksQuery) { database.getSubEntriesFlow(subtasksQuery) }.collectAsState(initial = emptyList())

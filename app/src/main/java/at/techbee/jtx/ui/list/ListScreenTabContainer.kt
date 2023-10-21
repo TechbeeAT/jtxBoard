@@ -397,9 +397,9 @@ fun ListScreenTabContainer(
                                 getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.SEARCH
                                 getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
                                 getActiveViewModel().listSettings.newEntryText.value = ""
-                                topBarMenuExpanded = false
                             }
                         )
+
                         DropdownMenuItem(
                             text = {
                                 when (getActiveViewModel().module) {
@@ -437,6 +437,23 @@ fun ListScreenTabContainer(
                             }
                         )
                         HorizontalDivider()
+
+                        AnimatedVisibility(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.SEARCH
+                                && (getActiveViewModel().listSettings.viewMode.value == ViewMode.LIST || getActiveViewModel().listSettings.viewMode.value == ViewMode.COMPACT)
+                        ) {
+                            CheckboxWithText(
+                                text = stringResource(R.string.list_show_only_search_matching_subentries),
+                                isSelected = getActiveViewModel().listSettings.showOnlySearchMatchingSubentries.value,
+                                onCheckedChange = {
+                                    getActiveViewModel().listSettings.showOnlySearchMatchingSubentries.value = it
+                                    getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
+                                }
+                            )
+                        }
+                        AnimatedVisibility(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.SEARCH) {
+                            HorizontalDivider()
+                        }
+
 
 
                         if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
