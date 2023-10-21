@@ -471,7 +471,9 @@ Danke!"</string>
     <string name="settings_tasks_status_progress">"Aufgaben-Einstellungen (Status/Fortschritt)"</string>
     <string name="settings_sync">"Sync-Einstellungen"</string>
     <string name="settings_default_start_date">"Standard-Startdatum für Aufgaben"</string>
+    <string name="settings_default_start_timezone">"Standard-Startzeitzone für Aufgaben festlegen"</string>
     <string name="settings_default_due_date">"Standard-Fälligkeit für Aufgaben"</string>
+    <string name="settings_default_due_timezone">"Standard-Fälligkeitszone für Aufgaben festlegen"</string>
     <string name="settings_default_start_time">"Standard-Startzeit für Aufgaben festlegen"</string>
     <string name="settings_default_due_time">"Standard-Fälligkeitszeit für Aufgaben festlegen"</string>
     <string name="settings_default_date_none">"Keines"</string>
