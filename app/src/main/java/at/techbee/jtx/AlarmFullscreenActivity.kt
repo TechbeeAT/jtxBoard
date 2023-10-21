@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
+import at.techbee.jtx.contract.JtxContract.JtxICalObject.TZ_ALLDAY
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.properties.Alarm
@@ -92,6 +93,9 @@ class AlarmFullscreenActivity : AppCompatActivity() {
                             iCalObject = iCalObject.value!!,
                             alarm = alarm.value,
                             isReadOnly = false,
+                            settingDisplayTimezone = settingsStateHolder.settingDisplayTimezone.value,
+                            settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
+                            settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                             onDismiss = {enforceCancelNotification ->
                                 if(enforceCancelNotification || !SettingsStateHolder(this).settingStickyAlarms.value)
                                     NotificationManagerCompat.from(this).cancel(icalObjectId.toInt())
@@ -112,12 +116,15 @@ fun FullscreenAlarmScreen(
     iCalObject: ICalObject,
     alarm: Alarm?,
     isReadOnly: Boolean,
+    settingDisplayTimezone: DropdownSettingOption,
+    settingKeepStatusProgressCompletedInSync: Boolean,
+    settingLinkProgressToSubtasks: Boolean,
     onDismiss: (enforceCancelNotification: Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
+    modifier: Modifier = Modifier,
 
-    val scope = rememberCoroutineScope()
+) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Box {
 
@@ -162,11 +169,33 @@ fun FullscreenAlarmScreen(
                         text = stringResource(id = R.string.started),
                         style = MaterialTheme.typography.labelSmall
                     )
-                    Text(
-                        text = DateTimeUtils.convertLongToFullDateTimeString(iCalObject.dtstart, iCalObject.dtstartTimezone),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleMedium
-                    )
+
+                    if(iCalObject.dtstartTimezone == TZ_ALLDAY
+                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
+                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
+                    ) {
+                        Text(
+                            text = DateTimeUtils.convertLongToFullDateTimeString(
+                                iCalObject.dtstart,
+                                if(iCalObject.dtstartTimezone == TZ_ALLDAY) TZ_ALLDAY else null
+                            ),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                    if(iCalObject.dtstartTimezone != TZ_ALLDAY && iCalObject.dtstartTimezone != null &&
+                        (settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL
+                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL)
+                    ) {
+                        Text(
+                            text = DateTimeUtils.convertLongToFullDateTimeString(
+                                iCalObject.dtstart,
+                                iCalObject.dtstartTimezone
+                            ),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
 
                 if(iCalObject.due != null) {
@@ -174,11 +203,33 @@ fun FullscreenAlarmScreen(
                         text = stringResource(id = R.string.due),
                         style = MaterialTheme.typography.labelSmall
                     )
-                    Text(
-                        text = DateTimeUtils.convertLongToFullDateTimeString(iCalObject.due, iCalObject.dueTimezone),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleMedium
-                    )
+
+                    if(iCalObject.dueTimezone == TZ_ALLDAY
+                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
+                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
+                    ) {
+                        Text(
+                            text = DateTimeUtils.convertLongToFullDateTimeString(
+                                iCalObject.due,
+                                if(iCalObject.dueTimezone == TZ_ALLDAY) TZ_ALLDAY else null
+                            ),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                    if(iCalObject.dueTimezone != TZ_ALLDAY && iCalObject.dueTimezone != null &&
+                        (settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL
+                                || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL)
+                    ) {
+                        Text(
+                            text = DateTimeUtils.convertLongToFullDateTimeString(
+                                iCalObject.due,
+                                iCalObject.dueTimezone
+                            ),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
             }
 
@@ -209,9 +260,8 @@ fun FullscreenAlarmScreen(
 
                     TextButton(
                         onClick = {
-                            val settingsStateHolder = SettingsStateHolder(context)
                             scope.launch(Dispatchers.IO) {
-                                NotificationPublisher.setToDone(iCalObject.id, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value, settingsStateHolder.settingLinkProgressToSubtasks.value, context)
+                                NotificationPublisher.setToDone(iCalObject.id, settingKeepStatusProgressCompletedInSync, settingLinkProgressToSubtasks, context)
                                 onDismiss(true)
                             }
                         }
@@ -251,12 +301,15 @@ fun FullscreenAlarmScreen_Preview() {
                 summary = "My summary - this is now very long to make several rows"
                 description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
                 due = System.currentTimeMillis()
-                dueTimezone = null
+                dueTimezone = "Europe/London"
                 dtstart = System.currentTimeMillis() - (1).days.inWholeMicroseconds
-                dtstartTimezone = null
+                dtstartTimezone = "Europe/London"
             },
             alarm = Alarm.createDisplayAlarm().apply { alarmId = 1L },
             isReadOnly = false,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL,
+            settingKeepStatusProgressCompletedInSync = true,
+            settingLinkProgressToSubtasks = true,
             onDismiss = { }
         )
     }
@@ -271,12 +324,15 @@ fun FullscreenAlarmScreen_Preview_readonly() {
                 summary = "My summary - this is now very long to make several rows"
                 description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
                 due = System.currentTimeMillis()
-                dueTimezone = null
+                dueTimezone = TZ_ALLDAY
                 dtstart = System.currentTimeMillis() - (1).days.inWholeMicroseconds
-                dtstartTimezone = null
+                dtstartTimezone = TZ_ALLDAY
             },
             alarm = Alarm.createDisplayAlarm().apply { alarmId = 1L },
             isReadOnly = true,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL,
+            settingKeepStatusProgressCompletedInSync = true,
+            settingLinkProgressToSubtasks = true,
             onDismiss = { }
         )
     }
