@@ -72,7 +72,7 @@ object DateTimeUtils {
     }
 
     fun convertLongToMediumDateShortTimeString(date: Long?, timezone: String?): String {
-        return convertLongToMediumDateString(date, timezone) + if(timezone != TZ_ALLDAY) " " + convertLongToTimeString(date, timezone) else ""
+        return convertLongToMediumDateString(date, timezone) + if(timezone != TZ_ALLDAY) " " + convertLongToShortTimeString(date, timezone) else ""
     }
 
     private fun convertLongToMediumDateString(date: Long?, timezone: String?): String {
@@ -84,6 +84,7 @@ object DateTimeUtils {
         return zonedDateTime.format(formatter)
     }
 
+    /*
     private fun convertLongToTimeString(time: Long?, timezone: String?): String {
         if (time == null || time == 0L || timezone == TZ_ALLDAY)
             return ""
@@ -92,6 +93,7 @@ object DateTimeUtils {
         val formatter = if(timezone == null) DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT) else  DateTimeFormatter.ofLocalizedTime(FormatStyle.LONG)
         return zonedDateTime.format(formatter)
     }
+     */
 
     fun convertLongToShortTimeString(time: Long?, timezone: String?): String {
         if (time == null || time == 0L || timezone == TZ_ALLDAY)

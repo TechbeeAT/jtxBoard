@@ -889,23 +889,58 @@ data class ICalObject(
             val localTomorrow = localNow.plusDays(1)
             val localStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart), requireTzId(timezone2show))
 
-            return if(module == Module.TODO) {
+            var finalString = ""
+
+            if(module == Module.TODO) {
                  when {
-                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> context.getString(R.string.list_start_today)
-                     ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> context.getString(R.string.list_start_past)
-                     ChronoUnit.HOURS.between(localNow, localStart) < 1L -> context.getString(R.string.list_start_shortly)
-                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
-                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
-                     ChronoUnit.DAYS.between(localNow, localStart) < 6 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                     else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
+                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_start_today)
+                     ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> finalString += context.getString(R.string.list_start_past)
+                     ChronoUnit.HOURS.between(localNow, localStart) < 1L -> finalString += context.getString(R.string.list_start_shortly)
+                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
+                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
+                        finalString += context.getString(R.string.list_start_tomorrow)
+                         if(timezone2show != TZ_ALLDAY)
+                             finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
+                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                             finalString += " ${requireTzId(timezone2show).id}"
+                     }
+                     ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> {
+                         finalString += context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                         if(timezone2show != TZ_ALLDAY)
+                             finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
+                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                             finalString += " ${requireTzId(timezone2show).id}"
+                     }
+                     else -> {
+                         finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
+                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                             finalString += " ${requireTzId(timezone2show).id}"
+                     }
                 }
             } else {
                 when {
-                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_date_today)
-                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_date_tomorrow)
-                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> {
+                        finalString += context.getString(R.string.list_date_today)
+                        if(timezone2show != TZ_ALLDAY)
+                            finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
+                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                            finalString += " ${requireTzId(timezone2show).id}"
+                    }
+                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
+                        finalString += context.getString(R.string.list_date_tomorrow)
+                        if(timezone2show != TZ_ALLDAY)
+                            finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
+                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                            finalString += " ${requireTzId(timezone2show).id}"
+                    }
+                    else -> {
+                        finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
+                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                            finalString += " ${requireTzId(timezone2show).id}"
+                    }
                 }
             }
+            return finalString
         }
 
         fun getDueTextInfo(status: String?, due: Long?, dueTimezone: String?, percent: Int?, daysOnly: Boolean = false, context: Context): String {
@@ -926,15 +961,35 @@ data class ICalObject(
             val localTomorrow = localNow.plusDays(1)
             val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(timezone2show))
 
-            return when {
-                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> context.getString(R.string.list_due_today)
-                ChronoUnit.MINUTES.between(localNow, localDue) < 0L -> context.getString(R.string.list_due_overdue)
-                ChronoUnit.HOURS.between(localNow, localDue) < 1L -> context.getString(R.string.list_due_shortly)
-                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, ChronoUnit.HOURS.between(localNow, localDue))
-                localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
-                ChronoUnit.DAYS.between(localNow, localDue) < 6 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                else -> DateTimeUtils.convertLongToMediumDateShortTimeString(due, timezone2show)
+            var finalString = ""
+
+            when {
+                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_due_today)
+                ChronoUnit.MINUTES.between(localNow, localDue) < 0L -> finalString += context.getString(R.string.list_due_overdue)
+                ChronoUnit.HOURS.between(localNow, localDue) < 1L -> finalString += context.getString(R.string.list_due_shortly)
+                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_due_inXhours, ChronoUnit.HOURS.between(localNow, localDue))
+                localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> {
+                    finalString += context.getString(R.string.list_due_tomorrow)
+                    if(timezone2show != TZ_ALLDAY)
+                        finalString += " ${DateTimeUtils.convertLongToShortTimeString(due, timezone2show)}"
+                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                        finalString += " ${requireTzId(timezone2show).id}"
+                }
+                ChronoUnit.DAYS.between(localNow, localDue) <= 7 -> {
+                    finalString += context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                    if(timezone2show != TZ_ALLDAY)
+                        finalString += " ${DateTimeUtils.convertLongToShortTimeString(due, timezone2show)}"
+                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                        finalString += " ${requireTzId(timezone2show).id}"
+                }
+                else -> {
+                    finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(due, timezone2show)
+                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                        finalString += " ${requireTzId(timezone2show).id}"
+                }
             }
+
+            return finalString
         }
 
         suspend fun findTopParent(iCalObjectId: Long, database: ICalDatabaseDao): ICalObject? {

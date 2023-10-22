@@ -91,6 +91,7 @@ fun HorizontalDateCard(
 
             if (datetime != null) {
                 if(timezone == TZ_ALLDAY
+                    || timezone == null
                     || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
                     || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
                     ) {
