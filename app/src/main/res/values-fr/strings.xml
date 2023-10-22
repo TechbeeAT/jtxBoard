@@ -80,6 +80,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"La première ligne est interprétée comme un résumé, le reste comme une description. Les hashtags sont interprétés comme des catégories (par exemple #catégorie)."</string>
     <string name="list_item_recurring">"Entrée récurrente"</string>
     <string name="list_item_edited_recurring">"Evénement périodique modifié"</string>
+    <string name="list_scroll_to_top">"Défiler vers le haut"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Autorisation de l'application"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board a besoin de la permission d'enregistrer l'audio ou d'utiliser les fonctionnalités de synthèse vocale. Veuillez accorder la permission d'utiliser cette fonctionnalité."</string>
@@ -307,6 +308,7 @@
     <string name="list_without_start_date">"Sans date de début"</string>
     <string name="list_without_due_date">"Sans date d'échéance"</string>
     <string name="list_without_completed_date">"Sans date de réalisation"</string>
+    <string name="list_show_only_search_matching_subentries">"Afficher uniquement les sous-entrées correspondantes à la recherche"</string>
     <string name="filter_order_by">"Trier par"</string>
     <string name="filter_asc">"Ascendant"</string>
     <string name="filter_desc">"Descendant"</string>
@@ -318,6 +320,7 @@
     <string name="filter_subnotes_order_by">Trier les notes liées par</string>
     <string name="filter_no_filter">"Aucun filtre"</string>
     <string name="filter_options_more_entries">"Plus (%1$d)"</string>
+    <string name="filter_options_less_entries">"Moins"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Veuillez cliquer sur la collection à laquelle l'entrée/les entrées doivent être ajoutées !"</string>
     <string name="collections_snackbar_x_items_added">"%1$d ajouté, %2$d ignoré. (Instances exclusives d'entrées récurrentes.)"</string>
     <string name="collections_toast_x_items_added">"%1$d entrées ajoutées !"</string>
@@ -349,6 +352,10 @@
     <string name="settings_protect_biometric_all">"Tout"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Veuillez vous authentifier pour modifier ce paramètre!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Veuillez vous authentifier pour afficher les entrées protégées !"</string>
+    <string name="settings_timezone_display">"Sélectionnez l'affichage de l'heure avec le fuseau horaire"</string>
+    <string name="settings_timezone_display_local">"Afficher l'heure dans le fuseau horaire local"</string>
+    <string name="settings_timezone_display_original">"Afficher l'heure dans le fuseau horaire d'origine"</string>
+    <string name="settings_timezone_display_local_and_original">"Afficher l'heure en local et dans le fuseau horaire d'origine (vue détaillée seulement)"</string>
     <string name="donate_dialog_title">"Vous aimez jtx Board?"</string>
     <string name="donate_dialog_message">"Le développement d'une application est complexe et la maintenance et le support sont des tâches difficiles. Si vous aimez cette application et si vous souhaitez en assurer le développement continu, pensez à faire un don :-)
 Merci !"</string>
@@ -468,7 +475,9 @@ Merci !"</string>
     <string name="settings_tasks_status_progress">"Paramètres des tâches (statut/progression)"</string>
     <string name="settings_sync">"Paramètres de synchronisation"</string>
     <string name="settings_default_start_date">"Définir une date de début par défaut pour les tâches"</string>
+    <string name="settings_default_start_timezone">"Définir un fuseau horaire de démarrage par défaut pour les tâches"</string>
     <string name="settings_default_due_date">"Définir une date d'échéance par défaut pour les tâches"</string>
+    <string name="settings_default_due_timezone">"Définir un fuseau horaire par défaut pour les tâches"</string>
     <string name="settings_default_start_time">"Définir une heure de début par défaut pour les tâches"</string>
     <string name="settings_default_due_time">"Définir une heure d'échéance par défaut pour les tâches"</string>
     <string name="settings_default_date_none">"Aucun"</string>
