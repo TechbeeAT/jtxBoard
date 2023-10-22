@@ -543,12 +543,10 @@ data class ICal4List(
             }
 
             queryString += "ORDER BY "
-            queryString += orderBy.queryAppendix
-            sortOrder.let { queryString += it.queryAppendix }
+            queryString += orderBy.getQueryAppendix(sortOrder)
 
             queryString += ", "
-            queryString += orderBy2.queryAppendix
-            sortOrder2.let { queryString += it.queryAppendix }
+            queryString += orderBy2.getQueryAppendix(sortOrder2)
 
             limit?.let { queryString += "LIMIT $it" }
 
@@ -590,7 +588,7 @@ data class ICal4List(
                 queryArgs.add("%${searchText}%")
             }
 
-            queryString += "ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}"
+            queryString += "ORDER BY ${orderBy.getQueryAppendix(sortOrder)}"
 
             return SimpleSQLiteQuery(queryString, queryArgs.toTypedArray())
         }
@@ -615,7 +613,7 @@ data class ICal4List(
                     }
                 } else
                     ""
-                + "ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+                + "ORDER BY ${orderBy.getQueryAppendix(sortOrder)}")
 
     }
 
