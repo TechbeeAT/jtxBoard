@@ -308,6 +308,7 @@
     <string name="list_without_start_date">"Bez data začátku"</string>
     <string name="list_without_due_date">"Bez data termínu"</string>
     <string name="list_without_completed_date">"Bez data dokončení"</string>
+    <string name="list_show_only_search_matching_subentries">"Zobrazit pouze dílčí záznamy odpovídající vyhledávání"</string>
     <string name="filter_order_by">"Objednal"</string>
     <string name="filter_asc">"Vzestupně"</string>
     <string name="filter_desc">"Sestupně"</string>
@@ -470,7 +471,9 @@ Děkujeme vám!"</string>
     <string name="settings_tasks_status_progress">"Nastavení úkolů (stav nebo průběh)"</string>
     <string name="settings_sync">"Nastavení synchronizace"</string>
     <string name="settings_default_start_date">"Nastavit výchozí datum zahájení úkolů"</string>
+    <string name="settings_default_start_timezone">"Nastavit výchozí časové pásmo začátku pro úkoly"</string>
     <string name="settings_default_due_date">"Nastavit výchozí datum termínu úkolů"</string>
+    <string name="settings_default_due_timezone">"Nastavit výchozí časové pásmo termínu pro úkoly"</string>
     <string name="settings_default_start_time">"Nastavit výchozí čas zahájení pro úkoly"</string>
     <string name="settings_default_due_time">"Nastavit výchozí čas termínu pro úkoly"</string>
     <string name="settings_default_date_none">"Žádné"</string>

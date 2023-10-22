@@ -308,6 +308,7 @@
     <string name="list_without_start_date">"Zonder startdatum"</string>
     <string name="list_without_due_date">"Zonder vervaldatum"</string>
     <string name="list_without_completed_date">"Zonder voltooide datum"</string>
+    <string name="list_show_only_search_matching_subentries">"Toon alleen zoekresultaten die overeenkomen met sub-items"</string>
     <string name="filter_order_by">"Sorteer op"</string>
     <string name="filter_asc">"Oplopend"</string>
     <string name="filter_desc">"Aflopend"</string>
