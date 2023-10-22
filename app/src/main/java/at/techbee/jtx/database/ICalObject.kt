@@ -32,6 +32,7 @@ import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
@@ -877,25 +878,32 @@ data class ICalObject(
             else if(dtstart == null)
                 return context.getString(R.string.list_date_without)
 
+            val settingsStateHolder = SettingsStateHolder(context)
+            val timezone2show =
+                if(dtstartTimezone == TZ_ALLDAY || dtstartTimezone == null || settingsStateHolder.settingDisplayTimezone.value == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL)
+                    dtstartTimezone
+                else
+                    null
+
             val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dtstartTimezone))
+            val localStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart), requireTzId(timezone2show))
 
             return if(module == Module.TODO) {
                  when {
-                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == TZ_ALLDAY) -> context.getString(R.string.list_start_today)
+                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> context.getString(R.string.list_start_today)
                      ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> context.getString(R.string.list_start_past)
                      ChronoUnit.HOURS.between(localNow, localStart) < 1L -> context.getString(R.string.list_start_shortly)
                      localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
                      localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
                      ChronoUnit.DAYS.between(localNow, localStart) < 6 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                     else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
+                     else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
                 }
             } else {
                 when {
                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_date_today)
                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_date_tomorrow)
-                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
+                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
                 }
             }
         }
@@ -907,18 +915,25 @@ data class ICalObject(
             if(due == null)
                 return context.getString(R.string.list_due_without)
 
+            val settingsStateHolder = SettingsStateHolder(context)
+            val timezone2show =
+                if(dueTimezone == TZ_ALLDAY || dueTimezone == null || settingsStateHolder.settingDisplayTimezone.value == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL)
+                    dueTimezone
+                else
+                    null
+
             val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dueTimezone))
+            val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(timezone2show))
 
             return when {
-                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || dueTimezone == TZ_ALLDAY) -> context.getString(R.string.list_due_today)
+                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> context.getString(R.string.list_due_today)
                 ChronoUnit.MINUTES.between(localNow, localDue) < 0L -> context.getString(R.string.list_due_overdue)
                 ChronoUnit.HOURS.between(localNow, localDue) < 1L -> context.getString(R.string.list_due_shortly)
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, ChronoUnit.HOURS.between(localNow, localDue))
                 localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
                 ChronoUnit.DAYS.between(localNow, localDue) < 6 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                else -> DateTimeUtils.convertLongToMediumDateShortTimeString(due, dueTimezone)
+                else -> DateTimeUtils.convertLongToMediumDateShortTimeString(due, timezone2show)
             }
         }
 

@@ -84,13 +84,21 @@ object DateTimeUtils {
         return zonedDateTime.format(formatter)
     }
 
-    fun convertLongToTimeString(time: Long?, timezone: String?): String {
+    private fun convertLongToTimeString(time: Long?, timezone: String?): String {
         if (time == null || time == 0L || timezone == TZ_ALLDAY)
             return ""
         val zonedDateTime =
             ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), requireTzId(timezone))
+        val formatter = if(timezone == null) DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT) else  DateTimeFormatter.ofLocalizedTime(FormatStyle.LONG)
+        return zonedDateTime.format(formatter)
+    }
+
+    fun convertLongToShortTimeString(time: Long?, timezone: String?): String {
+        if (time == null || time == 0L || timezone == TZ_ALLDAY)
+            return ""
+        val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), requireTzId(timezone))
         val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        return zonedDateTime.toLocalTime().format(formatter)
+        return zonedDateTime.format(formatter)
     }
 
     fun convertLongToDayString(date: Long?, timezone: String?): String {
