@@ -25,19 +25,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.contract.JtxContract.JtxICalObject.TZ_ALLDAY
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
-import java.util.*
+import java.util.TimeZone
 
 
 @Composable
 fun VerticalDateBlock(
     datetime: Long?,
     timezone: String?,
+    settingDisplayTimezone: DropdownSettingOption,
     modifier: Modifier = Modifier,
     labelTop: String? = null
 ) {
+
+    val timezone2show =
+        if(timezone == null || timezone == TZ_ALLDAY || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL)
+            timezone
+        else
+            null
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -53,40 +63,40 @@ fun VerticalDateBlock(
 
         if(datetime != null) {
             Text(
-                text = DateTimeUtils.convertLongToDayString(datetime, timezone),
+                text = DateTimeUtils.convertLongToDayString(datetime, timezone2show),
                 style = Typography.displaySmall,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = DateTimeUtils.convertLongToWeekdayString(datetime, timezone),
+                text = DateTimeUtils.convertLongToWeekdayString(datetime, timezone2show),
                 style = Typography.labelSmall,
                 textAlign = TextAlign.Center
             )
             Text(
-                DateTimeUtils.convertLongToMonthString(datetime, timezone),
+                DateTimeUtils.convertLongToMonthString(datetime, timezone2show),
                 style = Typography.labelMedium,
                 textAlign = TextAlign.Center
             )
 
             Text(
-                DateTimeUtils.convertLongToYearString(datetime, timezone),
+                DateTimeUtils.convertLongToYearString(datetime, timezone2show),
                 style = Typography.labelSmall,
                 textAlign = TextAlign.Center
             )
             if (timezone != ICalObject.TZ_ALLDAY)
                 Text(
-                    DateTimeUtils.convertLongToTimeString(datetime, timezone),
+                    DateTimeUtils.convertLongToShortTimeString(datetime, timezone2show),
                     style = Typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-            if (timezone != ICalObject.TZ_ALLDAY && timezone?.isNotEmpty() == true && TimeZone.getTimeZone(
+            if (timezone2show != ICalObject.TZ_ALLDAY && timezone2show?.isNotEmpty() == true && TimeZone.getTimeZone(
                     timezone
                 ).getDisplayName(true, TimeZone.SHORT) != null
             )
                 Text(
-                    TimeZone.getTimeZone(timezone).getDisplayName(true, TimeZone.SHORT),
+                    TimeZone.getTimeZone(timezone2show).getDisplayName(true, TimeZone.SHORT),
                     style = Typography.labelSmall,
                     fontStyle = FontStyle.Italic,
                     textAlign = TextAlign.Center
@@ -104,7 +114,7 @@ fun VerticalDateBlock(
 @Composable
 fun DateBlock_Preview_Allday() {
     MaterialTheme {
-        VerticalDateBlock(System.currentTimeMillis(), ICalObject.TZ_ALLDAY)
+        VerticalDateBlock(System.currentTimeMillis(), ICalObject.TZ_ALLDAY, DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL)
     }
 }
 
@@ -115,6 +125,7 @@ fun DateBlock_Preview_Allday_with_label() {
         VerticalDateBlock(
             datetime = System.currentTimeMillis(),
             timezone = ICalObject.TZ_ALLDAY,
+            settingDisplayTimezone =  DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
             labelTop = stringResource(id = R.string.started))
     }
 }
@@ -123,7 +134,7 @@ fun DateBlock_Preview_Allday_with_label() {
 @Composable
 fun DateBlock_Preview_WithTime() {
     MaterialTheme {
-        VerticalDateBlock(System.currentTimeMillis(), null)
+        VerticalDateBlock(System.currentTimeMillis(), null, DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL)
     }
 }
 
@@ -131,7 +142,7 @@ fun DateBlock_Preview_WithTime() {
 @Composable
 fun DateBlock_Preview_WithTimezone() {
     MaterialTheme {
-        VerticalDateBlock(System.currentTimeMillis(), "Europe/Vienna")
+        VerticalDateBlock(System.currentTimeMillis(), "Europe/Vienna", DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL)
     }
 }
 
@@ -139,7 +150,7 @@ fun DateBlock_Preview_WithTimezone() {
 @Composable
 fun DateBlock_Preview_WithTimezone2() {
     MaterialTheme {
-        VerticalDateBlock(System.currentTimeMillis(), "Africa/Addis_Ababa")
+        VerticalDateBlock(System.currentTimeMillis(), "Africa/Addis_Ababa", DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL)
     }
 }
 
@@ -147,7 +158,7 @@ fun DateBlock_Preview_WithTimezone2() {
 @Composable
 fun DateBlock_Preview_null() {
     MaterialTheme {
-        VerticalDateBlock(null, null)
+        VerticalDateBlock(null, null, DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL)
     }
 }
 
@@ -155,6 +166,6 @@ fun DateBlock_Preview_null() {
 @Composable
 fun DateBlock_Preview_null_withLabel() {
     MaterialTheme {
-        VerticalDateBlock(null, null, labelTop = stringResource(id = R.string.due))
+        VerticalDateBlock(null, null, DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL, labelTop = stringResource(id = R.string.due))
     }
 }
