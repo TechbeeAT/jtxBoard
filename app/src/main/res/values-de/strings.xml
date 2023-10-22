@@ -352,6 +352,10 @@
     <string name="settings_protect_biometric_all">"Alle"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Bitte authentifizieren Sie sich, um diese Einstellung zu ändern!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Bitte authentifizieren Sie sich, um geschützte Einträge anzuzeigen!"</string>
+    <string name="settings_timezone_display">"Anzeige der Zeit mit Zeitzone wählen"</string>
+    <string name="settings_timezone_display_local">"Zeit in lokaler Zeitzone anzeigen"</string>
+    <string name="settings_timezone_display_original">"Zeit in der ursprünglichen Zeitzone anzeigen"</string>
+    <string name="settings_timezone_display_local_and_original">"Zeit in lokaler und in ursprünglicher Zeitzone anzeigen (nur Detailansicht)"</string>
     <string name="donate_dialog_title">"Gefällt dir jtx Board?"</string>
     <string name="donate_dialog_message">"Die Entwicklung und Wartung einer App sind viel Arbeit. Wenn dir jtx Board gefällt und du die kontinuierliche Entwicklung sicherstellen möchtest, dann denke bitte auch an die Möglichkeit einer Spende! :-)
 Vielen Dank!"</string>
