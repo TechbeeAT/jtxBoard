@@ -656,19 +656,19 @@ enum class OrderBy(@StringRes val stringResource: Int) {
 
     fun getQueryAppendix(sortOrder: SortOrder): String {
         return when(this) {
-            START_VTODO -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name}"
-            START_VJOURNAL -> "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name}"
-            DUE -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DUE IS NULL, $COLUMN_DUE ${sortOrder.name}"
-            COMPLETED -> "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED ${sortOrder.name}"
-            CREATED -> "$COLUMN_CREATED ${sortOrder.name}"
-            LAST_MODIFIED -> "$COLUMN_LAST_MODIFIED ${sortOrder.name}"
-            SUMMARY -> "UPPER($COLUMN_SUMMARY) ${sortOrder.name}"
-            PRIORITY -> "CASE WHEN $COLUMN_PRIORITY IS NULL THEN 1 WHEN $COLUMN_PRIORITY = 0 THEN 1 ELSE 0 END, $COLUMN_PRIORITY ${sortOrder.name}"
-            CLASSIFICATION -> "$COLUMN_CLASSIFICATION IS NULL, $COLUMN_CLASSIFICATION ${sortOrder.name}"
-            STATUS -> "$COLUMN_STATUS IS NULL, $COLUMN_STATUS ${sortOrder.name}"
-            PROGRESS -> "$COLUMN_PERCENT ${sortOrder.name}"
-            ACCOUNT -> "$COLUMN_COLLECTION_ACCOUNT_NAME ${sortOrder.name}"
-            COLLECTION -> "$COLUMN_COLLECTION_DISPLAYNAME ${sortOrder.name}"
+            START_VTODO -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
+            START_VJOURNAL -> "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
+            DUE -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DUE IS NULL, $COLUMN_DUE ${sortOrder.name} "
+            COMPLETED -> "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED ${sortOrder.name} "
+            CREATED -> "$COLUMN_CREATED ${sortOrder.name} "
+            LAST_MODIFIED -> "$COLUMN_LAST_MODIFIED ${sortOrder.name} "
+            SUMMARY -> "UPPER($COLUMN_SUMMARY) ${sortOrder.name} "
+            PRIORITY -> "CASE WHEN $COLUMN_PRIORITY IS NULL THEN 1 WHEN $COLUMN_PRIORITY = 0 THEN 1 ELSE 0 END, $COLUMN_PRIORITY ${sortOrder.name} "
+            CLASSIFICATION -> "$COLUMN_CLASSIFICATION IS NULL, $COLUMN_CLASSIFICATION ${sortOrder.name} "
+            STATUS -> "$COLUMN_STATUS IS NULL, $COLUMN_STATUS ${sortOrder.name} "
+            PROGRESS -> "$COLUMN_PERCENT ${sortOrder.name} "
+            ACCOUNT -> "$COLUMN_COLLECTION_ACCOUNT_NAME ${sortOrder.name} "
+            COLLECTION -> "$COLUMN_COLLECTION_DISPLAYNAME ${sortOrder.name} "
         }
     }
 
