@@ -350,6 +350,10 @@
     <string name="settings_protect_biometric_all">"Όλα"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Παρακαλώ πιστοποιήστε για να αλλάξετε αυτή τη ρύθμιση!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Παρακαλώ πιστοποιήστε για να εμφανίσετε προστατευμένες καταχωρήσεις!"</string>
+    <string name="settings_timezone_display">"Επιλέξτε εμφάνιση της ώρας με τη ζώνη ώρας"</string>
+    <string name="settings_timezone_display_local">"Εμφάνιση ώρας στην τοπική ζώνη ώρας"</string>
+    <string name="settings_timezone_display_original">"Εμφάνιση ώρας στην αρχική ζώνη ώρας"</string>
+    <string name="settings_timezone_display_local_and_original">"Εμφάνιση ώρας στην τοπική και στην αρχική ζώνη ώρας (προβολή λεπτομερειών μόνο)"</string>
     <string name="donate_dialog_title">"Σας αρέσει το jtx Board;"</string>
     <string name="donate_dialog_message">"Η δημιουργία μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μια σκληρή δουλειά. Εάν σας αρέσει αυτή η εφαρμογή και εάν θέλετε να εξασφαλίσετε την συνεχή ανάπτυξη της, σκεφτείτε για μια δωρεά :-)
  Ευχαριστώ!"</string>
