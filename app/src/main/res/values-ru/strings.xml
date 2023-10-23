@@ -308,6 +308,7 @@
     <string name="list_without_start_date">"Без даты начала"</string>
     <string name="list_without_due_date">"Без даты завершения"</string>
     <string name="list_without_completed_date">"Без даты выполнения"</string>
+    <string name="list_show_only_search_matching_subentries">"Показывать только соответствующие поисковому запросу дочерние записи"</string>
     <string name="filter_order_by">"Сортировать по"</string>
     <string name="filter_asc">"По возрастанию"</string>
     <string name="filter_desc">"По убыванию"</string>
@@ -351,6 +352,10 @@
     <string name="settings_protect_biometric_all">"Все"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Авторизуйтесь, чтобы изменить эту настройку!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Авторизуйтесь, чтобы показать защищенные записи!"</string>
+    <string name="settings_timezone_display">"Отображение времени в часовом поясе"</string>
+    <string name="settings_timezone_display_local">"Показывать время по местному часовому поясу"</string>
+    <string name="settings_timezone_display_original">"Показывать время по указанному часовому поясу"</string>
+    <string name="settings_timezone_display_local_and_original">"Показывать время по местному и указанному часовым поясам (только в детальном просмотре записи)"</string>
     <string name="donate_dialog_title">"Вам нравится jtx Board?"</string>
     <string name="donate_dialog_message">"Разработка приложения – непростая вещь, и его обслуживание и поддержка – тяжелая работа. Если вам нравится наш проект, вы можете поддержать его пожертвованием :-)
 Спасибо большое!"</string>

@@ -353,7 +353,9 @@
     <string name="settings_protect_biometric_info_on_settings_unlock">"この設定を変更するには認証してください！"</string>
     <string name="settings_protect_biometric_info_on_unlock">"保護されたエントリーを表示するのは認証してください！"</string>
     <string name="settings_timezone_display">"タイムゾーン付きの時間表示を選択"</string>
-    <string name="settings_timezone_display_local">"ローカルタイムゾーンで時刻を表示する"</string>
+    <string name="settings_timezone_display_local">"現地時間で時刻を表示する"</string>
+    <string name="settings_timezone_display_original">"元のタイムゾーンで時間を表示"</string>
+    <string name="settings_timezone_display_local_and_original">"現地時間および元のタイムゾーンで時間を表示 (詳細表示のみ)"</string>
     <string name="donate_dialog_title">"jtx Board を気に入っていただけましたか？"</string>
     <string name="donate_dialog_message">"アプリの開発は複雑で、開発・メンテナンス・サポートは大変な仕事です。このアプリを気に入り、継続的な開発をご支援いただける場合は、寄付をご検討ください :-)
 ありがとうございます！"</string>
