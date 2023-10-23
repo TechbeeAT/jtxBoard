@@ -470,7 +470,9 @@ Gràcies!"</string>
     <string name="settings_tasks_status_progress">"Configuració de Tasques (estat/progrés)"</string>
     <string name="settings_sync">"Ajusts de Sincronització"</string>
     <string name="settings_default_start_date">"Estableix una data d'inici per defecte"</string>
+    <string name="settings_default_start_timezone">"Estableix una zona horària d'inici predeterminada per a tasques"</string>
     <string name="settings_default_due_date">"Estableix una data de venciment per defecte"</string>
+    <string name="settings_default_due_timezone">"Estableix una zona horària de venciment predeterminada per a tasques"</string>
     <string name="settings_default_start_time">"Estableix una hora d'inici per a tasques"</string>
     <string name="settings_default_due_time">"Estableix una hora de venciment per a tasques"</string>
     <string name="settings_default_date_none">"Cap"</string>
