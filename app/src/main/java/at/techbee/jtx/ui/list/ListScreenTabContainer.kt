@@ -173,9 +173,9 @@ fun ListScreenTabContainer(
     }
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
-    var showDeleteSelectedDialog by remember { mutableStateOf(false) }
-    var showUpdateEntriesDialog by remember { mutableStateOf(false) }
-    var showCollectionSelectorDialog by remember { mutableStateOf(false) }
+    var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
+    var showUpdateEntriesDialog by rememberSaveable { mutableStateOf(false) }
+    var showCollectionSelectorDialog by rememberSaveable { mutableStateOf(false) }
 
 
     fun getActiveViewModel() = when (pagerState.currentPage) {
@@ -206,7 +206,7 @@ fun ListScreenTabContainer(
     var filterSheetInitialTab by remember { mutableStateOf(ListOptionsBottomSheetTabs.FILTER)}
 
     var showSearch by remember { mutableStateOf(false) }
-    val showQuickAdd = remember { mutableStateOf(false) }
+    val showQuickAdd = rememberSaveable { mutableStateOf(false) }
     var quickAddBackupText by rememberSaveable { mutableStateOf("") }
 
     if (showDeleteSelectedDialog) {

@@ -22,11 +22,31 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.EventNote
 import androidx.compose.material.icons.automirrored.outlined.Note
 import androidx.compose.material.icons.automirrored.outlined.NoteAdd
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.AddTask
+import androidx.compose.material.icons.outlined.ContentPaste
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Mail
+import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -76,8 +96,8 @@ fun DetailsScreen(
     val scope = rememberCoroutineScope()
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var showRevertDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+    var showRevertDialog by rememberSaveable { mutableStateOf(false) }
     var showUnsavedChangesDialog by rememberSaveable { mutableStateOf(false) }
     var showLinkEntryDialog by rememberSaveable { mutableStateOf(false) }
     var linkEntryDialogModule by rememberSaveable { mutableStateOf(listOf<Module>())}

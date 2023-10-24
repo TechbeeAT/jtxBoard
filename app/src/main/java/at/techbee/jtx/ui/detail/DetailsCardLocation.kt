@@ -85,12 +85,12 @@ fun DetailsCardLocation(
     var showRequestGeofencePermissionsDialog by rememberSaveable { mutableStateOf(false) }
     val openPermissionsIntent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
 
-    var location by remember { mutableStateOf(initialLocation ?: "") }
-    var geoLat by remember { mutableStateOf(initialGeoLat) }
-    var geoLong by remember { mutableStateOf(initialGeoLong) }
-    var geoLatText by remember { mutableStateOf(initialGeoLat?.toString() ?: "") }
-    var geoLongText by remember { mutableStateOf(initialGeoLong?.toString() ?: "") }
-    var geofenceRadius by remember { mutableStateOf(initialGeofenceRadius) }
+    var location by rememberSaveable { mutableStateOf(initialLocation ?: "") }
+    var geoLat by rememberSaveable { mutableStateOf(initialGeoLat) }
+    var geoLong by rememberSaveable { mutableStateOf(initialGeoLong) }
+    var geoLatText by rememberSaveable { mutableStateOf(initialGeoLat?.toString() ?: "") }
+    var geoLongText by rememberSaveable { mutableStateOf(initialGeoLong?.toString() ?: "") }
+    var geofenceRadius by rememberSaveable { mutableStateOf(initialGeofenceRadius) }
 
     val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao().getAllLocationsLatLng().observeAsState(emptyList())
 

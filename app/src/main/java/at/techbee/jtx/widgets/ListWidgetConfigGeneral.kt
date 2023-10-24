@@ -43,6 +43,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,8 +72,8 @@ fun ListWidgetConfigGeneral(
     modifier: Modifier = Modifier
 ) {
 
-    var showColorPickerBackground by remember { mutableStateOf(false) }
-    var showColorPickerEntryBackground by remember { mutableStateOf(false) }
+    var showColorPickerBackground by rememberSaveable { mutableStateOf(false) }
+    var showColorPickerEntryBackground by rememberSaveable { mutableStateOf(false) }
 
     val widgetColorCalculated = listSettings.widgetColor.value?.let { Color(it).copy(alpha = listSettings.widgetAlpha.value) } ?: MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value)
     val widgetColorEntriesCalculated = listSettings.widgetColorEntries.value?.let { Color(it).copy(alpha = listSettings.widgetAlphaEntries.value) } ?: MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value)

@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,9 +76,9 @@ fun CollectionCard(
     var menuExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    var showCollectionsAddOrEditDialog by remember { mutableStateOf(false) }
-    var showCollectionsDeleteCollectionDialog by remember { mutableStateOf(false) }
-    var showCollectionsMoveCollectionDialog by remember { mutableStateOf(false) }
+    var showCollectionsAddOrEditDialog by rememberSaveable { mutableStateOf(false) }
+    var showCollectionsDeleteCollectionDialog by rememberSaveable { mutableStateOf(false) }
+    var showCollectionsMoveCollectionDialog by rememberSaveable { mutableStateOf(false) }
     val syncApp = SyncApp.fromAccountType(collection.accountType)
 
 
