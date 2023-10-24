@@ -352,6 +352,10 @@
     <string name="settings_protect_biometric_all">"Vše"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Pro změnu tohoto nastavení se ověřte!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Pro zobrazení chráněných záznamů se ověřte!"</string>
+    <string name="settings_timezone_display">"Vyberte zobrazení času s časovým pásmem"</string>
+    <string name="settings_timezone_display_local">"Zobrazit čas v místním časovém pásmu"</string>
+    <string name="settings_timezone_display_original">"Zobrazit čas v původním časovém pásmu"</string>
+    <string name="settings_timezone_display_local_and_original">"Zobrazit čas v místním a původním časovém pásmu (pouze v podrobném zobrazení)"</string>
     <string name="donate_dialog_title">"Líbí se vám jtx Board?"</string>
     <string name="donate_dialog_message">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud se vám tato aplikace líbí a pokud chcete zajistit její neustálý vývoj, zvažte prosím příspěvek :-)
 Děkujeme vám!"</string>
