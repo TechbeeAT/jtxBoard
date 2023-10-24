@@ -93,7 +93,7 @@ enum class BuildFlavor(val flavor: String, val hasBilling: Boolean, val hasGeofe
     GENERIC("generic", false, false, false, false);
 
     companion object {
-        fun getCurrent() = values().find { it.flavor == BuildConfig.FLAVOR } ?: OSE
+        fun getCurrent() = entries.find { it.flavor == BuildConfig.FLAVOR } ?: OSE
     }
 }
 
@@ -337,7 +337,7 @@ fun MainNavHost(
             arguments = FilteredListDestination.FilteredList.args
         ) { backStackEntry ->
 
-            val module = Module.values().find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.argModule) } ?: return@composable
+            val module = Module.entries.find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.argModule) } ?: return@composable
             val storedListSettingData = backStackEntry.arguments?.getString(
                 FilteredListDestination.argStoredListSettingData)?.let {
                 Json.decodeFromString<StoredListSettingData>(URLDecoder.decode(it, "utf-8")

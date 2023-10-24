@@ -618,13 +618,13 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             },
             onInvertSelection = {
-                val missing = Classification.values().filter { classification -> !listSettings.searchClassification.contains(classification) }
+                val missing = Classification.entries.filter { classification -> !listSettings.searchClassification.contains(classification) }
                 listSettings.searchClassification.clear()
                 listSettings.searchClassification.addAll(missing)
                 onListSettingsChanged()
             })
         {
-            Classification.values().forEach { classification ->
+            Classification.entries.forEach { classification ->
                 FilterChip(
                     selected = listSettings.searchClassification.contains(classification),
                     onClick = {

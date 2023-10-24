@@ -129,7 +129,7 @@ fun DetailsCardAttendees(
                                 },
                                 label = { Text(attendee.getDisplayString()) },
                                 leadingIcon = {
-                                    if (Role.values().any { role -> role.name == attendee.role })
+                                    if (Role.entries.any { role -> role.name == attendee.role })
                                         Role.valueOf(attendee.role ?: Role.`REQ-PARTICIPANT`.name)
                                             .Icon()
                                     else
@@ -141,7 +141,7 @@ fun DetailsCardAttendees(
                                 onClick = { overflowMenuExpanded.value = true },
                                 label = { Text(attendee.getDisplayString()) },
                                 leadingIcon = {
-                                    if (Role.values().any { role -> role.name == attendee.role })
+                                    if (Role.entries.any { role -> role.name == attendee.role })
                                         Role.valueOf(attendee.role ?: Role.`REQ-PARTICIPANT`.name)
                                             .Icon()
                                     else
@@ -166,7 +166,7 @@ fun DetailsCardAttendees(
                             expanded = overflowMenuExpanded.value,
                             onDismissRequest = { overflowMenuExpanded.value = false }
                         ) {
-                            Role.values().forEach { role ->
+                            Role.entries.forEach { role ->
                                 DropdownMenuItem(
                                     text = {
                                         Row(

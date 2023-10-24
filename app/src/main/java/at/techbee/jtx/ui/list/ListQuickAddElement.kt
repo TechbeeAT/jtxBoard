@@ -455,7 +455,7 @@ fun ListQuickAddElement_Preview() {
 
         ListQuickAddElement(
             presetModule = Module.JOURNAL,
-            enabledModules = Module.values().toList(),
+            enabledModules = Module.entries,
             allWriteableCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _, _ -> },
@@ -490,7 +490,7 @@ fun ListQuickAddElement_Preview_empty() {
 
         ListQuickAddElement(
             presetModule = Module.JOURNAL,
-            enabledModules = Module.values().toList(),
+            enabledModules = Module.entries,
             allWriteableCollections = listOf(collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _, _ -> },

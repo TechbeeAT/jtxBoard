@@ -112,7 +112,7 @@ fun ListWidgetConfigGeneral(
             horizontalArrangement = Arrangement.Center
         ) {
 
-            Module.values().forEach { module ->
+            Module.entries.forEach { module ->
                 FilterChip(
                     selected = module == selectedModule.value,
                     onClick = {
