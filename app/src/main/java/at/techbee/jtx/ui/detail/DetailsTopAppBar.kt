@@ -14,8 +14,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.AddTask
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -41,7 +53,7 @@ fun DetailsTopAppBar(
     actions: @Composable () -> Unit = { }
 ) {
 
-    var textFieldText by remember { mutableStateOf("") }
+    var textFieldText by rememberSaveable { mutableStateOf("") }
 
     CenterAlignedTopAppBar(
         title = {
@@ -63,7 +75,7 @@ fun DetailsTopAppBar(
                 shape = RoundedCornerShape(32.dp),
                 textStyle = MaterialTheme.typography.bodyLarge,
                 placeholder = {
-                Crossfade(detailTopAppBarMode) {
+                Crossfade(detailTopAppBarMode, label = "detailTopAppBarMode") {
                     when(it) {
                         DetailTopAppBarMode.ADD_SUBTASK -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
                         DetailTopAppBarMode.ADD_SUBNOTE -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))

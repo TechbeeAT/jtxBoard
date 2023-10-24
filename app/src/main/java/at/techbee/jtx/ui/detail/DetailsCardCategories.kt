@@ -41,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
@@ -74,7 +75,7 @@ fun DetailsCardCategories(
 ) {
 
     val headline = stringResource(id = R.string.categories)
-    var newCategory by remember { mutableStateOf("") }
+    var newCategory by rememberSaveable { mutableStateOf("") }
 
     val mergedCategories = mutableListOf<StoredCategory>()
     mergedCategories.addAll(storedCategories)

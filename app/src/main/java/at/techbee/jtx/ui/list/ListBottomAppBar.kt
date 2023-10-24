@@ -44,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -88,10 +89,10 @@ fun ListBottomAppBar(
     onDeleteDone: () -> Unit
 ) {
 
-    var showGoToDatePicker by remember { mutableStateOf(false) }
-    var showSyncAppIncompatibleDialog by remember { mutableStateOf(false) }
-    var showDeleteDoneDialog by remember { mutableStateOf(false) }
-    val showMoreActionsMenu = remember { mutableStateOf(false) }
+    var showGoToDatePicker by rememberSaveable { mutableStateOf(false) }
+    var showSyncAppIncompatibleDialog by rememberSaveable { mutableStateOf(false) }
+    var showDeleteDoneDialog by rememberSaveable { mutableStateOf(false) }
+    val showMoreActionsMenu = rememberSaveable { mutableStateOf(false) }
 
     if(showGoToDatePicker) {
         DatePickerDialog(
