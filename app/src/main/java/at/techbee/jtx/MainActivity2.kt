@@ -233,7 +233,10 @@ class MainActivity2 : AppCompatActivity() {
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                 }
                 INTENT_ACTION_OPEN_FILTERED_LIST -> {
-                    globalStateHolder.filteredList2Load.value = intent.getStringExtra(INTENT_EXTRA_LISTWIDGETCONFIG)?.let { Json.decodeFromString<ListWidgetConfig>(it) }
+                    intent.getStringExtra(INTENT_EXTRA_LISTWIDGETCONFIG)?.let {
+                        globalStateHolder.filteredList2Load.value = Json.decodeFromString<ListWidgetConfig>(it)
+                        intent.removeExtra(INTENT_EXTRA_LISTWIDGETCONFIG)
+                    }
                 }
                 INTENT_ACTION_OPEN_ICALOBJECT -> {
                     val id = intent.getLongExtra(INTENT_EXTRA_ITEM2SHOW, 0L)
@@ -317,6 +320,7 @@ fun MainNavHost(
     val navController = rememberNavController()
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
     var showOSEDonationDialog by rememberSaveable { mutableStateOf(false) }
+    val detailViewModel: DetailViewModel = viewModel()   // putting this viewmodel out of NavHost to make sure it survives orientation changes
 
     globalStateHolder.remoteCollections = ICalDatabase.getInstance(activity).iCalDatabaseDao().getAllRemoteCollectionsLive().observeAsState(emptyList())
 
@@ -366,7 +370,6 @@ fun MainNavHost(
             backStackEntry.savedStateHandle[DetailDestination.argIsEditMode] = editImmediately
              */
 
-            val detailViewModel: DetailViewModel = viewModel()
             detailViewModel.load(icalObjectId, globalStateHolder.isAuthenticated.value)
             globalStateHolder.icalObject2Open.value = null  // reset (if it was set)
 
@@ -473,6 +476,7 @@ fun MainNavHost(
         val listSettings = ListSettings.fromListWidgetConfig(listWidgetConfig)
         val storedListSettingData = StoredListSettingData.fromListSettings(listSettings)
         navController.navigate(FilteredListDestination.FilteredList.getRoute(listWidgetConfig.module, storedListSettingData))
+        globalStateHolder.filteredList2Load.value = null
     }
 
     if (!settingsStateHolder.proInfoShown.value && !isProPurchased.value) {
