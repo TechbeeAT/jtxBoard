@@ -7,23 +7,22 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Alarm
-import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.CheckBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -126,168 +125,165 @@ fun FullscreenAlarmScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    Box {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Icon(
+            imageVector = Icons.Outlined.Alarm,
+            contentDescription = null,
+            modifier = Modifier
+                .size(72.dp)
+                .alpha(0.33f)
+        )
+        Text(
+            text = iCalObject.summary?:"",
+            textAlign = TextAlign.Center,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.displayMedium
+        )
+        Text(
+            text = iCalObject.description?:"",
+            textAlign = TextAlign.Center,
+            maxLines = 5,
+            overflow = TextOverflow.Ellipsis
+        )
 
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Icon(
-                imageVector = Icons.Outlined.Alarm,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(72.dp)
-                    .alpha(0.33f)
-            )
-            Text(
-                text = iCalObject.summary?:"",
-                textAlign = TextAlign.Center,
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.displayMedium
-            )
-            Text(
-                text = iCalObject.description?:"",
-                textAlign = TextAlign.Center,
-                maxLines = 5,
-                overflow = TextOverflow.Ellipsis
-            )
+            if(iCalObject.dtstart != null) {
+                Text(
+                    text = stringResource(id = R.string.started),
+                    style = MaterialTheme.typography.labelSmall
+                )
 
-            Column(
-                modifier = modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                if(iCalObject.dtstart != null) {
+                if(iCalObject.dtstartTimezone == TZ_ALLDAY
+                    || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
+                    || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
+                ) {
                     Text(
-                        text = stringResource(id = R.string.started),
-                        style = MaterialTheme.typography.labelSmall
+                        text = DateTimeUtils.convertLongToFullDateTimeString(
+                            iCalObject.dtstart,
+                            if(iCalObject.dtstartTimezone == TZ_ALLDAY) TZ_ALLDAY else null
+                        ),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleMedium
                     )
-
-                    if(iCalObject.dtstartTimezone == TZ_ALLDAY
-                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
-                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
-                    ) {
-                        Text(
-                            text = DateTimeUtils.convertLongToFullDateTimeString(
-                                iCalObject.dtstart,
-                                if(iCalObject.dtstartTimezone == TZ_ALLDAY) TZ_ALLDAY else null
-                            ),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                    if(iCalObject.dtstartTimezone != TZ_ALLDAY && iCalObject.dtstartTimezone != null &&
-                        (settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL
-                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL)
-                    ) {
-                        Text(
-                            text = DateTimeUtils.convertLongToFullDateTimeString(
-                                iCalObject.dtstart,
-                                iCalObject.dtstartTimezone
-                            ),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
                 }
-
-                if(iCalObject.due != null) {
+                if(iCalObject.dtstartTimezone != TZ_ALLDAY && iCalObject.dtstartTimezone != null &&
+                    (settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL
+                    || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL)
+                ) {
                     Text(
-                        text = stringResource(id = R.string.due),
-                        style = MaterialTheme.typography.labelSmall
+                        text = DateTimeUtils.convertLongToFullDateTimeString(
+                            iCalObject.dtstart,
+                            iCalObject.dtstartTimezone
+                        ),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleMedium
                     )
-
-                    if(iCalObject.dueTimezone == TZ_ALLDAY
-                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
-                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
-                    ) {
-                        Text(
-                            text = DateTimeUtils.convertLongToFullDateTimeString(
-                                iCalObject.due,
-                                if(iCalObject.dueTimezone == TZ_ALLDAY) TZ_ALLDAY else null
-                            ),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                    if(iCalObject.dueTimezone != TZ_ALLDAY && iCalObject.dueTimezone != null &&
-                        (settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL
-                                || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL)
-                    ) {
-                        Text(
-                            text = DateTimeUtils.convertLongToFullDateTimeString(
-                                iCalObject.due,
-                                iCalObject.dueTimezone
-                            ),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
                 }
             }
 
-            if(!isReadOnly) {
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    if (alarm != null && alarm.alarmId != 0L) {
-                        TextButton(
-                            onClick = {
-                                scope.launch(Dispatchers.IO) {
-                                    NotificationPublisher.addPostponedAlarm(alarm.alarmId, (1).hours.inWholeMilliseconds, context)
-                                    onDismiss(true)
-                                }
-                            }
-                        )  {
-                            Text(stringResource(id = R.string.notification_add_1h))
-                        }
-                        TextButton(
-                            onClick = {
-                                scope.launch(Dispatchers.IO) {
-                                    NotificationPublisher.addPostponedAlarm(alarm.alarmId, (1).days.inWholeMilliseconds, context)
-                                    onDismiss(true)
-                                }
-                            }
-                        ) {
-                            Text(stringResource(id = R.string.notification_add_1d))
-                        }
-                    }
+            if(iCalObject.due != null) {
+                Text(
+                    text = stringResource(id = R.string.due),
+                    style = MaterialTheme.typography.labelSmall
+                )
 
+                if(iCalObject.dueTimezone == TZ_ALLDAY
+                    || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
+                    || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
+                ) {
+                    Text(
+                        text = DateTimeUtils.convertLongToFullDateTimeString(
+                            iCalObject.due,
+                            if(iCalObject.dueTimezone == TZ_ALLDAY) TZ_ALLDAY else null
+                        ),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                if(iCalObject.dueTimezone != TZ_ALLDAY && iCalObject.dueTimezone != null &&
+                    (settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL
+                            || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL)
+                ) {
+                    Text(
+                        text = DateTimeUtils.convertLongToFullDateTimeString(
+                            iCalObject.due,
+                            iCalObject.dueTimezone
+                        ),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+        }
+
+        if(!isReadOnly) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (alarm != null && alarm.alarmId != 0L) {
                     TextButton(
                         onClick = {
                             scope.launch(Dispatchers.IO) {
-                                NotificationPublisher.setToDone(iCalObject.id, settingKeepStatusProgressCompletedInSync, settingLinkProgressToSubtasks, context)
+                                NotificationPublisher.addPostponedAlarm(alarm.alarmId, (1).hours.inWholeMilliseconds, context)
+                                onDismiss(true)
+                            }
+                        }
+                    )  {
+                        Text(stringResource(id = R.string.notification_add_1h))
+                    }
+                    TextButton(
+                        onClick = {
+                            scope.launch(Dispatchers.IO) {
+                                NotificationPublisher.addPostponedAlarm(alarm.alarmId, (1).days.inWholeMilliseconds, context)
                                 onDismiss(true)
                             }
                         }
                     ) {
-                        Text(stringResource(id = R.string.notification_done))
+                        Text(stringResource(id = R.string.notification_add_1d))
                     }
                 }
-            }
 
-            Button(onClick = {
-                val intent = Intent(context, MainActivity2::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    this.action = MainActivity2.INTENT_ACTION_OPEN_ICALOBJECT
-                    this.putExtra(MainActivity2.INTENT_EXTRA_ITEM2SHOW, iCalObject.id)
+                TextButton(
+                    onClick = {
+                        scope.launch(Dispatchers.IO) {
+                            NotificationPublisher.setToDone(iCalObject.id, settingKeepStatusProgressCompletedInSync, settingLinkProgressToSubtasks, context)
+                            onDismiss(true)
+                        }
+                    }
+                ) {
+                    Icon(Icons.Outlined.CheckBox, null)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(stringResource(id = R.string.notification_done))
                 }
-                context.startActivity(intent)
-                onDismiss(false)
-            }) {
-                Text(stringResource(id = R.string.open))
             }
         }
 
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            IconButton(onClick = { onDismiss(false) }) {
-                Icon(Icons.Outlined.Close, stringResource(id = R.string.dismiss))
+        Button(onClick = {
+            val intent = Intent(context, MainActivity2::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                this.action = MainActivity2.INTENT_ACTION_OPEN_ICALOBJECT
+                this.putExtra(MainActivity2.INTENT_EXTRA_ITEM2SHOW, iCalObject.id)
             }
+            context.startActivity(intent)
+            onDismiss(false)
+        }) {
+            Text(stringResource(id = R.string.open))
+        }
+
+        TextButton(onClick = { onDismiss(false) }) {
+            Text(stringResource(id = R.string.dismiss))
         }
     }
 }
