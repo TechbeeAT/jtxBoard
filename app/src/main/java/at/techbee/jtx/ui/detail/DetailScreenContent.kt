@@ -215,6 +215,13 @@ fun DetailScreenContent(
     var summary by rememberSaveable { mutableStateOf(originalICalEntity.value?.property?.summary ?: "") }
     var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(originalICalEntity.value?.property?.description ?: "")) }
 
+    // make sure the values get propagated in the iCalObject again when the orientation changes
+    if(iCalObject.summary != summary.ifEmpty { null } || iCalObject.description != description.text.ifEmpty { null } || iCalObject.color != color) {
+        iCalObject.summary = summary.ifEmpty { null }
+        iCalObject.description = description.text.ifEmpty { null }
+        iCalObject.color = color
+    }
+
     // Apply Markdown on recomposition if applicable, then set back to OBSERVING
     if (markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
         description = markdownState.value.format(description)

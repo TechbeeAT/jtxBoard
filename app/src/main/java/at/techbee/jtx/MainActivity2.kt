@@ -320,7 +320,6 @@ fun MainNavHost(
     val navController = rememberNavController()
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
     var showOSEDonationDialog by rememberSaveable { mutableStateOf(false) }
-    val detailViewModel: DetailViewModel = viewModel()   // putting this viewmodel out of NavHost to make sure it survives orientation changes
 
     globalStateHolder.remoteCollections = ICalDatabase.getInstance(activity).iCalDatabaseDao().getAllRemoteCollectionsLive().observeAsState(emptyList())
 
@@ -369,7 +368,7 @@ fun MainNavHost(
             backStackEntry.savedStateHandle[DetailDestination.argICalObjectId] = icalObjectId
             backStackEntry.savedStateHandle[DetailDestination.argIsEditMode] = editImmediately
              */
-
+            val detailViewModel: DetailViewModel = viewModel()
             detailViewModel.load(icalObjectId, globalStateHolder.isAuthenticated.value)
             globalStateHolder.icalObject2Open.value = null  // reset (if it was set)
 
