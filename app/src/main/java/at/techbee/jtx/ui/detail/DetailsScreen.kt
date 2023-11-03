@@ -106,18 +106,11 @@ fun DetailsScreen(
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
-    val parents = detailViewModel.relatedParents.observeAsState(emptyList())
-    val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
-    val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
+
     val seriesElement = detailViewModel.seriesElement.observeAsState(null)
-    val seriesInstances = detailViewModel.seriesInstances.observeAsState(emptyList())
-    val isChild = detailViewModel.isChild.observeAsState(false)
-    val allCategories = detailViewModel.allCategories.observeAsState(emptyList())
-    val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val storedCategories by detailViewModel.storedCategories.observeAsState(emptyList())
     val storedResources by detailViewModel.storedResources.observeAsState(emptyList())
     val storedStatuses by detailViewModel.storedStatuses.observeAsState(emptyList())
-    val allWriteableCollections = detailViewModel.allWriteableCollections.observeAsState(emptyList())
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
     val isProActionAvailable by remember(isProPurchased, icalEntity) { derivedStateOf { isProPurchased.value || icalEntity.value?.ICalCollection?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
@@ -490,19 +483,19 @@ fun DetailsScreen(
                 alarms = detailViewModel.mutableAlarms,
                 isEditMode = isEditMode,
                 changeState = detailViewModel.changeState,
-                parents = parents,
-                subtasks = subtasks,
-                subnotes = subnotes,
-                isChild = isChild.value,
-                allWriteableCollections = allWriteableCollections.value,
-                allCategories = allCategories.value,
-                allResources = allResources.value,
+                parentsLive = detailViewModel.relatedParents,
+                subtasksLive = detailViewModel.relatedSubtasks,
+                subnotesLive = detailViewModel.relatedSubnotes,
+                isChildLive = detailViewModel.isChild,
+                allWriteableCollectionsLive = detailViewModel.allWriteableCollections,
+                allCategoriesLive = detailViewModel.allCategories,
+                allResourcesLive = detailViewModel.allResources,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
-                seriesInstances = seriesInstances.value,
+                seriesInstancesLive = detailViewModel.seriesInstances,
                 seriesElement = seriesElement.value,
                 sliderIncrement = detailViewModel.settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
                 showProgressForMainTasks = detailViewModel.settingsStateHolder.settingShowProgressForMainTasks.value,

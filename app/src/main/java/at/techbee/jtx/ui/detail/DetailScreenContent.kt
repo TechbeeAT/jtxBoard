@@ -74,6 +74,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection
@@ -125,19 +127,19 @@ fun DetailScreenContent(
     alarms: SnapshotStateList<Alarm>,
     isEditMode: MutableState<Boolean>,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
-    subtasks: State<List<ICal4List>>,
-    subnotes: State<List<ICal4List>>,
-    parents: State<List<ICal4List>>,
-    isChild: Boolean,
-    allWriteableCollections: List<ICalCollection>,
-    allCategories: List<String>,
-    allResources: List<String>,
+    subtasksLive: LiveData<List<ICal4List>>,
+    subnotesLive: LiveData<List<ICal4List>>,
+    parentsLive: LiveData<List<ICal4List>>,
+    isChildLive: LiveData<Boolean>,
+    allWriteableCollectionsLive: LiveData<List<ICalCollection>>,
+    allCategoriesLive: LiveData<List<String>>,
+    allResourcesLive: LiveData<List<String>>,
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
     extendedStatuses: List<ExtendedStatus>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
-    seriesInstances: List<ICalObject>,
+    seriesInstancesLive: LiveData<List<ICalObject>>,
     seriesElement: ICalObject?,
     sliderIncrement: Int,
     showProgressForMainTasks: Boolean,
@@ -166,6 +168,13 @@ fun DetailScreenContent(
 
     val context = LocalContext.current
     val localInspectionMode = LocalInspectionMode.current
+
+    val parents = parentsLive.observeAsState(emptyList())
+    val subtasks = subtasksLive.observeAsState(emptyList())
+    val subnotes = subnotesLive.observeAsState(emptyList())
+    val seriesInstances = seriesInstancesLive.observeAsState(emptyList())
+    val isChild = isChildLive.observeAsState(false)
+    val allWriteableCollections = allWriteableCollectionsLive.observeAsState(emptyList())
 
     val autoAlarmSetting by remember {
         if (!localInspectionMode)
@@ -229,7 +238,7 @@ fun DetailScreenContent(
     }
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
-    val allPossibleCollections = allWriteableCollections.filter {
+    val allPossibleCollections = allWriteableCollections.value.filter {
         it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value            // filter remote collections if pro was not purchased
     }
 
@@ -335,7 +344,7 @@ fun DetailScreenContent(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-        AnimatedVisibility(!isEditMode.value || isChild) {
+        AnimatedVisibility(!isEditMode.value || isChild.value) {
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -364,7 +373,7 @@ fun DetailScreenContent(
             }
         }
 
-        AnimatedVisibility(isEditMode.value && !isChild) {
+        AnimatedVisibility(isEditMode.value && !isChild.value) {
 
             Card(
                 colors = CardDefaults.elevatedCardColors(),
@@ -636,7 +645,7 @@ fun DetailScreenContent(
                 storedCategories = storedCategories,
                 isEditMode = isEditMode.value,
                 onCategoriesUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED },
-                allCategories = allCategories,
+                allCategoriesLive = allCategoriesLive,
                 onGoToFilteredList = goToFilteredList
             )
         }
@@ -713,7 +722,7 @@ fun DetailScreenContent(
                 isEditMode = isEditMode.value,
                 onResourcesUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED },
                 onGoToFilteredList = goToFilteredList,
-                allResources = allResources,
+                allResourcesLive = allResourcesLive,
             )
         }
 
@@ -804,7 +813,7 @@ fun DetailScreenContent(
         ) {   // only Todos have recur!
             DetailsCardRecur(
                 icalObject = iCalObject,
-                seriesInstances = seriesInstances,
+                seriesInstances = seriesInstances.value,
                 seriesElement = seriesElement,
                 isEditMode = isEditMode.value,
                 hasChildren = subtasks.value.isNotEmpty() || subnotes.value.isNotEmpty(),
@@ -925,12 +934,12 @@ fun DetailScreenContent_JOURNAL() {
             alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(false) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
-            parents = remember { mutableStateOf(emptyList()) },
-            subtasks = remember { mutableStateOf(emptyList()) },
-            subnotes = remember { mutableStateOf(emptyList()) },
-            seriesInstances = emptyList(),
+            parentsLive = MutableLiveData(emptyList()),
+            subtasksLive = MutableLiveData(emptyList()),
+            subnotesLive = MutableLiveData(emptyList()),
+            seriesInstancesLive = MutableLiveData(emptyList()),
             seriesElement = null,
-            isChild = false,
+            isChildLive = MutableLiveData(false),
             player = null,
             sliderIncrement = 10,
             showProgressForMainTasks = true,
@@ -939,9 +948,9 @@ fun DetailScreenContent_JOURNAL() {
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
-            allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
-            allCategories = emptyList(),
-            allResources = emptyList(),
+            allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
+            allCategoriesLive = MutableLiveData(emptyList()),
+            allResourcesLive = MutableLiveData(emptyList()),
             storedCategories = emptyList(),
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
@@ -987,16 +996,16 @@ fun DetailScreenContent_TODO_editInitially() {
             alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            parents = remember { mutableStateOf(emptyList()) },
-            subtasks = remember { mutableStateOf(emptyList()) },
-            subnotes = remember { mutableStateOf(emptyList()) },
-            seriesInstances = emptyList(),
+            parentsLive = MutableLiveData(emptyList()),
+            subtasksLive = MutableLiveData(emptyList()),
+            subnotesLive = MutableLiveData(emptyList()),
+            seriesInstancesLive = MutableLiveData(emptyList()),
             seriesElement = null,
-            isChild = false,
+            isChildLive = MutableLiveData(false),
             player = null,
-            allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
-            allCategories = emptyList(),
-            allResources = emptyList(),
+            allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
+            allCategoriesLive = MutableLiveData(emptyList()),
+            allResourcesLive = MutableLiveData(emptyList()),
             storedCategories = emptyList(),
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
@@ -1049,16 +1058,16 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            parents = remember { mutableStateOf(emptyList()) },
-            subtasks = remember { mutableStateOf(emptyList()) },
-            subnotes = remember { mutableStateOf(emptyList()) },
-            seriesInstances = emptyList(),
+            parentsLive = MutableLiveData(emptyList()),
+            subtasksLive = MutableLiveData(emptyList()),
+            subnotesLive = MutableLiveData(emptyList()),
+            seriesInstancesLive = MutableLiveData(emptyList()),
             seriesElement = null,
-            isChild = true,
+            isChildLive = MutableLiveData(true),
             player = null,
-            allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
-            allCategories = emptyList(),
-            allResources = emptyList(),
+            allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
+            allCategoriesLive = MutableLiveData(emptyList()),
+            allResourcesLive = MutableLiveData(emptyList()),
             storedCategories = emptyList(),
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
@@ -1105,16 +1114,16 @@ fun DetailScreenContent_failedLoading() {
             alarms = remember { mutableStateListOf() },
             isEditMode = remember { mutableStateOf(true) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            parents = remember { mutableStateOf(emptyList()) },
-            subtasks = remember { mutableStateOf(emptyList()) },
-            subnotes = remember { mutableStateOf(emptyList()) },
-            seriesInstances = emptyList(),
+            parentsLive = MutableLiveData(emptyList()),
+            subtasksLive = MutableLiveData(emptyList()),
+            subnotesLive = MutableLiveData(emptyList()),
+            seriesInstancesLive = MutableLiveData(emptyList()),
             seriesElement = null,
-            isChild = true,
+            isChildLive = MutableLiveData(true),
             player = null,
-            allWriteableCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
-            allCategories = emptyList(),
-            allResources = emptyList(),
+            allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
+            allCategoriesLive = MutableLiveData(emptyList()),
+            allResourcesLive = MutableLiveData(emptyList()),
             storedCategories = emptyList(),
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
