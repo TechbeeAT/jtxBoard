@@ -28,6 +28,8 @@ class SettingsStateHolder(val context: Context) {
     var settingEnableNotes = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ENABLE_NOTES.key, SwitchSetting.SETTING_ENABLE_NOTES.default))
     var settingEnableTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ENABLE_TASKS.key, SwitchSetting.SETTING_ENABLE_TASKS.default))
 
+    var settingAccessibilityMode = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ACCESSIBILITY_MODE.key, SwitchSetting.SETTING_ACCESSIBILITY_MODE.default))
+
     var settingTheme = mutableStateOf(DropdownSetting.SETTING_THEME.getSetting(prefs))
     var settingAudioFormat = mutableStateOf(DropdownSetting.SETTING_AUDIO_FORMAT.getSetting(prefs))
     var settingAutoExpandSubtasks = mutableStateOf(SwitchSetting.SETTING_AUTO_EXPAND_SUBTASKS.getSetting(prefs))

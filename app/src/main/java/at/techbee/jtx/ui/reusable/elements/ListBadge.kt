@@ -15,16 +15,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material3.*
+import androidx.compose.material3.Badge
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,6 +43,7 @@ fun ListBadge(
     iconDesc: String? = null,
     text: String? = null,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    isAccessibilityMode: Boolean = SettingsStateHolder(LocalContext.current).settingAccessibilityMode.value
 ) {
     val contentColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(containerColor)
 
@@ -54,7 +62,7 @@ fun ListBadge(
                     imageVector = it,
                     contentDescription = iconDesc,
                     tint = contentColor,
-                    modifier = Modifier.size(12.dp)
+                    modifier = if(isAccessibilityMode) Modifier.size(16.dp) else Modifier.size(12.dp)
                 )
             }
             iconRes?.let {
@@ -62,10 +70,17 @@ fun ListBadge(
                     painterResource(id = it),
                     contentDescription = iconDesc,
                     tint = contentColor,
-                    modifier = Modifier.size(12.dp)
+                    modifier = if(isAccessibilityMode) Modifier.size(16.dp) else Modifier.size(12.dp)
                 )
             }
-            text?.let { Text(text = it, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+            text?.let {
+                Text(
+                    text = it,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = if(isAccessibilityMode) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelSmall
+                )
+            }
         }
     }
 }

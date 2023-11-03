@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.AlarmOff
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.DoneAll
+import androidx.compose.material.icons.outlined.FormatSize
 import androidx.compose.material.icons.outlined.Fullscreen
 import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.PublishedWithChanges
@@ -158,6 +159,13 @@ enum class SwitchSetting(
         icon = { Icon(Icons.Outlined.SwipeDown, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_sync_on_pull_refresh,
         default = true
+    ),
+    SETTING_ACCESSIBILITY_MODE(
+        key = "settings_accessibility_mode",
+        icon = { Icon(Icons.Outlined.FormatSize, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_accessibility_mode,
+        subtitle = R.string.settings_accessibility_mode_sub,
+        default = false
     );
     fun saveSetting(newSwitchValue: Boolean, prefs: SharedPreferences) = prefs.edit().putBoolean(key, newSwitchValue).apply()
 
