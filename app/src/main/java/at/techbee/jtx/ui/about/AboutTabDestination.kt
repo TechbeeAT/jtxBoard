@@ -23,27 +23,27 @@ sealed class AboutTabDestination (
     val icon: ImageVector,
     //val badgeCount: Int?
 ) {
-    object Jtx: AboutTabDestination(
+    data object Jtx: AboutTabDestination(
         titleResource = R.string.about_tabitem_jtx,
         icon = Icons.Outlined.Info,
     )
-    object JtxBoardPro: AboutTabDestination(
+    data object JtxBoardPro: AboutTabDestination(
         titleResource = R.string.buypro_initial_dialog_title,
         icon = Icons.Outlined.CardGiftcard,
     )
-    object Releasenotes: AboutTabDestination(
+    data object Releasenotes: AboutTabDestination(
         titleResource = R.string.about_tabitem_releasenotes,
         icon = Icons.Outlined.NewReleases,
     )
-    object Libraries: AboutTabDestination(
+    data object Libraries: AboutTabDestination(
         titleResource = R.string.about_tabitem_libraries,
         icon = Icons.Outlined.DataObject,
     )
-    object Translations: AboutTabDestination(
+    data object Translations: AboutTabDestination(
         titleResource = R.string.about_tabitem_translations,
         icon = Icons.Outlined.Translate,
     )
-    object Contributors: AboutTabDestination(
+    data object Contributors: AboutTabDestination(
         titleResource = R.string.about_tabitem_contributors,
         icon = Icons.Outlined.Handshake,
     )
