@@ -19,10 +19,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.NavigateBefore
 import androidx.compose.material.icons.automirrored.outlined.NavigateNext
@@ -336,20 +335,51 @@ fun DetailScreenContent(
         saveEntry()
     }
 
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .verticalScroll(rememberScrollState()),
+            .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-        AnimatedVisibility(!isEditMode.value || isChild.value) {
+        item {
+            AnimatedVisibility(!isEditMode.value || isChild.value) {
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Card(
+                        colors = CardDefaults.elevatedCardColors(),
+                        elevation = CardDefaults.elevatedCardElevation(),
+                        border = color?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+
+                        Row(
+                            modifier = Modifier.padding(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            ListBadge(
+                                icon = Icons.Outlined.FolderOpen,
+                                iconDesc = stringResource(id = R.string.collection),
+                                containerColor = originalICalEntity.value?.ICalCollection?.color?.let {
+                                    Color(
+                                        it
+                                    )
+                                } ?: MaterialTheme.colorScheme.primaryContainer
+                            )
+                            Text(originalICalEntity.value?.ICalCollection?.displayName + originalICalEntity.value?.ICalCollection?.accountName?.let { " ($it)" })
+                        }
+                    }
+                }
+            }
+        }
+
+        item {
+            AnimatedVisibility(isEditMode.value && !isChild.value) {
+
                 Card(
                     colors = CardDefaults.elevatedCardColors(),
                     elevation = CardDefaults.elevatedCardElevation(),
@@ -358,546 +388,663 @@ fun DetailScreenContent(
                 ) {
 
                     Row(
-                        modifier = Modifier.padding(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        ListBadge(
-                            icon = Icons.Outlined.FolderOpen,
-                            iconDesc = stringResource(id = R.string.collection),
-                            containerColor = originalICalEntity.value?.ICalCollection?.color?.let {Color(it) } ?: MaterialTheme.colorScheme.primaryContainer
-                        )
-                        Text(originalICalEntity.value?.ICalCollection?.displayName + originalICalEntity.value?.ICalCollection?.accountName?.let { " ($it)" })
-                    }
-                }
-            }
-        }
 
-        AnimatedVisibility(isEditMode.value && !isChild.value) {
-
-            Card(
-                colors = CardDefaults.elevatedCardColors(),
-                elevation = CardDefaults.elevatedCardElevation(),
-                border = color?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    CollectionsSpinner(
-                        collections = allPossibleCollections,
-                        preselected = originalICalEntity.value?.ICalCollection ?: allPossibleCollections.first(),
-                        includeReadOnly = false,
-                        includeVJOURNAL = if (originalICalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
-                        includeVTODO = if (originalICalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
-                        onSelectionChanged = { newCollection ->
-                            if (iCalObject.collectionId != newCollection.collectionId) {
-                                onMoveToNewCollection(newCollection)
-                            }
-                        },
-                        enabled = iCalObject.recurid.isNullOrEmpty(),
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(4.dp)
-                    )
-                    IconButton(onClick = { showColorPicker = true }) {
-                        Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
-                    }
-                }
-            }
-        }
-
-        DetailsCardDates(
-            icalObject = iCalObject,
-            isEditMode = isEditMode.value,
-            enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] ?: true || iCalObject.getModuleFromString() == Module.JOURNAL,
-            enableDue = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] ?: true,
-            enableCompleted = detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] ?: true,
-            allowCompletedChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
-            onDtstartChanged = { datetime, timezone ->
-                iCalObject.dtstart = datetime
-                iCalObject.dtstartTimezone = timezone
-                updateAlarms()
-                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-            },
-            onDueChanged = { datetime, timezone ->
-                iCalObject.due = datetime
-                iCalObject.dueTimezone = timezone
-                updateAlarms()
-                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-            },
-            onCompletedChanged = { datetime, timezone ->
-                iCalObject.completed = datetime
-                iCalObject.completedTimezone = timezone
-                if (keepStatusProgressCompletedInSync) {
-                    if (datetime == null)
-                        iCalObject.setUpdatedProgress(null, true)
-                    else
-                        iCalObject.setUpdatedProgress(100, true)
-                }
-                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-            },
-            toggleEditMode = { isEditMode.value = !isEditMode.value }
-        )
-
-        AnimatedVisibility(!isEditMode.value && (summary.isNotBlank() || description.text.isNotBlank())) {
-            SelectionContainer {
-                ElevatedCard(
-                    onClick = {
-                        if (originalICalEntity.value?.ICalCollection?.readonly == false)
-                            isEditMode.value = true
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("benchmark:DetailSummary")
-                ) {
-
-                    if (summary.isNotBlank())
-                        Text(
-                            summary.trim(),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-
-                    if (description.text.isNotBlank()) {
-                        if (detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false)
-                            MarkdownText(
-                                markdown = description.text.trim(),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
-                                style = TextStyle(textDirection = TextDirection.Content),
-                                onClick = {
-                                    if (originalICalEntity.value?.ICalCollection?.readonly == false)
-                                        isEditMode.value = true
+                        CollectionsSpinner(
+                            collections = allPossibleCollections,
+                            preselected = originalICalEntity.value?.ICalCollection
+                                ?: allPossibleCollections.first(),
+                            includeReadOnly = false,
+                            includeVJOURNAL = if (originalICalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
+                            includeVTODO = if (originalICalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
+                            onSelectionChanged = { newCollection ->
+                                if (iCalObject.collectionId != newCollection.collectionId) {
+                                    onMoveToNewCollection(newCollection)
                                 }
-                            )
-                        else
-                            Text(
-                                text = description.text.trim(),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
-                            )
+                            },
+                            enabled = iCalObject.recurid.isNullOrEmpty(),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(4.dp)
+                        )
+                        IconButton(onClick = { showColorPicker = true }) {
+                            Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
+                        }
                     }
                 }
             }
         }
 
-        AnimatedVisibility(isEditMode.value) {
+        item {
+            DetailsCardDates(
+                icalObject = iCalObject,
+                isEditMode = isEditMode.value,
+                enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] ?: true || iCalObject.getModuleFromString() == Module.JOURNAL,
+                enableDue = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] ?: true,
+                enableCompleted = detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED]
+                    ?: true,
+                allowCompletedChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
+                onDtstartChanged = { datetime, timezone ->
+                    iCalObject.dtstart = datetime
+                    iCalObject.dtstartTimezone = timezone
+                    updateAlarms()
+                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                },
+                onDueChanged = { datetime, timezone ->
+                    iCalObject.due = datetime
+                    iCalObject.dueTimezone = timezone
+                    updateAlarms()
+                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                },
+                onCompletedChanged = { datetime, timezone ->
+                    iCalObject.completed = datetime
+                    iCalObject.completedTimezone = timezone
+                    if (keepStatusProgressCompletedInSync) {
+                        if (datetime == null)
+                            iCalObject.setUpdatedProgress(null, true)
+                        else
+                            iCalObject.setUpdatedProgress(100, true)
+                    }
+                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                },
+                toggleEditMode = { isEditMode.value = !isEditMode.value }
+            )
+        }
 
-            ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("benchmark:DetailSummaryCardEdit")
-            ) {
-
-                AnimatedVisibility(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true || showAllOptions) {
-                    OutlinedTextField(
-                        value = summary,
-                        onValueChange = {
-                            summary = it
-                            iCalObject.summary = it.ifEmpty { null }
-                            changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+        item {
+            AnimatedVisibility(!isEditMode.value && (summary.isNotBlank() || description.text.isNotBlank())) {
+                SelectionContainer {
+                    ElevatedCard(
+                        onClick = {
+                            if (originalICalEntity.value?.ICalCollection?.readonly == false)
+                                isEditMode.value = true
                         },
-                        label = { Text(stringResource(id = R.string.summary)) },
-                        keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Sentences,
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Default
-                        ),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
-                    )
-                }
+                            .testTag("benchmark:DetailSummary")
+                    ) {
 
-                AnimatedVisibility(description.text.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == true || showAllOptions) {
-                    OutlinedTextField(
-                        value = description,
-                        onValueChange = {
+                        if (summary.isNotBlank())
+                            Text(
+                                summary.trim(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                style = MaterialTheme.typography.titleMedium
+                            )
 
-                            // START Create bulletpoint if previous line started with a bulletpoint
-                            val enteredCharIndex = StringUtils.indexOfDifference(it.text, description.text)
-                            val enteredCharIsReturn =
-                                enteredCharIndex >= 0
-                                        && it.text.substring(enteredCharIndex).startsWith(System.lineSeparator())
-                                        && it.text.length > description.text.length  // excludes backspace!
-
-                            val before = it.getTextBeforeSelection(Int.MAX_VALUE)
-                            val after = if (it.selection.start < it.annotatedString.lastIndex) it.annotatedString.subSequence(
-                                it.selection.start,
-                                it.annotatedString.lastIndex + 1
-                            ) else AnnotatedString("")
-                            val lines = before.split(System.lineSeparator())
-                            val previous = if (lines.lastIndex > 1) lines[lines.lastIndex - 1] else before
-                            val nextLineStartWith = when {
-                                previous.startsWith("- [ ] ") || previous.startsWith("- [x]") -> "- [ ] "
-                                previous.startsWith("* ") -> "* "
-                                previous.startsWith("- ") -> "- "
-                                else -> null
-                            }
-
-                            description = if (description.text != it.text && (nextLineStartWith != null) && enteredCharIsReturn)
-                                TextFieldValue(
-                                    annotatedString = before.plus(AnnotatedString(nextLineStartWith)).plus(after),
-                                    selection = TextRange(it.selection.start + nextLineStartWith.length)
+                        if (description.text.isNotBlank()) {
+                            if (detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false)
+                                MarkdownText(
+                                    markdown = description.text.trim(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                    style = TextStyle(textDirection = TextDirection.Content),
+                                    onClick = {
+                                        if (originalICalEntity.value?.ICalCollection?.readonly == false)
+                                            isEditMode.value = true
+                                    }
                                 )
                             else
-                                it
-                            // END Create bulletpoint if previous line started with a bulletpoint
+                                Text(
+                                    text = description.text.trim(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                )
+                        }
+                    }
+                }
+            }
+        }
 
-                            iCalObject.description = it.text.ifEmpty { null }
+        item {
+            AnimatedVisibility(isEditMode.value) {
+
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("benchmark:DetailSummaryCardEdit")
+                ) {
+
+                    AnimatedVisibility(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true || showAllOptions) {
+                        OutlinedTextField(
+                            value = summary,
+                            onValueChange = {
+                                summary = it
+                                iCalObject.summary = it.ifEmpty { null }
+                                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                            },
+                            label = { Text(stringResource(id = R.string.summary)) },
+                            keyboardOptions = KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences,
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Default
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        )
+                    }
+
+                    AnimatedVisibility(description.text.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == true || showAllOptions) {
+                        OutlinedTextField(
+                            value = description,
+                            onValueChange = {
+
+                                // START Create bulletpoint if previous line started with a bulletpoint
+                                val enteredCharIndex =
+                                    StringUtils.indexOfDifference(it.text, description.text)
+                                val enteredCharIsReturn =
+                                    enteredCharIndex >= 0
+                                            && it.text.substring(enteredCharIndex)
+                                        .startsWith(System.lineSeparator())
+                                            && it.text.length > description.text.length  // excludes backspace!
+
+                                val before = it.getTextBeforeSelection(Int.MAX_VALUE)
+                                val after =
+                                    if (it.selection.start < it.annotatedString.lastIndex) it.annotatedString.subSequence(
+                                        it.selection.start,
+                                        it.annotatedString.lastIndex + 1
+                                    ) else AnnotatedString("")
+                                val lines = before.split(System.lineSeparator())
+                                val previous =
+                                    if (lines.lastIndex > 1) lines[lines.lastIndex - 1] else before
+                                val nextLineStartWith = when {
+                                    previous.startsWith("- [ ] ") || previous.startsWith("- [x]") -> "- [ ] "
+                                    previous.startsWith("* ") -> "* "
+                                    previous.startsWith("- ") -> "- "
+                                    else -> null
+                                }
+
+                                description =
+                                    if (description.text != it.text && (nextLineStartWith != null) && enteredCharIsReturn)
+                                        TextFieldValue(
+                                            annotatedString = before.plus(
+                                                AnnotatedString(
+                                                    nextLineStartWith
+                                                )
+                                            ).plus(after),
+                                            selection = TextRange(it.selection.start + nextLineStartWith.length)
+                                        )
+                                    else
+                                        it
+                                // END Create bulletpoint if previous line started with a bulletpoint
+
+                                iCalObject.description = it.text.ifEmpty { null }
+                                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                            },
+                            label = { Text(stringResource(id = R.string.description)) },
+                            keyboardOptions = KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences,
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Default
+                            ),
+                            minLines = 3,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .onFocusChanged { focusState ->
+                                    if (
+                                        focusState.hasFocus
+                                        && markdownState.value == MarkdownState.DISABLED
+                                        && detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false
+                                    )
+                                        markdownState.value = MarkdownState.OBSERVING
+                                    else if (!focusState.hasFocus)
+                                        markdownState.value = MarkdownState.DISABLED
+                                }
+                        )
+                    }
+                }
+            }
+        }
+
+        item {
+            if (iCalObject.module == Module.TODO.name) {
+                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+                    ProgressElement(
+                        label = null,
+                        iCalObjectId = iCalObject.id,
+                        progress = iCalObject.percent,
+                        status = iCalObject.status,
+                        isReadOnly = originalICalEntity.value?.ICalCollection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
+                        sliderIncrement = sliderIncrement,
+                        onProgressChanged = { itemId, newPercent ->
+                            iCalObject.setUpdatedProgress(
+                                newPercent,
+                                keepStatusProgressCompletedInSync
+                            )
+                            onProgressChanged(itemId, newPercent)
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
-                        label = { Text(stringResource(id = R.string.description)) },
-                        keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Sentences,
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Default
-                        ),
-                        minLines = 3,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .onFocusChanged { focusState ->
-                                if (
-                                    focusState.hasFocus
-                                    && markdownState.value == MarkdownState.DISABLED
-                                    && detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false
-                                )
-                                    markdownState.value = MarkdownState.OBSERVING
-                                else if (!focusState.hasFocus)
-                                    markdownState.value = MarkdownState.DISABLED
-                            }
+                        showSlider = showProgressForMainTasks,
+                        modifier = Modifier.align(Alignment.End)
                     )
                 }
             }
         }
 
-        if (iCalObject.module == Module.TODO.name) {
-            ElevatedCard(modifier = Modifier.fillMaxWidth()) {
-                ProgressElement(
-                    label = null,
-                    iCalObjectId = iCalObject.id,
-                    progress = iCalObject.percent,
-                    status = iCalObject.status,isReadOnly = originalICalEntity.value?.ICalCollection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
-                    sliderIncrement = sliderIncrement,
-                    onProgressChanged = { itemId, newPercent ->
-                        iCalObject.setUpdatedProgress(newPercent, keepStatusProgressCompletedInSync)
-                        onProgressChanged(itemId, newPercent)
+        item {
+            AnimatedVisibility(
+                (!isEditMode.value && (!iCalObject.status.isNullOrEmpty() || !iCalObject.xstatus.isNullOrEmpty() || !iCalObject.classification.isNullOrEmpty() || iCalObject.priority in 1..9))
+                        || (isEditMode.value
+                        && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] ?: true
+                        || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true
+                        || (iCalObject.getModuleFromString() == Module.TODO && detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true)
+                        || showAllOptions)
+                        )
+            ) {
+                DetailsCardStatusClassificationPriority(
+                    icalObject = iCalObject,
+                    isEditMode = isEditMode.value,
+                    enableStatus = detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] ?: true || showAllOptions,
+                    enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true || showAllOptions,
+                    enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true || showAllOptions,
+                    allowStatusChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
+                    extendedStatuses = extendedStatuses,
+                    onStatusChanged = { newStatus ->
+                        if (keepStatusProgressCompletedInSync && iCalObject.getModuleFromString() == Module.TODO) {
+                            when (newStatus) {
+                                Status.IN_PROCESS -> iCalObject.setUpdatedProgress(
+                                    if (iCalObject.percent !in 1..99) 1 else iCalObject.percent,
+                                    true
+                                )
+
+                                Status.COMPLETED -> iCalObject.setUpdatedProgress(100, true)
+                                else -> {}
+                            }
+                        }
                         changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
-                    showSlider = showProgressForMainTasks,
-                    modifier = Modifier.align(Alignment.End)
+                    onClassificationChanged = { newClassification ->
+                        iCalObject.classification = newClassification.classification
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    onPriorityChanged = { newPriority ->
+                        iCalObject.priority = newPriority
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
 
-        AnimatedVisibility(
-            (!isEditMode.value && (!iCalObject.status.isNullOrEmpty() || !iCalObject.xstatus.isNullOrEmpty() || !iCalObject.classification.isNullOrEmpty() || iCalObject.priority in 1..9))
-                    || (isEditMode.value
-                    && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] ?: true
-                    || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true
-                    || (iCalObject.getModuleFromString() == Module.TODO && detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true)
-                    || showAllOptions)
-                    )
-        ) {
-            DetailsCardStatusClassificationPriority(
-                icalObject = iCalObject,
-                isEditMode = isEditMode.value,
-                enableStatus = detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] ?: true || showAllOptions,
-                enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true || showAllOptions,
-                enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true || showAllOptions,
-                allowStatusChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
-                extendedStatuses = extendedStatuses,
-                onStatusChanged = { newStatus ->
-                    if (keepStatusProgressCompletedInSync && iCalObject.getModuleFromString() == Module.TODO) {
-                        when (newStatus) {
-                            Status.IN_PROCESS -> iCalObject.setUpdatedProgress(if (iCalObject.percent !in 1..99) 1 else iCalObject.percent, true)
-                            Status.COMPLETED -> iCalObject.setUpdatedProgress(100, true)
-                            else -> { }
+        item {
+            AnimatedVisibility(categories.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] ?: true || showAllOptions))) {
+                DetailsCardCategories(
+                    categories = categories,
+                    storedCategories = storedCategories,
+                    isEditMode = isEditMode.value,
+                    onCategoriesUpdated = {
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    allCategoriesLive = allCategoriesLive,
+                    onGoToFilteredList = goToFilteredList
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(parents.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] ?: true || showAllOptions))) {
+                DetailsCardParents(
+                    parents = parents.value,
+                    isEditMode = isEditMode,
+                    sliderIncrement = sliderIncrement,
+                    showSlider = showProgressForSubTasks,
+                    blockProgressUpdates = linkProgressToSubtasks,
+                    onProgressChanged = { itemId, newPercent ->
+                        onProgressChanged(itemId, newPercent)
+                    },
+                    goToDetail = { itemId, editMode, list ->
+                        goToDetail(
+                            itemId,
+                            editMode,
+                            list,
+                            false
+                        )
+                    },
+                    onUnlinkFromParent = { parentUID ->
+                        onUnlinkSubEntry(
+                            iCalObject.id,
+                            parentUID
+                        )
+                    },
+                    onShowLinkExistingDialog = {
+                        onShowLinkExistingDialog(
+                            listOf(
+                                Module.JOURNAL,
+                                Module.NOTE,
+                                Module.TODO
+                            ), Reltype.PARENT
+                        )
+                    }
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
+                DetailsCardSubtasks(
+                    subtasks = subtasks.value,
+                    isEditMode = isEditMode,
+                    enforceSavingSubtask = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
+                    sliderIncrement = sliderIncrement,
+                    showSlider = showProgressForSubTasks,
+                    onProgressChanged = { itemId, newPercent ->
+                        onProgressChanged(itemId, newPercent)
+                    },
+                    onSubtaskAdded = { subtask -> onSubEntryAdded(subtask, null) },
+                    onSubtaskUpdated = { icalObjectId, newText ->
+                        onSubEntryUpdated(
+                            icalObjectId,
+                            newText
+                        )
+                    },
+                    onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
+                    onUnlinkSubEntry = { id -> onUnlinkSubEntry(id, iCalObject.uid) },
+                    goToDetail = { itemId, editMode, list ->
+                        goToDetail(
+                            itemId,
+                            editMode,
+                            list,
+                            false
+                        )
+                    },
+                    onShowLinkExistingDialog = {
+                        onShowLinkExistingDialog(
+                            listOf(Module.TODO),
+                            Reltype.CHILD
+                        )
+                    }
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] ?: false || showAllOptions))) {
+                DetailsCardSubnotes(
+                    subnotes = subnotes.value,
+                    isEditMode = isEditMode,
+                    enforceSavingSubnote = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
+                    onSubnoteAdded = { subnote, attachment ->
+                        onSubEntryAdded(
+                            subnote,
+                            attachment
+                        )
+                    },
+                    onSubnoteUpdated = { icalObjectId, newText ->
+                        onSubEntryUpdated(
+                            icalObjectId,
+                            newText
+                        )
+                    },
+                    onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
+                    onUnlinkSubEntry = { id -> onUnlinkSubEntry(id, iCalObject.uid) },
+                    player = player,
+                    goToDetail = { itemId, editMode, list ->
+                        goToDetail(
+                            itemId,
+                            editMode,
+                            list,
+                            false
+                        )
+                    },
+                    onShowLinkExistingDialog = {
+                        onShowLinkExistingDialog(
+                            listOf(
+                                Module.JOURNAL,
+                                Module.NOTE
+                            ), Reltype.CHILD
+                        )
+                    }
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(resources.isNotEmpty() || (isEditMode.value && iCalObject.getModuleFromString() == Module.TODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] ?: false || showAllOptions))) {
+                DetailsCardResources(
+                    resources = resources,
+                    storedResources = storedResources,
+                    isEditMode = isEditMode.value,
+                    onResourcesUpdated = {
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    onGoToFilteredList = goToFilteredList,
+                    allResourcesLive = allResourcesLive,
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(attendees.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] ?: false || showAllOptions))) {
+                DetailsCardAttendees(
+                    attendees = attendees,
+                    isEditMode = isEditMode.value,
+                    onAttendeesUpdated = {
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    }
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(iCalObject.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] ?: false || showAllOptions))) {
+                DetailsCardContact(
+                    initialContact = iCalObject.contact ?: "",
+                    isEditMode = isEditMode.value,
+                    onContactUpdated = { newContact ->
+                        iCalObject.contact = newContact.ifEmpty { null }
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(iCalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] ?: false || showAllOptions))) {
+                DetailsCardUrl(
+                    initialUrl = iCalObject.url ?: "",
+                    isEditMode = isEditMode.value,
+                    onUrlUpdated = { newUrl ->
+                        iCalObject.url = newUrl.ifEmpty { null }
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility((iCalObject.location?.isNotEmpty() == true || (iCalObject.geoLat != null && iCalObject.geoLong != null)) || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] ?: false || showAllOptions))) {
+                DetailsCardLocation(
+                    initialLocation = iCalObject.location,
+                    initialGeoLat = iCalObject.geoLat,
+                    initialGeoLong = iCalObject.geoLong,
+                    initialGeofenceRadius = iCalObject.geofenceRadius,
+                    isEditMode = isEditMode.value,
+                    setCurrentLocation = setCurrentLocation,
+                    onLocationUpdated = { newLocation, newGeoLat, newGeoLong ->
+                        if (newGeoLat != null && newGeoLong != null) {
+                            iCalObject.geoLat = newGeoLat
+                            iCalObject.geoLong = newGeoLong
+                        } else {
+                            iCalObject.geoLat = null
+                            iCalObject.geoLong = null
                         }
-                    }
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                onClassificationChanged = { newClassification ->
-                    iCalObject.classification = newClassification.classification
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                onPriorityChanged = { newPriority ->
-                    iCalObject.priority = newPriority
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        AnimatedVisibility(categories.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] ?: true || showAllOptions))) {
-            DetailsCardCategories(
-                categories = categories,
-                storedCategories = storedCategories,
-                isEditMode = isEditMode.value,
-                onCategoriesUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED },
-                allCategoriesLive = allCategoriesLive,
-                onGoToFilteredList = goToFilteredList
-            )
-        }
-
-        AnimatedVisibility(parents.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] ?: true || showAllOptions))) {
-            DetailsCardParents(
-                parents = parents.value,
-                isEditMode = isEditMode,
-                sliderIncrement = sliderIncrement,
-                showSlider = showProgressForSubTasks,
-                blockProgressUpdates = linkProgressToSubtasks,
-                onProgressChanged = { itemId, newPercent ->
-                    onProgressChanged(itemId, newPercent)
-                },
-                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
-                onUnlinkFromParent = { parentUID -> onUnlinkSubEntry(iCalObject.id, parentUID) },
-                onShowLinkExistingDialog = { onShowLinkExistingDialog(listOf(Module.JOURNAL, Module.NOTE, Module.TODO), Reltype.PARENT) }
-                )
-        }
-
-        AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] ?: true || showAllOptions))) {
-            DetailsCardSubtasks(
-                subtasks = subtasks.value,
-                isEditMode = isEditMode,
-                enforceSavingSubtask = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
-                sliderIncrement = sliderIncrement,
-                showSlider = showProgressForSubTasks,
-                onProgressChanged = { itemId, newPercent ->
-                    onProgressChanged(itemId, newPercent)
-                },
-                onSubtaskAdded = { subtask -> onSubEntryAdded(subtask, null) },
-                onSubtaskUpdated = { icalObjectId, newText ->
-                    onSubEntryUpdated(
-                        icalObjectId,
-                        newText
-                    )
-                },
-                onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                onUnlinkSubEntry = { id -> onUnlinkSubEntry(id, iCalObject.uid) },
-                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
-                onShowLinkExistingDialog = { onShowLinkExistingDialog(listOf(Module.TODO), Reltype.CHILD) }
-            )
-        }
-
-        AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] ?: false || showAllOptions))) {
-            DetailsCardSubnotes(
-                subnotes = subnotes.value,
-                isEditMode = isEditMode,
-                enforceSavingSubnote = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
-                onSubnoteAdded = { subnote, attachment ->
-                    onSubEntryAdded(
-                        subnote,
-                        attachment
-                    )
-                },
-                onSubnoteUpdated = { icalObjectId, newText ->
-                    onSubEntryUpdated(
-                        icalObjectId,
-                        newText
-                    )
-                },
-                onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                onUnlinkSubEntry = { id -> onUnlinkSubEntry(id, iCalObject.uid) },
-                player = player,
-                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
-                onShowLinkExistingDialog = { onShowLinkExistingDialog(listOf(Module.JOURNAL, Module.NOTE), Reltype.CHILD) }
-            )
-        }
-
-        AnimatedVisibility(resources.isNotEmpty() || (isEditMode.value && iCalObject.getModuleFromString() == Module.TODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] ?: false || showAllOptions))) {
-            DetailsCardResources(
-                resources = resources,
-                storedResources = storedResources,
-                isEditMode = isEditMode.value,
-                onResourcesUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED },
-                onGoToFilteredList = goToFilteredList,
-                allResourcesLive = allResourcesLive,
-            )
-        }
-
-        AnimatedVisibility(attendees.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] ?: false || showAllOptions))) {
-            DetailsCardAttendees(
-                attendees = attendees,
-                isEditMode = isEditMode.value,
-                onAttendeesUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED }
-            )
-        }
-
-        AnimatedVisibility(iCalObject.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] ?: false || showAllOptions))) {
-            DetailsCardContact(
-                initialContact = iCalObject.contact ?: "",
-                isEditMode = isEditMode.value,
-                onContactUpdated = { newContact ->
-                    iCalObject.contact = newContact.ifEmpty { null }
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-            )
-        }
-
-        AnimatedVisibility(iCalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] ?: false || showAllOptions))) {
-            DetailsCardUrl(
-                initialUrl = iCalObject.url ?: "",
-                isEditMode = isEditMode.value,
-                onUrlUpdated = { newUrl ->
-                    iCalObject.url = newUrl.ifEmpty { null }
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-            )
-        }
-
-        AnimatedVisibility((iCalObject.location?.isNotEmpty() == true || (iCalObject.geoLat != null && iCalObject.geoLong != null)) || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] ?: false || showAllOptions))) {
-            DetailsCardLocation(
-                initialLocation = iCalObject.location,
-                initialGeoLat = iCalObject.geoLat,
-                initialGeoLong = iCalObject.geoLong,
-                initialGeofenceRadius = iCalObject.geofenceRadius,
-                isEditMode = isEditMode.value,
-                setCurrentLocation = setCurrentLocation,
-                onLocationUpdated = { newLocation, newGeoLat, newGeoLong ->
-                    if (newGeoLat != null && newGeoLong != null) {
-                        iCalObject.geoLat = newGeoLat
-                        iCalObject.geoLong = newGeoLong
-                    } else {
-                        iCalObject.geoLat = null
-                        iCalObject.geoLong = null
-                    }
-                    iCalObject.location = newLocation.ifEmpty { null }
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                onGeofenceRadiusUpdatd = { iCalObject.geofenceRadius = it }
-            )
-        }
-
-        AnimatedVisibility(comments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] ?: false || showAllOptions))) {
-            DetailsCardComments(
-                comments = comments,
-                isEditMode = isEditMode.value,
-                onCommentsUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED }
-            )
-        }
-
-        AnimatedVisibility(attachments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] ?: false || showAllOptions))) {
-            DetailsCardAttachments(
-                attachments = attachments,
-                isEditMode = isEditMode.value,
-                isRemoteCollection = originalICalEntity.value?.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE,
-                player = player,
-                onAttachmentsUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED }
-            )
-        }
-
-        AnimatedVisibility(alarms.isNotEmpty() || (isEditMode.value && iCalObject.module == Module.TODO.name && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] ?: false || showAllOptions))) {
-            DetailsCardAlarms(
-                alarms = alarms,
-                icalObject = iCalObject,
-                isEditMode = isEditMode.value,
-                onAlarmsUpdated = { changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED }
-            )
-        }
-
-        AnimatedVisibility(
-            iCalObject.rrule != null
-                    || iCalObject.recurid != null
-                    || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] ?: false || (showAllOptions && iCalObject.module != Module.NOTE.name)))
-        ) {   // only Todos have recur!
-            DetailsCardRecur(
-                icalObject = iCalObject,
-                seriesInstances = seriesInstances.value,
-                seriesElement = seriesElement,
-                isEditMode = isEditMode.value,
-                hasChildren = subtasks.value.isNotEmpty() || subnotes.value.isNotEmpty(),
-                onRecurUpdated = { updatedRRule ->
-                    iCalObject.rrule = updatedRRule?.toString()
-                    if(updatedRRule == null) {
-                        iCalObject.rdate = null
-                        iCalObject.exdate = null
-                    }
-                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                },
-                goToDetail = { itemId, editMode, list -> goToDetail(itemId, editMode, list, false) },
-                unlinkFromSeries = unlinkFromSeries
-            )
-        }
-
-        AnimatedVisibility(isEditMode.value && !showAllOptions) {
-            TextButton(
-                onClick = { showAllOptions = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.details_show_all_options))
-            }
-        }
-
-        AnimatedVisibility(!isEditMode.value) {
-            Column(
-                horizontalAlignment = Alignment.End,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text(
-                    stringResource(id = R.string.view_created_text, DateTimeUtils.convertLongToFullDateTimeString(iCalObject.created, null)),
-                    style = MaterialTheme.typography.bodySmall,
-                    fontStyle = FontStyle.Italic
-                )
-                Text(
-                    stringResource(id = R.string.view_last_modified_text, DateTimeUtils.convertLongToFullDateTimeString(iCalObject.lastModified, null)),
-                    style = MaterialTheme.typography.bodySmall,
-                    fontStyle = FontStyle.Italic
+                        iCalObject.location = newLocation.ifEmpty { null }
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    onGeofenceRadiusUpdatd = { iCalObject.geofenceRadius = it }
                 )
             }
         }
 
-        AnimatedVisibility(!isEditMode.value) {
-            val curIndex = icalObjectIdList.indexOf(originalICalEntity.value?.property?.id ?: 0)
-            if (icalObjectIdList.size > 1 && curIndex >= 0) {
-                Row(
-                    modifier = Modifier
-                        .padding(vertical = 16.dp, horizontal = 8.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+        item {
+            AnimatedVisibility(comments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] ?: false || showAllOptions))) {
+                DetailsCardComments(
+                    comments = comments,
+                    isEditMode = isEditMode.value,
+                    onCommentsUpdated = {
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    }
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(attachments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] ?: false || showAllOptions))) {
+                DetailsCardAttachments(
+                    attachments = attachments,
+                    isEditMode = isEditMode.value,
+                    isRemoteCollection = originalICalEntity.value?.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE,
+                    player = player,
+                    onAttachmentsUpdated = {
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    }
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(alarms.isNotEmpty() || (isEditMode.value && iCalObject.module == Module.TODO.name && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] ?: false || showAllOptions))) {
+                DetailsCardAlarms(
+                    alarms = alarms,
+                    icalObject = iCalObject,
+                    isEditMode = isEditMode.value,
+                    onAlarmsUpdated = {
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    }
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(
+                iCalObject.rrule != null
+                        || iCalObject.recurid != null
+                        || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] ?: false || (showAllOptions && iCalObject.module != Module.NOTE.name)))
+            ) {   // only Todos have recur!
+                DetailsCardRecur(
+                    icalObject = iCalObject,
+                    seriesInstances = seriesInstances.value,
+                    seriesElement = seriesElement,
+                    isEditMode = isEditMode.value,
+                    hasChildren = subtasks.value.isNotEmpty() || subnotes.value.isNotEmpty(),
+                    onRecurUpdated = { updatedRRule ->
+                        iCalObject.rrule = updatedRRule?.toString()
+                        if (updatedRRule == null) {
+                            iCalObject.rdate = null
+                            iCalObject.exdate = null
+                        }
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    },
+                    goToDetail = { itemId, editMode, list ->
+                        goToDetail(
+                            itemId,
+                            editMode,
+                            list,
+                            false
+                        )
+                    },
+                    unlinkFromSeries = unlinkFromSeries
+                )
+            }
+        }
+
+        item {
+            AnimatedVisibility(isEditMode.value && !showAllOptions) {
+                TextButton(
+                    onClick = { showAllOptions = true },
+                    modifier = Modifier.fillMaxWidth()
                 ) {
+                    Text(stringResource(R.string.details_show_all_options))
+                }
+            }
+        }
 
-                    if (curIndex > 0) {
-                        IconButton(onClick = {
-                            goToDetail(
-                                icalObjectIdList[curIndex - 1],
-                                false,
-                                icalObjectIdList,
-                                true
+        item {
+            AnimatedVisibility(!isEditMode.value) {
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text(
+                        stringResource(
+                            id = R.string.view_created_text,
+                            DateTimeUtils.convertLongToFullDateTimeString(iCalObject.created, null)
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontStyle = FontStyle.Italic
+                    )
+                    Text(
+                        stringResource(
+                            id = R.string.view_last_modified_text,
+                            DateTimeUtils.convertLongToFullDateTimeString(
+                                iCalObject.lastModified,
+                                null
                             )
-                        }) {
-                            Icon(Icons.AutoMirrored.Outlined.NavigateBefore, stringResource(id = R.string.previous))
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            }
+        }
+
+        item {
+            AnimatedVisibility(!isEditMode.value) {
+                val curIndex = icalObjectIdList.indexOf(originalICalEntity.value?.property?.id ?: 0)
+                if (icalObjectIdList.size > 1 && curIndex >= 0) {
+                    Row(
+                        modifier = Modifier
+                            .padding(vertical = 16.dp, horizontal = 8.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        if (curIndex > 0) {
+                            IconButton(onClick = {
+                                goToDetail(
+                                    icalObjectIdList[curIndex - 1],
+                                    false,
+                                    icalObjectIdList,
+                                    true
+                                )
+                            }) {
+                                Icon(
+                                    Icons.AutoMirrored.Outlined.NavigateBefore,
+                                    stringResource(id = R.string.previous)
+                                )
+                            }
+                        } else {
+                            Spacer(modifier = Modifier.size(48.dp))
                         }
-                    } else {
-                        Spacer(modifier = Modifier.size(48.dp))
-                    }
-                    Text(text = "${icalObjectIdList.indexOf(originalICalEntity.value?.property?.id ?: 0) + 1}/${icalObjectIdList.size}")
-                    if (curIndex != icalObjectIdList.lastIndex) {
-                        IconButton(onClick = {
-                            goToDetail(
-                                icalObjectIdList[curIndex + 1],
-                                false,
-                                icalObjectIdList,
-                                true
-                            )
-                        }) {
-                            Icon(Icons.AutoMirrored.Outlined.NavigateNext, stringResource(id = R.string.next))
+                        Text(text = "${icalObjectIdList.indexOf(originalICalEntity.value?.property?.id ?: 0) + 1}/${icalObjectIdList.size}")
+                        if (curIndex != icalObjectIdList.lastIndex) {
+                            IconButton(onClick = {
+                                goToDetail(
+                                    icalObjectIdList[curIndex + 1],
+                                    false,
+                                    icalObjectIdList,
+                                    true
+                                )
+                            }) {
+                                Icon(
+                                    Icons.AutoMirrored.Outlined.NavigateNext,
+                                    stringResource(id = R.string.next)
+                                )
+                            }
+                        } else {
+                            Spacer(modifier = Modifier.size(48.dp))
                         }
-                    } else {
-                        Spacer(modifier = Modifier.size(48.dp))
                     }
                 }
             }
