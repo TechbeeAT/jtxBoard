@@ -271,6 +271,7 @@ fun CollectionsScreen(
                     CollectionsScreenContent(
                         collections = collections,
                         isProcessing = collectionsViewModel.isProcessing,
+                        settingAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                         onCollectionChanged = { collection ->
                             collectionsViewModel.saveCollection(
                                 collection

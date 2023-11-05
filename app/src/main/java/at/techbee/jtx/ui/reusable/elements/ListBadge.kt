@@ -43,7 +43,7 @@ fun ListBadge(
     iconDesc: String? = null,
     text: String? = null,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
-    isAccessibilityMode: Boolean = SettingsStateHolder(LocalContext.current).settingAccessibilityMode.value
+    isAccessibilityMode: Boolean
 ) {
     val contentColor = MaterialTheme.colorScheme.getContrastSurfaceColorFor(containerColor)
 
@@ -93,7 +93,24 @@ fun ListBadge_Preview() {
             ListBadge(
                 icon = Icons.Outlined.Folder,
                 iconDesc = "Collections",
-                text = "Collections"
+                text = "Collections",
+                isAccessibilityMode = false
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ListBadge_Preview_accessibility() {
+    MaterialTheme {
+        ElevatedCard {
+            ListBadge(
+                icon = Icons.Outlined.Folder,
+                iconDesc = "Collections",
+                text = "Collections",
+                isAccessibilityMode = true
             )
         }
     }
