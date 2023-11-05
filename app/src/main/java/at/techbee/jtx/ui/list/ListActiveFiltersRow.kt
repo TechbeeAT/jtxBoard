@@ -63,7 +63,8 @@ fun ListActiveFiltersRow(
 
         AnimatedVisibility(isFilterActive) {
             FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(3.dp)
+                horizontalArrangement = Arrangement.spacedBy(3.dp),
+                modifier = Modifier.fillMaxWidth(fraction = 0.8f)
             ) {
                 Text(
                     text = stringResource(R.string.active_filters),
@@ -265,7 +266,7 @@ fun ListActiveFiltersRow(
         }
 
         AnimatedVisibility(!isFilterActive) {
-            Box(Modifier.size(1.dp))
+            Box(Modifier.size(1.dp).weight(1f))
         }
 
         ListBadge(
