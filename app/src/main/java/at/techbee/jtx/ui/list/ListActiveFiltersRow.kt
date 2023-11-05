@@ -10,12 +10,24 @@ package at.techbee.jtx.ui.list
 
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.AccountBalance
+import androidx.compose.material.icons.outlined.FolderOpen
+import androidx.compose.material.icons.outlined.PrivacyTip
+import androidx.compose.material.icons.outlined.PublishedWithChanges
+import androidx.compose.material.icons.outlined.WorkOutline
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -231,9 +243,10 @@ fun ListActiveFiltersRow(
             Box(Modifier.size(1.dp))
         }
 
-        Text(
+        ListBadge(
             text = "$numShownEntries/${numAllEntries?:0}",
-            style = MaterialTheme.typography.labelSmall
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            modifier = Modifier.padding(vertical = 2.dp)
         )
     }
 }

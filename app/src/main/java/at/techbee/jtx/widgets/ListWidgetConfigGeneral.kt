@@ -260,7 +260,7 @@ fun ListWidgetConfigGeneral(
         Text(
             text = stringResource(R.string.widget_list_opacity_warning),
             color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             fontStyle = FontStyle.Italic
         )
 
@@ -317,7 +317,7 @@ fun ListWidgetConfigGeneral(
         Text(
             text = stringResource(R.string.widget_list_color_warning),
             color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             fontStyle = FontStyle.Italic
         )
 
