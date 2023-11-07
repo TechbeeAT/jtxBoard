@@ -217,6 +217,7 @@ fun DetailsCardLocation(
                                             geoLong = locationLatLng.geoLong
                                             geoLatText = geoLat?.toString()?:""
                                             geoLongText = geoLong?.toString()?:""
+                                            onLocationUpdated(location, geoLat, geoLong)
                                         },
                                         label = {
                                             val displayString =
