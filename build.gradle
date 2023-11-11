@@ -23,7 +23,7 @@ buildscript {
         version_coroutine = "1.7.3"
         version_appcompat = "1.6.1"
         version_gradle = '8.1.3'
-        version_kotlin = "1.9.20"
+        version_kotlin = "1.9.10"
         version_room = "2.6.0"
         version_work = "2.8.1"
         version_billing = "6.0.1"
