@@ -62,7 +62,7 @@ fun ListOptionsKanban(
 
         Text(
             text = stringResource(R.string.settings_attention_experimental_feature),
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.error,
             modifier = Modifier.padding(vertical = 8.dp)
         )

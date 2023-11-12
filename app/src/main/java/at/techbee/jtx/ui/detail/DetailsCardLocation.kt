@@ -466,7 +466,7 @@ fun DetailsCardLocation(
                     ) {
                         Text(
                             text = stringResource(R.string.geofence_missing_permission_info),
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.weight(1f)
                         )

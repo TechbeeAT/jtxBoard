@@ -307,7 +307,7 @@ fun ListQuickAddElement(
 
                 Text(
                     stringResource(id = R.string.list_quickadd_dialog_summary_description_helper),
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 

@@ -56,6 +56,7 @@ fun ListCardGrid(
     storedStatuses: List<ExtendedStatus>,
     selected: Boolean,
     progressUpdateDisabled: Boolean,
+    settingIsAccessibilityMode: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
     modifier: Modifier = Modifier,
@@ -82,7 +83,8 @@ fun ListCardGrid(
                 storedCategories = storedCategories,
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
-                includeJournalDate = true
+                includeJournalDate = true,
+                isAccessibilityMode = settingIsAccessibilityMode
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
@@ -169,6 +171,7 @@ fun ListCardGrid_JOURNAL() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier
@@ -198,6 +201,7 @@ fun ListCardGrid_NOTE() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = true,
             progressUpdateDisabled = false,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             player = null,
@@ -236,6 +240,7 @@ fun ListCardGrid_TODO() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
@@ -275,6 +280,7 @@ fun ListCardGrid_TODO_short() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)

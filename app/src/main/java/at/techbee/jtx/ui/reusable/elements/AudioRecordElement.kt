@@ -134,7 +134,7 @@ fun AudioRecordElement(
                         Icon(Icons.Filled.Stop, stringResource(R.string.audio_stop))
                         Text(
                             text = DateTimeUtils.getMinutesSecondsFormatted(secondsRemaining),
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }

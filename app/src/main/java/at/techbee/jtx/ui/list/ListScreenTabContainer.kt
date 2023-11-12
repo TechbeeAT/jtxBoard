@@ -227,6 +227,7 @@ fun ListScreenTabContainer(
             storedCategoriesLive = getActiveViewModel().storedCategories,
             storedResourcesLive = getActiveViewModel().storedResources,
             extendedStatusesLive = getActiveViewModel().extendedStatuses,
+            settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
             player = getActiveViewModel().mediaPlayer,
             onSelectFromAllListSearchTextUpdated = { getActiveViewModel().updateSelectFromAllListQuery(searchText = it, isAuthenticated = globalStateHolder.isAuthenticated.value) },
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
@@ -653,6 +654,7 @@ fun ListScreenTabContainer(
                                 numShownEntries = iCal4ListRel.size,
                                 numAllEntries = numAllEntries,
                                 isFilterActive = listViewModel.listSettings.isFilterActive(),
+                                isAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                             )
 

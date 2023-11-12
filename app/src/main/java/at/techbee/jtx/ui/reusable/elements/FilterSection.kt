@@ -85,7 +85,7 @@ fun FilterSection(
                 subtitle?.let {
                     Text(
                         text = it,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }

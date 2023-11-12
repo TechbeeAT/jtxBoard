@@ -55,6 +55,7 @@ fun ListCardCompact(
     storedStatuses: List<ExtendedStatus>,
     progressUpdateDisabled: Boolean,
     markdownEnabled: Boolean,
+    settingIsAccessibilityMode: Boolean,
     selected: List<Long>,
     player: MediaPlayer?,
     modifier: Modifier = Modifier,
@@ -85,7 +86,8 @@ fun ListCardCompact(
                 storedCategories = storedCategories,
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
-                includeJournalDate = true
+                includeJournalDate = true,
+                isAccessibilityMode = settingIsAccessibilityMode
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
@@ -205,6 +207,7 @@ fun ListCardCompact_JOURNAL() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
@@ -235,6 +238,7 @@ fun ListCardCompact_JOURNAL2() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
@@ -266,6 +270,7 @@ fun ListCardCompact_NOTE() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
@@ -301,6 +306,7 @@ fun ListCardCompact_TODO() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
@@ -350,6 +356,7 @@ fun ListCardCompact_TODO_only_summary() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             selected = emptyList(),
             player = null,

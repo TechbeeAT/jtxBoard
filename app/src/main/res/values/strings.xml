@@ -522,6 +522,8 @@ Thank you!"</string>
     <string name="settings_sticky_alarms_sub">"Keep notifications until done or postponed"</string>
     <string name="settings_fullscreen_alarms">"Full screen alarms"</string>
     <string name="settings_fullscreen_alarms_sub">"Shows alarms in full screen when the device is locked"</string>
+    <string name="settings_accessibility_mode">"Accessibility mode"</string>
+    <string name="settings_accessibility_mode_sub">"Ensures minimum font-size for small elements"</string>
     <string name="settings_fullscreen_alarms_toast">"Please grant full screen notification permission in the system settings."</string>
     <string name="settings_sync_on_start">"Sync on app start"</string>
     <string name="settings_sync_on_pull_refresh">"Sync on pull down"</string>

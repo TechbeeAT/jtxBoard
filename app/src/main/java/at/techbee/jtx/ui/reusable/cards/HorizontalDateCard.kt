@@ -85,7 +85,7 @@ fun HorizontalDateCard(
             labelTop?.let { label ->
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelMedium
                 )
             }
 
