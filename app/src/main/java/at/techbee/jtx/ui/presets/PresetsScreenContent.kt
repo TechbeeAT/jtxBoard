@@ -8,14 +8,27 @@
 
 package at.techbee.jtx.ui.presets
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.DashboardCustomize
 import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.WorkOutline
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.ElevatedAssistChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -196,12 +209,12 @@ fun PresetsScreenContent(
 
         Text(
             text = stringResource(id = R.string.extended_status_attention),
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             fontStyle = FontStyle.Italic,
             modifier = Modifier.padding(8.dp)
         )
 
-        Module.values().forEach { module ->
+        Module.entries.forEach { module ->
 
             Text(
                 text = when(module) {
@@ -209,7 +222,7 @@ fun PresetsScreenContent(
                     Module.NOTE -> stringResource(id = R.string.extended_statuses_for_notes)
                     Module.TODO -> stringResource(id = R.string.extended_statuses_for_tasks)
                 },
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier.padding(8.dp)
             )
 
@@ -257,12 +270,12 @@ fun PresetsScreenContent(
 
             Text(
                 text = stringResource(id = R.string.filter_presets_edit_info),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 fontStyle = FontStyle.Italic,
                 modifier = Modifier.padding(8.dp)
             )
 
-            Module.values().forEach { module ->
+            Module.entries.forEach { module ->
                 if(storedListSettings.none { it.module == module })
                     return@forEach
 
@@ -272,7 +285,7 @@ fun PresetsScreenContent(
                         Module.NOTE -> stringResource(id = R.string.extended_statuses_for_notes)
                         Module.TODO -> stringResource(id = R.string.extended_statuses_for_tasks)
                     },
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.padding(8.dp)
                 )
 

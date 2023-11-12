@@ -56,6 +56,7 @@ fun ListTopRow(
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
     extendedStatuses: List<ExtendedStatus>,
+    isAccessibilityMode: Boolean,
     modifier: Modifier = Modifier,
     includeJournalDate: Boolean = false,
     enableScroll: Boolean = true,
@@ -63,6 +64,7 @@ fun ListTopRow(
     showSubtasks: Boolean = true,
     showSubnotes: Boolean = true
 ) {
+
     Row(
         horizontalArrangement = Arrangement.spacedBy(3.dp),
         modifier = if(enableScroll) modifier.horizontalScroll(rememberScrollState()) else modifier
@@ -72,6 +74,7 @@ fun ListTopRow(
             iconDesc = stringResource(id = R.string.collection),
             text = ical4List.collectionDisplayName,
             containerColor = ical4List.colorCollection?.let { Color(it) } ?: MaterialTheme.colorScheme.primaryContainer,
+            isAccessibilityMode = isAccessibilityMode,
             modifier = Modifier.padding(vertical = 2.dp)
         )
 
@@ -79,6 +82,7 @@ fun ListTopRow(
             ListBadge(
                 iconRes = R.drawable.ic_readonly,
                 iconDesc = stringResource(id = R.string.readyonly),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -87,6 +91,7 @@ fun ListTopRow(
             ListBadge(
                 icon = Icons.Outlined.CloudSync,
                 iconDesc = stringResource(id = R.string.upload_pending),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -96,6 +101,7 @@ fun ListTopRow(
                 icon = if(ical4List.rrule != null || (ical4List.recurid != null && ical4List.sequence == 0L)) Icons.Outlined.EventRepeat else null,
                 iconRes = if(ical4List.recurid != null && ical4List.sequence > 0L) R.drawable.ic_recur_exception else null,
                 iconDesc = stringResource(id = R.string.list_item_recurring),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -111,6 +117,7 @@ fun ListTopRow(
                     context = LocalContext.current
                 ),
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -125,6 +132,7 @@ fun ListTopRow(
                     context = LocalContext.current
                 ),
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -146,6 +154,7 @@ fun ListTopRow(
                         ical4List.dueTimezone
                     ) == true
                 ) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.secondaryContainer,
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -156,6 +165,7 @@ fun ListTopRow(
                 iconDesc = stringResource(id = R.string.category),
                 text = category.text,
                 containerColor = StoredCategory.getColorForCategory(category.text, storedCategories) ?: MaterialTheme.colorScheme.primaryContainer,
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -166,6 +176,7 @@ fun ListTopRow(
                 iconDesc = stringResource(id = R.string.resources),
                 text = resource.text,
                 containerColor = StoredResource.getColorForResource(resource.text?:"", storedResources) ?: MaterialTheme.colorScheme.primaryContainer,
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -175,6 +186,7 @@ fun ListTopRow(
                 icon = Icons.Outlined.PublishedWithChanges,
                 iconDesc = stringResource(R.string.status),
                 text = Status.getStatusFromString(ical4List.status)?.stringResource?.let { stringResource(id = it) } ?: ical4List.status,
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -184,6 +196,7 @@ fun ListTopRow(
                 iconDesc = stringResource(R.string.status),
                 text = ical4List.xstatus?:"",
                 containerColor = ExtendedStatus.getColorForStatus(ical4List.xstatus, extendedStatuses, ical4List.module) ?: MaterialTheme.colorScheme.primaryContainer,
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -193,6 +206,7 @@ fun ListTopRow(
                 icon = Icons.Outlined.AdminPanelSettings,
                 iconDesc = stringResource(R.string.classification),
                 text = Classification.getClassificationFromString(ical4List.classification)?.stringResource?.let { stringResource(id = it) } ?: ical4List.classification,
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -202,6 +216,7 @@ fun ListTopRow(
                 icon = Icons.Outlined.WorkOutline,
                 iconDesc = stringResource(id = R.string.priority),
                 text = if (ical4List.priority in 1..9) stringArrayResource(id = R.array.priority)[ical4List.priority!!] else null,
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -212,6 +227,7 @@ fun ListTopRow(
                 icon = Icons.Outlined.Group,
                 iconDesc = stringResource(id = R.string.attendees),
                 text = ical4List.numAttendees.toString(),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -220,6 +236,7 @@ fun ListTopRow(
                 icon = Icons.Outlined.Attachment,
                 iconDesc = stringResource(id = R.string.attachments),
                 text = ical4List.numAttachments.toString(),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -228,6 +245,7 @@ fun ListTopRow(
                 icon = Icons.AutoMirrored.Outlined.Comment,
                 iconDesc = stringResource(id = R.string.comments),
                 text = ical4List.numComments.toString(),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -245,6 +263,7 @@ fun ListTopRow(
                 icon = Icons.Outlined.Alarm,
                 iconDesc = stringResource(id = R.string.alarms),
                 text = ical4List.numAlarms.toString(),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -253,6 +272,7 @@ fun ListTopRow(
                 icon = Icons.Outlined.Link,
                 iconDesc = stringResource(id = R.string.url),
                 //text = ical4List.url,
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -260,6 +280,7 @@ fun ListTopRow(
             ListBadge(
                 icon = Icons.Outlined.PinDrop,
                 iconDesc = stringResource(id = R.string.location),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -267,6 +288,7 @@ fun ListTopRow(
             ListBadge(
                 icon = Icons.Outlined.Map,
                 iconDesc = stringResource(id = R.string.location),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -274,6 +296,7 @@ fun ListTopRow(
             ListBadge(
                 icon = Icons.Outlined.ContactMail,
                 iconDesc = stringResource(id = R.string.contact),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -282,6 +305,7 @@ fun ListTopRow(
                 icon = Icons.Outlined.TaskAlt,
                 iconDesc = stringResource(id = R.string.subtasks),
                 text = ical4List.numSubtasks.toString(),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -290,6 +314,7 @@ fun ListTopRow(
                 icon = Icons.AutoMirrored.Outlined.Note,
                 iconDesc = stringResource(id = R.string.note),
                 text = ical4List.numSubnotes.toString(),
+                isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
@@ -309,7 +334,8 @@ fun ListTopRow_Preview() {
             resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb()))
+            extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            isAccessibilityMode = false
         )
     }
 }

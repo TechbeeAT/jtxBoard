@@ -368,7 +368,8 @@ fun DetailScreenContent(
                                 Color(
                                     it
                                 )
-                            } ?: MaterialTheme.colorScheme.primaryContainer
+                            } ?: MaterialTheme.colorScheme.primaryContainer,
+                            isAccessibilityMode = true
                         )
                         Text(originalICalEntity.value?.ICalCollection?.displayName + originalICalEntity.value?.ICalCollection?.accountName?.let { " ($it)" })
                     }

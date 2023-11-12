@@ -46,6 +46,7 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 fun CollectionsScreenContent(
     collections: List<CollectionsView>,
     isProcessing: LiveData<Boolean>,
+    settingAccessibilityMode: Boolean,
     onCollectionChanged: (ICalCollection) -> Unit,
     onCollectionDeleted: (ICalCollection) -> Unit,
     onEntriesMoved: (old: ICalCollection, new: ICalCollection) -> Unit,
@@ -110,6 +111,7 @@ fun CollectionsScreenContent(
                     CollectionCard(
                         collection = collection,
                         allCollections = collections,
+                        settingAccessibilityMode = settingAccessibilityMode,
                         onCollectionChanged = onCollectionChanged,
                         onCollectionDeleted = onCollectionDeleted,
                         onEntriesMoved = onEntriesMoved,
@@ -168,6 +170,7 @@ fun CollectionsScreenContent_Preview() {
         CollectionsScreenContent(
             collections = listOf(collection1, collection2, collection3),
             isProcessing = MutableLiveData(true),
+            settingAccessibilityMode = false,
             onCollectionChanged = { },
             onCollectionDeleted = { },
             onEntriesMoved = { _, _ -> },

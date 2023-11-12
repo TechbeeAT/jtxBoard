@@ -164,7 +164,7 @@ fun FullscreenAlarmScreen(
             if(iCalObject.dtstart != null) {
                 Text(
                     text = stringResource(id = R.string.started),
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelMedium
                 )
 
                 if(iCalObject.dtstartTimezone == TZ_ALLDAY
@@ -198,7 +198,7 @@ fun FullscreenAlarmScreen(
             if(iCalObject.due != null) {
                 Text(
                     text = stringResource(id = R.string.due),
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelMedium
                 )
 
                 if(iCalObject.dueTimezone == TZ_ALLDAY

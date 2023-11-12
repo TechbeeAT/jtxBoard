@@ -67,6 +67,7 @@ import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DISPLAY_TIMEZONE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROGRESS_STEP
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROTECT_BIOMETRIC
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_THEME
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_ACCESSIBILITY_MODE
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_SUBNOTES
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_SUBTASKS
@@ -277,6 +278,15 @@ fun SettingsScreen(
                             onSelectionChanged = { selection ->
                                 settingsStateHolder.settingDisplayTimezone.value = selection
                                 SETTING_DISPLAY_TIMEZONE.saveSetting(selection, settingsStateHolder.prefs)
+                            }
+                        )
+
+                        SwitchSettingElement(
+                            setting = SETTING_ACCESSIBILITY_MODE,
+                            checked = settingsStateHolder.settingAccessibilityMode,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingAccessibilityMode.value = it
+                                SETTING_ACCESSIBILITY_MODE.saveSetting(it, settingsStateHolder.prefs)
                             }
                         )
                     }

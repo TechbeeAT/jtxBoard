@@ -118,7 +118,7 @@ fun EditStoredStatusDialog(
 
                 Text(
                     text = "Custom statuses are only visible in jtx Board but are mapped to a standard status of your choice for interoperability with other applications.",
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(8.dp)
                 )

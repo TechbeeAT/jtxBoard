@@ -245,7 +245,8 @@ fun DetailsScreen(
             storedCategories = storedCategories,
             storedResources = storedResources,
             extendedStatuses = storedStatuses,
-            detailViewModel.mediaPlayer,
+            settingIsAccessibilityMode = detailViewModel.settingsStateHolder.settingAccessibilityMode.value,
+            player = detailViewModel.mediaPlayer,
             onAllEntriesSearchTextUpdated = { searchText, modules, sameCollection, sameAccount -> detailViewModel.updateSelectFromAllListQuery(searchText, modules, sameCollection, sameAccount) },
             onEntriesToLinkConfirmed = { selected, reltype ->
                 when(reltype) {

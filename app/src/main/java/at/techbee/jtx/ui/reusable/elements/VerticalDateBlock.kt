@@ -70,24 +70,24 @@ fun VerticalDateBlock(
             )
             Text(
                 text = DateTimeUtils.convertLongToWeekdayString(datetime, timezone2show),
-                style = Typography.labelSmall,
+                style = Typography.labelMedium,
                 textAlign = TextAlign.Center
             )
             Text(
                 DateTimeUtils.convertLongToMonthString(datetime, timezone2show),
-                style = Typography.labelMedium,
+                style = Typography.labelLarge,
                 textAlign = TextAlign.Center
             )
 
             Text(
                 DateTimeUtils.convertLongToYearString(datetime, timezone2show),
-                style = Typography.labelSmall,
+                style = Typography.labelMedium,
                 textAlign = TextAlign.Center
             )
             if (timezone != ICalObject.TZ_ALLDAY)
                 Text(
                     DateTimeUtils.convertLongToShortTimeString(datetime, timezone2show),
-                    style = Typography.labelMedium,
+                    style = Typography.labelLarge,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
@@ -97,7 +97,7 @@ fun VerticalDateBlock(
             )
                 Text(
                     TimeZone.getTimeZone(timezone2show).getDisplayName(true, TimeZone.SHORT),
-                    style = Typography.labelSmall,
+                    style = Typography.labelMedium,
                     fontStyle = FontStyle.Italic,
                     textAlign = TextAlign.Center
                 )

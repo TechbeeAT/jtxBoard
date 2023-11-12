@@ -106,6 +106,7 @@ fun UpdateEntriesDialog(
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     storedResourcesLive: LiveData<List<StoredResource>>,
     extendedStatusesLive: LiveData<List<ExtendedStatus>>,
+    settingIsAccessibilityMode: Boolean,
     player: MediaPlayer?,
     onSelectFromAllListSearchTextUpdated: (String) -> Unit,
     //currentCategories: List<String>,
@@ -330,7 +331,7 @@ fun UpdateEntriesDialog(
                     )
                     {
 
-                        Classification.values().forEach { classification ->
+                        Classification.entries.forEach { classification ->
                             InputChip(
                                 onClick = { newClassification = classification },
                                 label = { Text(stringResource(id = classification.stringResource)) },
@@ -440,7 +441,8 @@ fun UpdateEntriesDialog(
                                 storedStatuses = storedStatuses,
                                 selected = entry.iCal4List == selectFromAllListSelectedEntry,
                                 progressUpdateDisabled = true,
-                                markdownEnabled = false, 
+                                markdownEnabled = false,
+                                settingIsAccessibilityMode = settingIsAccessibilityMode,
                                 player = player,
                                 onProgressChanged = {_, _ -> },
                                 modifier = Modifier.clickable {
@@ -514,6 +516,7 @@ fun UpdateEntriesDialog_Preview() {
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedResourcesLive = MutableLiveData(listOf(StoredResource("1234", Color.Green.toArgb()))),
             extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))),
+            settingIsAccessibilityMode = false,
             player = null,
             onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },
