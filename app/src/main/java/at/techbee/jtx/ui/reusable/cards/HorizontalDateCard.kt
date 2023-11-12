@@ -12,7 +12,11 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,17 +24,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 import at.techbee.jtx.contract.JtxContract.JtxICalObject.TZ_ALLDAY
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
+import at.techbee.jtx.ui.settings.DropdownSetting
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.DateTimeUtils
-import java.time.ZoneId
 import java.time.ZonedDateTime
 
 
@@ -52,6 +59,10 @@ fun HorizontalDateCard(
 ) {
 
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+    val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    val settingDisplayTimezone = DropdownSetting.SETTING_DISPLAY_TIMEZONE.getSetting(prefs)
+
 
     Card(
         onClick = {
@@ -74,29 +85,42 @@ fun HorizontalDateCard(
             labelTop?.let { label ->
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelMedium
                 )
             }
 
             if (datetime != null) {
-                Text(
-                    DateTimeUtils.convertLongToFullDateTimeString(
-                        datetime,
-                        when(timezone) {
-                            TZ_ALLDAY -> TZ_ALLDAY
-                            null -> null
-                            else -> ZoneId.systemDefault().id
-                        }
-                    ),
-                    fontStyle = if(!isEditMode) FontStyle.Italic else null,
-                    fontWeight = if(!isEditMode) FontWeight.Bold else null
-                )
-                if(isEditMode && timezone != null && timezone != TZ_ALLDAY) {
+                if(timezone == TZ_ALLDAY
+                    || timezone == null
+                    || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
+                    || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
+                    ) {
+                    Text(
+                        DateTimeUtils.convertLongToFullDateTimeString(
+                            datetime,
+                            when (timezone) {
+                                TZ_ALLDAY -> TZ_ALLDAY
+                                null -> null
+                                else -> null
+                            }
+                        ),
+                        fontStyle = if (!isEditMode) FontStyle.Italic else null,
+                        fontWeight = if (!isEditMode) FontWeight.Bold else null
+                    )
+                }
+                if((isEditMode && timezone != null && timezone != TZ_ALLDAY)
+                    || (timezone != null && timezone != TZ_ALLDAY &&
+                    (settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL
+                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL)
+                            )
+                    ) {
                     Text(
                         DateTimeUtils.convertLongToFullDateTimeString(
                             datetime,
                             timezone
-                        )
+                        ),
+                        fontStyle = if (!isEditMode && settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL) FontStyle.Italic else null,
+                        fontWeight = if (!isEditMode && settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL) FontWeight.Bold else null
                     )
                 }
             } else {

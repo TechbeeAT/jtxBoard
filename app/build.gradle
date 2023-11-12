@@ -31,8 +31,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 206000003
-        versionName "2.06.00-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 206030001
+        versionName "2.06.03"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Where there is love, there is life. ❤️🌈\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -48,7 +48,7 @@ android {
         }
 
         //don't forget to update locales_config.xml when changing the languages!
-        def locales = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu"]
+        def locales = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu", "vi"]
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         resourceConfigurations += locales
 
@@ -188,8 +188,8 @@ dependencies {
 
     // Amazon billing & maps support
     amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.4'
-    amazonImplementation "com.google.maps.android:maps-compose:2.15.0"
-    amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
+    amazonImplementation "com.google.maps.android:maps-compose:4.1.1"
+    amazonImplementation "com.google.android.gms:play-services-maps:18.2.0"
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
 
     // Huawei billing
@@ -198,8 +198,8 @@ dependencies {
 
 
     // Google Maps
-    gplayImplementation "com.google.maps.android:maps-compose:2.15.0"
-    gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
+    gplayImplementation "com.google.maps.android:maps-compose:4.1.1"
+    gplayImplementation "com.google.android.gms:play-services-maps:18.2.0"
     gplayImplementation "com.google.android.gms:play-services-location:21.0.1"
 
     //OSM
@@ -212,7 +212,7 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$version_work"
 
     //support for java.time for older Android versions (<O)
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
     androidTestImplementation "androidx.test.ext:junit-ktx:1.1.5"
     //androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0-alpha07"
@@ -246,14 +246,14 @@ dependencies {
 
     // jetpack compose
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation "androidx.compose.material3:material3:1.2.0-alpha08"
-    implementation "androidx.compose.material:material-icons-extended:1.5.2"
-    implementation "androidx.compose.material:material:1.5.2"
+    implementation "androidx.compose.material3:material3:1.2.0-alpha09"
+    implementation "androidx.compose.material:material-icons-extended:1.5.4"
+    implementation "androidx.compose.material:material:1.5.4"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
-    implementation "androidx.navigation:navigation-compose:2.7.3"
+    implementation "androidx.navigation:navigation-compose:2.7.5"
     implementation "com.arnyminerz.markdowntext:markdowntext:1.3.2"
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
@@ -270,5 +270,5 @@ dependencies {
     implementation "androidx.profileinstaller:profileinstaller:1.3.1"
 
     //image loading from the web
-    implementation "io.coil-kt:coil-compose:2.4.0"
+    implementation "io.coil-kt:coil-compose:2.5.0"
 }

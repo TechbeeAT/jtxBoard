@@ -10,14 +10,38 @@ package at.techbee.jtx.ui.list
 
 import android.content.Context
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.AccountBalance
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.DashboardCustomize
+import androidx.compose.material.icons.outlined.FilterAlt
+import androidx.compose.material.icons.outlined.FolderOpen
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PrivacyTip
+import androidx.compose.material.icons.outlined.PublishedWithChanges
+import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,7 +50,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
@@ -59,7 +86,7 @@ fun ListOptionsFilter(
     val allAccounts by remember { derivedStateOf { allCollectionsState.value.map { it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } } }
     val storedListSettings by storedListSettingLive.observeAsState(emptyList())
     val extendedStatuses by extendedStatusesLive.observeAsState(initial = emptyList())
-    var showSaveListSettingsPresetDialog by remember { mutableStateOf(false) }
+    var showSaveListSettingsPresetDialog by rememberSaveable { mutableStateOf(false) }
 
     if(showSaveListSettingsPresetDialog) {
         val currentListSettingData = StoredListSettingData.fromListSettings(listSettings)
@@ -124,7 +151,7 @@ fun ListOptionsFilter(
                 if(index > maxEntries-1)
                     return@forEachIndexed
 
-                var showDeleteDialog by remember { mutableStateOf(false) }
+                var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
                 if(showDeleteDialog) {
                     DeleteFilterPresetDialog(
@@ -591,13 +618,13 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             },
             onInvertSelection = {
-                val missing = Classification.values().filter { classification -> !listSettings.searchClassification.contains(classification) }
+                val missing = Classification.entries.filter { classification -> !listSettings.searchClassification.contains(classification) }
                 listSettings.searchClassification.clear()
                 listSettings.searchClassification.addAll(missing)
                 onListSettingsChanged()
             })
         {
-            Classification.values().forEach { classification ->
+            Classification.entries.forEach { classification ->
                 FilterChip(
                     selected = listSettings.searchClassification.contains(classification),
                     onClick = {

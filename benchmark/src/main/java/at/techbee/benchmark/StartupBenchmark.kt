@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 
 const val BENCHMARK_TAG_LISTCARD = "benchmark:ListCard"
 const val BENCHMARK_TAG_DETAILSUMMARY = "benchmark:DetailSummary"
+const val BENCHMARK_TAG_DETAILSUMMARYCARDEDIT = "benchmark:DetailSummaryCardEdit"
 
 /**
  * This is an example startup benchmark.
@@ -35,6 +36,10 @@ class StartupBenchmark {
     @Test fun startupAndGoToDetailCompilationNone() = startupAndGoToDetail(CompilationMode.None())
     @Test fun startupAndGoToDetailCompilationPartial() = startupAndGoToDetail(CompilationMode.Partial())
 
+
+    @Test fun startupAndGoToDetailAndEditCompilationNone() = startupAndGoToDetailAndEdit(CompilationMode.None())
+    @Test fun startupAndGoToDetailAndEditCompilationPartial() = startupAndGoToDetailAndEdit(CompilationMode.Partial())
+
     private fun startup(compilationMode: CompilationMode) = benchmarkRule.measureRepeated(
         packageName = "at.techbee.jtx",
         metrics = listOf(StartupTimingMetric()),
@@ -44,8 +49,7 @@ class StartupBenchmark {
     ) {
         pressHome()
         startActivityAndWait()
-
-        device.wait(Until.hasObject(By.res("benchmark:ListCard")), 30_000)
+        device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
     }
 
     private fun startupAndGoToDetail(compilationMode: CompilationMode) = benchmarkRule.measureRepeated(
@@ -58,8 +62,27 @@ class StartupBenchmark {
         pressHome()
         startActivityAndWait()
         device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
+
         device.findObject(By.res(BENCHMARK_TAG_LISTCARD)).click()
         device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 30_000)
+    }
+
+    private fun startupAndGoToDetailAndEdit(compilationMode: CompilationMode) = benchmarkRule.measureRepeated(
+        packageName = "at.techbee.jtx",
+        metrics = listOf(StartupTimingMetric()),
+        iterations = 5,
+        compilationMode = compilationMode,
+        startupMode = StartupMode.COLD,
+    ) {
+        pressHome()
+        startActivityAndWait()
+        device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
+
+        device.findObject(By.res(BENCHMARK_TAG_LISTCARD)).click()
+        device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 30_000)
+
+        device.findObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)).click()
+        device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARYCARDEDIT)), 30_000)
     }
 }
 

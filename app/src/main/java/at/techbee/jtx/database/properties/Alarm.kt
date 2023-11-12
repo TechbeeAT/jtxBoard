@@ -24,6 +24,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import at.techbee.jtx.AlarmFullscreenActivity
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.MainActivity2.Companion.INTENT_ACTION_OPEN_ICALOBJECT
 import at.techbee.jtx.MainActivity2.Companion.INTENT_EXTRA_ITEM2SHOW
@@ -252,9 +253,13 @@ data class Alarm(
             notificationDescription: String?,
             isReadOnly: Boolean,
             notificationChannel: String,
-            isSticky: Boolean,
-            context: Context
+            context: Context,
+            ignoreStickySetting: Boolean = false,
         ): Notification {
+
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val isSticky = prefs.getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default) && !ignoreStickySetting
+            val isFullScreen = prefs.getBoolean(SwitchSetting.SETTING_FULLSCREEN_ALARMS.key, SwitchSetting.SETTING_FULLSCREEN_ALARMS.default)
 
             val intent = Intent(context, MainActivity2::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -285,8 +290,16 @@ data class Alarm(
                 notificationSummary?.let { setContentTitle(it) }
                 notificationDescription?.let { setContentText(it) }
                 setContentIntent(contentIntent)
+                if(isFullScreen) {
+                    val fullScreenIntent = Intent(context, AlarmFullscreenActivity::class.java).apply {
+                        putExtra(NotificationPublisher.ALARM_ID, alarmId)
+                        putExtra(NotificationPublisher.ICALOBJECT_ID, iCalObjectId)
+                    }
+                    val fullScreenPendingIntent = PendingIntent.getActivity(context, iCalObjectId.toInt(), fullScreenIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                    setFullScreenIntent(fullScreenPendingIntent, true)
+                }
                 priority = NotificationCompat.PRIORITY_MAX
-                setCategory(NotificationCompat.CATEGORY_REMINDER)     //  CATEGORY_REMINDER might also be an alternative
+                setCategory(NotificationCompat.CATEGORY_ALARM)     //  CATEGORY_REMINDER might also be an alternative
                 if (isSticky) {
                     setAutoCancel(false)
                     setOngoing(true)
@@ -414,8 +427,6 @@ data class Alarm(
             notificationDescription,
             isReadOnly,
             MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
-            PreferenceManager.getDefaultSharedPreferences(context)
-                .getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default),
             context
         )
 

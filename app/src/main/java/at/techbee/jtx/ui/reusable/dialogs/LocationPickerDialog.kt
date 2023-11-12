@@ -15,7 +15,11 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,9 +38,9 @@ fun LocationPickerDialog(
     onDismiss: () -> Unit
 ) {
 
-    var location by remember { mutableStateOf(initialLocation) }
-    var lat by remember { mutableStateOf(initialGeoLat) }
-    var long by remember { mutableStateOf(initialGeoLong) }
+    var location by rememberSaveable { mutableStateOf(initialLocation) }
+    var lat by rememberSaveable { mutableStateOf(initialGeoLat) }
+    var long by rememberSaveable { mutableStateOf(initialGeoLong) }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },

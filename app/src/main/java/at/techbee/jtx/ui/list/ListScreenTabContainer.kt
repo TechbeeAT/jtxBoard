@@ -36,10 +36,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -161,6 +161,9 @@ fun ListScreenTabContainer(
     val storedResources by listViewModel.storedResources.observeAsState(emptyList())
     val storedListSettings by listViewModel.storedListSettings.observeAsState(emptyList())
 
+    val iCal4ListRel by listViewModel.iCal4ListRel.observeAsState(initial = emptyList())
+    val numAllEntries by listViewModel.numAllEntries.observeAsState(initial = 0)
+
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, allWriteableCollections.value) {
         if (!timeout) {
@@ -170,9 +173,9 @@ fun ListScreenTabContainer(
     }
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
-    var showDeleteSelectedDialog by remember { mutableStateOf(false) }
-    var showUpdateEntriesDialog by remember { mutableStateOf(false) }
-    var showCollectionSelectorDialog by remember { mutableStateOf(false) }
+    var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
+    var showUpdateEntriesDialog by rememberSaveable { mutableStateOf(false) }
+    var showCollectionSelectorDialog by rememberSaveable { mutableStateOf(false) }
 
 
     fun getActiveViewModel() = when (pagerState.currentPage) {
@@ -203,7 +206,7 @@ fun ListScreenTabContainer(
     var filterSheetInitialTab by remember { mutableStateOf(ListOptionsBottomSheetTabs.FILTER)}
 
     var showSearch by remember { mutableStateOf(false) }
-    val showQuickAdd = remember { mutableStateOf(false) }
+    val showQuickAdd = rememberSaveable { mutableStateOf(false) }
     var quickAddBackupText by rememberSaveable { mutableStateOf("") }
 
     if (showDeleteSelectedDialog) {
@@ -224,6 +227,7 @@ fun ListScreenTabContainer(
             storedCategoriesLive = getActiveViewModel().storedCategories,
             storedResourcesLive = getActiveViewModel().storedResources,
             extendedStatusesLive = getActiveViewModel().extendedStatuses,
+            settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
             player = getActiveViewModel().mediaPlayer,
             onSelectFromAllListSearchTextUpdated = { getActiveViewModel().updateSelectFromAllListQuery(searchText = it, isAuthenticated = globalStateHolder.isAuthenticated.value) },
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
@@ -286,8 +290,10 @@ fun ListScreenTabContainer(
             settingsStateHolder.settingDefaultJournalsDate.value,
             settingsStateHolder.settingDefaultStartDate.value,
             settingsStateHolder.settingDefaultStartTime.value,
+            settingsStateHolder.settingDefaultStartTimezone.value,
             settingsStateHolder.settingDefaultDueDate.value,
-            settingsStateHolder.settingDefaultDueTime.value
+            settingsStateHolder.settingDefaultDueTime.value,
+            settingsStateHolder.settingDefaultDueTimezone.value,
         )
         val categories = Category.extractHashtagsFromText(text)
 
@@ -392,9 +398,9 @@ fun ListScreenTabContainer(
                                 getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.SEARCH
                                 getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
                                 getActiveViewModel().listSettings.newEntryText.value = ""
-                                topBarMenuExpanded = false
                             }
                         )
+
                         DropdownMenuItem(
                             text = {
                                 when (getActiveViewModel().module) {
@@ -433,6 +439,23 @@ fun ListScreenTabContainer(
                         )
                         HorizontalDivider()
 
+                        AnimatedVisibility(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.SEARCH
+                                && (getActiveViewModel().listSettings.viewMode.value == ViewMode.LIST || getActiveViewModel().listSettings.viewMode.value == ViewMode.COMPACT)
+                        ) {
+                            CheckboxWithText(
+                                text = stringResource(R.string.list_show_only_search_matching_subentries),
+                                isSelected = getActiveViewModel().listSettings.showOnlySearchMatchingSubentries.value,
+                                onCheckedChange = {
+                                    getActiveViewModel().listSettings.showOnlySearchMatchingSubentries.value = it
+                                    getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
+                                }
+                            )
+                        }
+                        AnimatedVisibility(getActiveViewModel().listSettings.topAppBarMode.value == ListTopAppBarMode.SEARCH) {
+                            HorizontalDivider()
+                        }
+
+
 
                         if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
                             DropdownMenuItem(
@@ -449,7 +472,7 @@ fun ListScreenTabContainer(
                             )
                             HorizontalDivider()
                         }
-                        ViewMode.values().forEach { viewMode ->
+                        ViewMode.entries.forEach { viewMode ->
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
                                 isSelected = getActiveViewModel().listSettings.viewMode.value == viewMode,
@@ -522,7 +545,7 @@ fun ListScreenTabContainer(
                 }) {
                 ListBottomAppBar(
                     module = listViewModel.module,
-                    iCal4ListRelLive = listViewModel.iCal4ListRel,
+                    iCal4ListRel = iCal4ListRel,
                     allowNewEntries = allUsableCollections.any { collection ->
                         ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
@@ -596,7 +619,7 @@ fun ListScreenTabContainer(
                         Column {
 
                             if(enabledTabs.size > 1) {
-                                TabRow(
+                                PrimaryTabRow(
                                     selectedTabIndex = pagerState.currentPage    // adding the indicator might make a smooth movement of the tabIndicator, but Accompanist does not support all components (TODO: Check again in future) https://www.geeksforgeeks.org/tab-layout-in-android-using-jetpack-compose/
                                 ) {
                                     enabledTabs.forEach { enabledTab ->
@@ -621,16 +644,19 @@ fun ListScreenTabContainer(
                                 }
                             }
 
-                            AnimatedVisibility(listViewModel.listSettings.isFilterActive()) {
-                                ListActiveFiltersRow(
-                                    listSettings = listViewModel.listSettings,
-                                    module = listViewModel.module,
-                                    storedCategories = storedCategories,
-                                    storedResources = storedResources,
-                                    storedListSettings = storedListSettings,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                )
-                            }
+
+                            ListActiveFiltersRow(
+                                listSettings = listViewModel.listSettings,
+                                module = listViewModel.module,
+                                storedCategories = storedCategories,
+                                storedResources = storedResources,
+                                storedListSettings = storedListSettings,
+                                numShownEntries = iCal4ListRel.size,
+                                numAllEntries = numAllEntries,
+                                isFilterActive = listViewModel.listSettings.isFilterActive(),
+                                isAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                            )
 
                             AnimatedVisibility(
                                 allUsableCollections.isNotEmpty() &&

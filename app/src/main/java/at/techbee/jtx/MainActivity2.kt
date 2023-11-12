@@ -17,8 +17,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -89,7 +94,7 @@ enum class BuildFlavor(val flavor: String, val hasBilling: Boolean, val hasGeofe
     GENERIC("generic", false, false, false, false);
 
     companion object {
-        fun getCurrent() = values().find { it.flavor == BuildConfig.FLAVOR } ?: OSE
+        fun getCurrent() = entries.find { it.flavor == BuildConfig.FLAVOR } ?: OSE
     }
 }
 
@@ -230,7 +235,10 @@ class MainActivity2 : AppCompatActivity() {
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                 }
                 INTENT_ACTION_OPEN_FILTERED_LIST -> {
-                    globalStateHolder.filteredList2Load.value = intent.getStringExtra(INTENT_EXTRA_LISTWIDGETCONFIG)?.let { Json.decodeFromString<ListWidgetConfig>(it) }
+                    intent.getStringExtra(INTENT_EXTRA_LISTWIDGETCONFIG)?.let {
+                        globalStateHolder.filteredList2Load.value = Json.decodeFromString<ListWidgetConfig>(it)
+                        intent.removeExtra(INTENT_EXTRA_LISTWIDGETCONFIG)
+                    }
                 }
                 INTENT_ACTION_OPEN_ICALOBJECT -> {
                     val id = intent.getLongExtra(INTENT_EXTRA_ITEM2SHOW, 0L)
@@ -313,7 +321,7 @@ fun MainNavHost(
 ) {
     val navController = rememberNavController()
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(false)
-    var showOSEDonationDialog by remember { mutableStateOf(false) }
+    var showOSEDonationDialog by rememberSaveable { mutableStateOf(false) }
 
     globalStateHolder.remoteCollections = ICalDatabase.getInstance(activity).iCalDatabaseDao().getAllRemoteCollectionsLive().observeAsState(emptyList())
 
@@ -334,7 +342,7 @@ fun MainNavHost(
             arguments = FilteredListDestination.FilteredList.args
         ) { backStackEntry ->
 
-            val module = Module.values().find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.argModule) } ?: return@composable
+            val module = Module.entries.find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.argModule) } ?: return@composable
             val storedListSettingData = backStackEntry.arguments?.getString(
                 FilteredListDestination.argStoredListSettingData)?.let {
                 Json.decodeFromString<StoredListSettingData>(URLDecoder.decode(it, "utf-8")
@@ -362,7 +370,6 @@ fun MainNavHost(
             backStackEntry.savedStateHandle[DetailDestination.argICalObjectId] = icalObjectId
             backStackEntry.savedStateHandle[DetailDestination.argIsEditMode] = editImmediately
              */
-
             val detailViewModel: DetailViewModel = viewModel()
             detailViewModel.load(icalObjectId, globalStateHolder.isAuthenticated.value)
             globalStateHolder.icalObject2Open.value = null  // reset (if it was set)
@@ -470,6 +477,7 @@ fun MainNavHost(
         val listSettings = ListSettings.fromListWidgetConfig(listWidgetConfig)
         val storedListSettingData = StoredListSettingData.fromListSettings(listSettings)
         navController.navigate(FilteredListDestination.FilteredList.getRoute(listWidgetConfig.module, storedListSettingData))
+        globalStateHolder.filteredList2Load.value = null
     }
 
     if (!settingsStateHolder.proInfoShown.value && !isProPurchased.value) {

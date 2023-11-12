@@ -85,12 +85,12 @@ fun DetailsCardLocation(
     var showRequestGeofencePermissionsDialog by rememberSaveable { mutableStateOf(false) }
     val openPermissionsIntent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
 
-    var location by remember { mutableStateOf(initialLocation ?: "") }
-    var geoLat by remember { mutableStateOf(initialGeoLat) }
-    var geoLong by remember { mutableStateOf(initialGeoLong) }
-    var geoLatText by remember { mutableStateOf(initialGeoLat?.toString() ?: "") }
-    var geoLongText by remember { mutableStateOf(initialGeoLong?.toString() ?: "") }
-    var geofenceRadius by remember { mutableStateOf(initialGeofenceRadius) }
+    var location by rememberSaveable { mutableStateOf(initialLocation ?: "") }
+    var geoLat by rememberSaveable { mutableStateOf(initialGeoLat) }
+    var geoLong by rememberSaveable { mutableStateOf(initialGeoLong) }
+    var geoLatText by rememberSaveable { mutableStateOf(initialGeoLat?.toString() ?: "") }
+    var geoLongText by rememberSaveable { mutableStateOf(initialGeoLong?.toString() ?: "") }
+    var geofenceRadius by rememberSaveable { mutableStateOf(initialGeofenceRadius) }
 
     val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao().getAllLocationsLatLng().observeAsState(emptyList())
 
@@ -217,6 +217,7 @@ fun DetailsCardLocation(
                                             geoLong = locationLatLng.geoLong
                                             geoLatText = geoLat?.toString()?:""
                                             geoLongText = geoLong?.toString()?:""
+                                            onLocationUpdated(location, geoLat, geoLong)
                                         },
                                         label = {
                                             val displayString =
@@ -465,7 +466,7 @@ fun DetailsCardLocation(
                     ) {
                         Text(
                             text = stringResource(R.string.geofence_missing_permission_info),
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.weight(1f)
                         )
@@ -506,9 +507,26 @@ fun DetailsCardLocation_Preview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, locale = "EN-en")
 @Composable
-fun DetailsCardLocation_Preview_withGEo() {
+fun DetailsCardLocation_Preview_withGeo() {
+    MaterialTheme {
+        DetailsCardLocation(
+            initialLocation = "Vienna, Stephansplatz",
+            initialGeoLat = 23.447378,
+            initialGeoLong = 73.272838,
+            initialGeofenceRadius = null,
+            isEditMode = false,
+            setCurrentLocation = false,
+            onLocationUpdated = { _, _, _ -> },
+            onGeofenceRadiusUpdatd = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, locale = "DE-de")
+@Composable
+fun DetailsCardLocation_Preview_withGeoDE() {
     MaterialTheme {
         DetailsCardLocation(
             initialLocation = "Vienna, Stephansplatz",

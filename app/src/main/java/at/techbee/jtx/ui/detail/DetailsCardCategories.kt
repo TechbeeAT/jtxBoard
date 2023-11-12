@@ -38,9 +38,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
@@ -53,6 +55,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSettingData
@@ -66,7 +70,7 @@ import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 fun DetailsCardCategories(
     categories: SnapshotStateList<Category>,
     isEditMode: Boolean,
-    allCategories: List<String>,
+    allCategoriesLive: LiveData<List<String>>,
     storedCategories: List<StoredCategory>,
     onCategoriesUpdated: () -> Unit,
     onGoToFilteredList: (StoredListSettingData) -> Unit,
@@ -74,7 +78,8 @@ fun DetailsCardCategories(
 ) {
 
     val headline = stringResource(id = R.string.categories)
-    var newCategory by remember { mutableStateOf("") }
+    var newCategory by rememberSaveable { mutableStateOf("") }
+    val allCategories by allCategoriesLive.observeAsState(emptyList())
 
     val mergedCategories = mutableListOf<StoredCategory>()
     mergedCategories.addAll(storedCategories)
@@ -224,7 +229,7 @@ fun DetailsCardCategories_Preview() {
         DetailsCardCategories(
             categories = remember { mutableStateListOf(Category(text = "asdf")) },
             isEditMode = false,
-            allCategories = listOf("category1", "category2", "Whatever"),
+            allCategoriesLive = MutableLiveData(listOf("category1", "category2", "Whatever")),
             storedCategories = listOf(StoredCategory("category1", Color.Green.toArgb())),
             onCategoriesUpdated = { },
             onGoToFilteredList = { }
@@ -240,7 +245,7 @@ fun DetailsCardCategories_Preview_edit() {
         DetailsCardCategories(
             categories = remember { mutableStateListOf(Category(text = "asdf")) },
             isEditMode = true,
-            allCategories = listOf("category1", "category2", "Whatever"),
+            allCategoriesLive = MutableLiveData(listOf("category1", "category2", "Whatever")),
             storedCategories = listOf(StoredCategory("category1", Color.Green.toArgb())),
             onCategoriesUpdated = { },
             onGoToFilteredList = { }

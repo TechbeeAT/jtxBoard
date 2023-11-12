@@ -70,6 +70,7 @@ import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.reusable.elements.VerticalDateBlock
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
@@ -98,6 +99,8 @@ fun ListCard(
     isAttachmentsExpandedDefault: Boolean = true,
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
+    settingDisplayTimezone: DropdownSettingOption,
+    settingIsAccessibilityMode: Boolean,
     progressIncrement: Int,
     linkProgressToSubtasks: Boolean,
     markdownEnabled: Boolean,
@@ -150,7 +153,8 @@ fun ListCard(
                 extendedStatuses = storedStatuses,
                 showAttachments = false,
                 showSubtasks = false,
-                showSubnotes = false
+                showSubnotes = false,
+                isAccessibilityMode = settingIsAccessibilityMode
             )
 
             Row(
@@ -160,8 +164,9 @@ fun ListCard(
 
                 if (iCalObject.module == Module.JOURNAL.name)
                     VerticalDateBlock(
-                        iCalObject.dtstart,
-                        iCalObject.dtstartTimezone,
+                        datetime = iCalObject.dtstart,
+                        timezone = iCalObject.dtstartTimezone,
+                        settingDisplayTimezone = settingDisplayTimezone,
                         modifier = Modifier.padding(
                             start = 4.dp,
                             end = 12.dp
@@ -549,6 +554,8 @@ fun ICalObjectListCardPreview_JOURNAL() {
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
             linkProgressToSubtasks = false,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
@@ -592,6 +599,8 @@ fun ICalObjectListCardPreview_NOTE() {
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             progressIncrement = 1,
             linkProgressToSubtasks = false,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
@@ -641,6 +650,8 @@ fun ICalObjectListCardPreview_TODO() {
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             settingShowProgressMaintasks = true,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            settingIsAccessibilityMode = false,
             progressIncrement = 1,
             linkProgressToSubtasks = false,
             markdownEnabled = false,
@@ -691,6 +702,8 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             progressIncrement = 1,
             linkProgressToSubtasks = false,
             settingShowProgressMaintasks = false,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
@@ -739,6 +752,8 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             onLongClick = { _, _ -> },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             settingShowProgressMaintasks = false,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            settingIsAccessibilityMode = false,
             progressIncrement = 1,
             linkProgressToSubtasks = false,
             markdownEnabled = false,
@@ -790,6 +805,8 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             onLongClick = { _, _ -> },
             attachments = listOf(),
             settingShowProgressMaintasks = false,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            settingIsAccessibilityMode = false,
             progressIncrement = 1,
             linkProgressToSubtasks = false,
             markdownEnabled = false,
@@ -841,6 +858,8 @@ fun ICalObjectListCardPreview_TASK_one_liner() {
             onLongClick = { _, _ -> },
             attachments = listOf(),
             settingShowProgressMaintasks = false,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            settingIsAccessibilityMode = false,
             progressIncrement = 1,
             linkProgressToSubtasks = false,
             markdownEnabled = false,
@@ -892,6 +911,8 @@ fun ICalObjectListCardPreview_NOTE_one_liner() {
             onLongClick = { _, _ -> },
             attachments = listOf(),
             settingShowProgressMaintasks = false,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            settingIsAccessibilityMode = false,
             progressIncrement = 1,
             linkProgressToSubtasks = false,
             markdownEnabled = false,

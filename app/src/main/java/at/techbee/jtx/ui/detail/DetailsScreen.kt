@@ -22,11 +22,31 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.EventNote
 import androidx.compose.material.icons.automirrored.outlined.Note
 import androidx.compose.material.icons.automirrored.outlined.NoteAdd
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.AddTask
+import androidx.compose.material.icons.outlined.ContentPaste
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Mail
+import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -76,8 +96,8 @@ fun DetailsScreen(
     val scope = rememberCoroutineScope()
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var showRevertDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+    var showRevertDialog by rememberSaveable { mutableStateOf(false) }
     var showUnsavedChangesDialog by rememberSaveable { mutableStateOf(false) }
     var showLinkEntryDialog by rememberSaveable { mutableStateOf(false) }
     var linkEntryDialogModule by rememberSaveable { mutableStateOf(listOf<Module>())}
@@ -86,18 +106,11 @@ fun DetailsScreen(
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
-    val parents = detailViewModel.relatedParents.observeAsState(emptyList())
-    val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
-    val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
+
     val seriesElement = detailViewModel.seriesElement.observeAsState(null)
-    val seriesInstances = detailViewModel.seriesInstances.observeAsState(emptyList())
-    val isChild = detailViewModel.isChild.observeAsState(false)
-    val allCategories = detailViewModel.allCategories.observeAsState(emptyList())
-    val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val storedCategories by detailViewModel.storedCategories.observeAsState(emptyList())
     val storedResources by detailViewModel.storedResources.observeAsState(emptyList())
     val storedStatuses by detailViewModel.storedStatuses.observeAsState(emptyList())
-    val allWriteableCollections = detailViewModel.allWriteableCollections.observeAsState(emptyList())
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
     val isProActionAvailable by remember(isProPurchased, icalEntity) { derivedStateOf { isProPurchased.value || icalEntity.value?.ICalCollection?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
@@ -232,7 +245,8 @@ fun DetailsScreen(
             storedCategories = storedCategories,
             storedResources = storedResources,
             extendedStatuses = storedStatuses,
-            detailViewModel.mediaPlayer,
+            settingIsAccessibilityMode = detailViewModel.settingsStateHolder.settingAccessibilityMode.value,
+            player = detailViewModel.mediaPlayer,
             onAllEntriesSearchTextUpdated = { searchText, modules, sameCollection, sameAccount -> detailViewModel.updateSelectFromAllListQuery(searchText, modules, sameCollection, sameAccount) },
             onEntriesToLinkConfirmed = { selected, reltype ->
                 when(reltype) {
@@ -470,19 +484,19 @@ fun DetailsScreen(
                 alarms = detailViewModel.mutableAlarms,
                 isEditMode = isEditMode,
                 changeState = detailViewModel.changeState,
-                parents = parents,
-                subtasks = subtasks,
-                subnotes = subnotes,
-                isChild = isChild.value,
-                allWriteableCollections = allWriteableCollections.value,
-                allCategories = allCategories.value,
-                allResources = allResources.value,
+                parentsLive = detailViewModel.relatedParents,
+                subtasksLive = detailViewModel.relatedSubtasks,
+                subnotesLive = detailViewModel.relatedSubnotes,
+                isChildLive = detailViewModel.isChild,
+                allWriteableCollectionsLive = detailViewModel.allWriteableCollections,
+                allCategoriesLive = detailViewModel.allCategories,
+                allResourcesLive = detailViewModel.allResources,
                 storedCategories = storedCategories,
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
-                seriesInstances = seriesInstances.value,
+                seriesInstancesLive = detailViewModel.seriesInstances,
                 seriesElement = seriesElement.value,
                 sliderIncrement = detailViewModel.settingsStateHolder.settingStepForProgress.value.getProgressStepKeyAsInt(),
                 showProgressForMainTasks = detailViewModel.settingsStateHolder.settingShowProgressForMainTasks.value,

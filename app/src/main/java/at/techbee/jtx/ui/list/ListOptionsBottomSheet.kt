@@ -74,7 +74,7 @@ fun ListOptionsBottomSheet(
         modifier = modifier
     ) {
 
-        TabRow(selectedTabIndex = pagerState.currentPage) {
+        SecondaryTabRow(selectedTabIndex = pagerState.currentPage) {
             listOptionTabs.forEach { tab ->
                 Tab(
                     selected = pagerState.currentPage == listOptionTabs.indexOf(tab),

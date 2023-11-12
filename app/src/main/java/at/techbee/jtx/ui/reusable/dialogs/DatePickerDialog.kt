@@ -99,7 +99,7 @@ fun DatePickerDialog(
 
                 if (!dateOnly || allowNull) {    // show the tabs if not date only
 
-                    TabRow(selectedTabIndex = selectedTab) {
+                    SecondaryTabRow(selectedTabIndex = selectedTab) {
                         Tab(selected = selectedTab == tabIndexDate,
                             onClick = { selectedTab = tabIndexDate },
                             text = {

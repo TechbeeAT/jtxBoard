@@ -11,6 +11,8 @@
     <string name="ok">"OK"</string>
     <string name="delete">"Διαγραφή"</string>
     <string name="discard">"Απόρριψη"</string>
+    <string name="dismiss">"Απόρριψη"</string>
+    <string name="open">"Ανοιχτό"</string>
     <string name="cont">"Συνέχεια"</string>
     <string name="website">"Website"</string>
     <string name="latitude">"Γεωγραφικό πλάτος"</string>
@@ -348,6 +350,10 @@
     <string name="settings_protect_biometric_all">"Όλα"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Παρακαλώ πιστοποιήστε για να αλλάξετε αυτή τη ρύθμιση!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Παρακαλώ πιστοποιήστε για να εμφανίσετε προστατευμένες καταχωρήσεις!"</string>
+    <string name="settings_timezone_display">"Επιλέξτε εμφάνιση της ώρας με τη ζώνη ώρας"</string>
+    <string name="settings_timezone_display_local">"Εμφάνιση ώρας στην τοπική ζώνη ώρας"</string>
+    <string name="settings_timezone_display_original">"Εμφάνιση ώρας στην αρχική ζώνη ώρας"</string>
+    <string name="settings_timezone_display_local_and_original">"Εμφάνιση ώρας στην τοπική και στην αρχική ζώνη ώρας (προβολή λεπτομερειών μόνο)"</string>
     <string name="donate_dialog_title">"Σας αρέσει το jtx Board;"</string>
     <string name="donate_dialog_message">"Η δημιουργία μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μια σκληρή δουλειά. Εάν σας αρέσει αυτή η εφαρμογή και εάν θέλετε να εξασφαλίσετε την συνεχή ανάπτυξη της, σκεφτείτε για μια δωρεά :-)
  Ευχαριστώ!"</string>
@@ -464,10 +470,13 @@
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
     <string name="settings_tasks">"Ρυθμίσεις εργασιών"</string>
+    <string name="settings_alarms">"Ρυθμίσεις ξυπνητηριού"</string>
     <string name="settings_tasks_status_progress">"Ρυθμίσεις εργασιών (κατάσταση/πρόοδος)"</string>
     <string name="settings_sync">"Ρυθμίσεις συγχρονισμού"</string>
     <string name="settings_default_start_date">"Ορίστε μια προεπιλεγμένη ημερομηνία έναρξης για εργασίες"</string>
+    <string name="settings_default_start_timezone">"Ορίστε μια προεπιλεγμένη ώρα έναρξης για εργασίες"</string>
     <string name="settings_default_due_date">"Ορίστε μια προεπιλεγμένη ημερομηνία έναρξης για εργασίες"</string>
+    <string name="settings_default_due_timezone">"Ορίστε μια προεπιλεγμένη ώρα έναρξης για εργασίες"</string>
     <string name="settings_default_start_time">"Ορίστε μια προεπιλεγμένη ώρα έναρξης για εργασίες"</string>
     <string name="settings_default_due_time">"Ορίστε μια προεπιλεγμένη ώρα έναρξης για εργασίες"</string>
     <string name="settings_default_date_none">"Κανένα"</string>
@@ -493,6 +502,9 @@
     <string name="settings_create_with_current_location">"Δημιουργήστε νέες καταχωρήσεις με την τρέχουσα τοποθεσία"</string>
     <string name="settings_sticky_alarms">"Κολλημένες ειδοποιήσεις"</string>
     <string name="settings_sticky_alarms_sub">"Διατήρηση ειδοποιήσεων μέχρι να ολοκληρωθούν ή αναβληθούν"</string>
+    <string name="settings_fullscreen_alarms">"Αφύπνιση σε πλήρη οθόνη"</string>
+    <string name="settings_fullscreen_alarms_sub">"Εμφάνιση ειδοποιήσεων σε πλήρη οθόνη όταν η συσκευή είναι κλειδωμένη"</string>
+    <string name="settings_fullscreen_alarms_toast">"Παραχωρήστε άδεια ειδοποίησης πλήρους οθόνης στις ρυθμίσεις συστήματος."</string>
     <string name="settings_sync_on_start">"Συγχρονισμός κατά την έναρξη"</string>
     <string name="settings_sync_on_pull_refresh">"Συγχρονισμός κατά την έξοδο"</string>
     <string name="sync_button_go_to_collections">"Πήγαινε στις συλλογέ"</string>

@@ -19,6 +19,8 @@
     <string name="ok">"OK"</string>
     <string name="delete">"Delete"</string>
     <string name="discard">"Discard"</string>
+    <string name="dismiss">"Dismiss"</string>
+    <string name="open">"Open"</string>
     <string name="cont">"Continue"</string>
     <string name="website">"Website"</string>
     <string name="latitude">"Latitude"</string>
@@ -317,6 +319,7 @@
     <string name="list_without_start_date">"Without start date"</string>
     <string name="list_without_due_date">"Without due date"</string>
     <string name="list_without_completed_date">"Without completed date"</string>
+    <string name="list_show_only_search_matching_subentries">"Show only search matching sub-entries"</string>
     <string name="filter_order_by">"Order by"</string>
     <string name="filter_asc">"Ascending"</string>
     <string name="filter_desc">"Descending"</string>
@@ -360,6 +363,10 @@
     <string name="settings_protect_biometric_all">"All"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Please authenticate to change this setting!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Please authenticate to show protected entries!"</string>
+    <string name="settings_timezone_display">"Select display of time with timezone"</string>
+    <string name="settings_timezone_display_local">"Show time in local timezone"</string>
+    <string name="settings_timezone_display_original">"Show time in original timezone"</string>
+    <string name="settings_timezone_display_local_and_original">"Show time in local and in original timezone (detail view only)"</string>
     <string name="donate_dialog_title">"Do you like jtx Board?"</string>
     <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
 Thank you!"</string>
@@ -481,10 +488,13 @@ Thank you!"</string>
     <string name="settings_audio_format_ogg" translatable="false">"OGG (audio/ogg)"</string>
     <string name="settings_audio_format_mp4" translatable="false">"MP4 (audio/mp4)"</string>
     <string name="settings_tasks">"Tasks Settings"</string>
+    <string name="settings_alarms">"Alarms Settings"</string>
     <string name="settings_tasks_status_progress">"Tasks Settings (status/progress)"</string>
     <string name="settings_sync">"Sync Settings"</string>
     <string name="settings_default_start_date">"Set a default start date for tasks"</string>
+    <string name="settings_default_start_timezone">"Set a default start timezone for tasks"</string>
     <string name="settings_default_due_date">"Set a default due date for tasks"</string>
+    <string name="settings_default_due_timezone">"Set a default due timezone for tasks"</string>
     <string name="settings_default_start_time">"Set a default start time for tasks"</string>
     <string name="settings_default_due_time">"Set a default due time for tasks"</string>
     <string name="settings_default_date_none">"None"</string>
@@ -510,6 +520,11 @@ Thank you!"</string>
     <string name="settings_create_with_current_location">"Create new entries with current location"</string>
     <string name="settings_sticky_alarms">"Sticky alarms"</string>
     <string name="settings_sticky_alarms_sub">"Keep notifications until done or postponed"</string>
+    <string name="settings_fullscreen_alarms">"Full screen alarms"</string>
+    <string name="settings_fullscreen_alarms_sub">"Shows alarms in full screen when the device is locked"</string>
+    <string name="settings_accessibility_mode">"Accessibility mode"</string>
+    <string name="settings_accessibility_mode_sub">"Ensures minimum font-size for small elements"</string>
+    <string name="settings_fullscreen_alarms_toast">"Please grant full screen notification permission in the system settings."</string>
     <string name="settings_sync_on_start">"Sync on app start"</string>
     <string name="settings_sync_on_pull_refresh">"Sync on pull down"</string>
     <string name="sync_button_go_to_collections">"Go to Collections"</string>

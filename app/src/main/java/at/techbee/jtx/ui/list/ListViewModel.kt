@@ -117,6 +117,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val storedCategories = database.getStoredCategories()
     val storedResources = database.getStoredResources()
     val extendedStatuses = database.getStoredStatuses()
+    val numAllEntries = database.getICal4ListCount(module.name)
 
     var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)
@@ -199,7 +200,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 component = Component.VTODO,
                 hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application),
                 orderBy = listSettings.subtasksOrderBy.value,
-                sortOrder = listSettings.subtasksSortOrder.value
+                sortOrder = listSettings.subtasksSortOrder.value,
+                searchText = if(listSettings.showOnlySearchMatchingSubentries.value) listSettings.searchText.value else null
             )
         )
         allSubnotesQuery.postValue(
@@ -207,7 +209,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 component = Component.VJOURNAL,
                 hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application),
                 orderBy = listSettings.subnotesOrderBy.value,
-                sortOrder = listSettings.subnotesSortOrder.value
+                sortOrder = listSettings.subnotesSortOrder.value,
+                searchText = if(listSettings.showOnlySearchMatchingSubentries.value) listSettings.searchText.value else null
             )
         )
         if(saveListSettings)
@@ -636,20 +639,38 @@ open class ListViewModelTodos(application: Application) : ListViewModel(applicat
 
 
 
-enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String) {
-    START_VTODO(R.string.started, "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
-    START_VJOURNAL(R.string.date, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
-    DUE(R.string.due, "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DUE IS NULL, $COLUMN_DUE "),
-    COMPLETED(R.string.completed, "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED "),
-    CREATED(R.string.filter_created, "$COLUMN_CREATED "),
-    LAST_MODIFIED(R.string.filter_last_modified, "$COLUMN_LAST_MODIFIED "),
-    SUMMARY(R.string.summary, "UPPER($COLUMN_SUMMARY) "),
-    PRIORITY(R.string.priority, "CASE WHEN $COLUMN_PRIORITY IS NULL THEN 1 WHEN $COLUMN_PRIORITY = 0 THEN 1 ELSE 0 END, $COLUMN_PRIORITY "),
-    CLASSIFICATION(R.string.classification, "$COLUMN_CLASSIFICATION IS NULL, $COLUMN_CLASSIFICATION "),
-    STATUS(R.string.status, "$COLUMN_STATUS IS NULL, $COLUMN_STATUS "),
-    PROGRESS(R.string.progress, "$COLUMN_PERCENT "),
-    ACCOUNT(R.string.account, "$COLUMN_COLLECTION_ACCOUNT_NAME "),
-    COLLECTION(R.string.collection, "$COLUMN_COLLECTION_DISPLAYNAME ");
+enum class OrderBy(@StringRes val stringResource: Int) {
+    START_VTODO(R.string.started),
+    START_VJOURNAL(R.string.date),
+    DUE(R.string.due),
+    COMPLETED(R.string.completed),
+    CREATED(R.string.filter_created),
+    LAST_MODIFIED(R.string.filter_last_modified),
+    SUMMARY(R.string.summary),
+    PRIORITY(R.string.priority),
+    CLASSIFICATION(R.string.classification),
+    STATUS(R.string.status),
+    PROGRESS(R.string.progress),
+    ACCOUNT(R.string.account),
+    COLLECTION(R.string.collection);
+
+    fun getQueryAppendix(sortOrder: SortOrder): String {
+        return when(this) {
+            START_VTODO -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
+            START_VJOURNAL -> "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
+            DUE -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DUE IS NULL, $COLUMN_DUE ${sortOrder.name} "
+            COMPLETED -> "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED ${sortOrder.name} "
+            CREATED -> "$COLUMN_CREATED ${sortOrder.name} "
+            LAST_MODIFIED -> "$COLUMN_LAST_MODIFIED ${sortOrder.name} "
+            SUMMARY -> "UPPER($COLUMN_SUMMARY) ${sortOrder.name} "
+            PRIORITY -> "CASE WHEN $COLUMN_PRIORITY IS NULL THEN 1 WHEN $COLUMN_PRIORITY = 0 THEN 1 ELSE 0 END, $COLUMN_PRIORITY ${sortOrder.name} "
+            CLASSIFICATION -> "$COLUMN_CLASSIFICATION IS NULL, $COLUMN_CLASSIFICATION ${sortOrder.name} "
+            STATUS -> "$COLUMN_STATUS IS NULL, $COLUMN_STATUS ${sortOrder.name} "
+            PROGRESS -> "$COLUMN_PERCENT ${sortOrder.name} "
+            ACCOUNT -> "$COLUMN_COLLECTION_ACCOUNT_NAME ${sortOrder.name} "
+            COLLECTION -> "$COLUMN_COLLECTION_DISPLAYNAME ${sortOrder.name} "
+        }
+    }
 
     companion object {
         fun getValuesFor(module: Module): Array<OrderBy> =
@@ -661,9 +682,9 @@ enum class OrderBy(@StringRes val stringResource: Int, val queryAppendix: String
     }
 }
 
-enum class SortOrder(@StringRes val stringResource: Int, val queryAppendix: String) {
-    ASC(R.string.filter_asc, "ASC "),
-    DESC(R.string.filter_desc, "DESC ")
+enum class SortOrder(@StringRes val stringResource: Int) {
+    ASC(R.string.filter_asc),
+    DESC(R.string.filter_desc)
 }
 
 enum class GroupBy(@StringRes val stringResource: Int) {

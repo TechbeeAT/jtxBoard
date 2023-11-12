@@ -59,7 +59,12 @@ enum class DropdownSettingOption(
     PROTECT_BIOMETRIC_OFF("protect_biometric_off", R.string.off),
     PROTECT_BIOMETRIC_CONFIDENTIAL("protect_biometric_confidential", R.string.settings_protect_biometric_confidential),
     PROTECT_BIOMETRIC_PRIVATE_CONFIDENTIAL("protect_biometric_private_confidential", R.string.settings_protect_biometric_private_confidential),
-    PROTECT_BIOMETRIC_ALL("protect_biometric_all", R.string.settings_protect_biometric_all);
+    PROTECT_BIOMETRIC_ALL("protect_biometric_all", R.string.settings_protect_biometric_all),
+
+    DISPLAY_TIMEZONE_LOCAL("settings_timezone_display_local", R.string.settings_timezone_display_local),
+    DISPLAY_TIMEZONE_ORIGINAL("settings_timezone_display_original", R.string.settings_timezone_display_original),
+    DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL("settings_timezone_display_local_and_original", R.string.settings_timezone_display_local_and_original)
+    ;
 
     fun getProgressStepKeyAsInt(): Int {
         return try {

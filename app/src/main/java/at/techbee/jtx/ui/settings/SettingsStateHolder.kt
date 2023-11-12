@@ -28,6 +28,8 @@ class SettingsStateHolder(val context: Context) {
     var settingEnableNotes = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ENABLE_NOTES.key, SwitchSetting.SETTING_ENABLE_NOTES.default))
     var settingEnableTasks = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ENABLE_TASKS.key, SwitchSetting.SETTING_ENABLE_TASKS.default))
 
+    var settingAccessibilityMode = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_ACCESSIBILITY_MODE.key, SwitchSetting.SETTING_ACCESSIBILITY_MODE.default))
+
     var settingTheme = mutableStateOf(DropdownSetting.SETTING_THEME.getSetting(prefs))
     var settingAudioFormat = mutableStateOf(DropdownSetting.SETTING_AUDIO_FORMAT.getSetting(prefs))
     var settingAutoExpandSubtasks = mutableStateOf(SwitchSetting.SETTING_AUTO_EXPAND_SUBTASKS.getSetting(prefs))
@@ -40,20 +42,25 @@ class SettingsStateHolder(val context: Context) {
     var settingDefaultJournalsDate = mutableStateOf(DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE.getSetting(prefs))
     var settingDefaultStartDate = mutableStateOf(DropdownSetting.SETTING_DEFAULT_START_DATE.getSetting(prefs))
     var settingDefaultStartTime = mutableStateOf(TimeSetting.SETTING_DEFAULT_START_TIME.getSetting(prefs))
+    var settingDefaultStartTimezone = mutableStateOf(DropdownSettingTimezone.SETTING_DEFAULT_START_TIMEZONE.getSetting(prefs))
     var settingDefaultDueDate = mutableStateOf(DropdownSetting.SETTING_DEFAULT_DUE_DATE.getSetting(prefs))
     var settingDefaultDueTime = mutableStateOf(TimeSetting.SETTING_DEFAULT_DUE_TIME.getSetting(prefs))
+    var settingDefaultDueTimezone = mutableStateOf(DropdownSettingTimezone.SETTING_DEFAULT_DUE_TIMEZONE.getSetting(prefs))
     var settingStepForProgress = mutableStateOf(DropdownSetting.SETTING_PROGRESS_STEP.getSetting(prefs))
     var settingDisableAlarmsReadonly = mutableStateOf(SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.getSetting(prefs))
     var settingAutoAlarm = mutableStateOf(DropdownSetting.SETTING_AUTO_ALARM.getSetting(prefs))
     var settingLinkProgressToSubtasks = mutableStateOf(SwitchSetting.SETTING_LINK_PROGRESS_TO_SUBTASKS.getSetting(prefs))
     var settingKeepStatusProgressCompletedInSync = mutableStateOf(SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.getSetting(prefs))
     var settingProtectBiometric = mutableStateOf(DropdownSetting.SETTING_PROTECT_BIOMETRIC.getSetting(prefs))
+    var settingDisplayTimezone = mutableStateOf(DropdownSetting.SETTING_DISPLAY_TIMEZONE.getSetting(prefs))
+
 
     var settingSetDefaultCurrentLocationJournals = mutableStateOf(SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
     var settingSetDefaultCurrentLocationNotes = mutableStateOf(SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
     var settingSetDefaultCurrentLocationTasks = mutableStateOf(SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
 
     var settingStickyAlarms = mutableStateOf(SwitchSetting.SETTING_STICKY_ALARMS.getSetting(prefs))
+    var settingFullscreenAlarms = mutableStateOf(SwitchSetting.SETTING_FULLSCREEN_ALARMS.getSetting(prefs))
 
     var settingSyncOnStart = mutableStateOf(SwitchSetting.SETTING_SYNC_ON_START.getSetting(prefs))
     var settingSyncOnPullRefresh = mutableStateOf(SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH.getSetting(prefs))
@@ -74,7 +81,7 @@ class SettingsStateHolder(val context: Context) {
         }
 
     val detailTopAppBarMode = mutableStateOf(
-        DetailTopAppBarMode.values().find { it.name == prefs.getString(PREFS_DETAIL_TOP_APP_BAR_MODE, null) }?: DetailTopAppBarMode.ADD_SUBTASK
+        DetailTopAppBarMode.entries.find { it.name == prefs.getString(PREFS_DETAIL_TOP_APP_BAR_MODE, null) }?: DetailTopAppBarMode.ADD_SUBTASK
     )
     fun setDetailTopAppBarMode(mode: DetailTopAppBarMode) {
         detailTopAppBarMode.value = mode

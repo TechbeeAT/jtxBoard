@@ -19,6 +19,8 @@ import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.AlarmOff
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.DoneAll
+import androidx.compose.material.icons.outlined.FormatSize
+import androidx.compose.material.icons.outlined.Fullscreen
 import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.RestartAlt
@@ -139,17 +141,31 @@ enum class SwitchSetting(
         subtitle = R.string.settings_sticky_alarms_sub,
         default = false
     ),
+    SETTING_FULLSCREEN_ALARMS(
+        key = "settings_fullscreen_alarms",
+        icon = { Icon(Icons.Outlined.Fullscreen, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_fullscreen_alarms,
+        subtitle = R.string.settings_fullscreen_alarms_sub,
+        default = false
+    ),
     SETTING_SYNC_ON_START(
         key = "settings_sync_on_start",
         icon = { Icon(Icons.Outlined.RestartAlt, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_sync_on_start,
-        default = true
+        default = false
     ),
     SETTING_SYNC_ON_PULL_REFRESH(
         key = "settings_sync_on_pull_refresh",
         icon = { Icon(Icons.Outlined.SwipeDown, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_sync_on_pull_refresh,
         default = true
+    ),
+    SETTING_ACCESSIBILITY_MODE(
+        key = "settings_accessibility_mode",
+        icon = { Icon(Icons.Outlined.FormatSize, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_accessibility_mode,
+        subtitle = R.string.settings_accessibility_mode_sub,
+        default = false
     );
     fun saveSetting(newSwitchValue: Boolean, prefs: SharedPreferences) = prefs.edit().putBoolean(key, newSwitchValue).apply()
 

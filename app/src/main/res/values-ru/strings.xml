@@ -11,6 +11,8 @@
     <string name="ok">"ОК"</string>
     <string name="delete">"Удалить"</string>
     <string name="discard">"Сбросить"</string>
+    <string name="dismiss">"Скрыть"</string>
+    <string name="open">"Открыть"</string>
     <string name="cont">"Продолжить"</string>
     <string name="website">"Сайт"</string>
     <string name="latitude">"Широта"</string>
@@ -306,6 +308,7 @@
     <string name="list_without_start_date">"Без даты начала"</string>
     <string name="list_without_due_date">"Без даты завершения"</string>
     <string name="list_without_completed_date">"Без даты выполнения"</string>
+    <string name="list_show_only_search_matching_subentries">"Поиск по дочерним записям"</string>
     <string name="filter_order_by">"Сортировать по"</string>
     <string name="filter_asc">"По возрастанию"</string>
     <string name="filter_desc">"По убыванию"</string>
@@ -349,6 +352,10 @@
     <string name="settings_protect_biometric_all">"Все"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Авторизуйтесь, чтобы изменить эту настройку!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Авторизуйтесь, чтобы показать защищенные записи!"</string>
+    <string name="settings_timezone_display">"Отображение времени в часовом поясе"</string>
+    <string name="settings_timezone_display_local">"Показывать время по местному часовому поясу"</string>
+    <string name="settings_timezone_display_original">"Показывать время по указанному часовому поясу"</string>
+    <string name="settings_timezone_display_local_and_original">"Показывать время по местному и указанному часовым поясам (только в детальном просмотре записи)"</string>
     <string name="donate_dialog_title">"Вам нравится jtx Board?"</string>
     <string name="donate_dialog_message">"Разработка приложения – непростая вещь, и его обслуживание и поддержка – тяжелая работа. Если вам нравится наш проект, вы можете поддержать его пожертвованием :-)
 Спасибо большое!"</string>
@@ -464,10 +471,13 @@
     <string name="menu_list_viewmode_compact">"Компактно"</string>
     <string name="menu_list_viewmode_kanban">"Канбан"</string>
     <string name="settings_tasks">"Настройки задач"</string>
+    <string name="settings_alarms">"Настройки напоминаний"</string>
     <string name="settings_tasks_status_progress">"Настройки задач (статус/прогресс)"</string>
     <string name="settings_sync">"Настройки синхронизации"</string>
     <string name="settings_default_start_date">"Установить дату начала задачи по умолчанию"</string>
+    <string name="settings_default_start_timezone">"Установить часовой пояс начала задачи по умолчанию"</string>
     <string name="settings_default_due_date">"Установить дату завершения задачи по умолчанию"</string>
+    <string name="settings_default_due_timezone">"Установить часовой пояс завершения задачи по умолчанию"</string>
     <string name="settings_default_start_time">"Установить время начала задачи по умолчанию"</string>
     <string name="settings_default_due_time">"Установить время завершения задачи по умолчанию"</string>
     <string name="settings_default_date_none">"Нет"</string>
@@ -493,6 +503,9 @@
     <string name="settings_create_with_current_location">"Создавать новые записи с текущим местоположением"</string>
     <string name="settings_sticky_alarms">"Закрепленные напоминания"</string>
     <string name="settings_sticky_alarms_sub">"Уведомление находится в шторке, пока не отмечено как выполненное или отложенное"</string>
+    <string name="settings_fullscreen_alarms">"Полноэкранные напоминания"</string>
+    <string name="settings_fullscreen_alarms_sub">"Показывает напоминания во весь экран, когда устройство заблокировано"</string>
+    <string name="settings_fullscreen_alarms_toast">"Пожалуйста, предоставьте разрешение на полноэкранные оповещения в настройках системы."</string>
     <string name="settings_sync_on_start">"Синхронизировать при запуске"</string>
     <string name="settings_sync_on_pull_refresh">"Синхронизировать при свайпе вниз"</string>
     <string name="sync_button_go_to_collections">"Перейти в Коллекции"</string>

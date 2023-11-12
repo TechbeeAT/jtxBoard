@@ -53,6 +53,7 @@ fun ListCardKanban(
     storedResources: List<StoredResource>,
     storedStatuses: List<ExtendedStatus>,
     markdownEnabled: Boolean,
+    settingIsAccessibilityMode: Boolean,
     selected: Boolean,
     player: MediaPlayer?,
     modifier: Modifier = Modifier
@@ -79,7 +80,8 @@ fun ListCardKanban(
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
                 includeJournalDate = true,
-                enableScroll = false
+                enableScroll = false,
+                isAccessibilityMode = settingIsAccessibilityMode
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
@@ -136,6 +138,7 @@ fun ListCardKanban_JOURNAL() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             markdownEnabled = false,
+            settingIsAccessibilityMode = false,
             player = null,
             modifier = Modifier
                 .width(150.dp)
@@ -165,6 +168,7 @@ fun ListCardKanban_NOTE() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = true,
             markdownEnabled = false,
+            settingIsAccessibilityMode = false,
             player = null,
             modifier = Modifier
                 .width(150.dp)
@@ -202,6 +206,7 @@ fun ListCardKanban_TODO() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             markdownEnabled = false,
+            settingIsAccessibilityMode = false,
             player = null,
         )
     }

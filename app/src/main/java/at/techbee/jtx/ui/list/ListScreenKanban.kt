@@ -74,6 +74,7 @@ fun ListScreenKanban(
     kanbanColumnsCategory: SnapshotStateList<String>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
+    settingIsAccessibilityMode: Boolean,
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
@@ -191,6 +192,7 @@ fun ListScreenKanban(
                             storedStatuses = extendedStatuses,
                             selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                             markdownEnabled = markdownEnabled,
+                            settingIsAccessibilityMode = settingIsAccessibilityMode,
                             player = player,
                             modifier = Modifier
                                 .animateItemPlacement()
@@ -235,8 +237,7 @@ fun ListScreenKanban(
 
                                                 kanbanColumnsCategory.isNotEmpty() -> onSwapCategories(iCal4ListRelObject.iCal4List.id, column, columns[draggedToColumn])
 
-                                                else -> Status     //this cover also kanbanColumnsStatus.isNotEmpty()
-                                                    .values()
+                                                else -> Status.entries
                                                     .find { status -> context.getString(status.stringResource) == columns[draggedToColumn] }
                                                     ?.let { status ->
                                                         onStatusChanged(iCal4ListRelObject.iCal4List.id, status, true)
@@ -324,6 +325,7 @@ fun ListScreenKanban_TODO() {
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
@@ -387,6 +389,7 @@ fun ListScreenKanban_JOURNAL() {
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,

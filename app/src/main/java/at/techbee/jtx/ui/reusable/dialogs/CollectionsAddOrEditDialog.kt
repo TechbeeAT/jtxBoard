@@ -8,13 +8,26 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -31,7 +44,6 @@ import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CollectionsAddOrEditDialog(
     current: ICalCollection,
@@ -40,9 +52,9 @@ fun CollectionsAddOrEditDialog(
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
-    var collectionName by remember { mutableStateOf(current.displayName ?: "") }
+    var collectionName by rememberSaveable { mutableStateOf(current.displayName ?: "") }
     var collectionColor by remember { mutableStateOf(current.color?.let { Color(it) }) }
-    var noCollectionNameError by remember { mutableStateOf(false) }
+    var noCollectionNameError by rememberSaveable { mutableStateOf(false) }
 
 
     AlertDialog(

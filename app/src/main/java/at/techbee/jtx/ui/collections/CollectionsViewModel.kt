@@ -153,8 +153,10 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         defaultJournalDateSettingOption: DropdownSettingOption,
         defaultStartDateSettingOption: DropdownSettingOption,
         defaultStartTime: LocalTime?,
+        defaultStartTimezone: String?,
         defaultDueDateSettingOption: DropdownSettingOption,
-        defaultDueTime: LocalTime?
+        defaultDueTime: LocalTime?,
+        defaultDueTimezone: String?
     ) {
         isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
@@ -166,8 +168,10 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
                     defaultJournalDateSettingOption,
                     defaultStartDateSettingOption,
                     defaultStartTime,
+                    defaultStartTimezone,
                     defaultDueDateSettingOption,
-                    defaultDueTime
+                    defaultDueTime,
+                    defaultDueTimezone
                 )
             )
             if(collection.accountType != LOCAL_ACCOUNT_TYPE)

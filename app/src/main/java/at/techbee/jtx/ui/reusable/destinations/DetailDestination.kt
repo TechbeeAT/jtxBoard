@@ -1,6 +1,8 @@
 package at.techbee.jtx.ui.reusable.destinations
 
-import androidx.navigation.*
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -17,7 +19,7 @@ sealed class DetailDestination (
         const val argICalObjectIdList = "icalObjectIdList"
     }
 
-    object Detail: DetailDestination(
+    data object Detail: DetailDestination(
         route = "details/{$argICalObjectId}/{$argICalObjectIdList}?$argIsEditMode={$argIsEditMode}&$argReturnToLauncher={$argReturnToLauncher}",
         args = listOf(
             navArgument(argICalObjectId) { type = NavType.LongType },

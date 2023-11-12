@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -122,7 +123,7 @@ fun CollectionsScreen(
         }
     }
 
-    var showSelectModuleForTxtImportDialog by remember { mutableStateOf(false) }
+    var showSelectModuleForTxtImportDialog by rememberSaveable { mutableStateOf(false) }
     if(showSelectModuleForTxtImportDialog && importCollection != null && resultImportTxtFilepaths.isNotEmpty()) {
         SelectModuleForTxtImportDialog(
             files = resultImportTxtFilepaths,
@@ -148,8 +149,10 @@ fun CollectionsScreen(
                         defaultJournalDateSettingOption = settingsStateHolder.settingDefaultJournalsDate.value,
                         defaultStartDateSettingOption = settingsStateHolder.settingDefaultStartDate.value,
                         defaultStartTime = settingsStateHolder.settingDefaultStartTime.value,
+                        defaultStartTimezone = settingsStateHolder.settingDefaultStartTimezone.value,
                         defaultDueDateSettingOption = settingsStateHolder.settingDefaultDueDate.value,
-                        defaultDueTime = settingsStateHolder.settingDefaultDueTime.value
+                        defaultDueTime = settingsStateHolder.settingDefaultDueTime.value,
+                        defaultDueTimezone = settingsStateHolder.settingDefaultDueTimezone.value
                     )
                     it.close()
                 }
@@ -202,7 +205,7 @@ fun CollectionsScreen(
     }
 
 
-    var showCollectionsAddDialog by remember { mutableStateOf(false) }
+    var showCollectionsAddDialog by rememberSaveable { mutableStateOf(false) }
     if (showCollectionsAddDialog)
         CollectionsAddOrEditDialog(
             current = ICalCollection.createLocalCollection(context),
@@ -268,6 +271,7 @@ fun CollectionsScreen(
                     CollectionsScreenContent(
                         collections = collections,
                         isProcessing = collectionsViewModel.isProcessing,
+                        settingAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                         onCollectionChanged = { collection ->
                             collectionsViewModel.saveCollection(
                                 collection

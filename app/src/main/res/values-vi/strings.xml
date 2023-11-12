@@ -1,28 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board đồng bộ Nhật ký, Ghi chú &amp; Nhiệm vụ"</string>
+    <string name="app_permission_desc">"đồng bộ nội dung jtx Board với các ứng dụng khác như DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
+    <string name="save">"Lưu lại"</string>
+    <string name="update">"Cập nhật"</string>
+    <string name="cancel">"Hủy bỏ"</string>
+    <string name="ok">"OK"</string>
+    <string name="delete">"Xóa"</string>
+    <string name="discard">"Bỏ qua"</string>
+    <string name="cont">"Tiếp tục"</string>
+    <string name="website">"Trang web"</string>
+    <string name="latitude">"Vĩ độ"</string>
+    <string name="longitude">"Vĩ độ"</string>
+    <string name="unlink">"Gỡ liên kết"</string>
+    <string name="off">"Tắt"</string>
+    <string name="permissions">"Cấp phép"</string>
+    <string name="current_location">"Vị trí hiện tại"</string>
+    <string name="toolbar_text_add_journal">"Thêm Nhật ký"</string>
+    <string name="toolbar_text_add_note">"Thêm Ghi chú"</string>
+    <string name="toolbar_text_add_task">"Thêm Nhiệm vụ"</string>
+    <string name="toast_sync_requested">"Đã yêu cầu đồng bộ hóa"</string>
+    <string name="default_local_collection_name">"Cục bộ"</string>
+    <string name="default_local_account_name">"Cục bộ"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Bản nháp"</string>
+    <string name="journal_status_final">"Cuối cùng"</string>
+    <string name="journal_status_cancelled">"Đã hủy bỏ"</string>
+    <string name="todo_status_needsaction">"Cần thực hiện"</string>
+    <string name="todo_status_completed">"Đã hoàn thành"</string>
+    <string name="todo_status_inprocess">"Đang xử lý"</string>
+    <string name="todo_status_cancelled">"Đã hủy bỏ"</string>
+    <string name="classification_public">"Công khai"</string>
+    <string name="classification_private">"Riêng tư"</string>
+    <string name="classification_confidential">"Riêng tư"</string>
+    <string name="attendee_role_chair">"Chủ trì"</string>
+    <string name="attendee_role_required_participant">"Người tham gia "</string>
+    <string name="attendee_role_optional_participant">"Người tham gia tùy chọn"</string>
+    <string name="attendee_role_non_participant">"Không tham gia / Thông tin"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Mở ngăn điều hướng"</string>
+    <string name="navigation_drawer_close">"Đóng ngăn điều hướng"</string>
+    <string name="navigation_drawer_board">"Bảng"</string>
+    <string name="navigation_drawer_synchronization">"Đồng bộ hóa"</string>
+    <string name="navigation_drawer_about">"Giới thiệu / Giấy phép"</string>
+    <string name="navigation_drawer_subtitle">"Nhật ký, Ghi chú và Nhiệm vụ"</string>
+    <string name="navigation_drawer_settings">"Các cài đặt"</string>
+    <string name="navigation_drawer_news_updates">"Mới và Cập nhật"</string>
+    <string name="navigation_drawer_external_links">"Liên kết bên ngoài"</string>
+    <string name="navigation_drawer_website">"Trang web"</string>
+    <string name="navigation_drawer_support">"Hỗ trợ"</string>
+    <string name="navigation_drawer_donate">"Ủng hộ"</string>
+    <string name="navigation_drawer_privacy_policy">"Chính sách bảo mật"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"Quá hạn"</string>
+    <string name="list_due_shortly">"Đến hạn sớm"</string>
+    <string name="list_due_today">"Đến hạn hôm nay"</string>
+    <string name="list_due_tomorrow">"Đến hạn ngày mai"</string>
+    <string name="list_due_within_7_days">"Hạn trong 7 ngày"</string>
+    <string name="list_due_inXhours">"Đến hạn sau %d giờ"</string>
+    <string name="list_due_on_weekday">"Đến hạn vào %s"</string>
+    <string name="list_start_past">"Bắt đầu trong quá khứ"</string>
+    <string name="list_start_shortly">"Bắt đầu ngay"</string>
+    <string name="list_start_today">"Dự kiến ​​bắt đầu hôm nay"</string>
+    <string name="list_start_tomorrow">"Bắt đầu ngày mai"</string>
+    <string name="list_start_inXhours">"Dự kiến ​​bắt đầu sau %d giờ"</string>
+    <string name="list_start_on_weekday">"Dự kiến ​​bắt đầu vào %s"</string>
+    <string name="list_tabitem_journals">"Nhật ký"</string>
+    <string name="list_tabitem_notes">"Ghi chú"</string>
+    <string name="list_tabitem_todos">"Nhiệm vụ"</string>
+    <string name="list_expand">"Mở rộng"</string>
+    <string name="list_dialog_delete_selected_title">Xóa các mục đã chọn?</string>
+    <string name="list_dialog_delete_selected_message">Hành động này sẽ xóa tất cả các mục đã chọn (%1$d). Bạn có chắc chắn muốn tiếp tục không? Thao tác này không thể hoàn tác!</string>
+    <string name="list_quickadd_dialog_summary_description_hint">"Mô tả/Tóm tắt"</string>
+    <string name="list_quickadd_dialog_summary_description_helper">"Dòng đầu tiên được hiểu là tóm tắt, dòng còn lại là mô tả. Hashtags được hiểu là các danh mục (ví dụ #category)."</string>
+    <string name="list_item_recurring">"Mục nhập định kỳ"</string>
+    <string name="list_item_edited_recurring">"Đã chỉnh sửa mục nhập định kỳ"</string>
+    <string name="list_scroll_to_top">"Cuộn lên trên cùng"</string>
     <!-- fragment_ical_view -->
+    <string name="view_fragment_audio_permission">"Quyền ứng dụng"</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board cần có sự cho phép để ghi lại âm thanh hoặc sử dụng các chức năng chuyển giọng nói thành văn bản. Vui lòng cấp quyền sử dụng tính năng này."</string>
+    <string name="view_reccurrence_note_is_exception">"Mục này là một ngoại lệ đối với mục nhập định kỳ."</string>
+    <string name="view_feedback_linked_notes">"Phản hồi / Ghi chú được liên kết"</string>
+    <string name="view_subtask_of">"Nhiệm vụ phụ của"</string>
+    <string name="view_linked_note_of">"Ghi chú được liên kết của"</string>
+    <string name="view_add_audio_note">"Thêm âm thanh"</string>
+    <string name="view_created_text">"Đã tạo: %1$s"</string>
+    <string name="view_last_modified_text">"Sửa đổi lần cuối: %1$s"</string>
+    <string name="view_due">"Quá hạn"</string>
+    <string name="view_completed">"Hoàn thành"</string>
+    <string name="view_started">"Bắt đầu (đã)"</string>
     <!-- fragment_ical_edit -->
+    <string name="edit_comment_helper">"Thêm một bình luận"</string>
+    <string name="edit_attachment_button_text">"Thêm bản đính kèm"</string>
+    <string name="edit_take_picture_button_text">"Chụp ảnh"</string>
+    <string name="edit_add_link_button_text">"Thêm liên kết đính kèm"</string>
+    <string name="edit_subtasks_add_helper">"Thêm một nhiệm vụ phụ"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Thêm nhanh nhiệm vụ phụ"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Thêm nhanh nhiệm vụ phụ"</string>
+    <string name="edit_attachment_add_link_dialog">"Thêm liên kết đính kèm"</string>
+    <string name="edit_recur_repeat_every_x">"Lặp lại mỗi"</string>
+    <string name="edit_recur_on_weekday">"vào"</string>
+    <string name="edit_recur_on_the_x_day_of_month">"vào ngày"</string>
+    <string name="edit_recur_x_day_of_the_month">"ngày của tháng"</string>
+    <string name="edit_recur_x_times">"lần"</string>
+    <string name="edit_recur_toast_requires_start_date">"Sự lặp lại yêu cầu phải thiết lập ngày bắt đầu!"</string>
+    <string name="edit_datepicker_dialog_select_date">"Chọn ngày"</string>
+    <string name="edit_datepicker_dialog_add_time">"Thêm thời gian"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Chỉnh giờ"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Thêm múi giờ"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Chỉnh sửa múi giờ"</string>
+    <string name="edit_dialog_sure_to_delete_title">"Xóa %1$s?"</string>
+    <string name="edit_dialog_sure_to_discard_title">"Hủy mục này?"</string>
+    <string name="dialog_delete_done_title">"Xóa tất cả nhiệm vụ đã thực hiện?"</string>
+    <string name="dialog_delete_done_message">"Chú ý: Nhiệm vụ con sẽ bị xóa độc lập với trạng thái của chúng nếu nhiệm vụ gốc của chúng được đánh dấu là hoàn thành. Thao tác này không thể hoàn tác!"</string>
+    <string name="edit_dialog_sure_to_delete_message">"Bạn có chắc chắn muốn xóa \"%1$s\" không?"</string>
+    <string name="edit_dialog_sure_to_discard_message">"Bạn có chắc chắn muốn loại bỏ mục này? Mục nhập này sẽ không được lưu."</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Ngày đến hạn không được trước ngày bắt đầu."</string>
+    <string name="edit_fragment_app_permission">"Quyền truy cập ứng dụng"</string>
+    <string name="edit_fragment_app_permission_message">"jtx Board có thể đề xuất dữ liệu Người tham gia dựa trên danh bạ của bạn cho các mục nhập của bạn. Cần có quyền truy cập danh bạ của bạn để bật tính năng này."</string>
     <!-- fragment_about -->
+    <string name="about_tabitem_translations">"Dịch thuật"</string>
+    <string name="about_tabitem_libraries">"Thư viện"</string>
+    <string name="about_tabitem_contributors">"Những người đóng góp"</string>
+    <string name="about_special_thanks">"Lời cảm ơn sâu sắc"</string>
+    <string name="about_app_version">"Phiên bản %1$s (%2$d)"</string>
+    <string name="about_app_codename">"Tên mã: %1$s"</string>
+    <string name="about_app_build_date">"Được biên soạn vào %s"</string>
+    <string name="about_app_terms">"Điều khoản &amp; Điều kiện"</string>
+    <string name="about_thanks_ffg">"Đặc biệt cảm ơn FFG vì sự tin tưởng và hỗ trợ tài chính để thực hiện dự án này."</string>
     <!-- menus -->
-    <!-- Notification channel for Reminders -->
+    <string name="menu_list_gotodate">"Đến ngày"</string>
+    <string name="menu_list_quick_journal">"Nhật ký nhanh"</string>
+    <string name="menu_list_quick_note">"Ghi chép nhanh"</string>
+    <string name="menu_list_quick_todo">"Việc cần làm nhanh"</string>
+    <string name="menu_view_share_ics">"Chia sẻ dưới dạng .ics"</string>
+    <string name="menu_view_copy_as_journal">"Sao chép dưới dạng nhật ký"</string>
+    <string name="menu_view_copy_as_todo">"Sao chép dưới dạng Việc cần làm"</string>
+    <string name="menu_view_copy_as_note">"Sao chép dưới dạng Ghi chú"</string>
+    <string name="menu_view_copy_item">"Tạo bản sao"</string>
+    <string name="notification_channel_alarms_name">"Báo thức"</string>
+    <string name="notification_channel_geofences_name">"Khu vực"</string>
     <!-- Shortcuts -->
+    <string name="shortcut_addJournal_longLabel">"Thêm Nhật ký"</string>
+    <string name="shortcut_addNote_longLabel">"Thêm Ghi chú"</string>
+    <string name="shortcut_addTodo_longLabel">"Thêm Việc cần làm"</string>
     <!-- Settings fragment -->
+    <string name="settings_list">"Cài đặt cho danh sách mục"</string>
+    <string name="settings_show_progress_for_subtasks">Hiển thị tiến trình cho các nhiệm vụ phụ</string>
+    <string name="settings_show_progress_for_maintasks">Hiển thị tiến độ cho các nhiệm vụ chính</string>
+    <string name="settings_app">"Cài đặt ứng dụng"</string>
+    <string name="settings_select_mimetype_for_audio">"Chọn Mimetype cho ghi chú âm thanh"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"Đồng bộ hóa với %1$s"</string>
+    <string name="sync_basic_info">"jtx Board không tự cung cấp tính năng đồng bộ hóa máy chủ nhưng hỗ trợ đồng bộ hóa thông qua DAVx⁵. Phương pháp này cho phép bạn sử dụng bất kỳ máy chủ CalDAV tương thích nào mà bạn chọn để lưu trữ, sao lưu và đồng bộ hóa dữ liệu của mình."</string>
+    <string name="sync_ksync_basic_info">"kSync là một ứng dụng dựa trên DAVx⁵ được Infomaniak phát triển đặc biệt cho các dịch vụ của họ. Mặc dù DAVx⁵ mở cho mọi máy chủ CalDAV tương thích nhưng kSync chỉ cho phép đồng bộ hóa các tài khoản Infomaniak."</string>
+    <string name="sync_manageddavx5_basic_info">"DAVx⁵ được quản lý cung cấp chức năng của DAVx⁵ cho các tổ chức và đi kèm với các tính năng bổ sung dành cho doanh nghiệp như triển khai hàng loạt, xây dựng thương hiệu công ty và các cài đặt có thể định cấu hình trước."</string>
+    <string name="sync_congratulations">"Chúc Mừng! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"Chúng tôi đã phát hiện thấy %1$s trên điện thoại của bạn."</string>
+    <string name="sync_setup_instructions">"Hướng dẫn thiết lập"</string>
+    <string name="sync_check_out_sync_app">"Hãy xem %1$s!"</string>
+    <string name="sync_sync_app_not_found">"Chúng tôi chưa phát hiện thấy %1$s trên điện thoại của bạn."</string>
+    <string name="sync_more_about_sync_app">"Tìm hiểu thêm về %1$s"</string>
+    <string name="sync_download_sync_app">"Tải xuống %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Thêm tài khoản trong %1$s"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Không mở được %1$s, vui lòng mở ứng dụng theo cách thủ công."</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"Xin chào, tôi là Patrick, nhà phát triển jtx Board. Tôi đang dành rất nhiều thời gian và công sức cho ứng dụng này mà tôi đang cung cấp miễn phí cho bạn. Nếu bạn thích ứng dụng của tôi, vui lòng gửi một chút tình yêu và quyên góp nhỏ!"</string>
+    <string name="donate_thank_you">"Cảm ơn bạn!"</string>
+    <string name="donate_donate_with">"Ủng hộ qua"</string>
+    <string name="donate_other_donation_methods">"Nếu bạn muốn xem xét bất kỳ phương thức quyên góp nào khác, vui lòng kiểm tra trang web của chúng tôi:"</string>
+    <string name="attachment_error_no_app_found_to_open_file_or_uri">"Không tìm thấy ứng dụng nào để mở tệp/URL này."</string>
+    <string name="toast_item_is_now_recu_exception">"Mục định kỳ bây giờ là một ngoại lệ."</string>
+    <string name="toast_done_tasks_deleted">"Đã hoàn thành nhiệm vụ đã xóa (%d)."</string>
     <!-- sync content provider -->
+    <string name="about_translations_thanks_to">"Cảm ơn đến"</string>
+    <string name="about_translations_basic_info">"jtx Board là một ứng dụng nguồn mở đánh giá cao sự tham gia và đóng góp của cộng đồng nguồn mở. Trên trang này chúng tôi muốn ghi nhận nỗ lực của các thành viên cộng đồng trong việc dịch thuật."</string>
+    <string name="about_translations_contribution_info">"Nếu bạn muốn chỉnh sửa/thêm bản dịch hoặc thêm ngôn ngữ mới vào ứng dụng này, vui lòng tham gia dự án jtx Board trên nền tảng dịch thuật Crowdin:"</string>
+    <string name="about_translations_contribution_button">"Tham gia trên Crowdin.com"</string>
+    <string name="list_welcome_entry_journal_summary">"Xin chúc mừng, đây là bài viết nhật ký đầu tiên của bạn :-)"</string>
+    <string name="list_welcome_entry_journal_description">"Nhật ký có thể được sử dụng để ghi chú của bạn cho một ngày cụ thể. Ví dụ, sử dụng chức năng này cho các giao thức, biên bản cuộc họp, mục nhật ký, v. v. Nếu chỉnh sửa mục này, bạn sẽ thấy các tùy chọn để thêm danh mục, người tham dự, tệp đính kèm,… Hãy thoải mái xóa mục này bất cứ khi nào bạn muốn!"</string>
+    <string name="list_welcome_entry_note_summary">"Xin chúc mừng, đây là mục ghi chú đầu tiên của bạn :-)"</string>
+    <string name="list_welcome_entry_note_description">"Ghi chú là ghi chú truyền thống và không bị ràng buộc vào một ngày cụ thể. Giống như nhật ký, bạn có thể thêm tệp đính kèm, người tham dự và hơn thế nữa khi chỉnh sửa hoặc thêm mục nhập. Nhân tiện, bạn cũng có thể thêm nhiệm vụ phụ vào bất kỳ mục nhập nào, bất kể đó là nhật ký, ghi chú hay nhiệm vụ!"</string>
+    <string name="list_welcome_entry_todo_summary">"Xin chúc mừng, đây là mục nhập nhiệm vụ đầu tiên của bạn :-)"</string>
+    <string name="list_welcome_entry_todo_description">"Ngoài nhật ký và ghi chú, nhiệm vụ có thể có thời điểm bắt đầu theo kế hoạch, thời điểm đến hạn và ngày hoàn thành. Chúng có thể được kiểm tra khi hoàn thành hoặc có thể thiết lập tiến trình. Chỉnh sửa mục này để kiểm tra tất cả các tùy chọn :-)"</string>
+    <string name="list_welcome_category">"＃Đầutiên"</string>
+    <string name="save_and_edit">"Lưu &amp; biên tập"</string>
+    <string name="save_and_new">"Lưu &amp; mới"</string>
+    <string name="save_and_close">"Lưu &amp; đóng"</string>
+    <string name="list_quickadd_add_audio_attachment">"Ghi lại tệp đính kèm âm thanh"</string>
     <!-- Permissions -->
+    <string name="permission_read_contacts_granted">"Đã cấp quyền đọc danh bạ"</string>
+    <string name="permission_read_contacts_denied">"Quyền đọc danh bạ bị từ chối"</string>
+    <string name="permission_record_audio_granted">"Đã cấp quyền ghi âm"</string>
+    <string name="permission_record_audio_denied">"Quyền ghi âm bị từ chối"</string>
+    <string name="intent_dialog_title">"Thêm nội dung vào nhật ký, ghi chú hoặc nhiệm vụ?"</string>
     <!-- alarms -->
     <!-- fragment_collections -->
     <!-- Fuzzy -->
-    <!-- Fuzzy -->
-    <!-- Fuzzy -->
+    <string name="collections_dialog_edit_local_collection_title">"Chỉnh sửa Bộ sưu tập cục bộ"</string>
+    <string name="collections_dialog_delete_local_title">"Xóa %1$s?"</string>
+    <string name="collections_dialog_delete_local_message">"Xóa bộ sưu tập cũng sẽ xóa tất cả nhật ký, ghi chú và nhiệm vụ trong bộ sưu tập này. Điều này không thể được hoàn tác. Bạn có chắc chắn muốn tiếp tục không?"</string>
+    <string name="menu_collections_add_local">"Thêm Bộ sưu tập cục bộ"</string>
+    <string name="navigation_drawer_website_news">"Tin tức &amp; Ghi chú phát hành"</string>
+    <string name="color">"Màu"</string>
+    <string name="priority_0_no_priority">"Không có mức độ ưu tiên"</string>
+    <string name="priority_1_highest">"1 - Cao nhất"</string>
     <!-- Buy Pro fragment -->
     <!-- alarms -->
     <!-- fragment_ical_list -->

@@ -50,6 +50,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -96,7 +97,7 @@ fun DetailsCardAttendees(
     var searchAttendees = emptyList<Attendee>()
 
     val headline = stringResource(id = R.string.attendees)
-    var newAttendee by remember { mutableStateOf("") }
+    var newAttendee by rememberSaveable { mutableStateOf("") }
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -128,7 +129,7 @@ fun DetailsCardAttendees(
                                 },
                                 label = { Text(attendee.getDisplayString()) },
                                 leadingIcon = {
-                                    if (Role.values().any { role -> role.name == attendee.role })
+                                    if (Role.entries.any { role -> role.name == attendee.role })
                                         Role.valueOf(attendee.role ?: Role.`REQ-PARTICIPANT`.name)
                                             .Icon()
                                     else
@@ -140,7 +141,7 @@ fun DetailsCardAttendees(
                                 onClick = { overflowMenuExpanded.value = true },
                                 label = { Text(attendee.getDisplayString()) },
                                 leadingIcon = {
-                                    if (Role.values().any { role -> role.name == attendee.role })
+                                    if (Role.entries.any { role -> role.name == attendee.role })
                                         Role.valueOf(attendee.role ?: Role.`REQ-PARTICIPANT`.name)
                                             .Icon()
                                     else
@@ -165,7 +166,7 @@ fun DetailsCardAttendees(
                             expanded = overflowMenuExpanded.value,
                             onDismissRequest = { overflowMenuExpanded.value = false }
                         ) {
-                            Role.values().forEach { role ->
+                            Role.entries.forEach { role ->
                                 DropdownMenuItem(
                                     text = {
                                         Row(
@@ -223,7 +224,7 @@ fun DetailsCardAttendees(
             }
 
 
-            Crossfade(isEditMode) {
+            Crossfade(isEditMode, label = "crossfade_attendee_edit") {
                 if (it) {
 
                     OutlinedTextField(
@@ -281,7 +282,7 @@ fun DetailsCardAttendees(
                 }
             }
 
-            Crossfade(isEditMode) {
+            Crossfade(isEditMode, label = "crossfade_attendee_info") {
                 if(it) {
                     Text(
                         text = stringResource(id = R.string.details_attendees_processing_info),

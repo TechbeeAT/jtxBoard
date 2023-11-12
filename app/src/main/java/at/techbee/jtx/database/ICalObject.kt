@@ -32,6 +32,7 @@ import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
@@ -604,8 +605,10 @@ data class ICalObject(
             defaultJournalDateSettingOption: DropdownSettingOption,
             defaultStartDateSettingOption: DropdownSettingOption,
             defaultStartTime: LocalTime?,
+            defaultStartTimezone: String?,
             defaultDueDateSettingOption: DropdownSettingOption,
             defaultDueTime: LocalTime?,
+            defaultDueTimezone: String?
         ): ICalObject {
             val iCalObject = when(module) {
                 Module.JOURNAL -> createJournal()
@@ -616,8 +619,8 @@ data class ICalObject(
                 iCalObject.setDefaultJournalDateFromSettings(defaultJournalDateSettingOption)
             }
             if(module == Module.TODO) {
-                iCalObject.setDefaultStartDateFromSettings(defaultStartDateSettingOption, defaultStartTime)
-                iCalObject.setDefaultDueDateFromSettings(defaultDueDateSettingOption, defaultDueTime)
+                iCalObject.setDefaultStartDateFromSettings(defaultStartDateSettingOption, defaultStartTime, defaultStartTimezone)
+                iCalObject.setDefaultDueDateFromSettings(defaultDueDateSettingOption, defaultDueTime, defaultDueTimezone)
             }
             iCalObject.parseSummaryAndDescription(text)
             iCalObject.parseURL(text)
@@ -841,11 +844,11 @@ data class ICalObject(
         /**
          * @param geoLat  Latitude as Double
          * @param geoLong  Longitude as Double
-         * @return A textual representation of the Latitude and Logitude e.g. (1.23400, 5.67700)
+         * @return A textual representation of the Latitude and Longitude e.g. (1.23400, 5.67700)
          */
         fun getLatLongString(geoLat: Double?, geoLong: Double?): String? {
             return if(geoLat != null && geoLong != null) {
-                "(" + "%.5f".format(Locale.ENGLISH, geoLat)  + ","  + "%.5f".format(Locale.ENGLISH, geoLong) + ")"
+                "(" + "%.5f".format(Locale.ENGLISH, geoLat)  + ", "  + "%.5f".format(Locale.ENGLISH, geoLong) + ")"
             } else {
                null
             }
@@ -875,27 +878,69 @@ data class ICalObject(
             else if(dtstart == null)
                 return context.getString(R.string.list_date_without)
 
+            val settingsStateHolder = SettingsStateHolder(context)
+            val timezone2show =
+                if(dtstartTimezone == TZ_ALLDAY || dtstartTimezone == null || settingsStateHolder.settingDisplayTimezone.value == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL)
+                    dtstartTimezone
+                else
+                    null
+
             val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dtstartTimezone))
+            val localStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart), requireTzId(timezone2show))
 
-            return if(module == Module.TODO) {
+            var finalString = ""
+
+            if(module == Module.TODO) {
                  when {
-                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || dtstartTimezone == TZ_ALLDAY) -> context.getString(R.string.list_start_today)
-                     ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> context.getString(R.string.list_start_past)
-                     ChronoUnit.HOURS.between(localNow, localStart) < 1L -> context.getString(R.string.list_start_shortly)
-                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
-                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_start_tomorrow)
-                     ChronoUnit.DAYS.between(localNow, localStart) < 6 -> context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                     else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
+                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_start_today)
+                     ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> finalString += context.getString(R.string.list_start_past)
+                     ChronoUnit.HOURS.between(localNow, localStart) < 1L -> finalString += context.getString(R.string.list_start_shortly)
+                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
+                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
+                        finalString += context.getString(R.string.list_start_tomorrow)
+                         if(timezone2show != TZ_ALLDAY)
+                             finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
+                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                             finalString += " ${requireTzId(timezone2show).id}"
+                     }
+                     ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> {
+                         finalString += context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                         if(timezone2show != TZ_ALLDAY)
+                             finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
+                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                             finalString += " ${requireTzId(timezone2show).id}"
+                     }
+                     else -> {
+                         finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
+                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                             finalString += " ${requireTzId(timezone2show).id}"
+                     }
                 }
             } else {
                 when {
-                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_date_today)
-                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_date_tomorrow)
-                    else -> DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, dtstartTimezone)
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> {
+                        finalString += context.getString(R.string.list_date_today)
+                        if(timezone2show != TZ_ALLDAY)
+                            finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
+                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                            finalString += " ${requireTzId(timezone2show).id}"
+                    }
+                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
+                        finalString += context.getString(R.string.list_date_tomorrow)
+                        if(timezone2show != TZ_ALLDAY)
+                            finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
+                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                            finalString += " ${requireTzId(timezone2show).id}"
+                    }
+                    else -> {
+                        finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
+                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                            finalString += " ${requireTzId(timezone2show).id}"
+                    }
                 }
             }
+            return finalString
         }
 
         fun getDueTextInfo(status: String?, due: Long?, dueTimezone: String?, percent: Int?, daysOnly: Boolean = false, context: Context): String {
@@ -905,19 +950,46 @@ data class ICalObject(
             if(due == null)
                 return context.getString(R.string.list_due_without)
 
+            val settingsStateHolder = SettingsStateHolder(context)
+            val timezone2show =
+                if(dueTimezone == TZ_ALLDAY || dueTimezone == null || settingsStateHolder.settingDisplayTimezone.value == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL)
+                    dueTimezone
+                else
+                    null
+
             val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dueTimezone))
+            val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(timezone2show))
 
-            return when {
-                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || dueTimezone == TZ_ALLDAY) -> context.getString(R.string.list_due_today)
-                ChronoUnit.MINUTES.between(localNow, localDue) < 0L -> context.getString(R.string.list_due_overdue)
-                ChronoUnit.HOURS.between(localNow, localDue) < 1L -> context.getString(R.string.list_due_shortly)
-                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> context.getString(R.string.list_due_inXhours, ChronoUnit.HOURS.between(localNow, localDue))
-                localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> context.getString(R.string.list_due_tomorrow)
-                ChronoUnit.DAYS.between(localNow, localDue) < 6 -> context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                else -> DateTimeUtils.convertLongToMediumDateShortTimeString(due, dueTimezone)
+            var finalString = ""
+
+            when {
+                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_due_today)
+                ChronoUnit.MINUTES.between(localNow, localDue) < 0L -> finalString += context.getString(R.string.list_due_overdue)
+                ChronoUnit.HOURS.between(localNow, localDue) < 1L -> finalString += context.getString(R.string.list_due_shortly)
+                localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_due_inXhours, ChronoUnit.HOURS.between(localNow, localDue))
+                localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> {
+                    finalString += context.getString(R.string.list_due_tomorrow)
+                    if(timezone2show != TZ_ALLDAY)
+                        finalString += " ${DateTimeUtils.convertLongToShortTimeString(due, timezone2show)}"
+                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                        finalString += " ${requireTzId(timezone2show).id}"
+                }
+                ChronoUnit.DAYS.between(localNow, localDue) <= 7 -> {
+                    finalString += context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                    if(timezone2show != TZ_ALLDAY)
+                        finalString += " ${DateTimeUtils.convertLongToShortTimeString(due, timezone2show)}"
+                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                        finalString += " ${requireTzId(timezone2show).id}"
+                }
+                else -> {
+                    finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(due, timezone2show)
+                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
+                        finalString += " ${requireTzId(timezone2show).id}"
+                }
             }
+
+            return finalString
         }
 
         suspend fun findTopParent(iCalObjectId: Long, database: ICalDatabaseDao): ICalObject? {
@@ -1039,7 +1111,7 @@ data class ICalObject(
         else if (this.component == Component.VTODO.name)
             this.module = Module.TODO.name
         else
-            throw IllegalArgumentException("Unsupported component: ${this.component}. Supported components: ${Component.values()}.")
+            throw IllegalArgumentException("Unsupported component: ${this.component}. Supported components: ${Component.entries.toTypedArray()}.")
 
         if(recurid != null && sequence <= 0)
             sequence = 1     // mark changed instances with a sequence if missing!
@@ -1548,7 +1620,7 @@ data class ICalObject(
         }
     }
 
-    fun setDefaultStartDateFromSettings(defaultStartDate: DropdownSettingOption, defaultStartTime: LocalTime?) {
+    fun setDefaultStartDateFromSettings(defaultStartDate: DropdownSettingOption, defaultStartTime: LocalTime?, defaultStartTimezone: String?) {
         if(defaultStartDate == DropdownSettingOption.DEFAULT_DATE_NONE)
             return
         try {
@@ -1557,14 +1629,14 @@ data class ICalObject(
                 this.dtstartTimezone = TZ_ALLDAY
             } else {
                 this.dtstart = this.dtstart!! + defaultStartTime.toSecondOfDay()*1000
-                this.dtstartTimezone = null
+                this.dtstartTimezone = defaultStartTimezone
             }
         } catch (e: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
 
-    fun setDefaultDueDateFromSettings(defaultDueDate: DropdownSettingOption, defaultDueTime: LocalTime?) {
+    fun setDefaultDueDateFromSettings(defaultDueDate: DropdownSettingOption, defaultDueTime: LocalTime?, defaultStartTimezone: String?) {
         if(defaultDueDate == DropdownSettingOption.DEFAULT_DATE_NONE)
             return
         try {
@@ -1573,7 +1645,7 @@ data class ICalObject(
                 this.dueTimezone = TZ_ALLDAY
             } else {
                 this.due = this.due!! + defaultDueTime.toSecondOfDay()*1000
-                this.dueTimezone = null
+                this.dueTimezone = defaultStartTimezone
             }
         } catch (e: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
@@ -1615,7 +1687,7 @@ enum class Status(val status: String?, @StringRes val stringResource: Int) : Par
 
     companion object {
 
-        fun getStatusFromString(stringStatus: String?) = Status.values().find { it.status == stringStatus }
+        fun getStatusFromString(stringStatus: String?) = entries.find { it.status == stringStatus }
 
         fun valuesFor(module: Module): List<Status> {
             return when (module) {
@@ -1627,7 +1699,7 @@ enum class Status(val status: String?, @StringRes val stringResource: Int) : Par
         fun getListFromStringList(stringList: Set<String>?): MutableList<Status> {
             val list = mutableListOf<Status>()
             stringList?.forEach { string ->
-                values().find { it.status == string || it.name == string }?.let { status -> list.add(status) }
+                entries.find { it.status == string || it.name == string }?.let { status -> list.add(status) }
             }
             return list
         }
@@ -1655,12 +1727,12 @@ enum class Classification(val classification: String?, @StringRes val stringReso
     CONFIDENTIAL("CONFIDENTIAL", R.string.classification_confidential);
 
     companion object {
-        fun getClassificationFromString(stringClassification: String?) = Classification.values().find { it.classification == stringClassification }
+        fun getClassificationFromString(stringClassification: String?) = entries.find { it.classification == stringClassification }
 
         fun getListFromStringList(stringList: Set<String>?): MutableList<Classification> {
             val list = mutableListOf<Classification>()
             stringList?.forEach { string ->
-                values().find { it.classification == string || it.name == string }?.let { status -> list.add(status) }
+                entries.find { it.classification == string || it.name == string }?.let { status -> list.add(status) }
             }
             return list
         }

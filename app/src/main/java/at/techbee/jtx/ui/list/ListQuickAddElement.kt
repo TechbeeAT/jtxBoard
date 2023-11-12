@@ -24,16 +24,34 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.MicOff
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -63,7 +81,7 @@ import at.techbee.jtx.ui.reusable.cards.AttachmentCard
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.AudioRecordElement
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
-import java.util.*
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,7 +132,7 @@ fun ListQuickAddElement(
                 null
         )
     }
-    var currentText by remember { mutableStateOf(TextFieldValue(text = presetText, selection = TextRange(presetText.length))) }
+    var currentText by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(text = presetText, selection = TextRange(presetText.length))) }
     val currentAttachments = remember { mutableStateListOf(presetAttachment) }
     val focusRequester = remember { FocusRequester() }
     val sr = remember {
@@ -289,7 +307,7 @@ fun ListQuickAddElement(
 
                 Text(
                     stringResource(id = R.string.list_quickadd_dialog_summary_description_helper),
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
@@ -437,7 +455,7 @@ fun ListQuickAddElement_Preview() {
 
         ListQuickAddElement(
             presetModule = Module.JOURNAL,
-            enabledModules = Module.values().toList(),
+            enabledModules = Module.entries,
             allWriteableCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _, _ -> },
@@ -472,7 +490,7 @@ fun ListQuickAddElement_Preview_empty() {
 
         ListQuickAddElement(
             presetModule = Module.JOURNAL,
-            enabledModules = Module.values().toList(),
+            enabledModules = Module.entries,
             allWriteableCollections = listOf(collection3),
             onDismiss = { },
             onSaveEntry = { _, _, _, _, _ -> },

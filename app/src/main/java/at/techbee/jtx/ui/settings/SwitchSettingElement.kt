@@ -8,10 +8,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,14 +22,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SwitchSettingElement(
     setting: SwitchSetting,
-    initiallyChecked: Boolean,
+    checked: MutableState<Boolean>,
     onCheckedChanged: (checked: Boolean) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-
-    var checked by remember { mutableStateOf(initiallyChecked) }
-
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -59,11 +55,8 @@ fun SwitchSettingElement(
             }
         }
         Switch(
-            checked = checked,
-            onCheckedChange = {
-                checked = it
-                onCheckedChanged(it)
-            },
+            checked = checked.value,
+            onCheckedChange = onCheckedChanged,
             modifier = Modifier.padding(12.dp),
             enabled = enabled
         )
@@ -80,7 +73,7 @@ fun SwitchSettingElement_preview() {
 
         SwitchSettingElement(
             setting = SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS,
-            initiallyChecked = false,
+            checked = remember { mutableStateOf(false) },
             onCheckedChanged = { }
         )
     }

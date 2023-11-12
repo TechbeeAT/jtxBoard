@@ -826,7 +826,7 @@ class ICalObjectTest {
         assertNull(ICalObject.getMapLink(null, null, BuildFlavor.OSE))
     }
 
-    @Test fun getLatLongString1() = assertEquals("(1.11100,12345.12312)", ICalObject.getLatLongString(1.111, 12345.123123123))
+    @Test fun getLatLongString1() = assertEquals("(1.11100, 12345.12312)", ICalObject.getLatLongString(1.111, 12345.123123123))
     @Test fun getLatLongString_null() = assertNull(ICalObject.getLatLongString(null, 2.222))
 
     @Test fun getAsRecurId_1() = assertEquals("20230101T000000", ICalObject.getAsRecurId(1672527600000L, "Europe/Vienna"))
@@ -837,6 +837,7 @@ class ICalObjectTest {
         iCalObject.setDefaultStartDateFromSettings(
             DropdownSettingOption.DEFAULT_DATE_SAME_DAY,
             LocalTime.of(15,0),
+            "GMT"
         )
 
         val now = LocalDateTime.now().withHour(15).withMinute(0)
@@ -853,6 +854,7 @@ class ICalObjectTest {
         iCalObject.setDefaultDueDateFromSettings(
             DropdownSettingOption.DEFAULT_DATE_NEXT_DAY,
             LocalTime.of(22,15),
+            "GMT"
         )
 
         val now = LocalDateTime.now().plusDays(1).withHour(22).withMinute(15)
