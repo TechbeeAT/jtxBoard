@@ -504,6 +504,8 @@
     <string name="settings_sticky_alarms_sub">"Διατήρηση ειδοποιήσεων μέχρι να ολοκληρωθούν ή αναβληθούν"</string>
     <string name="settings_fullscreen_alarms">"Αφύπνιση σε πλήρη οθόνη"</string>
     <string name="settings_fullscreen_alarms_sub">"Εμφάνιση ειδοποιήσεων σε πλήρη οθόνη όταν η συσκευή είναι κλειδωμένη"</string>
+    <string name="settings_accessibility_mode">"Λειτουργία προσβασιμότητας"</string>
+    <string name="settings_accessibility_mode_sub">"Εξασφαλίζει το ελάχιστο μέγεθος γραμματοσειράς για τα μικρά στοιχεία"</string>
     <string name="settings_fullscreen_alarms_toast">"Παραχωρήστε άδεια ειδοποίησης πλήρους οθόνης στις ρυθμίσεις συστήματος."</string>
     <string name="settings_sync_on_start">"Συγχρονισμός κατά την έναρξη"</string>
     <string name="settings_sync_on_pull_refresh">"Συγχρονισμός κατά την έξοδο"</string>
