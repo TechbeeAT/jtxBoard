@@ -501,6 +501,8 @@ Köszönjük!"</string>
     <string name="settings_sticky_alarms_sub">"Az emlékeztetők megőrzése az elkészülésig vagy elhalasztásig"</string>
     <string name="settings_fullscreen_alarms">"Teljes képernyős riasztások"</string>
     <string name="settings_fullscreen_alarms_sub">"A riasztások a teljes képernyőt foglalják el, ha az eszköz zárolva van"</string>
+    <string name="settings_accessibility_mode">"Kisegítő lehetőségek"</string>
+    <string name="settings_accessibility_mode_sub">"Minimális fontméret biztosítása"</string>
     <string name="settings_fullscreen_alarms_toast">"Kérjük, a rendszerbeállításoknál adja meg a teljes képernyős értesítésekhez szükséges engedélyt."</string>
     <string name="settings_sync_on_start">"Szinkronizálás az alkalmazás indításakor"</string>
     <string name="settings_sync_on_pull_refresh">"Szinkronizálás lehúzás-gesztussal"</string>
