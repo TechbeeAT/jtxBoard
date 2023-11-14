@@ -505,6 +505,8 @@
     <string name="settings_sticky_alarms_sub">"完了または延期されるまで通知を維持します"</string>
     <string name="settings_fullscreen_alarms">"全画面アラーム"</string>
     <string name="settings_fullscreen_alarms_sub">"端末がロックされているときに全画面でアラームを表示する"</string>
+    <string name="settings_accessibility_mode">"アクセシビリティモード"</string>
+    <string name="settings_accessibility_mode_sub">"小さな要素のフォントサイズを最小限に抑えます"</string>
     <string name="settings_fullscreen_alarms_toast">"システム設定で全画面通知の権限を付与してください。"</string>
     <string name="settings_sync_on_start">"アプリを起動したときに同期"</string>
     <string name="settings_sync_on_pull_refresh">"プルダウンで同期"</string>
