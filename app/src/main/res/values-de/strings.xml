@@ -506,6 +506,8 @@ Danke!"</string>
     <string name="settings_sticky_alarms_sub">"Benachrichtigungen erhalten bis erledigt oder verschoben"</string>
     <string name="settings_fullscreen_alarms">"Vollbild-Alarme"</string>
     <string name="settings_fullscreen_alarms_sub">"Zeigt Alarme im Vollbild, wenn das Gerät gesperrt ist"</string>
+    <string name="settings_accessibility_mode">"Barrierefreiheitsmodus"</string>
+    <string name="settings_accessibility_mode_sub">"Stellt die Mindestschriftgröße für kleine Elemente sicher"</string>
     <string name="settings_fullscreen_alarms_toast">"Bitte erteilen Sie in den Systemeinstellungen die Vollbild-Benachrichtigungsberechtigung."</string>
     <string name="settings_sync_on_start">"Synchronisieren beim Start der App"</string>
     <string name="settings_sync_on_pull_refresh">"Synchronisieren beim Herunterziehen"</string>

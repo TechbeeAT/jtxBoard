@@ -352,6 +352,9 @@
     <string name="settings_protect_biometric_all">"Mind"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Ennek a beállításnak a módosításához azonosítsa magát!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"A védett bejegyzésekhez való hozzáféréshez azonosítsa magát!"</string>
+    <string name="settings_timezone_display">"Az időzóna kijelzésének kiválasztása"</string>
+    <string name="settings_timezone_display_local">"Idő megjelenítése a helyi időzónában"</string>
+    <string name="settings_timezone_display_original">"Idő megjelenítése az eredeti időzónában"</string>
     <string name="donate_dialog_title">"Tetszik Önnek a jtx Board?"</string>
     <string name="donate_dialog_message">"Egy alkalmazás fejlesztése összetett feladat, a fejlesztés, karbantartás és támogatás pedig kemény munka. Ha tetszik önnek ez az alkalmazás és szeretne tenni a folyamatos fejlesztés biztosításáért, kérjük, fontolja meg a támogatást :-)
 Köszönjük!"</string>
@@ -501,6 +504,8 @@ Köszönjük!"</string>
     <string name="settings_sticky_alarms_sub">"Az emlékeztetők megőrzése az elkészülésig vagy elhalasztásig"</string>
     <string name="settings_fullscreen_alarms">"Teljes képernyős riasztások"</string>
     <string name="settings_fullscreen_alarms_sub">"A riasztások a teljes képernyőt foglalják el, ha az eszköz zárolva van"</string>
+    <string name="settings_accessibility_mode">"Kisegítő lehetőségek"</string>
+    <string name="settings_accessibility_mode_sub">"Minimális fontméret biztosítása"</string>
     <string name="settings_fullscreen_alarms_toast">"Kérjük, a rendszerbeállításoknál adja meg a teljes képernyős értesítésekhez szükséges engedélyt."</string>
     <string name="settings_sync_on_start">"Szinkronizálás az alkalmazás indításakor"</string>
     <string name="settings_sync_on_pull_refresh">"Szinkronizálás lehúzás-gesztussal"</string>

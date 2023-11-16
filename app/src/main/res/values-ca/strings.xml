@@ -500,6 +500,8 @@ Gràcies!"</string>
     <string name="settings_sticky_alarms_sub">"Manté les notificacions fins que es marquen com a completades o es posposen"</string>
     <string name="settings_fullscreen_alarms">"Alarmes a pantalla completa"</string>
     <string name="settings_fullscreen_alarms_sub">"Mostra les alarmes a pantalla completa quan el dispositiu està bloquejat"</string>
+    <string name="settings_accessibility_mode">"Mode d'accessibilitat"</string>
+    <string name="settings_accessibility_mode_sub">"Assegura una mida de lletra mínim per als elements petits"</string>
     <string name="settings_fullscreen_alarms_toast">"Per favor, dona permís per a notificacions a pantalla completa a la configuració del sistema."</string>
     <string name="settings_sync_on_start">"Sincronitza en iniciar l'aplicació"</string>
     <string name="settings_sync_on_pull_refresh">"Sincronitza en lliscar cap avall"</string>
