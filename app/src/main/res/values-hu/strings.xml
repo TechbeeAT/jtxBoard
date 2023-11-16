@@ -352,6 +352,9 @@
     <string name="settings_protect_biometric_all">"Mind"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Ennek a beállításnak a módosításához azonosítsa magát!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"A védett bejegyzésekhez való hozzáféréshez azonosítsa magát!"</string>
+    <string name="settings_timezone_display">"Az időzóna kijelzésének kiválasztása"</string>
+    <string name="settings_timezone_display_local">"Idő megjelenítése a helyi időzónában"</string>
+    <string name="settings_timezone_display_original">"Idő megjelenítése az eredeti időzónában"</string>
     <string name="donate_dialog_title">"Tetszik Önnek a jtx Board?"</string>
     <string name="donate_dialog_message">"Egy alkalmazás fejlesztése összetett feladat, a fejlesztés, karbantartás és támogatás pedig kemény munka. Ha tetszik önnek ez az alkalmazás és szeretne tenni a folyamatos fejlesztés biztosításáért, kérjük, fontolja meg a támogatást :-)
 Köszönjük!"</string>
