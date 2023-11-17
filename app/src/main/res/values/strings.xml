@@ -565,6 +565,7 @@ Thank you!"</string>
     <string name="list_biometric_protected_entries_unlocked">Biometric protected entries unlocked</string>
     <string name="settings_auto_alarm">"Automatic alarm"</string>
     <string name="alarms_always_ondue">"Always on due"</string>
+    <string name="alarms_always_on_save">"Always on save (experimental)"</string>
     <string name="settings_auto_alarm_sub">"Turn on to automatically create alarms. Choose \"Always on due\" to not create an alarm but to get notified in any case when a task is due."</string>
     <string name="settings_protect_biometric">"Protect entries with biometrics"</string>
     <string name="settings_protect_biometric_sub">"This function hides the selected entries until they are unlocked with biometrics, but does not encrypt/decrypt data in the background."</string>
