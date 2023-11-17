@@ -55,6 +55,7 @@ enum class DropdownSettingOption(
     AUTO_ALARM_ON_START("on_start", R.string.alarms_onstart),
     AUTO_ALARM_ON_DUE("on_due", R.string.alarms_ondue),
     AUTO_ALARM_ALWAYS_ON_DUE("always_on_due", R.string.alarms_always_ondue),
+    AUTO_ALARM_ALWAYS_ON_SAVE("always_on_save", R.string.alarms_always_on_save),
 
     PROTECT_BIOMETRIC_OFF("protect_biometric_off", R.string.off),
     PROTECT_BIOMETRIC_CONFIDENTIAL("protect_biometric_confidential", R.string.settings_protect_biometric_confidential),

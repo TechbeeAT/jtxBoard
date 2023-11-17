@@ -63,6 +63,7 @@ import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
@@ -492,6 +493,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val newId = database.insertICalObject(icalObject)
+                icalObject.id = newId
 
                 categories.forEach {
                     it.icalObjectId = newId
@@ -517,6 +519,10 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 sqlConstraintException.value = true
             }
             onChangeDone()
+
+            // trigger alarm immediately if setting is active
+            if(icalObject.getModuleFromString() == Module.TODO && SettingsStateHolder(_application).settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
+                NotificationPublisher.triggerImmediateAlarm(icalObject, _application)
         }
     }
 
