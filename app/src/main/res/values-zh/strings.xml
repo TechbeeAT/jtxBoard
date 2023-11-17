@@ -6,15 +6,19 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"保存"</string>
+    <string name="update">"更新"</string>
     <string name="cancel">"取消"</string>
     <string name="ok">"确定"</string>
     <string name="delete">"删除"</string>
     <string name="discard">"丢弃"</string>
+    <string name="dismiss">"放弃"</string>
+    <string name="open">"打开"</string>
     <string name="cont">"继续"</string>
     <string name="website">"网站"</string>
     <string name="latitude">"纬度"</string>
     <string name="longitude">"经度"</string>
     <string name="unlink">"取消关联"</string>
+    <string name="off">"关闭"</string>
     <string name="current_location">"当前位置"</string>
     <string name="toolbar_text_add_journal">"添加日志"</string>
     <string name="toolbar_text_add_note">"添加笔记"</string>
