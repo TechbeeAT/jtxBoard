@@ -547,6 +547,7 @@ Dank u!"</string>
     <string name="list_biometric_protected_entries_unlocked">Biometrische beschermde entries ontgrendeld</string>
     <string name="settings_auto_alarm">"Automatisch alarm"</string>
     <string name="alarms_always_ondue">"Altijd bij verval"</string>
+    <string name="alarms_always_on_save">"Altijd bij het opslaan (experimenteel)"</string>
     <string name="settings_auto_alarm_sub">"Schakel in om automatisch alarmen te maken. Kies \"Altijd bij verval\" om geen alarm aan te maken, maar om een melding te krijgen zodra een taak vervalt."</string>
     <string name="settings_protect_biometric">"Bescherm invoergegevens met biometrie"</string>
     <string name="settings_protect_biometric_sub">"Deze functie verbergt de geselecteerde invoergegevens totdat ze zijn ontgrendeld met biometrie, maar versleutelt/ontsleutelt niet gegevens op de achtergrond."</string>
