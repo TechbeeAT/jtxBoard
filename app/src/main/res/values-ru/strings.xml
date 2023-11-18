@@ -548,6 +548,7 @@
     <string name="list_biometric_protected_entries_unlocked">Защищенные биометрией записи разблокированы</string>
     <string name="settings_auto_alarm">"Автоматическое напоминание"</string>
     <string name="alarms_always_ondue">"Всегда по завершению"</string>
+    <string name="alarms_always_on_save">"Всегда при сохранении (экспериментально)"</string>
     <string name="settings_auto_alarm_sub">"Активируйте, чтобы напоминания создавались автоматически. Выберите \"Всегда по завершению\", чтобы получать уведомления каждый раз, когда наступает дата завершения задачи."</string>
     <string name="settings_protect_biometric">"Защита записей с помощью биометрии"</string>
     <string name="settings_protect_biometric_sub">"Эта функция скрывает выбранные записи, пока они не будут разблокированы с помощью биометрии, но не шифрует/дешифрует данные в фоновом режиме."</string>

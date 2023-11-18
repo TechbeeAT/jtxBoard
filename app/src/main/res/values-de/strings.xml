@@ -549,6 +549,7 @@ Danke!"</string>
     <string name="list_biometric_protected_entries_unlocked">Biometrische geschützte Einträge entsperrt</string>
     <string name="settings_auto_alarm">"Automatischer Alarm"</string>
     <string name="alarms_always_ondue">"Immer wenn fällig"</string>
+    <string name="alarms_always_on_save">"Immer beim Speichern (experimentell)"</string>
     <string name="settings_auto_alarm_sub">"Erstellt automatisch Alarme, wenn aktiviert. \"Immer wenn fällig\" triggert immer eine Benachrichtigung, wenn eine Aufgabe fällig wird, auch wenn es keinen expliziten Alarm gibt."</string>
     <string name="settings_protect_biometric">"Einträge mit Biometrie schützen"</string>
     <string name="settings_protect_biometric_sub">"Diese Funktion verbirgt die ausgewählten Einträge, bis sie mit Biometrie entsperrt sind, allerdings werden die Daten nicht verschlüsselt."</string>
