@@ -176,7 +176,11 @@ class NotificationPublisher : BroadcastReceiver() {
         }
 
         fun triggerImmediateAlarm(iCalObject: ICalObject, context: Context) {
-            if(iCalObject.summary.isNullOrEmpty() && iCalObject.description.isNullOrEmpty())
+            if((iCalObject.summary.isNullOrEmpty() && iCalObject.description.isNullOrEmpty())
+                || iCalObject.percent != 100
+                || iCalObject.status != Status.COMPLETED.status
+                || (iCalObject.due?:0L) < System.currentTimeMillis()
+                )
                 return
 
             val notification = Alarm.createNotification(
