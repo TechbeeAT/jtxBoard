@@ -549,6 +549,7 @@ Köszönjük!"</string>
     <string name="list_biometric_protected_entries_unlocked">A biometrikusan védett bejegyzések zárolása feloldva</string>
     <string name="settings_auto_alarm">"Automatikus riasztások"</string>
     <string name="alarms_always_ondue">"Mindig a határidőkor"</string>
+    <string name="alarms_always_on_save">"Mentéskor mindig (kísérleti funkció)"</string>
     <string name="settings_auto_alarm_sub">"Kapcsolja be az riasztások automatikus beállításához. Válassza a \"Mindig a határidőkor\" opciót, ha nem akar riasztást beállítani, de szeretné, ha a határidőkor mégis kapna értesítést."</string>
     <string name="settings_protect_biometric">"Bejegyzések védése a biometrikus azonosítással"</string>
     <string name="settings_protect_biometric_sub">"Ez a funkció elrejti a egyes kiválasztott bejegyzéseket, amíg a biometrikus adatokkal fel nem oldják a zárolást, de nem az adatokat a háttérben."</string>
