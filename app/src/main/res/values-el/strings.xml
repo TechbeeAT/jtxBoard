@@ -547,6 +547,7 @@
     <string name="list_biometric_protected_entries_unlocked">Οι βιομετρικά προστατευόμενες καταχωρήσεις κλειδώθηκαν</string>
     <string name="settings_auto_alarm">"Αυτόματο ξυπνητήρι"</string>
     <string name="alarms_always_ondue">"Εντός προθεσμίας"</string>
+    <string name="alarms_always_on_save">"Αποθήκευση πάντα σε λειτουργία (πειραματική)"</string>
     <string name="settings_auto_alarm_sub">"Ενεργοποιήστε για αυτόματη δημιουργία συναγερμών. Επιλέξτε \"Always on time\" για να μην δημιουργήσετε συναγερμό αλλά για να λαμβάνετε ειδοποίηση σε κάθε περίπτωση όταν μια εργασία είναι ληξιπρόθεσμη."</string>
     <string name="settings_protect_biometric">"Προστασία καταχωρήσεων με βιομετρικά στοιχεία"</string>
     <string name="settings_protect_biometric_sub">"Αυτή η λειτουργία αποκρύπτει τις επιλεγμένες καταχωρήσεις μέχρι να ξεκλειδωθούν με βιομετρικά, αλλά δεν κρυπτογραφεί / αποκρυπτογραφεί τα δεδομένα στο παρασκήνιο."</string>
