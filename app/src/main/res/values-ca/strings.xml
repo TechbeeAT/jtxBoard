@@ -543,6 +543,7 @@ Gràcies!"</string>
     <string name="list_biometric_protected_entries_unlocked">Entrades protegides per biometria desbloquejades</string>
     <string name="settings_auto_alarm">"Alarma automàtica"</string>
     <string name="alarms_always_ondue">"Sempre en vèncer"</string>
+    <string name="alarms_always_on_save">"Sempre al desar (experimental)"</string>
     <string name="settings_auto_alarm_sub">"Activa-ho per a crear alarmes automàticament. Tria \"Sempre en vèncer\" per a no crear una alarma, però ser notificat quan una tasca venci."</string>
     <string name="settings_protect_biometric">"Protegeix entrades amb biometria"</string>
     <string name="settings_protect_biometric_sub">"Aquesta funció amaga les entrades seleccionades fins a que es desbloquegen amb biometria, però no encripta/desencripta les dades en segon pla."</string>

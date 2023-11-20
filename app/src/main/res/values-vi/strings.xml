@@ -11,6 +11,8 @@
     <string name="ok">"OK"</string>
     <string name="delete">"Xóa"</string>
     <string name="discard">"Bỏ qua"</string>
+    <string name="dismiss">"Bỏ qua"</string>
+    <string name="open">"Mở"</string>
     <string name="cont">"Tiếp tục"</string>
     <string name="website">"Trang web"</string>
     <string name="latitude">"Vĩ độ"</string>
@@ -197,7 +199,19 @@
     <string name="permission_record_audio_granted">"Đã cấp quyền ghi âm"</string>
     <string name="permission_record_audio_denied">"Quyền ghi âm bị từ chối"</string>
     <string name="intent_dialog_title">"Thêm nội dung vào nhật ký, ghi chú hoặc nhiệm vụ?"</string>
+    <string name="add">"Thêm"</string>
+    <string name="edit">"Chỉnh sửa"</string>
+    <string name="reset">"Đặt lại"</string>
+    <string name="apply">"Áp dụng"</string>
+    <string name="collection">"Bộ sưu tập"</string>
+    <string name="collection_owner_displayname">"Chủ sở hữu: %1$s"</string>
+    <string name="link_to_parent">"Liên kết tới cấp trên"</string>
+    <string name="link_selected_as_parent">"Cấp trên"</string>
+    <string name="link_selected_as_subtask_note">"Nhiệm vụ phụ/-ghi chú"</string>
+    <string name="link_selected_as">"Liên kết được chọn là …"</string>
+    <string name="navigation_drawer_collections">"Bộ sưu tập"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Ngày tháng/Thời gian"</string>
     <!-- fragment_collections -->
     <!-- Fuzzy -->
     <string name="collections_dialog_edit_local_collection_title">"Chỉnh sửa Bộ sưu tập cục bộ"</string>
