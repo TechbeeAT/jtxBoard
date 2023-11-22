@@ -30,7 +30,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryTabRow
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -82,8 +81,8 @@ fun DatePickerDialog(
     val tabIndexTimezone = 2
     var selectedTab by remember { mutableIntStateOf(0) }
 
+    /*
     fun isValidDate(date: Long): Boolean {
-        /*
         val zonedDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.of("UTC")).withHour(0).withMinute(0).withSecond(0).withNano(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
         val zonedMinDate = minDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
         val zonedMaxDate = maxDate?.withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
@@ -91,19 +90,21 @@ fun DatePickerDialog(
             zonedDate.year*zonedDate.dayOfYear in (zonedMinDate?.year?:0)*(zonedMinDate?.dayOfYear?:0) until (zonedMaxDate?.year?:3000)*(zonedMaxDate?.dayOfYear?:367)
         else
             zonedDate.year*zonedDate.dayOfYear in (zonedMinDate?.year?:0)*(zonedMinDate?.dayOfYear?:0) .. (zonedMaxDate?.year?:3000)*(zonedMaxDate?.dayOfYear?:367)
-         */
         return true
     }
+     */
 
     val initialZonedDateTime = datetime
         ?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }
         ?: minDate
 
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = initialZonedDateTime?.toInstant()?.toEpochMilli()?.plus(initialZonedDateTime.offset.totalSeconds*1000),
+        initialSelectedDateMillis = initialZonedDateTime?.toInstant()?.toEpochMilli()?.plus(initialZonedDateTime.offset.totalSeconds*1000)
+                /*
         selectableDates = object: SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long) = isValidDate((utcTimeMillis))
         }
+                 */
     )
     val timePickerState = rememberTimePickerState(initialZonedDateTime?.hour?:0, initialZonedDateTime?.minute?:0)
 
@@ -276,7 +277,7 @@ fun DatePickerDialog(
 
 
                 TextButton(
-                    enabled = datePickerState.selectedDateMillis?.let { isValidDate(it) } ?: true,
+                    //enabled = datePickerState.selectedDateMillis?.let { isValidDate(it) } ?: true,
                     onClick = {
                         if (newTimezone != null && newTimezone != TZ_ALLDAY && !TimeZone.getAvailableIDs()
                                 .contains(newTimezone)
