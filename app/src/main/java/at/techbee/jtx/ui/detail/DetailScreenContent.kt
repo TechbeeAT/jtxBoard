@@ -76,6 +76,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection
@@ -262,8 +263,13 @@ fun DetailScreenContent(
 
 
     val previousIsEditModeState = rememberSaveable { mutableStateOf(isEditMode.value) }
-    if (previousIsEditModeState.value && !isEditMode.value)  //changed from edit to view mode
+    if (previousIsEditModeState.value && !isEditMode.value) {  //changed from edit to view mode
         saveEntry()
+
+        // trigger alarm immediately if setting is active
+        if(iCalObject.getModuleFromString() == Module.TODO && autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
+            NotificationPublisher.triggerImmediateAlarm(iCalObject, context)
+    }
     previousIsEditModeState.value = isEditMode.value
 
 

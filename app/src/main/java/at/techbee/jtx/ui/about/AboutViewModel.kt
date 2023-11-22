@@ -59,7 +59,7 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
                             githubUrl = response.getJSONObject(i).getString("html_url")
                         )
                         Log.d("GithubRelease", "tag_name = ${release.releaseName}, description = ${release.releaseText}")
-                        if(!release.prerelease && !releaseinfos.contains(release))   // prereleases are excluded
+                        if(!releaseinfos.contains(release))
                             releaseinfos.add(release)
                     }
                 } catch (e: JSONException) {

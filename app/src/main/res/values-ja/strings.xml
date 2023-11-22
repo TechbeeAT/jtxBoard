@@ -505,6 +505,8 @@
     <string name="settings_sticky_alarms_sub">"完了または延期されるまで通知を維持します"</string>
     <string name="settings_fullscreen_alarms">"全画面アラーム"</string>
     <string name="settings_fullscreen_alarms_sub">"端末がロックされているときに全画面でアラームを表示する"</string>
+    <string name="settings_accessibility_mode">"アクセシビリティモード"</string>
+    <string name="settings_accessibility_mode_sub">"小さな要素のフォントサイズを最小限に抑えます"</string>
     <string name="settings_fullscreen_alarms_toast">"システム設定で全画面通知の権限を付与してください。"</string>
     <string name="settings_sync_on_start">"アプリを起動したときに同期"</string>
     <string name="settings_sync_on_pull_refresh">"プルダウンで同期"</string>
@@ -546,6 +548,7 @@
     <string name="list_biometric_protected_entries_unlocked">生体認証で保護されたエントリーはロック解除されています</string>
     <string name="settings_auto_alarm">"自動アラーム"</string>
     <string name="alarms_always_ondue">"締切日時に通知"</string>
+    <string name="alarms_always_on_save">"常に保存時（実験的）"</string>
     <string name="settings_auto_alarm_sub">"オンにすると自動でアラームを作成します。「締切日時に通知」を選択するとアラームを作成せずに、締切日時に通知します。"</string>
     <string name="settings_protect_biometric">"エントリーを生体認証で保護"</string>
     <string name="settings_protect_biometric_sub">"この機能は、選択されたエントリーを生体認証でロック解除されるまで非表示にしますが、バックグラウンドでデータを暗号化/復号するものではありません。"</string>

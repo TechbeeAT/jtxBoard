@@ -504,6 +504,8 @@
     <string name="settings_sticky_alarms_sub">"Διατήρηση ειδοποιήσεων μέχρι να ολοκληρωθούν ή αναβληθούν"</string>
     <string name="settings_fullscreen_alarms">"Αφύπνιση σε πλήρη οθόνη"</string>
     <string name="settings_fullscreen_alarms_sub">"Εμφάνιση ειδοποιήσεων σε πλήρη οθόνη όταν η συσκευή είναι κλειδωμένη"</string>
+    <string name="settings_accessibility_mode">"Λειτουργία προσβασιμότητας"</string>
+    <string name="settings_accessibility_mode_sub">"Εξασφαλίζει το ελάχιστο μέγεθος γραμματοσειράς για τα μικρά στοιχεία"</string>
     <string name="settings_fullscreen_alarms_toast">"Παραχωρήστε άδεια ειδοποίησης πλήρους οθόνης στις ρυθμίσεις συστήματος."</string>
     <string name="settings_sync_on_start">"Συγχρονισμός κατά την έναρξη"</string>
     <string name="settings_sync_on_pull_refresh">"Συγχρονισμός κατά την έξοδο"</string>
@@ -545,6 +547,7 @@
     <string name="list_biometric_protected_entries_unlocked">Οι βιομετρικά προστατευόμενες καταχωρήσεις κλειδώθηκαν</string>
     <string name="settings_auto_alarm">"Αυτόματο ξυπνητήρι"</string>
     <string name="alarms_always_ondue">"Εντός προθεσμίας"</string>
+    <string name="alarms_always_on_save">"Αποθήκευση πάντα σε λειτουργία (πειραματική)"</string>
     <string name="settings_auto_alarm_sub">"Ενεργοποιήστε για αυτόματη δημιουργία συναγερμών. Επιλέξτε \"Always on time\" για να μην δημιουργήσετε συναγερμό αλλά για να λαμβάνετε ειδοποίηση σε κάθε περίπτωση όταν μια εργασία είναι ληξιπρόθεσμη."</string>
     <string name="settings_protect_biometric">"Προστασία καταχωρήσεων με βιομετρικά στοιχεία"</string>
     <string name="settings_protect_biometric_sub">"Αυτή η λειτουργία αποκρύπτει τις επιλεγμένες καταχωρήσεις μέχρι να ξεκλειδωθούν με βιομετρικά, αλλά δεν κρυπτογραφεί / αποκρυπτογραφεί τα δεδομένα στο παρασκήνιο."</string>
