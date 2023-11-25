@@ -100,6 +100,7 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
+import at.techbee.jtx.ui.reusable.elements.CollectionInfoColumn
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import at.techbee.jtx.ui.reusable.elements.ListBadge
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
@@ -377,7 +378,12 @@ fun DetailScreenContent(
                             } ?: MaterialTheme.colorScheme.primaryContainer,
                             isAccessibilityMode = true
                         )
-                        Text(originalICalEntity.value?.ICalCollection?.displayName + originalICalEntity.value?.ICalCollection?.accountName?.let { " ($it)" })
+                        originalICalEntity.value?.ICalCollection?.let {
+                            CollectionInfoColumn(
+                                collection = it,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                 }
             }
