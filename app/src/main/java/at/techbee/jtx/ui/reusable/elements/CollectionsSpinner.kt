@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.FolderOpen
@@ -15,7 +14,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -76,8 +74,8 @@ fun CollectionsSpinner(
                 containerColor = selected.color?.let {Color(it) } ?: MaterialTheme.colorScheme.primaryContainer,
                 isAccessibilityMode = true
             )
-            Text(
-                text = selected.displayName + selected.accountName?.let { " ($it)" },
+            CollectionInfoColumn(
+                collection = selected,
                 modifier = Modifier
                     .weight(1f)
                     .alpha(if (!enabled) 0.5f else 1f)
@@ -111,13 +109,7 @@ fun CollectionsSpinner(
                             }
                         },
                         text = {
-                            Text(
-                                text = (collection.displayName ?: collection.accountName)
-                                    ?: " ",
-                                modifier = Modifier
-                                    .wrapContentWidth()
-                                    .align(Alignment.Start)
-                            )
+                            CollectionInfoColumn(collection = collection)
                         }
                     )
                 }

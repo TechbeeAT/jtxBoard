@@ -39,12 +39,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -134,12 +136,27 @@ fun CollectionCard(
                             containerColor = collection.color?.let { Color (it) } ?: MaterialTheme.colorScheme.primaryContainer,
                             isAccessibilityMode = settingAccessibilityMode
                         )
-                        Text(
-                            collection.displayName ?: collection.accountName ?: collection.accountType ?: "",
-                            style = Typography.bodyMedium,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.weight(1f)
-                        )
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            collection.displayName?.let {
+                                Text(
+                                    text = it,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = Typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
+                            if(collection.accountType != LOCAL_ACCOUNT_TYPE) {
+                                Text(
+                                    text = collection.url,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.alpha(0.5f)
+                                )
+                            }
+                        }
                     }
                     if (collection.description?.isNotBlank() == true) {
                         Text(
