@@ -8,11 +8,13 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.glance.appwidget.updateAll
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.flavored.GeofenceClient
+import at.techbee.jtx.widgets.ListWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -56,6 +58,7 @@ class RestoreNotificationsAtBootReceiver : BroadcastReceiver() {
                             notificationManager.notify(iCalObjectId.toInt(), notification)
                         }
                     }
+                ListWidget().updateAll(context)
                 GeofenceClient(context).setGeofences()
             }
         }
