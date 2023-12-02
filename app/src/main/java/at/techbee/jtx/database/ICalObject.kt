@@ -1512,7 +1512,13 @@ data class ICalObject(
             Regex("\\d*[.]\\d*~\\d*[.]\\d*"),   // Bing Maps (Microsoft)
             Regex("\\d*[.]\\d*/\\d*[.]\\d*"),   // Open Street Maps
         )
-        val urlDecoded = try { URLDecoder.decode(text, "UTF-8") } catch (e: UnsupportedEncodingException) { text }
+        val urlDecoded = try {
+            URLDecoder.decode(text, "UTF-8")
+        } catch (e: UnsupportedEncodingException) {
+            text
+        } catch (e: IllegalArgumentException) {
+            text
+        }
 
         formats.forEach { format ->
             format.find(urlDecoded)?.value?.let {
