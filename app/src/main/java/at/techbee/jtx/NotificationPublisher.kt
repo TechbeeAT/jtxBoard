@@ -49,6 +49,9 @@ class NotificationPublisher : BroadcastReceiver() {
 
         // onReceive is triggered when the Alarm Manager calls it (the initial notification, action is null)
         // but also when one of the actions is clicked in the notification (action is one of the defined actions)
+        if(intent.action != null)
+            notificationManager.cancel(icalObjectId.toInt())
+
         when (intent.action) {
             ACTION_SNOOZE_1D -> CoroutineScope(Dispatchers.IO).launch { addPostponedAlarm(alarmId, (1).days.inWholeMilliseconds, context) }
             ACTION_SNOOZE_1H -> CoroutineScope(Dispatchers.IO).launch { addPostponedAlarm(alarmId, (1).hours.inWholeMilliseconds, context) }
