@@ -1,6 +1,5 @@
 package at.techbee.jtx.ui.detail
 
-import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
