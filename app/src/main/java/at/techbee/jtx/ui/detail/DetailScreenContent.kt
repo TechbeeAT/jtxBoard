@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.detail
 
 import android.media.MediaPlayer
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -105,25 +106,27 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-enum class DetailsScreenSection {
-    COLLECTION,
-    DATES,
-    SUMMARYDESCRIPTION,
-    PROGRESS,
-    STATUSCLASSIFICATIONPRIORITY,
-    CATEGORIES,
-    PARENTS,
-    SUBTASKS,
-    SUBNOTES,
-    RESOURCES,
-    ATTENDEES,
-    CONTACT,
-    URL,
-    LOCATION,
-    COMMENTS,
-    ATTACHMENTS,
-    ALARMS,
-    RECURRENCE
+enum class DetailsScreenSection(
+    @StringRes val stringRes: Int
+) {
+    COLLECTION(R.string.collection),
+    DATES(R.string.date),
+    SUMMARYDESCRIPTION(R.string.summary_description),
+    PROGRESS(R.string.progress),
+    STATUSCLASSIFICATIONPRIORITY(R.string.status_classification_priority),
+    CATEGORIES(R.string.categories),
+    PARENTS(R.string.linked_parents),
+    SUBTASKS(R.string.subtasks),
+    SUBNOTES(R.string.view_feedback_linked_notes),
+    RESOURCES(R.string.resources),
+    ATTENDEES(R.string.attendees),
+    CONTACT(R.string.contact),
+    URL(R.string.url),
+    LOCATION(R.string.location),
+    COMMENTS(R.string.comments),
+    ATTACHMENTS(R.string.attachments),
+    ALARMS(R.string.alarms),
+    RECURRENCE(R.string.recurrence)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -338,17 +341,6 @@ fun DetailScreenContent(
         saveEntry()
     }
 
-    val screenSections: List<DetailsScreenSection> = mutableListOf<DetailsScreenSection>().apply {
-        /*
-        add(DetailsScreenSection.COLLECTION)
-        add(DetailsScreenSection.DATES)
-        add(DetailsScreenSection.SUMMARYDESCRIPTION)
-        add(DetailsScreenSection.PROGRESS)
-        add(DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY)
-         */
-        addAll(DetailsScreenSection.entries)
-    }
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -357,7 +349,7 @@ fun DetailScreenContent(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-        screenSections.forEach { detailsScreenSection ->
+        detailSettings.detailSettingOrder.forEach { detailsScreenSection ->
 
             when(detailsScreenSection) {
                 DetailsScreenSection.COLLECTION -> {

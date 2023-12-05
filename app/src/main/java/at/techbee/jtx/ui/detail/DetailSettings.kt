@@ -11,13 +11,18 @@ package at.techbee.jtx.ui.detail
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.ListViewModel
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
-enum class DetailSettingsOptionGroup { GENERAL, ELEMENT }
+enum class DetailSettingsOptionGroup { GENERAL, ELEMENT, ORDER }
+
+const val DETAILS_ORDER = "detailsOrder"
 
 enum class DetailSettingsOption(
     val key: String,
@@ -247,16 +252,18 @@ enum class DetailSettingsOption(
 
 class DetailSettings {
     val detailSetting = mutableStateMapOf<DetailSettingsOption, Boolean>()
+    val detailSettingOrder = mutableStateListOf<DetailsScreenSection>()
     private var currentModule: Module? = null
     private var prefs: SharedPreferences? = null
 
     var listSettings: ListSettings? = null  // List settings get overwritten on load but will not be saved!
 
     fun save() {
-        prefs?.edit().apply {
-            DetailSettingsOption.values().forEach { detailSettingOption ->
-                this?.putBoolean(detailSettingOption.key, detailSetting[detailSettingOption] ?: true)
+        prefs?.edit()?.apply {
+            DetailSettingsOption.entries.forEach { detailSettingOption ->
+                this.putBoolean(detailSettingOption.key, detailSetting[detailSettingOption] ?: true)
             }
+            this.putString(DETAILS_ORDER, Json.encodeToString(detailSettingOrder.map { it.name }.toList()))
         }?.apply()
     }
 
@@ -270,8 +277,19 @@ class DetailSettings {
             }
 
             detailSetting.apply {
-                DetailSettingsOption.values().forEach { detailSettingOption ->
+                DetailSettingsOption.entries.forEach { detailSettingOption ->
                     prefs?.getBoolean(detailSettingOption.key, detailSettingOption.getDefault(module))?.let { this[detailSettingOption] = it }
+                }
+
+                detailSettingOrder.clear()
+                val definedOrder: List<String>? = prefs?.getString(DETAILS_ORDER, null)?.let { Json.decodeFromString(it) }
+                definedOrder?.forEach {
+                    val section = DetailsScreenSection.entries.firstOrNull { entry -> entry.name == it } ?: return@forEach
+                    if(!detailSettingOrder.contains(section))
+                        detailSettingOrder.add(section)
+                }
+                DetailsScreenSection.entries.filter {!detailSettingOrder.contains(it) }.forEach {
+                    detailSettingOrder.add(it)
                 }
             }
 
@@ -281,7 +299,6 @@ class DetailSettings {
                 Module.NOTE -> context.getSharedPreferences(ListViewModel.PREFS_LIST_NOTES, Context.MODE_PRIVATE)
                 Module.TODO -> context.getSharedPreferences(ListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
             }.let { ListSettings.fromPrefs(it)  }
-
         }
     }
 }
