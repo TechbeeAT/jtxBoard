@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.detail
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -145,67 +146,76 @@ fun DetailOptionsBottomSheet(
                     }
                 }
                 DetailOptionsBottomSheetTabs.ORDER -> {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                        modifier = modifier.verticalScroll(rememberScrollState()).fillMaxWidth()
+                    ) {
 
-                    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+                        detailSettings.detailSettingOrder.forEach {
 
-                        /*
-                        Text(
-                            text = stringResource(R.string.details_show_hide_elements),
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
+                            ElevatedAssistChip(
+                                onClick = { },
+                                enabled = when(it) {
+                                              DetailsScreenSection.COLLECTION -> true
+                                              DetailsScreenSection.DATES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false
+                                              DetailsScreenSection.SUMMARYDESCRIPTION -> true
+                                              DetailsScreenSection.PROGRESS -> module == Module.TODO
+                                              DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false
+                                              DetailsScreenSection.CATEGORIES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false
+                                              DetailsScreenSection.PARENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] != false
+                                              DetailsScreenSection.SUBTASKS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false
+                                              DetailsScreenSection.SUBNOTES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] != false
+                                              DetailsScreenSection.RESOURCES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] != false
+                                              DetailsScreenSection.ATTENDEES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] != false
+                                              DetailsScreenSection.CONTACT -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] != false
+                                              DetailsScreenSection.URL -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] != false
+                                              DetailsScreenSection.LOCATION -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] != false
+                                              DetailsScreenSection.COMMENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] != false
+                                              DetailsScreenSection.ATTACHMENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] != false
+                                              DetailsScreenSection.ALARMS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] != false
+                                              DetailsScreenSection.RECURRENCE -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] != false
+                                },
+                                label = { Text(stringResource(id = it.stringRes)) },
+                                leadingIcon = {
+                                    val index = detailSettings.detailSettingOrder.indexOf(it)
+                                    Text((index+1).toString())
+                                },
+                                trailingIcon = {
+                                              Row {
+                                                  if(it != detailSettings.detailSettingOrder.firstOrNull()) {
+                                                      IconButton(onClick = {
+                                                          val index = detailSettings.detailSettingOrder.indexOf(it)
+                                                          detailSettings.detailSettingOrder.remove(it)
+                                                          detailSettings.detailSettingOrder.add(index-1, it)
+                                                          onListSettingsChanged()
+                                                      }) {
+                                                          Icon(
+                                                              Icons.Outlined.KeyboardArrowUp,
+                                                              "Up"
+                                                          )
+                                                      }
+                                                  } else { Box(modifier = Modifier.size(48.dp))}
 
-                         */
+                                                  if(it != detailSettings.detailSettingOrder.lastOrNull()) {
+                                                      IconButton(onClick = {
+                                                          val index = detailSettings.detailSettingOrder.indexOf(it)
+                                                          detailSettings.detailSettingOrder.remove(it)
+                                                          detailSettings.detailSettingOrder.add(index+1, it)
+                                                          onListSettingsChanged()
+                                                      }) {
+                                                          Icon(
+                                                              Icons.Outlined.KeyboardArrowDown,
+                                                              "Down"
+                                                          )
+                                                      }
+                                                  } else { Box(modifier = Modifier.size(48.dp))}
 
-                        Column(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            detailSettings.detailSettingOrder.forEach {
-
-                                ElevatedAssistChip(
-                                    onClick = { },
-                                    label = { Text(stringResource(id = it.stringRes)) },
-                                    leadingIcon = {
-                                        val index = detailSettings.detailSettingOrder.indexOf(it)
-                                        Text((index+1).toString())
-                                    },
-                                    trailingIcon = {
-                                                  Row {
-                                                      if(it != detailSettings.detailSettingOrder.firstOrNull()) {
-                                                          IconButton(onClick = {
-                                                              val index = detailSettings.detailSettingOrder.indexOf(it)
-                                                              detailSettings.detailSettingOrder.remove(it)
-                                                              detailSettings.detailSettingOrder.add(index-1, it)
-                                                              onListSettingsChanged()
-                                                          }) {
-                                                              Icon(
-                                                                  Icons.Outlined.KeyboardArrowUp,
-                                                                  "Up"
-                                                              )
-                                                          }
-                                                      } else { Box(modifier = Modifier.size(48.dp))}
-
-                                                      if(it != detailSettings.detailSettingOrder.lastOrNull()) {
-                                                          IconButton(onClick = {
-                                                              val index = detailSettings.detailSettingOrder.indexOf(it)
-                                                              detailSettings.detailSettingOrder.remove(it)
-                                                              detailSettings.detailSettingOrder.add(index+1, it)
-                                                              onListSettingsChanged()
-                                                          }) {
-                                                              Icon(
-                                                                  Icons.Outlined.KeyboardArrowDown,
-                                                                  "Down"
-                                                              )
-                                                          }
-                                                      } else { Box(modifier = Modifier.size(48.dp))}
-
-                                                  }
-                                    },
-                                    modifier = Modifier
-                                        .padding(end = 4.dp)
-                                        .fillMaxWidth()
-                                )
-                            }
+                                              }
+                                },
+                                modifier = Modifier
+                                    .padding(end = 4.dp)
+                                    .fillMaxWidth()
+                            )
                         }
                     }
                 }

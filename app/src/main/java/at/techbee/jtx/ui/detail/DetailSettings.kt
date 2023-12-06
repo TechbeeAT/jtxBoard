@@ -288,8 +288,8 @@ class DetailSettings {
                     if(!detailSettingOrder.contains(section))
                         detailSettingOrder.add(section)
                 }
-                DetailsScreenSection.entries.filter {!detailSettingOrder.contains(it) }.forEach {
-                    detailSettingOrder.add(it)
+                DetailsScreenSection.entriesFor(module).filter {!detailSettingOrder.contains(it) }.let {
+                    detailSettingOrder.addAll(it)
                 }
             }
 

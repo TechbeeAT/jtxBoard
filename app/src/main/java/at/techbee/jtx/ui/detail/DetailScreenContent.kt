@@ -126,7 +126,17 @@ enum class DetailsScreenSection(
     COMMENTS(R.string.comments),
     ATTACHMENTS(R.string.attachments),
     ALARMS(R.string.alarms),
-    RECURRENCE(R.string.recurrence)
+    RECURRENCE(R.string.recurrence);
+
+    companion object {
+        fun entriesFor(module: Module): List<DetailsScreenSection> {
+            return when(module) {
+                Module.JOURNAL -> listOf(COLLECTION, DATES, SUMMARYDESCRIPTION, STATUSCLASSIFICATIONPRIORITY, CATEGORIES, PARENTS, SUBTASKS, SUBNOTES, ATTENDEES, CONTACT, URL, LOCATION, COMMENTS, ATTACHMENTS, RECURRENCE)
+                Module.NOTE -> listOf(COLLECTION, SUMMARYDESCRIPTION, STATUSCLASSIFICATIONPRIORITY, CATEGORIES, PARENTS, SUBTASKS, SUBNOTES, ATTENDEES, CONTACT, URL, LOCATION, COMMENTS, ATTACHMENTS)
+                Module.TODO -> listOf(COLLECTION, DATES, SUMMARYDESCRIPTION, PROGRESS, STATUSCLASSIFICATIONPRIORITY, CATEGORIES, PARENTS, SUBTASKS, SUBNOTES, RESOURCES, ATTENDEES, CONTACT, URL, LOCATION, COMMENTS, ATTACHMENTS, ALARMS, RECURRENCE)
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
