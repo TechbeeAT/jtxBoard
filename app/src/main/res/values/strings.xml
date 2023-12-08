@@ -296,6 +296,8 @@
     <string name="search_notes">Search notes</string>
     <string name="search_todos">Search tasks</string>
     <string name="filter">"Filter"</string>
+    <string name="visibility">"Visibility"</string>
+    <string name="order">"Order"</string>
     <string name="sync_now">"Sync now"</string>
     <string name="due">"Due"</string>
     <string name="completed">"Completed"</string>
@@ -399,6 +401,8 @@ Thank you!"</string>
     <string name="back">"Back"</string>
     <string name="details">"Details"</string>
     <string name="date">"Date"</string>
+    <string name="summary_description">"Summary/Description"</string>
+    <string name="status_classification_priority">"Status/Classification/Priority"</string>
     <string name="timezone">"Timezone"</string>
     <string name="not_set2">"Not set"</string>
     <string name="invert_selection">"Invert selection"</string>

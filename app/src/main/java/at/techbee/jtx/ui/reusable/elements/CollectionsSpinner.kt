@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,7 +51,7 @@ fun CollectionsSpinner(
     val context = LocalContext.current
     var selected by remember { mutableStateOf(preselected) }
     var expanded by remember { mutableStateOf(false) } // initial value
-    val isProPurchased by BillingManager.getInstance().isProPurchased.observeAsState(true)
+    val isProPurchased by if(LocalInspectionMode.current) remember { mutableStateOf(true)} else BillingManager.getInstance().isProPurchased.observeAsState(true)
 
     OutlinedCard(
         modifier = modifier,
