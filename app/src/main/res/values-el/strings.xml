@@ -285,6 +285,8 @@
     <string name="search_notes">Αναζήτηση σημειώσεων</string>
     <string name="search_todos">Αναζήτηση εργασιών</string>
     <string name="filter">"Φίλτρα"</string>
+    <string name="visibility">"Εμφάνιση"</string>
+    <string name="order">"Σειρά"</string>
     <string name="sync_now">"Συγχρονισμός τώρα"</string>
     <string name="due">"Λήξη"</string>
     <string name="completed">"Ολοκληρώθηκε"</string>
@@ -385,6 +387,8 @@
     <string name="back">"Πίσω"</string>
     <string name="details">"Λεπτομέριες"</string>
     <string name="date">"Ημερομηνία"</string>
+    <string name="summary_description">"Περίληψη/Περιγραφή"</string>
+    <string name="status_classification_priority">"Κατάσταση/Ταξινόμηση/Προτεραιότητα"</string>
     <string name="timezone">"Ζώνη ώρας"</string>
     <string name="not_set2">"Δεν ορίστηκε"</string>
     <string name="invert_selection">"Αντιστροφή επιλογής"</string>
