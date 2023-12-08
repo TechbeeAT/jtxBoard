@@ -285,6 +285,8 @@
     <string name="search_notes">Jegyzetek keresése</string>
     <string name="search_todos">Feladatok keresése</string>
     <string name="filter">"Szűrő"</string>
+    <string name="visibility">"Láthatóság"</string>
+    <string name="order">"Rendezés"</string>
     <string name="sync_now">"Szinkronizálás most"</string>
     <string name="due">"Határidő"</string>
     <string name="completed">"Befejezett"</string>
@@ -387,6 +389,8 @@ Köszönjük!"</string>
     <string name="back">"Vissza"</string>
     <string name="details">"Részletek"</string>
     <string name="date">"Dátum"</string>
+    <string name="summary_description">"Összefoglalás/Leírás"</string>
+    <string name="status_classification_priority">"Státusz/Besorolás/Prioritás"</string>
     <string name="timezone">"Időzóna"</string>
     <string name="not_set2">"Nincs beállítva"</string>
     <string name="invert_selection">"Kiválasztás megfordítása"</string>
