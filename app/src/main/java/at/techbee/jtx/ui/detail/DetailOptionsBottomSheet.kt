@@ -29,6 +29,7 @@ import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -67,7 +68,6 @@ fun DetailOptionsBottomSheet(
 ) {
 
     val scope = rememberCoroutineScope()
-
     val detailOptionTabs = DetailOptionsBottomSheetTabs.entries
     val pagerState = rememberPagerState(initialPage = detailOptionTabs.indexOf(initialTab), pageCount = { detailOptionTabs.size })
 
@@ -147,8 +147,12 @@ fun DetailOptionsBottomSheet(
                 }
                 DetailOptionsBottomSheetTabs.ORDER -> {
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(2.dp),
-                        modifier = modifier.verticalScroll(rememberScrollState()).fillMaxWidth()
+                        verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = modifier
+                            .verticalScroll(rememberScrollState())
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
                     ) {
 
                         detailSettings.detailSettingOrder.forEach {
@@ -216,6 +220,17 @@ fun DetailOptionsBottomSheet(
                                     .padding(end = 4.dp)
                                     .fillMaxWidth()
                             )
+                        }
+
+                        Button(
+                            onClick = {
+                                detailSettings.detailSettingOrder.clear()
+                                detailSettings.detailSettingOrder.addAll(DetailsScreenSection.entriesFor(module))
+                                onListSettingsChanged()
+                            },
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            Text(stringResource(id = R.string.reset))
                         }
                     }
                 }
