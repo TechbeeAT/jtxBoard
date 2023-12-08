@@ -123,23 +123,25 @@ fun DetailsCardCollections(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                CollectionsSpinner(
-                    collections = allPossibleCollections,
-                    preselected = originalICalEntity?.ICalCollection
-                        ?: allPossibleCollections.first(),
-                    includeReadOnly = false,
-                    includeVJOURNAL = includeVJOURNAL,
-                    includeVTODO = includeVTODO,
-                    onSelectionChanged = { newCollection ->
-                        if (iCalObject?.collectionId != newCollection.collectionId) {
-                            onMoveToNewCollection(newCollection)
-                        }
-                    },
-                    enabled = iCalObject?.recurid.isNullOrEmpty(),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(4.dp)
-                )
+                originalICalEntity?.ICalCollection?.let {
+
+                    CollectionsSpinner(
+                        collections = allPossibleCollections,
+                        preselected = it,
+                        includeReadOnly = false,
+                        includeVJOURNAL = includeVJOURNAL,
+                        includeVTODO = includeVTODO,
+                        onSelectionChanged = { newCollection ->
+                            if (iCalObject?.collectionId != newCollection.collectionId) {
+                                onMoveToNewCollection(newCollection)
+                            }
+                        },
+                        enabled = iCalObject?.recurid.isNullOrEmpty(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(4.dp)
+                    )
+                }
                 IconButton(onClick = { showColorPicker = true }) {
                     Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
                 }
@@ -155,6 +157,8 @@ fun DetailsCardCollections(
 @Composable
 fun DetailsCardCollections_edit() {
     MaterialTheme {
+        val context = LocalContext.current
+
         val entity = ICalEntity().apply {
             this.property = ICalObject.createJournal("MySummary")
             //this.property.dtstart = System.currentTimeMillis()
@@ -167,8 +171,7 @@ fun DetailsCardCollections_edit() {
             Category(3, 1, "This is a very long category", null, null),
         )
         entity.property.color = Color.Blue.toArgb()
-
-        val context = LocalContext.current
+        entity.ICalCollection = ICalCollection.createLocalCollection(context).apply { this.displayName = "Test" }
 
         DetailsCardCollections(
             iCalObject = entity.property,
@@ -190,6 +193,8 @@ fun DetailsCardCollections_edit() {
 @Composable
 fun DetailsCardCollections_read() {
     MaterialTheme {
+        val context = LocalContext.current
+
         val entity = ICalEntity().apply {
             this.property = ICalObject.createJournal("MySummary")
             //this.property.dtstart = System.currentTimeMillis()
@@ -202,8 +207,8 @@ fun DetailsCardCollections_read() {
             Category(3, 1, "This is a very long category", null, null),
         )
         entity.property.color = Color.Blue.toArgb()
+        entity.ICalCollection = ICalCollection.createLocalCollection(context).apply { this.displayName = "Test" }
 
-        val context = LocalContext.current
 
         DetailsCardCollections(
             iCalObject = entity.property,
