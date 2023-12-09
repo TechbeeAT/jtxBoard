@@ -285,6 +285,8 @@
     <string name="search_notes">Doorzoek notities</string>
     <string name="search_todos">Zoek taken</string>
     <string name="filter">"Filter"</string>
+    <string name="visibility">"Zichtbaarheid"</string>
+    <string name="order">"Volgorde"</string>
     <string name="sync_now">"Sync nu"</string>
     <string name="due">"Vervalt"</string>
     <string name="completed">"Voltooid"</string>
@@ -386,6 +388,8 @@ Dank u!"</string>
     <string name="back">"Terug"</string>
     <string name="details">"Details"</string>
     <string name="date">"Datum"</string>
+    <string name="summary_description">"Samenvatting/beschrijving"</string>
+    <string name="status_classification_priority">"Status/Classificatie/Prioriteit"</string>
     <string name="timezone">"Tijdzone"</string>
     <string name="not_set2">"Niet ingesteld"</string>
     <string name="invert_selection">"Selectie omkeren"</string>

@@ -285,6 +285,8 @@
     <string name="search_notes">Notizen durchsuchen</string>
     <string name="search_todos">Aufgaben durchsuchen</string>
     <string name="filter">"Filter"</string>
+    <string name="visibility">"Sichtbarkeit"</string>
+    <string name="order">"Reihenfolge"</string>
     <string name="sync_now">"Jetzt synchronisieren"</string>
     <string name="due">"Fällig"</string>
     <string name="completed">"Fertiggestellt"</string>
@@ -387,6 +389,8 @@ Danke!"</string>
     <string name="back">"Zurück"</string>
     <string name="details">"Details"</string>
     <string name="date">"Datum"</string>
+    <string name="summary_description">"Zusammenfassung/Beschreibung"</string>
+    <string name="status_classification_priority">"Status/Klassifizierung/Priorität"</string>
     <string name="timezone">"Zeitzone"</string>
     <string name="not_set2">"Nicht gesetzt"</string>
     <string name="invert_selection">"Auswahl umkehren"</string>
