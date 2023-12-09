@@ -664,8 +664,8 @@ enum class OrderBy(@StringRes val stringResource: Int) {
         return when(this) {
             START_VTODO -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
             START_VJOURNAL -> "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
-            DUE -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DUE IS NULL, $COLUMN_DUE ${sortOrder.name} "
-            COMPLETED -> "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED ${sortOrder.name} "
+            DUE -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100), $COLUMN_DUE IS NULL, $COLUMN_DUE ${sortOrder.name} "
+            COMPLETED -> "IFNULL($COLUMN_COMPLETED, 0) ${sortOrder.name} "
             CREATED -> "$COLUMN_CREATED ${sortOrder.name} "
             LAST_MODIFIED -> "$COLUMN_LAST_MODIFIED ${sortOrder.name} "
             SUMMARY -> "UPPER($COLUMN_SUMMARY) ${sortOrder.name} "
