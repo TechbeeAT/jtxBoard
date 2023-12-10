@@ -71,6 +71,15 @@ object DateTimeUtils {
         return zonedDateTime.format(formatter)
     }
 
+    fun convertLongToShortDateString(date: Long?, timezone: String?): String {
+        if (date == null || date == 0L)
+            return ""
+        val zonedDateTime =
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+        return zonedDateTime.format(formatter)
+    }
+
     fun convertLongToMediumDateShortTimeString(date: Long?, timezone: String?): String {
         return convertLongToMediumDateString(date, timezone) + if(timezone != TZ_ALLDAY) " " + convertLongToShortTimeString(date, timezone) else ""
     }
