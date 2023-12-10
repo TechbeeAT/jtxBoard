@@ -529,6 +529,7 @@ Dank u!"</string>
     <string name="settings_select_language_system">"Systeemstandaard"</string>
     <string name="filter_special">"Speciale filters"</string>
     <string name="filter_presets">"Standaardfilters"</string>
+    <string name="filter_presets_edit_info">"Instellingen in het filtermenu in de lijstweergave toevoegen, bijwerken en verwijderen."</string>
     <string name="filter_any">"Elke"</string>
     <string name="filter_all">"Alle"</string>
     <string name="filter_none">"Geen"</string>
