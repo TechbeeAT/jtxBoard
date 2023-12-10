@@ -433,9 +433,9 @@ fun ListOptionsFilter(
                 label = {
                     var text = if(module == Module.TODO) stringResource(id = R.string.started) else stringResource(id = R.string.date)
                     text += ": "
-                    text += listSettings.filterStartRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, "UTC")}  ?: "..."
+                    text += listSettings.filterStartRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
                     text += " - "
-                    text += listSettings.filterStartRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, "UTC")}  ?: "..."
+                    text += listSettings.filterStartRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
                     Text(text)
                 }
             )
@@ -449,9 +449,9 @@ fun ListOptionsFilter(
                     label = {
                         var text = stringResource(id = R.string.due)
                         text += ": "
-                        text += listSettings.filterDueRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, "UTC")}  ?: "..."
+                        text += listSettings.filterDueRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
                         text += " - "
-                        text += listSettings.filterDueRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, "UTC")}  ?: "..."
+                        text += listSettings.filterDueRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
                         Text(text)
                     }
                 )
@@ -463,9 +463,9 @@ fun ListOptionsFilter(
                     label = {
                         var text = stringResource(id = R.string.completed)
                         text += ": "
-                        text += listSettings.filterCompletedRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, "UTC")} ?: "..."
+                        text += listSettings.filterCompletedRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)} ?: "..."
                         text += " - "
-                        text += listSettings.filterCompletedRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, "UTC")}  ?: "..."
+                        text += listSettings.filterCompletedRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
                         Text(text)
                     }
                 )
