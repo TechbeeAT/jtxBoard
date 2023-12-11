@@ -293,7 +293,7 @@
     <string name="progress">"Прогресс"</string>
     <string name="categories">"Категория"</string>
     <string name="subtasks">"Подзадачи"</string>
-    <string name="linked_parents">"Привязанные род. записи"</string>
+    <string name="linked_parents">"Родительские записи"</string>
     <string name="priority_7_low">"7 - Пониженный"</string>
     <string name="priority_8_lower">"8 - Низкий"</string>
     <string name="priority_9_lowest">"9 - Минимальный"</string>
