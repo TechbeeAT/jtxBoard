@@ -64,6 +64,14 @@ class ListSettings {
     var isFilterNoCompletedDateSet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoCategorySet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoResourceSet: MutableState<Boolean> = mutableStateOf(false)
+
+    var filterStartRangeStart: MutableState<Long?> = mutableStateOf(null)
+    var filterStartRangeEnd: MutableState<Long?> = mutableStateOf(null)
+    var filterDueRangeStart: MutableState<Long?> = mutableStateOf(null)
+    var filterDueRangeEnd: MutableState<Long?> = mutableStateOf(null)
+    var filterCompletedRangeStart: MutableState<Long?> = mutableStateOf(null)
+    var filterCompletedRangeEnd: MutableState<Long?> = mutableStateOf(null)
+
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
     var newEntryText: MutableState<String> = mutableStateOf("")    // newEntryText is not saved!
     var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
@@ -124,6 +132,14 @@ class ListSettings {
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
         private const val PREFS_FILTER_START_WITHIN_7_DAYS = "prefsFilterStartWithin7Days"
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
+
+        private const val PREFS_FILTER_START_RANGE_START = "prefsFilterStartRangeStart"
+        private const val PREFS_FILTER_START_RANGE_END = "prefsFilterStartRangeEnd"
+        private const val PREFS_FILTER_DUE_RANGE_START = "prefsFilterDueRangeStart"
+        private const val PREFS_FILTER_DUE_RANGE_END = "prefsFilterDueRangeEnd"
+        private const val PREFS_FILTER_COMPLETED_RANGE_START = "prefsFilterCompletedRangeStart"
+        private const val PREFS_FILTER_COMPLETED_RANGE_END = "prefsFilterCompletedRangeEnd"
+
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
         private const val PREFS_FLAT_VIEW = "prefsFlatView"
@@ -174,6 +190,13 @@ class ListSettings {
             isFilterNoCompletedDateSet.value = prefs.getBoolean(PREFS_FILTER_NO_COMPLETED_DATE_SET, false)
             isFilterNoCategorySet.value = prefs.getBoolean(PREFS_FILTER_NO_CATEGORY_SET, false)
             isFilterNoResourceSet.value = prefs.getBoolean(PREFS_FILTER_NO_RESOURCE_SET, false)
+
+            filterStartRangeStart.value = prefs.getLong(PREFS_FILTER_START_RANGE_START, 0L).takeIf { it != 0L }
+            filterStartRangeEnd.value = prefs.getLong(PREFS_FILTER_START_RANGE_END, 0L).takeIf { it != 0L }
+            filterDueRangeStart.value = prefs.getLong(PREFS_FILTER_DUE_RANGE_START, 0L).takeIf { it != 0L }
+            filterDueRangeEnd.value = prefs.getLong(PREFS_FILTER_DUE_RANGE_END, 0L).takeIf { it != 0L }
+            filterCompletedRangeStart.value = prefs.getLong(PREFS_FILTER_COMPLETED_RANGE_START, 0L).takeIf { it != 0L }
+            filterCompletedRangeEnd.value = prefs.getLong(PREFS_FILTER_COMPLETED_RANGE_END, 0L).takeIf { it != 0L }
 
             //searchOrganizers =
             searchCategories.addAll(prefs.getStringSet(PREFS_CATEGORIES, emptySet())?.toList() ?: emptyList())
@@ -238,6 +261,13 @@ class ListSettings {
             isFilterNoCategorySet.value = listWidgetConfig.isFilterNoCategorySet
             isFilterNoResourceSet.value = listWidgetConfig.isFilterNoResourceSet
 
+            filterStartRangeStart.value = listWidgetConfig.filterStartRangeStart
+            filterStartRangeEnd.value = listWidgetConfig.filterStartRangeEnd
+            filterDueRangeStart.value = listWidgetConfig.filterDueRangeStart
+            filterDueRangeEnd.value = listWidgetConfig.filterDueRangeEnd
+            filterCompletedRangeStart.value = listWidgetConfig.filterCompletedRangeStart
+            filterCompletedRangeEnd.value = listWidgetConfig.filterCompletedRangeEnd
+
             searchCategories.addAll(listWidgetConfig.searchCategories)
             searchCategoriesAnyAllNone.value = listWidgetConfig.searchCategoriesAnyAllNone
             searchResources.addAll(listWidgetConfig.searchResources)
@@ -292,6 +322,25 @@ class ListSettings {
             putBoolean(PREFS_FILTER_NO_COMPLETED_DATE_SET, isFilterNoCompletedDateSet.value)
             putBoolean(PREFS_FILTER_NO_CATEGORY_SET, isFilterNoCategorySet.value)
             putBoolean(PREFS_FILTER_NO_RESOURCE_SET, isFilterNoResourceSet.value)
+
+            filterStartRangeStart.value?.let {
+                putLong(PREFS_FILTER_START_RANGE_START, it)  }
+                ?: remove(PREFS_FILTER_START_RANGE_START)
+            filterStartRangeEnd.value?.let {
+                putLong(PREFS_FILTER_START_RANGE_END, it)  }
+                ?: remove(PREFS_FILTER_START_RANGE_END)
+            filterDueRangeStart.value?.let {
+                putLong(PREFS_FILTER_DUE_RANGE_START, it)  }
+                ?: remove(PREFS_FILTER_DUE_RANGE_START)
+            filterDueRangeEnd.value?.let {
+                putLong(PREFS_FILTER_DUE_RANGE_END, it)  }
+                ?: remove(PREFS_FILTER_DUE_RANGE_END)
+            filterCompletedRangeStart.value?.let {
+                putLong(PREFS_FILTER_COMPLETED_RANGE_START, it)  }
+                ?: remove(PREFS_FILTER_COMPLETED_RANGE_START)
+            filterCompletedRangeEnd.value?.let {
+                putLong(PREFS_FILTER_COMPLETED_RANGE_END, it)  }
+                ?: remove(PREFS_FILTER_COMPLETED_RANGE_END)
 
             putString(PREFS_ORDERBY, orderBy.value.name)
             putString(PREFS_SORTORDER, sortOrder.value.name)
@@ -363,6 +412,13 @@ class ListSettings {
         isFilterNoCompletedDateSet.value = false
         isFilterNoCategorySet.value = false
         isFilterNoResourceSet.value = false
+
+        filterStartRangeStart.value = null
+        filterStartRangeEnd.value = null
+        filterDueRangeStart.value = null
+        filterDueRangeEnd.value = null
+        filterCompletedRangeStart.value = null
+        filterCompletedRangeEnd.value = null
     }
 
     fun getLastUsedCollectionId(prefs: SharedPreferences) = prefs.getLong(PREFS_LAST_COLLECTION, 0L)
@@ -394,4 +450,10 @@ class ListSettings {
                 || isFilterNoCompletedDateSet.value
                 || isFilterNoCategorySet.value
                 || isFilterNoResourceSet.value
+                || filterStartRangeStart.value != null
+                || filterStartRangeEnd.value != null
+                || filterDueRangeStart.value != null
+                || filterDueRangeEnd.value != null
+                || filterCompletedRangeStart.value != null
+                || filterCompletedRangeEnd.value != null
 }

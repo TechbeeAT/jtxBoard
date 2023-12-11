@@ -57,9 +57,11 @@ import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
+import at.techbee.jtx.ui.reusable.dialogs.DateRangePickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.DeleteFilterPresetDialog
 import at.techbee.jtx.ui.reusable.dialogs.SaveListSettingsPresetDialog
 import at.techbee.jtx.ui.reusable.elements.FilterSection
+import at.techbee.jtx.util.DateTimeUtils
 
 const val MAX_ITEMS_PER_SECTION = 5
 
@@ -88,6 +90,10 @@ fun ListOptionsFilter(
     val extendedStatuses by extendedStatusesLive.observeAsState(initial = emptyList())
     var showSaveListSettingsPresetDialog by rememberSaveable { mutableStateOf(false) }
 
+    var showFilterDateRangeStartDialog by rememberSaveable { mutableStateOf(false) }
+    var showFilterDateRangeDueDialog by rememberSaveable { mutableStateOf(false) }
+    var showFilterDateRangeCompletedDialog by rememberSaveable { mutableStateOf(false) }
+
     if(showSaveListSettingsPresetDialog) {
         val currentListSettingData = StoredListSettingData.fromListSettings(listSettings)
         val currentListSetting = storedListSettings.firstOrNull { it.module == module && it.storedListSettingData == currentListSettingData } ?:
@@ -97,6 +103,49 @@ fun ListOptionsFilter(
             storedListSettings = storedListSettings,
             onConfirm = { newStoredListSetting ->  onSaveStoredListSetting(newStoredListSetting) },
             onDismiss = { showSaveListSettingsPresetDialog = false }
+        )
+    }
+
+    if(showFilterDateRangeStartDialog) {
+        DateRangePickerDialog(
+            dateRangeStart = listSettings.filterStartRangeStart.value,
+            dateRangeEnd = listSettings.filterStartRangeEnd.value,
+            onConfirm = { start, end ->
+                listSettings.filterStartRangeStart.value = start
+                listSettings.filterStartRangeEnd.value = end
+                onListSettingsChanged()
+            },
+            onDismiss = {
+                showFilterDateRangeStartDialog = false
+            }
+        )
+    }
+    if(showFilterDateRangeDueDialog) {
+        DateRangePickerDialog(
+            dateRangeStart = listSettings.filterDueRangeStart.value,
+            dateRangeEnd = listSettings.filterDueRangeEnd.value,
+            onConfirm = { start, end ->
+                listSettings.filterDueRangeStart.value = start
+                listSettings.filterDueRangeEnd.value = end
+                onListSettingsChanged()
+            },
+            onDismiss = {
+                showFilterDateRangeDueDialog = false
+            }
+        )
+    }
+    if(showFilterDateRangeCompletedDialog) {
+        DateRangePickerDialog(
+            dateRangeStart = listSettings.filterCompletedRangeStart.value,
+            dateRangeEnd = listSettings.filterCompletedRangeEnd.value,
+            onConfirm = { start, end ->
+                listSettings.filterCompletedRangeStart.value = start
+                listSettings.filterCompletedRangeEnd.value = end
+                onListSettingsChanged()
+            },
+            onDismiss = {
+                showFilterDateRangeCompletedDialog = false
+            }
         )
     }
 
@@ -373,6 +422,52 @@ fun ListOptionsFilter(
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = R.string.list_no_dates_set)) }
+                )
+            }
+
+            FilterChip(
+                selected = listSettings.filterStartRangeStart.value != null || listSettings.filterStartRangeEnd.value != null,
+                onClick = {
+                    showFilterDateRangeStartDialog = true
+                },
+                label = {
+                    var text = if(module == Module.TODO) stringResource(id = R.string.started) else stringResource(id = R.string.date)
+                    text += ": "
+                    text += listSettings.filterStartRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                    text += " - "
+                    text += listSettings.filterStartRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                    Text(text)
+                }
+            )
+
+            if(module == Module.TODO) {
+                FilterChip(
+                    selected = listSettings.filterDueRangeStart.value != null || listSettings.filterDueRangeEnd.value != null,
+                    onClick = {
+                        showFilterDateRangeDueDialog = true
+                    },
+                    label = {
+                        var text = stringResource(id = R.string.due)
+                        text += ": "
+                        text += listSettings.filterDueRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                        text += " - "
+                        text += listSettings.filterDueRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                        Text(text)
+                    }
+                )
+                FilterChip(
+                    selected = listSettings.filterCompletedRangeStart.value != null || listSettings.filterCompletedRangeEnd.value != null,
+                    onClick = {
+                        showFilterDateRangeCompletedDialog = true
+                    },
+                    label = {
+                        var text = stringResource(id = R.string.completed)
+                        text += ": "
+                        text += listSettings.filterCompletedRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)} ?: "..."
+                        text += " - "
+                        text += listSettings.filterCompletedRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                        Text(text)
+                    }
                 )
             }
         }
