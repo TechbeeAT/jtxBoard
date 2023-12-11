@@ -150,11 +150,11 @@
     <string name="shortcut_addNote_longLabel">"Notitie toevoegen"</string>
     <string name="shortcut_addTodo_longLabel">"Taak toevoegen"</string>
     <!-- Settings fragment -->
-    <string name="settings_list">"Instellingen voor de itemlijst"</string>
+    <string name="settings_list">"Subtaken weergave"</string>
     <string name="settings_show_progress_for_subtasks">Voortgang voor subtaken weergeven</string>
     <string name="settings_show_progress_for_maintasks">Voortgang voor subtaken weergeven</string>
     <string name="settings_app">"App-instellingen"</string>
-    <string name="settings_select_mimetype_for_audio">"Mimetype voor audionotities selecteren"</string>
+    <string name="settings_select_mimetype_for_audio">"Audiotype voor audionotities"</string>
     <!-- Sync fragment -->
     <string name="sync_with_sync_app_heading">"Synchroniseren met %1$s"</string>
     <string name="sync_basic_info">"jtx Board biedt zelf geen server-synchronisatie, maar ondersteunt synchronisatie via DAVx5. Deze methode staat u toe om uw gegevens op te slaan, te back-uppen en te synchroniseren."</string>
@@ -179,8 +179,8 @@
     <string name="toast_done_tasks_deleted">"Gedane taken verwijderd (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Met dank aan"</string>
-    <string name="about_translations_basic_info">"jtx Board is een open source app die de bijdrage van de open source community waardeert. Op deze pagina willen we de inspanningen van gemeenschapsleden voor vertalingen toeschrijven."</string>
-    <string name="about_translations_contribution_info">"Als u vertalingen wilt bewerken/toevoegen of nieuwe talen wilt toevoegen aan deze app, voel je vrij om deel te nemen aan het jtx-beheerproject op het vertaalplatform Crowdin:"</string>
+    <string name="about_translations_basic_info">"jtx Board is een open source app die het deelnemen en bijdragen aan de open source community waardeert. Op deze plaats willen we de inspanningen van leden van de gemeenschap voor vertalingen vermelden."</string>
+    <string name="about_translations_contribution_info">"Als je vertalingen wilt bewerken/toevoegen of nieuwe talen wilt toevoegen aan deze app, voel je vrij om deel te nemen aan het jtx-beheerproject op het vertaalplatform Crowdin:"</string>
     <string name="about_translations_contribution_button">"Doe mee op Crowdin.com"</string>
     <string name="list_welcome_entry_journal_summary">"Gefeliciteerd, dit is je eerste logboek-item :-)"</string>
     <string name="list_welcome_entry_journal_description">"Logboekenkunnen worden gebruikt om je notities voor een specifieke datum bij te houden. Gebruik deze functionaliteit bijvoorbeeld voor protocollen, notulen, dagboekvermeldingen enzovoort. Als u deze invoer wijzigt, ziet u de opties om categorieën toe te voegen, deelnemers, bijlagen, … Voel je vrij om dit item te verwijderen wanneer je maar wilt!"</string>
@@ -285,6 +285,8 @@
     <string name="search_notes">Doorzoek notities</string>
     <string name="search_todos">Zoek taken</string>
     <string name="filter">"Filter"</string>
+    <string name="visibility">"Zichtbaarheid"</string>
+    <string name="order">"Volgorde"</string>
     <string name="sync_now">"Sync nu"</string>
     <string name="due">"Vervalt"</string>
     <string name="completed">"Voltooid"</string>
@@ -343,7 +345,7 @@
     <string name="presets_export_error">"Er is een fout opgetreden bij het opslaan van voorinstellingen"</string>
     <string name="more">"Meer"</string>
     <string name="navigation_drawer_buypro">"Koop Pro"</string>
-    <string name="settings_select_theme">"Kies thema"</string>
+    <string name="settings_select_theme">"Themakleur"</string>
     <string name="settings_select_theme_dark">"Donker"</string>
     <string name="settings_select_theme_light">"Licht"</string>
     <string name="settings_select_theme_system">"Systeemstandaard"</string>
@@ -352,7 +354,7 @@
     <string name="settings_protect_biometric_all">"Alle"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Graag authenticeren om de instellingen te wijzigen"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Gelieve te authenticeren om beschermde items te tonen!"</string>
-    <string name="settings_timezone_display">"Selecteer weergave van tijd met tijdzone"</string>
+    <string name="settings_timezone_display">"Tijdzone weergave instellen"</string>
     <string name="settings_timezone_display_local">"Toon tijd in lokale tijdzone"</string>
     <string name="settings_timezone_display_original">"Toon tijd in de oorspronkelijke tijdzone"</string>
     <string name="settings_timezone_display_local_and_original">"Toon tijd in lokale en originele tijdzone (alleen de detailweergave)"</string>
@@ -386,6 +388,8 @@ Dank u!"</string>
     <string name="back">"Terug"</string>
     <string name="details">"Details"</string>
     <string name="date">"Datum"</string>
+    <string name="summary_description">"Samenvatting/beschrijving"</string>
+    <string name="status_classification_priority">"Status/Classificatie/Prioriteit"</string>
     <string name="timezone">"Tijdzone"</string>
     <string name="not_set2">"Niet ingesteld"</string>
     <string name="invert_selection">"Selectie omkeren"</string>
@@ -470,10 +474,10 @@ Dank u!"</string>
     <string name="dialog_add_audio_entry_title">"Audio-item toevoegen"</string>
     <string name="menu_list_viewmode_compact">"Compacte weergave"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-weergave"</string>
-    <string name="settings_tasks">"Taakinstellingen"</string>
-    <string name="settings_alarms">"Alarminstellingen"</string>
-    <string name="settings_tasks_status_progress">"Taken Instellingen (status/voortgang)"</string>
-    <string name="settings_sync">"Synchroniseerinstellingen"</string>
+    <string name="settings_tasks">"Taken instellen"</string>
+    <string name="settings_alarms">"Meldingen instellen"</string>
+    <string name="settings_tasks_status_progress">"Taken voortgang instellen"</string>
+    <string name="settings_sync">"Synchronisatie instellen"</string>
     <string name="settings_default_start_date">"Stel een standaard startdatum voor taken in"</string>
     <string name="settings_default_start_timezone">"Een standaard starttijdzone voor taken instellen"</string>
     <string name="settings_default_due_date">"Stel een standaard vervaldatum voor taken in"</string>
@@ -496,17 +500,19 @@ Dank u!"</string>
     <string name="settings_progress_step_25">"Verhogen met 25 (4 stappen)"</string>
     <string name="settings_progress_step_50">"Verhogen met 50 (2 stappen)"</string>
     <string name="settings_progress_step">"Stel de stap voor de voortgangsslider in"</string>
-    <string name="settings_disable_alarms_for_readonly">"Schakel alarmen uit voor alleen-lezen verzamelingen"</string>
+    <string name="settings_disable_alarms_for_readonly">"Meldingen uit voor alleen-lezen verzamelingen"</string>
     <string name="settings_link_progress_to_subtasks">"Voortgang koppelen aan subtaken"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Hou status, voortgang &amp; voltooidstatus gesynchoniseerd"</string>
     <string name="settings_attention_experimental_feature">"Let op: Dit is een experimentele functie"</string>
     <string name="settings_create_with_current_location">"Nieuwe items maken met de huidige locatie"</string>
-    <string name="settings_sticky_alarms">"Sticky alarmen"</string>
+    <string name="settings_sticky_alarms">"Kleverige meldingen"</string>
     <string name="settings_sticky_alarms_sub">"Behoud meldingen tot klaar of uitgesteld"</string>
     <string name="settings_fullscreen_alarms">"Volledig scherm alarmen"</string>
-    <string name="settings_fullscreen_alarms_sub">"Toont alarmen op volledig scherm wanneer het apparaat is vergrendeld"</string>
-    <string name="settings_fullscreen_alarms_toast">"Gelieve toestemming te verlenen voor volledige schermmeldingen in de systeeminstellingen."</string>
-    <string name="settings_sync_on_start">"Synchroniseer bij starten app"</string>
+    <string name="settings_fullscreen_alarms_sub">"Toont meldingen op volledig scherm wanneer het apparaat is vergrendeld"</string>
+    <string name="settings_accessibility_mode">"Toegankelijkheidsmodus"</string>
+    <string name="settings_accessibility_mode_sub">"Zorgt voor minimale lettergrootte voor kleine elementen"</string>
+    <string name="settings_fullscreen_alarms_toast">"Geef toegang tot volledig scherm meldingen in de systeeminstellingen."</string>
+    <string name="settings_sync_on_start">"Bij starten app synchroniseren"</string>
     <string name="settings_sync_on_pull_refresh">"Synchroniseren bij pull-down"</string>
     <string name="sync_button_go_to_collections">"Ga naar verzamelingen"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Koop het Pro-pakket om deze functie in te schakelen."</string>
@@ -519,10 +525,11 @@ Dank u!"</string>
     <string name="menu_view_convert_to_journal">"Omzetten naar logboek"</string>
     <string name="menu_view_convert_to_note">"Converteren naar notitie"</string>
     <string name="menu_view_convert_to_task">"Omzetten naar taak"</string>
-    <string name="settings_select_language">"Taal kiezen"</string>
+    <string name="settings_select_language">"Taal"</string>
     <string name="settings_select_language_system">"Systeemstandaard"</string>
     <string name="filter_special">"Speciale filters"</string>
     <string name="filter_presets">"Standaardfilters"</string>
+    <string name="filter_presets_edit_info">"Instellingen in het filtermenu in de lijstweergave toevoegen, bijwerken en verwijderen."</string>
     <string name="filter_any">"Elke"</string>
     <string name="filter_all">"Alle"</string>
     <string name="filter_none">"Geen"</string>
@@ -543,10 +550,11 @@ Dank u!"</string>
     <string name="collections_biometric_protected_entries_locked_title">Biometrische beschermde entries vergrendeld</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Authenticeer en probeer het opnieuw</string>
     <string name="list_biometric_protected_entries_unlocked">Biometrische beschermde entries ontgrendeld</string>
-    <string name="settings_auto_alarm">"Automatisch alarm"</string>
+    <string name="settings_auto_alarm">"Automatische meldingen"</string>
     <string name="alarms_always_ondue">"Altijd bij verval"</string>
-    <string name="settings_auto_alarm_sub">"Schakel in om automatisch alarmen te maken. Kies \"Altijd bij verval\" om geen alarm aan te maken, maar om een melding te krijgen zodra een taak vervalt."</string>
-    <string name="settings_protect_biometric">"Bescherm invoergegevens met biometrie"</string>
+    <string name="alarms_always_on_save">"Altijd bij het opslaan (experimenteel)"</string>
+    <string name="settings_auto_alarm_sub">"Inschakelen voor automatische meldingen. Kies \"Altijd bij verval\" om niet een alarm aan te maken, maar een melding te krijgen zodra een taak vervalt."</string>
+    <string name="settings_protect_biometric">"Invoer met biometrie beschermen"</string>
     <string name="settings_protect_biometric_sub">"Deze functie verbergt de geselecteerde invoergegevens totdat ze zijn ontgrendeld met biometrie, maar versleutelt/ontsleutelt niet gegevens op de achtergrond."</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"Geen status"</string>
@@ -586,7 +594,7 @@ Dank u!"</string>
     <string name="widget_list_maximum_entries_reached">"Maximum aantal items in widget bereikt (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Widget bijwerken"</string>
     <string name="widget_list_opacity_warning">"Opmerking: Dit is een experimentele functie! Lagere doorzichtigheid in het kleurthema wordt mogelijk niet onmiddellijk weergegeven!"</string>
-    <string name="widget_list_color_warning">"Opmerking: Dit is een experimentele functie! Wijzigingen in het kleurthema zullen niet worden weergegeven! Kies geen kleur om terug te keren naar systeem standaard."</string>
+    <string name="widget_list_color_warning">"Opmerking: Dit is een experimentele functie! Wijzigingen in het themakleur worden niet weergegeven! Kies geen kleur voor terugkeer naar systeem standaard."</string>
     <string name="opacity">"Transparantie"</string>
     <string name="general">"Algemeen"</string>
     <string name="list_collapse">"Inklappen"</string>
@@ -599,8 +607,8 @@ Dank u!"</string>
     <string name="widget_list_show_description">"Toon beschrijving"</string>
     <string name="settings_select_theme_true_dark">"Volledig donker (AMOLED)"</string>
     <string name="settings_select_theme_contrast">"Contrast (e-Ink)"</string>
-    <string name="settings_journals">"Logboekinstellingen"</string>
-    <string name="settings_notes">"Notitie-instellingen"</string>
+    <string name="settings_journals">"Logboek instellen"</string>
+    <string name="settings_notes">"Notities instellen"</string>
     <string name="settings_default_journals_date">"Stel een standaard datum/tijd voor logboeken in"</string>
     <string name="settings_default_journals_date_previous_day">"Gisteren"</string>
     <string name="settings_default_journals_date_current_day">"Vandaag"</string>

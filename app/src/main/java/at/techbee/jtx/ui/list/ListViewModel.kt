@@ -63,6 +63,7 @@ import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
@@ -186,6 +187,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
             isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value,
             isFilterNoDueDateSet = listSettings.isFilterNoDueDateSet.value,
             isFilterNoCompletedDateSet = listSettings.isFilterNoCompletedDateSet.value,
+            filterStartRangeStart = listSettings.filterStartRangeStart.value,
+            filterStartRangeEnd = listSettings.filterStartRangeEnd.value,
+            filterDueRangeStart = listSettings.filterDueRangeStart.value,
+            filterDueRangeEnd = listSettings.filterDueRangeEnd.value,
+            filterCompletedRangeStart = listSettings.filterCompletedRangeStart.value,
+            filterCompletedRangeEnd = listSettings.filterCompletedRangeEnd.value,
             isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value,
             isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value,
             searchText = listSettings.searchText.value,
@@ -492,6 +499,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val newId = database.insertICalObject(icalObject)
+                icalObject.id = newId
 
                 categories.forEach {
                     it.icalObjectId = newId
@@ -517,6 +525,10 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 sqlConstraintException.value = true
             }
             onChangeDone()
+
+            // trigger alarm immediately if setting is active
+            if(icalObject.getModuleFromString() == Module.TODO && SettingsStateHolder(_application).settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
+                NotificationPublisher.triggerImmediateAlarm(icalObject, _application)
         }
     }
 
@@ -658,8 +670,8 @@ enum class OrderBy(@StringRes val stringResource: Int) {
         return when(this) {
             START_VTODO -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
             START_VJOURNAL -> "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
-            DUE -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DUE IS NULL, $COLUMN_DUE ${sortOrder.name} "
-            COMPLETED -> "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED ${sortOrder.name} "
+            DUE -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100), $COLUMN_DUE IS NULL, $COLUMN_DUE ${sortOrder.name} "
+            COMPLETED -> "IFNULL($COLUMN_COMPLETED, 0) ${sortOrder.name} "
             CREATED -> "$COLUMN_CREATED ${sortOrder.name} "
             LAST_MODIFIED -> "$COLUMN_LAST_MODIFIED ${sortOrder.name} "
             SUMMARY -> "UPPER($COLUMN_SUMMARY) ${sortOrder.name} "

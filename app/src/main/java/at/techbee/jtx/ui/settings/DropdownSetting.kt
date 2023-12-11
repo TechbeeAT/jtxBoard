@@ -130,7 +130,8 @@ enum class DropdownSetting(
             DropdownSettingOption.AUTO_ALARM_OFF,
             DropdownSettingOption.AUTO_ALARM_ON_START,
             DropdownSettingOption.AUTO_ALARM_ON_DUE,
-            DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_DUE
+            DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_DUE,
+            DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE
         ),
         default = DropdownSettingOption.AUTO_ALARM_OFF
     ),

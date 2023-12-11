@@ -1,5 +1,7 @@
 package at.techbee.benchmark
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.benchmark.macro.*
 import androidx.benchmark.macro.junit4.MacrobenchmarkRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -30,14 +32,20 @@ class StartupBenchmark {
     @get:Rule
     val benchmarkRule = MacrobenchmarkRule()
 
+    @RequiresApi(Build.VERSION_CODES.N)
     @Test fun startupCompilationNone() = startup(CompilationMode.None())
+    @RequiresApi(Build.VERSION_CODES.N)
     @Test fun startupCompilationPartial() = startup(CompilationMode.Partial())
 
+    @RequiresApi(Build.VERSION_CODES.N)
     @Test fun startupAndGoToDetailCompilationNone() = startupAndGoToDetail(CompilationMode.None())
+    @RequiresApi(Build.VERSION_CODES.N)
     @Test fun startupAndGoToDetailCompilationPartial() = startupAndGoToDetail(CompilationMode.Partial())
 
 
+    @RequiresApi(Build.VERSION_CODES.N)
     @Test fun startupAndGoToDetailAndEditCompilationNone() = startupAndGoToDetailAndEdit(CompilationMode.None())
+    @RequiresApi(Build.VERSION_CODES.N)
     @Test fun startupAndGoToDetailAndEditCompilationPartial() = startupAndGoToDetailAndEdit(CompilationMode.Partial())
 
     private fun startup(compilationMode: CompilationMode) = benchmarkRule.measureRepeated(

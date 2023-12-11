@@ -285,6 +285,8 @@
     <string name="search_notes">Поиск заметок</string>
     <string name="search_todos">Поиск задач</string>
     <string name="filter">"Фильтр"</string>
+    <string name="visibility">"Отображение"</string>
+    <string name="order">"Сортировка"</string>
     <string name="sync_now">"Синхронизировать"</string>
     <string name="due">"Дата завершения"</string>
     <string name="completed">"Дата выполнения"</string>
@@ -293,7 +295,7 @@
     <string name="progress">"Прогресс"</string>
     <string name="categories">"Категория"</string>
     <string name="subtasks">"Подзадачи"</string>
-    <string name="linked_parents">"Привязанные род. записи"</string>
+    <string name="linked_parents">"Родительские записи"</string>
     <string name="priority_7_low">"7 - Пониженный"</string>
     <string name="priority_8_lower">"8 - Низкий"</string>
     <string name="priority_9_lowest">"9 - Минимальный"</string>
@@ -353,9 +355,9 @@
     <string name="settings_protect_biometric_info_on_settings_unlock">"Авторизуйтесь, чтобы изменить эту настройку!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Авторизуйтесь, чтобы показать защищенные записи!"</string>
     <string name="settings_timezone_display">"Отображение времени в часовом поясе"</string>
-    <string name="settings_timezone_display_local">"Показывать время по местному часовому поясу"</string>
-    <string name="settings_timezone_display_original">"Показывать время по указанному часовому поясу"</string>
-    <string name="settings_timezone_display_local_and_original">"Показывать время по местному и указанному часовым поясам (только в детальном просмотре записи)"</string>
+    <string name="settings_timezone_display_local">"Местный часовой пояс"</string>
+    <string name="settings_timezone_display_original">"Указанный часовой пояс"</string>
+    <string name="settings_timezone_display_local_and_original">"Местный и указанный часовые пояса (только в детальном просмотре записи)"</string>
     <string name="donate_dialog_title">"Вам нравится jtx Board?"</string>
     <string name="donate_dialog_message">"Разработка приложения – непростая вещь, и его обслуживание и поддержка – тяжелая работа. Если вам нравится наш проект, вы можете поддержать его пожертвованием :-)
 Спасибо большое!"</string>
@@ -386,6 +388,8 @@
     <string name="back">"Назад"</string>
     <string name="details">"Подробности"</string>
     <string name="date">"Дата"</string>
+    <string name="summary_description">"Название/Описание"</string>
+    <string name="status_classification_priority">"Статус/Классификация/Приоритет"</string>
     <string name="timezone">"Часовой пояс"</string>
     <string name="not_set2">"Не установлено"</string>
     <string name="invert_selection">"Инвертировать выбранное"</string>
@@ -505,6 +509,8 @@
     <string name="settings_sticky_alarms_sub">"Уведомление находится в шторке, пока не отмечено как выполненное или отложенное"</string>
     <string name="settings_fullscreen_alarms">"Полноэкранные напоминания"</string>
     <string name="settings_fullscreen_alarms_sub">"Показывает напоминания во весь экран, когда устройство заблокировано"</string>
+    <string name="settings_accessibility_mode">"Специальные возможности"</string>
+    <string name="settings_accessibility_mode_sub">"Увеличить размер шрифта для мелких элементов"</string>
     <string name="settings_fullscreen_alarms_toast">"Пожалуйста, предоставьте разрешение на полноэкранные оповещения в настройках системы."</string>
     <string name="settings_sync_on_start">"Синхронизировать при запуске"</string>
     <string name="settings_sync_on_pull_refresh">"Синхронизировать при свайпе вниз"</string>
@@ -546,6 +552,7 @@
     <string name="list_biometric_protected_entries_unlocked">Защищенные биометрией записи разблокированы</string>
     <string name="settings_auto_alarm">"Автоматическое напоминание"</string>
     <string name="alarms_always_ondue">"Всегда по завершению"</string>
+    <string name="alarms_always_on_save">"Всегда при сохранении (экспериментально)"</string>
     <string name="settings_auto_alarm_sub">"Активируйте, чтобы напоминания создавались автоматически. Выберите \"Всегда по завершению\", чтобы получать уведомления каждый раз, когда наступает дата завершения задачи."</string>
     <string name="settings_protect_biometric">"Защита записей с помощью биометрии"</string>
     <string name="settings_protect_biometric_sub">"Эта функция скрывает выбранные записи, пока они не будут разблокированы с помощью биометрии, но не шифрует/дешифрует данные в фоновом режиме."</string>

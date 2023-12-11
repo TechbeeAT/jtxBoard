@@ -337,6 +337,12 @@ data class ICal4List(
             isFilterNoStartDateSet: Boolean = false,
             isFilterNoDueDateSet: Boolean = false,
             isFilterNoCompletedDateSet: Boolean = false,
+            filterStartRangeStart: Long? = null,
+            filterStartRangeEnd: Long? = null,
+            filterDueRangeStart: Long? = null,
+            filterDueRangeEnd: Long? = null,
+            filterCompletedRangeStart: Long? = null,
+            filterCompletedRangeEnd: Long? = null,
             isFilterNoCategorySet: Boolean = false,
             isFilterNoResourceSet: Boolean = false,
             searchText: String? = null,
@@ -487,6 +493,14 @@ data class ICal4List(
 
             if (dateQuery.isNotEmpty())
                 queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
+
+            // DATE RANGE
+            if(filterStartRangeStart != null || filterStartRangeEnd != null)
+                queryString += " AND ($COLUMN_DTSTART BETWEEN ${filterStartRangeStart?:Long.MIN_VALUE} AND ${filterStartRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
+            if(filterDueRangeStart != null || filterDueRangeEnd != null)
+                queryString += " AND ($COLUMN_DUE BETWEEN ${filterDueRangeStart?:Long.MIN_VALUE} AND ${filterDueRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
+            if(filterCompletedRangeStart != null || filterCompletedRangeEnd != null)
+                queryString += " AND ($COLUMN_DTSTART BETWEEN ${filterCompletedRangeStart?:Long.MIN_VALUE} AND ${filterCompletedRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
 
             //CLASSIFICATION
             if (searchClassification.isNotEmpty()) {

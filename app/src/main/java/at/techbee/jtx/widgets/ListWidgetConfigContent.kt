@@ -268,6 +268,14 @@ fun ListWidgetConfigContent(
                                     isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value
                                     isFilterNoDueDateSet = listSettings.isFilterNoDueDateSet.value
                                     isFilterNoCompletedDateSet = listSettings.isFilterNoCompletedDateSet.value
+
+                                    filterStartRangeStart = listSettings.filterStartRangeStart.value
+                                    filterStartRangeEnd = listSettings.filterStartRangeEnd.value
+                                    filterDueRangeStart = listSettings.filterDueRangeStart.value
+                                    filterDueRangeEnd = listSettings.filterDueRangeEnd.value
+                                    filterCompletedRangeStart = listSettings.filterCompletedRangeStart.value
+                                    filterCompletedRangeEnd = listSettings.filterCompletedRangeEnd.value
+
                                     isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value
                                     isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value
                                 }
@@ -345,6 +353,14 @@ data class ListWidgetConfig(
     var isFilterNoStartDateSet: Boolean = false,
     var isFilterNoDueDateSet: Boolean = false,
     var isFilterNoCompletedDateSet: Boolean = false,
+
+    var filterStartRangeStart: Long? = null,
+    var filterStartRangeEnd: Long? = null,
+    var filterDueRangeStart: Long? = null,
+    var filterDueRangeEnd: Long? = null,
+    var filterCompletedRangeStart: Long? = null,
+    var filterCompletedRangeEnd: Long? = null,
+
     var isFilterNoCategorySet: Boolean = false,
     var isFilterNoResourceSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!

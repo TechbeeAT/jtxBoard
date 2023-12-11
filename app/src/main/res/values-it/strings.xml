@@ -502,6 +502,8 @@ Grazie!"</string>
     <string name="settings_sticky_alarms_sub">"Mantieni le notifiche fino al termine o al rinvio"</string>
     <string name="settings_fullscreen_alarms">"Allarmi a schermo intero"</string>
     <string name="settings_fullscreen_alarms_sub">"Mostra gli allarmi a schermo intero quando il dispositivo è bloccato"</string>
+    <string name="settings_accessibility_mode">"Modalità accessibilità"</string>
+    <string name="settings_accessibility_mode_sub">"Assicura la dimensione minima dei caratteri per piccoli elementi"</string>
     <string name="settings_fullscreen_alarms_toast">"Si prega di concedere l'autorizzazione di notifica a schermo intero nelle impostazioni di sistema."</string>
     <string name="settings_sync_on_start">"Sincronizzazione all'avvio dell'app"</string>
     <string name="settings_sync_on_pull_refresh">"Sincronizza al pull down"</string>

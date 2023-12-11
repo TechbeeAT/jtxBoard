@@ -118,6 +118,7 @@
     <string name="edit_recur_x_times">"times"</string>
     <string name="edit_recur_toast_requires_start_date">"Recurrence requires a start-date to be set!"</string>
     <string name="edit_datepicker_dialog_select_date">"Select date"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Select date range"</string>
     <string name="edit_datepicker_dialog_add_time">"Add time"</string>
     <string name="edit_datepicker_dialog_edit_time">"Edit time"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Add timezone"</string>
@@ -296,6 +297,8 @@
     <string name="search_notes">Search notes</string>
     <string name="search_todos">Search tasks</string>
     <string name="filter">"Filter"</string>
+    <string name="visibility">"Visibility"</string>
+    <string name="order">"Order"</string>
     <string name="sync_now">"Sync now"</string>
     <string name="due">"Due"</string>
     <string name="completed">"Completed"</string>
@@ -399,6 +402,8 @@ Thank you!"</string>
     <string name="back">"Back"</string>
     <string name="details">"Details"</string>
     <string name="date">"Date"</string>
+    <string name="summary_description">"Summary/Description"</string>
+    <string name="status_classification_priority">"Status/Classification/Priority"</string>
     <string name="timezone">"Timezone"</string>
     <string name="not_set2">"Not set"</string>
     <string name="invert_selection">"Invert selection"</string>
@@ -565,6 +570,7 @@ Thank you!"</string>
     <string name="list_biometric_protected_entries_unlocked">Biometric protected entries unlocked</string>
     <string name="settings_auto_alarm">"Automatic alarm"</string>
     <string name="alarms_always_ondue">"Always on due"</string>
+    <string name="alarms_always_on_save">"Always on save (experimental)"</string>
     <string name="settings_auto_alarm_sub">"Turn on to automatically create alarms. Choose \"Always on due\" to not create an alarm but to get notified in any case when a task is due."</string>
     <string name="settings_protect_biometric">"Protect entries with biometrics"</string>
     <string name="settings_protect_biometric_sub">"This function hides the selected entries until they are unlocked with biometrics, but does not encrypt/decrypt data in the background."</string>

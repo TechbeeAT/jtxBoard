@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.glance.appwidget.updateAll
@@ -159,6 +160,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
             originalEntry = database.getSync(icalObjectId)  // store original entry for revert option
         }
+
+        //remove notification (if not sticky)
+        if(!settingsStateHolder.settingStickyAlarms.value)
+            NotificationManagerCompat.from(_application).cancel(icalObjectId.toInt())
     }
 
     fun updateSelectFromAllListQuery(searchText: String, modules: List<Module>, sameCollection: Boolean, sameAccount: Boolean) {

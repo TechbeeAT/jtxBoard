@@ -90,6 +90,14 @@ data class StoredListSettingData(
     var isFilterNoStartDateSet: Boolean = false,
     var isFilterNoDueDateSet: Boolean = false,
     var isFilterNoCompletedDateSet: Boolean = false,
+
+    var filterStartRangeStart: Long? = null,
+    var filterStartRangeEnd: Long? = null,
+    var filterDueRangeStart: Long? = null,
+    var filterDueRangeEnd: Long? = null,
+    var filterCompletedRangeStart: Long? = null,
+    var filterCompletedRangeEnd: Long? = null,
+
     var isFilterNoCategorySet: Boolean = false,
     var isFilterNoResourceSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!
@@ -133,6 +141,12 @@ data class StoredListSettingData(
                 isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value,
                 isFilterNoDueDateSet = listSettings.isFilterNoDueDateSet.value,
                 isFilterNoCompletedDateSet = listSettings.isFilterNoCompletedDateSet.value,
+                filterStartRangeStart = listSettings.filterStartRangeStart.value,
+                filterStartRangeEnd = listSettings.filterStartRangeEnd.value,
+                filterDueRangeStart = listSettings.filterDueRangeStart.value,
+                filterDueRangeEnd = listSettings.filterDueRangeEnd.value,
+                filterCompletedRangeStart = listSettings.filterCompletedRangeStart.value,
+                filterCompletedRangeEnd = listSettings.filterCompletedRangeEnd.value,
                 isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value,
                 isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value
             )
@@ -173,6 +187,14 @@ data class StoredListSettingData(
         listSettings.isFilterNoStartDateSet.value = isFilterNoStartDateSet
         listSettings.isFilterNoDueDateSet.value = isFilterNoDueDateSet
         listSettings.isFilterNoCompletedDateSet.value = isFilterNoCompletedDateSet
+
+        listSettings.filterStartRangeStart.value = filterStartRangeStart
+        listSettings.filterStartRangeEnd.value = filterStartRangeEnd
+        listSettings.filterDueRangeStart.value = filterDueRangeStart
+        listSettings.filterDueRangeEnd.value = filterDueRangeEnd
+        listSettings.filterCompletedRangeStart.value = filterCompletedRangeStart
+        listSettings.filterCompletedRangeEnd.value = filterCompletedRangeEnd
+
         listSettings.isFilterNoCategorySet.value = isFilterNoCategorySet
         listSettings.isFilterNoResourceSet.value = isFilterNoResourceSet
     }

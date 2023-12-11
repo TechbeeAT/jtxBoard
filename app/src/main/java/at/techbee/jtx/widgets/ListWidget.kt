@@ -97,6 +97,12 @@ class ListWidget : GlanceAppWidget() {
                     isFilterNoStartDateSet = listWidgetConfig.isFilterNoStartDateSet,
                     isFilterNoDueDateSet = listWidgetConfig.isFilterNoDueDateSet,
                     isFilterNoCompletedDateSet = listWidgetConfig.isFilterNoCompletedDateSet,
+                    filterStartRangeStart = listWidgetConfig.filterStartRangeStart,
+                    filterStartRangeEnd = listWidgetConfig.filterStartRangeEnd,
+                    filterDueRangeStart = listWidgetConfig.filterDueRangeStart,
+                    filterDueRangeEnd = listWidgetConfig.filterDueRangeEnd,
+                    filterCompletedRangeStart = listWidgetConfig.filterCompletedRangeStart,
+                    filterCompletedRangeEnd = listWidgetConfig.filterCompletedRangeEnd,
                     isFilterNoCategorySet = listWidgetConfig.isFilterNoCategorySet,
                     isFilterNoResourceSet = listWidgetConfig.isFilterNoResourceSet,
                     flatView = listWidgetConfig.flatView,  // always true in Widget, we handle the flat view in the code

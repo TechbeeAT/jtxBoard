@@ -13,54 +13,32 @@ jobs:
         api-level: [ 31 ]
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: true
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
-      - uses: gradle/gradle-build-action@v2
+          
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2.9.0
 
-      - name: Enable KVM group perms
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
+      - name: Grant Permissions to gradlew
+        run: chmod +x gradlew
 
-      - name: Cache AVD and APKs
-        uses: actions/cache@v3
-        id: avd-cache
+      - name: Build app and benchmark
+        run: ./gradlew :app:assembleBenchmark # change the 'app' with your app module's name
+        
+      - name: Clean Managed Devices
+        run: ./gradlew cleanManagedDevices --unused-only
+
+      # Generates Baseline Profile
+      - name: Generate Baseline Profile
+        run: ./gradlew generateBaselineProfile -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile -Pandroid.experimental.testOptions.managedDevices.setupTimeoutMinutes=20 -Dorg.gradle.workers.max=4
+
+      # Create Pull Request
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
         with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
-
-      - name: Create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          arch: x86_64
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
-
-      - name: Run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          arch: x86_64
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: ./gradlew app:connectedGplayDebugAndroidTest
-
-      - name: Archive results
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: |
-            app/build/reports
+          commit-message: "Generate baseline profiles"
+          title: "Generate baseline profiles"
+          delete-branch: true
+          branch: actions/baseline-profiles

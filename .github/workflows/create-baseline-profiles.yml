@@ -32,6 +32,9 @@ jobs:
 
       # Operating system where the job gets to be executed
       runs-on: ubuntu-latest-4-cores
+      strategy:
+        matrix:
+          api-level: [ 31 ]
 
       # Job steps
       steps:
@@ -40,7 +43,7 @@ jobs:
         - uses: actions/checkout@v4
 
         # Sets java up
-        - uses: actions/setup-java@v3
+        - uses: actions/setup-java@v4
           with:
             distribution: temurin
             java-version: 17

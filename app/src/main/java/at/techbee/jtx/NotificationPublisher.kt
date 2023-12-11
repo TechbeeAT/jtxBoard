@@ -174,5 +174,31 @@ class NotificationPublisher : BroadcastReceiver() {
             SyncUtil.notifyContentObservers(context)
             scheduleNextNotifications(context)
         }
+
+        fun triggerImmediateAlarm(iCalObject: ICalObject, context: Context) {
+            if((iCalObject.summary.isNullOrEmpty() && iCalObject.description.isNullOrEmpty())
+                || iCalObject.percent == 100
+                || iCalObject.status == Status.COMPLETED.status
+                )
+                return
+
+            val notification = Alarm.createNotification(
+                iCalObject.id,
+                0L,
+                iCalObject.summary,
+                iCalObject.description,
+                false,   // can never be read only
+                MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
+                context
+            )
+            val notificationManager = NotificationManagerCompat.from(context)
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                notificationManager.notify(iCalObject.id.toInt(), notification)
+            }
+        }
     }
 }
