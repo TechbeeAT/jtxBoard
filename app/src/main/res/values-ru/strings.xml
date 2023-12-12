@@ -110,6 +110,7 @@
     <string name="edit_recur_x_times">"раз"</string>
     <string name="edit_recur_toast_requires_start_date">"Установите дату начала, чтобы активировать повторения!"</string>
     <string name="edit_datepicker_dialog_select_date">"Выбрать дату"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Диапазон дат"</string>
     <string name="edit_datepicker_dialog_add_time">"Время"</string>
     <string name="edit_datepicker_dialog_edit_time">"Изменить время"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Часовой пояс"</string>
