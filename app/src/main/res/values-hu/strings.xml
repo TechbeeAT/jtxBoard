@@ -110,6 +110,7 @@
     <string name="edit_recur_x_times">"alkalommal"</string>
     <string name="edit_recur_toast_requires_start_date">"Az ismétlés beállításához előbb adjon meg kezdési dátumot!"</string>
     <string name="edit_datepicker_dialog_select_date">"Dátum kiválasztása"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Dátumtartomány kiválasztása"</string>
     <string name="edit_datepicker_dialog_add_time">"Idő hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_time">"Idő módosítása"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Időzóna hozzáadása"</string>
