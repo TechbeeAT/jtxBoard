@@ -110,6 +110,7 @@
     <string name="edit_recur_x_times">"keer"</string>
     <string name="edit_recur_toast_requires_start_date">"Herhaling vereist een startdatum!"</string>
     <string name="edit_datepicker_dialog_select_date">"Kies datum"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Selecteer een datumbereik"</string>
     <string name="edit_datepicker_dialog_add_time">"Tijd toevoegen"</string>
     <string name="edit_datepicker_dialog_edit_time">"Bewerk tijd"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Tijdzone toevoegen"</string>
