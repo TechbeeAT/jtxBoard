@@ -110,6 +110,7 @@
     <string name="edit_recur_x_times">"vegades"</string>
     <string name="edit_recur_toast_requires_start_date">"Cal establir una data d'inici a la recurrència!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleccionar data"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Selecciona el rang de dates"</string>
     <string name="edit_datepicker_dialog_add_time">"Afegir temps"</string>
     <string name="edit_datepicker_dialog_edit_time">"Editar temps"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Afegir fus horari"</string>
@@ -261,6 +262,7 @@
     <string name="status">"Estat"</string>
     <string name="classification">"Classificació"</string>
     <string name="category">"Categoria"</string>
+    <string name="resource">"Recurs"</string>
     <string name="priority">"Prioritat"</string>
     <string name="readyonly">"Només lectura"</string>
     <string name="upload_pending">"Pujada pendent"</string>
@@ -284,6 +286,8 @@
     <string name="search_notes">Cerca notes</string>
     <string name="search_todos">Cerca tasques</string>
     <string name="filter">"Filtra"</string>
+    <string name="visibility">"Visibilitat"</string>
+    <string name="order">"Ordre"</string>
     <string name="sync_now">"Sincronitza ara"</string>
     <string name="due">"Venciment"</string>
     <string name="completed">"Completat"</string>
@@ -307,6 +311,7 @@
     <string name="list_without_start_date">"Sense data d'inici"</string>
     <string name="list_without_due_date">"Sense data de venciment"</string>
     <string name="list_without_completed_date">"Sense data de compleció"</string>
+    <string name="list_show_only_search_matching_subentries">"Mostra només cerques que quadren amb sub-entrades"</string>
     <string name="filter_order_by">"Ordenar per"</string>
     <string name="filter_asc">"Ascendent"</string>
     <string name="filter_desc">"Ordre descendent"</string>
@@ -350,6 +355,10 @@
     <string name="settings_protect_biometric_all">"Totes"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Per favor, autentica't per a canviar aquest ajust!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Per favor, autentica't per a mostrar entrades protegides!"</string>
+    <string name="settings_timezone_display">"Mostra l'hora amb zona horària"</string>
+    <string name="settings_timezone_display_local">"Mostra l'hora a la zona horària local"</string>
+    <string name="settings_timezone_display_original">"Mostra l'hora a la zona horària original"</string>
+    <string name="settings_timezone_display_local_and_original">"Mostra l'hora a la zona horària actual i original (només a la vista detallada)"</string>
     <string name="donate_dialog_title">"T'agrada jtx Board?"</string>
     <string name="donate_dialog_message">"El desenvolupament d'una aplicació és un tema complex, i tant el manteniment com el mateix desenvolupament és un treball dur. Si t'agrada l'aplicació, i t'agradaria que no es detingués el desenvolupament, per favor, considera una donació :-)
 Gràcies!"</string>
@@ -381,6 +390,8 @@ Gràcies!"</string>
     <string name="back">"Enrere"</string>
     <string name="details">"Detalls"</string>
     <string name="date">"Data"</string>
+    <string name="summary_description">"Sumari/Descripció"</string>
+    <string name="status_classification_priority">"Estat/Classificació/Prioritat"</string>
     <string name="timezone">"Fus horari"</string>
     <string name="not_set2">"No establert"</string>
     <string name="invert_selection">"Inverteix la selecció"</string>
