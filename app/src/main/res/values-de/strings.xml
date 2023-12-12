@@ -110,6 +110,7 @@
     <string name="edit_recur_x_times">"Mal"</string>
     <string name="edit_recur_toast_requires_start_date">"Wiederholungen benötigen ein Start-Datum!"</string>
     <string name="edit_datepicker_dialog_select_date">"Datum auswählen"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Zeitraum auswählen"</string>
     <string name="edit_datepicker_dialog_add_time">"Zeit hinzufügen"</string>
     <string name="edit_datepicker_dialog_edit_time">"Zeit bearbeiten"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Zeitzone hinzufügen"</string>
