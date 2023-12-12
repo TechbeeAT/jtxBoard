@@ -110,6 +110,7 @@
     <string name="edit_recur_x_times">"φορές"</string>
     <string name="edit_recur_toast_requires_start_date">"Η επανάληψη απαιτεί να οριστεί μια ημερομηνία έναρξης!"</string>
     <string name="edit_datepicker_dialog_select_date">"Επιλογή ημερομηνίας"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Επιλέξτε εύρος ημερομηνιών"</string>
     <string name="edit_datepicker_dialog_add_time">"Προσθήκη ώρας"</string>
     <string name="edit_datepicker_dialog_edit_time">"Επεξεργασία ώρας"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Προσθήκη ζώνης ώρας"</string>
