@@ -110,6 +110,7 @@
     <string name="edit_recur_x_times">"fois"</string>
     <string name="edit_recur_toast_requires_start_date">"La récurrence nécessite qu'une date de début soit fixée !"</string>
     <string name="edit_datepicker_dialog_select_date">"Sélectionner la date"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Sélectionner une plage de dates"</string>
     <string name="edit_datepicker_dialog_add_time">"Ajouter du temps"</string>
     <string name="edit_datepicker_dialog_edit_time">"Modifier l'heure"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Ajouter un fuseau horaire"</string>
