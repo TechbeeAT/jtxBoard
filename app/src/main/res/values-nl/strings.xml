@@ -440,10 +440,10 @@ Dank u!"</string>
     <string name="edit_subnote_add_helper">"Subnotitie toevoegen"</string>
     <string name="edit_subtask">"Subtaak aanpassen"</string>
     <string name="edit_subnote">"Subnotitie bewerken"</string>
-    <string name="edit_fragment_app_notification_permission_message">"jtx Board toont meldingen wanneer alarmen vervallen. Geef toestemming om deze functie te gebruiken."</string>
+    <string name="edit_fragment_app_notification_permission_message">"jtx Board toont berichten als meldingen vervallen. Geef toestemming om deze functie te gebruiken."</string>
     <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board kan je locatie gebruiken om automatisch naar je locatie te zoomen bij het gebruik van kaarten. Geef grove-locatie-machtiging als je deze functie wilt gebruiken."</string>
     <!-- alarms -->
-    <string name="alarms_alarm">"Alarm"</string>
+    <string name="alarms_alarm">"Melding"</string>
     <string name="alarms_before">"voor"</string>
     <string name="alarms_after">"na"</string>
     <string name="alarms_start">"start"</string>
@@ -501,15 +501,15 @@ Dank u!"</string>
     <string name="settings_progress_step_25">"Verhogen met 25 (4 stappen)"</string>
     <string name="settings_progress_step_50">"Verhogen met 50 (2 stappen)"</string>
     <string name="settings_progress_step">"Stel de stap voor de voortgangsslider in"</string>
-    <string name="settings_disable_alarms_for_readonly">"Meldingen uit voor alleen-lezen verzamelingen"</string>
+    <string name="settings_disable_alarms_for_readonly">"Schakel meldingen uit voor alleen-lezen verzamelingen"</string>
     <string name="settings_link_progress_to_subtasks">"Voortgang koppelen aan subtaken"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Hou status, voortgang &amp; voltooidstatus gesynchoniseerd"</string>
     <string name="settings_attention_experimental_feature">"Let op: Dit is een experimentele functie"</string>
     <string name="settings_create_with_current_location">"Nieuwe items maken met de huidige locatie"</string>
     <string name="settings_sticky_alarms">"Kleverige meldingen"</string>
-    <string name="settings_sticky_alarms_sub">"Behoud meldingen tot klaar of uitgesteld"</string>
-    <string name="settings_fullscreen_alarms">"Volledig scherm alarmen"</string>
-    <string name="settings_fullscreen_alarms_sub">"Toont meldingen op volledig scherm wanneer het apparaat is vergrendeld"</string>
+    <string name="settings_sticky_alarms_sub">"Behoud berichten tot klaar of uitgesteld"</string>
+    <string name="settings_fullscreen_alarms">"Volledig scherm meldingen"</string>
+    <string name="settings_fullscreen_alarms_sub">"Meldingen tonen op volledig scherm als het apparaat is vergrendeld"</string>
     <string name="settings_accessibility_mode">"Toegankelijkheidsmodus"</string>
     <string name="settings_accessibility_mode_sub">"Zorgt voor minimale lettergrootte voor kleine elementen"</string>
     <string name="settings_fullscreen_alarms_toast">"Geef toegang tot volledig scherm meldingen in de systeeminstellingen."</string>
@@ -554,7 +554,7 @@ Dank u!"</string>
     <string name="settings_auto_alarm">"Automatische meldingen"</string>
     <string name="alarms_always_ondue">"Altijd bij verval"</string>
     <string name="alarms_always_on_save">"Altijd bij het opslaan (experimenteel)"</string>
-    <string name="settings_auto_alarm_sub">"Inschakelen voor automatische meldingen. Kies \"Altijd bij verval\" om niet een alarm aan te maken, maar een melding te krijgen zodra een taak vervalt."</string>
+    <string name="settings_auto_alarm_sub">"Inschakelen voor automatische meldingen. Kies \"Steeds bij verval\" om niet een melding aan te maken, maar bericht te krijgen telkens als een taak vervalt."</string>
     <string name="settings_protect_biometric">"Invoer met biometrie beschermen"</string>
     <string name="settings_protect_biometric_sub">"Deze functie verbergt de geselecteerde invoergegevens totdat ze zijn ontgrendeld met biometrie, maar versleutelt/ontsleutelt niet gegevens op de achtergrond."</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -648,8 +648,8 @@ Dank u!"</string>
     <string name="geofence_radius_feet">"Radius %1$d ft"</string>
     <string name="geofence_selection">"Geomuur: %1$s"</string>
     <string name="geofence_options">"Geofence opties"</string>
-    <string name="geofence_missing_permission_info">"jtx Board heeft de rechten nodig om toegang te krijgen tot je achtergrondlocatie en om je meldingen te sturen. Werk de locatie-machtiging bij naar 'Altijd toestaan' en geef de meldingsmachtiging om een melding te krijgen wanneer je de Geofence bereikt!"</string>
+    <string name="geofence_missing_permission_info">"jtx Board heeft de rechten nodig om toegang te krijgen tot je achtergrondlocatie en om meldingen te sturen. Werk de toegang tot locatie bij naar 'Altijd toestaan' en geef toegang tot meldingen om bericht te krijgen als je de Geofence bereikt!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board kan je een melding geven wanneer je in de buurt bent van de opgegeven coördinaten. Stel de locatie-toestemming in op 'Altijd toestaan' en geef de meldingstoestemming om deze functie te gebruiken."</string>
     <string name="geofence_notification_summary">"Geofence geactiveerd"</string>
-    <string name="exact_alarm_permission_dialog_message">"jtx Board heeft toestemming nodig om exacte meldingen te plannen, anders kunnen meldingen vertraagd worden. Geef deze toestemming om deze functie te kunnen gebruiken."</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board heeft de toegang nodig om exacte meldingen te plannen, anders kunnen waarschuwingsberichten vertraagd worden. Geef deze toegang om de functie te kunnen gebruiken."</string>
 </resources>
