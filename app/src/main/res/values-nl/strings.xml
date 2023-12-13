@@ -164,7 +164,7 @@
     <string name="sync_congratulations">"Gefeliciteerd! :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"We hebben %1$s gedetecteerd op uw telefoon."</string>
     <string name="sync_setup_instructions">"Installatie-instructies"</string>
-    <string name="sync_check_out_sync_app">"Bekijk %1$s!"</string>
+    <string name="sync_check_out_sync_app">"Controleer %1$s!"</string>
     <string name="sync_sync_app_not_found">"We hebben %1$s niet gedetecteerd op uw telefoon."</string>
     <string name="sync_more_about_sync_app">"Meer over %1$s"</string>
     <string name="sync_download_sync_app">"%1$s downloaden"</string>
@@ -275,7 +275,7 @@
     <string name="relatedto">"Gerelateerd aan"</string>
     <string name="comments">"Opmerkingen"</string>
     <string name="attachments">"Bijlagen"</string>
-    <string name="alarms">"Alarmen"</string>
+    <string name="alarms">"Meldingen"</string>
     <string name="recurrence">"Herhaling"</string>
     <string name="recurrence_exceptions">"Uitzonderingen"</string>
     <string name="recurrence_additions">"Toevoegingen"</string>
