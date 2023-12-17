@@ -132,7 +132,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                             component = Component.VTODO,
                             hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
                             orderBy = detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED,
-                            sortOrder = detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC
+                            sortOrder = detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.DESC
                         )
                     )
                 }
@@ -145,7 +145,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                             component = Component.VJOURNAL,
                             hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
                             orderBy = detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED,
-                            sortOrder = detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC
+                            sortOrder = detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.DESC
                         )
                     )
                 }

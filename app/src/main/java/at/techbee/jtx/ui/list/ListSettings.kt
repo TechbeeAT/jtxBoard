@@ -44,9 +44,9 @@ class ListSettings {
     var groupBy: MutableState<GroupBy?> = mutableStateOf(null)
     var showOnlySearchMatchingSubentries: MutableState<Boolean> = mutableStateOf(false)
     var subtasksOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
-    var subtasksSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var subtasksSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.DESC)
     var subnotesOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
-    var subnotesSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var subnotesSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.DESC)
     var isExcludeDone: MutableState<Boolean> = mutableStateOf(false)
     var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
@@ -217,9 +217,9 @@ class ListSettings {
             showOnlySearchMatchingSubentries.value = prefs.getBoolean(PREFS_SHOW_ONLY_SEARCH_MATCHING_SUBENTRIES, false)
 
             subtasksOrderBy.value = prefs.getString(PREFS_SUBTASKS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
-            subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+            subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.DESC
             subnotesOrderBy.value = prefs.getString(PREFS_SUBNOTES_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
-            subnotesSortOrder.value = prefs.getString(PREFS_SUBNOTES_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+            subnotesSortOrder.value = prefs.getString(PREFS_SUBNOTES_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.DESC
 
             viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)

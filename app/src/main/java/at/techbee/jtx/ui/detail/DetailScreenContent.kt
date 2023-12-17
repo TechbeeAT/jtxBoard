@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
@@ -43,6 +44,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -99,6 +101,7 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import com.arnyminerz.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -170,6 +173,7 @@ fun DetailScreenContent(
     linkProgressToSubtasks: Boolean,
     setCurrentLocation: Boolean,
     markdownState: MutableState<MarkdownState>,
+    scrollToSectionState: MutableState<DetailsScreenSection?>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     saveEntry: () -> Unit,
@@ -348,9 +352,21 @@ fun DetailScreenContent(
         saveEntry()
     }
 
-    val detailElementModifier = Modifier.padding(top = 8.dp).fillMaxWidth()
+    val detailElementModifier = Modifier
+        .padding(top = 8.dp)
+        .fillMaxWidth()
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+
+    if(scrollToSectionState.value != null && detailSettings.detailSettingOrder.contains(scrollToSectionState.value)) {
+        scope.launch {
+            listState.animateScrollToItem(detailSettings.detailSettingOrder.indexOf(scrollToSectionState.value))
+            scrollToSectionState.value = null
+        }
+    }
 
     LazyColumn(
+        state = listState,
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -1055,6 +1071,7 @@ fun DetailScreenContent_JOURNAL() {
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
+            scrollToSectionState = remember { mutableStateOf(null) },
             allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
             allCategoriesLive = MutableLiveData(emptyList()),
             allResourcesLive = MutableLiveData(emptyList()),
@@ -1125,6 +1142,7 @@ fun DetailScreenContent_TODO_editInitially() {
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
+            scrollToSectionState = remember { mutableStateOf(null) },
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
@@ -1187,6 +1205,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
+            scrollToSectionState = remember { mutableStateOf(null) },
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
@@ -1243,6 +1262,7 @@ fun DetailScreenContent_failedLoading() {
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
+            scrollToSectionState = remember { mutableStateOf(null) },
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
