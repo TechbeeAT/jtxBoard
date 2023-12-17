@@ -118,6 +118,52 @@ fun DetailsCardSubnotes(
                 
             }
 
+
+            AnimatedVisibility(isEditMode.value) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = newSubnoteText,
+                        trailingIcon = {
+                            AnimatedVisibility(newSubnoteText.isNotEmpty()) {
+                                IconButton(onClick = {
+                                    if (newSubnoteText.isNotEmpty())
+                                        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+                                    newSubnoteText = ""
+                                }) {
+                                    Icon(
+                                        Icons.Outlined.EditNote,
+                                        stringResource(id = R.string.edit_subnote_add_helper)
+                                    )
+                                }
+                            }
+                        },
+                        label = { Text(stringResource(id = R.string.edit_subnote_add_helper)) },
+                        onValueChange = { newValue -> newSubnoteText = newValue },
+                        isError = newSubnoteText.isNotEmpty(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(bottom = 8.dp),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Sentences,
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            if (newSubnoteText.isNotEmpty())
+                                onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+                            newSubnoteText = ""
+                        })
+                    )
+                    IconButton(onClick = { showAddAudioNoteDialog = true }) {
+                        Icon(Icons.Outlined.Mic, stringResource(id = R.string.view_add_audio_note))
+                    }
+                }
+            }
+
             AnimatedVisibility(subnotes.isNotEmpty()) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -157,50 +203,6 @@ fun DetailsCardSubnotes(
                                     }
                                 )
                         )
-                    }
-                }
-            }
-
-            AnimatedVisibility(isEditMode.value) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    OutlinedTextField(
-                        value = newSubnoteText,
-                        trailingIcon = {
-                            AnimatedVisibility(newSubnoteText.isNotEmpty()) {
-                                IconButton(onClick = {
-                                    if (newSubnoteText.isNotEmpty())
-                                        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
-                                    newSubnoteText = ""
-                                }) {
-                                    Icon(
-                                        Icons.Outlined.EditNote,
-                                        stringResource(id = R.string.edit_subnote_add_helper)
-                                    )
-                                }
-                            }
-                        },
-                        label = { Text(stringResource(id = R.string.edit_subnote_add_helper)) },
-                        onValueChange = { newValue -> newSubnoteText = newValue },
-                        isError = newSubnoteText.isNotEmpty(),
-                        modifier = Modifier
-                            .weight(1f),
-                        keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Sentences,
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(onDone = {
-                            if (newSubnoteText.isNotEmpty())
-                                onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
-                            newSubnoteText = ""
-                        })
-                    )
-                    IconButton(onClick = { showAddAudioNoteDialog = true }) {
-                        Icon(Icons.Outlined.Mic, stringResource(id = R.string.view_add_audio_note))
                     }
                 }
             }

@@ -105,6 +105,40 @@ fun DetailsCardSubtasks(
             }
 
 
+            AnimatedVisibility(isEditMode.value) {
+                OutlinedTextField(
+                    value = newSubtaskText,
+                    trailingIcon = {
+                        AnimatedVisibility(newSubtaskText.isNotEmpty()) {
+                            IconButton(onClick = {
+                                if(newSubtaskText.isNotEmpty())
+                                    onSubtaskAdded(ICalObject.createTask(newSubtaskText))
+                                newSubtaskText = ""
+                            }) {
+                                Icon(
+                                    Icons.Outlined.AddTask,
+                                    stringResource(id = R.string.edit_subtasks_add_helper)
+                                )
+                            }
+                        }
+                    },
+                    label = { Text(stringResource(id = R.string.edit_subtasks_add_helper)) },
+                    onValueChange = { newValue -> newSubtaskText = newValue },
+                    isError = newSubtaskText.isNotEmpty(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(0.dp, Color.Transparent)
+                        .padding(bottom = 8.dp),
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        if(newSubtaskText.isNotEmpty())
+                            onSubtaskAdded(ICalObject.createTask(newSubtaskText))
+                        newSubtaskText = ""
+                    })
+                )
+            }
+
+
             AnimatedVisibility(subtasks.isNotEmpty()) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -149,38 +183,6 @@ fun DetailsCardSubtasks(
                         )
                     }
                 }
-            }
-
-            AnimatedVisibility(isEditMode.value) {
-                OutlinedTextField(
-                    value = newSubtaskText,
-                    trailingIcon = {
-                        AnimatedVisibility(newSubtaskText.isNotEmpty()) {
-                            IconButton(onClick = {
-                                if(newSubtaskText.isNotEmpty())
-                                    onSubtaskAdded(ICalObject.createTask(newSubtaskText))
-                                newSubtaskText = ""
-                            }) {
-                                Icon(
-                                    Icons.Outlined.AddTask,
-                                    stringResource(id = R.string.edit_subtasks_add_helper)
-                                )
-                            }
-                        }
-                    },
-                    label = { Text(stringResource(id = R.string.edit_subtasks_add_helper)) },
-                    onValueChange = { newValue -> newSubtaskText = newValue },
-                    isError = newSubtaskText.isNotEmpty(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(0.dp, Color.Transparent),
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        if(newSubtaskText.isNotEmpty())
-                            onSubtaskAdded(ICalObject.createTask(newSubtaskText))
-                        newSubtaskText = ""
-                    })
-                )
             }
         }
     }
