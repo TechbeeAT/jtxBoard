@@ -10,7 +10,6 @@ package at.techbee.jtx.ui.detail
 
 import android.media.MediaPlayer
 import androidx.annotation.StringRes
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,17 +18,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.NavigateBefore
 import androidx.compose.material.icons.automirrored.outlined.NavigateNext
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -139,7 +137,6 @@ enum class DetailsScreenSection(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreenContent(
     originalICalEntity: State<ICalEntity?>,
@@ -351,15 +348,15 @@ fun DetailScreenContent(
         saveEntry()
     }
 
-    Column(
+    val detailElementModifier = Modifier.padding(top = 8.dp).fillMaxWidth()
+
+    LazyColumn(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-        detailSettings.detailSettingOrder.forEach { detailsScreenSection ->
+        items(detailSettings.detailSettingOrder)  { detailsScreenSection ->
 
             when(detailsScreenSection) {
                 DetailsScreenSection.COLLECTION -> {
@@ -373,7 +370,8 @@ fun DetailScreenContent(
                         allPossibleCollections = allPossibleCollections,
                         includeVJOURNAL = if (originalICalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
                         includeVTODO = if (originalICalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
-                        onMoveToNewCollection = onMoveToNewCollection
+                        onMoveToNewCollection = onMoveToNewCollection,
+                        modifier = detailElementModifier
                     )
                 }
                 DetailsScreenSection.DATES -> {
@@ -409,13 +407,14 @@ fun DetailScreenContent(
                             }
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
-                        toggleEditMode = { isEditMode.value = !isEditMode.value }
+                        toggleEditMode = { isEditMode.value = !isEditMode.value },
+                        modifier = detailElementModifier
                     )
                 }
 
                 DetailsScreenSection.SUMMARYDESCRIPTION -> {
-                    AnimatedVisibility(!isEditMode.value && (summary.isNotBlank() || description.text.isNotBlank())) {
-                        SelectionContainer {
+                    if(!isEditMode.value && (summary.isNotBlank() || description.text.isNotBlank())) {
+                        SelectionContainer(modifier = detailElementModifier) {
                             ElevatedCard(
                                 onClick = {
                                     if (originalICalEntity.value?.ICalCollection?.readonly == false)
@@ -460,14 +459,14 @@ fun DetailScreenContent(
                         }
                     }
 
-                    AnimatedVisibility(isEditMode.value) {
+                    if(isEditMode.value) {
                         ElevatedCard(
-                            modifier = Modifier
+                            modifier = detailElementModifier
                                 .fillMaxWidth()
                                 .testTag("benchmark:DetailSummaryCardEdit")
                         ) {
 
-                            AnimatedVisibility(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true || showAllOptions) {
+                            if(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true || showAllOptions) {
                                 OutlinedTextField(
                                     value = summary,
                                     onValueChange = {
@@ -487,7 +486,7 @@ fun DetailScreenContent(
                                 )
                             }
 
-                            AnimatedVisibility(description.text.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == true || showAllOptions) {
+                            if(description.text.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == true || showAllOptions) {
                                 OutlinedTextField(
                                     value = description,
                                     onValueChange = {
@@ -561,8 +560,8 @@ fun DetailScreenContent(
                 }
 
                 DetailsScreenSection.PROGRESS -> {
-                    AnimatedVisibility(iCalObject.module == Module.TODO.name) {
-                        ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+                    if(iCalObject.module == Module.TODO.name) {
+                        ElevatedCard(modifier = detailElementModifier.fillMaxWidth()) {
                             ProgressElement(
                                 label = null,
                                 iCalObjectId = iCalObject.id,
@@ -586,7 +585,7 @@ fun DetailScreenContent(
                 }
 
                 DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> {
-                    AnimatedVisibility(
+                    if(
                         (!isEditMode.value && (!iCalObject.status.isNullOrEmpty() || !iCalObject.xstatus.isNullOrEmpty() || !iCalObject.classification.isNullOrEmpty() || iCalObject.priority in 1..9))
                                 || (isEditMode.value
                                 && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false
@@ -626,13 +625,13 @@ fun DetailScreenContent(
                                 iCalObject.priority = newPriority
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = detailElementModifier.fillMaxWidth()
                         )
                     }
                 }
 
                 DetailsScreenSection.CATEGORIES -> {
-                    AnimatedVisibility(categories.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false || showAllOptions))) {
+                    if(categories.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false || showAllOptions))) {
                         DetailsCardCategories(
                             categories = categories,
                             storedCategories = storedCategories,
@@ -641,12 +640,13 @@ fun DetailScreenContent(
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                             },
                             allCategoriesLive = allCategoriesLive,
-                            onGoToFilteredList = goToFilteredList
+                            onGoToFilteredList = goToFilteredList,
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.PARENTS -> {
-                    AnimatedVisibility(parents.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] != false || showAllOptions))) {
+                    if(parents.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] != false || showAllOptions))) {
                         DetailsCardParents(
                             parents = parents.value,
                             isEditMode = isEditMode,
@@ -678,12 +678,13 @@ fun DetailScreenContent(
                                         Module.TODO
                                     ), Reltype.PARENT
                                 )
-                            }
+                            },
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.SUBTASKS -> {
-                    AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false || showAllOptions))) {
+                    if(subtasks.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false || showAllOptions))) {
                         DetailsCardSubtasks(
                             subtasks = subtasks.value,
                             isEditMode = isEditMode,
@@ -715,12 +716,13 @@ fun DetailScreenContent(
                                     listOf(Module.TODO),
                                     Reltype.CHILD
                                 )
-                            }
+                            },
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.SUBNOTES -> {
-                    AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] == true || showAllOptions))) {
+                    if(subnotes.value.isNotEmpty() || (isEditMode.value && originalICalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] == true || showAllOptions))) {
                         DetailsCardSubnotes(
                             subnotes = subnotes.value,
                             isEditMode = isEditMode,
@@ -755,12 +757,13 @@ fun DetailScreenContent(
                                         Module.NOTE
                                     ), Reltype.CHILD
                                 )
-                            }
+                            },
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.RESOURCES -> {
-                    AnimatedVisibility(resources.isNotEmpty() || (isEditMode.value && iCalObject.getModuleFromString() == Module.TODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] == true || showAllOptions))) {
+                    if(resources.isNotEmpty() || (isEditMode.value && iCalObject.getModuleFromString() == Module.TODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] == true || showAllOptions))) {
                         DetailsCardResources(
                             resources = resources,
                             storedResources = storedResources,
@@ -770,22 +773,24 @@ fun DetailScreenContent(
                             },
                             onGoToFilteredList = goToFilteredList,
                             allResourcesLive = allResourcesLive,
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.ATTENDEES -> {
-                    AnimatedVisibility(attendees.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] == true || showAllOptions))) {
+                    if(attendees.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] == true || showAllOptions))) {
                         DetailsCardAttendees(
                             attendees = attendees,
                             isEditMode = isEditMode.value,
                             onAttendeesUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                            }
+                            },
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.CONTACT -> {
-                    AnimatedVisibility(iCalObject.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] == true || showAllOptions))) {
+                    if(iCalObject.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] == true || showAllOptions))) {
                         DetailsCardContact(
                             initialContact = iCalObject.contact ?: "",
                             isEditMode = isEditMode.value,
@@ -793,11 +798,12 @@ fun DetailScreenContent(
                                 iCalObject.contact = newContact.ifEmpty { null }
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                             },
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.URL -> {
-                    AnimatedVisibility(iCalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] == true || showAllOptions))) {
+                    if(iCalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] == true || showAllOptions))) {
                         DetailsCardUrl(
                             initialUrl = iCalObject.url ?: "",
                             isEditMode = isEditMode.value,
@@ -805,11 +811,12 @@ fun DetailScreenContent(
                                 iCalObject.url = newUrl.ifEmpty { null }
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                             },
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.LOCATION -> {
-                    AnimatedVisibility((iCalObject.location?.isNotEmpty() == true || (iCalObject.geoLat != null && iCalObject.geoLong != null)) || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] == true || showAllOptions))) {
+                    if((iCalObject.location?.isNotEmpty() == true || (iCalObject.geoLat != null && iCalObject.geoLong != null)) || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] == true || showAllOptions))) {
                         DetailsCardLocation(
                             initialLocation = iCalObject.location,
                             initialGeoLat = iCalObject.geoLat,
@@ -828,23 +835,25 @@ fun DetailScreenContent(
                                 iCalObject.location = newLocation.ifEmpty { null }
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                             },
-                            onGeofenceRadiusUpdatd = { iCalObject.geofenceRadius = it }
+                            onGeofenceRadiusUpdatd = { iCalObject.geofenceRadius = it },
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.COMMENTS -> {
-                    AnimatedVisibility(comments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] == true || showAllOptions))) {
+                    if(comments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] == true || showAllOptions))) {
                         DetailsCardComments(
                             comments = comments,
                             isEditMode = isEditMode.value,
                             onCommentsUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                            }
+                            },
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.ATTACHMENTS -> {
-                    AnimatedVisibility(attachments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] == true || showAllOptions))) {
+                    if(attachments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] == true || showAllOptions))) {
                         DetailsCardAttachments(
                             attachments = attachments,
                             isEditMode = isEditMode.value,
@@ -852,24 +861,26 @@ fun DetailScreenContent(
                             player = player,
                             onAttachmentsUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                            }
+                            },
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.ALARMS -> {
-                    AnimatedVisibility(alarms.isNotEmpty() || (isEditMode.value && iCalObject.module == Module.TODO.name && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] == true || showAllOptions))) {
+                    if(alarms.isNotEmpty() || (isEditMode.value && iCalObject.module == Module.TODO.name && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] == true || showAllOptions))) {
                         DetailsCardAlarms(
                             alarms = alarms,
                             icalObject = iCalObject,
                             isEditMode = isEditMode.value,
                             onAlarmsUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                            }
+                            },
+                            modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.RECURRENCE -> {
-                    AnimatedVisibility(
+                    if(
                         iCalObject.rrule != null
                                 || iCalObject.recurid != null
                                 || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] == true || (showAllOptions && iCalObject.module != Module.NOTE.name)))
@@ -896,99 +907,104 @@ fun DetailScreenContent(
                                     false
                                 )
                             },
-                            unlinkFromSeries = unlinkFromSeries
+                            unlinkFromSeries = unlinkFromSeries,
+                            modifier = detailElementModifier
                         )
                     }
                 }
             }
         }
 
+    if(isEditMode.value && !showAllOptions) {
+        item {
 
-        AnimatedVisibility(isEditMode.value && !showAllOptions) {
-
-            TextButton(
-                onClick = { showAllOptions = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.details_show_all_options))
-            }
-        }
-
-        AnimatedVisibility(!isEditMode.value) {
-            Column(
-                horizontalAlignment = Alignment.End,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text(
-                    stringResource(
-                        id = R.string.view_created_text,
-                        DateTimeUtils.convertLongToFullDateTimeString(iCalObject.created, null)
-                    ),
-                    style = MaterialTheme.typography.bodySmall,
-                    fontStyle = FontStyle.Italic
-                )
-                Text(
-                    stringResource(
-                        id = R.string.view_last_modified_text,
-                        DateTimeUtils.convertLongToFullDateTimeString(
-                            iCalObject.lastModified,
-                            null
-                        )
-                    ),
-                    style = MaterialTheme.typography.bodySmall,
-                    fontStyle = FontStyle.Italic
-                )
-            }
-        }
-
-
-        AnimatedVisibility(!isEditMode.value) {
-            val curIndex = icalObjectIdList.indexOf(originalICalEntity.value?.property?.id ?: 0)
-            if (icalObjectIdList.size > 1 && curIndex >= 0) {
-                Row(
-                    modifier = Modifier
-                        .padding(vertical = 16.dp, horizontal = 8.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                TextButton(
+                    onClick = { showAllOptions = true },
+                    modifier = detailElementModifier.fillMaxWidth()
                 ) {
+                    Text(stringResource(R.string.details_show_all_options))
+                }
+            }
+        }
 
-                    if (curIndex > 0) {
-                        IconButton(onClick = {
-                            goToDetail(
-                                icalObjectIdList[curIndex - 1],
-                                false,
-                                icalObjectIdList,
-                                true
+        if(!isEditMode.value) {
+            item {
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text(
+                        stringResource(
+                            id = R.string.view_created_text,
+                            DateTimeUtils.convertLongToFullDateTimeString(iCalObject.created, null)
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontStyle = FontStyle.Italic
+                    )
+                    Text(
+                        stringResource(
+                            id = R.string.view_last_modified_text,
+                            DateTimeUtils.convertLongToFullDateTimeString(
+                                iCalObject.lastModified,
+                                null
                             )
-                        }) {
-                            Icon(
-                                Icons.AutoMirrored.Outlined.NavigateBefore,
-                                stringResource(id = R.string.previous)
-                            )
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            }
+        }
+
+        if(!isEditMode.value) {
+            item {
+                val curIndex = icalObjectIdList.indexOf(originalICalEntity.value?.property?.id ?: 0)
+                if (icalObjectIdList.size > 1 && curIndex >= 0) {
+                    Row(
+                        modifier = Modifier
+                            .padding(vertical = 16.dp, horizontal = 8.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        if (curIndex > 0) {
+                            IconButton(onClick = {
+                                goToDetail(
+                                    icalObjectIdList[curIndex - 1],
+                                    false,
+                                    icalObjectIdList,
+                                    true
+                                )
+                            }) {
+                                Icon(
+                                    Icons.AutoMirrored.Outlined.NavigateBefore,
+                                    stringResource(id = R.string.previous)
+                                )
+                            }
+                        } else {
+                            Spacer(modifier = Modifier.size(48.dp))
                         }
-                    } else {
-                        Spacer(modifier = Modifier.size(48.dp))
-                    }
-                    Text(text = "${icalObjectIdList.indexOf(originalICalEntity.value?.property?.id ?: 0) + 1}/${icalObjectIdList.size}")
-                    if (curIndex != icalObjectIdList.lastIndex) {
-                        IconButton(onClick = {
-                            goToDetail(
-                                icalObjectIdList[curIndex + 1],
-                                false,
-                                icalObjectIdList,
-                                true
-                            )
-                        }) {
-                            Icon(
-                                Icons.AutoMirrored.Outlined.NavigateNext,
-                                stringResource(id = R.string.next)
-                            )
+                        Text(text = "${icalObjectIdList.indexOf(originalICalEntity.value?.property?.id ?: 0) + 1}/${icalObjectIdList.size}")
+                        if (curIndex != icalObjectIdList.lastIndex) {
+                            IconButton(onClick = {
+                                goToDetail(
+                                    icalObjectIdList[curIndex + 1],
+                                    false,
+                                    icalObjectIdList,
+                                    true
+                                )
+                            }) {
+                                Icon(
+                                    Icons.AutoMirrored.Outlined.NavigateNext,
+                                    stringResource(id = R.string.next)
+                                )
+                            }
+                        } else {
+                            Spacer(modifier = Modifier.size(48.dp))
                         }
-                    } else {
-                        Spacer(modifier = Modifier.size(48.dp))
                     }
                 }
             }
