@@ -10,13 +10,37 @@ package at.techbee.jtx.ui.detail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.EventRepeat
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -38,16 +62,19 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import at.techbee.jtx.util.UiUtil.asDayOfWeek
-import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
+import net.fortuna.ical4j.model.NumberList
+import net.fortuna.ical4j.model.Recur
 import net.fortuna.ical4j.model.Recur.Frequency
+import net.fortuna.ical4j.model.WeekDay
+import net.fortuna.ical4j.model.WeekDayList
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Locale
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun DetailsCardRecur(
     icalObject: ICalObject,
@@ -292,7 +319,7 @@ fun DetailsCardRecur(
                                     onDismissRequest = { frequencyExpanded = false }
                                 ) {
 
-                                    Frequency.values().reversed().forEach { frequency2select ->
+                                    Frequency.entries.reversed().forEach { frequency2select ->
                                         if(icalObject.dtstartTimezone == TZ_ALLDAY
                                             && listOf(Frequency.SECONDLY, Frequency.MINUTELY, Frequency.HOURLY).contains(frequency2select))
                                             return@forEach
@@ -552,12 +579,11 @@ fun DetailsCardRecur(
                 )
             }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            FlowRow(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
                     .padding(8.dp)
             ) {
                 if(!isEditMode && !icalObject.recurid.isNullOrEmpty()) {

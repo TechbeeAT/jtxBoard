@@ -31,8 +31,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 206050009
-        versionName "2.06.05-alpha09"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 206050010
+        versionName "2.06.05-alpha10"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Where there is love, there is life. ❤️🌈\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -164,7 +164,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
 
     // Android Annotations
-    implementation "androidx.annotation:annotation:1.7.0"
+    implementation "androidx.annotation:annotation:1.7.1"
 
     // Room dependencies
     implementation "androidx.room:room-runtime:$version_room"
@@ -248,7 +248,7 @@ dependencies {
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
-    implementation "androidx.navigation:navigation-compose:2.7.5"
+    implementation "androidx.navigation:navigation-compose:2.7.6"
     implementation "com.arnyminerz.markdowntext:markdowntext:1.3.2"
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
