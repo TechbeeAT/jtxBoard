@@ -93,7 +93,6 @@ fun AboutReleaseinfo(
                 release = release,
                 modifier = Modifier
                     .padding(top = 8.dp)
-                    .animateItemPlacement()
             )
         }
 

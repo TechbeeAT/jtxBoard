@@ -198,7 +198,6 @@ fun ListScreenCompact(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 4.dp, bottom = 4.dp)
-                                .animateItemPlacement()
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
                                     onClick = {

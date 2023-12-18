@@ -146,7 +146,6 @@ fun ListScreenGrid(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(jtxCardCornerShape)
-                        //.animateItemPlacement()
                         .combinedClickable(
                             onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
                             onLongClick = {
