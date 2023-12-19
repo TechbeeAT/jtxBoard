@@ -158,7 +158,7 @@ fun ListScreenKanban(
                     LaunchedEffect(list) {
                         val itemIndex = groupedList[column]?.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId } ?: -1
                         if (itemIndex > -1) {
-                            listState.animateScrollToItem(itemIndex)
+                            listState.scrollToItem(itemIndex)
                             scrollOnceId.postValue(null)
                         }
                     }

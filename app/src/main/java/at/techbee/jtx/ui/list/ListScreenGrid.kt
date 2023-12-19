@@ -99,7 +99,7 @@ fun ListScreenGrid(
         LaunchedEffect(list) {
             val index = list.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId }
             if (index > -1) {
-                gridState.animateScrollToItem(index)
+                gridState.scrollToItem(index)
                 scrollOnceId.postValue(null)
             }
         }
@@ -172,7 +172,7 @@ fun ListScreenGrid(
                 ) {
                     Button(
                         onClick = {
-                            scope.launch { gridState.animateScrollToItem(0) }
+                            scope.launch { gridState.scrollToItem(0) }
                         },
                         colors = ButtonDefaults.filledTonalButtonColors(),
                         modifier = Modifier.padding(8.dp).alpha(0.33f)

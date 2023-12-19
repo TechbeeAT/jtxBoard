@@ -176,7 +176,7 @@ fun ListScreenCompact(
                             LaunchedEffect(group) {
                                 val index = group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
                                 if (index > -1) {
-                                    listState.animateScrollToItem(index)
+                                    listState.scrollToItem(index)
                                     scrollOnceId.postValue(null)
                                 }
                             }
@@ -246,7 +246,7 @@ fun ListScreenCompact(
                 ) {
                     Button(
                         onClick = {
-                            scope.launch { listState.animateScrollToItem(0) }
+                            scope.launch { listState.scrollToItem(0) }
                         },
                         colors = ButtonDefaults.filledTonalButtonColors(),
                         modifier = Modifier.padding(8.dp).alpha(0.33f)
