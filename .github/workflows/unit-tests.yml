@@ -18,7 +18,7 @@ jobs:
       - name: Run lint and unit tests
         run: ./gradlew app:lintOseDebug app:testGplayDebugUnitTest
       - name: Archive results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results2
           path: |
