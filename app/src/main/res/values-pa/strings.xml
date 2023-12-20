@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board ਜਰਨਲ, ਨੋਟ ਅਤੇ ਕੰਮਾਂ ਨੂੰ ਸਿੰਕਰੋਨਾਈਜ਼ ਕਰੋ"</string>
+    <string name="app_permission_desc">"jtx ਬੋਰਡ ਦੀ ਵਿਸ਼ਾ-ਵਸਤੂ ਨੂੰ ਹੋਰਨਾਂ ਐਪਲੀਕੇਸ਼ਨਾਂ ਜਿਵੇੰ DAVx⁵ ਨਾਲ ਸਿੰਕ ਕਰੋ"</string>
+    <!-- Reusable links in different contexts -->
+    <!-- Global Strings -->
+    <string name="save">"ਸਾਂਭੋ"</string>
+    <string name="update">"ਅੱਪਡੇਟ ਕਰੋ"</string>
+    <string name="cancel">"ਰੱਦ ਕਰੋ"</string>
+    <string name="ok">"ਠੀਕ ਹੈ"</string>
+    <string name="delete">"ਮਿਟਾਓ"</string>
+    <string name="discard">"ਰੱਦ"</string>
+    <string name="dismiss">"ਖ਼ਾਰਜ ਕਰੋ"</string>
+    <string name="open">"ਖੋਲ੍ਹੋ"</string>
+    <string name="cont">"ਜਾਰੀ ਰੱਖੋ"</string>
+    <string name="website">"ਵੈੱਬਸਾਈਟ"</string>
+    <string name="latitude">"ਵਿਥਕਾਰ"</string>
+    <string name="longitude">"ਲੰਬਕਾਰ"</string>
+    <string name="unlink">"ਅਨਲਿੰਕ ਕਰੋ"</string>
+    <string name="off">"ਬੰਦ"</string>
+    <string name="permissions">"ਮਨਜ਼ੂਰੀਆਂ"</string>
+    <string name="current_location">"ਮੌਜੂਦਾ ਟਿਕਾਣਾ"</string>
+    <string name="toolbar_text_add_journal">"ਜਰਨਲ ਸ਼ਾਮਲ ਕਰੋ"</string>
+    <string name="toolbar_text_add_note">"ਨੋਟ ਸ਼ਾਮਲ ਕਰੋ"</string>
+    <string name="toolbar_text_add_task">"ਕਾਰਜ ਸ਼ਾਮਲ ਕਰੋ"</string>
+    <string name="toast_sync_requested">"ਸਿੰਕਰੋਨਾਈਜੇਸ਼ਨ ਦੀ ਬੇਨਤੀ ਕੀਤੀ ਗਈ"</string>
+    <string name="default_local_collection_name">"ਸਥਾਨਕ"</string>
+    <string name="default_local_account_name">"ਸਥਾਨਕ"</string>
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"ਖਰੜਾ"</string>
+    <string name="journal_status_final">"ਫਾਈਨਲ"</string>
+    <string name="journal_status_cancelled">"ਰੱਦ ਕੀਤਾ ਗਿਆ"</string>
+    <string name="todo_status_needsaction">"ਕਾਰਵਾਈ ਦੀ ਮੰਗ ਕਰਦਾ ਹੈ"</string>
+    <string name="todo_status_completed">"ਮੁਕੰਮਲ"</string>
+    <!-- Navigation Drawer -->
+    <!-- fragment_ical_list -->
+    <!-- fragment_ical_view -->
+    <!-- fragment_ical_edit -->
+    <!-- fragment_about -->
+    <!-- menus -->
+    <!-- Shortcuts -->
+    <!-- Settings fragment -->
+    <!-- Sync fragment -->
+    <!-- Donate fragment -->
+    <!-- sync content provider -->
+    <!-- Permissions -->
+    <!-- alarms -->
+    <!-- fragment_collections -->
+    <!-- Fuzzy -->
+    <!-- Buy Pro fragment -->
+    <!-- alarms -->
+    <!-- fragment_ical_list -->
+    <!-- Strings for values in properties of an ICalObject -->
+</resources>

@@ -110,6 +110,7 @@
     <string name="edit_recur_x_times">"lần"</string>
     <string name="edit_recur_toast_requires_start_date">"Sự lặp lại yêu cầu phải thiết lập ngày bắt đầu!"</string>
     <string name="edit_datepicker_dialog_select_date">"Chọn ngày"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Chọn phạm vi ngày tháng"</string>
     <string name="edit_datepicker_dialog_add_time">"Thêm thời gian"</string>
     <string name="edit_datepicker_dialog_edit_time">"Chỉnh giờ"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Thêm múi giờ"</string>

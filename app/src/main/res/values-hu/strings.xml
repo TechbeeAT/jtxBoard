@@ -2,12 +2,12 @@
 <resources>
     <!-- App title and fragment titles -->
     <string name="app_permission_label">"jtx Board: naplók, jegyzetek és feladatok szinkronizálása"</string>
-    <string name="app_permission_desc">"jtx Board bejegyzések szinkronizálása DAVx⁵-el vagy hasonló alkalmazással"</string>
+    <string name="app_permission_desc">"jtx Board bejegyzések szinkronizálása DAVx⁵-tel vagy hasonló alkalmazással"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Mentés"</string>
     <string name="update">"Frissítés"</string>
-    <string name="cancel">"Mégsem"</string>
+    <string name="cancel">"Mégse"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Törlés"</string>
     <string name="discard">"Elvetés"</string>
@@ -29,28 +29,28 @@
     <string name="default_local_account_name">"Helyi"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Piszkozat"</string>
-    <string name="journal_status_final">"Végső"</string>
+    <string name="journal_status_final">"Végleges"</string>
     <string name="journal_status_cancelled">"Megszakítva"</string>
     <string name="todo_status_needsaction">"Intézkedés szükséges"</string>
-    <string name="todo_status_completed">"Befejezett"</string>
+    <string name="todo_status_completed">"Befejezve"</string>
     <string name="todo_status_inprocess">"Folyamatban"</string>
     <string name="todo_status_cancelled">"Megszakítva"</string>
     <string name="classification_public">"Nyilvános"</string>
     <string name="classification_private">"Privát"</string>
     <string name="classification_confidential">"Bizalmas"</string>
     <string name="attendee_role_chair">"Vezető"</string>
-    <string name="attendee_role_required_participant">"Meghívott"</string>
-    <string name="attendee_role_optional_participant">"Opcionális meghívott"</string>
+    <string name="attendee_role_required_participant">"Kötelező résztvevő"</string>
+    <string name="attendee_role_optional_participant">"Nem kötelező résztvevő"</string>
     <string name="attendee_role_non_participant">"Csak értesítés"</string>
     <!-- Navigation Drawer -->
-    <string name="navigation_drawer_open">"Navigációs sáv megnyitása"</string>
-    <string name="navigation_drawer_close">"Navigációs sáv bezárása"</string>
-    <string name="navigation_drawer_board">"Board"</string>
+    <string name="navigation_drawer_open">"Navigációs fiók megnyitása"</string>
+    <string name="navigation_drawer_close">"Navigációs fiók bezárása"</string>
+    <string name="navigation_drawer_board">"Tábla"</string>
     <string name="navigation_drawer_synchronization">"Szinkronizálás"</string>
-    <string name="navigation_drawer_about">"Névjegy / Licencek"</string>
+    <string name="navigation_drawer_about">"Névjegy / licencek"</string>
     <string name="navigation_drawer_subtitle">"naplók, jegyzetek és feladatok"</string>
     <string name="navigation_drawer_settings">"Beállítások"</string>
-    <string name="navigation_drawer_news_updates">"Hírek &amp; frissítések"</string>
+    <string name="navigation_drawer_news_updates">"Hírek és aktualitások"</string>
     <string name="navigation_drawer_external_links">"Külső hivatkozások"</string>
     <string name="navigation_drawer_website">"Honlap"</string>
     <string name="navigation_drawer_support">"Támogatás"</string>
@@ -76,28 +76,28 @@
     <string name="list_expand">"Kibontás"</string>
     <string name="list_dialog_delete_selected_title">Törli a kijelölt bejegyzéseket?</string>
     <string name="list_dialog_delete_selected_message">Ez a művelet törli az összes kiválasztott bejegyzést (%1$d). Biztos, hogy folytatni szeretné? Ez a művelet nem vonható vissza!</string>
-    <string name="list_quickadd_dialog_summary_description_hint">"Összefoglaló/Leírás"</string>
-    <string name="list_quickadd_dialog_summary_description_helper">"Az első sort összefoglalóként, a többit leírásként lesz értelmezve. A hashtageket kategóriaként értelmezzük (pl. #kategória)."</string>
+    <string name="list_quickadd_dialog_summary_description_hint">"Összefoglaló/leírás"</string>
+    <string name="list_quickadd_dialog_summary_description_helper">"Az első sor összefoglalóként, a többi leírásként lesz értelmezve. A hashtagek kategóriánként vannak értelmezve (például #kategória)."</string>
     <string name="list_item_recurring">"Ismétlődő bejegyzés"</string>
     <string name="list_item_edited_recurring">"Ismétlődő bejegyzés szerkesztve"</string>
-    <string name="list_scroll_to_top">"Ugrás az elejére"</string>
+    <string name="list_scroll_to_top">"Görgetés a tetejére"</string>
     <!-- fragment_ical_view -->
-    <string name="view_fragment_audio_permission">"Engedélyek"</string>
+    <string name="view_fragment_audio_permission">"Alkalmazásengedély"</string>
     <string name="view_fragment_audio_permission_message">"A hangfelvételt készítéséhez és a hangfelismerés funkció használatához szükség van erre az engedélyre. Kérjük, adja meg az engedélyt, ha szeretné használni ezeket a funkciókat."</string>
-    <string name="view_reccurrence_note_is_exception">"Ez az elem kivételes tagja egy ismétlődő bejegyzésnek."</string>
+    <string name="view_reccurrence_note_is_exception">"Ez az elem egy ismétlődő bejegyzés kivétele."</string>
     <string name="view_feedback_linked_notes">"Visszajelzés / csatolt jegyzet"</string>
-    <string name="view_subtask_of">"Szülő"</string>
-    <string name="view_linked_note_of">"Szülő:"</string>
+    <string name="view_subtask_of">"Alfeladata ennek:"</string>
+    <string name="view_linked_note_of">"Csatolt jegyzete ennek:"</string>
     <string name="view_add_audio_note">"Hangfelvétel hozzáadása"</string>
     <string name="view_created_text">"Létrehozva: %1$s"</string>
     <string name="view_last_modified_text">"Utoljára módosítva: %1$s"</string>
     <string name="view_due">"Határidő"</string>
-    <string name="view_completed">"Befejezett"</string>
+    <string name="view_completed">"Befejezve"</string>
     <string name="view_started">"Kezdés"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_comment_helper">"Megjegyzés hozzáadása"</string>
     <string name="edit_attachment_button_text">"Melléklet hozzáadása"</string>
-    <string name="edit_take_picture_button_text">"Fotó készítése"</string>
+    <string name="edit_take_picture_button_text">"Fénykép készítése"</string>
     <string name="edit_add_link_button_text">"Webes hivatkozás hozzáadása"</string>
     <string name="edit_subtasks_add_helper">"Alfeladat hozzáadása"</string>
     <string name="detail_top_app_bar_quick_add_subtask">"Alfeladat gyors hozzáadása"</string>
