@@ -2,12 +2,12 @@
 <resources>
     <!-- App title and fragment titles -->
     <string name="app_permission_label">"jtx Board: naplók, jegyzetek és feladatok szinkronizálása"</string>
-    <string name="app_permission_desc">"jtx Board bejegyzések szinkronizálása DAVx⁵-el vagy hasonló alkalmazással"</string>
+    <string name="app_permission_desc">"jtx Board bejegyzések szinkronizálása DAVx⁵-tel vagy hasonló alkalmazással"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Mentés"</string>
     <string name="update">"Frissítés"</string>
-    <string name="cancel">"Mégsem"</string>
+    <string name="cancel">"Mégse"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Törlés"</string>
     <string name="discard">"Elvetés"</string>
@@ -29,28 +29,28 @@
     <string name="default_local_account_name">"Helyi"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Piszkozat"</string>
-    <string name="journal_status_final">"Végső"</string>
+    <string name="journal_status_final">"Végleges"</string>
     <string name="journal_status_cancelled">"Megszakítva"</string>
     <string name="todo_status_needsaction">"Intézkedés szükséges"</string>
-    <string name="todo_status_completed">"Befejezett"</string>
+    <string name="todo_status_completed">"Befejezve"</string>
     <string name="todo_status_inprocess">"Folyamatban"</string>
     <string name="todo_status_cancelled">"Megszakítva"</string>
     <string name="classification_public">"Nyilvános"</string>
     <string name="classification_private">"Privát"</string>
     <string name="classification_confidential">"Bizalmas"</string>
     <string name="attendee_role_chair">"Vezető"</string>
-    <string name="attendee_role_required_participant">"Meghívott"</string>
-    <string name="attendee_role_optional_participant">"Opcionális meghívott"</string>
+    <string name="attendee_role_required_participant">"Kötelező résztvevő"</string>
+    <string name="attendee_role_optional_participant">"Nem kötelező résztvevő"</string>
     <string name="attendee_role_non_participant">"Csak értesítés"</string>
     <!-- Navigation Drawer -->
-    <string name="navigation_drawer_open">"Navigációs sáv megnyitása"</string>
-    <string name="navigation_drawer_close">"Navigációs sáv bezárása"</string>
-    <string name="navigation_drawer_board">"Board"</string>
+    <string name="navigation_drawer_open">"Navigációs fiók megnyitása"</string>
+    <string name="navigation_drawer_close">"Navigációs fiók bezárása"</string>
+    <string name="navigation_drawer_board">"Tábla"</string>
     <string name="navigation_drawer_synchronization">"Szinkronizálás"</string>
-    <string name="navigation_drawer_about">"Névjegy / Licencek"</string>
+    <string name="navigation_drawer_about">"Névjegy / licencek"</string>
     <string name="navigation_drawer_subtitle">"naplók, jegyzetek és feladatok"</string>
     <string name="navigation_drawer_settings">"Beállítások"</string>
-    <string name="navigation_drawer_news_updates">"Hírek &amp; frissítések"</string>
+    <string name="navigation_drawer_news_updates">"Hírek és aktualitások"</string>
     <string name="navigation_drawer_external_links">"Külső hivatkozások"</string>
     <string name="navigation_drawer_website">"Honlap"</string>
     <string name="navigation_drawer_support">"Támogatás"</string>
