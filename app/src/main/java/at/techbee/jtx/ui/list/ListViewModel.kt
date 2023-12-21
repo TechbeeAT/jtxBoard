@@ -517,6 +517,11 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 }
 
                 scrollOnceId.postValue(newId)
+
+                // trigger alarm immediately if setting is active
+                if(icalObject.getModuleFromString() == Module.TODO && SettingsStateHolder(_application).settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
+                    NotificationPublisher.triggerImmediateAlarm(icalObject, _application)
+
                 if (editAfterSaving)
                     goToEdit.postValue(newId)
             } catch (e: SQLiteConstraintException) {
@@ -525,10 +530,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 sqlConstraintException.value = true
             }
             onChangeDone()
-
-            // trigger alarm immediately if setting is active
-            if(icalObject.getModuleFromString() == Module.TODO && SettingsStateHolder(_application).settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
-                NotificationPublisher.triggerImmediateAlarm(icalObject, _application)
         }
     }
 

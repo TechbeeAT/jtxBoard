@@ -124,6 +124,8 @@ fun DetailsScreen(
     LaunchedEffect(detailViewModel.changeState.value, icalEntity.value, icalEntity.value?.property) {
         if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED) {
             detailViewModel.mutableICalObject = icalEntity.value?.property
+            detailViewModel.mutableICalObject?.summary = icalEntity.value?.property?.summary
+            detailViewModel.mutableICalObject?.description = icalEntity.value?.property?.description
             if(detailViewModel.mutableCategories.isEmpty()) detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
             if(detailViewModel.mutableResources.isEmpty()) detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
             if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
