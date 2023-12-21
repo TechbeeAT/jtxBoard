@@ -106,7 +106,7 @@ fun DetailsScreen(
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
     val scrollToSection = remember { mutableStateOf<DetailsScreenSection?>(null) }
 
-    val icalEntity = detailViewModel.icalEntity.observeAsState()
+    val icalEntity = detailViewModel.icalEntity.observeAsState(null)
 
     val seriesElement = detailViewModel.seriesElement.observeAsState(null)
     val storedCategories by detailViewModel.storedCategories.observeAsState(emptyList())
@@ -124,8 +124,6 @@ fun DetailsScreen(
     LaunchedEffect(detailViewModel.changeState.value, icalEntity.value, icalEntity.value?.property) {
         if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED) {
             detailViewModel.mutableICalObject = icalEntity.value?.property
-            detailViewModel.mutableICalObject?.summary = icalEntity.value?.property?.summary
-            detailViewModel.mutableICalObject?.description = icalEntity.value?.property?.description
             if(detailViewModel.mutableCategories.isEmpty()) detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
             if(detailViewModel.mutableResources.isEmpty()) detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
             if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
@@ -134,7 +132,6 @@ fun DetailsScreen(
             if(detailViewModel.mutableAlarms.isEmpty()) detailViewModel.mutableAlarms.addAll(icalEntity.value?.alarms ?: emptyList())
         }
     }
-
 
     BackHandler {
         navigateUp = true
@@ -483,7 +480,8 @@ fun DetailsScreen(
         content = { paddingValues ->
 
             DetailScreenContent(
-                originalICalEntity = icalEntity,
+                observedICalEntity = icalEntity,
+                initialEntity = detailViewModel.initialEntity.value,
                 iCalObject = detailViewModel.mutableICalObject,
                 categories = detailViewModel.mutableCategories,
                 resources = detailViewModel.mutableResources,
