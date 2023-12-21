@@ -112,12 +112,12 @@
     <string name="edit_datepicker_dialog_select_date">"Dátum kiválasztása"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Dátumtartomány kiválasztása"</string>
     <string name="edit_datepicker_dialog_add_time">"Idő hozzáadása"</string>
-    <string name="edit_datepicker_dialog_edit_time">"Idő módosítása"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Idő szerkesztése"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Időzóna hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Időzóna módosítása"</string>
     <string name="edit_dialog_sure_to_delete_title">"%1$s törlése?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Bejegyzés elvetése?"</string>
-    <string name="dialog_delete_done_title">"Töröljük az összes késznek jelölt feladatot?"</string>
+    <string name="dialog_delete_done_title">"Az összes késznek jelölt feladat törlése?"</string>
     <string name="dialog_delete_done_message">"Figyelem! Az alfeladatok státuszuktól függetlenül törlődnek, ha a szülőfeladatuk késznek van jelölve. Ez a művelet nem vonható vissza!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Biztosan törölni szeretné a következőt: \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Biztos, hogy el akarja vetni ezt a bejegyzést? A bejegyzés nem kerül elmentésre."</string>
@@ -151,7 +151,7 @@
     <string name="shortcut_addNote_longLabel">"Jegyzet hozzáadása"</string>
     <string name="shortcut_addTodo_longLabel">"Teendő hozzáadása"</string>
     <!-- Settings fragment -->
-    <string name="settings_list">"Bejegyzés-listák beállításai"</string>
+    <string name="settings_list">"Bejegyzéslista beállításai"</string>
     <string name="settings_show_progress_for_subtasks">Alfeladatok készültségének megjelenítése</string>
     <string name="settings_show_progress_for_maintasks">Feladatok készültségének megjelenítése</string>
     <string name="settings_app">"Alkalmazás beállításai"</string>
