@@ -27,7 +27,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -72,9 +71,10 @@ import java.time.DayOfWeek
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.Locale
+import kotlin.math.absoluteValue
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DetailsCardRecur(
     icalObject: ICalObject,
@@ -426,10 +426,12 @@ fun DetailsCardRecur(
                             AssistChip(
                                 onClick = { monthDayListExpanded = true },
                                 label = {
+                                    val monthDay = monthDayList.firstOrNull()?:1
                                     Text(
-                                        DateTimeUtils.getLocalizedOrdinalFor(
-                                            monthDayList.firstOrNull() ?: 1
-                                        )
+                                        if(monthDay < 0)
+                                            stringResource(id = R.string.edit_recur_LAST_day_of_the_month) + if(monthDay < -1) " - ${monthDay.absoluteValue-1}" else ""
+                                        else
+                                            DateTimeUtils.getLocalizedOrdinalFor(monthDay)
                                     )
 
                                     DropdownMenu(
@@ -446,6 +448,20 @@ fun DetailsCardRecur(
                                                 },
                                                 text = {
                                                     Text(DateTimeUtils.getLocalizedOrdinalFor(number))
+                                                }
+                                            )
+                                        }
+
+                                        for (number in 1..31) {
+                                            DropdownMenuItem(
+                                                onClick = {
+                                                    monthDayList.clear()
+                                                    monthDayList.add(number*(-1))
+                                                    monthDayListExpanded = false
+                                                    onRecurUpdated(buildRRule())
+                                                },
+                                                text = {
+                                                    Text(stringResource(id = R.string.edit_recur_LAST_day_of_the_month) + if(number > 1) " - ${number-1}" else "")
                                                 }
                                             )
                                         }
