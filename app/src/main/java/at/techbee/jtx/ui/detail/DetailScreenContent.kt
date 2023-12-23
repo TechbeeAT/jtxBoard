@@ -44,7 +44,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -101,7 +100,6 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import com.arnyminerz.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -363,11 +361,11 @@ fun DetailScreenContent(
         .padding(top = 8.dp)
         .fillMaxWidth()
     val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
 
-    if(scrollToSectionState.value != null && detailSettings.detailSettingOrder.contains(scrollToSectionState.value)) {
-        scope.launch {
-            listState.animateScrollToItem(detailSettings.detailSettingOrder.indexOf(scrollToSectionState.value))
+    LaunchedEffect(scrollToSectionState.value) {
+        val sectionIndex = detailSettings.detailSettingOrder.indexOf(scrollToSectionState.value)
+        if(sectionIndex >= 0) {
+            listState.animateScrollToItem(sectionIndex)
             scrollToSectionState.value = null
         }
     }
