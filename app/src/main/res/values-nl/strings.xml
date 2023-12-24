@@ -107,6 +107,7 @@
     <string name="edit_recur_on_weekday">"op"</string>
     <string name="edit_recur_on_the_x_day_of_month">"op de"</string>
     <string name="edit_recur_x_day_of_the_month">"dag van de maand"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"laatste"</string>
     <string name="edit_recur_x_times">"keer"</string>
     <string name="edit_recur_toast_requires_start_date">"Herhaling vereist een startdatum!"</string>
     <string name="edit_datepicker_dialog_select_date">"Kies datum"</string>
@@ -195,10 +196,6 @@
     <string name="save_and_close">"Opslaan &amp; sluiten"</string>
     <string name="list_quickadd_add_audio_attachment">"Geluid opnemen"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Machtiging contactpersonen lezen gegeven"</string>
-    <string name="permission_read_contacts_denied">"Machtiging contactpersonen lezen geweigerd"</string>
-    <string name="permission_record_audio_granted">"Machtiging audio opnemen gegeven"</string>
-    <string name="permission_record_audio_denied">"Machtiging audio opnemen geweigerd"</string>
     <string name="intent_dialog_title">"Inhoud toevoegen aan een logboek, notitie of taak?"</string>
     <string name="add">"Voeg toe"</string>
     <string name="edit">"Bewerk"</string>
@@ -383,8 +380,6 @@ Dank u!"</string>
     <string name="settings_default_expand_subtasks">"Subtaken standaard uitvouwen in lijst"</string>
     <string name="settings_default_expand_subnotes">"Subtaken standaard uitvouwen in lijst"</string>
     <string name="settings_default_expand_attachments">"Subtaken standaard uitvouwen in lijst"</string>
-    <string name="permission_coarse_location_granted">"Grove locatiemachtiging verleend"</string>
-    <string name="permission_coarse_location_denied">"Grove locatiemachtiging geweigerd"</string>
     <string name="sorry">"Sorry"</string>
     <string name="back">"Terug"</string>
     <string name="details">"Details"</string>

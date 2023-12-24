@@ -194,10 +194,6 @@
     <string name="save_and_close">"Uložit a zavřít"</string>
     <string name="list_quickadd_add_audio_attachment">"Nahrát zvukovou přílohu"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Oprávnění ke čtení kontaktů uděleno"</string>
-    <string name="permission_read_contacts_denied">"Oprávnění ke čtení kontaktů zamítnuto"</string>
-    <string name="permission_record_audio_granted">"Oprávnění k nahrávání zvuku uděleno"</string>
-    <string name="permission_record_audio_denied">"Oprávnění k nahrávání zvuku zamítnuto"</string>
     <string name="intent_dialog_title">"Přidat obsah do deníku, poznámky nebo úkolu?"</string>
     <string name="add">"Přidat"</string>
     <string name="edit">"Upravit"</string>
@@ -380,8 +376,6 @@ Děkujeme vám!"</string>
     <string name="settings_default_expand_subtasks">"Rozbalovat dílčí úkoly v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_subnotes">"Rozbalovat dílčí poznámky v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_attachments">"Rozbalovat přílohy v seznamu ve výchozím nastavení"</string>
-    <string name="permission_coarse_location_granted">"Oprávnění k přibližné poloze uděleno"</string>
-    <string name="permission_coarse_location_denied">"Oprávnění k přibližné poloze zamítnuto"</string>
     <string name="sorry">"Omlouváme se"</string>
     <string name="back">"Zpět"</string>
     <string name="details">"Podrobnosti"</string>

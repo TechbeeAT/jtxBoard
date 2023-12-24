@@ -195,10 +195,6 @@
     <string name="save_and_close">"保存して閉じる"</string>
     <string name="list_quickadd_add_audio_attachment">"添付する音声メモを録音"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"連絡先の読み取り権限が付与されました"</string>
-    <string name="permission_read_contacts_denied">"連絡先の読み取り権限が拒否されました"</string>
-    <string name="permission_record_audio_granted">"音声録音の権限が付与されました"</string>
-    <string name="permission_record_audio_denied">"音声録音の権限が拒否されました"</string>
     <string name="intent_dialog_title">"ジャーナル、メモ、ToDo にコンテンツを追加しますか？"</string>
     <string name="add">"追加"</string>
     <string name="edit">"編集"</string>
@@ -382,8 +378,6 @@
     <string name="settings_default_expand_subtasks">"デフォルトでサブ ToDo を一覧に展開"</string>
     <string name="settings_default_expand_subnotes">"デフォルトでサブメモを一覧に展開"</string>
     <string name="settings_default_expand_attachments">"デフォルトで添付ファイルを一覧に展開"</string>
-    <string name="permission_coarse_location_granted">"おおよその位置情報の権限が付与されました"</string>
-    <string name="permission_coarse_location_denied">"おおよその位置情報の権限が拒否されました"</string>
     <string name="sorry">"申し訳ありません"</string>
     <string name="back">"戻る"</string>
     <string name="details">"詳細"</string>
