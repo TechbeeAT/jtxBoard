@@ -195,10 +195,6 @@
     <string name="save_and_close">"Mentés és bezárás"</string>
     <string name="list_quickadd_add_audio_attachment">"Hang-csatolmány hozzáadása"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Névjegyek olvasása engedélyezve van"</string>
-    <string name="permission_read_contacts_denied">"Névjegyek olvasása nincs engedélyezve"</string>
-    <string name="permission_record_audio_granted">"Hangfelvétel engedélyezve van"</string>
-    <string name="permission_record_audio_denied">"Hangfelvétel nincs engedélyezve"</string>
     <string name="intent_dialog_title">"Tartalom hozzáadása egy naplóbejegyzéshez, jegyzethez, vagy feladathoz?"</string>
     <string name="add">"Hozzáad"</string>
     <string name="edit">"Szerkesztés"</string>
@@ -384,8 +380,6 @@ Köszönjük!"</string>
     <string name="settings_default_expand_subtasks">"Az alfeladatok alapértelmezett kibontása a listában"</string>
     <string name="settings_default_expand_subnotes">"Az aljegyzetek alapértelmezett kibontása a listában"</string>
     <string name="settings_default_expand_attachments">"Csatolmányok alapértelmezett kibontása a listában"</string>
-    <string name="permission_coarse_location_granted">"Hozzávetőleges helymeghatározás engedélyezve van"</string>
-    <string name="permission_coarse_location_denied">"Hozzávetőleges helymeghatározás nincs engedélyezve"</string>
     <string name="sorry">"Elnézést"</string>
     <string name="back">"Vissza"</string>
     <string name="details">"Részletek"</string>
