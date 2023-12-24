@@ -194,10 +194,6 @@
     <string name="save_and_close">"Guardar y Cerrar"</string>
     <string name="list_quickadd_add_audio_attachment">"Grabar archivo adjunto de audio"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Permiso de acceso a contactos en modo lectura concedido"</string>
-    <string name="permission_read_contacts_denied">"Permiso de acceso a contactos en modo lectura denegado"</string>
-    <string name="permission_record_audio_granted">"Permiso de grabación de audio concedido"</string>
-    <string name="permission_record_audio_denied">"Permiso de grabación de audio denegado"</string>
     <string name="intent_dialog_title">"¿Añadir contenido a un diario, nota o tarea?"</string>
     <string name="add">"Añadir"</string>
     <string name="edit">"Editar"</string>
@@ -376,8 +372,6 @@
     <string name="settings_default_expand_subtasks">"Expandir por defecto subtareas en lista"</string>
     <string name="settings_default_expand_subnotes">"Expandir por defecto notas en lista"</string>
     <string name="settings_default_expand_attachments">"Expandir por defecto adjuntos en lista"</string>
-    <string name="permission_coarse_location_granted">"Acceso a ubicación permitido"</string>
-    <string name="permission_coarse_location_denied">"Acceso a ubicación denegado"</string>
     <string name="sorry">"Disculpe"</string>
     <string name="back">"Retroceder"</string>
     <string name="details">"Detalles"</string>
