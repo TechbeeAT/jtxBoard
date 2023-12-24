@@ -163,10 +163,6 @@
     <string name="save_and_close">"ذخیره &amp; بستن"</string>
     <string name="list_quickadd_add_audio_attachment">"ضبط پیوست صوتی"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"مجوز خواندن مخاطبین داده شد"</string>
-    <string name="permission_read_contacts_denied">"مجوز خواندن مخاطبین رد شد"</string>
-    <string name="permission_record_audio_granted">"مجوز ضبط صدا داده شد"</string>
-    <string name="permission_record_audio_denied">"مجوز ضبط صدا رد شد"</string>
     <string name="add">"افزودن"</string>
     <string name="edit">"ویرایش"</string>
     <string name="reset">"بازنشانی"</string>
