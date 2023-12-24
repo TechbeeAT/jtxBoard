@@ -180,10 +180,6 @@
     <string name="save_and_close">"保存并关闭"</string>
     <string name="list_quickadd_add_audio_attachment">"录制音频附件"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"已授予读取联系人权限"</string>
-    <string name="permission_read_contacts_denied">"已禁止读取联系人权限"</string>
-    <string name="permission_record_audio_granted">"已授予录音权限"</string>
-    <string name="permission_record_audio_denied">"已禁止录音权限"</string>
     <string name="intent_dialog_title">"是否将内容添加到日记、笔记或任务？"</string>
     <string name="add">"添加"</string>
     <string name="edit">"编辑"</string>
@@ -342,8 +338,6 @@
     <string name="settings_default_expand_subtasks">"默认在列表中展开子任务"</string>
     <string name="settings_default_expand_subnotes">"默认在列表中展开子笔记"</string>
     <string name="settings_default_expand_attachments">"默认在列表中展开附件"</string>
-    <string name="permission_coarse_location_granted">"已授予大致位置权限"</string>
-    <string name="permission_coarse_location_denied">"大致位置权限被拒绝"</string>
     <string name="sorry">"抱歉"</string>
     <string name="back">"返回"</string>
     <string name="details">"详细信息"</string>

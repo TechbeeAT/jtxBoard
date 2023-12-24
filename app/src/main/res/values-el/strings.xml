@@ -107,6 +107,7 @@
     <string name="edit_recur_on_weekday">"σε"</string>
     <string name="edit_recur_on_the_x_day_of_month">"στο"</string>
     <string name="edit_recur_x_day_of_the_month">"ημέρα του μήνα"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"τελευταία"</string>
     <string name="edit_recur_x_times">"φορές"</string>
     <string name="edit_recur_toast_requires_start_date">"Η επανάληψη απαιτεί να οριστεί μια ημερομηνία έναρξης!"</string>
     <string name="edit_datepicker_dialog_select_date">"Επιλογή ημερομηνίας"</string>
@@ -195,10 +196,6 @@
     <string name="save_and_close">"Αποθήκευση &amp; κλείσιμο"</string>
     <string name="list_quickadd_add_audio_attachment">"Επισύναψη ηχογραφημένου αρχείου"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Παραχωρήθηκε η άδεια ανάγνωσης επαφών"</string>
-    <string name="permission_read_contacts_denied">"Η άδεια ανάγνωσης των επαφών απορρίφθηκε"</string>
-    <string name="permission_record_audio_granted">"Άδεια εγγραφής ομιλίας παραχωρήθηκε"</string>
-    <string name="permission_record_audio_denied">"Η άδεια εγγραφής ομιλίας απορρίφθηκε"</string>
     <string name="intent_dialog_title">"Να προστεθεί το περιεχόμενο στο ημέρες λογικό, την σημείωση ή την εργασία;"</string>
     <string name="add">"Προσθήκη"</string>
     <string name="edit">"Επεξεργασία"</string>
@@ -382,8 +379,6 @@
     <string name="settings_default_expand_subtasks">"Ανάπτυξη των δευτερευουσών εργασιών στη λίστα από προεπιλογή"</string>
     <string name="settings_default_expand_subnotes">"Ανάπτυξη των δευτερευουσών σημειώσεων στη λίστα από προεπιλογή"</string>
     <string name="settings_default_expand_attachments">"Ανάπτυξη των επισυναπτωμένων στην λίστα από προεπιλογή"</string>
-    <string name="permission_coarse_location_granted">"Η άδεια χονδρικής τοποθεσίας χορηγήθηκε"</string>
-    <string name="permission_coarse_location_denied">"Η άδεια χονδρικής τοποθεσίας απορρίφθηκε"</string>
     <string name="sorry">"Συγνώμη"</string>
     <string name="back">"Πίσω"</string>
     <string name="details">"Λεπτομέριες"</string>
