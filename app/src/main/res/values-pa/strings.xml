@@ -37,6 +37,7 @@
     <!-- fragment_ical_list -->
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
+    <string name="edit_recur_LAST_day_of_the_month">"ਅਖੀਰਲਾ"</string>
     <!-- fragment_about -->
     <!-- menus -->
     <!-- Shortcuts -->
