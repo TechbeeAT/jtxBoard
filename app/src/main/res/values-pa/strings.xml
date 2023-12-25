@@ -33,8 +33,41 @@
     <string name="journal_status_cancelled">"ਰੱਦ ਕੀਤਾ ਗਿਆ"</string>
     <string name="todo_status_needsaction">"ਕਾਰਵਾਈ ਦੀ ਮੰਗ ਕਰਦਾ ਹੈ"</string>
     <string name="todo_status_completed">"ਮੁਕੰਮਲ"</string>
+    <string name="todo_status_inprocess">"ਅਮਲ ਵਿੱਚ ਹੈ"</string>
+    <string name="todo_status_cancelled">"ਰੱਦ ਕੀਤਾ ਗਿਆ"</string>
+    <string name="classification_public">"ਜਨਤਕ"</string>
+    <string name="classification_private">"ਨਿੱਜੀ"</string>
+    <string name="classification_confidential">"ਗੁਪਤ"</string>
+    <string name="attendee_role_chair">"ਕੁਰਸੀ"</string>
+    <string name="attendee_role_required_participant">"ਲੋੜੀਂਦਾ ਭਾਗੀਦਾਰ"</string>
+    <string name="attendee_role_optional_participant">"ਵਿਕਲਪਿਕ ਭਾਗੀਦਾਰ"</string>
+    <string name="attendee_role_non_participant">"ਗੈਰ-ਭਾਗੀਦਾਰ / ਜਾਣਕਾਰੀ"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"ਨੈਵੀਗੇਸ਼ਨ ਦਰਾਜ਼ ਖੋਲ੍ਹੋ"</string>
+    <string name="navigation_drawer_close">"ਨੈਵੀਗੇਸ਼ਨ ਦਰਾਜ਼ ਬੰਦ ਕਰੋ"</string>
+    <string name="navigation_drawer_board">"ਬੋਰਡ"</string>
+    <string name="navigation_drawer_synchronization">"ਸਮਕਾਲੀਕਰਨ"</string>
+    <string name="navigation_drawer_about">"ਇਸ ਬਾਰੇ / ਲਸੰਸ"</string>
+    <string name="navigation_drawer_subtitle">"ਰਸਾਲੇ, ਨੋਟਸ &amp; ਕਾਰਜ"</string>
+    <string name="navigation_drawer_settings">"ਸੈਟਿੰਗਾਂ"</string>
+    <string name="navigation_drawer_news_updates">"ਖ਼ਬਰਾਂ &amp; ਅੱਪਡੇਟਾਂ"</string>
+    <string name="navigation_drawer_external_links">"ਬਾਹਰਲੇ ਲਿੰਕ"</string>
+    <string name="navigation_drawer_website">"ਵੈੱਬਸਾਈਟ"</string>
+    <string name="navigation_drawer_support">"ਸਹਿਯੋਗ"</string>
+    <string name="navigation_drawer_donate">"ਦਾਨ ਕਰੋ"</string>
+    <string name="navigation_drawer_privacy_policy">"ਪਰਦੇਦਾਰੀ ਨੀਤੀ"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"ਬਕਾਇਆ"</string>
+    <string name="list_due_shortly">"ਹੁਣੇ ਕਰਨ ਵਾਲੇ"</string>
+    <string name="list_due_today">"ਅੱਜ ਕਰਨ ਵਾਲੇ"</string>
+    <string name="list_due_tomorrow">"ਕੱਲ੍ਹ ਕਰਨ ਵਾਲੇ"</string>
+    <string name="list_due_within_7_days">"7 ਦਿਨਾਂ ਵਿੱਚ ਕਰਨ ਵਾਲੇ"</string>
+    <string name="list_due_inXhours">"%d ਘੰਟਿਆਂ ਵਿੱਛ ਕਰਨ ਵਾਲੇ"</string>
+    <string name="list_due_on_weekday">"%s ਨੂੰ ਕਰਨ ਵਾਲਾ"</string>
+    <string name="list_start_past">"ਅਤੀਤ ਵਿੱਚ ਸ਼ੁਰੂ ਕਰੋ"</string>
+    <string name="list_start_shortly">"ਛੇਤੀ ਸ਼ੁਰੂ ਕਰੋ"</string>
+    <string name="list_start_today">"ਅੱਜ ਯੋਜਨਾਬੱਧੀ ਸ਼ੁਰੂਆਤ"</string>
+    <string name="list_start_tomorrow">"ਕੱਲ੍ਹ ਸ਼ੁਰੂ ਕਰੋ"</string>
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
     <string name="edit_recur_LAST_day_of_the_month">"ਅਖੀਰਲਾ"</string>
