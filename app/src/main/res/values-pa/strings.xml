@@ -68,6 +68,12 @@
     <string name="list_start_shortly">"ਛੇਤੀ ਸ਼ੁਰੂ ਕਰੋ"</string>
     <string name="list_start_today">"ਅੱਜ ਯੋਜਨਾਬੱਧੀ ਸ਼ੁਰੂਆਤ"</string>
     <string name="list_start_tomorrow">"ਕੱਲ੍ਹ ਸ਼ੁਰੂ ਕਰੋ"</string>
+    <string name="list_start_inXhours">"ਵਿਓਂਤਬੰਦ ਕੀਤਾ %d ਘੰਟਿਆਂ ਵਿੱਚ ਸ਼ੁਰੂ ਹੋਵੇਗਾ"</string>
+    <string name="list_start_on_weekday">"ਵਿਓਂਤਬੰਦ ਕੀਤਾ %s ਨੂੰ ਸ਼ੁਰੂ ਹੈ"</string>
+    <string name="list_tabitem_journals">"ਰਸਾਲੇ"</string>
+    <string name="list_tabitem_notes">"ਨੋਟ"</string>
+    <string name="list_tabitem_todos">"ਕਾਰਜ"</string>
+    <string name="list_expand">"ਵਿਸਤਾਰ ਕਰੋ"</string>
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
     <string name="edit_recur_LAST_day_of_the_month">"ਅਖੀਰਲਾ"</string>
