@@ -49,7 +49,7 @@ fun ListCardWeek(
     categories: List<Category>,
     //resources: List<Resource>,
     //selected: Boolean,
-    progressUpdateDisabled: Boolean,
+    //progressUpdateDisabled: Boolean,
     //settingIsAccessibilityMode: Boolean,
     //markdownEnabled: Boolean,
     //player: MediaPlayer?,
@@ -191,7 +191,7 @@ fun ListCardWeek_JOURNAL() {
             icalobject,
             categories = emptyList(),
             //resources = emptyList(),
-            progressUpdateDisabled = false
+            //progressUpdateDisabled = false
         )
     }
 }
@@ -214,7 +214,7 @@ fun ListCardWeek_NOTE() {
             icalobject,
             categories = emptyList(),
             //resources = emptyList(),
-            progressUpdateDisabled = false,
+            //progressUpdateDisabled = false,
             modifier = Modifier.width(150.dp)
         )
     }
@@ -247,7 +247,7 @@ fun ListCardWeek_TODO() {
             icalobject,
             categories = emptyList(),
             //resources = emptyList(),
-            progressUpdateDisabled = false
+            //progressUpdateDisabled = false
         )
     }
 }

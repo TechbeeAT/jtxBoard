@@ -216,8 +216,8 @@ fun Day(
             ListCardWeek(
                 iCalObject = iCal4ListRel.iCal4List,
                 categories = iCal4ListRel.categories,
-                resources = iCal4ListRel.resources,
-                progressUpdateDisabled = false,
+                //resources = iCal4ListRel.resources,
+                //progressUpdateDisabled = false,
                 modifier = Modifier
                     .combinedClickable(
                         onClick = { onClick(iCal4ListRel.iCal4List.id, list4day.map { it.iCal4List }, iCal4ListRel.iCal4List.isReadOnly) },
