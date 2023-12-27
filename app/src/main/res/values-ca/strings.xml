@@ -107,6 +107,7 @@
     <string name="edit_recur_on_weekday">"els"</string>
     <string name="edit_recur_on_the_x_day_of_month">"el"</string>
     <string name="edit_recur_x_day_of_the_month">"dia del mes"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"últim"</string>
     <string name="edit_recur_x_times">"vegades"</string>
     <string name="edit_recur_toast_requires_start_date">"Cal establir una data d'inici a la recurrència!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleccionar data"</string>

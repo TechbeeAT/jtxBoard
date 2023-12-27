@@ -33,10 +33,79 @@
     <string name="journal_status_cancelled">"ਰੱਦ ਕੀਤਾ ਗਿਆ"</string>
     <string name="todo_status_needsaction">"ਕਾਰਵਾਈ ਦੀ ਮੰਗ ਕਰਦਾ ਹੈ"</string>
     <string name="todo_status_completed">"ਮੁਕੰਮਲ"</string>
+    <string name="todo_status_inprocess">"ਅਮਲ ਵਿੱਚ ਹੈ"</string>
+    <string name="todo_status_cancelled">"ਰੱਦ ਕੀਤਾ ਗਿਆ"</string>
+    <string name="classification_public">"ਜਨਤਕ"</string>
+    <string name="classification_private">"ਨਿੱਜੀ"</string>
+    <string name="classification_confidential">"ਗੁਪਤ"</string>
+    <string name="attendee_role_chair">"ਕੁਰਸੀ"</string>
+    <string name="attendee_role_required_participant">"ਲੋੜੀਂਦਾ ਭਾਗੀਦਾਰ"</string>
+    <string name="attendee_role_optional_participant">"ਵਿਕਲਪਿਕ ਭਾਗੀਦਾਰ"</string>
+    <string name="attendee_role_non_participant">"ਗੈਰ-ਭਾਗੀਦਾਰ / ਜਾਣਕਾਰੀ"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"ਨੈਵੀਗੇਸ਼ਨ ਦਰਾਜ਼ ਖੋਲ੍ਹੋ"</string>
+    <string name="navigation_drawer_close">"ਨੈਵੀਗੇਸ਼ਨ ਦਰਾਜ਼ ਬੰਦ ਕਰੋ"</string>
+    <string name="navigation_drawer_board">"ਬੋਰਡ"</string>
+    <string name="navigation_drawer_synchronization">"ਸਮਕਾਲੀਕਰਨ"</string>
+    <string name="navigation_drawer_about">"ਇਸ ਬਾਰੇ / ਲਸੰਸ"</string>
+    <string name="navigation_drawer_subtitle">"ਰਸਾਲੇ, ਨੋਟਸ &amp; ਕਾਰਜ"</string>
+    <string name="navigation_drawer_settings">"ਸੈਟਿੰਗਾਂ"</string>
+    <string name="navigation_drawer_news_updates">"ਖ਼ਬਰਾਂ &amp; ਅੱਪਡੇਟਾਂ"</string>
+    <string name="navigation_drawer_external_links">"ਬਾਹਰਲੇ ਲਿੰਕ"</string>
+    <string name="navigation_drawer_website">"ਵੈੱਬਸਾਈਟ"</string>
+    <string name="navigation_drawer_support">"ਸਹਿਯੋਗ"</string>
+    <string name="navigation_drawer_donate">"ਦਾਨ ਕਰੋ"</string>
+    <string name="navigation_drawer_privacy_policy">"ਪਰਦੇਦਾਰੀ ਨੀਤੀ"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"ਬਕਾਇਆ"</string>
+    <string name="list_due_shortly">"ਹੁਣੇ ਕਰਨ ਵਾਲੇ"</string>
+    <string name="list_due_today">"ਅੱਜ ਕਰਨ ਵਾਲੇ"</string>
+    <string name="list_due_tomorrow">"ਕੱਲ੍ਹ ਕਰਨ ਵਾਲੇ"</string>
+    <string name="list_due_within_7_days">"7 ਦਿਨਾਂ ਵਿੱਚ ਕਰਨ ਵਾਲੇ"</string>
+    <string name="list_due_inXhours">"%d ਘੰਟਿਆਂ ਵਿੱਛ ਕਰਨ ਵਾਲੇ"</string>
+    <string name="list_due_on_weekday">"%s ਨੂੰ ਕਰਨ ਵਾਲਾ"</string>
+    <string name="list_start_past">"ਅਤੀਤ ਵਿੱਚ ਸ਼ੁਰੂ ਕਰੋ"</string>
+    <string name="list_start_shortly">"ਛੇਤੀ ਸ਼ੁਰੂ ਕਰੋ"</string>
+    <string name="list_start_today">"ਅੱਜ ਯੋਜਨਾਬੱਧੀ ਸ਼ੁਰੂਆਤ"</string>
+    <string name="list_start_tomorrow">"ਕੱਲ੍ਹ ਸ਼ੁਰੂ ਕਰੋ"</string>
+    <string name="list_start_inXhours">"ਵਿਓਂਤਬੰਦ ਕੀਤਾ %d ਘੰਟਿਆਂ ਵਿੱਚ ਸ਼ੁਰੂ ਹੋਵੇਗਾ"</string>
+    <string name="list_start_on_weekday">"ਵਿਓਂਤਬੰਦ ਕੀਤਾ %s ਨੂੰ ਸ਼ੁਰੂ ਹੈ"</string>
+    <string name="list_tabitem_journals">"ਰਸਾਲੇ"</string>
+    <string name="list_tabitem_notes">"ਨੋਟ"</string>
+    <string name="list_tabitem_todos">"ਕਾਰਜ"</string>
+    <string name="list_expand">"ਵਿਸਤਾਰ ਕਰੋ"</string>
+    <string name="list_dialog_delete_selected_title">ਚੁਣੇ ਗਏ ਇੰਦਰਾਜ਼ ਮਿਟਾਉਣੇ ਹਨ?</string>
+    <string name="list_dialog_delete_selected_message">ਇਹ ਕਾਰਵਾਈ ਸਾਰੇ ਚੁਣੇ ਗਏ ਇੰਦਰਾਜ਼ਾਂ (%1$d) ਨੂੰ ਮਿਟਾ ਦਿੰਦੀ ਹੈ। ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ \'ਤੇ ਅੱਗੇ ਵਧਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਸ ਕਾਰਵਾਈ ਨੂੰ ਅਣਕੀਤਾ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!</string>
+    <string name="list_quickadd_dialog_summary_description_hint">"ਸੰਖੇਪ/ਤਫ਼ਸੀਲ"</string>
+    <string name="list_quickadd_dialog_summary_description_helper">"ਪਹਿਲੀ ਲਾਈਨ ਨੂੰ ਸਾਰਾਂਸ਼ ਵਜੋਂ ਸਮਝਿਆ ਜਾਂਦਾ ਹੈ, ਬਾਕੀਆਂ ਨੂੰ ਤਫ਼ਸੀਲ ਵਜੋਂ। ਹੈਸ਼ਟੈਗਾਂ ਨੂੰ ਸ਼੍ਰੇਣੀਆਂ (ਜਿਵੇਂ ਕਿ #ਸ਼੍ਰੇਣੀ) ਵਜੋਂ ਸਮਝਿਆ ਜਾਂਦਾ ਹੈ।"</string>
+    <string name="list_item_recurring">"ਮੁੜ ਮੁੜ ਆਉਣ ਵਾਲਾ ਇੰਦਰਾਜ਼"</string>
+    <string name="list_item_edited_recurring">"ਸੋਧਿਆ ਗਿਆ ਮੁੜ ਮੁੜ ਆਉਣ ਵਾਲਾ ਇੰਦਰਾਜ਼"</string>
+    <string name="list_scroll_to_top">"ਸਿਖਰ ਤੱਕ ਸਕ੍ਰੋਲ ਕਰੋ"</string>
     <!-- fragment_ical_view -->
+    <string name="view_fragment_audio_permission">"ਐਪ ਮਨਜ਼ੂਰੀਆਂ"</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board ਨੂੰ ਆਡੀਓ ਰਿਕਾਰਡ ਕਰਨ ਜਾਂ ਸਪੀਚ-ਟੂ-ਟੈਕਸਟ ਕਾਰਜਕੁਸ਼ਲਤਾ ਦੀ ਵਰਤੋਂ ਕਰਨ ਲਈ ਇਜਾਜ਼ਤ ਦੀ ਲੋੜ ਹੁੰਦੀ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਵਿਸ਼ੇਸ਼ਤਾ ਦੀ ਵਰਤੋਂ ਕਰਨ ਦੀ ਇਜਾਜ਼ਤ ਦਿਓ।"</string>
+    <string name="view_reccurrence_note_is_exception">"ਇਹ ਵਸਤੂ ਮੁੜ ਮੁੜ ਆਉਣ ਵਾਲੇ ਇੰਦਰਾਜ਼ ਲਈ ਇੱਕ ਰਿਆਇਤ ਹੈ।"</string>
+    <string name="view_feedback_linked_notes">"ਸੁਝਾਅ / ਲਿੰਕ ਕੀਤੇ ਗਏ ਨੋਟ"</string>
+    <string name="view_subtask_of">"ਦਾ ਉੱਪ-ਕਾਰਜ"</string>
+    <string name="view_linked_note_of">"ਦਾ ਲਿੰਕ ਕੀਤਾ ਗਿਆ ਨੋਟ"</string>
+    <string name="view_add_audio_note">"ਆਡੀਓ ਜੋੜੋ"</string>
+    <string name="view_created_text">"ਬਣਾਇਆ ਗਿਆ: %1$s"</string>
+    <string name="view_last_modified_text">"ਆਖਰੀ ਤਬਦੀਲੀ: %1$s"</string>
+    <string name="view_due">"ਬਕਾਇਆ"</string>
+    <string name="view_completed">"ਮੁਕੰਮਲ"</string>
+    <string name="view_started">"ਸ਼ੁਰੂ(ਕੀਤਾ ਗਿਆ)"</string>
     <!-- fragment_ical_edit -->
+    <string name="edit_comment_helper">"ਟਿੱਪਣੀ ਸ਼ਾਮਲ ਕਰੋ"</string>
+    <string name="edit_attachment_button_text">"ਅਟੈਚਮੈਂਟ ਜੋੜੋ"</string>
+    <string name="edit_take_picture_button_text">"ਤਸਵੀਰ ਖਿੱਚੋ"</string>
+    <string name="edit_add_link_button_text">"ਅਟੈਚਮੈਂਟ ਲਿੰਕ ਜੋੜੋ"</string>
+    <string name="edit_subtasks_add_helper">"ਉੱਪ-ਕਾਰਜ ਜੋੜੋ"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"ਛੇਤੀ ਦਣੀ ਉੱਪ-ਕਾਰਜ ਜੋੜੋ"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"ਛੇਤੀ ਦਣੀ ਉੱਪ-ਨੋਟ ਜੋੜੋ"</string>
+    <string name="edit_attachment_add_link_dialog">"ਅਟੈਚਮੈਂਟ ਲਿੰਕ ਜੋੜੋ"</string>
+    <string name="edit_recur_repeat_every_x">"ਰੋਜ਼ਾਨਾ ਦੁਹਰਾਓ"</string>
+    <string name="edit_recur_on_weekday">"ਚਾਲੂ"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"ਅਖੀਰਲਾ"</string>
     <!-- fragment_about -->
     <!-- menus -->
     <!-- Shortcuts -->

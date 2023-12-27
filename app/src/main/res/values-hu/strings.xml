@@ -107,6 +107,7 @@
     <string name="edit_recur_on_weekday">" "</string>
     <string name="edit_recur_on_the_x_day_of_month">" "</string>
     <string name="edit_recur_x_day_of_the_month">"hónap napja"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"utolsó"</string>
     <string name="edit_recur_x_times">"alkalommal"</string>
     <string name="edit_recur_toast_requires_start_date">"Az ismétlés beállításához előbb adjon meg kezdési dátumot!"</string>
     <string name="edit_datepicker_dialog_select_date">"Dátum kiválasztása"</string>
