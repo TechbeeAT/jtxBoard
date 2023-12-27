@@ -266,4 +266,7 @@ dependencies {
 
     //image loading from the web
     implementation "io.coil-kt:coil-compose:2.5.0"
+
+    implementation "com.kizitonwose.calendar:compose:2.4.1"
+
 }
