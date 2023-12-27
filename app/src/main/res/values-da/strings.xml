@@ -4,8 +4,7 @@
     <string name="app_permission_label">"jtx Board synkroniserer Journaler, Noter &amp; Opgaver"</string>
     <string name="app_permission_desc">"synkroniser indhold i jtx Board med andre programmer som DAVx5"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Gem"</string>
     <string name="cancel">"Annuller"</string>
     <string name="ok">"OK"</string>

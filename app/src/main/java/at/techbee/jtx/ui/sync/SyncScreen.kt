@@ -73,7 +73,7 @@ fun SyncScreen(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
-    val remoteCollections by ICalDatabase.getInstance(context).iCalDatabaseDao.getAllRemoteCollectionsLive().observeAsState(emptyList())
+    val remoteCollections by ICalDatabase.getInstance(context).iCalDatabaseDao().getAllRemoteCollectionsLive().observeAsState(emptyList())
     val availableSyncApps = if (LocalInspectionMode.current) emptyList() else SyncUtil.availableSyncApps(context)
 
     Scaffold(

@@ -12,11 +12,16 @@ import android.icu.text.MessageFormat
 import android.os.Build
 import android.util.Log
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
-import java.time.*
+import java.time.DateTimeException
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.temporal.WeekFields
-import java.util.*
+import java.util.Locale
 
 object DateTimeUtils {
 
@@ -66,8 +71,17 @@ object DateTimeUtils {
         return zonedDateTime.format(formatter)
     }
 
+    fun convertLongToShortDateString(date: Long?, timezone: String?): String {
+        if (date == null || date == 0L)
+            return ""
+        val zonedDateTime =
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+        return zonedDateTime.format(formatter)
+    }
+
     fun convertLongToMediumDateShortTimeString(date: Long?, timezone: String?): String {
-        return convertLongToMediumDateString(date, timezone) + if(timezone != TZ_ALLDAY) " " + convertLongToTimeString(date, timezone) else ""
+        return convertLongToMediumDateString(date, timezone) + if(timezone != TZ_ALLDAY) " " + convertLongToShortTimeString(date, timezone) else ""
     }
 
     private fun convertLongToMediumDateString(date: Long?, timezone: String?): String {
@@ -79,13 +93,23 @@ object DateTimeUtils {
         return zonedDateTime.format(formatter)
     }
 
-    fun convertLongToTimeString(time: Long?, timezone: String?): String {
+    /*
+    private fun convertLongToTimeString(time: Long?, timezone: String?): String {
         if (time == null || time == 0L || timezone == TZ_ALLDAY)
             return ""
         val zonedDateTime =
             ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), requireTzId(timezone))
+        val formatter = if(timezone == null) DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT) else  DateTimeFormatter.ofLocalizedTime(FormatStyle.LONG)
+        return zonedDateTime.format(formatter)
+    }
+     */
+
+    fun convertLongToShortTimeString(time: Long?, timezone: String?): String {
+        if (time == null || time == 0L || timezone == TZ_ALLDAY)
+            return ""
+        val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), requireTzId(timezone))
         val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-        return zonedDateTime.toLocalTime().format(formatter)
+        return zonedDateTime.format(formatter)
     }
 
     fun convertLongToDayString(date: Long?, timezone: String?): String {
@@ -134,6 +158,8 @@ object DateTimeUtils {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
         return zonedDateTime.toLocalDateTime().format(formatter)
     }
+
+    fun timestampAsFilenameAppendix(): String = convertLongToYYYYMMDDString(System.currentTimeMillis(),null)
 
     fun getLocalizedOrdinal(from: Int, to: Int, includeEmpty: Boolean): Array<String> {
 
@@ -236,11 +262,8 @@ object DateTimeUtils {
      */
     fun getTodayAsLong() = LocalDate.now().atStartOfDay().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()
 
-    /**
-     * @param [date] of which the time should be removed
-     * @param [timezone] of the date (can be null, then local timezone is taken as default)
-     * @return the given date as UTC timestamp with the hour, minute, second and millis set to 0 or null if date was null
-     */
+
+    /*
     fun getDateWithoutTime(date: Long?, timezone: String?): Long? = date?.let {
         ZonedDateTime
             .ofInstant(Instant.ofEpochMilli(it), requireTzId(timezone))
@@ -252,6 +275,7 @@ object DateTimeUtils {
             .toInstant()
             .toEpochMilli()
     }
+     */
 
     /**
      * @param [seconds] that should be brought into a format like 00:00

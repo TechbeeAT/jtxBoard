@@ -8,7 +8,7 @@
 
 package at.techbee.jtx.ui.settings
 
-import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Alarm
@@ -16,9 +16,9 @@ import androidx.compose.material.icons.outlined.EditCalendar
 import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.FormatPaint
 import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 
 enum class DropdownSetting(
@@ -130,7 +130,8 @@ enum class DropdownSetting(
             DropdownSettingOption.AUTO_ALARM_OFF,
             DropdownSettingOption.AUTO_ALARM_ON_START,
             DropdownSettingOption.AUTO_ALARM_ON_DUE,
-            DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_DUE
+            DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_DUE,
+            DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE
         ),
         default = DropdownSettingOption.AUTO_ALARM_OFF
     ),
@@ -147,10 +148,23 @@ enum class DropdownSetting(
         ),
         default = DropdownSettingOption.PROTECT_BIOMETRIC_OFF
     ),
+    SETTING_DISPLAY_TIMEZONE(
+        key = "setting_display_timezone",
+        icon = Icons.Outlined.Public,
+        title = R.string.settings_timezone_display,
+        options = listOf(
+            DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL,
+            DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
+        ),
+        default = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
+    )
     ;
 
-    fun save(newDropdownSettingOption: DropdownSettingOption, context: Context) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit()
-            .putString(key, newDropdownSettingOption.key).apply()
-    }
+    fun saveSetting(newDropdownSettingOption: DropdownSettingOption, prefs: SharedPreferences) =
+        prefs.edit().putString(key, newDropdownSettingOption.key).apply()
+
+    fun getSetting(prefs: SharedPreferences) = DropdownSettingOption.entries.find { setting ->
+        setting.key == prefs.getString(key, default.key)
+    } ?: default
 }

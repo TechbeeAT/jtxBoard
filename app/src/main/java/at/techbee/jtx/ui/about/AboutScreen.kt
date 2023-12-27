@@ -13,8 +13,19 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +41,7 @@ import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import com.mikepenz.aboutlibraries.Libs
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
     translators: List<String>,
@@ -75,7 +86,7 @@ fun AboutScreen(
                 drawerState = drawerState,
                 mainContent = {
                     Column {
-                        TabRow(selectedTabIndex = pagerState.currentPage) {
+                        PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
                             screens.forEachIndexed { index, screen ->
                                 Tab(selected = pagerState.currentPage == index,
                                     onClick = {

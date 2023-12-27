@@ -4,13 +4,15 @@
     <string name="app_permission_label">"jtx Board Synchronisierung für Journale, Notizen &amp; Aufgaben"</string>
     <string name="app_permission_desc">"synchronisieren von jtx Board mit anderen Anwendungen wie z.B. DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Speichern"</string>
+    <string name="update">"Aktualisieren"</string>
     <string name="cancel">"Abbrechen"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Löschen"</string>
     <string name="discard">"Verwerfen"</string>
+    <string name="dismiss">"Verwerfen"</string>
+    <string name="open">"Öffnen"</string>
     <string name="cont">"Weiter"</string>
     <string name="website">"Webseite"</string>
     <string name="latitude">"Breitengrad"</string>
@@ -56,11 +58,14 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Datenschutzerklärung"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Überfällig"</string>
+    <string name="list_due_shortly">"Fällig in Kürze"</string>
     <string name="list_due_today">"Heute fällig"</string>
     <string name="list_due_tomorrow">"Morgen fällig"</string>
+    <string name="list_due_within_7_days">"Fällig innerhalb von 7 Tagen"</string>
     <string name="list_due_inXhours">"In %d Stunden fällig"</string>
     <string name="list_due_on_weekday">"Fällig am %s"</string>
     <string name="list_start_past">"Start in Vergangenheit"</string>
+    <string name="list_start_shortly">"Start in Kürze"</string>
     <string name="list_start_today">"Geplanter Start heute"</string>
     <string name="list_start_tomorrow">"Geplanter Start morgen"</string>
     <string name="list_start_inXhours">"Geplanter Start in %d Stunden"</string>
@@ -75,6 +80,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"Die erste Zeile wird als Zusammenfassung interpretiert, der Rest als Beschreibung. Hashtags werden als Kategorien interpretiert (z.B. #Kategorie)."</string>
     <string name="list_item_recurring">"Wiederkehrender Eintrag"</string>
     <string name="list_item_edited_recurring">"Bearbeiteter wiederkehrender Eintrag"</string>
+    <string name="list_scroll_to_top">"Nach oben scrollen"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"App Berechtigungen"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board benötigt Ihre Zustimmung, um Audio aufzunehmen und um die Spracherkennung zu nutzen. Bitte geben Sie die Berechtigung, um diese Funktionalität zu nutzen."</string>
@@ -101,9 +107,11 @@ Global Strings -->
     <string name="edit_recur_on_weekday">"am"</string>
     <string name="edit_recur_on_the_x_day_of_month">"am"</string>
     <string name="edit_recur_x_day_of_the_month">"Tag des Monats"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"letzten"</string>
     <string name="edit_recur_x_times">"Mal"</string>
     <string name="edit_recur_toast_requires_start_date">"Wiederholungen benötigen ein Start-Datum!"</string>
     <string name="edit_datepicker_dialog_select_date">"Datum auswählen"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Zeitraum auswählen"</string>
     <string name="edit_datepicker_dialog_add_time">"Zeit hinzufügen"</string>
     <string name="edit_datepicker_dialog_edit_time">"Zeit bearbeiten"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Zeitzone hinzufügen"</string>
@@ -188,10 +196,6 @@ Global Strings -->
     <string name="save_and_close">"Speichern &amp; schließen"</string>
     <string name="list_quickadd_add_audio_attachment">"Audioanhang aufnehmen"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Leseberechtigung für Kontakte erteilt"</string>
-    <string name="permission_read_contacts_denied">"Leseberechtigung für Kontakte abgelehnt"</string>
-    <string name="permission_record_audio_granted">"Audio-Aufnahmeberechtigung erteilt"</string>
-    <string name="permission_record_audio_denied">"Audio-Aufnahmeberechtigung abgelehnt"</string>
     <string name="intent_dialog_title">"Inhalt zu Journal, Notiz oder Aufgabe hinzufügen?"</string>
     <string name="add">"Hinzufügen"</string>
     <string name="edit">"Bearbeiten"</string>
@@ -243,8 +247,6 @@ Global Strings -->
     <string name="edit_recur_week">"Woche"</string>
     <string name="edit_recur_month">"Monat"</string>
     <string name="edit_recur_year">"Jahr"</string>
-    <string name="collections_toast_export_ics_success">"Export der Collection erfolgreich durchgeführt."</string>
-    <string name="collections_toast_export_ics_error">"Beim Exportieren der Collection ist ein Fehler aufgetreten."</string>
     <string name="attachment_export_saved_successfully">"Erfolgreich gespeichert"</string>
     <string name="attachment_export_error_error_occurred">"Beim Speichern der Datei ist ein Fehler aufgetreten!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Remote Collection hinzufügen (%1$s)"</string>
@@ -257,6 +259,7 @@ Global Strings -->
     <string name="status">"Status"</string>
     <string name="classification">"Klassifizierung"</string>
     <string name="category">"Kategorie"</string>
+    <string name="resource">"Material"</string>
     <string name="priority">"Priorität"</string>
     <string name="readyonly">"Schreibgeschützt"</string>
     <string name="upload_pending">"Hochladen ausständig"</string>
@@ -280,6 +283,8 @@ Global Strings -->
     <string name="search_notes">Notizen durchsuchen</string>
     <string name="search_todos">Aufgaben durchsuchen</string>
     <string name="filter">"Filter"</string>
+    <string name="visibility">"Sichtbarkeit"</string>
+    <string name="order">"Reihenfolge"</string>
     <string name="sync_now">"Jetzt synchronisieren"</string>
     <string name="due">"Fällig"</string>
     <string name="completed">"Fertiggestellt"</string>
@@ -298,10 +303,12 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Einträge von \"%1$s\" verschieben nach"</string>
     <string name="collection_dialog_move_info">"Achtung: Es können nur Collections ausgewählt werden, die gleiche Komponenten unterstützen (Journale, Notizen, Aufgaben)."</string>
     <string name="menu_collections_popup_move_entries">"Einträge verschieben"</string>
+    <string name="setting_no_time">"Keine Zeit"</string>
     <string name="list_no_dates_set">"Ohne Datumsangaben"</string>
     <string name="list_without_start_date">"Ohne Start"</string>
     <string name="list_without_due_date">"Ohne Fälligkeit"</string>
     <string name="list_without_completed_date">"Ohne Fertigstellungsdatum"</string>
+    <string name="list_show_only_search_matching_subentries">"Zeige nur suchtreffende Untereinträge"</string>
     <string name="filter_order_by">"Sortieren nach"</string>
     <string name="filter_asc">"Aufsteigend"</string>
     <string name="filter_desc">"Absteigend"</string>
@@ -311,6 +318,9 @@ Global Strings -->
     <string name="filter_no_resource">Ohne Materialien</string>
     <string name="filter_subtasks_order_by">Unteraufgaben sortieren nach</string>
     <string name="filter_subnotes_order_by">Verlinkte Notizen sortieren nach</string>
+    <string name="filter_no_filter">"Kein Filter"</string>
+    <string name="filter_options_more_entries">"Mehr (%1$d)"</string>
+    <string name="filter_options_less_entries">"Weniger"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Bitte klicken Sie auf die Collection, zu der die Einträge hinzugefügt werden sollen!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d hinzugefügt, %2$d übersprungen. (Exklusive Instanzen von wiederkehrenden Einträgen)"</string>
     <string name="collections_toast_x_items_added">"%1$d Einträge hinzugefügt!"</string>
@@ -322,9 +332,15 @@ Global Strings -->
     <string name="edit_recur_ends_never">"endet nie"</string>
     <string name="edit_recur_ends_on">"endet am"</string>
     <string name="edit_recur_ends_after">"endet nach"</string>
-    <string name="collections_toast_export_all_ics_success">"Alle Collections erfolgreich exportiert."</string>
-    <string name="collections_toast_export_all_ics_error">"Beim Export aller Collections ist ein Fehler aufgetreten."</string>
+    <string name="collections_toast_export_success">"Collections erfolgreich exportiert"</string>
+    <string name="collections_toast_export_error">"Fehler beim Exportieren der Collections"</string>
     <string name="menu_collections_export_all">"Alle exportieren"</string>
+    <string name="menu_presets_export_presets">"Voreinstellungen exportieren"</string>
+    <string name="menu_presets_import_presets">"Voreinstellungen importieren"</string>
+    <string name="presets_imported">"Voreinstellungen importiert"</string>
+    <string name="presets_import_invalid_file">"Ungültige Datei"</string>
+    <string name="presets_saved">"Voreinstellungen gespeichert"</string>
+    <string name="presets_export_error">"Beim Speichern der Voreinstellungen ist ein Fehler aufgetreten"</string>
     <string name="more">"Mehr"</string>
     <string name="navigation_drawer_buypro">"Pro kaufen"</string>
     <string name="settings_select_theme">"Theme auswählen"</string>
@@ -336,6 +352,10 @@ Global Strings -->
     <string name="settings_protect_biometric_all">"Alle"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Bitte authentifizieren Sie sich, um diese Einstellung zu ändern!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Bitte authentifizieren Sie sich, um geschützte Einträge anzuzeigen!"</string>
+    <string name="settings_timezone_display">"Anzeige der Zeit mit Zeitzone wählen"</string>
+    <string name="settings_timezone_display_local">"Zeit in lokaler Zeitzone anzeigen"</string>
+    <string name="settings_timezone_display_original">"Zeit in der ursprünglichen Zeitzone anzeigen"</string>
+    <string name="settings_timezone_display_local_and_original">"Zeit in lokaler und in ursprünglicher Zeitzone anzeigen (nur Detailansicht)"</string>
     <string name="donate_dialog_title">"Gefällt dir jtx Board?"</string>
     <string name="donate_dialog_message">"Die Entwicklung und Wartung einer App sind viel Arbeit. Wenn dir jtx Board gefällt und du die kontinuierliche Entwicklung sicherstellen möchtest, dann denke bitte auch an die Möglichkeit einer Spende! :-)
 Vielen Dank!"</string>
@@ -361,12 +381,12 @@ Danke!"</string>
     <string name="settings_default_expand_subtasks">"Unteraufgaben standardmäßig erweitern"</string>
     <string name="settings_default_expand_subnotes">"Unternotizen standardmäßig erweitern"</string>
     <string name="settings_default_expand_attachments">"Anhänge standardmäßig erweitern"</string>
-    <string name="permission_coarse_location_granted">"Standort-Berechtigung erteilt"</string>
-    <string name="permission_coarse_location_denied">"Standort-Berechtigung verweigert"</string>
     <string name="sorry">"Sorry"</string>
     <string name="back">"Zurück"</string>
     <string name="details">"Details"</string>
     <string name="date">"Datum"</string>
+    <string name="summary_description">"Zusammenfassung/Beschreibung"</string>
+    <string name="status_classification_priority">"Status/Klassifizierung/Priorität"</string>
     <string name="timezone">"Zeitzone"</string>
     <string name="not_set2">"Nicht gesetzt"</string>
     <string name="invert_selection">"Auswahl umkehren"</string>
@@ -452,10 +472,15 @@ Danke!"</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
     <string name="settings_tasks">"Aufgaben-Einstellungen"</string>
+    <string name="settings_alarms">"Alarm-Einstellungen"</string>
     <string name="settings_tasks_status_progress">"Aufgaben-Einstellungen (Status/Fortschritt)"</string>
     <string name="settings_sync">"Sync-Einstellungen"</string>
     <string name="settings_default_start_date">"Standard-Startdatum für Aufgaben"</string>
+    <string name="settings_default_start_timezone">"Standard-Startzeitzone für Aufgaben festlegen"</string>
     <string name="settings_default_due_date">"Standard-Fälligkeit für Aufgaben"</string>
+    <string name="settings_default_due_timezone">"Standard-Fälligkeitszone für Aufgaben festlegen"</string>
+    <string name="settings_default_start_time">"Standard-Startzeit für Aufgaben festlegen"</string>
+    <string name="settings_default_due_time">"Standard-Fälligkeitszeit für Aufgaben festlegen"</string>
     <string name="settings_default_date_none">"Keines"</string>
     <string name="settings_default_date_same_day">"Am gleichen Tag"</string>
     <string name="settings_default_date_next_day">"Am darauffolgenden Tag"</string>
@@ -479,6 +504,11 @@ Danke!"</string>
     <string name="settings_create_with_current_location">"Neue Einträge mit aktuellem Standort erstellen"</string>
     <string name="settings_sticky_alarms">"Fixierte Alarme"</string>
     <string name="settings_sticky_alarms_sub">"Benachrichtigungen erhalten bis erledigt oder verschoben"</string>
+    <string name="settings_fullscreen_alarms">"Vollbild-Alarme"</string>
+    <string name="settings_fullscreen_alarms_sub">"Zeigt Alarme im Vollbild, wenn das Gerät gesperrt ist"</string>
+    <string name="settings_accessibility_mode">"Barrierefreiheitsmodus"</string>
+    <string name="settings_accessibility_mode_sub">"Stellt die Mindestschriftgröße für kleine Elemente sicher"</string>
+    <string name="settings_fullscreen_alarms_toast">"Bitte erteilen Sie in den Systemeinstellungen die Vollbild-Benachrichtigungsberechtigung."</string>
     <string name="settings_sync_on_start">"Synchronisieren beim Start der App"</string>
     <string name="settings_sync_on_pull_refresh">"Synchronisieren beim Herunterziehen"</string>
     <string name="sync_button_go_to_collections">"Zu den Collections"</string>
@@ -496,14 +526,20 @@ Danke!"</string>
     <string name="settings_select_language_system">"Systemstandard"</string>
     <string name="filter_special">"Spezialfilter"</string>
     <string name="filter_presets">"Filter-Voreinstellungen"</string>
+    <string name="filter_presets_edit_info">"Bitte bearbeiten Sie Filter-Voreinstellungen über das Filtermenü in der Listenansicht."</string>
+    <string name="filter_any">"Irgendeine"</string>
+    <string name="filter_all">"Alle"</string>
+    <string name="filter_none">"Keine"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
     <string name="list_date_today">"Heute"</string>
     <string name="list_date_tomorrow">"Morgen"</string>
+    <string name="list_date_within_7_days">"Innerhalb von 7 Tagen"</string>
     <string name="list_date_future">"Datum in Zukunft"</string>
     <string name="list_start_date_in_past">"Start in Vergangenheit"</string>
     <string name="list_start_date_today">"Start heute"</string>
     <string name="list_start_date_tomorrow">"Start morgen"</string>
+    <string name="list_start_date_within_7_days">"Start innerhalb von 7 Tagen"</string>
     <string name="list_start_date_future">"Start in Zukunft"</string>
     <string name="list_hide_completed_tasks">"Fertiggestellte Aufgaben ausblenden"</string>
     <string name="list_biometric_protected_entries_locked">Biometrische geschützte Einträge gesperrt</string>
@@ -513,6 +549,7 @@ Danke!"</string>
     <string name="list_biometric_protected_entries_unlocked">Biometrische geschützte Einträge entsperrt</string>
     <string name="settings_auto_alarm">"Automatischer Alarm"</string>
     <string name="alarms_always_ondue">"Immer wenn fällig"</string>
+    <string name="alarms_always_on_save">"Immer beim Speichern (experimentell)"</string>
     <string name="settings_auto_alarm_sub">"Erstellt automatisch Alarme, wenn aktiviert. \"Immer wenn fällig\" triggert immer eine Benachrichtigung, wenn eine Aufgabe fällig wird, auch wenn es keinen expliziten Alarm gibt."</string>
     <string name="settings_protect_biometric">"Einträge mit Biometrie schützen"</string>
     <string name="settings_protect_biometric_sub">"Diese Funktion verbirgt die ausgewählten Einträge, bis sie mit Biometrie entsperrt sind, allerdings werden die Daten nicht verschlüsselt."</string>

@@ -4,13 +4,15 @@
     <string name="app_permission_label">"jtx Board sincronitza Diaris, Notes i Tasques"</string>
     <string name="app_permission_desc">"sincronitza el contingut de jtx Board amb altres aplicacions com DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Desa"</string>
+    <string name="update">"Actualitza"</string>
     <string name="cancel">"Cancel·lar"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Eliminar"</string>
     <string name="discard">"Descartar"</string>
+    <string name="dismiss">"Ignora"</string>
+    <string name="open">"Obre"</string>
     <string name="cont">"Continuar"</string>
     <string name="website">"Lloc web"</string>
     <string name="latitude">"Latitud"</string>
@@ -56,11 +58,14 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Política de Privacitat"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Vençut"</string>
+    <string name="list_due_shortly">"Venç d'ací poc"</string>
     <string name="list_due_today">"Venç hui"</string>
     <string name="list_due_tomorrow">"Venç demà"</string>
+    <string name="list_due_within_7_days">"Venç en 7 dies"</string>
     <string name="list_due_inXhours">"Venç en %d hores"</string>
     <string name="list_due_on_weekday">"Venç el %s"</string>
     <string name="list_start_past">"S'inicia en el passat"</string>
+    <string name="list_start_shortly">"S'inicia d'ací poc"</string>
     <string name="list_start_today">"Inici planejat hui"</string>
     <string name="list_start_tomorrow">"S'inicia demà"</string>
     <string name="list_start_inXhours">"Inici planejat en %d hores"</string>
@@ -75,6 +80,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"La primera línia s'interpreta com a sumari, la resta com a la descripció. Els coixinets s'interpreten com a categories (ex #categoria)."</string>
     <string name="list_item_recurring">"Entrada recurrent"</string>
     <string name="list_item_edited_recurring">"Entrada recurrent editada"</string>
+    <string name="list_scroll_to_top">"Torna a dalt"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Permís d'App"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board necessita permís per a gravar àudio o fer ús de les funcions de parla a text. Per favor, accepta la sol·licitud per a fer ús d'aquesta funció."</string>
@@ -101,9 +107,11 @@ Global Strings -->
     <string name="edit_recur_on_weekday">"els"</string>
     <string name="edit_recur_on_the_x_day_of_month">"el"</string>
     <string name="edit_recur_x_day_of_the_month">"dia del mes"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"últim"</string>
     <string name="edit_recur_x_times">"vegades"</string>
     <string name="edit_recur_toast_requires_start_date">"Cal establir una data d'inici a la recurrència!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleccionar data"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Selecciona el rang de dates"</string>
     <string name="edit_datepicker_dialog_add_time">"Afegir temps"</string>
     <string name="edit_datepicker_dialog_edit_time">"Editar temps"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Afegir fus horari"</string>
@@ -188,10 +196,6 @@ Global Strings -->
     <string name="save_and_close">"Desa i tanca"</string>
     <string name="list_quickadd_add_audio_attachment">"Grava un àudio adjunt"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"S'ha donat accés per a llegir els contactes"</string>
-    <string name="permission_read_contacts_denied">"S'ha denegat el permís per a llegir els contactes"</string>
-    <string name="permission_record_audio_granted">"S'ha donat permís per a gravar àudios"</string>
-    <string name="permission_record_audio_denied">"S'ha denegat el permís per a gravar àudios"</string>
     <string name="intent_dialog_title">"Afegir el contingut a l'entrada de diari, nota o tasca?"</string>
     <string name="add">"Afegeix"</string>
     <string name="edit">"Edita"</string>
@@ -243,8 +247,6 @@ Global Strings -->
     <string name="edit_recur_week">"setmana(es)"</string>
     <string name="edit_recur_month">"mes(os)"</string>
     <string name="edit_recur_year">"any(s)"</string>
-    <string name="collections_toast_export_ics_success">"L'exportació de la col·lecció s'ha completat satisfactòriament."</string>
-    <string name="collections_toast_export_ics_error">"Ha hagut un error en exportar la col·lecció seleccionada."</string>
     <string name="attachment_export_saved_successfully">"S'ha desat correctament"</string>
     <string name="attachment_export_error_error_occurred">"S'ha produït un error en desar l'arxiu seleccionat!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Afegeix una col·lecció remota (%1$s)"</string>
@@ -257,6 +259,7 @@ Global Strings -->
     <string name="status">"Estat"</string>
     <string name="classification">"Classificació"</string>
     <string name="category">"Categoria"</string>
+    <string name="resource">"Recurs"</string>
     <string name="priority">"Prioritat"</string>
     <string name="readyonly">"Només lectura"</string>
     <string name="upload_pending">"Pujada pendent"</string>
@@ -280,6 +283,8 @@ Global Strings -->
     <string name="search_notes">Cerca notes</string>
     <string name="search_todos">Cerca tasques</string>
     <string name="filter">"Filtra"</string>
+    <string name="visibility">"Visibilitat"</string>
+    <string name="order">"Ordre"</string>
     <string name="sync_now">"Sincronitza ara"</string>
     <string name="due">"Venciment"</string>
     <string name="completed">"Completat"</string>
@@ -298,10 +303,12 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Moure totes les entrades des de \"%1$s\" a"</string>
     <string name="collection_dialog_move_info">"Tingues en compte: Sols les col·leccions amb accés d'escriptura, i les que tinguin suport per als mateixos components (Diaris, Notes i Tasques) poden ser seleccionades."</string>
     <string name="menu_collections_popup_move_entries">"Moure entrades"</string>
+    <string name="setting_no_time">"Sense temps"</string>
     <string name="list_no_dates_set">"Cap data establerta"</string>
     <string name="list_without_start_date">"Sense data d'inici"</string>
     <string name="list_without_due_date">"Sense data de venciment"</string>
     <string name="list_without_completed_date">"Sense data de compleció"</string>
+    <string name="list_show_only_search_matching_subentries">"Mostra només cerques que quadren amb sub-entrades"</string>
     <string name="filter_order_by">"Ordenar per"</string>
     <string name="filter_asc">"Ascendent"</string>
     <string name="filter_desc">"Ordre descendent"</string>
@@ -311,6 +318,9 @@ Global Strings -->
     <string name="filter_no_resource">Sense recursos</string>
     <string name="filter_subtasks_order_by">Ordena sub-tasques per</string>
     <string name="filter_subnotes_order_by">Ordena les notes enllaçades per</string>
+    <string name="filter_no_filter">"Sense filtres"</string>
+    <string name="filter_options_more_entries">"Més (%1$d)"</string>
+    <string name="filter_options_less_entries">"Menys"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Per favor, fes clic a la col·lecció a la qual vols afegir l'entrada o entrades!"</string>
     <string name="collections_snackbar_x_items_added">"S'ha afegit %1$d, i s'ha saltat %2$d. (Excloent instàncies d'elements recurrents.)"</string>
     <string name="collections_toast_x_items_added">"S'han afegit %1$d entrades!"</string>
@@ -322,9 +332,15 @@ Global Strings -->
     <string name="edit_recur_ends_never">"no acaba mai"</string>
     <string name="edit_recur_ends_on">"acaba el"</string>
     <string name="edit_recur_ends_after">"acaba després de"</string>
-    <string name="collections_toast_export_all_ics_success">"L'exportació de totes les col·leccions ha finalitzat correctament."</string>
-    <string name="collections_toast_export_all_ics_error">"Ha hagut un error en exportar les col·leccions."</string>
+    <string name="collections_toast_export_success">"Les col·leccions han sigut exportades"</string>
+    <string name="collections_toast_export_error">"No s'han pogut exportar les col·leccions"</string>
     <string name="menu_collections_export_all">"Exporta-ho tot"</string>
+    <string name="menu_presets_export_presets">"Exporta els valors predefinits"</string>
+    <string name="menu_presets_import_presets">"Importar valors predefinits"</string>
+    <string name="presets_imported">"Valors predefinits importats"</string>
+    <string name="presets_import_invalid_file">"Fitxer invàlid"</string>
+    <string name="presets_saved">"Valors predefinits desats"</string>
+    <string name="presets_export_error">"No s'han pogut desar els valors predefinits"</string>
     <string name="more">"Més"</string>
     <string name="navigation_drawer_buypro">"Comprar Pro"</string>
     <string name="settings_select_theme">"Escollir tema"</string>
@@ -336,6 +352,10 @@ Global Strings -->
     <string name="settings_protect_biometric_all">"Totes"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Per favor, autentica't per a canviar aquest ajust!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Per favor, autentica't per a mostrar entrades protegides!"</string>
+    <string name="settings_timezone_display">"Mostra l'hora amb zona horària"</string>
+    <string name="settings_timezone_display_local">"Mostra l'hora a la zona horària local"</string>
+    <string name="settings_timezone_display_original">"Mostra l'hora a la zona horària original"</string>
+    <string name="settings_timezone_display_local_and_original">"Mostra l'hora a la zona horària actual i original (només a la vista detallada)"</string>
     <string name="donate_dialog_title">"T'agrada jtx Board?"</string>
     <string name="donate_dialog_message">"El desenvolupament d'una aplicació és un tema complex, i tant el manteniment com el mateix desenvolupament és un treball dur. Si t'agrada l'aplicació, i t'agradaria que no es detingués el desenvolupament, per favor, considera una donació :-)
 Gràcies!"</string>
@@ -361,12 +381,12 @@ Gràcies!"</string>
     <string name="settings_default_expand_subtasks">"Expandeix les tasques en llista per defecte"</string>
     <string name="settings_default_expand_subnotes">"Expandeix les sub-notes en llista per defecte"</string>
     <string name="settings_default_expand_attachments">"Expandeix els adjunts en llista per defecte"</string>
-    <string name="permission_coarse_location_granted">"S'ha donat accés a la ubicació aproximada"</string>
-    <string name="permission_coarse_location_denied">"S'ha denegat l'accés a la ubicació aproximada"</string>
     <string name="sorry">"Disculpa"</string>
     <string name="back">"Enrere"</string>
     <string name="details">"Detalls"</string>
     <string name="date">"Data"</string>
+    <string name="summary_description">"Sumari/Descripció"</string>
+    <string name="status_classification_priority">"Estat/Classificació/Prioritat"</string>
     <string name="timezone">"Fus horari"</string>
     <string name="not_set2">"No establert"</string>
     <string name="invert_selection">"Inverteix la selecció"</string>
@@ -452,10 +472,15 @@ Gràcies!"</string>
     <string name="menu_list_viewmode_compact">"Vista compacta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
     <string name="settings_tasks">"Configuració de tasques"</string>
+    <string name="settings_alarms">"Configuració d'Alarmes"</string>
     <string name="settings_tasks_status_progress">"Configuració de Tasques (estat/progrés)"</string>
     <string name="settings_sync">"Ajusts de Sincronització"</string>
     <string name="settings_default_start_date">"Estableix una data d'inici per defecte"</string>
+    <string name="settings_default_start_timezone">"Estableix una zona horària d'inici predeterminada per a tasques"</string>
     <string name="settings_default_due_date">"Estableix una data de venciment per defecte"</string>
+    <string name="settings_default_due_timezone">"Estableix una zona horària de venciment predeterminada per a tasques"</string>
+    <string name="settings_default_start_time">"Estableix una hora d'inici per a tasques"</string>
+    <string name="settings_default_due_time">"Estableix una hora de venciment per a tasques"</string>
     <string name="settings_default_date_none">"Cap"</string>
     <string name="settings_default_date_same_day">"El mateix dia"</string>
     <string name="settings_default_date_next_day">"Dia següent"</string>
@@ -479,6 +504,11 @@ Gràcies!"</string>
     <string name="settings_create_with_current_location">"Crea noves entrades amb la ubicació actual"</string>
     <string name="settings_sticky_alarms">"Alarmes fixades"</string>
     <string name="settings_sticky_alarms_sub">"Manté les notificacions fins que es marquen com a completades o es posposen"</string>
+    <string name="settings_fullscreen_alarms">"Alarmes a pantalla completa"</string>
+    <string name="settings_fullscreen_alarms_sub">"Mostra les alarmes a pantalla completa quan el dispositiu està bloquejat"</string>
+    <string name="settings_accessibility_mode">"Mode d'accessibilitat"</string>
+    <string name="settings_accessibility_mode_sub">"Assegura una mida de lletra mínim per als elements petits"</string>
+    <string name="settings_fullscreen_alarms_toast">"Per favor, dona permís per a notificacions a pantalla completa a la configuració del sistema."</string>
     <string name="settings_sync_on_start">"Sincronitza en iniciar l'aplicació"</string>
     <string name="settings_sync_on_pull_refresh">"Sincronitza en lliscar cap avall"</string>
     <string name="sync_button_go_to_collections">"Ves a les Col·leccions"</string>
@@ -496,14 +526,20 @@ Gràcies!"</string>
     <string name="settings_select_language_system">"Predeterminat del sistema"</string>
     <string name="filter_special">"Filtres especials"</string>
     <string name="filter_presets">"Filtres predefinits"</string>
+    <string name="filter_presets_edit_info">"Per favor, afegeix/actualitza/elimina filtres predefinits del menú de filtre des de la visualització de llista."</string>
+    <string name="filter_any">"Cualsevol"</string>
+    <string name="filter_all">"Tots"</string>
+    <string name="filter_none">"Cap"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data al passat"</string>
     <string name="list_date_today">"Avui"</string>
     <string name="list_date_tomorrow">"Demà"</string>
+    <string name="list_date_within_7_days">"D'ací 7 dies"</string>
     <string name="list_date_future">"Data en el futur"</string>
     <string name="list_start_date_in_past">"S'inicia en el passat"</string>
     <string name="list_start_date_today">"S'inicia avui"</string>
     <string name="list_start_date_tomorrow">"S'inicia demà"</string>
+    <string name="list_start_date_within_7_days">"S'inicia en 7 dies"</string>
     <string name="list_start_date_future">"S'inicia al futur"</string>
     <string name="list_hide_completed_tasks">"Amaga les tasques finalitzades"</string>
     <string name="list_biometric_protected_entries_locked">Entrades protegides per biometria bloquejades</string>
@@ -513,6 +549,7 @@ Gràcies!"</string>
     <string name="list_biometric_protected_entries_unlocked">Entrades protegides per biometria desbloquejades</string>
     <string name="settings_auto_alarm">"Alarma automàtica"</string>
     <string name="alarms_always_ondue">"Sempre en vèncer"</string>
+    <string name="alarms_always_on_save">"Sempre al desar (experimental)"</string>
     <string name="settings_auto_alarm_sub">"Activa-ho per a crear alarmes automàticament. Tria \"Sempre en vèncer\" per a no crear una alarma, però ser notificat quan una tasca venci."</string>
     <string name="settings_protect_biometric">"Protegeix entrades amb biometria"</string>
     <string name="settings_protect_biometric_sub">"Aquesta funció amaga les entrades seleccionades fins a que es desbloquegen amb biometria, però no encripta/desencripta les dades en segon pla."</string>
@@ -551,7 +588,7 @@ Gràcies!"</string>
     <string name="widget_list_no_entries_found">"No s'ha trobat cap entrada amb el teu criteri de filtre"</string>
     <string name="widget_list_view_settings">"Mostra la configuració"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Atenció: Sols està suportat un nivell d'herència al widget. Per a veure les entrades de nivells inferior, per favor, fes servir la visió plana."</string>
-    <string name="widget_list_maximum_entries_reached">"S'ha assolit el número màxim de widgets (%1$d)."</string>
+    <string name="widget_list_maximum_entries_reached">"S'ha assolit el nombre màxim d'entrades al widget (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Actualitzant el widget"</string>
     <string name="widget_list_opacity_warning">"Nota: Aquesta és una funció experimental! Amb canvis d'opacitat subtils en el tema de color pot ser no es mostren els canvis inmediatament!"</string>
     <string name="widget_list_color_warning">"Nota: Aquesta és una funció experimental! Els canvis al tema de color no es veuran reflectits! No tries cap color per a tornar al predefinit pel sistema."</string>

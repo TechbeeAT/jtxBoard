@@ -15,6 +15,7 @@ import androidx.room.Entity
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 
 /** The name of the the table for statuses that are stored only locally. */
@@ -25,6 +26,7 @@ const val COLUMN_EXTENDED_STATUS_COLOR = "color"
 const val COLUMN_EXTENDED_STATUS_MODULE = "module"
 
 
+@Serializable
 @Parcelize
 @Entity(tableName = TABLE_NAME_EXTENDED_STATUS, primaryKeys = [COLUMN_EXTENDED_STATUS_NAME, COLUMN_EXTENDED_STATUS_MODULE])
 data class ExtendedStatus (

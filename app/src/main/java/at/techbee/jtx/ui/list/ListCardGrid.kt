@@ -42,6 +42,7 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
+import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import com.arnyminerz.markdowntext.MarkdownText
 
 
@@ -55,6 +56,7 @@ fun ListCardGrid(
     storedStatuses: List<ExtendedStatus>,
     selected: Boolean,
     progressUpdateDisabled: Boolean,
+    settingIsAccessibilityMode: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
     modifier: Modifier = Modifier,
@@ -65,12 +67,13 @@ fun ListCardGrid(
             containerColor = if (selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.elevatedCardElevation(),
-        border = iCalObject.colorItem?.let { BorderStroke(1.dp, Color(it)) },
+        border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
         modifier = modifier
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+
         ) {
 
             ListTopRow(
@@ -80,7 +83,8 @@ fun ListCardGrid(
                 storedCategories = storedCategories,
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
-                includeJournalDate = true
+                includeJournalDate = true,
+                isAccessibilityMode = settingIsAccessibilityMode
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
@@ -167,6 +171,7 @@ fun ListCardGrid_JOURNAL() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier
@@ -196,6 +201,7 @@ fun ListCardGrid_NOTE() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = true,
             progressUpdateDisabled = false,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             player = null,
@@ -234,6 +240,7 @@ fun ListCardGrid_TODO() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
@@ -273,6 +280,7 @@ fun ListCardGrid_TODO_short() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             progressUpdateDisabled = false,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)

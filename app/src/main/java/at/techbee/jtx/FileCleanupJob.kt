@@ -16,7 +16,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.properties.Attachment
-import java.io.File
 
 class FileCleanupJob (private val appContext: Context, workerParams: WorkerParameters):
     CoroutineWorker(appContext, workerParams) {
@@ -24,7 +23,7 @@ class FileCleanupJob (private val appContext: Context, workerParams: WorkerParam
         override suspend fun doWork(): Result {
 
             val foundFileContentUris = mutableListOf<Uri>()
-            val database = ICalDatabase.getInstance(appContext.applicationContext).iCalDatabaseDao
+            val database = ICalDatabase.getInstance(appContext.applicationContext).iCalDatabaseDao()
 
             Log.d("FileCleanupJob", "File CleanupJob started")
 

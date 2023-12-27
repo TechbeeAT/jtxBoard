@@ -18,14 +18,50 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.CloudSync
+import androidx.compose.material.icons.outlined.Code
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DriveFileRenameOutline
+import androidx.compose.material.icons.outlined.FormatBold
+import androidx.compose.material.icons.outlined.FormatItalic
+import androidx.compose.material.icons.outlined.FormatStrikethrough
+import androidx.compose.material.icons.outlined.HorizontalRule
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Sync
+import androidx.compose.material.icons.outlined.TextFormat
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -281,7 +317,7 @@ fun DetailBottomAppBar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = { markdownState.value = MarkdownState.CLOSED }) {
-                        Icon(Icons.Outlined.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, stringResource(R.string.back))
                     }
                     VerticalDivider(modifier = Modifier.height(40.dp))
                 }
@@ -289,7 +325,8 @@ fun DetailBottomAppBar(
             AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(fraction = 0.75f)
+                        .fillMaxWidth()
+                        .padding(end = 16.dp)
                         .horizontalScroll(rememberScrollState()),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -320,7 +357,7 @@ fun DetailBottomAppBar(
                         Icon(Icons.Outlined.HorizontalRule, stringResource(R.string.markdown_horizontal_ruler))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.UNORDEREDLIST  }) {
-                        Icon(Icons.Outlined.List, stringResource(R.string.markdown_unordered_list))
+                        Icon(Icons.AutoMirrored.Outlined.List, stringResource(R.string.markdown_unordered_list))
                     }
                     IconButton(onClick = { markdownState.value = MarkdownState.CODE  }) {
                         Icon(Icons.Outlined.Code, stringResource(R.string.markdown_code))

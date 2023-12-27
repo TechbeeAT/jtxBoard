@@ -12,15 +12,29 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.Task
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,6 +63,7 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubtasks(
     subtasks: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
+    enforceSavingSubtask: Boolean,
     sliderIncrement: Int,
     showSlider: Boolean,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
@@ -64,6 +79,10 @@ fun DetailsCardSubtasks(
     val headline = stringResource(id = R.string.subtasks)
     var newSubtaskText by rememberSaveable { mutableStateOf("") }
 
+    if(enforceSavingSubtask && newSubtaskText.isNotEmpty()) {
+        onSubtaskAdded(ICalObject.createTask(newSubtaskText))
+        newSubtaskText = ""
+    }
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -85,52 +104,6 @@ fun DetailsCardSubtasks(
                 }
             }
 
-
-            AnimatedVisibility(subtasks.isNotEmpty()) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    subtasks.forEach { subtask ->
-
-                        var showEditSubtaskDialog by remember { mutableStateOf(false) }
-
-                        if (showEditSubtaskDialog) {
-                            EditSubtaskDialog(
-                                text = subtask.summary,
-                                onConfirm = { newText -> onSubtaskUpdated(subtask.id, newText) },
-                                onDismiss = { showEditSubtaskDialog = false }
-                            )
-                        }
-
-                        SubtaskCard(
-                            subtask = subtask,
-                            selected = false,
-                            isEditMode = isEditMode.value,
-                            showProgress = showSlider,
-                            sliderIncrement = sliderIncrement,
-                            onProgressChanged = onProgressChanged,
-                            onDeleteClicked = { onSubtaskDeleted(subtask.id) },
-                            onUnlinkClicked = { onUnlinkSubEntry(subtask.id) },
-                            modifier = Modifier
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                onClick = {
-                                    if(!isEditMode.value)
-                                        goToDetail(subtask.id, false, subtasks.map { it.id })
-                                    else
-                                        showEditSubtaskDialog = true
-                                          },
-                                onLongClick = {
-                                    if (!isEditMode.value &&!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                        goToDetail(subtask.id, true, subtasks.map { it.id })
-                                }
-                            )
-                        )
-                    }
-                }
-            }
 
             AnimatedVisibility(isEditMode.value) {
                 OutlinedTextField(
@@ -154,7 +127,8 @@ fun DetailsCardSubtasks(
                     isError = newSubtaskText.isNotEmpty(),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(0.dp, Color.Transparent),
+                        .border(0.dp, Color.Transparent)
+                        .padding(bottom = 8.dp),
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
                         if(newSubtaskText.isNotEmpty())
@@ -162,6 +136,53 @@ fun DetailsCardSubtasks(
                         newSubtaskText = ""
                     })
                 )
+            }
+
+
+            AnimatedVisibility(subtasks.isNotEmpty()) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    subtasks.forEach { subtask ->
+
+                        var showEditSubtaskDialog by rememberSaveable { mutableStateOf(false) }
+
+                        if (showEditSubtaskDialog) {
+                            EditSubtaskDialog(
+                                text = subtask.summary,
+                                onConfirm = { newText -> onSubtaskUpdated(subtask.id, newText) },
+                                onDismiss = { showEditSubtaskDialog = false }
+                            )
+                        }
+
+                        SubtaskCard(
+                            subtask = subtask,
+                            selected = false,
+                            isEditMode = isEditMode.value,
+                            showProgress = showSlider,
+                            sliderIncrement = sliderIncrement,
+                            onProgressChanged = onProgressChanged,
+                            onDeleteClicked = { onSubtaskDeleted(subtask.id) },
+                            onUnlinkClicked = { onUnlinkSubEntry(subtask.id) },
+                            modifier = Modifier
+                                .clip(jtxCardCornerShape)
+                                .combinedClickable(
+                                    onClick = {
+                                        if (!isEditMode.value)
+                                            goToDetail(subtask.id, false, subtasks.map { it.id })
+                                        else
+                                            showEditSubtaskDialog = true
+                                    },
+                                    onLongClick = {
+                                        if (!isEditMode.value && !subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                            goToDetail(subtask.id, true, subtasks.map { it.id })
+                                    }
+                                )
+                        )
+                    }
+                }
             }
         }
     }
@@ -181,6 +202,7 @@ fun DetailsCardSubtasks_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
+            enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = true,
             onSubtaskAdded = { },
@@ -208,6 +230,7 @@ fun DetailsCardSubtasks_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
+            enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = true,
             onSubtaskAdded = { },
@@ -235,6 +258,7 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
+            enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = false,
             onSubtaskAdded = { },

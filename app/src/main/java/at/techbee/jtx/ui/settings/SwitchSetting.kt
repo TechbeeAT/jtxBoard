@@ -8,18 +8,20 @@
 
 package at.techbee.jtx.ui.settings
 
-import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.EventNote
+import androidx.compose.material.icons.automirrored.outlined.Note
+import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.AlarmOff
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.DoneAll
-import androidx.compose.material.icons.outlined.EventNote
+import androidx.compose.material.icons.outlined.FormatSize
+import androidx.compose.material.icons.outlined.Fullscreen
 import androidx.compose.material.icons.outlined.MyLocation
-import androidx.compose.material.icons.outlined.Note
-import androidx.compose.material.icons.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.RestartAlt
 import androidx.compose.material.icons.outlined.SwipeDown
@@ -29,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 
 enum class SwitchSetting(
@@ -41,13 +42,13 @@ enum class SwitchSetting(
 ) {
     SETTING_ENABLE_JOURNALS(
         key = "settings_enable_journals",
-        icon = { Icon(Icons.Outlined.EventNote, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        icon = { Icon(Icons.AutoMirrored.Outlined.EventNote, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_modules_enable_journals,
         default = true
     ),
     SETTING_ENABLE_NOTES(
         key = "settings_enable_notes",
-        icon = { Icon(Icons.Outlined.NoteAdd, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        icon = { Icon(Icons.AutoMirrored.Outlined.NoteAdd, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_modules_enable_notes,
         default = true
     ),
@@ -65,7 +66,7 @@ enum class SwitchSetting(
     ),
     SETTING_AUTO_EXPAND_SUBNOTES(
         key = "settings_auto_expand_subnotes",
-        icon = { Icon(Icons.Outlined.Note, null, modifier = Modifier.padding(16.dp)) },
+        icon = { Icon(Icons.AutoMirrored.Outlined.Note, null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_default_expand_subnotes,
         default = false
     ),
@@ -140,19 +141,33 @@ enum class SwitchSetting(
         subtitle = R.string.settings_sticky_alarms_sub,
         default = false
     ),
+    SETTING_FULLSCREEN_ALARMS(
+        key = "settings_fullscreen_alarms",
+        icon = { Icon(Icons.Outlined.Fullscreen, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_fullscreen_alarms,
+        subtitle = R.string.settings_fullscreen_alarms_sub,
+        default = false
+    ),
     SETTING_SYNC_ON_START(
         key = "settings_sync_on_start",
         icon = { Icon(Icons.Outlined.RestartAlt, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_sync_on_start,
-        default = true
+        default = false
     ),
     SETTING_SYNC_ON_PULL_REFRESH(
         key = "settings_sync_on_pull_refresh",
         icon = { Icon(Icons.Outlined.SwipeDown, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_sync_on_pull_refresh,
         default = true
+    ),
+    SETTING_ACCESSIBILITY_MODE(
+        key = "settings_accessibility_mode",
+        icon = { Icon(Icons.Outlined.FormatSize, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_accessibility_mode,
+        subtitle = R.string.settings_accessibility_mode_sub,
+        default = false
     );
-    fun save(newSwitchValue: Boolean, context: Context) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, newSwitchValue).apply()
-    }
+    fun saveSetting(newSwitchValue: Boolean, prefs: SharedPreferences) = prefs.edit().putBoolean(key, newSwitchValue).apply()
+
+    fun getSetting(prefs: SharedPreferences) = prefs.getBoolean(key, default)
 }

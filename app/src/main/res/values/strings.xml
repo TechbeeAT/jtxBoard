@@ -9,16 +9,16 @@
     <string name="link_jtx" translatable="false">"https://jtx.techbee.at"</string>
     <string name="link_jtx_support" translatable="false">"https://jtx.techbee.at/support"</string>
     <string name="link_jtx_privacy_policy" translatable="false">"https://jtx.techbee.at/privacy"</string>
-    <string name="link_jtx_twitter" translatable="false">"https://twitter.com/jtxBoard"</string>
     <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
-    <string name="twitter_account_name" translatable="false">"@jtxBoard"</string>
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Save"</string>
+    <string name="update">"Update"</string>
     <string name="cancel">"Cancel"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Delete"</string>
     <string name="discard">"Discard"</string>
+    <string name="dismiss">"Dismiss"</string>
+    <string name="open">"Open"</string>
     <string name="cont">"Continue"</string>
     <string name="website">"Website"</string>
     <string name="latitude">"Latitude"</string>
@@ -64,11 +64,14 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Privacy Policy"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Overdue"</string>
+    <string name="list_due_shortly">"Due shortly"</string>
     <string name="list_due_today">"Due today"</string>
     <string name="list_due_tomorrow">"Due tomorrow"</string>
+    <string name="list_due_within_7_days">"Due within 7 days"</string>
     <string name="list_due_inXhours">"Due in %d hours"</string>
     <string name="list_due_on_weekday">"Due on %s"</string>
     <string name="list_start_past">"Start in past"</string>
+    <string name="list_start_shortly">"Start shortly"</string>
     <string name="list_start_today">"Planned start today"</string>
     <string name="list_start_tomorrow">"Start tomorrow"</string>
     <string name="list_start_inXhours">"Planned start in %d hours"</string>
@@ -83,6 +86,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
     <string name="list_item_recurring">"Recurring entry"</string>
     <string name="list_item_edited_recurring">"Edited recurring entry"</string>
+    <string name="list_scroll_to_top">"Scroll to top"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"App Permission"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature."</string>
@@ -109,9 +113,11 @@ Global Strings -->
     <string name="edit_recur_on_weekday">"on"</string>
     <string name="edit_recur_on_the_x_day_of_month">"on the"</string>
     <string name="edit_recur_x_day_of_the_month">"day of the month"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"last"</string>
     <string name="edit_recur_x_times">"times"</string>
     <string name="edit_recur_toast_requires_start_date">"Recurrence requires a start-date to be set!"</string>
     <string name="edit_datepicker_dialog_select_date">"Select date"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Select date range"</string>
     <string name="edit_datepicker_dialog_add_time">"Add time"</string>
     <string name="edit_datepicker_dialog_edit_time">"Edit time"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Add timezone"</string>
@@ -198,10 +204,6 @@ Global Strings -->
     <string name="save_and_close">"Save &amp; close"</string>
     <string name="list_quickadd_add_audio_attachment">"Record audio attachment"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Read contacts permission granted"</string>
-    <string name="permission_read_contacts_denied">"Read contacts permission denied"</string>
-    <string name="permission_record_audio_granted">"Record audio permission granted"</string>
-    <string name="permission_record_audio_denied">"Record audio permission denied"</string>
     <string name="intent_dialog_title">"Add content to a journal, note or task?"</string>
     <string name="add">"Add"</string>
     <string name="edit">"Edit"</string>
@@ -254,8 +256,6 @@ Global Strings -->
     <string name="edit_recur_week">"week(s)"</string>
     <string name="edit_recur_month">"month(s)"</string>
     <string name="edit_recur_year">"year(s)"</string>
-    <string name="collections_toast_export_ics_success">"Exporting collection finished successfully."</string>
-    <string name="collections_toast_export_ics_error">"An error occurred while exporting the selected collection."</string>
     <string name="attachment_export_saved_successfully">"Saved successfully"</string>
     <string name="attachment_export_error_error_occurred">"An error occurred while saving the selected file!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Add remote Collection (%1$s)"</string>
@@ -268,6 +268,7 @@ Global Strings -->
     <string name="status">"Status"</string>
     <string name="classification">"Classification"</string>
     <string name="category">"Category"</string>
+    <string name="resource">"Resource"</string>
     <string name="priority">"Priority"</string>
     <string name="readyonly">"Read only"</string>
     <string name="upload_pending">"Upload pending"</string>
@@ -291,6 +292,8 @@ Global Strings -->
     <string name="search_notes">Search notes</string>
     <string name="search_todos">Search tasks</string>
     <string name="filter">"Filter"</string>
+    <string name="visibility">"Visibility"</string>
+    <string name="order">"Order"</string>
     <string name="sync_now">"Sync now"</string>
     <string name="due">"Due"</string>
     <string name="completed">"Completed"</string>
@@ -309,10 +312,12 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Move all entries from \"%1$s\" to"</string>
     <string name="collection_dialog_move_info">"Please note: Only writeable collections and collections with support for the same components (Journals, Notes, Tasks) can be selected."</string>
     <string name="menu_collections_popup_move_entries">"Move entries"</string>
+    <string name="setting_no_time">"No time"</string>
     <string name="list_no_dates_set">"No dates set"</string>
     <string name="list_without_start_date">"Without start date"</string>
     <string name="list_without_due_date">"Without due date"</string>
     <string name="list_without_completed_date">"Without completed date"</string>
+    <string name="list_show_only_search_matching_subentries">"Show only search matching sub-entries"</string>
     <string name="filter_order_by">"Order by"</string>
     <string name="filter_asc">"Ascending"</string>
     <string name="filter_desc">"Descending"</string>
@@ -322,6 +327,9 @@ Global Strings -->
     <string name="filter_no_resource">Without resources</string>
     <string name="filter_subtasks_order_by">Order subtasks by</string>
     <string name="filter_subnotes_order_by">Order linked notes by</string>
+    <string name="filter_no_filter">"No filter"</string>
+    <string name="filter_options_more_entries">"More (%1$d)"</string>
+    <string name="filter_options_less_entries">"Less"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Please click on the collection to which the entry/entries should be added!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d added, %2$d skipped. (Exclusive instances of recurring entries.)"</string>
     <string name="collections_toast_x_items_added">"%1$d entries added!"</string>
@@ -333,9 +341,15 @@ Global Strings -->
     <string name="edit_recur_ends_never">"ends never"</string>
     <string name="edit_recur_ends_on">"ends on"</string>
     <string name="edit_recur_ends_after">"ends after"</string>
-    <string name="collections_toast_export_all_ics_success">"Exporting all collections finished successfully."</string>
-    <string name="collections_toast_export_all_ics_error">"An error occurred while exporting all collections."</string>
+    <string name="collections_toast_export_success">"Collections successfully exported"</string>
+    <string name="collections_toast_export_error">"Error on exporting collections"</string>
     <string name="menu_collections_export_all">"Export all"</string>
+    <string name="menu_presets_export_presets">"Export presets"</string>
+    <string name="menu_presets_import_presets">"Import presets"</string>
+    <string name="presets_imported">"Presets imported"</string>
+    <string name="presets_import_invalid_file">"Invalid file"</string>
+    <string name="presets_saved">"Presets saved"</string>
+    <string name="presets_export_error">"An error occurred saving presets"</string>
     <string name="more">"More"</string>
     <string name="navigation_drawer_buypro">"Buy Pro"</string>
     <string name="settings_select_theme">"Select theme"</string>
@@ -347,6 +361,10 @@ Global Strings -->
     <string name="settings_protect_biometric_all">"All"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Please authenticate to change this setting!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Please authenticate to show protected entries!"</string>
+    <string name="settings_timezone_display">"Select display of time with timezone"</string>
+    <string name="settings_timezone_display_local">"Show time in local timezone"</string>
+    <string name="settings_timezone_display_original">"Show time in original timezone"</string>
+    <string name="settings_timezone_display_local_and_original">"Show time in local and in original timezone (detail view only)"</string>
     <string name="donate_dialog_title">"Do you like jtx Board?"</string>
     <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
 Thank you!"</string>
@@ -373,12 +391,12 @@ Thank you!"</string>
     <string name="settings_default_expand_attachments">"Expand attachments in list by default"</string>
     <string name="link_paypal" translatable="false">"https://www.paypal.com/donate?hosted_button_id=8BVX7PUVVTCWY"</string>
     <string name="link_jtx_donate" translatable="false">"https://jtx.techbee.at/contribute"</string>
-    <string name="permission_coarse_location_granted">"Coarse location permission granted"</string>
-    <string name="permission_coarse_location_denied">"Coarse location permission denied"</string>
     <string name="sorry">"Sorry"</string>
     <string name="back">"Back"</string>
     <string name="details">"Details"</string>
     <string name="date">"Date"</string>
+    <string name="summary_description">"Summary/Description"</string>
+    <string name="status_classification_priority">"Status/Classification/Priority"</string>
     <string name="timezone">"Timezone"</string>
     <string name="not_set2">"Not set"</string>
     <string name="invert_selection">"Invert selection"</string>
@@ -468,10 +486,15 @@ Thank you!"</string>
     <string name="settings_audio_format_ogg" translatable="false">"OGG (audio/ogg)"</string>
     <string name="settings_audio_format_mp4" translatable="false">"MP4 (audio/mp4)"</string>
     <string name="settings_tasks">"Tasks Settings"</string>
+    <string name="settings_alarms">"Alarms Settings"</string>
     <string name="settings_tasks_status_progress">"Tasks Settings (status/progress)"</string>
     <string name="settings_sync">"Sync Settings"</string>
     <string name="settings_default_start_date">"Set a default start date for tasks"</string>
+    <string name="settings_default_start_timezone">"Set a default start timezone for tasks"</string>
     <string name="settings_default_due_date">"Set a default due date for tasks"</string>
+    <string name="settings_default_due_timezone">"Set a default due timezone for tasks"</string>
+    <string name="settings_default_start_time">"Set a default start time for tasks"</string>
+    <string name="settings_default_due_time">"Set a default due time for tasks"</string>
     <string name="settings_default_date_none">"None"</string>
     <string name="settings_default_date_same_day">"Same day"</string>
     <string name="settings_default_date_next_day">"Next day"</string>
@@ -495,6 +518,11 @@ Thank you!"</string>
     <string name="settings_create_with_current_location">"Create new entries with current location"</string>
     <string name="settings_sticky_alarms">"Sticky alarms"</string>
     <string name="settings_sticky_alarms_sub">"Keep notifications until done or postponed"</string>
+    <string name="settings_fullscreen_alarms">"Full screen alarms"</string>
+    <string name="settings_fullscreen_alarms_sub">"Shows alarms in full screen when the device is locked"</string>
+    <string name="settings_accessibility_mode">"Accessibility mode"</string>
+    <string name="settings_accessibility_mode_sub">"Ensures minimum font-size for small elements"</string>
+    <string name="settings_fullscreen_alarms_toast">"Please grant full screen notification permission in the system settings."</string>
     <string name="settings_sync_on_start">"Sync on app start"</string>
     <string name="settings_sync_on_pull_refresh">"Sync on pull down"</string>
     <string name="sync_button_go_to_collections">"Go to Collections"</string>
@@ -512,14 +540,20 @@ Thank you!"</string>
     <string name="settings_select_language_system">"System default"</string>
     <string name="filter_special">"Special filters"</string>
     <string name="filter_presets">"Filter presets"</string>
+    <string name="filter_presets_edit_info">"Please add/update/delete filter presets from the filter menu in the list view."</string>
+    <string name="filter_any">"Any"</string>
+    <string name="filter_all">"All"</string>
+    <string name="filter_none">"None"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>
     <string name="list_date_tomorrow">"Tomorrow"</string>
+    <string name="list_date_within_7_days">"Within 7 days"</string>
     <string name="list_date_future">"Date in future"</string>
     <string name="list_start_date_in_past">"Start in past"</string>
     <string name="list_start_date_today">"Start today"</string>
     <string name="list_start_date_tomorrow">"Start tomorrow"</string>
+    <string name="list_start_date_within_7_days">"Start within 7 days"</string>
     <string name="list_start_date_future">"Start in future"</string>
     <string name="list_hide_completed_tasks">"Hide completed tasks"</string>
     <string name="list_biometric_protected_entries_locked">Biometric protected entries locked</string>
@@ -529,6 +563,7 @@ Thank you!"</string>
     <string name="list_biometric_protected_entries_unlocked">Biometric protected entries unlocked</string>
     <string name="settings_auto_alarm">"Automatic alarm"</string>
     <string name="alarms_always_ondue">"Always on due"</string>
+    <string name="alarms_always_on_save">"Always on save (experimental)"</string>
     <string name="settings_auto_alarm_sub">"Turn on to automatically create alarms. Choose \"Always on due\" to not create an alarm but to get notified in any case when a task is due."</string>
     <string name="settings_protect_biometric">"Protect entries with biometrics"</string>
     <string name="settings_protect_biometric_sub">"This function hides the selected entries until they are unlocked with biometrics, but does not encrypt/decrypt data in the background."</string>

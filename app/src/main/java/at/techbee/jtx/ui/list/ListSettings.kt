@@ -28,7 +28,9 @@ import kotlinx.serialization.json.Json
 class ListSettings {
 
     var searchCategories = mutableStateListOf<String>()
+    var searchCategoriesAnyAllNone = mutableStateOf(AnyAllNone.ANY)
     var searchResources = mutableStateListOf<String>()
+    var searchResourcesAnyAllNone = mutableStateOf(AnyAllNone.ANY)
     //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
     var searchStatus = mutableStateListOf<Status>()
     var searchXStatus = mutableStateListOf<String>()
@@ -40,18 +42,21 @@ class ListSettings {
     var orderBy2: MutableState<OrderBy> = mutableStateOf(OrderBy.SUMMARY)
     var sortOrder2: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var groupBy: MutableState<GroupBy?> = mutableStateOf(null)
+    var showOnlySearchMatchingSubentries: MutableState<Boolean> = mutableStateOf(false)
     var subtasksOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
-    var subtasksSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var subtasksSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.DESC)
     var subnotesOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
-    var subnotesSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var subnotesSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.DESC)
     var isExcludeDone: MutableState<Boolean> = mutableStateOf(false)
     var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueTomorrow: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterDueWithin7Days: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartInPast: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartToday: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartTomorrow: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterStartWithin7Days: MutableState<Boolean> = mutableStateOf(false)
     var isFilterStartFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoStartDateSet: MutableState<Boolean> = mutableStateOf(false)
@@ -59,6 +64,14 @@ class ListSettings {
     var isFilterNoCompletedDateSet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoCategorySet: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoResourceSet: MutableState<Boolean> = mutableStateOf(false)
+
+    var filterStartRangeStart: MutableState<Long?> = mutableStateOf(null)
+    var filterStartRangeEnd: MutableState<Long?> = mutableStateOf(null)
+    var filterDueRangeStart: MutableState<Long?> = mutableStateOf(null)
+    var filterDueRangeEnd: MutableState<Long?> = mutableStateOf(null)
+    var filterCompletedRangeStart: MutableState<Long?> = mutableStateOf(null)
+    var filterCompletedRangeEnd: MutableState<Long?> = mutableStateOf(null)
+
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
     var newEntryText: MutableState<String> = mutableStateOf("")    // newEntryText is not saved!
     var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
@@ -71,6 +84,7 @@ class ListSettings {
     var kanbanColumnsStatus = mutableStateListOf<String?>()
     var kanbanColumnsXStatus = mutableStateListOf<String>()
     var kanbanColumnsCategory = mutableStateListOf<String>()
+    var collapsedGroups = mutableStateListOf<String>()
 
 
     var widgetHeader: MutableState<String> = mutableStateOf("") //widgetOnly
@@ -87,7 +101,9 @@ class ListSettings {
         private const val PREFS_COLLECTION = "prefsCollection"
         private const val PREFS_ACCOUNT = "prefsAccount"
         private const val PREFS_CATEGORIES = "prefsCategories"
+        private const val PREFS_CATEGORIES_ANYALLNONE = "prefsCategoriesAnyAllNone"
         private const val PREFS_RESOURCES = "prefsResources"
+        private const val PREFS_RESOURCES_ANYALLNONE = "prefsResourcesAnyAllNone"
         private const val PREFS_CLASSIFICATION = "prefsClassification"
         private const val PREFS_STATUS = "prefsStatus"
         private const val PREFS_EXTENDED_STATUS = "prefsXStatus"
@@ -101,9 +117,11 @@ class ListSettings {
         private const val PREFS_SUBTASKS_SORTORDER = "prefsSubtasksSortOrder"
         private const val PREFS_SUBNOTES_ORDERBY = "prefsSubnotesOrderBy"
         private const val PREFS_SUBNOTES_SORTORDER = "prefsSubnotesSortOrder"
+        private const val PREFS_SHOW_ONLY_SEARCH_MATCHING_SUBENTRIES = "prefsShowOnlySearchMatchingSubentries"
         private const val PREFS_FILTER_OVERDUE = "prefsFilterOverdue"
         private const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
+        private const val PREFS_FILTER_DUE_WITHIN_7_DAYS = "prefsFilterDueWithin7Days"
         private const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
         private const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
         private const val PREFS_FILTER_NO_START_DATE_SET = "prefsFilterNoStartDateSet"
@@ -112,7 +130,16 @@ class ListSettings {
         private const val PREFS_FILTER_START_IN_PAST = "prefsFilterStartOverdue"
         private const val PREFS_FILTER_START_TODAY = "prefsFilterStartToday"
         private const val PREFS_FILTER_START_TOMORROW = "prefsFilterStartTomorrow"
+        private const val PREFS_FILTER_START_WITHIN_7_DAYS = "prefsFilterStartWithin7Days"
         private const val PREFS_FILTER_START_FUTURE = "prefsFilterStartFuture"
+
+        private const val PREFS_FILTER_START_RANGE_START = "prefsFilterStartRangeStart"
+        private const val PREFS_FILTER_START_RANGE_END = "prefsFilterStartRangeEnd"
+        private const val PREFS_FILTER_DUE_RANGE_START = "prefsFilterDueRangeStart"
+        private const val PREFS_FILTER_DUE_RANGE_END = "prefsFilterDueRangeEnd"
+        private const val PREFS_FILTER_COMPLETED_RANGE_START = "prefsFilterCompletedRangeStart"
+        private const val PREFS_FILTER_COMPLETED_RANGE_END = "prefsFilterCompletedRangeEnd"
+
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
         private const val PREFS_FLAT_VIEW = "prefsFlatView"
@@ -130,6 +157,7 @@ class ListSettings {
         private const val PREFS_KANBAN_COLUMNS_STATUS2 = "kanbanColumnsStatus2"
         private const val PREFS_KANBAN_COLUMNS_EXTENDED_STATUS2 = "kanbanColumnsXStatus2"
         private const val PREFS_KANBAN_COLUMNS_CATEGORY2 = "kanbanColumnsCategory2"
+        private const val PREFS_COLLAPSED_GROUPS = "collapsedGroups"
 
         //private const val PREFS_CHECKBOX_POSITION_END = "prefsCheckboxPosition"
         //private const val PREFS_WIDGET_ALPHA = "prefsWidgetAlpha"
@@ -137,7 +165,7 @@ class ListSettings {
 
         fun getProtectedClassificationsFromSettings(context: Context) =
             when(SettingsStateHolder(context).settingProtectBiometric.value) {
-                DropdownSettingOption.PROTECT_BIOMETRIC_ALL -> Classification.values().toList()
+                DropdownSettingOption.PROTECT_BIOMETRIC_ALL -> Classification.entries
                 DropdownSettingOption.PROTECT_BIOMETRIC_CONFIDENTIAL -> listOf(Classification.CONFIDENTIAL)
                 DropdownSettingOption.PROTECT_BIOMETRIC_PRIVATE_CONFIDENTIAL -> listOf(Classification.PRIVATE, Classification.CONFIDENTIAL)
                 else -> emptyList()
@@ -149,10 +177,12 @@ class ListSettings {
             isFilterOverdue.value = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
             isFilterDueToday.value = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
             isFilterDueTomorrow.value = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
+            isFilterDueWithin7Days.value = prefs.getBoolean(PREFS_FILTER_DUE_WITHIN_7_DAYS, false)
             isFilterDueFuture.value = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
             isFilterStartInPast.value = prefs.getBoolean(PREFS_FILTER_START_IN_PAST, false)
             isFilterStartToday.value = prefs.getBoolean(PREFS_FILTER_START_TODAY, false)
             isFilterStartTomorrow.value = prefs.getBoolean(PREFS_FILTER_START_TOMORROW, false)
+            isFilterStartWithin7Days.value = prefs.getBoolean(PREFS_FILTER_START_WITHIN_7_DAYS, false)
             isFilterStartFuture.value = prefs.getBoolean(PREFS_FILTER_START_FUTURE, false)
             isFilterNoDatesSet.value = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
             isFilterNoStartDateSet.value = prefs.getBoolean(PREFS_FILTER_NO_START_DATE_SET, false)
@@ -161,12 +191,20 @@ class ListSettings {
             isFilterNoCategorySet.value = prefs.getBoolean(PREFS_FILTER_NO_CATEGORY_SET, false)
             isFilterNoResourceSet.value = prefs.getBoolean(PREFS_FILTER_NO_RESOURCE_SET, false)
 
+            filterStartRangeStart.value = prefs.getLong(PREFS_FILTER_START_RANGE_START, 0L).takeIf { it != 0L }
+            filterStartRangeEnd.value = prefs.getLong(PREFS_FILTER_START_RANGE_END, 0L).takeIf { it != 0L }
+            filterDueRangeStart.value = prefs.getLong(PREFS_FILTER_DUE_RANGE_START, 0L).takeIf { it != 0L }
+            filterDueRangeEnd.value = prefs.getLong(PREFS_FILTER_DUE_RANGE_END, 0L).takeIf { it != 0L }
+            filterCompletedRangeStart.value = prefs.getLong(PREFS_FILTER_COMPLETED_RANGE_START, 0L).takeIf { it != 0L }
+            filterCompletedRangeEnd.value = prefs.getLong(PREFS_FILTER_COMPLETED_RANGE_END, 0L).takeIf { it != 0L }
+
             //searchOrganizers =
             searchCategories.addAll(prefs.getStringSet(PREFS_CATEGORIES, emptySet())?.toList() ?: emptyList())
+            searchCategoriesAnyAllNone.value = prefs.getString(PREFS_CATEGORIES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: AnyAllNone.ANY
             searchResources.addAll(prefs.getStringSet(PREFS_RESOURCES, emptySet())?.toList() ?: emptyList())
+            searchResourcesAnyAllNone.value = prefs.getString(PREFS_RESOURCES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: AnyAllNone.ANY
             searchStatus.addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
             searchXStatus.addAll(prefs.getStringSet(PREFS_EXTENDED_STATUS, emptySet())?.toList() ?: emptyList())
-
             searchClassification.addAll(Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null)))
             searchCollection.addAll(prefs.getStringSet(PREFS_COLLECTION, emptySet())?.toList() ?: emptyList())
             searchAccount.addAll(prefs.getStringSet(PREFS_ACCOUNT, emptySet())?.toList() ?: emptyList())
@@ -176,11 +214,12 @@ class ListSettings {
             orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
             sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
             groupBy.value = prefs.getString(PREFS_GROUPBY, null)?.let { try { GroupBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } }
+            showOnlySearchMatchingSubentries.value = prefs.getBoolean(PREFS_SHOW_ONLY_SEARCH_MATCHING_SUBENTRIES, false)
 
             subtasksOrderBy.value = prefs.getString(PREFS_SUBTASKS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
-            subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+            subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.DESC
             subnotesOrderBy.value = prefs.getString(PREFS_SUBNOTES_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
-            subnotesSortOrder.value = prefs.getString(PREFS_SUBNOTES_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+            subnotesSortOrder.value = prefs.getString(PREFS_SUBNOTES_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.DESC
 
             viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
@@ -194,6 +233,7 @@ class ListSettings {
             kanbanColumnsStatus.addAll(prefs.getString(PREFS_KANBAN_COLUMNS_STATUS2, null)?.let { Json.decodeFromString(it) }?: emptyList())
             kanbanColumnsXStatus.addAll(prefs.getString(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS2, null)?.let { Json.decodeFromString(it) }?: emptyList())
             kanbanColumnsCategory.addAll(prefs.getString(PREFS_KANBAN_COLUMNS_CATEGORY2, null)?.let { Json.decodeFromString(it) }?: emptyList())
+            collapsedGroups.addAll(prefs.getString(PREFS_COLLAPSED_GROUPS, null)?.let { Json.decodeFromString(it) }?: emptyList())
 
             showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
 
@@ -207,10 +247,12 @@ class ListSettings {
             isFilterOverdue.value = listWidgetConfig.isFilterOverdue
             isFilterDueToday.value = listWidgetConfig.isFilterDueToday
             isFilterDueTomorrow.value = listWidgetConfig.isFilterDueTomorrow
+            isFilterDueWithin7Days.value = listWidgetConfig.isFilterDueWithin7Days
             isFilterDueFuture.value = listWidgetConfig.isFilterDueFuture
             isFilterStartInPast.value = listWidgetConfig.isFilterStartInPast
             isFilterStartToday.value = listWidgetConfig.isFilterStartToday
             isFilterStartTomorrow.value = listWidgetConfig.isFilterStartTomorrow
+            isFilterStartWithin7Days.value = listWidgetConfig.isFilterStartWithin7Days
             isFilterStartFuture.value = listWidgetConfig.isFilterStartFuture
             isFilterNoDatesSet.value = listWidgetConfig.isFilterNoDatesSet
             isFilterNoStartDateSet.value = listWidgetConfig.isFilterNoStartDateSet
@@ -219,8 +261,17 @@ class ListSettings {
             isFilterNoCategorySet.value = listWidgetConfig.isFilterNoCategorySet
             isFilterNoResourceSet.value = listWidgetConfig.isFilterNoResourceSet
 
+            filterStartRangeStart.value = listWidgetConfig.filterStartRangeStart
+            filterStartRangeEnd.value = listWidgetConfig.filterStartRangeEnd
+            filterDueRangeStart.value = listWidgetConfig.filterDueRangeStart
+            filterDueRangeEnd.value = listWidgetConfig.filterDueRangeEnd
+            filterCompletedRangeStart.value = listWidgetConfig.filterCompletedRangeStart
+            filterCompletedRangeEnd.value = listWidgetConfig.filterCompletedRangeEnd
+
             searchCategories.addAll(listWidgetConfig.searchCategories)
+            searchCategoriesAnyAllNone.value = listWidgetConfig.searchCategoriesAnyAllNone
             searchResources.addAll(listWidgetConfig.searchResources)
+            searchResourcesAnyAllNone.value = listWidgetConfig.searchResourcesAnyAllNone
             searchStatus.addAll(listWidgetConfig.searchStatus)
             searchXStatus.addAll(listWidgetConfig.searchXStatus)
             searchClassification.addAll(listWidgetConfig.searchClassification)
@@ -258,10 +309,12 @@ class ListSettings {
             putBoolean(PREFS_FILTER_OVERDUE, isFilterOverdue.value)
             putBoolean(PREFS_FILTER_DUE_TODAY, isFilterDueToday.value)
             putBoolean(PREFS_FILTER_DUE_TOMORROW, isFilterDueTomorrow.value)
+            putBoolean(PREFS_FILTER_DUE_WITHIN_7_DAYS, isFilterDueWithin7Days.value)
             putBoolean(PREFS_FILTER_DUE_FUTURE, isFilterDueFuture.value)
             putBoolean(PREFS_FILTER_START_IN_PAST, isFilterStartInPast.value)
             putBoolean(PREFS_FILTER_START_TODAY, isFilterStartToday.value)
             putBoolean(PREFS_FILTER_START_TOMORROW, isFilterStartTomorrow.value)
+            putBoolean(PREFS_FILTER_START_WITHIN_7_DAYS, isFilterStartWithin7Days.value)
             putBoolean(PREFS_FILTER_START_FUTURE, isFilterStartFuture.value)
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
             putBoolean(PREFS_FILTER_NO_START_DATE_SET, isFilterNoStartDateSet.value)
@@ -270,11 +323,31 @@ class ListSettings {
             putBoolean(PREFS_FILTER_NO_CATEGORY_SET, isFilterNoCategorySet.value)
             putBoolean(PREFS_FILTER_NO_RESOURCE_SET, isFilterNoResourceSet.value)
 
+            filterStartRangeStart.value?.let {
+                putLong(PREFS_FILTER_START_RANGE_START, it)  }
+                ?: remove(PREFS_FILTER_START_RANGE_START)
+            filterStartRangeEnd.value?.let {
+                putLong(PREFS_FILTER_START_RANGE_END, it)  }
+                ?: remove(PREFS_FILTER_START_RANGE_END)
+            filterDueRangeStart.value?.let {
+                putLong(PREFS_FILTER_DUE_RANGE_START, it)  }
+                ?: remove(PREFS_FILTER_DUE_RANGE_START)
+            filterDueRangeEnd.value?.let {
+                putLong(PREFS_FILTER_DUE_RANGE_END, it)  }
+                ?: remove(PREFS_FILTER_DUE_RANGE_END)
+            filterCompletedRangeStart.value?.let {
+                putLong(PREFS_FILTER_COMPLETED_RANGE_START, it)  }
+                ?: remove(PREFS_FILTER_COMPLETED_RANGE_START)
+            filterCompletedRangeEnd.value?.let {
+                putLong(PREFS_FILTER_COMPLETED_RANGE_END, it)  }
+                ?: remove(PREFS_FILTER_COMPLETED_RANGE_END)
+
             putString(PREFS_ORDERBY, orderBy.value.name)
             putString(PREFS_SORTORDER, sortOrder.value.name)
             putString(PREFS_ORDERBY2, orderBy2.value.name)
             putString(PREFS_SORTORDER2, sortOrder2.value.name)
             groupBy.value?.name?.let { putString(PREFS_GROUPBY, it) } ?: remove(PREFS_GROUPBY)
+            putBoolean(PREFS_SHOW_ONLY_SEARCH_MATCHING_SUBENTRIES, showOnlySearchMatchingSubentries.value)
 
             putString(PREFS_SUBTASKS_ORDERBY, subtasksOrderBy.value.name)
             putString(PREFS_SUBTASKS_SORTORDER, subtasksSortOrder.value.name)
@@ -284,7 +357,9 @@ class ListSettings {
             putBoolean(PREFS_EXCLUDE_DONE, isExcludeDone.value)
 
             putStringSet(PREFS_CATEGORIES, searchCategories.toSet())
+            putString(PREFS_CATEGORIES_ANYALLNONE, searchCategoriesAnyAllNone.value.name)
             putStringSet(PREFS_RESOURCES, searchResources.toSet())
+            putString(PREFS_RESOURCES_ANYALLNONE, searchResourcesAnyAllNone.value.name)
             putStringSet(PREFS_STATUS, Status.getStringSetFromList(searchStatus))
             putStringSet(PREFS_EXTENDED_STATUS, searchXStatus.toSet())
             putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(searchClassification))
@@ -300,6 +375,7 @@ class ListSettings {
             putString(PREFS_KANBAN_COLUMNS_STATUS2, Json.encodeToString(kanbanColumnsStatus.toList()))
             putString(PREFS_KANBAN_COLUMNS_EXTENDED_STATUS2, Json.encodeToString(kanbanColumnsXStatus.toList()))
             putString(PREFS_KANBAN_COLUMNS_CATEGORY2, Json.encodeToString(kanbanColumnsCategory.toList()))
+            putString(PREFS_COLLAPSED_GROUPS, Json.encodeToString(collapsedGroups.toList()))
 
             putBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, showOneRecurEntryInFuture.value)
 
@@ -310,7 +386,9 @@ class ListSettings {
 
     fun reset() {
         searchCategories.clear()
+        searchCategoriesAnyAllNone.value = AnyAllNone.ANY
         searchResources.clear()
+        searchResourcesAnyAllNone.value = AnyAllNone.ANY
         //searchOrganizer = emptyList()
         searchStatus.clear()
         searchXStatus.clear()
@@ -321,10 +399,12 @@ class ListSettings {
         isFilterStartInPast.value = false
         isFilterStartToday.value = false
         isFilterStartTomorrow.value = false
+        isFilterStartWithin7Days.value = false
         isFilterStartFuture.value = false
         isFilterOverdue.value = false
         isFilterDueToday.value = false
         isFilterDueTomorrow.value = false
+        isFilterDueWithin7Days.value = false
         isFilterDueFuture.value = false
         isFilterNoDatesSet.value = false
         isFilterNoStartDateSet.value = false
@@ -332,6 +412,13 @@ class ListSettings {
         isFilterNoCompletedDateSet.value = false
         isFilterNoCategorySet.value = false
         isFilterNoResourceSet.value = false
+
+        filterStartRangeStart.value = null
+        filterStartRangeEnd.value = null
+        filterDueRangeStart.value = null
+        filterDueRangeEnd.value = null
+        filterCompletedRangeStart.value = null
+        filterCompletedRangeEnd.value = null
     }
 
     fun getLastUsedCollectionId(prefs: SharedPreferences) = prefs.getLong(PREFS_LAST_COLLECTION, 0L)
@@ -350,10 +437,12 @@ class ListSettings {
                 || isFilterStartInPast.value
                 || isFilterStartToday.value
                 || isFilterStartTomorrow.value
+                || isFilterStartWithin7Days.value
                 || isFilterStartFuture.value
                 || isFilterOverdue.value
                 || isFilterDueToday.value
                 || isFilterDueTomorrow.value
+                || isFilterDueWithin7Days.value
                 || isFilterDueFuture.value
                 || isFilterNoDatesSet.value
                 || isFilterNoStartDateSet.value
@@ -361,4 +450,10 @@ class ListSettings {
                 || isFilterNoCompletedDateSet.value
                 || isFilterNoCategorySet.value
                 || isFilterNoResourceSet.value
+                || filterStartRangeStart.value != null
+                || filterStartRangeEnd.value != null
+                || filterDueRangeStart.value != null
+                || filterDueRangeEnd.value != null
+                || filterCompletedRangeStart.value != null
+                || filterCompletedRangeEnd.value != null
 }

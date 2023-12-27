@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Sort
+import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.outlined.ViewHeadline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -75,6 +75,8 @@ fun ListOptionsGroupSort(
                             listSettings.groupBy.value = null
 
                         listSettings.orderBy.value = when(listSettings.groupBy.value) {
+                            GroupBy.CATEGORY -> listSettings.orderBy.value
+                            GroupBy.RESOURCE -> listSettings.orderBy.value
                             GroupBy.START -> OrderBy.START_VTODO
                             GroupBy.DATE -> OrderBy.START_VJOURNAL
                             GroupBy.CLASSIFICATION -> OrderBy.CLASSIFICATION
@@ -83,7 +85,7 @@ fun ListOptionsGroupSort(
                             GroupBy.DUE -> OrderBy.DUE
                             GroupBy.ACCOUNT -> OrderBy.ACCOUNT
                             GroupBy.COLLECTION -> OrderBy.COLLECTION
-                            else -> listSettings.orderBy.value
+                            null -> listSettings.orderBy.value
                         }
                         onListSettingsChanged()
                     },
@@ -96,7 +98,7 @@ fun ListOptionsGroupSort(
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
         HeadlineWithIcon(
-            icon = Icons.Outlined.Sort,
+            icon = Icons.AutoMirrored.Outlined.Sort,
             iconDesc = stringResource(id = R.string.filter_order_by),
             text = stringResource(id = R.string.filter_order_by),
             modifier = Modifier.padding(top = 8.dp)
@@ -107,7 +109,7 @@ fun ListOptionsGroupSort(
             OrderBy.getValuesFor(module).forEach { orderBy ->
                 FilterChip(
                     selected = listSettings.orderBy.value == orderBy,
-                    enabled = listSettings.groupBy.value == null,
+                    enabled = listSettings.groupBy.value == null || listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE,
                     onClick = {
                         if (listSettings.orderBy.value != orderBy)
                             listSettings.orderBy.value = orderBy
@@ -135,7 +137,7 @@ fun ListOptionsGroupSort(
 
         // SORT ORDER 2
         HeadlineWithIcon(
-            icon = Icons.Outlined.Sort,
+            icon = Icons.AutoMirrored.Outlined.Sort,
             iconDesc = stringResource(id = R.string.filter_second_order_by),
             text = stringResource(id = R.string.filter_second_order_by),
             modifier = Modifier.padding(top = 8.dp)
@@ -175,7 +177,7 @@ fun ListOptionsGroupSort(
 
         // SORT ORDER FOR SUBTASKS
         HeadlineWithIcon(
-            icon = Icons.Outlined.Sort,
+            icon = Icons.AutoMirrored.Outlined.Sort,
             iconDesc = null,
             text = stringResource(id = R.string.filter_subtasks_order_by),
             modifier = Modifier.padding(top = 8.dp)
@@ -214,7 +216,7 @@ fun ListOptionsGroupSort(
 
         // SORT ORDER FOR SUBNOTES
         HeadlineWithIcon(
-            icon = Icons.Outlined.Sort,
+            icon = Icons.AutoMirrored.Outlined.Sort,
             iconDesc = null,
             text = stringResource(id = R.string.filter_subnotes_order_by),
             modifier = Modifier.padding(top = 8.dp)

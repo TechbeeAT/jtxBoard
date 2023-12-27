@@ -21,7 +21,12 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -31,8 +36,14 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,7 +58,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredResource
@@ -74,6 +88,7 @@ fun ListScreenKanban(
     kanbanColumnsCategory: SnapshotStateList<String>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
+    settingIsAccessibilityMode: Boolean,
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
@@ -143,7 +158,7 @@ fun ListScreenKanban(
                     LaunchedEffect(list) {
                         val itemIndex = groupedList[column]?.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId } ?: -1
                         if (itemIndex > -1) {
-                            listState.animateScrollToItem(itemIndex)
+                            listState.scrollToItem(itemIndex)
                             scrollOnceId.postValue(null)
                         }
                     }
@@ -191,9 +206,9 @@ fun ListScreenKanban(
                             storedStatuses = extendedStatuses,
                             selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                             markdownEnabled = markdownEnabled,
+                            settingIsAccessibilityMode = settingIsAccessibilityMode,
                             player = player,
                             modifier = Modifier
-                                .animateItemPlacement()
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
                                     onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
@@ -235,8 +250,7 @@ fun ListScreenKanban(
 
                                                 kanbanColumnsCategory.isNotEmpty() -> onSwapCategories(iCal4ListRelObject.iCal4List.id, column, columns[draggedToColumn])
 
-                                                else -> Status     //this cover also kanbanColumnsStatus.isNotEmpty()
-                                                    .values()
+                                                else -> Status.entries
                                                     .find { status -> context.getString(status.stringResource) == columns[draggedToColumn] }
                                                     ?.let { status ->
                                                         onStatusChanged(iCal4ListRelObject.iCal4List.id, status, true)
@@ -324,6 +338,7 @@ fun ListScreenKanban_TODO() {
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
@@ -387,6 +402,7 @@ fun ListScreenKanban_JOURNAL() {
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
+            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,

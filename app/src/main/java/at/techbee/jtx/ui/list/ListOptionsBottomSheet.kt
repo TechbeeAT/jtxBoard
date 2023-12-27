@@ -18,7 +18,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -27,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -42,7 +47,7 @@ import at.techbee.jtx.database.locals.StoredListSettingData
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ListOptionsBottomSheet(
     module: Module,
@@ -55,7 +60,7 @@ fun ListOptionsBottomSheet(
     storedListSettingLive: LiveData<List<StoredListSetting>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
     onListSettingsChanged: () -> Unit,
-    onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
+    onSaveStoredListSetting: (StoredListSetting) -> Unit,
     onDeleteStoredListSetting: (StoredListSetting) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -73,7 +78,7 @@ fun ListOptionsBottomSheet(
         modifier = modifier
     ) {
 
-        TabRow(selectedTabIndex = pagerState.currentPage) {
+        SecondaryTabRow(selectedTabIndex = pagerState.currentPage) {
             listOptionTabs.forEach { tab ->
                 Tab(
                     selected = pagerState.currentPage == listOptionTabs.indexOf(tab),
@@ -88,7 +93,8 @@ fun ListOptionsBottomSheet(
                                 ListOptionsBottomSheetTabs.FILTER -> R.string.filter
                                 ListOptionsBottomSheetTabs.GROUP_SORT -> R.string.filter_group_sort
                                 ListOptionsBottomSheetTabs.KANBAN_SETTINGS -> R.string.kanban_settings
-                            } )
+                            } ),
+                            textAlign = TextAlign.Center
                         )
                     },
                     modifier = Modifier.height(50.dp)
@@ -185,7 +191,7 @@ fun ListOptionsBottomSheet_Preview_TODO() {
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
-            onSaveStoredListSetting = { _, _ -> },
+            onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }
 
         )
@@ -229,7 +235,7 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
             storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
-            onSaveStoredListSetting = { _, _ -> },
+            onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }
         )
     }

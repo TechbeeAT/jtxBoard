@@ -44,8 +44,9 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CollectionsScreenContent(
-    collectionsLive: LiveData<List<CollectionsView>>,
+    collections: List<CollectionsView>,
     isProcessing: LiveData<Boolean>,
+    settingAccessibilityMode: Boolean,
     onCollectionChanged: (ICalCollection) -> Unit,
     onCollectionDeleted: (ICalCollection) -> Unit,
     onEntriesMoved: (old: ICalCollection, new: ICalCollection) -> Unit,
@@ -56,12 +57,11 @@ fun CollectionsScreenContent(
     onDeleteAccount: (Account) -> Unit
 ) {
 
-    val list by collectionsLive.observeAsState(emptyList())
-    val grouped = list.groupBy { Account(it.accountName, it.accountType) }
+    val grouped = collections.groupBy { Account(it.accountName, it.accountType) }
     val showProgressIndicator by isProcessing.observeAsState(false)
 
     val foundAccounts = mutableSetOf<Account>()
-    list.map { it.accountType }.distinct().forEach { accountType ->
+    collections.map { it.accountType }.distinct().forEach { accountType ->
         val account = AccountManager.get(LocalContext.current).getAccountsByType(accountType)
         foundAccounts.addAll(account)
     }
@@ -110,7 +110,8 @@ fun CollectionsScreenContent(
 
                     CollectionCard(
                         collection = collection,
-                        allCollections = list,
+                        allCollections = collections,
+                        settingAccessibilityMode = settingAccessibilityMode,
                         onCollectionChanged = onCollectionChanged,
                         onCollectionDeleted = onCollectionDeleted,
                         onEntriesMoved = onEntriesMoved,
@@ -121,7 +122,6 @@ fun CollectionsScreenContent(
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
                             .clip(jtxCardCornerShape)
-                            .animateItemPlacement()
                             .combinedClickable(
                                 onClick = { onCollectionClicked(collection) })
                     )
@@ -167,8 +167,9 @@ fun CollectionsScreenContent_Preview() {
             accountType = "at.bitfire.davx5"
         )
         CollectionsScreenContent(
-            collectionsLive = MutableLiveData(listOf(collection1, collection2, collection3)),
+            collections = listOf(collection1, collection2, collection3),
             isProcessing = MutableLiveData(true),
+            settingAccessibilityMode = false,
             onCollectionChanged = { },
             onCollectionDeleted = { },
             onEntriesMoved = { _, _ -> },

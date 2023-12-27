@@ -35,15 +35,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -63,6 +66,7 @@ import at.techbee.jtx.util.SyncUtil
 fun CollectionCard(
     collection: CollectionsView,
     allCollections: List<CollectionsView>,
+    settingAccessibilityMode: Boolean,
     onCollectionChanged: (ICalCollection) -> Unit,
     onCollectionDeleted: (ICalCollection) -> Unit,
     onEntriesMoved: (old: ICalCollection, new: ICalCollection) -> Unit,
@@ -75,9 +79,9 @@ fun CollectionCard(
     var menuExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    var showCollectionsAddOrEditDialog by remember { mutableStateOf(false) }
-    var showCollectionsDeleteCollectionDialog by remember { mutableStateOf(false) }
-    var showCollectionsMoveCollectionDialog by remember { mutableStateOf(false) }
+    var showCollectionsAddOrEditDialog by rememberSaveable { mutableStateOf(false) }
+    var showCollectionsDeleteCollectionDialog by rememberSaveable { mutableStateOf(false) }
+    var showCollectionsMoveCollectionDialog by rememberSaveable { mutableStateOf(false) }
     val syncApp = SyncApp.fromAccountType(collection.accountType)
 
 
@@ -129,14 +133,30 @@ fun CollectionCard(
                         ListBadge(
                             icon = Icons.Outlined.FolderOpen,
                             iconDesc = stringResource(id = R.string.collection),
-                            containerColor = collection.color?.let { Color (it) } ?: MaterialTheme.colorScheme.primaryContainer
+                            containerColor = collection.color?.let { Color (it) } ?: MaterialTheme.colorScheme.primaryContainer,
+                            isAccessibilityMode = settingAccessibilityMode
                         )
-                        Text(
-                            collection.displayName ?: collection.accountName ?: collection.accountType ?: "",
-                            style = Typography.bodyMedium,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.weight(1f)
-                        )
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            collection.displayName?.let {
+                                Text(
+                                    text = it,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = Typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
+                            if(collection.accountType != LOCAL_ACCOUNT_TYPE) {
+                                Text(
+                                    text = collection.url,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.alpha(0.5f)
+                                )
+                            }
+                        }
                     }
                     if (collection.description?.isNotBlank() == true) {
                         Text(
@@ -146,7 +166,12 @@ fun CollectionCard(
                     }
 
                     collection.ownerDisplayName?.let {
-                        ListBadge(icon = Icons.Outlined.AccountCircle, iconDesc = null, text = it)
+                        ListBadge(
+                            icon = Icons.Outlined.AccountCircle,
+                            iconDesc = null,
+                            text = it,
+                            isAccessibilityMode = settingAccessibilityMode
+                        )
                     }
 
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -161,9 +186,18 @@ fun CollectionCard(
                         val numTodos = if (collection.supportsVTODO) collection.numTodos?.toString()
                             ?: "0" else notAvailable
 
-                        ListBadge(text = stringResource(id = R.string.collections_journals_num, numJournals))
-                        ListBadge(text = stringResource(id = R.string.collections_notes_num, numNotes))
-                        ListBadge(text = stringResource(id = R.string.collections_tasks_num, numTodos))
+                        ListBadge(
+                            text = stringResource(id = R.string.collections_journals_num, numJournals),
+                            isAccessibilityMode = settingAccessibilityMode
+                        )
+                        ListBadge(
+                            text = stringResource(id = R.string.collections_notes_num, numNotes),
+                            isAccessibilityMode = settingAccessibilityMode
+                        )
+                        ListBadge(
+                            text = stringResource(id = R.string.collections_tasks_num, numTodos),
+                            isAccessibilityMode = settingAccessibilityMode
+                        )
                     }
                 }
 
@@ -291,7 +325,8 @@ fun CollectionCardPreview() {
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
             onImportFromTxt = { },
-            onExportAsICS = { }
+            onExportAsICS = { },
+            settingAccessibilityMode = false
         )
     }
 }
@@ -322,7 +357,8 @@ fun CollectionCardPreview2() {
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
             onImportFromTxt = { },
-            onExportAsICS = { }
+            onExportAsICS = { },
+            settingAccessibilityMode = false
         )
     }
 }
@@ -347,7 +383,8 @@ fun CollectionCardPreview3() {
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
             onImportFromTxt = { },
-            onExportAsICS = { }
+            onExportAsICS = { },
+            settingAccessibilityMode = true
         )
     }
 }

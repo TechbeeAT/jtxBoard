@@ -4,13 +4,15 @@
     <string name="app_permission_label">"jtx Board sync journaux, notes et tâches"</string>
     <string name="app_permission_desc">"synchroniser le contenu de jtx Board avec d'autres applications comme DAVx⁵."</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Sauver"</string>
+    <string name="update">"Mise à jour"</string>
     <string name="cancel">"Annuler"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Supprimer"</string>
     <string name="discard">"Rejeter"</string>
+    <string name="dismiss">"Ignorer"</string>
+    <string name="open">"Ouvrir"</string>
     <string name="cont">"Continuer"</string>
     <string name="website">"Site web"</string>
     <string name="latitude">"Latitude"</string>
@@ -56,11 +58,14 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Politique de confidentialité"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"En retard"</string>
+    <string name="list_due_shortly">"Echéance proche"</string>
     <string name="list_due_today">"Échéance aujourd'hui"</string>
     <string name="list_due_tomorrow">"Échéance demain"</string>
+    <string name="list_due_within_7_days">"Échéance dans les 7 prochains jours"</string>
     <string name="list_due_inXhours">"Échéance dans %d heures"</string>
     <string name="list_due_on_weekday">"Échéance le %s"</string>
     <string name="list_start_past">"Début dans le passé"</string>
+    <string name="list_start_shortly">"Début proche"</string>
     <string name="list_start_today">"Début prévu aujourd'hui"</string>
     <string name="list_start_tomorrow">"Début planifié pour demain"</string>
     <string name="list_start_inXhours">"Début planifié dans %d heures"</string>
@@ -75,6 +80,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"La première ligne est interprétée comme un résumé, le reste comme une description. Les hashtags sont interprétés comme des catégories (par exemple #catégorie)."</string>
     <string name="list_item_recurring">"Entrée récurrente"</string>
     <string name="list_item_edited_recurring">"Evénement périodique modifié"</string>
+    <string name="list_scroll_to_top">"Défiler vers le haut"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Autorisation de l'application"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board a besoin de la permission d'enregistrer l'audio ou d'utiliser les fonctionnalités de synthèse vocale. Veuillez accorder la permission d'utiliser cette fonctionnalité."</string>
@@ -94,14 +100,18 @@ Global Strings -->
     <string name="edit_take_picture_button_text">"Prendre une photo"</string>
     <string name="edit_add_link_button_text">"Ajouter un lien vers une pièce jointe"</string>
     <string name="edit_subtasks_add_helper">"Ajouter une sous-tâche"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Ajout rapide d'une sous-tâche"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Ajout rapide d'une sous-note"</string>
     <string name="edit_attachment_add_link_dialog">"Ajouter un lien vers une pièce jointe"</string>
     <string name="edit_recur_repeat_every_x">"Répéter chaque"</string>
     <string name="edit_recur_on_weekday">"le"</string>
     <string name="edit_recur_on_the_x_day_of_month">"le"</string>
     <string name="edit_recur_x_day_of_the_month">"jour du mois"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"dernier"</string>
     <string name="edit_recur_x_times">"fois"</string>
     <string name="edit_recur_toast_requires_start_date">"La récurrence nécessite qu'une date de début soit fixée !"</string>
     <string name="edit_datepicker_dialog_select_date">"Sélectionner la date"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Sélectionner une plage de dates"</string>
     <string name="edit_datepicker_dialog_add_time">"Ajouter du temps"</string>
     <string name="edit_datepicker_dialog_edit_time">"Modifier l'heure"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Ajouter un fuseau horaire"</string>
@@ -151,6 +161,7 @@ Global Strings -->
     <string name="sync_with_sync_app_heading">"Synchroniser avec %1$s"</string>
     <string name="sync_basic_info">"jtx Board n'assure pas lui-même la synchronisation serveur, mais prend en charge la synchronisation via DAVx⁵. Cette méthode vous permettra d'utiliser un serveur CalDAV compatible de votre choix pour stocker, sauvegarder et synchroniser vos données."</string>
     <string name="sync_ksync_basic_info">"kSync est une application basée sur DAVx5 développée par Infomaniak spécialement pour leurs services. Tandis que DAVx5 est ouvert à tout serveur CalDAV-compatible, kSync permet uniquement la synchronisation des comptes Infomaniak."</string>
+    <string name="sync_manageddavx5_basic_info">"Managed DAVx5 rend les fonctionnalités de DAVx5 disponibles pour les organisations et est fourni avec d'autres fonctionnalités d'entreprise telles que le déploiement de masse, le marquage de la société et les paramètres préconfigurables."</string>
     <string name="sync_congratulations">"Félicitations ! :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"Nous avons détecté %1$s sur votre appareil."</string>
     <string name="sync_setup_instructions">"Instructions de configuration"</string>
@@ -185,10 +196,6 @@ Global Strings -->
     <string name="save_and_close">"Enregistrer &amp; fermer"</string>
     <string name="list_quickadd_add_audio_attachment">"Enregistrer l'audio en pièce jointe"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Lire les contacts - permission accordée"</string>
-    <string name="permission_read_contacts_denied">"Autorisation de lecture des contacts refusée"</string>
-    <string name="permission_record_audio_granted">"Autorisation d'enregistrement audio accordée"</string>
-    <string name="permission_record_audio_denied">"Autorisation d'enregistrement audio refusée"</string>
     <string name="intent_dialog_title">"Ajouter du contenu à un journal, une note ou une tâche ?"</string>
     <string name="add">"Ajouter"</string>
     <string name="edit">"Modifier"</string>
@@ -198,6 +205,9 @@ Global Strings -->
     <string name="collection">"Collection"</string>
     <string name="collection_owner_displayname">"Propriétaire : %1$s"</string>
     <string name="link_to_parent">"Lier à un parent"</string>
+    <string name="link_selected_as_parent">"Parent"</string>
+    <string name="link_selected_as_subtask_note">"Sous-tâche/note"</string>
+    <string name="link_selected_as">"Lier la sélection comme …"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
     <string name="navigation_drawer_presets">"Préconfigurations"</string>
     <!-- alarms -->
@@ -237,8 +247,6 @@ Global Strings -->
     <string name="edit_recur_week">"semaine(s)"</string>
     <string name="edit_recur_month">"mois"</string>
     <string name="edit_recur_year">"an(s)"</string>
-    <string name="collections_toast_export_ics_success">"L'exportation de la collection s'est terminée avec succès."</string>
-    <string name="collections_toast_export_ics_error">"Une erreur s'est produite lors de l'exportation de la collection sélectionnée."</string>
     <string name="attachment_export_saved_successfully">"Sauvegarde réussie"</string>
     <string name="attachment_export_error_error_occurred">"Une erreur est survenue lors de l'enregistrement du fichier !"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Ajouter une collection distante (%1$s)"</string>
@@ -251,6 +259,7 @@ Global Strings -->
     <string name="status">"Statut"</string>
     <string name="classification">"Classification"</string>
     <string name="category">"Catégorie"</string>
+    <string name="resource">"Ressource"</string>
     <string name="priority">"Priorité"</string>
     <string name="readyonly">"Lecture seulement"</string>
     <string name="upload_pending">"Téléchargement en cours"</string>
@@ -282,6 +291,7 @@ Global Strings -->
     <string name="progress">"Progrès"</string>
     <string name="categories">"Catégories"</string>
     <string name="subtasks">"Sous-tâches"</string>
+    <string name="linked_parents">"Parents liés"</string>
     <string name="priority_7_low">"7 - Bas"</string>
     <string name="priority_8_lower">"8 - Plus bas"</string>
     <string name="priority_9_lowest">"9 - Le plus bas"</string>
@@ -291,10 +301,12 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Déplacer toutes les entrées de \"%1$s\" à"</string>
     <string name="collection_dialog_move_info">"Attention : seules les collections inscriptibles et les collections supportant les mêmes composants (Journaux, Notes, Tâches) peuvent être sélectionnées."</string>
     <string name="menu_collections_popup_move_entries">"Déplacer les entrées"</string>
+    <string name="setting_no_time">"Pas d'heure"</string>
     <string name="list_no_dates_set">"Aucune date n'a été fixée"</string>
     <string name="list_without_start_date">"Sans date de début"</string>
     <string name="list_without_due_date">"Sans date d'échéance"</string>
     <string name="list_without_completed_date">"Sans date de réalisation"</string>
+    <string name="list_show_only_search_matching_subentries">"Afficher uniquement les sous-entrées correspondantes à la recherche"</string>
     <string name="filter_order_by">"Trier par"</string>
     <string name="filter_asc">"Ascendant"</string>
     <string name="filter_desc">"Descendant"</string>
@@ -304,6 +316,9 @@ Global Strings -->
     <string name="filter_no_resource">Sans ressources</string>
     <string name="filter_subtasks_order_by">Trier les sous-tâches par</string>
     <string name="filter_subnotes_order_by">Trier les notes liées par</string>
+    <string name="filter_no_filter">"Aucun filtre"</string>
+    <string name="filter_options_more_entries">"Plus (%1$d)"</string>
+    <string name="filter_options_less_entries">"Moins"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Veuillez cliquer sur la collection à laquelle l'entrée/les entrées doivent être ajoutées !"</string>
     <string name="collections_snackbar_x_items_added">"%1$d ajouté, %2$d ignoré. (Instances exclusives d'entrées récurrentes.)"</string>
     <string name="collections_toast_x_items_added">"%1$d entrées ajoutées !"</string>
@@ -315,9 +330,15 @@ Global Strings -->
     <string name="edit_recur_ends_never">"ne se termine jamais"</string>
     <string name="edit_recur_ends_on">"se termine le"</string>
     <string name="edit_recur_ends_after">"se termine après"</string>
-    <string name="collections_toast_export_all_ics_success">"L'exportation de toutes les collections s'est terminée avec succès."</string>
-    <string name="collections_toast_export_all_ics_error">"Une erreur s'est produite lors de l'exportation de toutes les collections."</string>
+    <string name="collections_toast_export_success">"Collections correctement exportées"</string>
+    <string name="collections_toast_export_error">"Erreur lors de l'exportation des collections"</string>
     <string name="menu_collections_export_all">"Exporter tout"</string>
+    <string name="menu_presets_export_presets">"Exporter les préréglages"</string>
+    <string name="menu_presets_import_presets">"Importer des préréglages"</string>
+    <string name="presets_imported">"Préréglages importés"</string>
+    <string name="presets_import_invalid_file">"Fichier invalide"</string>
+    <string name="presets_saved">"Préréglages sauvegardés"</string>
+    <string name="presets_export_error">"Une erreur s'est produite lors de l'enregistrement des préréglages"</string>
     <string name="more">"En savoir plus"</string>
     <string name="navigation_drawer_buypro">"Acheter Pro"</string>
     <string name="settings_select_theme">"Sélectionner le thème"</string>
@@ -329,6 +350,10 @@ Global Strings -->
     <string name="settings_protect_biometric_all">"Tout"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Veuillez vous authentifier pour modifier ce paramètre!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Veuillez vous authentifier pour afficher les entrées protégées !"</string>
+    <string name="settings_timezone_display">"Sélectionnez l'affichage de l'heure avec le fuseau horaire"</string>
+    <string name="settings_timezone_display_local">"Afficher l'heure dans le fuseau horaire local"</string>
+    <string name="settings_timezone_display_original">"Afficher l'heure dans le fuseau horaire d'origine"</string>
+    <string name="settings_timezone_display_local_and_original">"Afficher l'heure en local et dans le fuseau horaire d'origine (vue détaillée seulement)"</string>
     <string name="donate_dialog_title">"Vous aimez jtx Board?"</string>
     <string name="donate_dialog_message">"Le développement d'une application est complexe et la maintenance et le support sont des tâches difficiles. Si vous aimez cette application et si vous souhaitez en assurer le développement continu, pensez à faire un don :-)
 Merci !"</string>
@@ -353,8 +378,6 @@ Merci !"</string>
     <string name="settings_default_expand_subtasks">"Développer les sous-tâches dans la liste par défaut"</string>
     <string name="settings_default_expand_subnotes">"Développer les sous-notes dans la liste par défaut"</string>
     <string name="settings_default_expand_attachments">"Développer les pièces jointes dans la liste par défaut"</string>
-    <string name="permission_coarse_location_granted">"Permission d'emplacement grossier accordée"</string>
-    <string name="permission_coarse_location_denied">"Autorisation de localisation grossière refusée"</string>
     <string name="sorry">"Désolé"</string>
     <string name="back">"Retour"</string>
     <string name="details">"Détails"</string>
@@ -379,8 +402,14 @@ Merci !"</string>
     <string name="list_update_entries_dialog_title">"Mettre à jour les entrées"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Attention : les instances récurrentes doivent être dissociées de sa série avant d'être déplacées vers une autre collection et seront ignorées dans ce processus."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Choisir le parent auquel les entrées sélectionnées doivent être liées en tant que sous-tâches/notes liées."</string>
+    <string name="link_entry">"Lier l'entrée"</string>
+    <string name="link_entry_search_within">"Rechercher dans …"</string>
+    <string name="link_entry_search_within_same_collection">"La même collection"</string>
+    <string name="link_entry_search_within_same_account">"Le même compte"</string>
     <string name="details_link_existing_subentry_dialog_title">"Lier les sous-entrées"</string>
+    <string name="details_link_existing_parent_dialog_title">"Lier parents"</string>
     <string name="details_link_existing_subentry_dialog_info">"Choisissez les sous-entrées qui doivent être liées."</string>
+    <string name="details_link_existing_parent_dialog_info">"Choisissez une entrée parente qui doit être liée."</string>
     <string name="details_app_bar_behaviour">"Comportement de la barre d'application"</string>
     <string name="details_show_all_options">"Afficher toutes les options"</string>
     <string name="details_show_hide_elements">Afficher/masquer des éléments</string>
@@ -438,10 +467,15 @@ Merci !"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
     <string name="settings_tasks">"Paramètres des tâches"</string>
+    <string name="settings_alarms">"Paramètres d'alarme"</string>
     <string name="settings_tasks_status_progress">"Paramètres des tâches (statut/progression)"</string>
     <string name="settings_sync">"Paramètres de synchronisation"</string>
     <string name="settings_default_start_date">"Définir une date de début par défaut pour les tâches"</string>
+    <string name="settings_default_start_timezone">"Définir un fuseau horaire de démarrage par défaut pour les tâches"</string>
     <string name="settings_default_due_date">"Définir une date d'échéance par défaut pour les tâches"</string>
+    <string name="settings_default_due_timezone">"Définir un fuseau horaire par défaut pour les tâches"</string>
+    <string name="settings_default_start_time">"Définir une heure de début par défaut pour les tâches"</string>
+    <string name="settings_default_due_time">"Définir une heure d'échéance par défaut pour les tâches"</string>
     <string name="settings_default_date_none">"Aucun"</string>
     <string name="settings_default_date_same_day">"Le même jour"</string>
     <string name="settings_default_date_next_day">"Le jour suivant"</string>
@@ -465,7 +499,11 @@ Merci !"</string>
     <string name="settings_create_with_current_location">"Créer de nouvelles entrées avec l'emplacement actuel"</string>
     <string name="settings_sticky_alarms">"Alarmes épinglées"</string>
     <string name="settings_sticky_alarms_sub">"Garder les notifications jusqu'à la fin ou les reporter"</string>
+    <string name="settings_fullscreen_alarms">"Alarmes en plein écran"</string>
+    <string name="settings_fullscreen_alarms_sub">"Affiche les alarmes en plein écran lorsque l'appareil est verrouillé"</string>
+    <string name="settings_fullscreen_alarms_toast">"Veuillez autoriser les notifications en plein écran dans les paramètres du système."</string>
     <string name="settings_sync_on_start">"Synchroniser au démarrage de l'appli"</string>
+    <string name="settings_sync_on_pull_refresh">"Synchroniser lors du tirage au sort"</string>
     <string name="sync_button_go_to_collections">"Aller aux collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Veuillez acheter jtx Board Pro pour activer cette fonction."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
@@ -481,14 +519,20 @@ Merci !"</string>
     <string name="settings_select_language_system">"Système par défaut"</string>
     <string name="filter_special">"Filtres spéciaux"</string>
     <string name="filter_presets">"Filtrer les préréglages"</string>
+    <string name="filter_presets_edit_info">"Veuillez ajouter/mettre à jour/supprimer les présélections de filtres dans la vue liste."</string>
+    <string name="filter_any">"N'importe laquelle"</string>
+    <string name="filter_all">"Toutes"</string>
+    <string name="filter_none">"Aucune"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date dans le passé"</string>
     <string name="list_date_today">"Aujourd'hui"</string>
     <string name="list_date_tomorrow">"Demain"</string>
+    <string name="list_date_within_7_days">"Dans les 7 jours"</string>
     <string name="list_date_future">"Date dans le futur"</string>
     <string name="list_start_date_in_past">"Début dans le passé"</string>
     <string name="list_start_date_today">"Début aujourd'hui"</string>
     <string name="list_start_date_tomorrow">"Début demain"</string>
+    <string name="list_start_date_within_7_days">"Commence dans les prochains 7 jours"</string>
     <string name="list_start_date_future">"Début dans le futur"</string>
     <string name="list_hide_completed_tasks">"Masquer les tâches terminées"</string>
     <string name="list_biometric_protected_entries_locked">Entrées biométriques protégées verrouillées</string>
@@ -594,4 +638,6 @@ Merci !"</string>
     <string name="geofence_options">"Options de géorepérage"</string>
     <string name="geofence_missing_permission_info">"jtx Board a besoin des autorisations pour accéder à votre position en arrière-plan et vous envoyer des notifications. Veuillez mettre à jour l’autorisation de localisation pour « Toujours autoriser» et accorder l’autorisation de notification afin d’être notifié lorsque vous atteignez votre repère géographique!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board peut vous avertir lorsque vous êtes proche des coordonnées indiquées. Veuillez définir l’autorisation de localisation pour «Toujours autoriser et autoriser les notifications à utiliser cette fonctionnalité."</string>
+    <string name="geofence_notification_summary">"Geofence activé"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board a besoin de l'autorisation pour programmer des alarmes exactes, sinon les notifications d'alarme pourraient être retardées. Veuillez accorder cette autorisation afin d'utiliser cette fonctionnalité."</string>
 </resources>

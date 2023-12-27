@@ -4,13 +4,15 @@
     <string name="app_permission_label">"jtx Board sync Ημερολόγιο, Σημειώσεις &amp; Εργασίες"</string>
     <string name="app_permission_desc">"το sync jtx Board παρέχει περιεχόμενο σε συνδυασμό με άλλες εφαρμογές όπως η DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Αποθήκευση"</string>
+    <string name="update">"Ενημέρωση"</string>
     <string name="cancel">"Ακύρωση"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Διαγραφή"</string>
     <string name="discard">"Απόρριψη"</string>
+    <string name="dismiss">"Απόρριψη"</string>
+    <string name="open">"Ανοιχτό"</string>
     <string name="cont">"Συνέχεια"</string>
     <string name="website">"Website"</string>
     <string name="latitude">"Γεωγραφικό πλάτος"</string>
@@ -56,11 +58,14 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Πολιτική Απορρήτου"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Καθυστερημένα"</string>
+    <string name="list_due_shortly">"Λήξη σύντομα"</string>
     <string name="list_due_today">"Μέχρι σήμερα"</string>
     <string name="list_due_tomorrow">"Μέχρι αύριο"</string>
+    <string name="list_due_within_7_days">"Μέχρι 7 ημέρες"</string>
     <string name="list_due_inXhours">"Μέχρι %d ώρες"</string>
     <string name="list_due_on_weekday">"Προθεσμία στις %s"</string>
     <string name="list_start_past">"Παρελθοντικά"</string>
+    <string name="list_start_shortly">"Έναρξη σύντομα"</string>
     <string name="list_start_today">"Για σήμερα"</string>
     <string name="list_start_tomorrow">"Αρχίζουν αύριο"</string>
     <string name="list_start_inXhours">"Σχεδιασμένα να αρχήσουν σε %d ώρες"</string>
@@ -75,6 +80,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"Η πρώτη γραμμή ερμηνεύεται ως περίληψη, η υπόλοιπη ως περιγραφή. Τα hashtags ερμηνεύονται ως κατηγορίες (πχ. #category)."</string>
     <string name="list_item_recurring">"Επαναλαμβανόμενη καταχώρηση"</string>
     <string name="list_item_edited_recurring">"Το επαναλαμβανόμενο γεγονός τροποποιήθηκε"</string>
+    <string name="list_scroll_to_top">"Μετακίνηση στην αρχή"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Άδεια εφαρμογής"</string>
     <string name="view_fragment_audio_permission_message">"Η εφαρμογή jtx Board χρειάζεται την άδεια σας για την εγγραφή ήχου. Παρακαλούμε παραχωρήστε την άδεια χρήσης αυτής της δυνατότητας."</string>
@@ -101,9 +107,11 @@ Global Strings -->
     <string name="edit_recur_on_weekday">"σε"</string>
     <string name="edit_recur_on_the_x_day_of_month">"στο"</string>
     <string name="edit_recur_x_day_of_the_month">"ημέρα του μήνα"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"τελευταία"</string>
     <string name="edit_recur_x_times">"φορές"</string>
     <string name="edit_recur_toast_requires_start_date">"Η επανάληψη απαιτεί να οριστεί μια ημερομηνία έναρξης!"</string>
     <string name="edit_datepicker_dialog_select_date">"Επιλογή ημερομηνίας"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Επιλέξτε εύρος ημερομηνιών"</string>
     <string name="edit_datepicker_dialog_add_time">"Προσθήκη ώρας"</string>
     <string name="edit_datepicker_dialog_edit_time">"Επεξεργασία ώρας"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Προσθήκη ζώνης ώρας"</string>
@@ -188,10 +196,6 @@ Global Strings -->
     <string name="save_and_close">"Αποθήκευση &amp; κλείσιμο"</string>
     <string name="list_quickadd_add_audio_attachment">"Επισύναψη ηχογραφημένου αρχείου"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Παραχωρήθηκε η άδεια ανάγνωσης επαφών"</string>
-    <string name="permission_read_contacts_denied">"Η άδεια ανάγνωσης των επαφών απορρίφθηκε"</string>
-    <string name="permission_record_audio_granted">"Άδεια εγγραφής ομιλίας παραχωρήθηκε"</string>
-    <string name="permission_record_audio_denied">"Η άδεια εγγραφής ομιλίας απορρίφθηκε"</string>
     <string name="intent_dialog_title">"Να προστεθεί το περιεχόμενο στο ημέρες λογικό, την σημείωση ή την εργασία;"</string>
     <string name="add">"Προσθήκη"</string>
     <string name="edit">"Επεξεργασία"</string>
@@ -243,8 +247,6 @@ Global Strings -->
     <string name="edit_recur_week">"εβδομάδα(ες)"</string>
     <string name="edit_recur_month">"μήνας(ες)"</string>
     <string name="edit_recur_year">"χρόνος(ια)"</string>
-    <string name="collections_toast_export_ics_success">"Η εξαγωγή της συλλογής τελείωσε αποτελεσματικά."</string>
-    <string name="collections_toast_export_ics_error">"Ένα πρόβλημα παρουσιάστηκε κατά την διαδικασία εξαγωγής της επιλεγμένης συλλογής."</string>
     <string name="attachment_export_saved_successfully">"Αποθηκεύτηκε επιτυχώς"</string>
     <string name="attachment_export_error_error_occurred">"Παρουσιάστηκε σφάλμα κατά την αποθήκευση του επιλεγμένου αρχείου!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Προσθήκη απομακρυσμένης συλλογής (%1$s)"</string>
@@ -257,6 +259,7 @@ Global Strings -->
     <string name="status">"Κατάσταση"</string>
     <string name="classification">"Ταξινόμηση"</string>
     <string name="category">"Κατηγορία"</string>
+    <string name="resource">"Πόρος"</string>
     <string name="priority">"Προτεραιότητα"</string>
     <string name="readyonly">"Μόνο για ανάγνωση"</string>
     <string name="upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>
@@ -280,6 +283,8 @@ Global Strings -->
     <string name="search_notes">Αναζήτηση σημειώσεων</string>
     <string name="search_todos">Αναζήτηση εργασιών</string>
     <string name="filter">"Φίλτρα"</string>
+    <string name="visibility">"Εμφάνιση"</string>
+    <string name="order">"Σειρά"</string>
     <string name="sync_now">"Συγχρονισμός τώρα"</string>
     <string name="due">"Λήξη"</string>
     <string name="completed">"Ολοκληρώθηκε"</string>
@@ -298,6 +303,7 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Μεταφέρετε όλες τις εγγραφές από \"%1$s\" προς"</string>
     <string name="collection_dialog_move_info">"Σημείωση: Μπορούν να επιλεγούν μόνο εγγράψιμες συλλογές και συλλογές με υποστήριξη για τα ίδια στοιχεία (ημερολόγια, σημειώσεις, εργασίες)."</string>
     <string name="menu_collections_popup_move_entries">"Μεταφορά εγγραφών"</string>
+    <string name="setting_no_time">"Δεν υπάρχει χρόνος"</string>
     <string name="list_no_dates_set">"Ελλιπής ημερομηνία"</string>
     <string name="list_without_start_date">"Χωρίς ημερομηνία έναρξης"</string>
     <string name="list_without_due_date">"Χωρίς διάρκεια ημερομηνίας"</string>
@@ -311,6 +317,8 @@ Global Strings -->
     <string name="filter_no_resource">Χωρίς πηγές</string>
     <string name="filter_subtasks_order_by">Ταξινόμηση υποεργασιών κατά</string>
     <string name="filter_subnotes_order_by">Ταξινόμηση συνδεδεμένων σημειώσεων κατά</string>
+    <string name="filter_no_filter">"Χωρίς φίλτρο"</string>
+    <string name="filter_options_more_entries">"Περισσότερα (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Κάντε κλικ στη συλλογή στην οποία πρέπει να προστεθούν οι καταχωρήσεις/καταχωρήσεις!"</string>
     <string name="collections_snackbar_x_items_added">"Προστέθηκε %1$d, παράβλεψη %2$d. (Αποκλειστικές περιπτώσεις επαναλαμβανόμενων εγγραφών.)"</string>
     <string name="collections_toast_x_items_added">"%1$d καταχωρήσεις προστέθηκαν!"</string>
@@ -322,9 +330,15 @@ Global Strings -->
     <string name="edit_recur_ends_never">"Χωρίς λήξη"</string>
     <string name="edit_recur_ends_on">"Λήξη στις"</string>
     <string name="edit_recur_ends_after">"Λήξη μετά από"</string>
-    <string name="collections_toast_export_all_ics_success">"Η εξαγωγή όλων των συλλογών ολοκληρώθηκε επιτυχώς."</string>
-    <string name="collections_toast_export_all_ics_error">"Εντοπίστηκε ένα πρόβλημα κατά την διαδικασία της εξαγωγής όπλων των συλλογών."</string>
+    <string name="collections_toast_export_success">"Οι συλλογές εξήχθησαν με επιτυχία"</string>
+    <string name="collections_toast_export_error">"Σφάλμα κατά την εξαγωγή συλλογών"</string>
     <string name="menu_collections_export_all">"Εξαγωγή όλων"</string>
+    <string name="menu_presets_export_presets">"Εξαγωγή προεπιλογών"</string>
+    <string name="menu_presets_import_presets">"Εισαγωγή προεπιλογών"</string>
+    <string name="presets_imported">"Οι προεπιλογές εισήχθησαν"</string>
+    <string name="presets_import_invalid_file">"Μη έγκυρο αρχείο"</string>
+    <string name="presets_saved">"Η προκαθορισμένη αποθήκευση"</string>
+    <string name="presets_export_error">"Παρουσιάστηκε σφάλμα κατά την αποθήκευση των προεπιλογών"</string>
     <string name="more">"Περισσοτερα"</string>
     <string name="navigation_drawer_buypro">"Αγορά Pro"</string>
     <string name="settings_select_theme">"Επιλογή θέματος"</string>
@@ -336,6 +350,10 @@ Global Strings -->
     <string name="settings_protect_biometric_all">"Όλα"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Παρακαλώ πιστοποιήστε για να αλλάξετε αυτή τη ρύθμιση!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Παρακαλώ πιστοποιήστε για να εμφανίσετε προστατευμένες καταχωρήσεις!"</string>
+    <string name="settings_timezone_display">"Επιλέξτε εμφάνιση της ώρας με τη ζώνη ώρας"</string>
+    <string name="settings_timezone_display_local">"Εμφάνιση ώρας στην τοπική ζώνη ώρας"</string>
+    <string name="settings_timezone_display_original">"Εμφάνιση ώρας στην αρχική ζώνη ώρας"</string>
+    <string name="settings_timezone_display_local_and_original">"Εμφάνιση ώρας στην τοπική και στην αρχική ζώνη ώρας (προβολή λεπτομερειών μόνο)"</string>
     <string name="donate_dialog_title">"Σας αρέσει το jtx Board;"</string>
     <string name="donate_dialog_message">"Η δημιουργία μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μια σκληρή δουλειά. Εάν σας αρέσει αυτή η εφαρμογή και εάν θέλετε να εξασφαλίσετε την συνεχή ανάπτυξη της, σκεφτείτε για μια δωρεά :-)
  Ευχαριστώ!"</string>
@@ -361,12 +379,12 @@ Global Strings -->
     <string name="settings_default_expand_subtasks">"Ανάπτυξη των δευτερευουσών εργασιών στη λίστα από προεπιλογή"</string>
     <string name="settings_default_expand_subnotes">"Ανάπτυξη των δευτερευουσών σημειώσεων στη λίστα από προεπιλογή"</string>
     <string name="settings_default_expand_attachments">"Ανάπτυξη των επισυναπτωμένων στην λίστα από προεπιλογή"</string>
-    <string name="permission_coarse_location_granted">"Η άδεια χονδρικής τοποθεσίας χορηγήθηκε"</string>
-    <string name="permission_coarse_location_denied">"Η άδεια χονδρικής τοποθεσίας απορρίφθηκε"</string>
     <string name="sorry">"Συγνώμη"</string>
     <string name="back">"Πίσω"</string>
     <string name="details">"Λεπτομέριες"</string>
     <string name="date">"Ημερομηνία"</string>
+    <string name="summary_description">"Περίληψη/Περιγραφή"</string>
+    <string name="status_classification_priority">"Κατάσταση/Ταξινόμηση/Προτεραιότητα"</string>
     <string name="timezone">"Ζώνη ώρας"</string>
     <string name="not_set2">"Δεν ορίστηκε"</string>
     <string name="invert_selection">"Αντιστροφή επιλογής"</string>
@@ -388,7 +406,7 @@ Global Strings -->
     <string name="list_update_entries_dialog_attention_collection_update">"Προσοχή: Τα επαναλαμβανόμενα στιγμιότυπα πρέπει να αποσυνδέονται από τη σειρά τους πριν μεταφερθούν σε άλλη συλλογή και θα αγνοηθούν σε αυτή τη διαδικασία."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Επιλέξτε την κύρια εγγραφή με την οποία οι επιλεγμένες καταχωρήσεις θα συνδέονται ως υποεργασίες/συνδεδεμένες σημειώσεις."</string>
     <string name="link_entry">"Σύνδεση καταχώρησης"</string>
-    <string name="link_entry_search_within">"Αναζήτηση μεταξύ ..."</string>
+    <string name="link_entry_search_within">"Αναζήτηση μεταξύ …"</string>
     <string name="link_entry_search_within_same_collection">"Ίδια συλλογή"</string>
     <string name="link_entry_search_within_same_account">"Ίδιος λογαριασμός"</string>
     <string name="details_link_existing_subentry_dialog_title">"Σύνδεση υπο-καταχωρήσεων"</string>
@@ -452,11 +470,16 @@ Global Strings -->
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
     <string name="settings_tasks">"Ρυθμίσεις εργασιών"</string>
+    <string name="settings_alarms">"Ρυθμίσεις ξυπνητηριού"</string>
     <string name="settings_tasks_status_progress">"Ρυθμίσεις εργασιών (κατάσταση/πρόοδος)"</string>
     <string name="settings_sync">"Ρυθμίσεις συγχρονισμού"</string>
     <string name="settings_default_start_date">"Ορίστε μια προεπιλεγμένη ημερομηνία έναρξης για εργασίες"</string>
+    <string name="settings_default_start_timezone">"Ορίστε μια προεπιλεγμένη ώρα έναρξης για εργασίες"</string>
     <string name="settings_default_due_date">"Ορίστε μια προεπιλεγμένη ημερομηνία έναρξης για εργασίες"</string>
-    <string name="settings_default_date_none">"Ορίστε μια προεπιλεγμένη ημερομηνία λήξης για εργασίες"</string>
+    <string name="settings_default_due_timezone">"Ορίστε μια προεπιλεγμένη ώρα έναρξης για εργασίες"</string>
+    <string name="settings_default_start_time">"Ορίστε μια προεπιλεγμένη ώρα έναρξης για εργασίες"</string>
+    <string name="settings_default_due_time">"Ορίστε μια προεπιλεγμένη ώρα έναρξης για εργασίες"</string>
+    <string name="settings_default_date_none">"Κανένα"</string>
     <string name="settings_default_date_same_day">"Ίδια ημέρα"</string>
     <string name="settings_default_date_next_day">"Επόμενη ημέρα"</string>
     <string name="settings_default_date_two_days">"Δύο ημέρες αργότερα"</string>
@@ -479,6 +502,11 @@ Global Strings -->
     <string name="settings_create_with_current_location">"Δημιουργήστε νέες καταχωρήσεις με την τρέχουσα τοποθεσία"</string>
     <string name="settings_sticky_alarms">"Κολλημένες ειδοποιήσεις"</string>
     <string name="settings_sticky_alarms_sub">"Διατήρηση ειδοποιήσεων μέχρι να ολοκληρωθούν ή αναβληθούν"</string>
+    <string name="settings_fullscreen_alarms">"Αφύπνιση σε πλήρη οθόνη"</string>
+    <string name="settings_fullscreen_alarms_sub">"Εμφάνιση ειδοποιήσεων σε πλήρη οθόνη όταν η συσκευή είναι κλειδωμένη"</string>
+    <string name="settings_accessibility_mode">"Λειτουργία προσβασιμότητας"</string>
+    <string name="settings_accessibility_mode_sub">"Εξασφαλίζει το ελάχιστο μέγεθος γραμματοσειράς για τα μικρά στοιχεία"</string>
+    <string name="settings_fullscreen_alarms_toast">"Παραχωρήστε άδεια ειδοποίησης πλήρους οθόνης στις ρυθμίσεις συστήματος."</string>
     <string name="settings_sync_on_start">"Συγχρονισμός κατά την έναρξη"</string>
     <string name="settings_sync_on_pull_refresh">"Συγχρονισμός κατά την έξοδο"</string>
     <string name="sync_button_go_to_collections">"Πήγαινε στις συλλογέ"</string>
@@ -496,14 +524,20 @@ Global Strings -->
     <string name="settings_select_language_system">"Προεπιλογή συστήματος"</string>
     <string name="filter_special">"Ειδικά φίλτρα"</string>
     <string name="filter_presets">"Φίλτρο προεπιλογών"</string>
+    <string name="filter_presets_edit_info">"Παρακαλώ προσθέστε/ενημερώστε/διαγράψτε τις προεπιλογές φίλτρων από το μενού φίλτρου στην προβολή λίστας."</string>
+    <string name="filter_any">"Οποιαδήποτε"</string>
+    <string name="filter_all">"Όλα"</string>
+    <string name="filter_none">"Καμία"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Παρελθοντική ημερομηνία"</string>
     <string name="list_date_today">"Σήμερα"</string>
     <string name="list_date_tomorrow">"Αύριο"</string>
+    <string name="list_date_within_7_days">"Μέσα σε 7 ημέρες"</string>
     <string name="list_date_future">"Μελλοντική ημερομηνία"</string>
     <string name="list_start_date_in_past">"Έναρξη στο παρελθόν"</string>
     <string name="list_start_date_today">"Έναρξη σήμερα"</string>
     <string name="list_start_date_tomorrow">"Έναρξη αύριο"</string>
+    <string name="list_start_date_within_7_days">"Αρχίζουν σε έως 7 ημέρες"</string>
     <string name="list_start_date_future">"Έναρξη στο μέλλον"</string>
     <string name="list_hide_completed_tasks">"Απόκριψη ολοκληρωμένων εργασιών"</string>
     <string name="list_biometric_protected_entries_locked">Οι βιομετρικές προστατευόμενες καταχωρήσεις κλειδώθηκαν</string>
@@ -513,6 +547,7 @@ Global Strings -->
     <string name="list_biometric_protected_entries_unlocked">Οι βιομετρικά προστατευόμενες καταχωρήσεις κλειδώθηκαν</string>
     <string name="settings_auto_alarm">"Αυτόματο ξυπνητήρι"</string>
     <string name="alarms_always_ondue">"Εντός προθεσμίας"</string>
+    <string name="alarms_always_on_save">"Αποθήκευση πάντα σε λειτουργία (πειραματική)"</string>
     <string name="settings_auto_alarm_sub">"Ενεργοποιήστε για αυτόματη δημιουργία συναγερμών. Επιλέξτε \"Always on time\" για να μην δημιουργήσετε συναγερμό αλλά για να λαμβάνετε ειδοποίηση σε κάθε περίπτωση όταν μια εργασία είναι ληξιπρόθεσμη."</string>
     <string name="settings_protect_biometric">"Προστασία καταχωρήσεων με βιομετρικά στοιχεία"</string>
     <string name="settings_protect_biometric_sub">"Αυτή η λειτουργία αποκρύπτει τις επιλεγμένες καταχωρήσεις μέχρι να ξεκλειδωθούν με βιομετρικά, αλλά δεν κρυπτογραφεί / αποκρυπτογραφεί τα δεδομένα στο παρασκήνιο."</string>
@@ -551,7 +586,7 @@ Global Strings -->
     <string name="widget_list_no_entries_found">"Δεν βρέθηκαν καταχωρήσεις που να ταιριάζουν με τα κριτήρια φίλτρου σας"</string>
     <string name="widget_list_view_settings">"Προβολή ρυθμίσεων"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Προσοχή: Προς το παρόν μόνο ένα επίπεδο ιεραρχίας υποστηρίζεται στο γραφικό στοιχείο. Για να δείτε τις καταχωρήσεις των χαμηλότερων επιπέδων, χρησιμοποιήστε την επίπεδη προβολή."</string>
-    <string name="widget_list_maximum_entries_reached">"Συμπληρώθηκε ο μέγιστος αριθμός καταχωρίσεων στο γραφικό στοιχείο (%1$d)."</string>
+    <string name="widget_list_maximum_entries_reached">"Επιτεύχθηκε μέγιστος αριθμός καταχωρήσεων στο widget (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Ενημέρωση widget"</string>
     <string name="widget_list_opacity_warning">"Σημείωση: Αυτό είναι ένα πειραματικό χαρακτηριστικό! Με μειωμένες αλλαγές αδιαφάνειας στο χρωματικό θέμα μπορεί να μην αντικατοπτρίζονται αμέσως!"</string>
     <string name="widget_list_color_warning">"Σημείωση: Αυτό είναι ένα πειραματικό χαρακτηριστικό! Οι αλλαγές στο χρώμα θέμα δε θα αντικατοπτρίζονται! Επιλέξτε κανένα χρώμα για να επιστρέψετε στην προεπιλογή συστήματος."</string>

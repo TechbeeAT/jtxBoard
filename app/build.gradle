@@ -6,13 +6,15 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-apply plugin: "com.android.application"
-apply plugin: "com.mikepenz.aboutlibraries.plugin"
-apply plugin: "kotlin-android"
-apply plugin: "kotlin-parcelize"
-apply plugin: "kotlin-kapt"
-apply plugin: "kotlinx-serialization"
-//apply plugin: "com.huawei.agconnect"
+plugins {
+    id "com.android.application"
+    id "com.mikepenz.aboutlibraries.plugin"
+    id "kotlin-android"
+    id "kotlin-parcelize"
+    id "kotlinx-serialization"
+    id "com.google.devtools.ksp"
+    //id "com.huawei.agconnect"
+}
 
 
 def localPropertiesFile = rootProject.file('local.properties')
@@ -29,9 +31,9 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 205020006
-        versionName "2.05.02-beta06"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
-        buildConfigField "String", "versionCodename", "\"Love is love ❤️🌈\""
+        versionCode 206050019
+        versionName "2.06.05-beta05"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        buildConfigField "String", "versionCodename", "\"Where there is love, there is life. ❤️🌈\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -39,15 +41,14 @@ android {
             unitTests.includeAndroidResources = true
             unitTests.returnDefaultValues = true
         }
-        // defining the room.schemaLocation explicitly allows AutoMigrations
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
+
+        ksp {
+            arg("room.generateKotlin", "true")
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
 
         //don't forget to update locales_config.xml when changing the languages!
-        def locales = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu"]
+        def locales = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu", "vi"]
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         resourceConfigurations += locales
 
@@ -94,7 +95,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.4.8"
+        kotlinCompilerExtensionVersion "1.5.7"
     }
 
     packagingOptions {
@@ -160,21 +161,21 @@ dependencies {
 
     // Android KTX
     implementation "androidx.core:core-ktx:$version_core"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
 
     // Android Annotations
-    implementation "androidx.annotation:annotation:1.6.0"
+    implementation "androidx.annotation:annotation:1.7.1"
 
     // Room dependencies
     implementation "androidx.room:room-runtime:$version_room"
     implementation "androidx.room:room-ktx:$version_room"   // Kotlin Extensions and Coroutines support for Room
-    kapt "androidx.room:room-compiler:$version_room"
+    ksp "androidx.room:room-compiler:$version_room"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
 
-    implementation "androidx.preference:preference-ktx:1.2.0"
+    implementation "androidx.preference:preference-ktx:1.2.1"
 
     // Volley for simple network requests
     implementation "com.android.volley:volley:1.2.1"
@@ -187,16 +188,16 @@ dependencies {
 
     // Amazon billing & maps support
     amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.4'
-    amazonImplementation "com.google.maps.android:maps-compose:2.12.0"
-    amazonImplementation "com.google.android.gms:play-services-maps:18.1.0"
+    amazonImplementation "com.google.maps.android:maps-compose:4.3.0"
+    amazonImplementation "com.google.android.gms:play-services-maps:18.2.0"
     amazonImplementation "com.google.android.gms:play-services-location:21.0.1"
 
     // Huawei billing
     //huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
 
     // Google Maps
-    gplayImplementation "com.google.maps.android:maps-compose:2.12.0"
-    gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
+    gplayImplementation "com.google.maps.android:maps-compose:4.3.0"
+    gplayImplementation "com.google.android.gms:play-services-maps:18.2.0"
     gplayImplementation "com.google.android.gms:play-services-location:21.0.1"
 
     //OSM
@@ -209,18 +210,15 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$version_work"
 
     //support for java.time for older Android versions (<O)
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
+    androidTestImplementation "androidx.test:core-ktx:1.5.0"
     androidTestImplementation "androidx.test.ext:junit-ktx:1.1.5"
     //androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0-alpha07"
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version_coroutine"
     androidTestImplementation "androidx.test:runner:1.5.2"
     androidTestImplementation "androidx.test:rules:1.5.0"
-
-    // Testing-only dependencies
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version_kotlin"
-    androidTestImplementation "androidx.test:core-ktx:1.5.0"
 
     // Testing
     testImplementation "junit:junit:4.13.2"
@@ -242,16 +240,15 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$version_appcompat"
 
     // jetpack compose
-    implementation 'androidx.core:core-ktx:1.10.1'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation "androidx.compose.material3:material3:1.2.0-alpha04"
-    implementation "androidx.compose.material:material-icons-extended:1.4.3"
-    implementation "androidx.compose.material:material:1.4.3"
+    implementation "androidx.compose.material3:material3:1.2.0-beta01"
+    implementation "androidx.compose.material:material-icons-extended:1.5.4"
+    implementation "androidx.compose.material:material:1.5.4"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    implementation "androidx.navigation:navigation-compose:2.7.0-rc01"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
+    implementation "androidx.navigation:navigation-compose:2.7.6"
     implementation "com.arnyminerz.markdowntext:markdowntext:1.3.2"
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
@@ -261,12 +258,12 @@ dependencies {
     // permissions from accompanist
     implementation "com.google.accompanist:accompanist-permissions:$version_accompanist"
 
-    implementation "androidx.glance:glance-appwidget:1.0.0-alpha05"
+    implementation "androidx.glance:glance-appwidget:1.0.0"
 
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
     
     implementation "androidx.profileinstaller:profileinstaller:1.3.1"
 
     //image loading from the web
-    implementation "io.coil-kt:coil-compose:2.4.0"
+    implementation "io.coil-kt:coil-compose:2.5.0"
 }

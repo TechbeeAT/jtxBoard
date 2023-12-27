@@ -16,12 +16,14 @@ import androidx.room.PrimaryKey
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.ui.list.AnyAllNone
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.ui.list.ViewMode
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 
 /** The name of the the table for filters that are stored only locally. */
@@ -37,6 +39,7 @@ const val COLUMN_STORED_LIST_SETTING_NAME = "name"
 const val COLUMN_STORED_LIST_SETTING_SETTINGS = "list_settings"
 
 
+@Serializable
 @Parcelize
 @Entity(tableName = TABLE_NAME_STORED_LIST_SETTINGS)
 data class StoredListSetting (
@@ -53,10 +56,12 @@ data class StoredListSetting (
 
 
 @Parcelize
-@kotlinx.serialization.Serializable
+@Serializable
 data class StoredListSettingData(
     var searchCategories: List<String> = emptyList(),
+    var searchCategoriesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
     var searchResources: List<String> = emptyList(),
+    var searchResourcesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
     var searchStatus: List<Status> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
     var searchCollection: List<String> = emptyList(),
@@ -74,15 +79,25 @@ data class StoredListSettingData(
     var isFilterOverdue: Boolean = false,
     var isFilterDueToday: Boolean = false,
     var isFilterDueTomorrow: Boolean = false,
+    var isFilterDueWithin7Days: Boolean = false,
     var isFilterDueFuture: Boolean = false,
     var isFilterStartInPast: Boolean = false,
     var isFilterStartToday: Boolean = false,
     var isFilterStartTomorrow: Boolean = false,
+    var isFilterStartWithin7Days: Boolean = false,
     var isFilterStartFuture: Boolean = false,
     var isFilterNoDatesSet: Boolean = false,
     var isFilterNoStartDateSet: Boolean = false,
     var isFilterNoDueDateSet: Boolean = false,
     var isFilterNoCompletedDateSet: Boolean = false,
+
+    var filterStartRangeStart: Long? = null,
+    var filterStartRangeEnd: Long? = null,
+    var filterDueRangeStart: Long? = null,
+    var filterDueRangeEnd: Long? = null,
+    var filterCompletedRangeStart: Long? = null,
+    var filterCompletedRangeEnd: Long? = null,
+
     var isFilterNoCategorySet: Boolean = false,
     var isFilterNoResourceSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!
@@ -95,7 +110,9 @@ data class StoredListSettingData(
         fun fromListSettings(listSettings: ListSettings): StoredListSettingData {
             return StoredListSettingData(
                 searchCategories = listSettings.searchCategories,
+                searchCategoriesAnyAllNone = listSettings.searchCategoriesAnyAllNone.value,
                 searchResources = listSettings.searchResources,
+                searchResourcesAnyAllNone = listSettings.searchResourcesAnyAllNone.value,
                 searchStatus = listSettings.searchStatus,
                 searchClassification = listSettings.searchClassification,
                 searchCollection = listSettings.searchCollection,
@@ -113,15 +130,23 @@ data class StoredListSettingData(
                 isFilterOverdue = listSettings.isFilterOverdue.value,
                 isFilterDueToday = listSettings.isFilterDueToday.value,
                 isFilterDueTomorrow = listSettings.isFilterDueTomorrow.value,
+                isFilterDueWithin7Days = listSettings.isFilterDueWithin7Days.value,
                 isFilterDueFuture = listSettings.isFilterDueFuture.value,
                 isFilterStartInPast = listSettings.isFilterStartInPast.value,
                 isFilterStartToday = listSettings.isFilterStartToday.value,
                 isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value,
+                isFilterStartWithin7Days = listSettings.isFilterStartWithin7Days.value,
                 isFilterStartFuture = listSettings.isFilterStartFuture.value,
                 isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value,
                 isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value,
                 isFilterNoDueDateSet = listSettings.isFilterNoDueDateSet.value,
                 isFilterNoCompletedDateSet = listSettings.isFilterNoCompletedDateSet.value,
+                filterStartRangeStart = listSettings.filterStartRangeStart.value,
+                filterStartRangeEnd = listSettings.filterStartRangeEnd.value,
+                filterDueRangeStart = listSettings.filterDueRangeStart.value,
+                filterDueRangeEnd = listSettings.filterDueRangeEnd.value,
+                filterCompletedRangeStart = listSettings.filterCompletedRangeStart.value,
+                filterCompletedRangeEnd = listSettings.filterCompletedRangeEnd.value,
                 isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value,
                 isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value
             )
@@ -131,7 +156,9 @@ data class StoredListSettingData(
     fun applyToListSettings(listSettings: ListSettings) {
         listSettings.reset()
         listSettings.searchCategories.addAll(searchCategories)
+        listSettings.searchCategoriesAnyAllNone.value = searchCategoriesAnyAllNone
         listSettings.searchResources.addAll(searchResources)
+        listSettings.searchResourcesAnyAllNone.value = searchResourcesAnyAllNone
         listSettings.searchStatus.addAll(searchStatus)
         listSettings.searchClassification.addAll(searchClassification)
         listSettings.searchCollection.addAll(searchCollection)
@@ -149,15 +176,25 @@ data class StoredListSettingData(
         listSettings.isFilterOverdue.value = isFilterOverdue
         listSettings.isFilterDueToday.value = isFilterDueToday
         listSettings.isFilterDueTomorrow.value = isFilterDueTomorrow
+        listSettings.isFilterDueWithin7Days.value = isFilterDueWithin7Days
         listSettings.isFilterDueFuture.value = isFilterDueFuture
         listSettings.isFilterStartInPast.value = isFilterStartInPast
         listSettings.isFilterStartToday.value = isFilterStartToday
         listSettings.isFilterStartTomorrow.value = isFilterStartTomorrow
+        listSettings.isFilterStartWithin7Days.value = isFilterStartWithin7Days
         listSettings.isFilterStartFuture.value = isFilterStartFuture
         listSettings.isFilterNoDatesSet.value = isFilterNoDatesSet
         listSettings.isFilterNoStartDateSet.value = isFilterNoStartDateSet
         listSettings.isFilterNoDueDateSet.value = isFilterNoDueDateSet
         listSettings.isFilterNoCompletedDateSet.value = isFilterNoCompletedDateSet
+
+        listSettings.filterStartRangeStart.value = filterStartRangeStart
+        listSettings.filterStartRangeEnd.value = filterStartRangeEnd
+        listSettings.filterDueRangeStart.value = filterDueRangeStart
+        listSettings.filterDueRangeEnd.value = filterDueRangeEnd
+        listSettings.filterCompletedRangeStart.value = filterCompletedRangeStart
+        listSettings.filterCompletedRangeEnd.value = filterCompletedRangeEnd
+
         listSettings.isFilterNoCategorySet.value = isFilterNoCategorySet
         listSettings.isFilterNoResourceSet.value = isFilterNoResourceSet
     }

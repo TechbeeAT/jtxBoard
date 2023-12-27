@@ -4,13 +4,15 @@
     <string name="app_permission_label">"jtx Board synchroniseert Logboeken, Notities &amp; Taken"</string>
     <string name="app_permission_desc">"synchroniseer jtx Board-inhoud met andere applicaties zoals DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Opslaan"</string>
+    <string name="update">"Bijwerken"</string>
     <string name="cancel">"Annuleren"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Verwijderen"</string>
     <string name="discard">"Annuleren"</string>
+    <string name="dismiss">"Afwijzen"</string>
+    <string name="open">"Openen"</string>
     <string name="cont">"Volgende"</string>
     <string name="website">"Website"</string>
     <string name="latitude">"Breedtegraad"</string>
@@ -56,11 +58,14 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Privacybeleid"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Achterstallig"</string>
+    <string name="list_due_shortly">"Binnenkort te betalen"</string>
     <string name="list_due_today">"Vervalt vandaag"</string>
     <string name="list_due_tomorrow">"Vervalt Morgen"</string>
+    <string name="list_due_within_7_days">"Vervalt binnen 7 dagen"</string>
     <string name="list_due_inXhours">"Vervalt binnen %d uur"</string>
     <string name="list_due_on_weekday">"Vervalt op %s"</string>
     <string name="list_start_past">"Start in verleden"</string>
+    <string name="list_start_shortly">"Binnenkort beginnen"</string>
     <string name="list_start_today">"Start vandaag gepland"</string>
     <string name="list_start_tomorrow">"Start morgen"</string>
     <string name="list_start_inXhours">"Geplande start over %d uur"</string>
@@ -75,6 +80,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"De eerste regel wordt geïnterpreteerd als onderwerp, de rest als beschrijving. Hashtags worden geïnterpreteerd als categorieën (zoals #category)."</string>
     <string name="list_item_recurring">"Terugkerend item"</string>
     <string name="list_item_edited_recurring">"Periodiek item bewerkt"</string>
+    <string name="list_scroll_to_top">"Naar boven scrollen"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"App-machtigingen"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board heeft toestemming nodig om audio op te nemen of speech-to-text functies te gebruiken. Geef de toestemming om deze functie te gebruiken."</string>
@@ -101,9 +107,11 @@ Global Strings -->
     <string name="edit_recur_on_weekday">"op"</string>
     <string name="edit_recur_on_the_x_day_of_month">"op de"</string>
     <string name="edit_recur_x_day_of_the_month">"dag van de maand"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"laatste"</string>
     <string name="edit_recur_x_times">"keer"</string>
     <string name="edit_recur_toast_requires_start_date">"Herhaling vereist een startdatum!"</string>
     <string name="edit_datepicker_dialog_select_date">"Kies datum"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Selecteer een datumbereik"</string>
     <string name="edit_datepicker_dialog_add_time">"Tijd toevoegen"</string>
     <string name="edit_datepicker_dialog_edit_time">"Bewerk tijd"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Tijdzone toevoegen"</string>
@@ -120,6 +128,7 @@ Global Strings -->
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Vertalingen"</string>
     <string name="about_tabitem_libraries">"Bibliotheken"</string>
+    <string name="about_tabitem_contributors">"Bijdragers"</string>
     <string name="about_special_thanks">"Speciale dank aan"</string>
     <string name="about_app_version">"Versie: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Codenaam: %1$s"</string>
@@ -143,11 +152,11 @@ Global Strings -->
     <string name="shortcut_addNote_longLabel">"Notitie toevoegen"</string>
     <string name="shortcut_addTodo_longLabel">"Taak toevoegen"</string>
     <!-- Settings fragment -->
-    <string name="settings_list">"Instellingen voor de itemlijst"</string>
+    <string name="settings_list">"Subtaken weergave"</string>
     <string name="settings_show_progress_for_subtasks">Voortgang voor subtaken weergeven</string>
     <string name="settings_show_progress_for_maintasks">Voortgang voor subtaken weergeven</string>
     <string name="settings_app">"App-instellingen"</string>
-    <string name="settings_select_mimetype_for_audio">"Mimetype voor audionotities selecteren"</string>
+    <string name="settings_select_mimetype_for_audio">"Audiotype voor audionotities"</string>
     <!-- Sync fragment -->
     <string name="sync_with_sync_app_heading">"Synchroniseren met %1$s"</string>
     <string name="sync_basic_info">"jtx Board biedt zelf geen server-synchronisatie, maar ondersteunt synchronisatie via DAVx5. Deze methode staat u toe om uw gegevens op te slaan, te back-uppen en te synchroniseren."</string>
@@ -156,7 +165,7 @@ Global Strings -->
     <string name="sync_congratulations">"Gefeliciteerd! :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"We hebben %1$s gedetecteerd op uw telefoon."</string>
     <string name="sync_setup_instructions">"Installatie-instructies"</string>
-    <string name="sync_check_out_sync_app">"Bekijk %1$s!"</string>
+    <string name="sync_check_out_sync_app">"Controleer %1$s!"</string>
     <string name="sync_sync_app_not_found">"We hebben %1$s niet gedetecteerd op uw telefoon."</string>
     <string name="sync_more_about_sync_app">"Meer over %1$s"</string>
     <string name="sync_download_sync_app">"%1$s downloaden"</string>
@@ -172,25 +181,21 @@ Global Strings -->
     <string name="toast_done_tasks_deleted">"Gedane taken verwijderd (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Met dank aan"</string>
-    <string name="about_translations_basic_info">"jtx Board is een open source app die de bijdrage van de open source community waardeert. Op deze pagina willen we de inspanningen van gemeenschapsleden voor vertalingen toeschrijven."</string>
-    <string name="about_translations_contribution_info">"Als u vertalingen wilt bewerken/toevoegen of nieuwe talen wilt toevoegen aan deze app, voel je vrij om deel te nemen aan het jtx-beheerproject op het vertaalplatform Crowdin:"</string>
+    <string name="about_translations_basic_info">"jtx Board is een open source app die het deelnemen en bijdragen aan de open source community waardeert. Op deze plaats willen we de inspanningen van leden van de gemeenschap voor vertalingen vermelden."</string>
+    <string name="about_translations_contribution_info">"Als je vertalingen wilt bewerken/toevoegen of nieuwe talen wilt toevoegen aan deze app, voel je vrij om deel te nemen aan het jtx-beheerproject op het vertaalplatform Crowdin:"</string>
     <string name="about_translations_contribution_button">"Doe mee op Crowdin.com"</string>
     <string name="list_welcome_entry_journal_summary">"Gefeliciteerd, dit is je eerste logboek-item :-)"</string>
-    <string name="list_welcome_entry_journal_description">"Logboekenkunnen worden gebruikt om je notities voor een specifieke datum bij te houden. Gebruik deze functionaliteit bijvoorbeeld voor protocollen, notulen, dagboekvermeldingen enzovoort. Als u deze invoer wijzigt, ziet u de opties om categorieën toe te voegen, deelnemers, bijlagen, … Voel je vrij om dit item te verwijderen wanneer je maar wilt!"</string>
+    <string name="list_welcome_entry_journal_description">"Logboeken kunnen worden gebruikt om je notities voor een specifieke datum bij te houden. Gebruik deze functionaliteit bijvoorbeeld voor protocollen, notulen, dagboekvermeldingen enzovoort. Als u deze invoer wijzigt, ziet u de opties om categorieën toe te voegen, deelnemers, bijlagen, … Voel je vrij om dit item te verwijderen wanneer je maar wilt!"</string>
     <string name="list_welcome_entry_note_summary">"Gefeliciteerd, dit is je eerste notitie-item :-)"</string>
     <string name="list_welcome_entry_note_description">"Notities zijn traditionele notities die niet gebonden zijn aan een specifieke datum. Net als logboeken kun je bijlagen, deelnemers en meer toevoegen bij het bewerken of toevoegen van een invoer. Zo kunt u ook subtaken toevoegen aan elke invoer, ongeacht of het een logboek, notitie of een taak is!"</string>
     <string name="list_welcome_entry_todo_summary">"Gefeliciteerd, dit is je eerste taak-item :-)"</string>
     <string name="list_welcome_entry_todo_description">"Daarnaast kunnen taken een geplande start-, een vervaldatum, en een vervaldatum hebben. Ze kunnen worden gecontroleerd wanneer ze klaar zijn of er kan een voortgang worden ingesteld. Bewerk dit item om alle opties te bekijken :-)"</string>
     <string name="list_welcome_category">"#EersteStappen"</string>
-    <string name="save_and_edit">"Opslaan &amp; afsluiten"</string>
+    <string name="save_and_edit">"Opslaan &amp; bewerken"</string>
     <string name="save_and_new">"Opslaan &amp; nieuw"</string>
     <string name="save_and_close">"Opslaan &amp; sluiten"</string>
     <string name="list_quickadd_add_audio_attachment">"Geluid opnemen"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Machtiging contactpersonen lezen gegeven"</string>
-    <string name="permission_read_contacts_denied">"Machtiging contactpersonen lezen geweigerd"</string>
-    <string name="permission_record_audio_granted">"Machtiging audio opnemen gegeven"</string>
-    <string name="permission_record_audio_denied">"Machtiging audio opnemen geweigerd"</string>
     <string name="intent_dialog_title">"Inhoud toevoegen aan een logboek, notitie of taak?"</string>
     <string name="add">"Voeg toe"</string>
     <string name="edit">"Bewerk"</string>
@@ -242,8 +247,6 @@ Global Strings -->
     <string name="edit_recur_week">"week(en)"</string>
     <string name="edit_recur_month">"maand(en)"</string>
     <string name="edit_recur_year">"ja(a)r(en)"</string>
-    <string name="collections_toast_export_ics_success">"Exporteren van collectie gelukt."</string>
-    <string name="collections_toast_export_ics_error">"Fout opgetreden tijdens het exporteren van de geselecteerde verzameling."</string>
     <string name="attachment_export_saved_successfully">"Opslaan is gelukt"</string>
     <string name="attachment_export_error_error_occurred">"Er is een fout opgetreden bij het opslaan van het bestand!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Externe verzameling toevoegen (%1$s)"</string>
@@ -256,6 +259,7 @@ Global Strings -->
     <string name="status">"Status"</string>
     <string name="classification">"Classificatie"</string>
     <string name="category">"Categorie"</string>
+    <string name="resource">"Bron"</string>
     <string name="priority">"Prioriteit"</string>
     <string name="readyonly">"Alleen-lezen"</string>
     <string name="upload_pending">"Upload in afwachting"</string>
@@ -268,7 +272,7 @@ Global Strings -->
     <string name="relatedto">"Gerelateerd aan"</string>
     <string name="comments">"Opmerkingen"</string>
     <string name="attachments">"Bijlagen"</string>
-    <string name="alarms">"Alarmen"</string>
+    <string name="alarms">"Meldingen"</string>
     <string name="recurrence">"Herhaling"</string>
     <string name="recurrence_exceptions">"Uitzonderingen"</string>
     <string name="recurrence_additions">"Toevoegingen"</string>
@@ -279,6 +283,8 @@ Global Strings -->
     <string name="search_notes">Doorzoek notities</string>
     <string name="search_todos">Zoek taken</string>
     <string name="filter">"Filter"</string>
+    <string name="visibility">"Zichtbaarheid"</string>
+    <string name="order">"Volgorde"</string>
     <string name="sync_now">"Sync nu"</string>
     <string name="due">"Vervalt"</string>
     <string name="completed">"Voltooid"</string>
@@ -287,6 +293,7 @@ Global Strings -->
     <string name="progress">"Voortgang"</string>
     <string name="categories">"Categorieën"</string>
     <string name="subtasks">"Subtaken"</string>
+    <string name="linked_parents">"Gelinkte ouders"</string>
     <string name="priority_7_low">"7 - Laag"</string>
     <string name="priority_8_lower">"8 - Lager"</string>
     <string name="priority_9_lowest">"9 - Laagst"</string>
@@ -296,10 +303,12 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Verplaats alle items van \"%1$s\" naar"</string>
     <string name="collection_dialog_move_info">"Let op: alleen beschrijfbare verzamelingen en verzamelingen met ondersteuning voor dezelfde onderdelen (logboeken, notities, taken) kunnen worden geselecteerd."</string>
     <string name="menu_collections_popup_move_entries">"Invoer verplaatsen"</string>
+    <string name="setting_no_time">"Geen tijd"</string>
     <string name="list_no_dates_set">"Geen datums ingesteld"</string>
     <string name="list_without_start_date">"Zonder startdatum"</string>
     <string name="list_without_due_date">"Zonder vervaldatum"</string>
     <string name="list_without_completed_date">"Zonder voltooide datum"</string>
+    <string name="list_show_only_search_matching_subentries">"Toon alleen zoekresultaten die overeenkomen met sub-items"</string>
     <string name="filter_order_by">"Sorteer op"</string>
     <string name="filter_asc">"Oplopend"</string>
     <string name="filter_desc">"Aflopend"</string>
@@ -309,6 +318,9 @@ Global Strings -->
     <string name="filter_no_resource">Zonder hulpmiddelen</string>
     <string name="filter_subtasks_order_by">Sorteer subtaken op</string>
     <string name="filter_subnotes_order_by">Sorteer gelinkte notities op</string>
+    <string name="filter_no_filter">"Geen filter"</string>
+    <string name="filter_options_more_entries">"Meer (%1$d)"</string>
+    <string name="filter_options_less_entries">"Minder"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Klik op de verzameling waaraan de invoer/gegevens moeten worden toegevoegd!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d toegevoegd, %2$d overgeslagen. (Exclusieve exemplaren van terugkerende items.)"</string>
     <string name="collections_toast_x_items_added">"%1$d items toegevoegd!"</string>
@@ -320,12 +332,18 @@ Global Strings -->
     <string name="edit_recur_ends_never">"stopt niet"</string>
     <string name="edit_recur_ends_on">"stopt op"</string>
     <string name="edit_recur_ends_after">"stopt na"</string>
-    <string name="collections_toast_export_all_ics_success">"Exporteren van collectie gelukt."</string>
-    <string name="collections_toast_export_all_ics_error">"Fout opgetreden tijdens het exporteren van de verzamelingen."</string>
+    <string name="collections_toast_export_success">"Collecties succesvol geëxporteerd"</string>
+    <string name="collections_toast_export_error">"Exporteren collecties mislukt"</string>
     <string name="menu_collections_export_all">"Alles exporteren"</string>
+    <string name="menu_presets_export_presets">"Voorinstellingen exporteren"</string>
+    <string name="menu_presets_import_presets">"Voorinstellingen importeren"</string>
+    <string name="presets_imported">"Voorinstellingen geïmporteerd"</string>
+    <string name="presets_import_invalid_file">"Ongeldig bestand"</string>
+    <string name="presets_saved">"Voorinstellingen opgeslagen"</string>
+    <string name="presets_export_error">"Er is een fout opgetreden bij het opslaan van voorinstellingen"</string>
     <string name="more">"Meer"</string>
     <string name="navigation_drawer_buypro">"Koop Pro"</string>
-    <string name="settings_select_theme">"Kies thema"</string>
+    <string name="settings_select_theme">"Themakleur"</string>
     <string name="settings_select_theme_dark">"Donker"</string>
     <string name="settings_select_theme_light">"Licht"</string>
     <string name="settings_select_theme_system">"Systeemstandaard"</string>
@@ -334,6 +352,10 @@ Global Strings -->
     <string name="settings_protect_biometric_all">"Alle"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Graag authenticeren om de instellingen te wijzigen"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Gelieve te authenticeren om beschermde items te tonen!"</string>
+    <string name="settings_timezone_display">"Tijdzone weergave instellen"</string>
+    <string name="settings_timezone_display_local">"Toon tijd in lokale tijdzone"</string>
+    <string name="settings_timezone_display_original">"Toon tijd in de oorspronkelijke tijdzone"</string>
+    <string name="settings_timezone_display_local_and_original">"Toon tijd in lokale en originele tijdzone (alleen de detailweergave)"</string>
     <string name="donate_dialog_title">"Vind je het jtx Board leuk?"</string>
     <string name="donate_dialog_message">"De ontwikkeling van een app is complex, en ontwikkeling, onderhoud en ondersteuning is hard werk. Als u deze app leuk vindt en ontwikkeling wilt ondersteunen, overweeg dan een donatie :-)
 Dank u!"</string>
@@ -358,12 +380,12 @@ Dank u!"</string>
     <string name="settings_default_expand_subtasks">"Subtaken standaard uitvouwen in lijst"</string>
     <string name="settings_default_expand_subnotes">"Subtaken standaard uitvouwen in lijst"</string>
     <string name="settings_default_expand_attachments">"Subtaken standaard uitvouwen in lijst"</string>
-    <string name="permission_coarse_location_granted">"Grove locatiemachtiging verleend"</string>
-    <string name="permission_coarse_location_denied">"Grove locatiemachtiging geweigerd"</string>
     <string name="sorry">"Sorry"</string>
     <string name="back">"Terug"</string>
     <string name="details">"Details"</string>
     <string name="date">"Datum"</string>
+    <string name="summary_description">"Samenvatting/beschrijving"</string>
+    <string name="status_classification_priority">"Status/Classificatie/Prioriteit"</string>
     <string name="timezone">"Tijdzone"</string>
     <string name="not_set2">"Niet ingesteld"</string>
     <string name="invert_selection">"Selectie omkeren"</string>
@@ -384,10 +406,14 @@ Dank u!"</string>
     <string name="list_update_entries_dialog_title">"Items bijwerken"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Let op: Terugkerende instanties moeten ontkoppeld zijn van de serie voordat ze verplaatst worden naar een andere verzamelingen en zullen genegeerd worden in dit proces."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Kies het bovenliggend element waaraan de deze moeten worden gekoppeld als subtaak/gekoppelde notities."</string>
+    <string name="link_entry">"Link item"</string>
     <string name="link_entry_search_within">"Zoeken binnen …"</string>
     <string name="link_entry_search_within_same_collection">"Dezelfde collectie"</string>
+    <string name="link_entry_search_within_same_account">"Zelfde account"</string>
     <string name="details_link_existing_subentry_dialog_title">"Link subitems"</string>
+    <string name="details_link_existing_parent_dialog_title">"Ouders koppelen"</string>
     <string name="details_link_existing_subentry_dialog_info">"Kies de sub-items die moeten worden gekoppeld."</string>
+    <string name="details_link_existing_parent_dialog_info">"Kies een ouder-item om aan te koppelen."</string>
     <string name="details_app_bar_behaviour">"App-balk gedrag"</string>
     <string name="details_show_all_options">"Toon alle opties"</string>
     <string name="details_show_hide_elements">Toon/verberg delen</string>
@@ -409,10 +435,10 @@ Dank u!"</string>
     <string name="edit_subnote_add_helper">"Subnotitie toevoegen"</string>
     <string name="edit_subtask">"Subtaak aanpassen"</string>
     <string name="edit_subnote">"Subnotitie bewerken"</string>
-    <string name="edit_fragment_app_notification_permission_message">"jtx Board toont meldingen wanneer alarmen vervallen. Geef toestemming om deze functie te gebruiken."</string>
+    <string name="edit_fragment_app_notification_permission_message">"jtx Board toont berichten als meldingen vervallen. Geef toestemming om deze functie te gebruiken."</string>
     <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board kan je locatie gebruiken om automatisch naar je locatie te zoomen bij het gebruik van kaarten. Geef grove-locatie-machtiging als je deze functie wilt gebruiken."</string>
     <!-- alarms -->
-    <string name="alarms_alarm">"Alarm"</string>
+    <string name="alarms_alarm">"Melding"</string>
     <string name="alarms_before">"voor"</string>
     <string name="alarms_after">"na"</string>
     <string name="alarms_start">"start"</string>
@@ -444,11 +470,16 @@ Dank u!"</string>
     <string name="dialog_add_audio_entry_title">"Audio-item toevoegen"</string>
     <string name="menu_list_viewmode_compact">"Compacte weergave"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-weergave"</string>
-    <string name="settings_tasks">"Taakinstellingen"</string>
-    <string name="settings_tasks_status_progress">"Taken Instellingen (status/voortgang)"</string>
-    <string name="settings_sync">"Synchroniseerinstellingen"</string>
+    <string name="settings_tasks">"Taken instellen"</string>
+    <string name="settings_alarms">"Meldingen instellen"</string>
+    <string name="settings_tasks_status_progress">"Taken voortgang instellen"</string>
+    <string name="settings_sync">"Synchronisatie instellen"</string>
     <string name="settings_default_start_date">"Stel een standaard startdatum voor taken in"</string>
+    <string name="settings_default_start_timezone">"Een standaard starttijdzone voor taken instellen"</string>
     <string name="settings_default_due_date">"Stel een standaard vervaldatum voor taken in"</string>
+    <string name="settings_default_due_timezone">"Een standaard vervaltijdzone voor taken instellen"</string>
+    <string name="settings_default_start_time">"Een standaard starttijd voor taken instellen"</string>
+    <string name="settings_default_due_time">"Een standaard vervaltijd voor taken instellen"</string>
     <string name="settings_default_date_none">"Geen"</string>
     <string name="settings_default_date_same_day">"Dezelfde dag"</string>
     <string name="settings_default_date_next_day">"Morgen"</string>
@@ -465,14 +496,19 @@ Dank u!"</string>
     <string name="settings_progress_step_25">"Verhogen met 25 (4 stappen)"</string>
     <string name="settings_progress_step_50">"Verhogen met 50 (2 stappen)"</string>
     <string name="settings_progress_step">"Stel de stap voor de voortgangsslider in"</string>
-    <string name="settings_disable_alarms_for_readonly">"Schakel alarmen uit voor alleen-lezen verzamelingen"</string>
+    <string name="settings_disable_alarms_for_readonly">"Schakel meldingen uit voor alleen-lezen verzamelingen"</string>
     <string name="settings_link_progress_to_subtasks">"Voortgang koppelen aan subtaken"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Hou status, voortgang &amp; voltooidstatus gesynchoniseerd"</string>
     <string name="settings_attention_experimental_feature">"Let op: Dit is een experimentele functie"</string>
     <string name="settings_create_with_current_location">"Nieuwe items maken met de huidige locatie"</string>
-    <string name="settings_sticky_alarms">"Sticky alarmen"</string>
-    <string name="settings_sticky_alarms_sub">"Behoud meldingen tot klaar of uitgesteld"</string>
-    <string name="settings_sync_on_start">"Synchroniseer bij starten app"</string>
+    <string name="settings_sticky_alarms">"Kleverige meldingen"</string>
+    <string name="settings_sticky_alarms_sub">"Behoud berichten tot klaar of uitgesteld"</string>
+    <string name="settings_fullscreen_alarms">"Volledig scherm meldingen"</string>
+    <string name="settings_fullscreen_alarms_sub">"Meldingen tonen op volledig scherm als het apparaat is vergrendeld"</string>
+    <string name="settings_accessibility_mode">"Toegankelijkheidsmodus"</string>
+    <string name="settings_accessibility_mode_sub">"Zorgt voor minimale lettergrootte voor kleine elementen"</string>
+    <string name="settings_fullscreen_alarms_toast">"Geef toegang tot volledig scherm meldingen in de systeeminstellingen."</string>
+    <string name="settings_sync_on_start">"Bij starten app synchroniseren"</string>
     <string name="settings_sync_on_pull_refresh">"Synchroniseren bij pull-down"</string>
     <string name="sync_button_go_to_collections">"Ga naar verzamelingen"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Koop het Pro-pakket om deze functie in te schakelen."</string>
@@ -485,18 +521,24 @@ Dank u!"</string>
     <string name="menu_view_convert_to_journal">"Omzetten naar logboek"</string>
     <string name="menu_view_convert_to_note">"Converteren naar notitie"</string>
     <string name="menu_view_convert_to_task">"Omzetten naar taak"</string>
-    <string name="settings_select_language">"Taal kiezen"</string>
+    <string name="settings_select_language">"Taal"</string>
     <string name="settings_select_language_system">"Systeemstandaard"</string>
     <string name="filter_special">"Speciale filters"</string>
     <string name="filter_presets">"Standaardfilters"</string>
+    <string name="filter_presets_edit_info">"Instellingen in het filtermenu in de lijstweergave toevoegen, bijwerken en verwijderen."</string>
+    <string name="filter_any">"Elke"</string>
+    <string name="filter_all">"Alle"</string>
+    <string name="filter_none">"Geen"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in het verleden"</string>
     <string name="list_date_today">"Vandaag"</string>
     <string name="list_date_tomorrow">"Morgen"</string>
+    <string name="list_date_within_7_days">"Binnen 7 dagen"</string>
     <string name="list_date_future">"Datum in de toekomst"</string>
     <string name="list_start_date_in_past">"Start in verleden"</string>
     <string name="list_start_date_today">"Start vandaag"</string>
     <string name="list_start_date_tomorrow">"Start morgen"</string>
+    <string name="list_start_date_within_7_days">"Start binnen 7 dagen"</string>
     <string name="list_start_date_future">"Start in de toekomst"</string>
     <string name="list_hide_completed_tasks">"Voltooide taken verbergen"</string>
     <string name="list_biometric_protected_entries_locked">Biometrische beschermde entries vergrendeld</string>
@@ -504,10 +546,11 @@ Dank u!"</string>
     <string name="collections_biometric_protected_entries_locked_title">Biometrische beschermde entries vergrendeld</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Authenticeer en probeer het opnieuw</string>
     <string name="list_biometric_protected_entries_unlocked">Biometrische beschermde entries ontgrendeld</string>
-    <string name="settings_auto_alarm">"Automatisch alarm"</string>
+    <string name="settings_auto_alarm">"Automatische meldingen"</string>
     <string name="alarms_always_ondue">"Altijd bij verval"</string>
-    <string name="settings_auto_alarm_sub">"Schakel in om automatisch alarmen te maken. Kies \"Altijd bij verval\" om geen alarm aan te maken, maar om een melding te krijgen zodra een taak vervalt."</string>
-    <string name="settings_protect_biometric">"Bescherm invoergegevens met biometrie"</string>
+    <string name="alarms_always_on_save">"Altijd bij het opslaan (experimenteel)"</string>
+    <string name="settings_auto_alarm_sub">"Inschakelen voor automatische meldingen. Kies \"Steeds bij verval\" om niet een melding aan te maken, maar bericht te krijgen telkens als een taak vervalt."</string>
+    <string name="settings_protect_biometric">"Invoer met biometrie beschermen"</string>
     <string name="settings_protect_biometric_sub">"Deze functie verbergt de geselecteerde invoergegevens totdat ze zijn ontgrendeld met biometrie, maar versleutelt/ontsleutelt niet gegevens op de achtergrond."</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"Geen status"</string>
@@ -547,7 +590,7 @@ Dank u!"</string>
     <string name="widget_list_maximum_entries_reached">"Maximum aantal items in widget bereikt (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Widget bijwerken"</string>
     <string name="widget_list_opacity_warning">"Opmerking: Dit is een experimentele functie! Lagere doorzichtigheid in het kleurthema wordt mogelijk niet onmiddellijk weergegeven!"</string>
-    <string name="widget_list_color_warning">"Opmerking: Dit is een experimentele functie! Wijzigingen in het kleurthema zullen niet worden weergegeven! Kies geen kleur om terug te keren naar systeem standaard."</string>
+    <string name="widget_list_color_warning">"Opmerking: Dit is een experimentele functie! Wijzigingen in het themakleur worden niet weergegeven! Kies geen kleur voor terugkeer naar systeem standaard."</string>
     <string name="opacity">"Transparantie"</string>
     <string name="general">"Algemeen"</string>
     <string name="list_collapse">"Inklappen"</string>
@@ -560,8 +603,8 @@ Dank u!"</string>
     <string name="widget_list_show_description">"Toon beschrijving"</string>
     <string name="settings_select_theme_true_dark">"Volledig donker (AMOLED)"</string>
     <string name="settings_select_theme_contrast">"Contrast (e-Ink)"</string>
-    <string name="settings_journals">"Logboekinstellingen"</string>
-    <string name="settings_notes">"Notitie-instellingen"</string>
+    <string name="settings_journals">"Logboek instellen"</string>
+    <string name="settings_notes">"Notities instellen"</string>
     <string name="settings_default_journals_date">"Stel een standaard datum/tijd voor logboeken in"</string>
     <string name="settings_default_journals_date_previous_day">"Gisteren"</string>
     <string name="settings_default_journals_date_current_day">"Vandaag"</string>
@@ -600,8 +643,8 @@ Dank u!"</string>
     <string name="geofence_radius_feet">"Radius %1$d ft"</string>
     <string name="geofence_selection">"Geomuur: %1$s"</string>
     <string name="geofence_options">"Geofence opties"</string>
-    <string name="geofence_missing_permission_info">"jtx Board heeft de rechten nodig om toegang te krijgen tot je achtergrondlocatie en om je meldingen te sturen. Werk de locatie-machtiging bij naar 'Altijd toestaan' en geef de meldingsmachtiging om een melding te krijgen wanneer je de Geofence bereikt!"</string>
+    <string name="geofence_missing_permission_info">"jtx Board heeft de rechten nodig om toegang te krijgen tot je achtergrondlocatie en om meldingen te sturen. Werk de toegang tot locatie bij naar 'Altijd toestaan' en geef toegang tot meldingen om bericht te krijgen als je de Geofence bereikt!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board kan je een melding geven wanneer je in de buurt bent van de opgegeven coördinaten. Stel de locatie-toestemming in op 'Altijd toestaan' en geef de meldingstoestemming om deze functie te gebruiken."</string>
     <string name="geofence_notification_summary">"Geofence geactiveerd"</string>
-    <string name="exact_alarm_permission_dialog_message">"jtx Board heeft toestemming nodig om exacte meldingen te plannen, anders kunnen meldingen vertraagd worden. Geef deze toestemming om deze functie te kunnen gebruiken."</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board heeft de toegang nodig om exacte meldingen te plannen, anders kunnen waarschuwingsberichten vertraagd worden. Geef deze toegang om de functie te kunnen gebruiken."</string>
 </resources>

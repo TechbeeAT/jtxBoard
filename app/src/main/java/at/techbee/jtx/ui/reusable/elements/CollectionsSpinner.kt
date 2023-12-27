@@ -1,19 +1,32 @@
 package at.techbee.jtx.ui.reusable.elements
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.FolderOpen
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,7 +51,7 @@ fun CollectionsSpinner(
     val context = LocalContext.current
     var selected by remember { mutableStateOf(preselected) }
     var expanded by remember { mutableStateOf(false) } // initial value
-    val isProPurchased by BillingManager.getInstance().isProPurchased.observeAsState(true)
+    val isProPurchased by if(LocalInspectionMode.current) remember { mutableStateOf(true)} else BillingManager.getInstance().isProPurchased.observeAsState(true)
 
     OutlinedCard(
         modifier = modifier,
@@ -59,10 +72,11 @@ fun CollectionsSpinner(
             ListBadge(
                 icon = Icons.Outlined.FolderOpen,
                 iconDesc = stringResource(id = R.string.collection),
-                containerColor = selected.color?.let {Color(it) } ?: MaterialTheme.colorScheme.primaryContainer
+                containerColor = selected.color?.let {Color(it) } ?: MaterialTheme.colorScheme.primaryContainer,
+                isAccessibilityMode = true
             )
-            Text(
-                text = selected.displayName + selected.accountName?.let { " ($it)" },
+            CollectionInfoColumn(
+                collection = selected,
                 modifier = Modifier
                     .weight(1f)
                     .alpha(if (!enabled) 0.5f else 1f)
@@ -96,13 +110,7 @@ fun CollectionsSpinner(
                             }
                         },
                         text = {
-                            Text(
-                                text = (collection.displayName ?: collection.accountName)
-                                    ?: " ",
-                                modifier = Modifier
-                                    .wrapContentWidth()
-                                    .align(Alignment.Start)
-                            )
+                            CollectionInfoColumn(collection = collection)
                         }
                     )
                 }

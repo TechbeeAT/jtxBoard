@@ -11,36 +11,41 @@ package at.techbee.jtx.ui.collections
 
 import android.accounts.Account
 import android.app.Application
-import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.CollectionsView
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.BufferedOutputStream
 import java.io.IOException
-import java.io.OutputStream
+import java.time.LocalTime
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
+enum class CollectionsExportMimetype(val mimeType: String) { ICS("text/calendar"), ZIP("application/zip") }
 
 class CollectionsViewModel(application: Application) : AndroidViewModel(application) {
 
-    val database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
+    private val _application = application
+    val database: ICalDatabaseDao = ICalDatabase.getInstance(_application).iCalDatabaseDao()
     val collections = database.getAllCollectionsView()
-    val app = application
 
-    val collectionsICS = MutableLiveData<List<Pair<String, String>>?>(null)
     val isProcessing = MutableLiveData(false)
+    val toastText = MutableLiveData<String>(null)
     val resultInsertedFromICS = MutableLiveData<Pair<Int, Int>?>(null)
+    val collectionsToExport = MutableLiveData<List<CollectionsView>>(emptyList())
 
 
     /**
@@ -74,7 +79,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             val objectsToMove = database.getICalObjectIdsToMove(oldCollectionId)
             objectsToMove.forEach {
                 val newId = ICalObject.updateCollectionWithChildren(it, null, newCollectionId, database, getApplication()) ?: return@forEach
-                database.getICalObjectByIdSync(newId)?.recreateRecurring(app)
+                database.getICalObjectByIdSync(newId)?.recreateRecurring(_application)
             }
             objectsToMove.forEach {
                 ICalObject.deleteItemWithChildren(it, database)
@@ -84,67 +89,47 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-
-    fun requestICSForExport(collections: List<CollectionsView>) {
+    /**
+     * Exports the given collections in collectionsToExport to the given uri
+     * @param [resultExportFilepath] where the data should be saved.
+     */
+    fun writeToFile(resultExportFilepath: Uri, collectionsExportMimetype: CollectionsExportMimetype) {
         isProcessing.postValue(true)
-        val icsList: MutableList<Pair<String, String>> = mutableListOf()   // first of pair is filename/collectionname, second is ics
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                _application.contentResolver?.openOutputStream(resultExportFilepath)?.use { outputStream ->
+                    if(collectionsToExport.value.isNullOrEmpty())
+                        throw IOException("Collections to export are empty")
 
-        viewModelScope.launch(Dispatchers.IO)  {
-            collections.forEach { collection ->
-                val ics = (Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId))
-                ics?.let { icsList.add(Pair(collection.displayName?:collection.collectionId.toString(), it)) }
-            }
-            collectionsICS.postValue(icsList)
-            isProcessing.postValue(false)
-        }
-    }
-
-    fun exportICSasZIP(resultExportFilepath: Uri?,context: Context) {
-
-        if(resultExportFilepath == null || collectionsICS.value == null)
-            return
-
-        isProcessing.postValue(true)
-        try {
-            val output: OutputStream? = context.contentResolver?.openOutputStream(resultExportFilepath)
-            val bos = BufferedOutputStream(output)
-            ZipOutputStream(bos).use { zos ->
-                collectionsICS.value?.forEach { ics ->
-                    // not available on BufferedOutputStream
-                    zos.putNextEntry(ZipEntry("${ics.first}.ics"))
-                    zos.write(ics.second.toByteArray())
-                    zos.closeEntry()
+                    when(collectionsExportMimetype) {
+                        CollectionsExportMimetype.ICS -> {
+                            val collection = collectionsToExport.value?.first() ?: throw IOException("Collections to export are empty")
+                            Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)?.let { ics ->
+                                outputStream.write(ics.toByteArray())
+                            }
+                        }
+                        CollectionsExportMimetype.ZIP -> {
+                            val bos = BufferedOutputStream(outputStream)
+                            ZipOutputStream(bos).use { zos ->
+                                collectionsToExport.value?.forEach { collection ->
+                                    Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)
+                                        ?.let { ics ->
+                                            zos.putNextEntry(ZipEntry("${collection.displayName ?: collection.collectionId.toString()}.ics"))
+                                            zos.write(ics.toByteArray())
+                                            zos.closeEntry()
+                                        }
+                                }
+                            }
+                        }
+                    }
                 }
+                toastText.postValue(_application.getString(R.string.collections_toast_export_success))
+            } catch (e: IOException) {
+                toastText.postValue(_application.getString(R.string.collections_toast_export_error))
+            } finally {
+                isProcessing.postValue(false)
+                collectionsToExport.postValue(emptyList())
             }
-            output?.flush()
-            output?.close()
-            Toast.makeText(context, R.string.collections_toast_export_all_ics_success, Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
-            Toast.makeText(context, R.string.collections_toast_export_all_ics_error, Toast.LENGTH_LONG).show()
-        } finally {
-            collectionsICS.value = null
-            isProcessing.postValue(false)
-        }
-    }
-
-    fun exportICS(resultExportFilepath: Uri?, context: Context) {
-
-        if(resultExportFilepath == null || collectionsICS.value == null)
-            return
-
-        isProcessing.postValue(true)
-        try {
-            val output: OutputStream? =
-                context.contentResolver?.openOutputStream(resultExportFilepath)
-            output?.write(collectionsICS.value?.first()?.second?.toByteArray())
-            output?.flush()
-            output?.close()
-            Toast.makeText(context, R.string.collections_toast_export_ics_success, Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
-            Toast.makeText(context, R.string.collections_toast_export_ics_error, Toast.LENGTH_LONG).show()
-        } finally {
-            collectionsICS.value = null
-            isProcessing.postValue(false)
         }
     }
 
@@ -161,10 +146,34 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun insertTxt(text: String, module: Module, collection: ICalCollection) {
+    fun insertTxt(
+        text: String,
+        module: Module,
+        collection: ICalCollection,
+        defaultJournalDateSettingOption: DropdownSettingOption,
+        defaultStartDateSettingOption: DropdownSettingOption,
+        defaultStartTime: LocalTime?,
+        defaultStartTimezone: String?,
+        defaultDueDateSettingOption: DropdownSettingOption,
+        defaultDueTime: LocalTime?,
+        defaultDueTimezone: String?
+    ) {
         isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
-            database.insertICalObject(ICalObject.fromText(module, collection.collectionId, text, getApplication()))
+            database.insertICalObject(
+                ICalObject.fromText(
+                    module,
+                    collection.collectionId,
+                    text,
+                    defaultJournalDateSettingOption,
+                    defaultStartDateSettingOption,
+                    defaultStartTime,
+                    defaultStartTimezone,
+                    defaultDueDateSettingOption,
+                    defaultDueTime,
+                    defaultDueTimezone
+                )
+            )
             if(collection.accountType != LOCAL_ACCOUNT_TYPE)
                 SyncUtil.notifyContentObservers(getApplication())
             isProcessing.postValue(false)

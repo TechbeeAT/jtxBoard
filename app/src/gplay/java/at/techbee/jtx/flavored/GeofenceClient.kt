@@ -92,7 +92,7 @@ class GeofenceClient(context: Context) : GeofenceClientDefinition(context) {
         val notificationManager = NotificationManagerCompat.from(context)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val db = ICalDatabase.getInstance(context).iCalDatabaseDao
+            val db = ICalDatabase.getInstance(context).iCalDatabaseDao()
 
             triggeringGeofences.forEach { geofence ->
                 val iCalObjectId = geofence.requestId.toLongOrNull() ?: return@forEach
@@ -107,7 +107,7 @@ class GeofenceClient(context: Context) : GeofenceClientDefinition(context) {
                             notificationDescription = iCalObject.summary ?: iCalObject.description,
                             isReadOnly = true,
                             notificationChannel = MainActivity2.NOTIFICATION_CHANNEL_GEOFENCES,
-                            isSticky = false,
+                            ignoreStickySetting = true,
                             context = context
                         )
                         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED

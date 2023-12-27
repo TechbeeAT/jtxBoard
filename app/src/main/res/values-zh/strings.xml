@@ -4,18 +4,21 @@
     <string name="app_permission_label">"jtx Board 同步日记、笔记和任务"</string>
     <string name="app_permission_desc">"使用 DAVx⁵ 之类的其它程序同步 jtx Board 内容"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"保存"</string>
+    <string name="update">"更新"</string>
     <string name="cancel">"取消"</string>
     <string name="ok">"确定"</string>
     <string name="delete">"删除"</string>
     <string name="discard">"丢弃"</string>
+    <string name="dismiss">"放弃"</string>
+    <string name="open">"打开"</string>
     <string name="cont">"继续"</string>
     <string name="website">"网站"</string>
     <string name="latitude">"纬度"</string>
     <string name="longitude">"经度"</string>
     <string name="unlink">"取消关联"</string>
+    <string name="off">"关闭"</string>
     <string name="current_location">"当前位置"</string>
     <string name="toolbar_text_add_journal">"添加日志"</string>
     <string name="toolbar_text_add_note">"添加笔记"</string>
@@ -177,10 +180,6 @@ Global Strings -->
     <string name="save_and_close">"保存并关闭"</string>
     <string name="list_quickadd_add_audio_attachment">"录制音频附件"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"已授予读取联系人权限"</string>
-    <string name="permission_read_contacts_denied">"已禁止读取联系人权限"</string>
-    <string name="permission_record_audio_granted">"已授予录音权限"</string>
-    <string name="permission_record_audio_denied">"已禁止录音权限"</string>
     <string name="intent_dialog_title">"是否将内容添加到日记、笔记或任务？"</string>
     <string name="add">"添加"</string>
     <string name="edit">"编辑"</string>
@@ -229,8 +228,6 @@ Global Strings -->
     <string name="edit_recur_week">"周"</string>
     <string name="edit_recur_month">"月"</string>
     <string name="edit_recur_year">"年"</string>
-    <string name="collections_toast_export_ics_success">"导出合集成功完成。"</string>
-    <string name="collections_toast_export_ics_error">"导出选定的合集时出错。"</string>
     <string name="attachment_export_saved_successfully">"保存成功"</string>
     <string name="attachment_export_error_error_occurred">"保存所选文件时出错！"</string>
     <string name="menu_collections_add_remote_to_sync_app">"添加远程合集（%1$s）"</string>
@@ -306,8 +303,6 @@ Global Strings -->
     <string name="edit_recur_ends_never">"从不结束"</string>
     <string name="edit_recur_ends_on">"结束，在"</string>
     <string name="edit_recur_ends_after">"结束，在此后"</string>
-    <string name="collections_toast_export_all_ics_success">"导出所有合集已成功完成。"</string>
-    <string name="collections_toast_export_all_ics_error">"导出合集时出错。"</string>
     <string name="menu_collections_export_all">"全部导出"</string>
     <string name="more">"更多"</string>
     <string name="navigation_drawer_buypro">"购买Pro版"</string>
@@ -343,8 +338,6 @@ Global Strings -->
     <string name="settings_default_expand_subtasks">"默认在列表中展开子任务"</string>
     <string name="settings_default_expand_subnotes">"默认在列表中展开子笔记"</string>
     <string name="settings_default_expand_attachments">"默认在列表中展开附件"</string>
-    <string name="permission_coarse_location_granted">"已授予大致位置权限"</string>
-    <string name="permission_coarse_location_denied">"大致位置权限被拒绝"</string>
     <string name="sorry">"抱歉"</string>
     <string name="back">"返回"</string>
     <string name="details">"详细信息"</string>

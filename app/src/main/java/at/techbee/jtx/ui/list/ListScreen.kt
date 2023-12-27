@@ -13,17 +13,12 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import at.techbee.jtx.R
-import at.techbee.jtx.database.Classification
-import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
@@ -45,55 +40,14 @@ fun ListScreen(
         listViewModel.toastMessage.value = null
     }
 
-    val list = listViewModel.iCal4ListRel.observeAsState(emptyList())
-
-    // first apply a proper sort order, then group
-    val sortedList = when (listViewModel.listSettings.groupBy.value) {
-        GroupBy.STATUS -> list.value.sortedBy {
-            if (listViewModel.module == Module.TODO && it.iCal4List.percent != 100)
-                try {
-                    Status.valueOf(it.iCal4List.status ?: Status.NO_STATUS.name).ordinal
-                } catch (e: java.lang.IllegalArgumentException) {
-                    -1
-                }
-            else
-                try {
-                    Status.valueOf(it.iCal4List.status ?: Status.FINAL.name).ordinal
-                } catch (e: java.lang.IllegalArgumentException) {
-                    -1
-                }
-        }.let { if (listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
-        GroupBy.CLASSIFICATION -> list.value.sortedBy {
-            try {
-                Classification.valueOf(it.iCal4List.classification ?: Classification.PUBLIC.name).ordinal
-            } catch (e: java.lang.IllegalArgumentException) {
-                -1
-            }
-        }.let { if (listViewModel.listSettings.sortOrder.value == SortOrder.DESC) it.asReversed() else it }
-        else -> list.value
-    }
-
-    val groupedList = sortedList.groupBy {
-        when (listViewModel.listSettings.groupBy.value) {
-            GroupBy.STATUS -> Status.values().find { status ->  status.status == it.iCal4List.status }?.stringResource?.let { stringRes -> stringResource(id = stringRes)}?: it.iCal4List.status?:""
-            GroupBy.CLASSIFICATION -> Classification.values().find { classif ->  classif.classification == it.iCal4List.classification }?.stringResource?.let { stringRes -> stringResource(id = stringRes)}?: it.iCal4List.classification?:""
-            GroupBy.ACCOUNT -> it.iCal4List.accountName ?:""
-            GroupBy.COLLECTION -> it.iCal4List.collectionDisplayName ?:""
-            GroupBy.PRIORITY -> {
-                when (it.iCal4List.priority) {
-                    null -> stringArrayResource(id = R.array.priority)[0]
-                    in 0..9 -> stringArrayResource(id = R.array.priority)[it.iCal4List.priority!!]
-                    else -> it.iCal4List.priority.toString()
-                }
-            }
-            GroupBy.DATE -> ICalObject.getDtstartTextInfo(module = Module.JOURNAL, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = LocalContext.current)
-            GroupBy.START -> ICalObject.getDtstartTextInfo(module = Module.TODO, dtstart = it.iCal4List.dtstart, dtstartTimezone = it.iCal4List.dtstartTimezone, daysOnly = true, context = LocalContext.current)
-            GroupBy.DUE -> ICalObject.getDueTextInfo(status = it.iCal4List.status, due = it.iCal4List.due, dueTimezone = it.iCal4List.dueTimezone, percent = it.iCal4List.percent, daysOnly = true, context = LocalContext.current)
-            else -> {
-                it.iCal4List.module
-            }
-        }
-    }
+    val list by listViewModel.iCal4ListRel.observeAsState(emptyList())
+    val groupedList = ICal4ListRel.getGroupedList(
+        initialList = list,
+        groupBy = listViewModel.listSettings.groupBy.value,
+        sortOrder = listViewModel.listSettings.sortOrder.value,
+        module = listViewModel.module,
+        context = context
+    )
 
     fun processOnClick(itemId: Long, ical4list: List<ICal4List>, isReadOnly: Boolean) {
         if (listViewModel.multiselectEnabled.value && isReadOnly)
@@ -132,13 +86,15 @@ fun ListScreen(
                     storedCategoriesLive = listViewModel.storedCategories,
                     storedResourcesLive = listViewModel.storedResources,
                     storedStatusesLive = listViewModel.extendedStatuses,
-                    isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks,
-                    isSubnotesExpandedDefault = settingsStateHolder.settingAutoExpandSubnotes,
-                    isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments,
-                    settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks,
-                    settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
-                    settingProgressIncrement = settingsStateHolder.settingStepForProgress,
+                    isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks.value,
+                    isSubnotesExpandedDefault = settingsStateHolder.settingAutoExpandSubnotes.value,
+                    isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments.value,
+                    settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks.value,
+                    settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks.value,
+                    settingProgressIncrement = settingsStateHolder.settingStepForProgress.value,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    settingDisplayTimezone = settingsStateHolder.settingDisplayTimezone.value,
+                    settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                     isPullRefreshEnabled = isPullRefreshEnabled,
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
@@ -156,12 +112,13 @@ fun ListScreen(
                             isAttachmentsExpanded
                         )
                     },
-                    onSyncRequested = { listViewModel.syncAccounts() }
+                    onSyncRequested = { listViewModel.syncAccounts() },
+                    onSaveListSettings = { listViewModel.saveListSettings() }
                 )
             }
             ViewMode.GRID -> {
                 ListScreenGrid(
-                    list = list.value,
+                    list = list,
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
                     storedResourcesLive = listViewModel.storedResources,
@@ -169,6 +126,7 @@ fun ListScreen(
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                     isPullRefreshEnabled = isPullRefreshEnabled,
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
@@ -191,19 +149,21 @@ fun ListScreen(
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                     isPullRefreshEnabled = isPullRefreshEnabled,
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent -> processOnProgressChanged(itemId, newPercent) },
-                    onSyncRequested = { listViewModel.syncAccounts() }
+                    onSyncRequested = { listViewModel.syncAccounts() },
+                    onSaveListSettings = { listViewModel.saveListSettings() }
                 )
             }
             ViewMode.KANBAN -> {
                 ListScreenKanban(
                     module = listViewModel.module,
-                    list = list.value,
+                    list = list,
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
                     storedResourcesLive = listViewModel.storedResources,
@@ -214,6 +174,7 @@ fun ListScreen(
                     kanbanColumnsCategory = listViewModel.listSettings.kanbanColumnsCategory,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                    settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                     isPullRefreshEnabled = isPullRefreshEnabled,
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,

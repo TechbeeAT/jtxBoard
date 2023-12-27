@@ -81,6 +81,7 @@ import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_RELTYPE
 import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_TEXT
 import at.techbee.jtx.database.properties.COLUMN_RESOURCE_ICALOBJECT_ID
 import at.techbee.jtx.database.properties.COLUMN_RESOURCE_TEXT
+import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.properties.TABLE_NAME_ALARM
 import at.techbee.jtx.database.properties.TABLE_NAME_ATTACHMENT
 import at.techbee.jtx.database.properties.TABLE_NAME_ATTENDEE
@@ -88,6 +89,7 @@ import at.techbee.jtx.database.properties.TABLE_NAME_CATEGORY
 import at.techbee.jtx.database.properties.TABLE_NAME_COMMENT
 import at.techbee.jtx.database.properties.TABLE_NAME_RELATEDTO
 import at.techbee.jtx.database.properties.TABLE_NAME_RESOURCE
+import at.techbee.jtx.ui.list.AnyAllNone
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.DateTimeUtils
@@ -146,7 +148,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'JOURNAL' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfJournal, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'NOTE' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfNote, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'TODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfTodo, " +
-            "(SELECT group_concat($TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT, \', \') FROM $TABLE_NAME_CATEGORY WHERE main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID GROUP BY $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
+            "(SELECT group_concat(sub.$COLUMN_CATEGORY_TEXT, \', \') FROM (SELECT * FROM $TABLE_NAME_CATEGORY ORDER BY $COLUMN_CATEGORY_TEXT) as sub WHERE main_icalobject.$COLUMN_ID = sub.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
+            "(SELECT group_concat(sub.$COLUMN_RESOURCE_TEXT, \', \') FROM (SELECT * FROM $TABLE_NAME_RESOURCE ORDER BY $COLUMN_RESOURCE_TEXT) as sub WHERE main_icalobject.$COLUMN_ID = sub.$COLUMN_RESOURCE_ICALOBJECT_ID) as resources, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = 'VTODO' AND sub_relatedto.$COLUMN_RELATEDTO_TEXT = main_icalobject.$COLUMN_UID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_icalobject.$COLUMN_DELETED = 0 AND sub_icalobject.$COLUMN_RRULE IS NULL) as numSubtasks, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = 'VJOURNAL' AND sub_relatedto.$COLUMN_RELATEDTO_TEXT = main_icalobject.$COLUMN_UID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_icalobject.$COLUMN_DELETED = 0 AND sub_icalobject.$COLUMN_RRULE IS NULL) as numSubnotes, " +
             "(SELECT count(*) FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAttachments, " +
@@ -225,6 +228,7 @@ data class ICal4List(
     @ColumnInfo var isChildOfTodo: Boolean,
 
     @ColumnInfo var categories: String?,
+    @ColumnInfo var resources: String?,
     @ColumnInfo var numSubtasks: Int,
     @ColumnInfo var numSubnotes: Int,
     @ColumnInfo var numAttachments: Int,
@@ -290,6 +294,7 @@ data class ICal4List(
                 isChildOfNote = false,
                 isChildOfTodo = false,
                 categories = "Category1, Whatever",
+                resources = "Resource1, Resource2",
                 numSubtasks = 3,
                 numSubnotes = 2,
                 numAttachments = 4,
@@ -305,7 +310,9 @@ data class ICal4List(
         fun constructQuery(
             modules: List<Module>,
             searchCategories: List<String> = emptyList(),
+            searchCategoriesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
             searchResources: List<String> = emptyList(),
+            searchResourcesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
             searchStatus: List<Status> = emptyList(),
             searchXStatus: List<String> = emptyList(),
             searchClassification: List<Classification> = emptyList(),
@@ -319,29 +326,36 @@ data class ICal4List(
             isFilterOverdue: Boolean = false,
             isFilterDueToday: Boolean = false,
             isFilterDueTomorrow: Boolean = false,
+            isFilterDueWithin7Days: Boolean = false,
             isFilterDueFuture: Boolean = false,
             isFilterStartInPast: Boolean = false,
             isFilterStartToday: Boolean = false,
             isFilterStartTomorrow: Boolean = false,
+            isFilterStartWithin7Days: Boolean = false,
             isFilterStartFuture: Boolean = false,
             isFilterNoDatesSet: Boolean = false,
             isFilterNoStartDateSet: Boolean = false,
             isFilterNoDueDateSet: Boolean = false,
             isFilterNoCompletedDateSet: Boolean = false,
+            filterStartRangeStart: Long? = null,
+            filterStartRangeEnd: Long? = null,
+            filterDueRangeStart: Long? = null,
+            filterDueRangeEnd: Long? = null,
+            filterCompletedRangeStart: Long? = null,
+            filterCompletedRangeEnd: Long? = null,
             isFilterNoCategorySet: Boolean = false,
             isFilterNoResourceSet: Boolean = false,
             searchText: String? = null,
             flatView: Boolean = false,
             searchSettingShowOneRecurEntryInFuture: Boolean = false,
-            hideBiometricProtected: List<Classification>
+            hideBiometricProtected: List<Classification>,
+            limit: Int? = null
         ): SimpleSQLiteQuery {
 
             val args = arrayListOf<String>()
 
             // Beginning of query string
             var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST "
-            if (searchCategories.isNotEmpty())
-                queryString += "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID "
             if (searchResources.isNotEmpty())
                 queryString += "LEFT JOIN $TABLE_NAME_RESOURCE ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ICALOBJECT_ID "
             if (searchCollection.isNotEmpty() || searchAccount.isNotEmpty())
@@ -373,13 +387,25 @@ data class ICal4List(
             if (searchCategories.isNotEmpty() || isFilterNoCategorySet) {
                 queryString += "AND ("
                 if (searchCategories.isNotEmpty()) {
-                    queryString += searchCategories.joinToString(
-                        prefix = "$TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN (",
-                        separator = ", ",
-                        transform = { "?" },
-                        postfix = ") " + if(isFilterNoCategorySet) "OR " else ""
-                    )
+                    queryString += "("
+                    searchCategories.forEachIndexed { index, _ ->
+                        queryString += when(searchCategoriesAnyAllNone) {
+                            AnyAllNone.ANY -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID IN (SELECT sub.$COLUMN_CATEGORY_ICALOBJECT_ID FROM $TABLE_NAME_CATEGORY sub WHERE sub.$COLUMN_CATEGORY_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_CATEGORY_TEXT = ?) "
+                            AnyAllNone.ALL -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID IN (SELECT sub.$COLUMN_CATEGORY_ICALOBJECT_ID FROM $TABLE_NAME_CATEGORY sub WHERE sub.$COLUMN_CATEGORY_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_CATEGORY_TEXT = ?) "
+                            AnyAllNone.NONE -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT sub.$COLUMN_CATEGORY_ICALOBJECT_ID FROM $TABLE_NAME_CATEGORY sub WHERE sub.$COLUMN_CATEGORY_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_CATEGORY_TEXT = ?) "
+                        }
+                        if(index != searchCategories.lastIndex) {
+                            queryString += when(searchCategoriesAnyAllNone) {
+                                AnyAllNone.ANY -> "OR "
+                                AnyAllNone.ALL, AnyAllNone.NONE -> "AND "
+                            }
+                        }
+                    }
+                    queryString += ") "
                     args.addAll(searchCategories)
+
+                    if(isFilterNoCategorySet)
+                        queryString += "OR "
                 }
                 if (isFilterNoCategorySet)
                     queryString += "$VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID FROM $TABLE_NAME_CATEGORY) "
@@ -390,13 +416,25 @@ data class ICal4List(
             if (searchResources.isNotEmpty() || isFilterNoResourceSet) {
                 queryString += "AND ("
                 if (searchResources.isNotEmpty()) {
-                    queryString += searchResources.joinToString(
-                        prefix = "$TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_TEXT IN (",
-                        separator = ", ",
-                        transform = { "?" },
-                        postfix = ") " + if(isFilterNoResourceSet) "OR " else ""
-                    )
+                    queryString += "("
+                    searchResources.forEachIndexed { index, _ ->
+                        queryString += when(searchResourcesAnyAllNone) {
+                            AnyAllNone.ANY -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID IN (SELECT sub.$COLUMN_RESOURCE_ICALOBJECT_ID FROM $TABLE_NAME_RESOURCE sub WHERE sub.$COLUMN_RESOURCE_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_RESOURCE_TEXT = ?) "
+                            AnyAllNone.ALL -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID IN (SELECT sub.$COLUMN_RESOURCE_ICALOBJECT_ID FROM $TABLE_NAME_RESOURCE sub WHERE sub.$COLUMN_RESOURCE_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_RESOURCE_TEXT = ?) "
+                            AnyAllNone.NONE -> "$VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT sub.$COLUMN_RESOURCE_ICALOBJECT_ID FROM $TABLE_NAME_RESOURCE sub WHERE sub.$COLUMN_RESOURCE_ICALOBJECT_ID = $VIEW_NAME_ICAL4LIST.$COLUMN_ID AND sub.$COLUMN_RESOURCE_TEXT = ?) "
+                        }
+                        if(index != searchResources.lastIndex) {
+                            queryString += when(searchResourcesAnyAllNone) {
+                                AnyAllNone.ANY -> "OR "
+                                AnyAllNone.ALL, AnyAllNone.NONE -> "AND "
+                            }
+                        }
+                    }
+                    queryString += ") "
                     args.addAll(searchResources)
+
+                    if(isFilterNoResourceSet)
+                        queryString += "OR "
                 }
                 if (isFilterNoResourceSet)
                     queryString += "$VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ICALOBJECT_ID FROM $TABLE_NAME_RESOURCE) "
@@ -421,7 +459,7 @@ data class ICal4List(
             }
 
             if (isExcludeDone)
-                queryString += "AND $COLUMN_PERCENT IS NOT 100 AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS NOT IN ('${Status.COMPLETED.status}')) "
+                queryString += "AND $COLUMN_PERCENT IS NOT 100 AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS NOT IN ('${Status.COMPLETED.status}', '${Status.CANCELLED.status}')) "
 
             val dateQuery = mutableListOf<String>()
             if (isFilterStartInPast)
@@ -430,6 +468,8 @@ data class ICal4List(
                 dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds - 1}")
             if (isFilterStartTomorrow)
                 dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds - 1}")
+            if (isFilterStartWithin7Days)
+                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (8).days.inWholeMilliseconds - 1}")
             if (isFilterStartFuture)
                 dateQuery.add("$COLUMN_DTSTART > ${System.currentTimeMillis()}")
             if (isFilterOverdue)
@@ -438,6 +478,8 @@ data class ICal4List(
                 dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds - 1}")
             if (isFilterDueTomorrow)
                 dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds - 1}")
+            if (isFilterDueWithin7Days)
+                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (8).days.inWholeMilliseconds - 1}")
             if (isFilterDueFuture)
                 dateQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
             if (isFilterNoDatesSet)
@@ -451,6 +493,14 @@ data class ICal4List(
 
             if (dateQuery.isNotEmpty())
                 queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
+
+            // DATE RANGE
+            if(filterStartRangeStart != null || filterStartRangeEnd != null)
+                queryString += " AND ($COLUMN_DTSTART BETWEEN ${filterStartRangeStart?:Long.MIN_VALUE} AND ${filterStartRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
+            if(filterDueRangeStart != null || filterDueRangeEnd != null)
+                queryString += " AND ($COLUMN_DUE BETWEEN ${filterDueRangeStart?:Long.MIN_VALUE} AND ${filterDueRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
+            if(filterCompletedRangeStart != null || filterCompletedRangeEnd != null)
+                queryString += " AND ($COLUMN_DTSTART BETWEEN ${filterCompletedRangeStart?:Long.MIN_VALUE} AND ${filterCompletedRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
 
             //CLASSIFICATION
             if (searchClassification.isNotEmpty()) {
@@ -507,12 +557,12 @@ data class ICal4List(
             }
 
             queryString += "ORDER BY "
-            queryString += orderBy.queryAppendix
-            sortOrder.let { queryString += it.queryAppendix }
+            queryString += orderBy.getQueryAppendix(sortOrder)
 
             queryString += ", "
-            queryString += orderBy2.queryAppendix
-            sortOrder2.let { queryString += it.queryAppendix }
+            queryString += orderBy2.getQueryAppendix(sortOrder2)
+
+            limit?.let { queryString += "LIMIT $it" }
 
             Log.println(Log.INFO, "queryString", queryString)
             //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
@@ -527,59 +577,36 @@ data class ICal4List(
          */
         fun getQueryForAllSubEntries(component: Component,
                                      hideBiometricProtected: List<Classification>,
+                                     searchText: String?,
                                      orderBy: OrderBy,
                                      sortOrder: SortOrder
-        ): SimpleSQLiteQuery = SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* " +
+        ): SimpleSQLiteQuery {
+
+            val queryArgs = mutableListOf<String>()
+            var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* " +
                     "from $VIEW_NAME_ICAL4LIST " +
                     "INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID " +
-                    "WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' " +
-                    if(hideBiometricProtected.isNotEmpty()) {
-                        if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
-                            "AND ($COLUMN_CLASSIFICATION IS NOT NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
-                        } else {
-                            "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
-                        }
-                    } else
-                        ""
-                    + "ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+                    "WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = '${Reltype.PARENT.name}' "
 
-        /**
-         * Returns all sub-entries
-         * @param component: Use Component.VTODO to get all subtasks, use Component.VJOURNAL to get all subnotes/subjournals
-         * @param parents: UID of parents for which the sub-entries should be returned
-         * @param orderBy
-         * @param sortOrder
-         */
-        fun getQueryForAllSubEntriesOfParents(
-            component: Component,
-            hideBiometricProtected: List<Classification>,
-            parents: List<String>,
-            orderBy: OrderBy,
-            sortOrder: SortOrder
-        ): SimpleSQLiteQuery =
-            SimpleSQLiteQuery("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* " +
-                    "from $VIEW_NAME_ICAL4LIST " +
-                    "INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID " +
-                    "WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = '$component' " +
-                    "AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' " +
-                    "AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT IN (${parents.joinToString(separator = ",", transform = { "'$it'" })}) " +
-                    if(hideBiometricProtected.isNotEmpty()) {
-                        if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
-                            "AND ($COLUMN_CLASSIFICATION IS NOT NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
-                        } else {
-                            "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
-                        }
-                    } else
-                        ""
-                    + "ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+            if(hideBiometricProtected.isNotEmpty()) {
+                queryString += if(hideBiometricProtected.contains(Classification.NO_CLASSIFICATION)) {
+                    "AND ($COLUMN_CLASSIFICATION IS NOT NULL AND $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                } else {
+                    "AND ($COLUMN_CLASSIFICATION IS NULL OR $COLUMN_CLASSIFICATION NOT IN (${hideBiometricProtected.joinToString(separator = ",", transform = { "'${it.classification ?:""}'" })})) "
+                }
+            }
 
-        /**
-         * Returns all subnotes/subjournals of a given entry by its UID
-         * @param parentUid: UID of parent for which the sub-entries should be returned
-         * @param component: The component to choose if subtasks (Component.VTODO) or subnotes/journals (Component.VJOURNAL) should be returned
-         * @param orderBy
-         * @param sortOrder
-         */
+            if ((searchText?.length?:0) >= 2) {
+                queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ? )"
+                queryArgs.add("%${searchText!!}%")
+                queryArgs.add("%${searchText}%")
+            }
+
+            queryString += "ORDER BY ${orderBy.getQueryAppendix(sortOrder)}"
+
+            return SimpleSQLiteQuery(queryString, queryArgs.toTypedArray())
+        }
+
         fun getQueryForAllSubentriesForParentUID(
             parentUid: String,
             hideBiometricProtected: List<Classification>,
@@ -600,7 +627,7 @@ data class ICal4List(
                     }
                 } else
                     ""
-                + "ORDER BY ${orderBy.queryAppendix} ${sortOrder.queryAppendix}")
+                + "ORDER BY ${orderBy.getQueryAppendix(sortOrder)}")
 
     }
 
@@ -610,7 +637,10 @@ data class ICal4List(
      */
     fun getAudioAttachmentAsUri(): Uri? {
         return try {
-            Uri.parse(audioAttachment)
+            if(audioAttachment?.startsWith("content://") == true)
+                Uri.parse(audioAttachment)
+            else
+                null
         } catch (e: Exception) {
             null
         }

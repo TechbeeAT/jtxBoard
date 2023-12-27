@@ -20,7 +20,7 @@ sealed class FilteredListDestination (
         const val argStoredListSettingData = "storedListSettingData"
     }
 
-    object FilteredList: FilteredListDestination(
+    data object FilteredList: FilteredListDestination(
         route = "filteredList/{$argModule}?$argStoredListSettingData={$argStoredListSettingData}",
         args = listOf(
             navArgument(argModule) { type = NavType.StringType },

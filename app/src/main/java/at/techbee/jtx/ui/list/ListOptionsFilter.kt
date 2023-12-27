@@ -9,30 +9,61 @@
 package at.techbee.jtx.ui.list
 
 import android.content.Context
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.outlined.AccountBalance
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.DashboardCustomize
+import androidx.compose.material.icons.outlined.FilterAlt
+import androidx.compose.material.icons.outlined.FolderOpen
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PrivacyTip
+import androidx.compose.material.icons.outlined.PublishedWithChanges
+import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
+import at.techbee.jtx.ui.reusable.dialogs.DateRangePickerDialog
+import at.techbee.jtx.ui.reusable.dialogs.DeleteFilterPresetDialog
 import at.techbee.jtx.ui.reusable.dialogs.SaveListSettingsPresetDialog
 import at.techbee.jtx.ui.reusable.elements.FilterSection
+import at.techbee.jtx.util.DateTimeUtils
 
+const val MAX_ITEMS_PER_SECTION = 5
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +76,7 @@ fun ListOptionsFilter(
     storedListSettingLive: LiveData<List<StoredListSetting>>,
     extendedStatusesLive: LiveData<List<ExtendedStatus>>,
     onListSettingsChanged: () -> Unit,
-    onSaveStoredListSetting: (String, StoredListSettingData) -> Unit,
+    onSaveStoredListSetting: (StoredListSetting) -> Unit,
     onDeleteStoredListSetting: (StoredListSetting) -> Unit,
     modifier: Modifier = Modifier,
     isWidgetConfig: Boolean = false
@@ -57,12 +88,64 @@ fun ListOptionsFilter(
     val allAccounts by remember { derivedStateOf { allCollectionsState.value.map { it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } } }
     val storedListSettings by storedListSettingLive.observeAsState(emptyList())
     val extendedStatuses by extendedStatusesLive.observeAsState(initial = emptyList())
-    var showSaveListSettingsPresetDialog by remember { mutableStateOf(false) }
+    var showSaveListSettingsPresetDialog by rememberSaveable { mutableStateOf(false) }
+
+    var showFilterDateRangeStartDialog by rememberSaveable { mutableStateOf(false) }
+    var showFilterDateRangeDueDialog by rememberSaveable { mutableStateOf(false) }
+    var showFilterDateRangeCompletedDialog by rememberSaveable { mutableStateOf(false) }
 
     if(showSaveListSettingsPresetDialog) {
+        val currentListSettingData = StoredListSettingData.fromListSettings(listSettings)
+        val currentListSetting = storedListSettings.firstOrNull { it.module == module && it.storedListSettingData == currentListSettingData } ?:
+            StoredListSetting(module = module, name = "", storedListSettingData = currentListSettingData)
         SaveListSettingsPresetDialog(
-            onConfirm = { name ->  onSaveStoredListSetting(name, StoredListSettingData.fromListSettings(listSettings)) },
+            currentSetting = currentListSetting,
+            storedListSettings = storedListSettings,
+            onConfirm = { newStoredListSetting ->  onSaveStoredListSetting(newStoredListSetting) },
             onDismiss = { showSaveListSettingsPresetDialog = false }
+        )
+    }
+
+    if(showFilterDateRangeStartDialog) {
+        DateRangePickerDialog(
+            dateRangeStart = listSettings.filterStartRangeStart.value,
+            dateRangeEnd = listSettings.filterStartRangeEnd.value,
+            onConfirm = { start, end ->
+                listSettings.filterStartRangeStart.value = start
+                listSettings.filterStartRangeEnd.value = end
+                onListSettingsChanged()
+            },
+            onDismiss = {
+                showFilterDateRangeStartDialog = false
+            }
+        )
+    }
+    if(showFilterDateRangeDueDialog) {
+        DateRangePickerDialog(
+            dateRangeStart = listSettings.filterDueRangeStart.value,
+            dateRangeEnd = listSettings.filterDueRangeEnd.value,
+            onConfirm = { start, end ->
+                listSettings.filterDueRangeStart.value = start
+                listSettings.filterDueRangeEnd.value = end
+                onListSettingsChanged()
+            },
+            onDismiss = {
+                showFilterDateRangeDueDialog = false
+            }
+        )
+    }
+    if(showFilterDateRangeCompletedDialog) {
+        DateRangePickerDialog(
+            dateRangeStart = listSettings.filterCompletedRangeStart.value,
+            dateRangeEnd = listSettings.filterCompletedRangeEnd.value,
+            onConfirm = { start, end ->
+                listSettings.filterCompletedRangeStart.value = start
+                listSettings.filterCompletedRangeEnd.value = end
+                onListSettingsChanged()
+            },
+            onDismiss = {
+                showFilterDateRangeCompletedDialog = false
+            }
         )
     }
 
@@ -72,61 +155,92 @@ fun ListOptionsFilter(
         horizontalAlignment = Alignment.Start
     ) {
 
-        AnimatedVisibility(storedListSettings.isNotEmpty()) {
-            FilterSection(
-                icon = Icons.Outlined.DashboardCustomize,
-                headline = stringResource(id = R.string.filter_presets),
-                onResetSelection = { },
-                onInvertSelection = { },
-                showMenu = false
-            ) {
-                storedListSettings.forEach { storedListSetting ->
+        FilterSection(
+            icon = Icons.Outlined.DashboardCustomize,
+            headline = stringResource(id = R.string.filter_presets),
+            onResetSelection = { },
+            onInvertSelection = { },
+            showDefaultMenu = false,
+            customMenu = {
+                if(!isWidgetConfig) {
                     var expanded by remember { mutableStateOf(false) }
-
-                    FilterChip(
-                        onClick = {
-                            storedListSetting.storedListSettingData.applyToListSettings(listSettings)
-                            onListSettingsChanged()
-                                  },
-                        label = { Text(storedListSetting.name) },
-                        selected = false,
-                        trailingIcon = {
-
-                            if(!isWidgetConfig) {
-                                Icon(
-                                    Icons.Outlined.ChevronRight,
-                                    contentDescription = stringResource(id = R.string.more),
-                                    modifier = Modifier.clickable { expanded = true }
-                                )
-
-                                DropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    DropdownMenuItem(
-                                        leadingIcon = { Icon(Icons.Outlined.Check, null) },
-                                        text = { Text(stringResource(id = R.string.apply)) },
-                                        onClick = {
-                                            storedListSetting.storedListSettingData.applyToListSettings(listSettings)
-                                            onListSettingsChanged()
-                                            expanded = false
-                                        }
-                                    )
-                                    DropdownMenuItem(
-                                        leadingIcon = { Icon(Icons.Outlined.Close, null) },
-                                        text = { Text(stringResource(id = R.string.delete)) },
-                                        onClick = {
-                                            onDeleteStoredListSetting(storedListSetting)
-                                            expanded = false
-                                        }
-                                    )
-                                }
-                            }
+                    Row {
+                        IconButton(onClick = { expanded = !expanded }) {
+                            Icon(Icons.Outlined.MoreVert, stringResource(id = R.string.more))
                         }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                leadingIcon = { Icon(Icons.Outlined.Save, null) },
+                                text = { Text(stringResource(id = R.string.filter_save_as_preset)) },
+                                onClick = {
+                                    showSaveListSettingsPresetDialog = true
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        ) {
+
+            FilterChip(
+                onClick = {
+                    listSettings.reset()
+                    onListSettingsChanged()
+                },
+                label = { Text(stringResource(id = R.string.filter_no_filter)) },
+                selected = !listSettings.isFilterActive(),
+            )
+            var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
+
+            storedListSettings.forEachIndexed { index, storedListSetting ->
+                if(index > maxEntries-1)
+                    return@forEachIndexed
+
+                var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
+                if(showDeleteDialog) {
+                    DeleteFilterPresetDialog(
+                        storedListSetting = storedListSetting,
+                        onConfirm = { onDeleteStoredListSetting(storedListSetting) },
+                        onDismiss = { showDeleteDialog = false}
                     )
+                }
+
+                FilterChip(
+                    onClick = {
+                        storedListSetting.storedListSettingData.applyToListSettings(listSettings)
+                        onListSettingsChanged()
+                              },
+                    label = { Text(storedListSetting.name) },
+                    selected = storedListSetting.module == module && storedListSetting.storedListSettingData == StoredListSettingData.fromListSettings(listSettings),
+                    trailingIcon = {
+
+                        if(!isWidgetConfig) {
+                            Icon(
+                                Icons.Outlined.Close,
+                                contentDescription = stringResource(id = R.string.delete),
+                                modifier = Modifier.clickable { showDeleteDialog = true }
+                            )
+                        }
+                    }
+                )
+            }
+            if(storedListSettings.size > maxEntries) {
+                TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
+                    Text(stringResource(R.string.filter_options_more_entries, storedListSettings.size-maxEntries))
+                }
+            }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
                 }
             }
         }
+
         ////// QuickFilters
         FilterSection(
             icon = Icons.Outlined.FilterAlt,
@@ -137,10 +251,12 @@ fun ListOptionsFilter(
                     listSettings.isFilterOverdue.value = false
                     listSettings.isFilterDueToday.value = false
                     listSettings.isFilterDueTomorrow.value = false
+                    listSettings.isFilterDueWithin7Days.value = false
                     listSettings.isFilterDueFuture.value = false
                     listSettings.isFilterStartInPast.value = false
                     listSettings.isFilterStartToday.value = false
                     listSettings.isFilterStartTomorrow.value = false
+                    listSettings.isFilterStartWithin7Days.value = false
                     listSettings.isFilterStartFuture.value = false
                     listSettings.isFilterNoDatesSet.value = false
                     listSettings.isFilterNoStartDateSet.value = false
@@ -155,10 +271,12 @@ fun ListOptionsFilter(
                     listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
                     listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
                     listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
+                    listSettings.isFilterDueWithin7Days.value = !listSettings.isFilterDueWithin7Days.value
                     listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
                     listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
                     listSettings.isFilterStartToday.value = !listSettings.isFilterStartToday.value
                     listSettings.isFilterStartTomorrow.value = !listSettings.isFilterStartTomorrow.value
+                    listSettings.isFilterStartWithin7Days.value = !listSettings.isFilterStartWithin7Days.value
                     listSettings.isFilterStartFuture.value = !listSettings.isFilterStartFuture.value
                     listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
                     listSettings.isFilterNoStartDateSet.value = !listSettings.isFilterNoStartDateSet.value
@@ -205,6 +323,15 @@ fun ListOptionsFilter(
                     label = { Text(stringResource(id = if (module == Module.TODO) R.string.list_start_date_tomorrow else R.string.list_date_tomorrow)) }
                 )
                 FilterChip(
+                    selected = listSettings.isFilterStartWithin7Days.value,
+                    onClick = {
+                        listSettings.isFilterStartWithin7Days.value =
+                            !listSettings.isFilterStartWithin7Days.value
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = if (module == Module.TODO) R.string.list_start_date_within_7_days else R.string.list_date_within_7_days)) }
+                )
+                FilterChip(
                     selected = listSettings.isFilterStartFuture.value,
                     onClick = {
                         listSettings.isFilterStartFuture.value =
@@ -241,6 +368,15 @@ fun ListOptionsFilter(
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = R.string.list_due_tomorrow)) }
+                )
+                FilterChip(
+                    selected = listSettings.isFilterDueWithin7Days.value,
+                    onClick = {
+                        listSettings.isFilterDueWithin7Days.value =
+                            !listSettings.isFilterDueWithin7Days.value
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = R.string.list_due_within_7_days)) }
                 )
                 FilterChip(
                     selected = listSettings.isFilterDueFuture.value,
@@ -288,11 +424,57 @@ fun ListOptionsFilter(
                     label = { Text(stringResource(id = R.string.list_no_dates_set)) }
                 )
             }
+
+            FilterChip(
+                selected = listSettings.filterStartRangeStart.value != null || listSettings.filterStartRangeEnd.value != null,
+                onClick = {
+                    showFilterDateRangeStartDialog = true
+                },
+                label = {
+                    var text = if(module == Module.TODO) stringResource(id = R.string.started) else stringResource(id = R.string.date)
+                    text += ": "
+                    text += listSettings.filterStartRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                    text += " - "
+                    text += listSettings.filterStartRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                    Text(text)
+                }
+            )
+
+            if(module == Module.TODO) {
+                FilterChip(
+                    selected = listSettings.filterDueRangeStart.value != null || listSettings.filterDueRangeEnd.value != null,
+                    onClick = {
+                        showFilterDateRangeDueDialog = true
+                    },
+                    label = {
+                        var text = stringResource(id = R.string.due)
+                        text += ": "
+                        text += listSettings.filterDueRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                        text += " - "
+                        text += listSettings.filterDueRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                        Text(text)
+                    }
+                )
+                FilterChip(
+                    selected = listSettings.filterCompletedRangeStart.value != null || listSettings.filterCompletedRangeEnd.value != null,
+                    onClick = {
+                        showFilterDateRangeCompletedDialog = true
+                    },
+                    label = {
+                        var text = stringResource(id = R.string.completed)
+                        text += ": "
+                        text += listSettings.filterCompletedRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)} ?: "..."
+                        text += " - "
+                        text += listSettings.filterCompletedRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                        Text(text)
+                    }
+                )
+            }
         }
 
         ////// CATEGORIES
         FilterSection(
-            icon = Icons.Outlined.Label,
+            icon = Icons.AutoMirrored.Outlined.Label,
             headline = stringResource(id = R.string.category),
             onResetSelection = {
                 listSettings.isFilterNoCategorySet.value = false
@@ -305,8 +487,13 @@ fun ListOptionsFilter(
                 listSettings.searchCategories.clear()
                 listSettings.searchCategories.addAll(missing)
                 onListSettingsChanged()
-            })
-        {
+            },
+            anyAllNone = listSettings.searchCategoriesAnyAllNone.value,
+            onAnyAllNoneChanged = {
+                listSettings.searchCategoriesAnyAllNone.value = it
+                onListSettingsChanged()
+            }
+        ) {
             FilterChip(
                 selected = listSettings.isFilterNoCategorySet.value,
                 onClick = {
@@ -316,7 +503,12 @@ fun ListOptionsFilter(
                 label = { Text(stringResource(id = R.string.filter_no_category)) }
             )
 
-            allCategories.forEach { category ->
+            var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
+            val allCategoriesSorted = if(allCategories.size > maxEntries) allCategories else allCategories.sortedBy { it.lowercase() }
+            allCategoriesSorted.forEachIndexed { index, category ->
+                if(index > maxEntries-1)
+                    return@forEachIndexed
+
                 FilterChip(
                     selected = listSettings.searchCategories.contains(category),
                     onClick = {
@@ -330,220 +522,278 @@ fun ListOptionsFilter(
                 )
             }
 
-            ////// ACCOUNTS
-            FilterSection(
-                icon = Icons.Outlined.AccountBalance,
-                headline = stringResource(id = R.string.account),
-                onResetSelection = {
-                    listSettings.searchAccount.clear()
-                    onListSettingsChanged()
-                },
-                onInvertSelection = {
-                    val missing = allAccounts.toMutableList().apply { removeAll(listSettings.searchAccount) }
-                    listSettings.searchAccount.clear()
-                    listSettings.searchAccount.addAll(missing)
-                    onListSettingsChanged()
-                })
-            {
-                allAccounts.forEach { account ->
-                    FilterChip(
-                        selected = listSettings.searchAccount.contains(account),
-                        onClick = {
-                            if (listSettings.searchAccount.contains(account))
-                                listSettings.searchAccount.remove(account)
-                            else
-                                listSettings.searchAccount.add(account)
-                            onListSettingsChanged()
-                        },
-                        label = { Text(account) }
-                    )
+            if(allCategories.size > maxEntries) {
+                TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
+                    Text(stringResource(R.string.filter_options_more_entries, allCategories.size-maxEntries))
                 }
             }
-
-            ////// COLLECTIONS
-            FilterSection(
-                icon = Icons.Outlined.FolderOpen,
-                headline = stringResource(id = R.string.collection),
-                onResetSelection = {
-                    listSettings.searchCollection.clear()
-                    onListSettingsChanged()
-                },
-                onInvertSelection = {
-                    val missing = allCollections.toMutableList().apply { removeAll(listSettings.searchCollection) }
-                    listSettings.searchCollection.clear()
-                    listSettings.searchCollection.addAll(missing)
-                    onListSettingsChanged()
-                })
-            {
-                allCollections.forEach { collection ->
-                    FilterChip(
-                        selected = listSettings.searchCollection.contains(collection),
-                        onClick = {
-                            if (listSettings.searchCollection.contains(collection))
-                                listSettings.searchCollection.remove(collection)
-                            else
-                                listSettings.searchCollection.add(collection)
-                            onListSettingsChanged()
-                        },
-                        label = { Text(collection) }
-                    )
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
                 }
             }
+        }
+
+        ////// ACCOUNTS
+        FilterSection(
+            icon = Icons.Outlined.AccountBalance,
+            headline = stringResource(id = R.string.account),
+            onResetSelection = {
+                listSettings.searchAccount.clear()
+                onListSettingsChanged()
+            },
+            onInvertSelection = {
+                val missing = allAccounts.toMutableList().apply { removeAll(listSettings.searchAccount) }
+                listSettings.searchAccount.clear()
+                listSettings.searchAccount.addAll(missing)
+                onListSettingsChanged()
+            })
+        {
+            var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
+
+            allAccounts.forEachIndexed { index, account ->
+                if(index > maxEntries-1)
+                    return@forEachIndexed
+
+                FilterChip(
+                    selected = listSettings.searchAccount.contains(account),
+                    onClick = {
+                        if (listSettings.searchAccount.contains(account))
+                            listSettings.searchAccount.remove(account)
+                        else
+                            listSettings.searchAccount.add(account)
+                        onListSettingsChanged()
+                    },
+                    label = { Text(account) }
+                )
+            }
+
+            if(allAccounts.size > maxEntries) {
+                TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
+                    Text(stringResource(R.string.filter_options_more_entries, allAccounts.size-maxEntries))
+                }
+            }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
+                }
+            }
+        }
+
+        ////// COLLECTIONS
+        FilterSection(
+            icon = Icons.Outlined.FolderOpen,
+            headline = stringResource(id = R.string.collection),
+            onResetSelection = {
+                listSettings.searchCollection.clear()
+                onListSettingsChanged()
+            },
+            onInvertSelection = {
+                val missing = allCollections.toMutableList().apply { removeAll(listSettings.searchCollection) }
+                listSettings.searchCollection.clear()
+                listSettings.searchCollection.addAll(missing)
+                onListSettingsChanged()
+            })
+        {
+            var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
+
+            allCollections.forEachIndexed { index, collection ->
+                if(index > maxEntries-1)
+                    return@forEachIndexed
+
+                FilterChip(
+                    selected = listSettings.searchCollection.contains(collection),
+                    onClick = {
+                        if (listSettings.searchCollection.contains(collection))
+                            listSettings.searchCollection.remove(collection)
+                        else
+                            listSettings.searchCollection.add(collection)
+                        onListSettingsChanged()
+                    },
+                    label = { Text(collection) }
+                )
+            }
+
+            if(allCollections.size > maxEntries) {
+                TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
+                    Text(stringResource(R.string.filter_options_more_entries, allCollections.size-maxEntries))
+                }
+            }
+            if(maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
+                }
+            }
+        }
 
 
+        FilterSection(
+            icon = Icons.Outlined.PublishedWithChanges,
+            headline = stringResource(id = R.string.status),
+            onResetSelection = {
+                listSettings.searchStatus.clear()
+                onListSettingsChanged()
+            },
+            onInvertSelection = {
+                val missing = Status.valuesFor(module).filter { status -> !listSettings.searchStatus.contains(status)}
+                listSettings.searchStatus.clear()
+                listSettings.searchStatus.addAll(missing)
+                onListSettingsChanged()
+            })
+        {
+            Status.valuesFor(module).forEach { status ->
+                FilterChip(
+                    selected = listSettings.searchStatus.contains(status),
+                    onClick = {
+                            if (listSettings.searchStatus.contains(status))
+                                listSettings.searchStatus.remove(status)
+                            else
+                                listSettings.searchStatus.add(status)
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = status.stringResource)) }
+                )
+            }
+        }
+
+        if(extendedStatuses.any { it.module == module }) {
             FilterSection(
                 icon = Icons.Outlined.PublishedWithChanges,
-                headline = stringResource(id = R.string.status),
+                headline = stringResource(id = R.string.extended_status),
                 onResetSelection = {
-                    listSettings.searchStatus.clear()
+                    listSettings.searchXStatus.clear()
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    val missing = Status.valuesFor(module).filter { status -> !listSettings.searchStatus.contains(status)}
-                    listSettings.searchStatus.clear()
-                    listSettings.searchStatus.addAll(missing)
+                    val missing = extendedStatuses.filter { xstatus -> !listSettings.searchXStatus.contains(xstatus.xstatus) }
+                    listSettings.searchXStatus.clear()
+                    listSettings.searchXStatus.addAll(missing.map { it.xstatus })
                     onListSettingsChanged()
                 })
             {
-                Status.valuesFor(module).forEach { status ->
+                var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
+
+                extendedStatuses.filter { it.module == module }.forEachIndexed { index, xstatus ->
+                    if(index > maxEntries-1)
+                        return@forEachIndexed
+
                     FilterChip(
-                        selected = listSettings.searchStatus.contains(status),
+                        selected = listSettings.searchXStatus.contains(xstatus.xstatus),
                         onClick = {
-                                if (listSettings.searchStatus.contains(status))
-                                    listSettings.searchStatus.remove(status)
-                                else
-                                    listSettings.searchStatus.add(status)
+                            if (listSettings.searchXStatus.contains(xstatus.xstatus))
+                                listSettings.searchXStatus.remove(xstatus.xstatus)
+                            else
+                                listSettings.searchXStatus.add(xstatus.xstatus)
                             onListSettingsChanged()
                         },
-                        label = { Text(stringResource(id = status.stringResource)) }
+                        label = { Text(xstatus.xstatus) }
                     )
                 }
-            }
 
-            if(extendedStatuses.any { it.module == module }) {
-                FilterSection(
-                    icon = Icons.Outlined.PublishedWithChanges,
-                    headline = stringResource(id = R.string.extended_status),
-                    onResetSelection = {
-                        listSettings.searchXStatus.clear()
-                        onListSettingsChanged()
-                    },
-                    onInvertSelection = {
-                        val missing = extendedStatuses.filter { xstatus -> !listSettings.searchXStatus.contains(xstatus.xstatus) }
-                        listSettings.searchXStatus.clear()
-                        listSettings.searchXStatus.addAll(missing.map { it.xstatus })
-                        onListSettingsChanged()
-                    })
-                {
-                    extendedStatuses.filter { it.module == module }.forEach { xstatus ->
-                        FilterChip(
-                            selected = listSettings.searchXStatus.contains(xstatus.xstatus),
-                            onClick = {
-                                if (listSettings.searchXStatus.contains(xstatus.xstatus))
-                                    listSettings.searchXStatus.remove(xstatus.xstatus)
-                                else
-                                    listSettings.searchXStatus.add(xstatus.xstatus)
-                                onListSettingsChanged()
-                            },
-                            label = { Text(xstatus.xstatus) }
-                        )
+                if(extendedStatuses.size > maxEntries) {
+                    TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
+                        Text(stringResource(R.string.filter_options_more_entries, extendedStatuses.size-maxEntries))
+                    }
+                }
+                if(maxEntries == Int.MAX_VALUE) {
+                    TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                        Text(stringResource(R.string.filter_options_less_entries))
                     }
                 }
             }
+        }
 
 
-            ////// CLASSIFICATION
+        ////// CLASSIFICATION
+        FilterSection(
+            icon = Icons.Outlined.PrivacyTip,
+            headline = stringResource(id = R.string.classification),
+            onResetSelection = {
+                listSettings.searchClassification.clear()
+                onListSettingsChanged()
+            },
+            onInvertSelection = {
+                val missing = Classification.entries.filter { classification -> !listSettings.searchClassification.contains(classification) }
+                listSettings.searchClassification.clear()
+                listSettings.searchClassification.addAll(missing)
+                onListSettingsChanged()
+            })
+        {
+            Classification.entries.forEach { classification ->
+                FilterChip(
+                    selected = listSettings.searchClassification.contains(classification),
+                    onClick = {
+                        if (listSettings.searchClassification.contains(classification))
+                                listSettings.searchClassification.remove(classification)
+                            else
+                                listSettings.searchClassification.add(classification)
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = classification.stringResource)) }
+                )
+            }
+        }
+
+
+        ////// RESOURCES
+        if (module == Module.TODO) {
             FilterSection(
-                icon = Icons.Outlined.PrivacyTip,
-                headline = stringResource(id = R.string.classification),
+                icon = Icons.AutoMirrored.Outlined.Label,
+                headline = stringResource(id = R.string.resources),
                 onResetSelection = {
-                    listSettings.searchClassification.clear()
+                    listSettings.isFilterNoResourceSet.value = false
+                    listSettings.searchResources.clear()
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    val missing = Classification.values().filter { classification -> !listSettings.searchClassification.contains(classification) }
-                    listSettings.searchClassification.clear()
-                    listSettings.searchClassification.addAll(missing)
+                    listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
+                    val missing = allResources.filter { resource -> !listSettings.searchResources.contains(resource) }
+                    listSettings.searchResources.clear()
+                    listSettings.searchResources.addAll(missing)
                     onListSettingsChanged()
-                })
-            {
-                Classification.values().forEach { classification ->
-                    FilterChip(
-                        selected = listSettings.searchClassification.contains(classification),
-                        onClick = {
-                            if (listSettings.searchClassification.contains(classification))
-                                    listSettings.searchClassification.remove(classification)
-                                else
-                                    listSettings.searchClassification.add(classification)
-                            onListSettingsChanged()
-                        },
-                        label = { Text(stringResource(id = classification.stringResource)) }
-                    )
+                },
+                anyAllNone = listSettings.searchResourcesAnyAllNone.value,
+                onAnyAllNoneChanged = {
+                    listSettings.searchResourcesAnyAllNone.value = it
+                    onListSettingsChanged()
                 }
-            }
-
-
-            ////// RESOURCES
-            if (module == Module.TODO) {
-                FilterSection(
-                    icon = Icons.Outlined.Label,
-                    headline = stringResource(id = R.string.resources),
-                    onResetSelection = {
-                        listSettings.isFilterNoResourceSet.value = false
-                        listSettings.searchResources.clear()
+            ) {
+                FilterChip(
+                    selected = listSettings.isFilterNoResourceSet.value,
+                    onClick = {
+                        listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
                         onListSettingsChanged()
                     },
-                    onInvertSelection = {
-                        listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
-                        val missing = allResources.filter { resource -> !listSettings.searchResources.contains(resource) }
-                        listSettings.searchResources.clear()
-                        listSettings.searchResources.addAll(missing)
-                        onListSettingsChanged()
-                    })
-                {
+                    label = { Text(stringResource(id = R.string.filter_no_resource)) }
+                )
+
+                var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
+                val allResourcesSorted = if(allResources.size > maxEntries) allResources else allResources.sortedBy { it.lowercase() }
+                allResourcesSorted.forEachIndexed { index, resource ->
+                    if(index > maxEntries-1)
+                        return@forEachIndexed
+
                     FilterChip(
-                        selected = listSettings.isFilterNoResourceSet.value,
+                        selected = listSettings.searchResources.contains(resource),
                         onClick = {
-                            listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
+                            if (listSettings.searchResources.contains(resource))
+                                listSettings.searchResources.remove(resource)
+                            else
+                                listSettings.searchResources.add(resource)
                             onListSettingsChanged()
                         },
-                        label = { Text(stringResource(id = R.string.filter_no_resource)) }
+                        label = { Text(resource) }
                     )
+                }
 
-                    allResources.forEach { resource ->
-                        FilterChip(
-                            selected = listSettings.searchResources.contains(resource),
-                            onClick = {
-                                if (listSettings.searchResources.contains(resource))
-                                    listSettings.searchResources.remove(resource)
-                                else
-                                    listSettings.searchResources.add(resource)
-                                onListSettingsChanged()
-                            },
-                            label = { Text(resource) }
-                        )
+                if(allResources.size > maxEntries) {
+                    TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
+                        Text(stringResource(R.string.filter_options_more_entries, allResources.size-maxEntries))
                     }
                 }
-            }
-
-
-            if (!isWidgetConfig) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .padding(top = 16.dp, bottom = 16.dp)
-                        .fillMaxWidth()
-                ) {
-                    Button(onClick = {
-                        listSettings.reset()
-                        onListSettingsChanged()
-                    }) {
-                        Text(stringResource(id = R.string.reset))
-                    }
-
-                    Button(onClick = { showSaveListSettingsPresetDialog = true}) {
-                        Text(stringResource(R.string.filter_save_as_preset))
+                if(maxEntries == Int.MAX_VALUE) {
+                    TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                        Text(stringResource(R.string.filter_options_less_entries))
                     }
                 }
             }
@@ -587,7 +837,7 @@ fun ListOptionsFilter_Preview_TODO() {
             extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             onListSettingsChanged = { },
-            onSaveStoredListSetting = { _, _ -> },
+            onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }
         )
     }
@@ -628,7 +878,7 @@ fun ListOptionsFilter_Preview_JOURNAL() {
             storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
             extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
             onListSettingsChanged = { },
-            onSaveStoredListSetting = { _, _ -> },
+            onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }
         )
     }

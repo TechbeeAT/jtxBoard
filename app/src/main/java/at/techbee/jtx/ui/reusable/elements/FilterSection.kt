@@ -9,15 +9,33 @@
 package at.techbee.jtx.ui.reusable.elements
 
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.SwapHoriz
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -25,21 +43,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.ui.list.AnyAllNone
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun FilterSection(
     icon: ImageVector,
     headline: String,
+    modifier: Modifier = Modifier,
+    subtitle: String? = null,
+    anyAllNone: AnyAllNone? = null,
+    showDefaultMenu: Boolean = true,
+    customMenu: @Composable () -> Unit = { },
     onResetSelection: () -> Unit,
     onInvertSelection: () -> Unit,
-    modifier: Modifier = Modifier,
-    showMenu: Boolean = true,
-    subtitle: String? = null,
+    onAnyAllNoneChanged: (AnyAllNone) -> Unit = { },
     content: @Composable () -> Unit,
     ) {
 
     var expanded by remember { mutableStateOf(false) }
+    //var currentAnyAllNone by remember { mutableStateOf(anyAllNone ?: AnyAllNone.values().first()) }
     
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -50,7 +73,7 @@ fun FilterSection(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            //modifier = Modifier.weight(1f)
         ) {
 
             Column(modifier = Modifier.weight(1f)) {
@@ -62,16 +85,26 @@ fun FilterSection(
                 subtitle?.let {
                     Text(
                         text = it,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
             }
-            if(showMenu) {
-                Row {
-                IconButton(onClick = { expanded = !expanded }) {
-                    Icon(Icons.Outlined.MoreVert, stringResource(id = R.string.more))
-                }
+
+            if(anyAllNone != null) {
+                FilterChip(
+                    selected = false,
+                    onClick = {
+                        onAnyAllNoneChanged(AnyAllNone.values()[(AnyAllNone.values().indexOf(anyAllNone)+1)%AnyAllNone.values().size])
+                    },
+                    label = { Text(stringResource(id = anyAllNone.stringResource)) }
+                )
+            }
+
+            if(showDefaultMenu) {
+                    IconButton(onClick = { expanded = !expanded }) {
+                        Icon(Icons.Outlined.MoreVert, stringResource(id = R.string.more))
+
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
@@ -94,6 +127,8 @@ fun FilterSection(
                         )
                     }
                 }
+            } else {
+                customMenu()
             }
         }
 
@@ -114,6 +149,9 @@ fun FilterSection_Preview() {
             icon = Icons.Outlined.Folder,
             headline = stringResource(id = R.string.collection),
             subtitle = "Here comes the subtitle",
+            onAnyAllNoneChanged = { },
+            onResetSelection = {  },
+            onInvertSelection = {  },
             content = {
                 Row(
                     modifier = Modifier
@@ -122,7 +160,31 @@ fun FilterSection_Preview() {
                 ) {
                     Text("Here comes the content")
                 } },
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun FilterSection_Preview_Category() {
+    MaterialTheme {
+        FilterSection(
+            icon = Icons.AutoMirrored.Outlined.Label,
+            headline = stringResource(id = R.string.category),
+            //subtitle = "Here comes the subtitle",
+            anyAllNone = AnyAllNone.ANY,
+            onAnyAllNoneChanged = { },
             onResetSelection = {  },
-            onInvertSelection = {  })
+            onInvertSelection = {  },
+            content = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
+                ) {
+                    Text("Here comes the content")
+                } },
+        )
     }
 }

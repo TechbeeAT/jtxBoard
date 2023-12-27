@@ -79,12 +79,10 @@ import at.techbee.jtx.database.properties.Unknown
 import at.techbee.jtx.flavored.GeofenceClient
 import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
-import at.techbee.jtx.widgets.ListWidgetReceiver
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.io.File
 import java.io.IOException
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 
 private const val CODE_ICALOBJECTS_DIR = 1
@@ -158,7 +156,7 @@ class SyncContentProvider : ContentProvider() {
         if (context?.applicationContext == null)
             return false
 
-        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao
+        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao()
         TimeZoneRegistryFactory.getInstance().createRegistry()
 
         return true
@@ -226,16 +224,15 @@ class SyncContentProvider : ContentProvider() {
         // this block updates the count variable. The raw query doesn't return the count of the deleted rows, so we determine it before
         val countQueryString = queryString.replace("DELETE FROM ", "SELECT count(*) FROM ")
         val countQuery = SimpleSQLiteQuery(countQueryString, args.toArray())
-        count = database.deleteRAW(countQuery)
+        count = database.executeRAW(countQuery)
 
         val deleteQuery = SimpleSQLiteQuery(queryString, args.toArray())
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query prepared: $queryString")
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query args prepared: ${args.joinToString(separator = ", ")}")
 
-        database.deleteRAW(deleteQuery)
+        database.executeRAW(deleteQuery)
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
-        ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
 
@@ -349,8 +346,6 @@ class SyncContentProvider : ContentProvider() {
         if(sUriMatcher.match(uri) == CODE_ALARM_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)
             NotificationPublisher.scheduleNextNotifications(context!!)
 
-        ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
-
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
 
@@ -434,7 +429,7 @@ class SyncContentProvider : ContentProvider() {
 
         // if the request was for an Attachment, then allow the calling application to access the file by grantUriPermission
         if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR || sUriMatcher.match(uri) == CODE_ATTACHMENT_ITEM) {
-            while (result?.moveToNext() == true) {
+            while (result.moveToNext()) {
                 try {
                     val uriColumnIndex = result.getColumnIndex(COLUMN_ATTACHMENT_URI)
                     val attachmentUriString = result.getString(uriColumnIndex)
@@ -448,9 +443,11 @@ class SyncContentProvider : ContentProvider() {
                     )
                 } catch (e: NullPointerException) {
                     Log.i("attachment", "Uri not present or could not be parsed.")
+                } catch (e: IllegalStateException) {
+                    Log.d("attachment", "Cursor for attachments is empty")
                 }
             }
-            result?.moveToPosition(-1)   // reset to beginning
+            result.moveToPosition(-1)   // reset to beginning
         }
         return result
     }
@@ -566,7 +563,7 @@ class SyncContentProvider : ContentProvider() {
 
         // TODO: find a solution to efficiently return the actual count of updated rows (the return value of the RAW-query doesn't work)
         //val count = database.updateRAW(updateQuery)
-        database.updateRAW(updateQuery)
+        database.executeRAW(updateQuery)
 
         // updates on recurring instances through bulk updates should not occur, only updates on single items will update the recurring instances
         if (sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) || values.containsKey(
@@ -592,7 +589,7 @@ class SyncContentProvider : ContentProvider() {
                 database.getAlarmSync(alarmId)?.icalObjectId ?: return 1
             }
 
-            val alarms = database.getAlarmsSync(icalObjectId) ?: emptyList()
+            val alarms = database.getAlarmsSync(icalObjectId)
             val iCalObject = database.getICalObjectByIdSync(alarms.firstOrNull()?.icalObjectId ?: return 1) ?: return 1
 
             alarms.forEach { alarm ->
@@ -621,8 +618,6 @@ class SyncContentProvider : ContentProvider() {
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
-
-        ListWidgetReceiver.setOneTimeWork(context!!, (10).seconds) // update Widget
 
         return 1
     }

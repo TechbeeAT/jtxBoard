@@ -40,6 +40,7 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
+import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import com.arnyminerz.markdowntext.MarkdownText
 
 
@@ -52,6 +53,7 @@ fun ListCardKanban(
     storedResources: List<StoredResource>,
     storedStatuses: List<ExtendedStatus>,
     markdownEnabled: Boolean,
+    settingIsAccessibilityMode: Boolean,
     selected: Boolean,
     player: MediaPlayer?,
     modifier: Modifier = Modifier
@@ -62,12 +64,12 @@ fun ListCardKanban(
             containerColor = if (selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.elevatedCardElevation(),
-        border = iCalObject.colorItem?.let { BorderStroke(1.dp, Color(it)) },
+        border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
         modifier = modifier
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         ) {
 
             ListTopRow(
@@ -78,7 +80,8 @@ fun ListCardKanban(
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
                 includeJournalDate = true,
-                enableScroll = false
+                enableScroll = false,
+                isAccessibilityMode = settingIsAccessibilityMode
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
@@ -135,6 +138,7 @@ fun ListCardKanban_JOURNAL() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             markdownEnabled = false,
+            settingIsAccessibilityMode = false,
             player = null,
             modifier = Modifier
                 .width(150.dp)
@@ -164,6 +168,7 @@ fun ListCardKanban_NOTE() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = true,
             markdownEnabled = false,
+            settingIsAccessibilityMode = false,
             player = null,
             modifier = Modifier
                 .width(150.dp)
@@ -201,6 +206,7 @@ fun ListCardKanban_TODO() {
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             markdownEnabled = false,
+            settingIsAccessibilityMode = false,
             player = null,
         )
     }

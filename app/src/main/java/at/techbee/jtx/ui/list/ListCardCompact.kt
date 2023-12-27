@@ -38,6 +38,7 @@ import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
+import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import com.arnyminerz.markdowntext.MarkdownText
 
@@ -54,6 +55,7 @@ fun ListCardCompact(
     storedStatuses: List<ExtendedStatus>,
     progressUpdateDisabled: Boolean,
     markdownEnabled: Boolean,
+    settingIsAccessibilityMode: Boolean,
     selected: List<Long>,
     player: MediaPlayer?,
     modifier: Modifier = Modifier,
@@ -66,14 +68,14 @@ fun ListCardCompact(
         colors = CardDefaults.cardColors(
             containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
         ),
-        border = iCalObject.colorItem?.let { BorderStroke(1.dp, Color(it)) },
+        border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
         modifier = modifier
     ) {
 
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 0.dp)
                 .fillMaxWidth()
         ) {
 
@@ -84,7 +86,8 @@ fun ListCardCompact(
                 storedCategories = storedCategories,
                 storedResources = storedResources,
                 extendedStatuses = storedStatuses,
-                includeJournalDate = true
+                includeJournalDate = true,
+                isAccessibilityMode = settingIsAccessibilityMode
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
@@ -204,6 +207,7 @@ fun ListCardCompact_JOURNAL() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
@@ -234,6 +238,7 @@ fun ListCardCompact_JOURNAL2() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
@@ -265,6 +270,7 @@ fun ListCardCompact_NOTE() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
@@ -300,6 +306,7 @@ fun ListCardCompact_TODO() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
@@ -349,6 +356,7 @@ fun ListCardCompact_TODO_only_summary() {
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             progressUpdateDisabled = true,
+            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             selected = emptyList(),
             player = null,

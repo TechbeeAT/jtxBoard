@@ -17,6 +17,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -166,7 +167,7 @@ fun AttachmentCard(
                     IconButton(onClick = {
                         attachment.openFile(context)
                     }) {
-                        Icon(Icons.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
+                        Icon(Icons.AutoMirrored.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
                     }
                 }
             }

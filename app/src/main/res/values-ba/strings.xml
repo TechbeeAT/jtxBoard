@@ -3,8 +3,7 @@
     <!-- App title and fragment titles -->
     <string name="app_permission_label">"jtx Board Көндәлектәрҙе, Яҙмаларҙы &amp; Мәсьәләләрҙе синхронлаштыра"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Һаҡларға"</string>
     <string name="cancel">"Кире ҡайтарырға"</string>
     <string name="ok">"ЯРАЙ"</string>

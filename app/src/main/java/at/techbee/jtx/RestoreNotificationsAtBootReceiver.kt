@@ -8,12 +8,13 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.glance.appwidget.updateAll
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.flavored.GeofenceClient
-import at.techbee.jtx.ui.settings.SwitchSetting
+import at.techbee.jtx.widgets.ListWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +26,7 @@ class RestoreNotificationsAtBootReceiver : BroadcastReceiver() {
             CoroutineScope(Dispatchers.IO).launch {
 
                 val notificationManager = NotificationManagerCompat.from(context)
-                val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+                val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
                 val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
                 prefs.getStringSet(NotificationPublisher.PREFS_SCHEDULED_ALARMS, null)
@@ -38,7 +39,7 @@ class RestoreNotificationsAtBootReceiver : BroadcastReceiver() {
                     }
                     ?.forEach { iCalObjectId ->
                         val iCalObject = database.getICalObjectByIdSync(iCalObjectId)
-                        val alarms = database.getAlarmsSync(iCalObjectId) ?: return@launch
+                        val alarms = database.getAlarmsSync(iCalObjectId)
                         if (iCalObject != null
                             && iCalObject.percent != 100
                             && iCalObject.status != Status.COMPLETED.status
@@ -52,12 +53,12 @@ class RestoreNotificationsAtBootReceiver : BroadcastReceiver() {
                                 iCalObject.description,
                                 true,
                                 MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
-                                PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SwitchSetting.SETTING_STICKY_ALARMS.key, SwitchSetting.SETTING_STICKY_ALARMS.default),
                                 context
                             )
                             notificationManager.notify(iCalObjectId.toInt(), notification)
                         }
                     }
+                ListWidget().updateAll(context)
                 GeofenceClient(context).setGeofences()
             }
         }

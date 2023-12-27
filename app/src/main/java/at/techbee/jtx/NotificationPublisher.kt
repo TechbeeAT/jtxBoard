@@ -32,7 +32,8 @@ import at.techbee.jtx.util.getParcelableExtraCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 
 
 class NotificationPublisher : BroadcastReceiver() {
@@ -44,47 +45,17 @@ class NotificationPublisher : BroadcastReceiver() {
         val alarmId = intent.getLongExtra(ALARM_ID,  0L)
         val icalObjectId = intent.getLongExtra(ICALOBJECT_ID, 0L)
         val settingsStateHolder = SettingsStateHolder(context)
-        val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+        val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
 
         // onReceive is triggered when the Alarm Manager calls it (the initial notification, action is null)
         // but also when one of the actions is clicked in the notification (action is one of the defined actions)
+        if(intent.action != null)
+            notificationManager.cancel(icalObjectId.toInt())
+
         when (intent.action) {
-            ACTION_SNOOZE_1D, ACTION_SNOOZE_1H -> {
-                notificationManager.cancel(icalObjectId.toInt())
-                val nextAlarm = when(intent.action) {
-                    ACTION_SNOOZE_1D -> System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)
-                    ACTION_SNOOZE_1H -> System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)
-                    else -> null
-                } ?: return
-
-                CoroutineScope(Dispatchers.IO).launch {
-                    val alarm = database.getAlarmSync(alarmId) ?: return@launch
-                    alarm.alarmId = 0L   //  we insert a new alarm
-                    alarm.triggerTime = nextAlarm
-                    alarm.alarmId = database.insertAlarm(alarm)
-                    database.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
-                    SyncUtil.notifyContentObservers(context)
-                    scheduleNextNotifications(context)
-                }
-            }
-            ACTION_DONE -> {
-                notificationManager.cancel(icalObjectId.toInt())
-                CoroutineScope(Dispatchers.IO).launch {
-                    val alarm = database.getAlarmSync(alarmId) ?: return@launch
-                    val icalobject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return@launch
-                    icalobject.setUpdatedProgress(100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-                    database.update(icalobject)
-
-                    if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
-                        ICalObject.findTopParent(icalObjectId, database)?.let {
-                            ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-                        }
-                    }
-
-                    SyncUtil.notifyContentObservers(context)
-                    scheduleNextNotifications(context)
-                }
-            }
+            ACTION_SNOOZE_1D -> CoroutineScope(Dispatchers.IO).launch { addPostponedAlarm(alarmId, (1).days.inWholeMilliseconds, context) }
+            ACTION_SNOOZE_1H -> CoroutineScope(Dispatchers.IO).launch { addPostponedAlarm(alarmId, (1).hours.inWholeMilliseconds, context) }
+            ACTION_DONE -> CoroutineScope(Dispatchers.IO).launch { setToDone(icalObjectId, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value, settingsStateHolder.settingLinkProgressToSubtasks.value, context) }
             else -> {
                 // no action, so here we notify. if we offer snooze depends on the intent (this was decided already on creation of the intent)
                 CoroutineScope(Dispatchers.IO).launch {
@@ -96,6 +67,7 @@ class NotificationPublisher : BroadcastReceiver() {
                         && ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
                         && notification != null
                     ) {
+                        Log.d("notificationManager", "Can use FullScreenIntent: ${notificationManager.canUseFullScreenIntent()}")
                         notificationManager.notify(icalObjectId.toInt(), notification)
                     } else {
                         Log.d("notificationManager", "Notification skipped")
@@ -129,7 +101,7 @@ class NotificationPublisher : BroadcastReceiver() {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                 return
 
-            val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+            val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
             val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED).toMutableList()
 
             val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -173,6 +145,60 @@ class NotificationPublisher : BroadcastReceiver() {
                 addAll(alarms.map { it.icalObjectId.toInt().toString() })
             }
             prefs.edit().putStringSet(PREFS_SCHEDULED_ALARMS, scheduledAlarms).apply()
+        }
+
+        suspend fun addPostponedAlarm(alarmId: Long, delay: Long, context: Context) {
+            val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
+            val alarm = database.getAlarmSync(alarmId) ?: return
+            alarm.alarmId = 0L   //  we insert a new alarm
+            alarm.triggerTime = System.currentTimeMillis() + delay
+            alarm.triggerRelativeTo = null
+            alarm.triggerRelativeDuration = null
+            alarm.alarmId = database.insertAlarm(alarm)
+            database.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
+            SyncUtil.notifyContentObservers(context)
+            scheduleNextNotifications(context)
+        }
+
+        suspend fun setToDone(icalObjectId: Long, keepStatusProgressCompletedInSync: Boolean, linkProgressToSubtasks: Boolean, context: Context) {
+            val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
+            val icalobject = database.getICalObjectByIdSync(icalObjectId) ?: return
+            icalobject.setUpdatedProgress(100, keepStatusProgressCompletedInSync)
+            database.update(icalobject)
+
+            if(linkProgressToSubtasks) {
+                ICalObject.findTopParent(icalobject.id, database)?.let {
+                    ICalObject.updateProgressOfParents(it.id, database, keepStatusProgressCompletedInSync)
+                }
+            }
+            SyncUtil.notifyContentObservers(context)
+            scheduleNextNotifications(context)
+        }
+
+        fun triggerImmediateAlarm(iCalObject: ICalObject, context: Context) {
+            if((iCalObject.summary.isNullOrEmpty() && iCalObject.description.isNullOrEmpty())
+                || iCalObject.percent == 100
+                || iCalObject.status == Status.COMPLETED.status
+                )
+                return
+
+            val notification = Alarm.createNotification(
+                iCalObject.id,
+                0L,
+                iCalObject.summary,
+                iCalObject.description,
+                false,   // can never be read only
+                MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
+                context
+            )
+            val notificationManager = NotificationManagerCompat.from(context)
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                notificationManager.notify(iCalObject.id.toInt(), notification)
+            }
         }
     }
 }

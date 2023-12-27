@@ -20,7 +20,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -29,9 +29,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,6 +51,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.ui.list.AnyAllNone
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.ListOptionsFilter
 import at.techbee.jtx.ui.list.ListOptionsGroupSort
@@ -70,7 +72,7 @@ fun ListWidgetConfigContent(
 ) {
 
     val context = LocalContext.current
-    val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+    val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
 
     val selectedModule = remember { mutableStateOf(initialConfig.module) }
     val listSettings = ListSettings.fromListWidgetConfig(initialConfig)
@@ -98,7 +100,7 @@ fun ListWidgetConfigContent(
                 navigationIcon = {
                     IconButton(onClick = { onCancel() }) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = stringResource(id = R.string.cancel)
                         )
                     }
@@ -114,7 +116,7 @@ fun ListWidgetConfigContent(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.Top
             ) {
-                TabRow(
+                PrimaryTabRow(
                     selectedTabIndex = pagerState.currentPage,
                     //containerColor = MaterialTheme.colorScheme.primaryContainer,
                     //contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -155,7 +157,12 @@ fun ListWidgetConfigContent(
                                 buyProToast.show()
                             }
                         },
-                        content = { Text(stringResource(id = R.string.filter_group_sort)) },
+                        content = {
+                            Text(
+                                stringResource(id = R.string.filter_group_sort),
+                                textAlign = TextAlign.Center
+                            )
+                        },
                         modifier = Modifier.height(50.dp)
                     )
                 }
@@ -183,10 +190,10 @@ fun ListWidgetConfigContent(
                                 allCategoriesLive = database.getAllCategoriesAsText(),
                                 allResourcesLive = database.getAllResourcesAsText(),
                                 extendedStatusesLive = database.getStoredStatuses(),
-                                storedListSettingLive = database.getStoredListSettings(module = selectedModule.value.name),
+                                storedListSettingLive = database.getStoredListSettings(modules = listOf(selectedModule.value.name)),
                                 onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
                                 isWidgetConfig = true,
-                                onSaveStoredListSetting = { _, _ ->  /* no saving option in list widget config*/ },
+                                onSaveStoredListSetting = { /* no saving option in list widget config*/ },
                                 onDeleteStoredListSetting = { /* no option to save/delete list widget config */ }
                             )
                         }
@@ -217,7 +224,9 @@ fun ListWidgetConfigContent(
                                 ListWidgetConfig().apply {
                                     module = selectedModule.value
                                     searchCategories = listSettings.searchCategories
+                                    searchCategoriesAnyAllNone = listSettings.searchCategoriesAnyAllNone.value
                                     searchResources = listSettings.searchResources
+                                    searchResourcesAnyAllNone = listSettings.searchResourcesAnyAllNone.value
                                     searchStatus = listSettings.searchStatus
                                     searchXStatus = listSettings.searchXStatus
                                     searchClassification = listSettings.searchClassification
@@ -248,15 +257,25 @@ fun ListWidgetConfigContent(
                                     isFilterOverdue = listSettings.isFilterOverdue.value
                                     isFilterDueToday = listSettings.isFilterDueToday.value
                                     isFilterDueTomorrow = listSettings.isFilterDueTomorrow.value
+                                    isFilterDueWithin7Days = listSettings.isFilterDueWithin7Days.value
                                     isFilterDueFuture = listSettings.isFilterDueFuture.value
                                     isFilterStartInPast = listSettings.isFilterStartInPast.value
                                     isFilterStartToday = listSettings.isFilterStartToday.value
                                     isFilterStartTomorrow = listSettings.isFilterStartTomorrow.value
+                                    isFilterStartWithin7Days = listSettings.isFilterStartWithin7Days.value
                                     isFilterStartFuture = listSettings.isFilterStartFuture.value
                                     isFilterNoDatesSet = listSettings.isFilterNoDatesSet.value
                                     isFilterNoStartDateSet = listSettings.isFilterNoStartDateSet.value
                                     isFilterNoDueDateSet = listSettings.isFilterNoDueDateSet.value
                                     isFilterNoCompletedDateSet = listSettings.isFilterNoCompletedDateSet.value
+
+                                    filterStartRangeStart = listSettings.filterStartRangeStart.value
+                                    filterStartRangeEnd = listSettings.filterStartRangeEnd.value
+                                    filterDueRangeStart = listSettings.filterDueRangeStart.value
+                                    filterDueRangeEnd = listSettings.filterDueRangeEnd.value
+                                    filterCompletedRangeStart = listSettings.filterCompletedRangeStart.value
+                                    filterCompletedRangeEnd = listSettings.filterCompletedRangeEnd.value
+
                                     isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value
                                     isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value
                                 }
@@ -302,7 +321,9 @@ fun WidgetConfigContent_Preview_not_purchased() {
 data class ListWidgetConfig(
     var module: Module = Module.NOTE,
     var searchCategories: List<String> = emptyList(),
+    var searchCategoriesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
     var searchResources: List<String> = emptyList(),
+    var searchResourcesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
     var searchStatus: List<Status> = emptyList(),
     var searchXStatus: List<String> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
@@ -321,15 +342,25 @@ data class ListWidgetConfig(
     var isFilterOverdue: Boolean = false,
     var isFilterDueToday: Boolean = false,
     var isFilterDueTomorrow: Boolean = false,
+    var isFilterDueWithin7Days: Boolean = false,
     var isFilterDueFuture: Boolean = false,
     var isFilterStartInPast: Boolean = false,
     var isFilterStartToday: Boolean = false,
     var isFilterStartTomorrow: Boolean = false,
+    var isFilterStartWithin7Days: Boolean = false,
     var isFilterStartFuture: Boolean = false,
     var isFilterNoDatesSet: Boolean = false,
     var isFilterNoStartDateSet: Boolean = false,
     var isFilterNoDueDateSet: Boolean = false,
     var isFilterNoCompletedDateSet: Boolean = false,
+
+    var filterStartRangeStart: Long? = null,
+    var filterStartRangeEnd: Long? = null,
+    var filterDueRangeStart: Long? = null,
+    var filterDueRangeEnd: Long? = null,
+    var filterCompletedRangeStart: Long? = null,
+    var filterCompletedRangeEnd: Long? = null,
+
     var isFilterNoCategorySet: Boolean = false,
     var isFilterNoResourceSet: Boolean = false,
     var searchText: String? = null,        // search text is not saved!

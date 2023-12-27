@@ -68,6 +68,7 @@ fun LinkExistingEntryDialog(
     storedCategories: List<StoredCategory>,
     storedResources: List<StoredResource>,
     extendedStatuses: List<ExtendedStatus>,
+    settingIsAccessibilityMode: Boolean,
     player: MediaPlayer?,
     onAllEntriesSearchTextUpdated: (String, List<Module>, sameAccount: Boolean, sameCollection: Boolean) -> Unit,
     onEntriesToLinkConfirmed: (newSubentries: List<ICal4List>, linkEntryReltype: Reltype) -> Unit,
@@ -148,7 +149,7 @@ fun LinkExistingEntryDialog(
 
                             HorizontalDivider()
 
-                            Module.values().forEach { module ->
+                            Module.entries.forEach { module ->
                                 CheckboxWithText(
                                     text = stringResource(
                                         id = when (module) {
@@ -217,6 +218,7 @@ fun LinkExistingEntryDialog(
                                 progressUpdateDisabled = true,
                                 markdownEnabled = false,
                                 onProgressChanged = { _, _ -> },
+                                settingIsAccessibilityMode = settingIsAccessibilityMode,
                                 player = player,
                                 modifier = Modifier.clickable {
                                     if (selectedEntries.contains(entry.iCal4List))
@@ -279,6 +281,7 @@ fun LinkExistingEntryDialog_Preview_CHILD() {
             storedCategories = emptyList(),
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
+            settingIsAccessibilityMode = false,
             player = null,
             onAllEntriesSearchTextUpdated = { _, _, _, _ -> },
             onEntriesToLinkConfirmed = { _, _ ->  },
@@ -306,6 +309,7 @@ fun LinkExistingEntryDialog_Preview_PARENT() {
             storedCategories = emptyList(),
             storedResources = emptyList(),
             extendedStatuses = emptyList(),
+            settingIsAccessibilityMode = false,
             player = null,
             onAllEntriesSearchTextUpdated = { _, _, _, _ -> },
             onEntriesToLinkConfirmed = { _, _ -> },

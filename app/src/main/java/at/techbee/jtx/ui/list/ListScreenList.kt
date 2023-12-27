@@ -10,12 +10,14 @@ package at.techbee.jtx.ui.list
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,24 +27,27 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowDropUp
+import androidx.compose.material.icons.outlined.VerticalAlignTop
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -68,6 +73,8 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
+import kotlinx.coroutines.launch
+import java.util.UUID
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -84,13 +91,15 @@ fun ListScreenList(
     attachmentsLive: LiveData<Map<Long, List<Attachment>>>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
-    isSubtasksExpandedDefault: MutableState<Boolean>,
-    isSubnotesExpandedDefault: MutableState<Boolean>,
-    isAttachmentsExpandedDefault: MutableState<Boolean>,
-    settingShowProgressMaintasks: MutableState<Boolean>,
-    settingShowProgressSubtasks: MutableState<Boolean>,
-    settingProgressIncrement: MutableState<DropdownSettingOption>,
+    isSubtasksExpandedDefault: Boolean,
+    isSubnotesExpandedDefault: Boolean,
+    isAttachmentsExpandedDefault: Boolean,
+    settingShowProgressMaintasks: Boolean,
+    settingShowProgressSubtasks: Boolean,
+    settingProgressIncrement: DropdownSettingOption,
+    settingDisplayTimezone: DropdownSettingOption,
     settingLinkProgressToSubtasks: Boolean,
+    settingIsAccessibilityMode: Boolean,
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
@@ -98,7 +107,8 @@ fun ListScreenList(
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
-    onSyncRequested: () -> Unit
+    onSyncRequested: () -> Unit,
+    onSaveListSettings: () -> Unit,
 ) {
 
     val subtasks by subtasksLive.observeAsState(emptyList())
@@ -109,20 +119,24 @@ fun ListScreenList(
     val storedResources by storedResourcesLive.observeAsState(emptyList())
     val storedStatuses by storedStatusesLive.observeAsState(emptyList())
 
+    val scope = rememberCoroutineScope()
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
-    val itemsCollapsed = remember { mutableStateListOf<String>() }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
         onRefresh = { onSyncRequested() }
     )
 
     Box(
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier.fillMaxSize()
     ) {
+
         LazyColumn(
             modifier = if(isPullRefreshEnabled)
-                    Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp).pullRefresh(pullRefreshState)
+                Modifier
+                    .padding(start = 8.dp, end = 8.dp, top = 4.dp)
+                    .pullRefresh(pullRefreshState)
                 else
                     Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
             state = listState,
@@ -141,10 +155,11 @@ fun ListScreenList(
 
                         ) {
                             TextButton(onClick = {
-                                if (itemsCollapsed.contains(groupName))
-                                    itemsCollapsed.remove(groupName)
+                                if (listSettings.collapsedGroups.contains(groupName))
+                                    listSettings.collapsedGroups.remove(groupName)
                                 else
-                                    itemsCollapsed.add(groupName)
+                                    listSettings.collapsedGroups.add(groupName)
+                                onSaveListSettings()
                             }) {
                                 Text(
                                     text = groupName,
@@ -152,7 +167,7 @@ fun ListScreenList(
                                     modifier = Modifier.padding(horizontal = 4.dp)
                                 )
 
-                                if (itemsCollapsed.contains(groupName))
+                                if (listSettings.collapsedGroups.contains(groupName))
                                     Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
                                 else
                                     Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
@@ -161,10 +176,15 @@ fun ListScreenList(
                     }
                 }
 
-                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !itemsCollapsed.contains(groupName))) {
+                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !listSettings.collapsedGroups.contains(groupName))) {
                     items(
                         items = group,
-                        key = { item -> item.iCal4List.id }
+                        key = { item ->
+                            if(listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE)
+                                item.iCal4List.id.toString() + UUID.randomUUID()
+                            else
+                                item.iCal4List.id
+                        }
                     ) { iCal4ListRelObject ->
 
                         var currentSubtasks =
@@ -185,7 +205,7 @@ fun ListScreenList(
                                 val index =
                                     group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
                                 if (index > -1) {
-                                    listState.animateScrollToItem(index)
+                                    listState.scrollToItem(index)
                                     scrollOnceId.postValue(null)
                                 }
                             }
@@ -203,12 +223,14 @@ fun ListScreenList(
                             storedStatuses = storedStatuses,
                             selected = selectedEntries,
                             attachments = currentAttachments ?: emptyList(),
-                            isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
-                            isSubnotesExpandedDefault = isSubnotesExpandedDefault.value,
-                            isAttachmentsExpandedDefault = isAttachmentsExpandedDefault.value,
-                            settingShowProgressMaintasks = settingShowProgressMaintasks.value,
-                            settingShowProgressSubtasks = settingShowProgressSubtasks.value,
-                            progressIncrement = settingProgressIncrement.value.getProgressStepKeyAsInt(),
+                            isSubtasksExpandedDefault = isSubtasksExpandedDefault,
+                            isSubnotesExpandedDefault = isSubnotesExpandedDefault,
+                            isAttachmentsExpandedDefault = isAttachmentsExpandedDefault,
+                            settingShowProgressMaintasks = settingShowProgressMaintasks,
+                            settingShowProgressSubtasks = settingShowProgressSubtasks,
+                            settingDisplayTimezone = settingDisplayTimezone,
+                            settingIsAccessibilityMode = settingIsAccessibilityMode,
+                            progressIncrement = settingProgressIncrement.getProgressStepKeyAsInt(),
                             linkProgressToSubtasks = settingLinkProgressToSubtasks,
                             markdownEnabled = markdownEnabled,
                             onClick = onClick,
@@ -220,7 +242,6 @@ fun ListScreenList(
                                 .fillMaxWidth()
                                 .padding(bottom = 8.dp)
                                 .clip(jtxCardCornerShape)
-                                .animateItemPlacement()
                                 .combinedClickable(
                                     onClick = {
                                         onClick(
@@ -251,6 +272,25 @@ fun ListScreenList(
             refreshing = false,
             state = pullRefreshState
         )
+
+        Crossfade(listState.canScrollBackward, label = "showScrollUp") {
+            if (it) {
+                Box(
+                    contentAlignment = Alignment.BottomCenter,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Button(
+                        onClick = {
+                            scope.launch { listState.scrollToItem(0) }
+                        },
+                        colors = ButtonDefaults.filledTonalButtonColors(),
+                        modifier = Modifier.padding(8.dp).alpha(0.33f)
+                    ) {
+                        Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -308,13 +348,15 @@ fun ListScreenList_TODO() {
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
-            isSubtasksExpandedDefault = remember { mutableStateOf(true) },
-            isSubnotesExpandedDefault = remember { mutableStateOf(true) },
-            isAttachmentsExpandedDefault = remember { mutableStateOf(true) },
-            settingShowProgressMaintasks = remember { mutableStateOf(true) },
-            settingShowProgressSubtasks = remember { mutableStateOf(true) },
-            settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
+            isSubtasksExpandedDefault = true,
+            isSubnotesExpandedDefault = true,
+            isAttachmentsExpandedDefault = true,
+            settingShowProgressMaintasks = true,
+            settingShowProgressSubtasks = true,
+            settingProgressIncrement = DropdownSettingOption.PROGRESS_STEP_1,
             settingLinkProgressToSubtasks = false,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
+            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
@@ -323,7 +365,8 @@ fun ListScreenList_TODO() {
             onLongClick = { _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            onSaveListSettings = { }
         )
     }
 }
@@ -385,13 +428,15 @@ fun ListScreenList_JOURNAL() {
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
-            isSubtasksExpandedDefault = remember { mutableStateOf(false) },
-            isSubnotesExpandedDefault = remember { mutableStateOf(false) },
-            isAttachmentsExpandedDefault = remember { mutableStateOf(false) },
-            settingShowProgressMaintasks = remember { mutableStateOf(false) },
-            settingShowProgressSubtasks = remember { mutableStateOf(false) },
-            settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
+            isSubtasksExpandedDefault = false,
+            isSubnotesExpandedDefault = false,
+            isAttachmentsExpandedDefault = false,
+            settingShowProgressMaintasks = false,
+            settingShowProgressSubtasks = false,
+            settingProgressIncrement = DropdownSettingOption.PROGRESS_STEP_1,
+            settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
             settingLinkProgressToSubtasks = false,
+            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
@@ -400,7 +445,8 @@ fun ListScreenList_JOURNAL() {
             onLongClick = { _, _ -> },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            onSaveListSettings = { }
         )
     }
 }

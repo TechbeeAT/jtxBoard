@@ -1,4 +1,4 @@
-package at.techbee.jtx.ui.reusable.elements
+package at.techbee.jtx.ui.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,23 +7,31 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import at.techbee.jtx.ui.settings.DropdownSetting
-import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.R
+import java.util.TimeZone
 
 
 @Composable
-fun DropdownSetting(
-    setting: DropdownSetting,
-    selected: DropdownSettingOption,
-    onSelectionChanged: (selection: DropdownSettingOption) -> Unit,
+fun DropdownSettingTimezoneElement(
+    setting: DropdownSettingTimezone,
+    selected: String?,
+    onSelectionChanged: (selection: String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -58,7 +66,7 @@ fun DropdownSetting(
                 )
             }
             Text(
-                text = stringResource(id = selected.text),
+                text = selected?.let { "${TimeZone.getTimeZone(it).id} (${TimeZone.getTimeZone(it).displayName})" } ?: stringResource(id = R.string.not_set2),
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -71,7 +79,7 @@ fun DropdownSetting(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            setting.options.forEach { option ->
+            setting.options.sortedBy { it?.let { TimeZone.getTimeZone(it).id } }.forEach { option ->
 
                 DropdownMenuItem(
                     onClick = {
@@ -80,7 +88,7 @@ fun DropdownSetting(
                     },
                     text = {
                         Text(
-                            text = stringResource(id = option.text),
+                            text = option?.let { "${TimeZone.getTimeZone(option).id} (${TimeZone.getTimeZone(option).displayName})" } ?: stringResource(R.string.not_set2),
                             modifier = Modifier
                                 .align(Alignment.Start)
                         )
@@ -94,40 +102,23 @@ fun DropdownSetting(
 
 @Preview(showBackground = true)
 @Composable
-fun DropdownSetting_Theme() {
+fun DropdownSettingElementTimezone_preview() {
     MaterialTheme {
-
-        DropdownSetting(
-            setting = DropdownSetting.SETTING_THEME,
-            selected = DropdownSetting.SETTING_THEME.options.last(),
+        DropdownSettingTimezoneElement(
+            setting = DropdownSettingTimezone.SETTING_DEFAULT_START_TIMEZONE,
+            selected = TimeZone.getDefault().toString(),
             onSelectionChanged = { }
         )
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun DropdownSetting_Auto_Alarm() {
+fun DropdownSettingElementTimezone_preview_not_set() {
     MaterialTheme {
-
-        DropdownSetting(
-            setting = DropdownSetting.SETTING_AUTO_ALARM,
-            selected = DropdownSetting.SETTING_AUTO_ALARM.options.last(),
-            onSelectionChanged = { }
-        )
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DropdownSetting_AudioTheme() {
-    MaterialTheme {
-
-        DropdownSetting(
-            setting = DropdownSetting.SETTING_AUDIO_FORMAT,
-            selected = DropdownSetting.SETTING_AUDIO_FORMAT.options.last(),
+        DropdownSettingTimezoneElement(
+            setting = DropdownSettingTimezone.SETTING_DEFAULT_START_TIMEZONE,
+            selected = null,
             onSelectionChanged = { }
         )
     }

@@ -4,13 +4,15 @@
     <string name="app_permission_label">"jtx Board синхронизирует журналы, заметки и задачи"</string>
     <string name="app_permission_desc">"синхронизация содержимого jtx Board с другими приложениями, такими как DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
-    <!-- Possible audio formats for settings
-Global Strings -->
+    <!-- Global Strings -->
     <string name="save">"Сохранить"</string>
+    <string name="update">"Обновить"</string>
     <string name="cancel">"Отмена"</string>
     <string name="ok">"ОК"</string>
     <string name="delete">"Удалить"</string>
     <string name="discard">"Сбросить"</string>
+    <string name="dismiss">"Скрыть"</string>
+    <string name="open">"Открыть"</string>
     <string name="cont">"Продолжить"</string>
     <string name="website">"Сайт"</string>
     <string name="latitude">"Широта"</string>
@@ -56,11 +58,14 @@ Global Strings -->
     <string name="navigation_drawer_privacy_policy">"Политика конфиденциальности"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Просрочено"</string>
+    <string name="list_due_shortly">"Скоро завершится"</string>
     <string name="list_due_today">"Завершается сегодня"</string>
     <string name="list_due_tomorrow">"Завершается завтра"</string>
+    <string name="list_due_within_7_days">"Завершается в теч. 7 дней"</string>
     <string name="list_due_inXhours">"Завершается через %d ч."</string>
     <string name="list_due_on_weekday">"Завершается в %s"</string>
     <string name="list_start_past">"Началось"</string>
+    <string name="list_start_shortly">"Скоро начнется"</string>
     <string name="list_start_today">"Начинается сегодня"</string>
     <string name="list_start_tomorrow">"Начинается завтра"</string>
     <string name="list_start_inXhours">"Начинается через %d ч."</string>
@@ -75,6 +80,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_helper">"Первая строка интерпретируется как название, остальные — как описание. Хэштеги интерпретируются как категории (например, #категория)."</string>
     <string name="list_item_recurring">"Повторяющаяся запись"</string>
     <string name="list_item_edited_recurring">"Повторяющаяся запись изменена"</string>
+    <string name="list_scroll_to_top">"Наверх"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Разрешение приложения"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board требуется разрешение для записи звука или использования функций преобразования речи в текст. Предоставьте разрешение на использование этой функции."</string>
@@ -104,6 +110,7 @@ Global Strings -->
     <string name="edit_recur_x_times">"раз"</string>
     <string name="edit_recur_toast_requires_start_date">"Установите дату начала, чтобы активировать повторения!"</string>
     <string name="edit_datepicker_dialog_select_date">"Выбрать дату"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Диапазон дат"</string>
     <string name="edit_datepicker_dialog_add_time">"Время"</string>
     <string name="edit_datepicker_dialog_edit_time">"Изменить время"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Часовой пояс"</string>
@@ -188,10 +195,6 @@ Global Strings -->
     <string name="save_and_close">"Сохранить &amp; закрыть"</string>
     <string name="list_quickadd_add_audio_attachment">"Прикрепить аудио"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Разрешение на чтение контактов предоставлено"</string>
-    <string name="permission_read_contacts_denied">"Разрешение на чтение контактов отклонено"</string>
-    <string name="permission_record_audio_granted">"Разрешение на запись звука предоставлено"</string>
-    <string name="permission_record_audio_denied">"Разрешение на запись звука отклонено"</string>
     <string name="intent_dialog_title">"Добавить вложение в журнал, заметку или задачу?"</string>
     <string name="add">"Добавить"</string>
     <string name="edit">"Редактировать"</string>
@@ -243,8 +246,6 @@ Global Strings -->
     <string name="edit_recur_week">"нед."</string>
     <string name="edit_recur_month">"мес."</string>
     <string name="edit_recur_year">"лет"</string>
-    <string name="collections_toast_export_ics_success">"Экспорт коллекции успешно завершен."</string>
-    <string name="collections_toast_export_ics_error">"Произошла ошибка при экспорте выбранной коллекции."</string>
     <string name="attachment_export_saved_successfully">"Сохранено"</string>
     <string name="attachment_export_error_error_occurred">"Ошибка при сохранении файла"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Добавить внешнюю коллекцию (%1$s)"</string>
@@ -257,6 +258,7 @@ Global Strings -->
     <string name="status">"Статус"</string>
     <string name="classification">"Классификация"</string>
     <string name="category">"Категория"</string>
+    <string name="resource">"Ресурс"</string>
     <string name="priority">"Приоритет"</string>
     <string name="readyonly">"Только для чтения"</string>
     <string name="upload_pending">"Ожидающие загрузки"</string>
@@ -280,6 +282,8 @@ Global Strings -->
     <string name="search_notes">Поиск заметок</string>
     <string name="search_todos">Поиск задач</string>
     <string name="filter">"Фильтр"</string>
+    <string name="visibility">"Отображение"</string>
+    <string name="order">"Сортировка"</string>
     <string name="sync_now">"Синхронизировать"</string>
     <string name="due">"Дата завершения"</string>
     <string name="completed">"Дата выполнения"</string>
@@ -288,7 +292,7 @@ Global Strings -->
     <string name="progress">"Прогресс"</string>
     <string name="categories">"Категория"</string>
     <string name="subtasks">"Подзадачи"</string>
-    <string name="linked_parents">"Привязанные род. записи"</string>
+    <string name="linked_parents">"Родительские записи"</string>
     <string name="priority_7_low">"7 - Пониженный"</string>
     <string name="priority_8_lower">"8 - Низкий"</string>
     <string name="priority_9_lowest">"9 - Минимальный"</string>
@@ -298,10 +302,12 @@ Global Strings -->
     <string name="collections_dialog_move_title">"Переместить все записи из \"%1$s\" в"</string>
     <string name="collection_dialog_move_info">"Обратите внимание: могут быть выбраны только доступные для записи коллекции и коллекции с поддержкой тех же компонентов (Журналы, Заметки, Задачи)."</string>
     <string name="menu_collections_popup_move_entries">"Переместить записи"</string>
+    <string name="setting_no_time">"Без времени"</string>
     <string name="list_no_dates_set">"Без даты"</string>
     <string name="list_without_start_date">"Без даты начала"</string>
     <string name="list_without_due_date">"Без даты завершения"</string>
     <string name="list_without_completed_date">"Без даты выполнения"</string>
+    <string name="list_show_only_search_matching_subentries">"Поиск по дочерним записям"</string>
     <string name="filter_order_by">"Сортировать по"</string>
     <string name="filter_asc">"По возрастанию"</string>
     <string name="filter_desc">"По убыванию"</string>
@@ -311,6 +317,9 @@ Global Strings -->
     <string name="filter_no_resource">Без ресурсов</string>
     <string name="filter_subtasks_order_by">Сортировать подзадачи по</string>
     <string name="filter_subnotes_order_by">Сортировать связанные заметки по</string>
+    <string name="filter_no_filter">"Без фильтра"</string>
+    <string name="filter_options_more_entries">"Развернуть (%1$d)"</string>
+    <string name="filter_options_less_entries">"Свернуть"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Пожалуйста, нажмите на коллекцию, в которую следует добавить запись/записи!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d добавлено, %2$d пропущено. (исключения в повторяющихся записях)"</string>
     <string name="collections_toast_x_items_added">"%1$d записей добавлено!"</string>
@@ -322,9 +331,15 @@ Global Strings -->
     <string name="edit_recur_ends_never">"повторять всегда"</string>
     <string name="edit_recur_ends_on">"повторять до"</string>
     <string name="edit_recur_ends_after">"повторять раз"</string>
-    <string name="collections_toast_export_all_ics_success">"Экспорт всех коллекций успешно завершен."</string>
-    <string name="collections_toast_export_all_ics_error">"Произошла ошибка при экспорте всех коллекций."</string>
+    <string name="collections_toast_export_success">"Коллекции успешно экспортированы"</string>
+    <string name="collections_toast_export_error">"Ошибка при экспорте коллекций"</string>
     <string name="menu_collections_export_all">"Экспортировать всё"</string>
+    <string name="menu_presets_export_presets">"Экспорт пресетов"</string>
+    <string name="menu_presets_import_presets">"Импорт пресетов"</string>
+    <string name="presets_imported">"Пресеты импортированы"</string>
+    <string name="presets_import_invalid_file">"Недопустимый файл"</string>
+    <string name="presets_saved">"Пресеты сохранены"</string>
+    <string name="presets_export_error">"Ошибка при экспорте пресетов"</string>
     <string name="more">"Ещё"</string>
     <string name="navigation_drawer_buypro">"Купить Pro"</string>
     <string name="settings_select_theme">"Тема"</string>
@@ -336,6 +351,10 @@ Global Strings -->
     <string name="settings_protect_biometric_all">"Все"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Авторизуйтесь, чтобы изменить эту настройку!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Авторизуйтесь, чтобы показать защищенные записи!"</string>
+    <string name="settings_timezone_display">"Отображение времени в часовом поясе"</string>
+    <string name="settings_timezone_display_local">"Местный часовой пояс"</string>
+    <string name="settings_timezone_display_original">"Указанный часовой пояс"</string>
+    <string name="settings_timezone_display_local_and_original">"Местный и указанный часовые пояса (только в детальном просмотре записи)"</string>
     <string name="donate_dialog_title">"Вам нравится jtx Board?"</string>
     <string name="donate_dialog_message">"Разработка приложения – непростая вещь, и его обслуживание и поддержка – тяжелая работа. Если вам нравится наш проект, вы можете поддержать его пожертвованием :-)
 Спасибо большое!"</string>
@@ -360,16 +379,16 @@ Global Strings -->
     <string name="settings_default_expand_subtasks">"Показывать подзадачи в списке по умолчанию"</string>
     <string name="settings_default_expand_subnotes">"Показывать дочерние заметки в списке по умолчанию"</string>
     <string name="settings_default_expand_attachments">"Показывать вложения в списке по умолчанию"</string>
-    <string name="permission_coarse_location_granted">"Разрешение на определение местоположения предоставлено"</string>
-    <string name="permission_coarse_location_denied">"Разрешение на определение местоположения отклонено"</string>
     <string name="sorry">"Извините"</string>
     <string name="back">"Назад"</string>
     <string name="details">"Подробности"</string>
     <string name="date">"Дата"</string>
+    <string name="summary_description">"Название/Описание"</string>
+    <string name="status_classification_priority">"Статус/Классификация/Приоритет"</string>
     <string name="timezone">"Часовой пояс"</string>
     <string name="not_set2">"Не установлено"</string>
-    <string name="invert_selection">"Инвертировать выделение"</string>
-    <string name="clear_selection">"Очистить выделение"</string>
+    <string name="invert_selection">"Инвертировать выбранное"</string>
+    <string name="clear_selection">"Очистить выбранное"</string>
     <string name="preferences">"Настройки"</string>
     <string name="revert">"Сбросить"</string>
     <string name="audio_play">"Воспроизвести"</string>
@@ -451,10 +470,15 @@ Global Strings -->
     <string name="menu_list_viewmode_compact">"Компактно"</string>
     <string name="menu_list_viewmode_kanban">"Канбан"</string>
     <string name="settings_tasks">"Настройки задач"</string>
+    <string name="settings_alarms">"Настройки напоминаний"</string>
     <string name="settings_tasks_status_progress">"Настройки задач (статус/прогресс)"</string>
     <string name="settings_sync">"Настройки синхронизации"</string>
     <string name="settings_default_start_date">"Установить дату начала задачи по умолчанию"</string>
+    <string name="settings_default_start_timezone">"Установить часовой пояс начала задачи по умолчанию"</string>
     <string name="settings_default_due_date">"Установить дату завершения задачи по умолчанию"</string>
+    <string name="settings_default_due_timezone">"Установить часовой пояс завершения задачи по умолчанию"</string>
+    <string name="settings_default_start_time">"Установить время начала задачи по умолчанию"</string>
+    <string name="settings_default_due_time">"Установить время завершения задачи по умолчанию"</string>
     <string name="settings_default_date_none">"Нет"</string>
     <string name="settings_default_date_same_day">"Текущий день"</string>
     <string name="settings_default_date_next_day">"Следующий день"</string>
@@ -478,6 +502,11 @@ Global Strings -->
     <string name="settings_create_with_current_location">"Создавать новые записи с текущим местоположением"</string>
     <string name="settings_sticky_alarms">"Закрепленные напоминания"</string>
     <string name="settings_sticky_alarms_sub">"Уведомление находится в шторке, пока не отмечено как выполненное или отложенное"</string>
+    <string name="settings_fullscreen_alarms">"Полноэкранные напоминания"</string>
+    <string name="settings_fullscreen_alarms_sub">"Показывает напоминания во весь экран, когда устройство заблокировано"</string>
+    <string name="settings_accessibility_mode">"Специальные возможности"</string>
+    <string name="settings_accessibility_mode_sub">"Увеличить размер шрифта для мелких элементов"</string>
+    <string name="settings_fullscreen_alarms_toast">"Пожалуйста, предоставьте разрешение на полноэкранные оповещения в настройках системы."</string>
     <string name="settings_sync_on_start">"Синхронизировать при запуске"</string>
     <string name="settings_sync_on_pull_refresh">"Синхронизировать при свайпе вниз"</string>
     <string name="sync_button_go_to_collections">"Перейти в Коллекции"</string>
@@ -495,14 +524,20 @@ Global Strings -->
     <string name="settings_select_language_system">"Системный"</string>
     <string name="filter_special">"Специальные фильтры"</string>
     <string name="filter_presets">"Пресеты фильтров"</string>
+    <string name="filter_presets_edit_info">"Вы можете добавить/обновить/удалить пресеты фильтров через меню фильтров."</string>
+    <string name="filter_any">"Любое из"</string>
+    <string name="filter_all">"Все из"</string>
+    <string name="filter_none">"Ничего из"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Дата в прошлом"</string>
     <string name="list_date_today">"Сегодня"</string>
     <string name="list_date_tomorrow">"Завтра"</string>
+    <string name="list_date_within_7_days">"В течение 7 дней"</string>
     <string name="list_date_future">"Дата в будущем"</string>
     <string name="list_start_date_in_past">"Началось"</string>
     <string name="list_start_date_today">"Начинается сегодня"</string>
     <string name="list_start_date_tomorrow">"Начинается завтра"</string>
+    <string name="list_start_date_within_7_days">"Начинается в теч. 7 дней"</string>
     <string name="list_start_date_future">"Начинается в будущем"</string>
     <string name="list_hide_completed_tasks">"Скрыть выполненное"</string>
     <string name="list_biometric_protected_entries_locked">Защищенные биометрией записи заблокированы</string>
@@ -512,6 +547,7 @@ Global Strings -->
     <string name="list_biometric_protected_entries_unlocked">Защищенные биометрией записи разблокированы</string>
     <string name="settings_auto_alarm">"Автоматическое напоминание"</string>
     <string name="alarms_always_ondue">"Всегда по завершению"</string>
+    <string name="alarms_always_on_save">"Всегда при сохранении (экспериментально)"</string>
     <string name="settings_auto_alarm_sub">"Активируйте, чтобы напоминания создавались автоматически. Выберите \"Всегда по завершению\", чтобы получать уведомления каждый раз, когда наступает дата завершения задачи."</string>
     <string name="settings_protect_biometric">"Защита записей с помощью биометрии"</string>
     <string name="settings_protect_biometric_sub">"Эта функция скрывает выбранные записи, пока они не будут разблокированы с помощью биометрии, но не шифрует/дешифрует данные в фоновом режиме."</string>
@@ -550,7 +586,7 @@ Global Strings -->
     <string name="widget_list_no_entries_found">"Не найдено записей, соответствующих вашим критериям"</string>
     <string name="widget_list_view_settings">"Показать настройки"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Внимание: В настоящее время в виджете поддерживается только первый уровень иерархии. Чтобы увидеть записи более низких уровней, выберите настройку Без иерархии."</string>
-    <string name="widget_list_maximum_entries_reached">"Достигнуто максимальное количество записей в виджете (%1$d)."</string>
+    <string name="widget_list_maximum_entries_reached">"Достигнуто максимальное число записей в виджете (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Обновление виджета"</string>
     <string name="widget_list_opacity_warning">"Примечание: Это экспериментальная функция! Изменения параметров непрозрачности могут отобразиться не сразу!"</string>
     <string name="widget_list_color_warning">"Примечание: Это экспериментальная функция! Системные настройки цветового оформления будут переопределены! Удалите выбор цвета для возврата к системному цветовому оформлению."</string>

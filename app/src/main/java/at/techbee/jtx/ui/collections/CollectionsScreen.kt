@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -55,7 +56,6 @@ import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
-import java.util.TimeZone
 
 
 @Composable
@@ -69,46 +69,19 @@ fun CollectionsScreen(
     val context = LocalContext.current
     val availableSyncApps = SyncUtil.availableSyncApps(context)
     val snackbarHostState = remember { SnackbarHostState() }
+    val collections by collectionsViewModel.collections.observeAsState(emptyList())
+    val toastText = collectionsViewModel.toastText.observeAsState()
 
     /* EXPORT FUNCTIONALITIES */
-    val collectionsICS = collectionsViewModel.collectionsICS.observeAsState()
-    val resultExportFilepath = remember { mutableStateOf<Uri?>(null) }
-    val launcherExportAll = rememberLauncherForActivityResult(CreateDocument("application/zip")) {
-        resultExportFilepath.value = it
+    val launcherExportAll = rememberLauncherForActivityResult(CreateDocument(CollectionsExportMimetype.ZIP.mimeType)) {
+        it?.let { uri ->
+            collectionsViewModel.writeToFile(uri, CollectionsExportMimetype.ZIP)
+        }
     }
-    val launcherExportSingle = rememberLauncherForActivityResult(CreateDocument("text/calendar")) {
-        resultExportFilepath.value = it
-    }
-    if (resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size > 1) {
-        launcherExportAll.launch(
-            "jtxBoard_${
-                DateTimeUtils.convertLongToYYYYMMDDString(
-                    System.currentTimeMillis(),
-                    TimeZone.getDefault().id
-                )
-            }.zip"
-        )
-    } else if (resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size == 1) {
-        launcherExportSingle.launch(
-            "${collectionsICS.value!!.first().first}_${
-                DateTimeUtils.convertLongToYYYYMMDDString(
-                    System.currentTimeMillis(),
-                    null
-                )
-            }.ics"
-        )
-    } else if (resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size > 1) {
-        collectionsViewModel.exportICSasZIP(
-            resultExportFilepath = resultExportFilepath.value,
-            context = context
-        )
-        resultExportFilepath.value = null
-    } else if (resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size == 1) {
-        collectionsViewModel.exportICS(
-            resultExportFilepath = resultExportFilepath.value,
-            context = context
-        )
-        resultExportFilepath.value = null
+    val launcherExportSingle = rememberLauncherForActivityResult(CreateDocument(CollectionsExportMimetype.ICS.mimeType)) {
+        it?.let { uri ->
+            collectionsViewModel.writeToFile(uri, CollectionsExportMimetype.ICS)
+        }
     }
 
     /* IMPORT FUNCTIONALITIES */
@@ -122,6 +95,13 @@ fun CollectionsScreen(
     }
     var importCollection by remember { mutableStateOf<CollectionsView?>(null) }
     var importModule by remember { mutableStateOf<Module?>(null) }
+
+    LaunchedEffect(toastText.value) {
+        toastText.value?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            collectionsViewModel.toastText.postValue(null)
+        }
+    }
 
 
     LaunchedEffect(resultImportICSFilepaths, importCollection) {
@@ -143,7 +123,7 @@ fun CollectionsScreen(
         }
     }
 
-    var showSelectModuleForTxtImportDialog by remember { mutableStateOf(false) }
+    var showSelectModuleForTxtImportDialog by rememberSaveable { mutableStateOf(false) }
     if(showSelectModuleForTxtImportDialog && importCollection != null && resultImportTxtFilepaths.isNotEmpty()) {
         SelectModuleForTxtImportDialog(
             files = resultImportTxtFilepaths,
@@ -162,7 +142,18 @@ fun CollectionsScreen(
         if (resultImportTxtFilepaths.isNotEmpty() && importCollection != null) {
             resultImportTxtFilepaths.forEach { filepath ->
                 context.contentResolver?.openInputStream(filepath)?.use {
-                    collectionsViewModel.insertTxt(text = it.readBytes().decodeToString(), module = importModule!!, collection = importCollection!!.toICalCollection())
+                    collectionsViewModel.insertTxt(
+                        text = it.readBytes().decodeToString(),
+                        module = importModule!!,
+                        collection = importCollection!!.toICalCollection(),
+                        defaultJournalDateSettingOption = settingsStateHolder.settingDefaultJournalsDate.value,
+                        defaultStartDateSettingOption = settingsStateHolder.settingDefaultStartDate.value,
+                        defaultStartTime = settingsStateHolder.settingDefaultStartTime.value,
+                        defaultStartTimezone = settingsStateHolder.settingDefaultStartTimezone.value,
+                        defaultDueDateSettingOption = settingsStateHolder.settingDefaultDueDate.value,
+                        defaultDueTime = settingsStateHolder.settingDefaultDueTime.value,
+                        defaultDueTimezone = settingsStateHolder.settingDefaultDueTimezone.value
+                    )
                     it.close()
                 }
             }
@@ -214,7 +205,7 @@ fun CollectionsScreen(
     }
 
 
-    var showCollectionsAddDialog by remember { mutableStateOf(false) }
+    var showCollectionsAddDialog by rememberSaveable { mutableStateOf(false) }
     if (showCollectionsAddDialog)
         CollectionsAddOrEditDialog(
             current = ICalCollection.createLocalCollection(context),
@@ -260,11 +251,8 @@ fun CollectionsScreen(
                             text = { Text(text = stringResource(id = R.string.menu_collections_export_all)) },
                             onClick = {
                                 if(settingsStateHolder.settingProtectBiometric.value == DropdownSettingOption.PROTECT_BIOMETRIC_OFF || globalStateHolder.isAuthenticated.value) {
-                                    collectionsViewModel.collections.value?.let {
-                                        collectionsViewModel.requestICSForExport(
-                                            it
-                                        )
-                                    }
+                                    collectionsViewModel.collectionsToExport.value = collections
+                                    launcherExportAll.launch("jtxBoard_${DateTimeUtils.timestampAsFilenameAppendix()}.zip")
                                 } else {
                                     globalStateHolder.biometricPrompt?.authenticate(biometricPromptInfo)
                                 }
@@ -281,8 +269,9 @@ fun CollectionsScreen(
                 drawerState = drawerState,
                 mainContent = {
                     CollectionsScreenContent(
-                        collectionsLive = collectionsViewModel.collections,
+                        collections = collections,
                         isProcessing = collectionsViewModel.isProcessing,
+                        settingAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                         onCollectionChanged = { collection ->
                             collectionsViewModel.saveCollection(
                                 collection
@@ -309,7 +298,8 @@ fun CollectionsScreen(
                         },
                         onExportAsICS = { collection ->
                             if(settingsStateHolder.settingProtectBiometric.value == DropdownSettingOption.PROTECT_BIOMETRIC_OFF || globalStateHolder.isAuthenticated.value) {
-                                collectionsViewModel.requestICSForExport(listOf(collection))
+                                collectionsViewModel.collectionsToExport.value = listOf(collection)
+                                launcherExportSingle.launch("${collection.displayName ?: collection.collectionId.toString()}_${DateTimeUtils.timestampAsFilenameAppendix()}.ics")
                             } else {
                                 globalStateHolder.biometricPrompt?.authenticate(biometricPromptInfo)
                             }
