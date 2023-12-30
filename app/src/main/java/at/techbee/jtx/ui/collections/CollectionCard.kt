@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.collections
 
 import android.accounts.Account
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -149,7 +150,7 @@ fun CollectionCard(
                             }
                             if(collection.accountType != LOCAL_ACCOUNT_TYPE) {
                                 Text(
-                                    text = collection.url,
+                                    text = try { Uri.parse(collection.url).host } catch (e: NullPointerException) { null } ?: "",
                                     style = MaterialTheme.typography.labelMedium,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
@@ -373,6 +374,8 @@ fun CollectionCardPreview3() {
             this.color = Color.Magenta.toArgb()
             this.supportsVJOURNAL = true
             this.supportsVTODO = true
+            this.url = "https://www.example.com/asdf/09809898797/index.php?whatever"
+            this.accountType = "remote_account_type"
         }
 
         CollectionCard(
