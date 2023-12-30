@@ -84,7 +84,7 @@ object DateTimeUtils {
         return convertLongToMediumDateString(date, timezone) + if(timezone != TZ_ALLDAY) " " + convertLongToShortTimeString(date, timezone) else ""
     }
 
-    private fun convertLongToMediumDateString(date: Long?, timezone: String?): String {
+    fun convertLongToMediumDateString(date: Long?, timezone: String?): String {
         if (date == null || date == 0L)
             return ""
         val zonedDateTime =
