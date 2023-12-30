@@ -107,6 +107,7 @@
     <string name="edit_recur_on_weekday">"по"</string>
     <string name="edit_recur_on_the_x_day_of_month">"на"</string>
     <string name="edit_recur_x_day_of_the_month">"день месяца"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"последний"</string>
     <string name="edit_recur_x_times">"раз"</string>
     <string name="edit_recur_toast_requires_start_date">"Установите дату начала, чтобы активировать повторения!"</string>
     <string name="edit_datepicker_dialog_select_date">"Выбрать дату"</string>
