@@ -59,6 +59,7 @@ import at.techbee.jtx.ui.reusable.dialogs.CollectionsDeleteCollectionDialog
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsMoveCollectionDialog
 import at.techbee.jtx.ui.reusable.elements.ListBadge
 import at.techbee.jtx.ui.theme.Typography
+import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
 
@@ -200,9 +201,16 @@ fun CollectionCard(
                             isAccessibilityMode = settingAccessibilityMode
                         )
                     }
+
+                    collection.lastSync?.let {
+                        ListBadge(
+                            icon = Icons.Outlined.Sync,
+                            iconDesc = null,
+                            text = stringResource(id = R.string.collection_last_sync_datetime, DateTimeUtils.convertLongToMediumDateShortTimeString(it, null)),
+                            isAccessibilityMode = settingAccessibilityMode
+                        )
+                    }
                 }
-
-
 
                 Row(
                     verticalAlignment = Alignment.Top,
@@ -376,6 +384,7 @@ fun CollectionCardPreview3() {
             this.supportsVTODO = true
             this.url = "https://www.example.com/asdf/09809898797/index.php?whatever"
             this.accountType = "remote_account_type"
+            this.lastSync = System.currentTimeMillis()
         }
 
         CollectionCard(

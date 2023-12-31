@@ -42,7 +42,7 @@ object JtxContract {
     const val AUTHORITY = "at.techbee.jtx.provider"
 
     /** The version of this SyncContentProviderContract */
-    const val VERSION = 6
+    const val VERSION = 7
 
     /** Constructs an Uri for the Jtx Sync Adapter with the given Account
      * @param [account] The account that should be appended to the Base Uri
@@ -191,8 +191,8 @@ object JtxContract {
         const val ID = BaseColumns._ID
 
         /** The column for the module.
-         * This is an internal differentiation for JOURNAL, NOTE and TODO as provided in the enum [Module].
-         * The Module does not need to be set. On import it will be derived from the component from the [Component] (Todo or Journal/Note) and if a
+         * This is an internal differentiation for JOURNAL, NOTE and T0DO as provided in the enum [Module].
+         * The Module does not need to be set. On import it will be derived from the component from the [Component] (T0do or Journal/Note) and if a
          * dtstart is present or not (Journal or Note). If the module was set, it might be overwritten on import. In this sense also
          * unknown values are overwritten.
          * Use e.g. Module.JOURNAL.name for a correct String value in this field.
@@ -514,7 +514,7 @@ object JtxContract {
         const val SEQUENCE = "sequence"
 
         /**
-         * Purpose:  This property specifies a color used for displaying the calendar, event, todo, or journal data.
+         * Purpose:  This property specifies a color used for displaying the calendar, event, t0do, or journal data.
          * See [https://tools.ietf.org/html/rfc7986#section-5.9].
          * The color is represented as Int-value as described in [https://developer.android.com/reference/android/graphics/Color#color-ints]
          * Type: [Int]
@@ -1204,6 +1204,12 @@ object JtxContract {
          * Type: [Boolean]
          */
         const val READONLY = "readonly"
+
+        /**
+         * Purpose:  This column/property defines the date/time of the last sync
+         * Type: [Long]
+         */
+        const val LAST_SYNC = "lastsync"
 
     }
 
