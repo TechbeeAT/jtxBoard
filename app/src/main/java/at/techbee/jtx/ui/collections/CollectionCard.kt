@@ -174,7 +174,8 @@ fun CollectionCard(
                                 icon = Icons.Outlined.AccountCircle,
                                 iconDesc = null,
                                 text = it,
-                                isAccessibilityMode = settingAccessibilityMode
+                                isAccessibilityMode = settingAccessibilityMode,
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer
                             )
                         }
 
@@ -186,7 +187,8 @@ fun CollectionCard(
                                     it,
                                     null
                                 ),
-                                isAccessibilityMode = settingAccessibilityMode
+                                isAccessibilityMode = settingAccessibilityMode,
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer
                             )
                         }
                     }
