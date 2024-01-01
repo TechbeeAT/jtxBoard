@@ -167,13 +167,28 @@ fun CollectionCard(
                         )
                     }
 
-                    collection.ownerDisplayName?.let {
-                        ListBadge(
-                            icon = Icons.Outlined.AccountCircle,
-                            iconDesc = null,
-                            text = it,
-                            isAccessibilityMode = settingAccessibilityMode
-                        )
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+
+                        collection.ownerDisplayName?.let {
+                            ListBadge(
+                                icon = Icons.Outlined.AccountCircle,
+                                iconDesc = null,
+                                text = it,
+                                isAccessibilityMode = settingAccessibilityMode
+                            )
+                        }
+
+                        collection.lastSync?.let {
+                            ListBadge(
+                                icon = Icons.Outlined.Sync,
+                                iconDesc = null,
+                                text = DateTimeUtils.convertLongToMediumDateShortTimeString(
+                                    it,
+                                    null
+                                ),
+                                isAccessibilityMode = settingAccessibilityMode
+                            )
+                        }
                     }
 
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -198,15 +213,6 @@ fun CollectionCard(
                         )
                         ListBadge(
                             text = stringResource(id = R.string.collections_tasks_num, numTodos),
-                            isAccessibilityMode = settingAccessibilityMode
-                        )
-                    }
-
-                    collection.lastSync?.let {
-                        ListBadge(
-                            icon = Icons.Outlined.Sync,
-                            iconDesc = null,
-                            text = stringResource(id = R.string.collection_last_sync_datetime, DateTimeUtils.convertLongToMediumDateShortTimeString(it, null)),
                             isAccessibilityMode = settingAccessibilityMode
                         )
                     }
@@ -384,6 +390,7 @@ fun CollectionCardPreview3() {
             this.supportsVTODO = true
             this.url = "https://www.example.com/asdf/09809898797/index.php?whatever"
             this.accountType = "remote_account_type"
+            this.ownerDisplayName = "Owner John Doe"
             this.lastSync = System.currentTimeMillis()
         }
 

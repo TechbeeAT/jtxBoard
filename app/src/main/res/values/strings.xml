@@ -212,7 +212,6 @@
     <string name="not_available_abbreviation">"n/a"</string>
     <string name="collection">"Collection"</string>
     <string name="collection_owner_displayname">"Owner: %1$s"</string>
-    <string name="collection_last_sync_datetime">"Last Sync: %1$s"</string>
     <string name="link_to_parent">"Link to parent"</string>
     <string name="link_selected_as_parent">"Parent"</string>
     <string name="link_selected_as_subtask_note">"Subtask/-note"</string>
