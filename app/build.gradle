@@ -266,4 +266,6 @@ dependencies {
 
     //image loading from the web
     implementation "io.coil-kt:coil-compose:2.5.0"
+
+    implementation "com.googlecode.libphonenumber:libphonenumber:8.13.27"
 }
