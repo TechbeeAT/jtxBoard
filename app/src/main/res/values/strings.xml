@@ -664,4 +664,6 @@ Thank you!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please set the location permission to 'Allow all the time' and grant the notifications permission to use this feature."</string>
     <string name="geofence_notification_summary">"Geofence activated"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board needs the permission to schedule exact alarms, otherwise alarm-notifications might be delayed. Please grant this permission in order to use this feature."</string>
+    <string name="call_contact">"Call %1$s"</string>
+    <string name="email_contact">"E-Mail %1$s"</string>
 </resources>
