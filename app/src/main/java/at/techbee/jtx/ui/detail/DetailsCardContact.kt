@@ -38,7 +38,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -90,20 +92,24 @@ fun DetailsCardContact(
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
-    var searchContacts = emptyList<Attendee>()
+    val searchContacts = remember { mutableStateListOf<Attendee>() }
 
-    val foundTelephoneNumber = contact.let {
-        PhoneNumberUtil.getInstance().findNumbers(
-            it, Locale.getDefault().country
-        ).firstOrNull()?.number()?.rawInput
+    val foundTelephoneNumber by derivedStateOf {
+        contact.let {
+            PhoneNumberUtil.getInstance().findNumbers(
+                it, Locale.getDefault().country
+            ).firstOrNull()?.rawString()
+        }
     }
 
-    val foundEmail = contact.let {
-        val matcher = PatternsCompat.EMAIL_ADDRESS.matcher(it)
-        if(matcher.find())
-            matcher.group()
-        else
-            null
+    val foundEmail by derivedStateOf {
+        contact.let {
+            val matcher = PatternsCompat.EMAIL_ADDRESS.matcher(it)
+            if(matcher.find())
+                matcher.group()
+            else
+                null
+        }
     }
 
 
@@ -148,13 +154,10 @@ fun DetailsCardContact(
 
                         foundEmail?.let {
                             IconButton(onClick = {
-                                val intent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "*/*"
-                                    putExtra(Intent.EXTRA_EMAIL, it)
-                                }
-                                if (intent.resolveActivity(context.packageManager) != null) {
-                                    context.startActivity(intent)
-                                }
+                                val intent = Intent(Intent.ACTION_SEND)
+                                intent.type = "message/rfc822"
+                                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(it))
+                                context.startActivity(intent)
                             }) {
                                 Icon(Icons.Outlined.Mail, stringResource(
                                     id = R.string.email_contact,
@@ -220,10 +223,9 @@ fun DetailsCardContact(
                                 onContactUpdated(contact)
 
                                 coroutineScope.launch {
+                                    searchContacts.clear()
                                     if(newValue.length >= 3 && contactsPermissionState?.status?.isGranted == true)
-                                        searchContacts = UiUtil.getLocalContacts(context, newValue)
-                                    else
-                                        emptyList<Attendee>()
+                                        searchContacts.addAll(UiUtil.getLocalContacts(context, newValue))
                                 }
                             },
                             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
