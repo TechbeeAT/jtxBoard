@@ -649,4 +649,6 @@ Köszönjük!"</string>
     <string name="geofence_notification_summary">"Szomszédságok aktiválva"</string>
     <string name="exact_alarm_permission_dialog_message">"A riasztások pontos ütemezéséhez szükség van erre az engedélyre, különben a riasztások nem biztos, hogy időben fognak megjelenni. 
 Kérjük, adja meg az engedélyt, ha szeretné használni ezt a funkciót."</string>
+    <string name="call_contact">"Hívás: %1$s"</string>
+    <string name="email_contact">"Levélküldés: %1$s"</string>
 </resources>
