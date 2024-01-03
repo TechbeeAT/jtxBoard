@@ -830,7 +830,7 @@ data class ICalObject(
         }
 
 
-        fun getMapLink(geoLat: Double?, geoLong: Double?, flavor: BuildFlavor): Uri? {
+        fun getMapLink(geoLat: Double?, geoLong: Double?, location: String?, flavor: BuildFlavor): Uri? {
             return if(geoLat != null || geoLong != null) {
                 try {
                     if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
@@ -838,6 +838,11 @@ data class ICalObject(
                     else
                         Uri.parse("https://www.openstreetmap.org/#map=15/$geoLat/$geoLong")
                 } catch (e: java.lang.IllegalArgumentException) { null }
+            } else if (!location.isNullOrEmpty()) {
+                if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
+                    Uri.parse("https://www.google.com/maps/search/$location/")
+                else
+                    Uri.parse("https://www.openstreetmap.org/search?query=$location")
             } else null
         }
 
