@@ -111,6 +111,8 @@
     <string name="edit_datepicker_dialog_select_date">"ਮਿਤੀ ਚੁਣੋ"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"ਮਿਤੀ ਦੀ ਹੱਦ ਚੁਣੋ"</string>
     <string name="edit_datepicker_dialog_add_time">"ਸਮਾਂ ਜੋੜੋ"</string>
+    <string name="edit_datepicker_dialog_edit_time">"ਸਮੇਂ ਵਿੱਚ ਤਰਮੀਮ ਕਰੋ"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"ਸਮਾਂ ਖੇਤਰ ਸ਼ਾਮਲ ਕਰੋ"</string>
     <!-- fragment_about -->
     <!-- menus -->
     <!-- Shortcuts -->

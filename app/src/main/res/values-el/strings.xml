@@ -646,4 +646,6 @@
     <string name="geofence_request_permission_dialog_message">"Το jtx Board μπορεί να σας ειδοποιήσει όταν είστε κοντά στις δεδομένες συντεταγμένες. Παρακαλώ ορίστε την άδεια τοποθεσίας για 'Να επιτρέπονται όλη την ώρα' και παραχωρήστε το δικαίωμα ειδοποιήσεων για να χρησιμοποιήσετε αυτήν τη δυνατότητα."</string>
     <string name="geofence_notification_summary">"Ο γεωφράκτης ενεργοποιήθηκε"</string>
     <string name="exact_alarm_permission_dialog_message">"Το jtx Board χρειάζεται την άδεια για τον προγραμματισμό ακριβών ειδοποιήσεων, διαφορετικά ενδέχεται να καθυστερήσει η ειδοποίηση. Παρακαλούμε χορηγήστε αυτό το δικαίωμα για να χρησιμοποιήσετε αυτήν τη δυνατότητα."</string>
+    <string name="call_contact">"Κλήση %1$s"</string>
+    <string name="email_contact">"E-mail %1$s"</string>
 </resources>
