@@ -647,4 +647,6 @@ Dank u!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board kan je een melding geven wanneer je in de buurt bent van de opgegeven coördinaten. Stel de locatie-toestemming in op 'Altijd toestaan' en geef de meldingstoestemming om deze functie te gebruiken."</string>
     <string name="geofence_notification_summary">"Geofence geactiveerd"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board heeft de toegang nodig om exacte meldingen te plannen, anders kunnen waarschuwingsberichten vertraagd worden. Geef deze toegang om de functie te kunnen gebruiken."</string>
+    <string name="call_contact">"Bel %1$s"</string>
+    <string name="email_contact">"E-mail %1$s"</string>
 </resources>
