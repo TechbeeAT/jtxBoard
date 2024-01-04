@@ -94,4 +94,5 @@
     <string name="markdown_italic">"Kursiv"</string>
     <string name="active_filters">Aktiva filter:</string>
     <string name="clear_filters">"Rensa filter"</string>
+    <string name="call_contact">"Ring %1$s"</string>
 </resources>
