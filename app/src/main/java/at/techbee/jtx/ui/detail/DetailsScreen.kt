@@ -126,7 +126,7 @@ fun DetailsScreen(
             detailViewModel.mutableICalObject = icalEntity.value?.property
             if(detailViewModel.mutableCategories.isEmpty()) detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
             if(detailViewModel.mutableResources.isEmpty()) detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
-            if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
+            if(detailViewModel.mutableAttendees.isEmpty()) detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
             if(detailViewModel.mutableComments.isEmpty()) detailViewModel.mutableComments.addAll(icalEntity.value?.comments ?: emptyList())
             if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttachments.addAll(icalEntity.value?.attachments ?: emptyList())
             if(detailViewModel.mutableAlarms.isEmpty()) detailViewModel.mutableAlarms.addAll(icalEntity.value?.alarms ?: emptyList())

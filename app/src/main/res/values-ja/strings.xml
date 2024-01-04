@@ -645,4 +645,6 @@
     <string name="geofence_request_permission_dialog_message">"jtx Board は指定された座標に近づいたときにお知らせできます。この機能を有効にするには、位置情報の権限を「常に許可」にし、通知の権限を許可してください。"</string>
     <string name="geofence_notification_summary">"ジオフェンスが有効です"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board はアラーム通知の遅延を避けるため、正確なアラームを設定する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
+    <string name="call_contact">"%1$sに電話する"</string>
+    <string name="email_contact">"%1$sにメールを送信"</string>
 </resources>

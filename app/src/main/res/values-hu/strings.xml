@@ -107,6 +107,7 @@
     <string name="edit_recur_on_weekday">" "</string>
     <string name="edit_recur_on_the_x_day_of_month">" "</string>
     <string name="edit_recur_x_day_of_the_month">"hónap napja"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"utolsó"</string>
     <string name="edit_recur_x_times">"alkalommal"</string>
     <string name="edit_recur_toast_requires_start_date">"Az ismétlés beállításához előbb adjon meg kezdési dátumot!"</string>
     <string name="edit_datepicker_dialog_select_date">"Dátum kiválasztása"</string>
@@ -648,4 +649,6 @@ Köszönjük!"</string>
     <string name="geofence_notification_summary">"Szomszédságok aktiválva"</string>
     <string name="exact_alarm_permission_dialog_message">"A riasztások pontos ütemezéséhez szükség van erre az engedélyre, különben a riasztások nem biztos, hogy időben fognak megjelenni. 
 Kérjük, adja meg az engedélyt, ha szeretné használni ezt a funkciót."</string>
+    <string name="call_contact">"Hívás: %1$s"</string>
+    <string name="email_contact">"Levélküldés: %1$s"</string>
 </resources>

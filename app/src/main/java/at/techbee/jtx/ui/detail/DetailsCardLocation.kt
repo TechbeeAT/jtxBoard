@@ -194,12 +194,55 @@ fun DetailsCardLocation(
 
             Crossfade(isEditMode, label = "toggleEditModeForMap") { editMode ->
                 if (!editMode) {
-                    Column {
-                        HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
-                        Text(
-                            text = location,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            HeadlineWithIcon(
+                                icon = Icons.Outlined.Place,
+                                iconDesc = headline,
+                                text = headline
+                            )
+                            Text(
+                                text = location,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            if(geoLat != null && geoLong != null) {
+                                Text(ICalObject.getLatLongString(geoLat, geoLong) ?: "")
+                            }
+                        }
+
+                        if((geoLat != null && geoLong != null) || location.isNotEmpty()) {
+
+                            IconButton(onClick = {
+                                val uri = if(geoLat == null && geoLong == null && location.isNotEmpty()) {
+                                    Uri.parse("geo:0,0?q=$location")
+                                } else if (geoLat != null && geoLong != null && location.isEmpty()) {
+                                    val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
+                                    Uri.parse("geo:0,0?q=$latLngParam(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
+                                } else {
+                                    val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
+                                    Uri.parse("geo:$latLngParam")
+                                }
+
+                                val geoIntent = Intent(Intent.ACTION_VIEW, uri)
+                                try {
+                                    context.startActivity(geoIntent)
+                                } catch (e: ActivityNotFoundException) {
+                                    context.startActivity(
+                                        Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, location, BuildFlavor.getCurrent()))
+                                    )
+                                }
+                            }) {
+                                Icon(
+                                    Icons.AutoMirrored.Outlined.OpenInNew,
+                                    stringResource(id = R.string.open_in_browser)
+                                )
+                            }
+                        }
+
                     }
                 } else {
                     Column {
@@ -356,33 +399,6 @@ fun DetailsCardLocation(
                         .height(200.dp)
                         .padding(top = 8.dp)
                 )
-            }
-
-            AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(ICalObject.getLatLongString(geoLat, geoLong) ?: "")
-
-                    IconButton(onClick = {
-                        val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
-                        val geoUri = if (location.isNotEmpty())
-                            Uri.parse("geo:0,0?q=$latLngParam(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
-                        else
-                            Uri.parse("geo:$latLngParam")
-
-                        val geoIntent = Intent(Intent.ACTION_VIEW, geoUri)
-                        try {
-                            context.startActivity(geoIntent)
-                        } catch (e: ActivityNotFoundException) {
-                            context.startActivity(Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, BuildFlavor.getCurrent())))
-                        }
-                    }) {
-                        Icon(Icons.AutoMirrored.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
-                    }
-                }
             }
 
             if (BuildFlavor.getCurrent() == BuildFlavor.GPLAY) {
