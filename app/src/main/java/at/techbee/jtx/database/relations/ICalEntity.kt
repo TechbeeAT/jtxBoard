@@ -215,7 +215,7 @@ data class ICalEntity(
 
         if(property.geoLat != null && property.geoLong != null) {
             shareText += context.getString(R.string.map) + ": ${getLatLongString(property.geoLat, property.geoLong)} - "
-            getMapLink(property.geoLat, property.geoLong, BuildFlavor.getCurrent())?.let { shareText += it }
+            getMapLink(property.geoLat, property.geoLong, property.location, BuildFlavor.getCurrent())?.let { shareText += it }
             shareText += System.lineSeparator()
         }
 

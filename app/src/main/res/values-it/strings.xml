@@ -194,10 +194,6 @@
     <string name="save_and_close">"Salva &amp; chiudi"</string>
     <string name="list_quickadd_add_audio_attachment">"Registra allegato audio"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Permesso di lettura dei contatti concesso"</string>
-    <string name="permission_read_contacts_denied">"Permesso di lettura dei contatti negato"</string>
-    <string name="permission_record_audio_granted">"Permesso di registrazione audio concessa"</string>
-    <string name="permission_record_audio_denied">"Permesso di registrazione audio negato"</string>
     <string name="intent_dialog_title">"Aggiungere contenuto a un Diario, una Nota o un'Attività?"</string>
     <string name="add">"Aggiungi"</string>
     <string name="edit">"Modifica"</string>
@@ -380,8 +376,6 @@ Grazie!"</string>
     <string name="settings_default_expand_subtasks">"Espansione predefinita delle sottoattività nell'elenco"</string>
     <string name="settings_default_expand_subnotes">"Espansione predefinita delle note secondarie nell'elenco"</string>
     <string name="settings_default_expand_attachments">"Espansione predefinita degli allegati nell'elenco"</string>
-    <string name="permission_coarse_location_granted">"Autorizzazione di localizzazione grossolana concessa"</string>
-    <string name="permission_coarse_location_denied">"Autorizzazione alla localizzazione grossolana negata"</string>
     <string name="sorry">"Spiacente"</string>
     <string name="back">"Indietro"</string>
     <string name="details">"Dettagli"</string>

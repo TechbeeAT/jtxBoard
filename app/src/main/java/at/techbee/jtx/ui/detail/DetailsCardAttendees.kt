@@ -37,7 +37,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
@@ -79,7 +78,7 @@ import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+@OptIn(ExperimentalFoundationApi::class,
     ExperimentalPermissionsApi::class, ExperimentalLayoutApi::class
 )
 @Composable
@@ -94,7 +93,7 @@ fun DetailsCardAttendees(
     // preview would break if rememberPermissionState is used for preview, so we set it to null only for preview!
     val contactsPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.READ_CONTACTS) else null
 
-    var searchAttendees = emptyList<Attendee>()
+    val searchAttendees = remember { mutableStateListOf<Attendee>() }
 
     val headline = stringResource(id = R.string.attendees)
     var newAttendee by rememberSaveable { mutableStateOf("") }
@@ -120,7 +119,7 @@ fun DetailsCardAttendees(
                             ElevatedAssistChip(
                                 onClick = {
                                           if(attendee.caladdress.startsWith("mailto:")) {
-                                              val mail: String = attendee.caladdress.replaceFirst("mailto:", "")
+                                              val mail = attendee.caladdress.replaceFirst("mailto:", "")
                                               val intent = Intent(Intent.ACTION_SEND)
                                               intent.type = "message/rfc822"
                                               intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(mail))
@@ -254,10 +253,9 @@ fun DetailsCardAttendees(
                             newAttendee = newValue
 
                             coroutineScope.launch {
+                                searchAttendees.clear()
                                 if(newValue.length >= 3 && contactsPermissionState?.status?.isGranted == true)
-                                    searchAttendees = UiUtil.getLocalContacts(context, newValue)
-                                else
-                                    emptyList<Attendee>()
+                                    searchAttendees.addAll(UiUtil.getLocalContacts(context, newValue))
                                 bringIntoViewRequester.bringIntoView()
                             }
                         },

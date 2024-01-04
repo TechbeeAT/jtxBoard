@@ -110,6 +110,7 @@
     <string name="edit_recur_x_times">"回"</string>
     <string name="edit_recur_toast_requires_start_date">"繰り返すには着手日を設定してください！"</string>
     <string name="edit_datepicker_dialog_select_date">"日付を選択"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"日付の範囲を選択"</string>
     <string name="edit_datepicker_dialog_add_time">"時刻を追加"</string>
     <string name="edit_datepicker_dialog_edit_time">"時刻を編集"</string>
     <string name="edit_datepicker_dialog_add_timezone">"タイムゾーンを追加"</string>
@@ -194,10 +195,6 @@
     <string name="save_and_close">"保存して閉じる"</string>
     <string name="list_quickadd_add_audio_attachment">"添付する音声メモを録音"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"連絡先の読み取り権限が付与されました"</string>
-    <string name="permission_read_contacts_denied">"連絡先の読み取り権限が拒否されました"</string>
-    <string name="permission_record_audio_granted">"音声録音の権限が付与されました"</string>
-    <string name="permission_record_audio_denied">"音声録音の権限が拒否されました"</string>
     <string name="intent_dialog_title">"ジャーナル、メモ、ToDo にコンテンツを追加しますか？"</string>
     <string name="add">"追加"</string>
     <string name="edit">"編集"</string>
@@ -285,6 +282,7 @@
     <string name="search_notes">メモを検索</string>
     <string name="search_todos">ToDo を検索</string>
     <string name="filter">"フィルター"</string>
+    <string name="order">"並び順"</string>
     <string name="sync_now">"今すぐ同期"</string>
     <string name="due">"締め切り"</string>
     <string name="completed">"完了"</string>
@@ -380,12 +378,12 @@
     <string name="settings_default_expand_subtasks">"デフォルトでサブ ToDo を一覧に展開"</string>
     <string name="settings_default_expand_subnotes">"デフォルトでサブメモを一覧に展開"</string>
     <string name="settings_default_expand_attachments">"デフォルトで添付ファイルを一覧に展開"</string>
-    <string name="permission_coarse_location_granted">"おおよその位置情報の権限が付与されました"</string>
-    <string name="permission_coarse_location_denied">"おおよその位置情報の権限が拒否されました"</string>
     <string name="sorry">"申し訳ありません"</string>
     <string name="back">"戻る"</string>
     <string name="details">"詳細"</string>
     <string name="date">"日付"</string>
+    <string name="summary_description">"概要/詳細"</string>
+    <string name="status_classification_priority">"ステータス/公開設定/優先度"</string>
     <string name="timezone">"タイムゾーン"</string>
     <string name="not_set2">"未設定"</string>
     <string name="invert_selection">"選択を反転"</string>
@@ -647,4 +645,6 @@
     <string name="geofence_request_permission_dialog_message">"jtx Board は指定された座標に近づいたときにお知らせできます。この機能を有効にするには、位置情報の権限を「常に許可」にし、通知の権限を許可してください。"</string>
     <string name="geofence_notification_summary">"ジオフェンスが有効です"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board はアラーム通知の遅延を避けるため、正確なアラームを設定する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
+    <string name="call_contact">"%1$sに電話する"</string>
+    <string name="email_contact">"%1$sにメールを送信"</string>
 </resources>

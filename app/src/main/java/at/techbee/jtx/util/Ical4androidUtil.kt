@@ -14,7 +14,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import at.bitfire.ical4android.*
-import at.bitfire.ical4android.util.MiscUtils.CursorHelper.toValues
+import at.bitfire.ical4android.util.MiscUtils.toValues
 import at.techbee.jtx.contract.JtxContract
 import at.techbee.jtx.contract.JtxContract.asSyncAdapter
 import net.fortuna.ical4j.data.CalendarOutputter

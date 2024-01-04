@@ -104,8 +104,9 @@ fun DetailsScreen(
     var linkEntryDialogReltype by rememberSaveable { mutableStateOf<Reltype?>(null)}
     var navigateUp by remember { mutableStateOf(false) }
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
+    val scrollToSection = remember { mutableStateOf<DetailsScreenSection?>(null) }
 
-    val icalEntity = detailViewModel.icalEntity.observeAsState()
+    val icalEntity = detailViewModel.icalEntity.observeAsState(null)
 
     val seriesElement = detailViewModel.seriesElement.observeAsState(null)
     val storedCategories by detailViewModel.storedCategories.observeAsState(emptyList())
@@ -125,13 +126,12 @@ fun DetailsScreen(
             detailViewModel.mutableICalObject = icalEntity.value?.property
             if(detailViewModel.mutableCategories.isEmpty()) detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
             if(detailViewModel.mutableResources.isEmpty()) detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
-            if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
+            if(detailViewModel.mutableAttendees.isEmpty()) detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
             if(detailViewModel.mutableComments.isEmpty()) detailViewModel.mutableComments.addAll(icalEntity.value?.comments ?: emptyList())
             if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttachments.addAll(icalEntity.value?.attachments ?: emptyList())
             if(detailViewModel.mutableAlarms.isEmpty()) detailViewModel.mutableAlarms.addAll(icalEntity.value?.alarms ?: emptyList())
         }
     }
-
 
     BackHandler {
         navigateUp = true
@@ -289,8 +289,14 @@ fun DetailsScreen(
                     navigateUp = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 detailTopAppBarMode = detailViewModel.settingsStateHolder.detailTopAppBarMode.value,
-                onAddSubnote = { subnoteText -> detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null) },
-                onAddSubtask = { subtaskText -> detailViewModel.addSubEntry(ICalObject.createTask(subtaskText), null) },
+                onAddSubnote = { subnoteText ->
+                    detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null)
+                    scrollToSection.value = DetailsScreenSection.SUBNOTES
+                               },
+                onAddSubtask = { subtaskText ->
+                    detailViewModel.addSubEntry(ICalObject.createTask(subtaskText), null)
+                    scrollToSection.value = DetailsScreenSection.SUBTASKS
+                               },
                 actions = {
                     val menuExpanded = remember { mutableStateOf(false) }
 
@@ -474,7 +480,8 @@ fun DetailsScreen(
         content = { paddingValues ->
 
             DetailScreenContent(
-                originalICalEntity = icalEntity,
+                observedICalEntity = icalEntity,
+                initialEntity = detailViewModel.initialEntity.value,
                 iCalObject = detailViewModel.mutableICalObject,
                 categories = detailViewModel.mutableCategories,
                 resources = detailViewModel.mutableResources,
@@ -517,13 +524,21 @@ fun DetailsScreen(
                             }
                     } else false,
                 markdownState = markdownState,
+                scrollToSectionState = scrollToSection,
                 saveEntry = {
                     detailViewModel.saveEntry()
                     onLastUsedCollectionChanged(detailViewModel.mutableICalObject!!.getModuleFromString(), detailViewModel.mutableICalObject!!.collectionId)
                 },
                 onProgressChanged = { itemId, newPercent -> detailViewModel.updateProgress(itemId, newPercent) },
                 onMoveToNewCollection = { newCollection -> detailViewModel.moveToNewCollection(newCollection.collectionId) },
-                onSubEntryAdded = { icalObject, attachment -> detailViewModel.addSubEntry(icalObject, attachment) },
+                onSubEntryAdded = { icalObject, attachment ->
+                    detailViewModel.addSubEntry(icalObject, attachment)
+                    when(icalObject.getModuleFromString()) {
+                        Module.JOURNAL -> scrollToSection.value = DetailsScreenSection.SUBNOTES
+                        Module.NOTE -> scrollToSection.value = DetailsScreenSection.SUBNOTES
+                        Module.TODO -> scrollToSection.value = DetailsScreenSection.SUBTASKS
+                    }
+                                  },
                 onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                 onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                 onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },

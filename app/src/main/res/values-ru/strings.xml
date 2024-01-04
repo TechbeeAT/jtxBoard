@@ -107,9 +107,11 @@
     <string name="edit_recur_on_weekday">"по"</string>
     <string name="edit_recur_on_the_x_day_of_month">"на"</string>
     <string name="edit_recur_x_day_of_the_month">"день месяца"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"последний"</string>
     <string name="edit_recur_x_times">"раз"</string>
     <string name="edit_recur_toast_requires_start_date">"Установите дату начала, чтобы активировать повторения!"</string>
     <string name="edit_datepicker_dialog_select_date">"Выбрать дату"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Диапазон дат"</string>
     <string name="edit_datepicker_dialog_add_time">"Время"</string>
     <string name="edit_datepicker_dialog_edit_time">"Изменить время"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Часовой пояс"</string>
@@ -194,10 +196,6 @@
     <string name="save_and_close">"Сохранить &amp; закрыть"</string>
     <string name="list_quickadd_add_audio_attachment">"Прикрепить аудио"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Разрешение на чтение контактов предоставлено"</string>
-    <string name="permission_read_contacts_denied">"Разрешение на чтение контактов отклонено"</string>
-    <string name="permission_record_audio_granted">"Разрешение на запись звука предоставлено"</string>
-    <string name="permission_record_audio_denied">"Разрешение на запись звука отклонено"</string>
     <string name="intent_dialog_title">"Добавить вложение в журнал, заметку или задачу?"</string>
     <string name="add">"Добавить"</string>
     <string name="edit">"Редактировать"</string>
@@ -382,8 +380,6 @@
     <string name="settings_default_expand_subtasks">"Показывать подзадачи в списке по умолчанию"</string>
     <string name="settings_default_expand_subnotes">"Показывать дочерние заметки в списке по умолчанию"</string>
     <string name="settings_default_expand_attachments">"Показывать вложения в списке по умолчанию"</string>
-    <string name="permission_coarse_location_granted">"Разрешение на определение местоположения предоставлено"</string>
-    <string name="permission_coarse_location_denied">"Разрешение на определение местоположения отклонено"</string>
     <string name="sorry">"Извините"</string>
     <string name="back">"Назад"</string>
     <string name="details">"Подробности"</string>

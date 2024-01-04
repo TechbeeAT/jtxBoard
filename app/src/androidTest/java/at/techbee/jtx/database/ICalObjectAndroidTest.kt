@@ -10,10 +10,12 @@ package at.techbee.jtx.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
+import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
@@ -594,5 +596,38 @@ class ICalObjectAndroidTest {
         database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent"))
         database.insertRelatedtoSync(Relatedto(icalObjectId = child1Id, reltype =  Reltype.PARENT.name, text = "parent2"))
         assertNull(ICalObject.findTopParent(child1Id, database))
+    }
+
+
+    @Test fun getMapLink_gplay() {
+        assertEquals(
+            Uri.parse("https://www.google.com/maps/search/?api=1&query=1.111%2C2.222"),
+            ICalObject.getMapLink(1.111, 2.222, null, BuildFlavor.GPLAY)
+        )
+    }
+
+    @Test fun getMapLink_gplay_location() {
+        assertEquals(
+            Uri.parse("https://www.google.com/maps/search/urania/"),
+            ICalObject.getMapLink(null, null, "urania", BuildFlavor.GPLAY)
+        )
+    }
+
+    @Test fun getMapLink_ose() {
+        assertEquals(
+            Uri.parse("https://www.openstreetmap.org/#map=15/1.111/2.222").toString(),
+            ICalObject.getMapLink(1.111, 2.222, null, BuildFlavor.OSE).toString()
+        )
+    }
+
+    @Test fun getMapLink_ose_location() {
+        assertEquals(
+            Uri.parse("https://www.openstreetmap.org/search?query=urania").toString(),
+            ICalObject.getMapLink(null, null, "urania", BuildFlavor.OSE).toString()
+        )
+    }
+
+    @Test fun getMapLink_empty() {
+        assertNull(ICalObject.getMapLink(null, null, null, BuildFlavor.OSE))
     }
 }

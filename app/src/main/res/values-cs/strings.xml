@@ -107,9 +107,11 @@
     <string name="edit_recur_on_weekday">"v"</string>
     <string name="edit_recur_on_the_x_day_of_month">"v"</string>
     <string name="edit_recur_x_day_of_the_month">"den v měsíci"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"poslední"</string>
     <string name="edit_recur_x_times">"krát"</string>
     <string name="edit_recur_toast_requires_start_date">"Opakování vyžaduje nastavení počátečního data!"</string>
     <string name="edit_datepicker_dialog_select_date">"Vybrat datum"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Vyberte časové období"</string>
     <string name="edit_datepicker_dialog_add_time">"Přidat čas"</string>
     <string name="edit_datepicker_dialog_edit_time">"Upravit čas"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Přidat časové pásmo"</string>
@@ -194,10 +196,6 @@
     <string name="save_and_close">"Uložit a zavřít"</string>
     <string name="list_quickadd_add_audio_attachment">"Nahrát zvukovou přílohu"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Oprávnění ke čtení kontaktů uděleno"</string>
-    <string name="permission_read_contacts_denied">"Oprávnění ke čtení kontaktů zamítnuto"</string>
-    <string name="permission_record_audio_granted">"Oprávnění k nahrávání zvuku uděleno"</string>
-    <string name="permission_record_audio_denied">"Oprávnění k nahrávání zvuku zamítnuto"</string>
     <string name="intent_dialog_title">"Přidat obsah do deníku, poznámky nebo úkolu?"</string>
     <string name="add">"Přidat"</string>
     <string name="edit">"Upravit"</string>
@@ -285,6 +283,8 @@
     <string name="search_notes">Hledat poznámky</string>
     <string name="search_todos">Hledat úkoly</string>
     <string name="filter">"Filtrovat"</string>
+    <string name="visibility">"Viditelnost"</string>
+    <string name="order">"Pořadí"</string>
     <string name="sync_now">"Synchronizovat nyní"</string>
     <string name="due">"Termín"</string>
     <string name="completed">"Dokončeno"</string>
@@ -380,12 +380,12 @@ Děkujeme vám!"</string>
     <string name="settings_default_expand_subtasks">"Rozbalovat dílčí úkoly v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_subnotes">"Rozbalovat dílčí poznámky v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_attachments">"Rozbalovat přílohy v seznamu ve výchozím nastavení"</string>
-    <string name="permission_coarse_location_granted">"Oprávnění k přibližné poloze uděleno"</string>
-    <string name="permission_coarse_location_denied">"Oprávnění k přibližné poloze zamítnuto"</string>
     <string name="sorry">"Omlouváme se"</string>
     <string name="back">"Zpět"</string>
     <string name="details">"Podrobnosti"</string>
     <string name="date">"Datum"</string>
+    <string name="summary_description">"Souhrn/Popis"</string>
+    <string name="status_classification_priority">"Stav/Klasifikace/Priorita"</string>
     <string name="timezone">"Časové pásmo"</string>
     <string name="not_set2">"Nenastaveno"</string>
     <string name="invert_selection">"Invertovat výběr"</string>
@@ -505,6 +505,8 @@ Děkujeme vám!"</string>
     <string name="settings_sticky_alarms_sub">"Ponechat oznámení dokud není dokončeno nebo odloženo"</string>
     <string name="settings_fullscreen_alarms">"Budíky přes celou obrazovku"</string>
     <string name="settings_fullscreen_alarms_sub">"Zobrazí budíky přes celou obrazovku, když je zařízení uzamčeno"</string>
+    <string name="settings_accessibility_mode">"Režim usnadnění"</string>
+    <string name="settings_accessibility_mode_sub">"Zajišťuje minimální velikost písma pro malé prvky"</string>
     <string name="settings_fullscreen_alarms_toast">"Udělte oprávnění k oznámení přes celou obrazovku v nastavení systému."</string>
     <string name="settings_sync_on_start">"Synchronizovat při spuštění aplikace"</string>
     <string name="settings_sync_on_pull_refresh">"Synchronizovat při potažení dolů"</string>
@@ -546,6 +548,7 @@ Děkujeme vám!"</string>
     <string name="list_biometric_protected_entries_unlocked">Záznamy chráněné biometrikou odemčeny</string>
     <string name="settings_auto_alarm">"Automatický budík"</string>
     <string name="alarms_always_ondue">"Vždy v termínu"</string>
+    <string name="alarms_always_on_save">"Vždy při uložení (experimentální)"</string>
     <string name="settings_auto_alarm_sub">"Zapněte pro automatické vytváření budíků. Zvolte „Vždy v termínu“, abyste nevytvářeli budík, ale abyste byli v každém případě upozorněni, když má úkol termín."</string>
     <string name="settings_protect_biometric">"Chránit položky biometrikou"</string>
     <string name="settings_protect_biometric_sub">"Tato funkce skryje vybrané položky, dokud nebudou odemčeny biometrikou, ale nešifruje nebo nedešifruje data na pozadí."</string>

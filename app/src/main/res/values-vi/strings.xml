@@ -110,6 +110,7 @@
     <string name="edit_recur_x_times">"lần"</string>
     <string name="edit_recur_toast_requires_start_date">"Sự lặp lại yêu cầu phải thiết lập ngày bắt đầu!"</string>
     <string name="edit_datepicker_dialog_select_date">"Chọn ngày"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Chọn phạm vi ngày tháng"</string>
     <string name="edit_datepicker_dialog_add_time">"Thêm thời gian"</string>
     <string name="edit_datepicker_dialog_edit_time">"Chỉnh giờ"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Thêm múi giờ"</string>
@@ -194,10 +195,6 @@
     <string name="save_and_close">"Lưu &amp; đóng"</string>
     <string name="list_quickadd_add_audio_attachment">"Ghi lại tệp đính kèm âm thanh"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Đã cấp quyền đọc danh bạ"</string>
-    <string name="permission_read_contacts_denied">"Quyền đọc danh bạ bị từ chối"</string>
-    <string name="permission_record_audio_granted">"Đã cấp quyền ghi âm"</string>
-    <string name="permission_record_audio_denied">"Quyền ghi âm bị từ chối"</string>
     <string name="intent_dialog_title">"Thêm nội dung vào nhật ký, ghi chú hoặc nhiệm vụ?"</string>
     <string name="add">"Thêm"</string>
     <string name="edit">"Chỉnh sửa"</string>

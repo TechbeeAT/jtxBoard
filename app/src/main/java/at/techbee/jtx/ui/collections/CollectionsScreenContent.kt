@@ -122,7 +122,6 @@ fun CollectionsScreenContent(
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
                             .clip(jtxCardCornerShape)
-                            .animateItemPlacement()
                             .combinedClickable(
                                 onClick = { onCollectionClicked(collection) })
                     )

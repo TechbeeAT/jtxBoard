@@ -830,7 +830,7 @@ data class ICalObject(
         }
 
 
-        fun getMapLink(geoLat: Double?, geoLong: Double?, flavor: BuildFlavor): Uri? {
+        fun getMapLink(geoLat: Double?, geoLong: Double?, location: String?, flavor: BuildFlavor): Uri? {
             return if(geoLat != null || geoLong != null) {
                 try {
                     if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
@@ -838,6 +838,11 @@ data class ICalObject(
                     else
                         Uri.parse("https://www.openstreetmap.org/#map=15/$geoLat/$geoLong")
                 } catch (e: java.lang.IllegalArgumentException) { null }
+            } else if (!location.isNullOrEmpty()) {
+                if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
+                    Uri.parse("https://www.google.com/maps/search/$location/")
+                else
+                    Uri.parse("https://www.openstreetmap.org/search?query=$location")
             } else null
         }
 
@@ -891,6 +896,15 @@ data class ICalObject(
 
             var finalString = ""
 
+            fun getTimeAndTimezone(): String {
+                var timeAndTimezone = ""
+                if(timezone2show != TZ_ALLDAY && !daysOnly)
+                    timeAndTimezone += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
+                if(timezone2show != null && timezone2show != TZ_ALLDAY && !daysOnly)
+                    timeAndTimezone += " ${requireTzId(timezone2show).id}"
+                return timeAndTimezone
+            }
+
             if(module == Module.TODO) {
                  when {
                      localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_start_today)
@@ -898,45 +912,31 @@ data class ICalObject(
                      ChronoUnit.HOURS.between(localNow, localStart) < 1L -> finalString += context.getString(R.string.list_start_shortly)
                      localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
                      localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
-                        finalString += context.getString(R.string.list_start_tomorrow)
-                         if(timezone2show != TZ_ALLDAY)
-                             finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
-                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                             finalString += " ${requireTzId(timezone2show).id}"
+                         finalString += context.getString(R.string.list_start_tomorrow)
+                         finalString += getTimeAndTimezone()
                      }
                      ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> {
                          finalString += context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                         if(timezone2show != TZ_ALLDAY)
-                             finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
-                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                             finalString += " ${requireTzId(timezone2show).id}"
+                         finalString += getTimeAndTimezone()
                      }
                      else -> {
-                         finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
-                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                             finalString += " ${requireTzId(timezone2show).id}"
+                         finalString += DateTimeUtils.convertLongToMediumDateString(dtstart, timezone2show)
+                         finalString += getTimeAndTimezone()
                      }
                 }
             } else {
                 when {
                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> {
                         finalString += context.getString(R.string.list_date_today)
-                        if(timezone2show != TZ_ALLDAY)
-                            finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
-                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                            finalString += " ${requireTzId(timezone2show).id}"
+                        finalString += getTimeAndTimezone()
                     }
                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
                         finalString += context.getString(R.string.list_date_tomorrow)
-                        if(timezone2show != TZ_ALLDAY)
-                            finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
-                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                            finalString += " ${requireTzId(timezone2show).id}"
+                        finalString += getTimeAndTimezone()
                     }
                     else -> {
-                        finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
-                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                            finalString += " ${requireTzId(timezone2show).id}"
+                        finalString += DateTimeUtils.convertLongToMediumDateString(dtstart, timezone2show)
+                        finalString += getTimeAndTimezone()
                     }
                 }
             }
@@ -963,6 +963,15 @@ data class ICalObject(
 
             var finalString = ""
 
+            fun getTimeAndTimezone(): String {
+                var timeAndTimezone = ""
+                if(timezone2show != TZ_ALLDAY && !daysOnly)
+                    timeAndTimezone += " ${DateTimeUtils.convertLongToShortTimeString(due, timezone2show)}"
+                if(timezone2show != null && timezone2show != TZ_ALLDAY && !daysOnly)
+                    timeAndTimezone += " ${requireTzId(timezone2show).id}"
+                return timeAndTimezone
+            }
+
             when {
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_due_today)
                 ChronoUnit.MINUTES.between(localNow, localDue) < 0L -> finalString += context.getString(R.string.list_due_overdue)
@@ -970,22 +979,15 @@ data class ICalObject(
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_due_inXhours, ChronoUnit.HOURS.between(localNow, localDue))
                 localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> {
                     finalString += context.getString(R.string.list_due_tomorrow)
-                    if(timezone2show != TZ_ALLDAY)
-                        finalString += " ${DateTimeUtils.convertLongToShortTimeString(due, timezone2show)}"
-                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                        finalString += " ${requireTzId(timezone2show).id}"
+                    finalString += getTimeAndTimezone()
                 }
                 ChronoUnit.DAYS.between(localNow, localDue) <= 7 -> {
                     finalString += context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                    if(timezone2show != TZ_ALLDAY)
-                        finalString += " ${DateTimeUtils.convertLongToShortTimeString(due, timezone2show)}"
-                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                        finalString += " ${requireTzId(timezone2show).id}"
+                    finalString += getTimeAndTimezone()
                 }
                 else -> {
-                    finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(due, timezone2show)
-                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                        finalString += " ${requireTzId(timezone2show).id}"
+                    finalString += DateTimeUtils.convertLongToMediumDateString(due, timezone2show)
+                    finalString += getTimeAndTimezone()
                 }
             }
 

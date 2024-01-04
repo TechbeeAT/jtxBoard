@@ -107,9 +107,11 @@
     <string name="edit_recur_on_weekday">"le"</string>
     <string name="edit_recur_on_the_x_day_of_month">"le"</string>
     <string name="edit_recur_x_day_of_the_month">"jour du mois"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"dernier"</string>
     <string name="edit_recur_x_times">"fois"</string>
     <string name="edit_recur_toast_requires_start_date">"La récurrence nécessite qu'une date de début soit fixée !"</string>
     <string name="edit_datepicker_dialog_select_date">"Sélectionner la date"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Sélectionner une plage de dates"</string>
     <string name="edit_datepicker_dialog_add_time">"Ajouter du temps"</string>
     <string name="edit_datepicker_dialog_edit_time">"Modifier l'heure"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Ajouter un fuseau horaire"</string>
@@ -194,10 +196,6 @@
     <string name="save_and_close">"Enregistrer &amp; fermer"</string>
     <string name="list_quickadd_add_audio_attachment">"Enregistrer l'audio en pièce jointe"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Lire les contacts - permission accordée"</string>
-    <string name="permission_read_contacts_denied">"Autorisation de lecture des contacts refusée"</string>
-    <string name="permission_record_audio_granted">"Autorisation d'enregistrement audio accordée"</string>
-    <string name="permission_record_audio_denied">"Autorisation d'enregistrement audio refusée"</string>
     <string name="intent_dialog_title">"Ajouter du contenu à un journal, une note ou une tâche ?"</string>
     <string name="add">"Ajouter"</string>
     <string name="edit">"Modifier"</string>
@@ -380,8 +378,6 @@ Merci !"</string>
     <string name="settings_default_expand_subtasks">"Développer les sous-tâches dans la liste par défaut"</string>
     <string name="settings_default_expand_subnotes">"Développer les sous-notes dans la liste par défaut"</string>
     <string name="settings_default_expand_attachments">"Développer les pièces jointes dans la liste par défaut"</string>
-    <string name="permission_coarse_location_granted">"Permission d'emplacement grossier accordée"</string>
-    <string name="permission_coarse_location_denied">"Autorisation de localisation grossière refusée"</string>
     <string name="sorry">"Désolé"</string>
     <string name="back">"Retour"</string>
     <string name="details">"Détails"</string>

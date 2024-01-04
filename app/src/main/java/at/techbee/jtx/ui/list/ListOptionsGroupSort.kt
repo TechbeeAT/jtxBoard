@@ -77,12 +77,12 @@ fun ListOptionsGroupSort(
                         listSettings.orderBy.value = when(listSettings.groupBy.value) {
                             GroupBy.CATEGORY -> listSettings.orderBy.value
                             GroupBy.RESOURCE -> listSettings.orderBy.value
-                            GroupBy.START -> OrderBy.START_VTODO
-                            GroupBy.DATE -> OrderBy.START_VJOURNAL
+                            GroupBy.START, GroupBy.START_WEEK, GroupBy.START_MONTH -> OrderBy.START_VTODO
+                            GroupBy.DATE, GroupBy.DATE_WEEK, GroupBy.DATE_MONTH -> OrderBy.START_VJOURNAL
                             GroupBy.CLASSIFICATION -> OrderBy.CLASSIFICATION
                             GroupBy.PRIORITY -> OrderBy.PRIORITY
                             GroupBy.STATUS -> OrderBy.STATUS
-                            GroupBy.DUE -> OrderBy.DUE
+                            GroupBy.DUE, GroupBy.DUE_WEEK, GroupBy.DUE_MONTH -> OrderBy.DUE
                             GroupBy.ACCOUNT -> OrderBy.ACCOUNT
                             GroupBy.COLLECTION -> OrderBy.COLLECTION
                             null -> listSettings.orderBy.value
@@ -121,7 +121,7 @@ fun ListOptionsGroupSort(
             }
         }
         FlowRow(modifier = Modifier.fillMaxWidth()) {
-            SortOrder.values().forEach { sortOrder ->
+            SortOrder.entries.forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.sortOrder.value == sortOrder,
                     onClick = {
@@ -159,7 +159,7 @@ fun ListOptionsGroupSort(
             }
         }
         FlowRow(modifier = Modifier.fillMaxWidth()) {
-            SortOrder.values().forEach { sortOrder2 ->
+            SortOrder.entries.forEach { sortOrder2 ->
                 FilterChip(
                     selected = listSettings.sortOrder2.value == sortOrder2,
                     onClick = {
@@ -197,7 +197,7 @@ fun ListOptionsGroupSort(
             }
         }
         FlowRow(modifier = Modifier.fillMaxWidth()) {
-            SortOrder.values().forEach { sortOrder ->
+            SortOrder.entries.forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.subtasksSortOrder.value == sortOrder,
                     onClick = {
@@ -236,7 +236,7 @@ fun ListOptionsGroupSort(
             }
         }
         FlowRow(modifier = Modifier.fillMaxWidth()) {
-            SortOrder.values().forEach { sortOrder ->
+            SortOrder.entries.forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.subnotesSortOrder.value == sortOrder,
                     onClick = {

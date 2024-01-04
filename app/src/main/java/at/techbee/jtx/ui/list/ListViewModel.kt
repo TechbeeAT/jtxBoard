@@ -517,6 +517,11 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 }
 
                 scrollOnceId.postValue(newId)
+
+                // trigger alarm immediately if setting is active
+                if(icalObject.getModuleFromString() == Module.TODO && SettingsStateHolder(_application).settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
+                    NotificationPublisher.triggerImmediateAlarm(icalObject, _application)
+
                 if (editAfterSaving)
                     goToEdit.postValue(newId)
             } catch (e: SQLiteConstraintException) {
@@ -525,10 +530,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 sqlConstraintException.value = true
             }
             onChangeDone()
-
-            // trigger alarm immediately if setting is active
-            if(icalObject.getModuleFromString() == Module.TODO && SettingsStateHolder(_application).settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
-                NotificationPublisher.triggerImmediateAlarm(icalObject, _application)
         }
     }
 
@@ -705,9 +706,15 @@ enum class GroupBy(@StringRes val stringResource: Int) {
     PRIORITY(R.string.priority),
     STATUS(R.string.status),
     CLASSIFICATION(R.string.classification),
-    DATE(R.string.date),
-    START(R.string.started),
-    DUE(R.string.due),
+    DATE(R.string.group_by_date_day),
+    DATE_WEEK(R.string.group_by_date_week),
+    DATE_MONTH(R.string.group_by_date_month),
+    START(R.string.group_by_started_day),
+    START_WEEK(R.string.group_by_started_week),
+    START_MONTH(R.string.group_by_started_month),
+    DUE(R.string.group_by_due_day),
+    DUE_WEEK(R.string.group_by_due_week),
+    DUE_MONTH(R.string.group_by_due_month),
     ACCOUNT(R.string.account),
     COLLECTION(R.string.collection);
 
@@ -717,6 +724,8 @@ enum class GroupBy(@StringRes val stringResource: Int) {
                 Module.JOURNAL -> arrayOf(
                     CATEGORY,
                     DATE,
+                    DATE_WEEK,
+                    DATE_MONTH,
                     STATUS,
                     CLASSIFICATION,
                     ACCOUNT,
@@ -733,7 +742,11 @@ enum class GroupBy(@StringRes val stringResource: Int) {
                     CATEGORY,
                     RESOURCE,
                     START,
+                    START_WEEK,
+                    START_MONTH,
                     DUE,
+                    DUE_WEEK,
+                    DUE_MONTH,
                     STATUS,
                     CLASSIFICATION,
                     PRIORITY,

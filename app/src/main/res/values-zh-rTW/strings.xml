@@ -149,10 +149,6 @@
     <string name="save_and_new">"儲存並新增"</string>
     <string name="save_and_close">"儲存並關閉"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"已授予聯絡人權限"</string>
-    <string name="permission_read_contacts_denied">"已禁止聯絡人權限"</string>
-    <string name="permission_record_audio_granted">"已授予錄音權限"</string>
-    <string name="permission_record_audio_denied">"已禁止錄音權限"</string>
     <string name="intent_dialog_title">"是否將內容添加到日誌、筆記或任務？"</string>
     <string name="add">"新增"</string>
     <string name="edit">"編輯"</string>

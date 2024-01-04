@@ -1,6 +1,5 @@
 package at.techbee.jtx.ui.detail
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -53,6 +52,7 @@ fun DetailsCardCollections(
     changeState: MutableState<DetailViewModel.DetailChangeState>,
     allPossibleCollections: List<ICalCollection>,
     onMoveToNewCollection: (newCollection: ICalCollection) -> Unit,
+    modifier: Modifier = Modifier
     ) {
 
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
@@ -71,9 +71,9 @@ fun DetailsCardCollections(
         )
     }
 
-    AnimatedVisibility(!isEditMode || isChild) {
+    if(!isEditMode || isChild) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Card(
@@ -107,14 +107,12 @@ fun DetailsCardCollections(
                 }
             }
         }
-    }
-
-    AnimatedVisibility(isEditMode && !isChild) {
+    } else {
         Card(
             colors = CardDefaults.elevatedCardColors(),
             elevation = CardDefaults.elevatedCardElevation(),
             border = color.value?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = modifier
         ) {
 
             Row(
@@ -183,7 +181,8 @@ fun DetailsCardCollections_edit() {
             includeVTODO = null,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             allPossibleCollections = listOf(ICalCollection.createLocalCollection(context)),
-            onMoveToNewCollection = {}
+            onMoveToNewCollection = {},
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -220,7 +219,8 @@ fun DetailsCardCollections_read() {
             includeVTODO = null,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             allPossibleCollections = listOf(ICalCollection.createLocalCollection(context)),
-            onMoveToNewCollection = {}
+            onMoveToNewCollection = {},
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

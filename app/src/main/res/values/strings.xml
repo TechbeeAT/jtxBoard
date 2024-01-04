@@ -9,9 +9,7 @@
     <string name="link_jtx" translatable="false">"https://jtx.techbee.at"</string>
     <string name="link_jtx_support" translatable="false">"https://jtx.techbee.at/support"</string>
     <string name="link_jtx_privacy_policy" translatable="false">"https://jtx.techbee.at/privacy"</string>
-    <string name="link_jtx_twitter" translatable="false">"https://twitter.com/jtxBoard"</string>
     <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
-    <string name="twitter_account_name" translatable="false">"@jtxBoard"</string>
     <!-- Global Strings -->
     <string name="save">"Save"</string>
     <string name="update">"Update"</string>
@@ -115,6 +113,7 @@
     <string name="edit_recur_on_weekday">"on"</string>
     <string name="edit_recur_on_the_x_day_of_month">"on the"</string>
     <string name="edit_recur_x_day_of_the_month">"day of the month"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"last"</string>
     <string name="edit_recur_x_times">"times"</string>
     <string name="edit_recur_toast_requires_start_date">"Recurrence requires a start-date to be set!"</string>
     <string name="edit_datepicker_dialog_select_date">"Select date"</string>
@@ -205,10 +204,6 @@
     <string name="save_and_close">"Save &amp; close"</string>
     <string name="list_quickadd_add_audio_attachment">"Record audio attachment"</string>
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Read contacts permission granted"</string>
-    <string name="permission_read_contacts_denied">"Read contacts permission denied"</string>
-    <string name="permission_record_audio_granted">"Record audio permission granted"</string>
-    <string name="permission_record_audio_denied">"Record audio permission denied"</string>
     <string name="intent_dialog_title">"Add content to a journal, note or task?"</string>
     <string name="add">"Add"</string>
     <string name="edit">"Edit"</string>
@@ -396,12 +391,20 @@ Thank you!"</string>
     <string name="settings_default_expand_attachments">"Expand attachments in list by default"</string>
     <string name="link_paypal" translatable="false">"https://www.paypal.com/donate?hosted_button_id=8BVX7PUVVTCWY"</string>
     <string name="link_jtx_donate" translatable="false">"https://jtx.techbee.at/contribute"</string>
-    <string name="permission_coarse_location_granted">"Coarse location permission granted"</string>
-    <string name="permission_coarse_location_denied">"Coarse location permission denied"</string>
     <string name="sorry">"Sorry"</string>
     <string name="back">"Back"</string>
     <string name="details">"Details"</string>
     <string name="date">"Date"</string>
+    <string name="group_by_date_day">"Date (day)"</string>
+    <string name="group_by_date_week">"Date (week)"</string>
+    <string name="group_by_date_month">"Date (month)"</string>
+    <string name="group_by_started_day">"Start(ed) (day)"</string>
+    <string name="group_by_started_week">"Start(ed) (week)"</string>
+    <string name="group_by_started_month">"Start(ed) (month)"</string>
+    <string name="group_by_due_day">"Due (day)"</string>
+    <string name="group_by_due_week">"Due (week)"</string>
+    <string name="group_by_due_month">"Due (month)"</string>
+    <string name="week_number_year">"Week %1$d/%2$d"</string>
     <string name="summary_description">"Summary/Description"</string>
     <string name="status_classification_priority">"Status/Classification/Priority"</string>
     <string name="timezone">"Timezone"</string>
@@ -671,4 +674,6 @@ Thank you!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please set the location permission to 'Allow all the time' and grant the notifications permission to use this feature."</string>
     <string name="geofence_notification_summary">"Geofence activated"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board needs the permission to schedule exact alarms, otherwise alarm-notifications might be delayed. Please grant this permission in order to use this feature."</string>
+    <string name="call_contact">"Call %1$s"</string>
+    <string name="email_contact">"E-Mail %1$s"</string>
 </resources>

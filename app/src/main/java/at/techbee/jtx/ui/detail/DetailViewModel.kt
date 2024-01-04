@@ -71,6 +71,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao()
 
     var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
+    var initialEntity = mutableStateOf<ICalEntity?>(null)
     var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var relatedSubtasks: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var relatedParents: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
@@ -117,6 +118,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         _isAuthenticated = isAuthenticated
         viewModelScope.launch {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
+            withContext(Dispatchers.IO) { initialEntity.value = database.getSync(icalObjectId) }
             icalEntity = database.get(icalObjectId)
 
             relatedParents = icalEntity.switchMap {
@@ -132,7 +134,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                             component = Component.VTODO,
                             hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
                             orderBy = detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED,
-                            sortOrder = detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.ASC
+                            sortOrder = detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.DESC
                         )
                     )
                 }
@@ -145,7 +147,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                             component = Component.VJOURNAL,
                             hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
                             orderBy = detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED,
-                            sortOrder = detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.ASC
+                            sortOrder = detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.DESC
                         )
                     )
                 }
