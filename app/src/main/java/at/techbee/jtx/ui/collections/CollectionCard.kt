@@ -59,6 +59,7 @@ import at.techbee.jtx.ui.reusable.dialogs.CollectionsDeleteCollectionDialog
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsMoveCollectionDialog
 import at.techbee.jtx.ui.reusable.elements.ListBadge
 import at.techbee.jtx.ui.theme.Typography
+import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
 
@@ -166,13 +167,30 @@ fun CollectionCard(
                         )
                     }
 
-                    collection.ownerDisplayName?.let {
-                        ListBadge(
-                            icon = Icons.Outlined.AccountCircle,
-                            iconDesc = null,
-                            text = it,
-                            isAccessibilityMode = settingAccessibilityMode
-                        )
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+
+                        collection.ownerDisplayName?.let {
+                            ListBadge(
+                                icon = Icons.Outlined.AccountCircle,
+                                iconDesc = null,
+                                text = it,
+                                isAccessibilityMode = settingAccessibilityMode,
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                            )
+                        }
+
+                        collection.lastSync?.let {
+                            ListBadge(
+                                icon = Icons.Outlined.Sync,
+                                iconDesc = null,
+                                text = DateTimeUtils.convertLongToMediumDateShortTimeString(
+                                    it,
+                                    null
+                                ),
+                                isAccessibilityMode = settingAccessibilityMode,
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                            )
+                        }
                     }
 
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -201,8 +219,6 @@ fun CollectionCard(
                         )
                     }
                 }
-
-
 
                 Row(
                     verticalAlignment = Alignment.Top,
@@ -376,6 +392,8 @@ fun CollectionCardPreview3() {
             this.supportsVTODO = true
             this.url = "https://www.example.com/asdf/09809898797/index.php?whatever"
             this.accountType = "remote_account_type"
+            this.ownerDisplayName = "Owner John Doe"
+            this.lastSync = System.currentTimeMillis()
         }
 
         CollectionCard(
