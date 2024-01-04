@@ -18,8 +18,10 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -179,7 +181,12 @@ fun DetailOptionsBottomSheet(
                                               DetailsScreenSection.ALARMS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] != false
                                               DetailsScreenSection.RECURRENCE -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] != false
                                 },
-                                label = { Text(stringResource(id = it.stringRes)) },
+                                label = {
+                                    Text(
+                                        text = stringResource(id = it.stringRes),
+                                        modifier = Modifier.heightIn(min = 48.dp).wrapContentHeight(align = Alignment.CenterVertically)
+                                    )
+                                },
                                 leadingIcon = {
                                     val index = detailSettings.detailSettingOrder.indexOf(it)
                                     Text((index+1).toString())
