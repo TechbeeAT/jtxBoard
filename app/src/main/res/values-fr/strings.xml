@@ -283,6 +283,8 @@
     <string name="search_notes">Rechercher des notes</string>
     <string name="search_todos">Rechercher des tâches</string>
     <string name="filter">"Filtre"</string>
+    <string name="visibility">"Visibilité"</string>
+    <string name="order">"Ordre"</string>
     <string name="sync_now">"Synchroniser maintenant"</string>
     <string name="due">"Exigible"</string>
     <string name="completed">"Complété"</string>
@@ -382,6 +384,8 @@ Merci !"</string>
     <string name="back">"Retour"</string>
     <string name="details">"Détails"</string>
     <string name="date">"Date"</string>
+    <string name="summary_description">"Résumé/Description"</string>
+    <string name="status_classification_priority">"Statut/Classification/Priorité"</string>
     <string name="timezone">"Fuseau horaire"</string>
     <string name="not_set2">"Non défini"</string>
     <string name="invert_selection">"Sélection inversée"</string>
@@ -501,6 +505,7 @@ Merci !"</string>
     <string name="settings_sticky_alarms_sub">"Garder les notifications jusqu'à la fin ou les reporter"</string>
     <string name="settings_fullscreen_alarms">"Alarmes en plein écran"</string>
     <string name="settings_fullscreen_alarms_sub">"Affiche les alarmes en plein écran lorsque l'appareil est verrouillé"</string>
+    <string name="settings_accessibility_mode">"Mode d'accessibilité"</string>
     <string name="settings_fullscreen_alarms_toast">"Veuillez autoriser les notifications en plein écran dans les paramètres du système."</string>
     <string name="settings_sync_on_start">"Synchroniser au démarrage de l'appli"</string>
     <string name="settings_sync_on_pull_refresh">"Synchroniser lors du tirage au sort"</string>
@@ -542,6 +547,7 @@ Merci !"</string>
     <string name="list_biometric_protected_entries_unlocked">Entrées biométriques protégées déverrouillées</string>
     <string name="settings_auto_alarm">"Alarme automatique"</string>
     <string name="alarms_always_ondue">"Toujours en échéance"</string>
+    <string name="alarms_always_on_save">"Toujours en sauvegarde (expérimental)"</string>
     <string name="settings_auto_alarm_sub">"Activez cette option pour créer automatiquement des alarmes. Choisissez \"Toujours à échéance\" pour ne pas créer d'alarme mais pour être informé dans tous les cas lorsqu'une tâche est à échéance."</string>
     <string name="settings_protect_biometric">"Protéger les entrées par biométrie"</string>
     <string name="settings_protect_biometric_sub">"Cette fonction masque les entrées sélectionnées jusqu'à ce qu'elles soient déverrouillées avec des données biométriques, mais ne chiffre/décrypte pas les données en arrière-plan."</string>
@@ -640,4 +646,6 @@ Merci !"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board peut vous avertir lorsque vous êtes proche des coordonnées indiquées. Veuillez définir l’autorisation de localisation pour «Toujours autoriser et autoriser les notifications à utiliser cette fonctionnalité."</string>
     <string name="geofence_notification_summary">"Geofence activé"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board a besoin de l'autorisation pour programmer des alarmes exactes, sinon les notifications d'alarme pourraient être retardées. Veuillez accorder cette autorisation afin d'utiliser cette fonctionnalité."</string>
+    <string name="call_contact">"Appeler %1$s"</string>
+    <string name="email_contact">"E-Mail %1$s"</string>
 </resources>
