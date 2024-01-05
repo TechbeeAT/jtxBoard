@@ -385,6 +385,16 @@ Köszönjük!"</string>
     <string name="back">"Vissza"</string>
     <string name="details">"Részletek"</string>
     <string name="date">"Dátum"</string>
+    <string name="group_by_date_day">"Dátum (nap)"</string>
+    <string name="group_by_date_week">"Dátum (hét)"</string>
+    <string name="group_by_date_month">"Dátum (hónap)"</string>
+    <string name="group_by_started_day">"Kezdés (nap)"</string>
+    <string name="group_by_started_week">"Kezdés (hét)"</string>
+    <string name="group_by_started_month">"Kezdés (hónap)"</string>
+    <string name="group_by_due_day">"Határidő (nap)"</string>
+    <string name="group_by_due_week">"Határidő (hét)"</string>
+    <string name="group_by_due_month">"Határidő (hónap)"</string>
+    <string name="week_number_year">"%1$d. hét/%2$d"</string>
     <string name="summary_description">"Összefoglaló/leírás"</string>
     <string name="status_classification_priority">"Állapot/besorolás/prioritás"</string>
     <string name="timezone">"Időzóna"</string>

@@ -382,6 +382,7 @@
     <string name="back">"戻る"</string>
     <string name="details">"詳細"</string>
     <string name="date">"日付"</string>
+    <string name="group_by_date_day">"日付 (日)"</string>
     <string name="summary_description">"概要/詳細"</string>
     <string name="status_classification_priority">"ステータス/公開設定/優先度"</string>
     <string name="timezone">"タイムゾーン"</string>

@@ -385,6 +385,16 @@ Danke!"</string>
     <string name="back">"Zurück"</string>
     <string name="details">"Details"</string>
     <string name="date">"Datum"</string>
+    <string name="group_by_date_day">"Datum (Tag)"</string>
+    <string name="group_by_date_week">"Datum (Woche)"</string>
+    <string name="group_by_date_month">"Datum (Monat)"</string>
+    <string name="group_by_started_day">"Start (Tag)"</string>
+    <string name="group_by_started_week">"Start (Woche)"</string>
+    <string name="group_by_started_month">"Start (Monat)"</string>
+    <string name="group_by_due_day">"Fällig (Tag)"</string>
+    <string name="group_by_due_week">"Fällig (Woche)"</string>
+    <string name="group_by_due_month">"Fällig (Monat)"</string>
+    <string name="week_number_year">"KW %1$d/%2$d"</string>
     <string name="summary_description">"Zusammenfassung/Beschreibung"</string>
     <string name="status_classification_priority">"Status/Klassifizierung/Priorität"</string>
     <string name="timezone">"Zeitzone"</string>
