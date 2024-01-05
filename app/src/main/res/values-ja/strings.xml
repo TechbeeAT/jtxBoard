@@ -383,6 +383,14 @@
     <string name="details">"詳細"</string>
     <string name="date">"日付"</string>
     <string name="group_by_date_day">"日付 (日)"</string>
+    <string name="group_by_date_week">"日付 (週)"</string>
+    <string name="group_by_date_month">"日付 (月)"</string>
+    <string name="group_by_started_day">"開始 (日)"</string>
+    <string name="group_by_started_week">"開始 (週)"</string>
+    <string name="group_by_started_month">"開始 (月)"</string>
+    <string name="group_by_due_day">"期限 (日)"</string>
+    <string name="group_by_due_week">"期限 (週)"</string>
+    <string name="group_by_due_month">"期限 (月)"</string>
     <string name="summary_description">"概要/詳細"</string>
     <string name="status_classification_priority">"ステータス/公開設定/優先度"</string>
     <string name="timezone">"タイムゾーン"</string>
