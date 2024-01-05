@@ -31,9 +31,9 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 206050024
-        versionName "2.06.05"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
-        buildConfigField "String", "versionCodename", "\"Where there is love, there is life. ❤️🌈\""
+        versionCode 207000002
+        versionName "2.07.00-alpha02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        buildConfigField "String", "versionCodename", "\"Love always wins ❤️💪\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -155,7 +155,7 @@ configurations {
 
 dependencies {
 
-    implementation "com.github.bitfireAT:ical4android:a78e72f580"
+    implementation "com.github.bitfireAT:ical4android:6f2601f"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
