@@ -64,6 +64,7 @@ import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_DUE_DATE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_START_DATE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DISPLAY_TIMEZONE
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_FONT
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROGRESS_STEP
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROTECT_BIOMETRIC
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_THEME
@@ -165,6 +166,15 @@ fun SettingsScreen(
                                     DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                                     else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                                 }
+                            }
+                        )
+
+                        DropdownSettingElement(
+                            setting = SETTING_FONT,
+                            selected = settingsStateHolder.settingFont.value,
+                            onSelectionChanged = { selection ->
+                                settingsStateHolder.settingFont.value = selection
+                                SETTING_FONT.saveSetting(selection, settingsStateHolder.prefs)
                             }
                         )
 

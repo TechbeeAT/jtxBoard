@@ -70,6 +70,8 @@ import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.ui.theme.notoFont
+import at.techbee.jtx.ui.theme.robotoFont
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidget
@@ -194,7 +196,18 @@ class MainActivity2 : AppCompatActivity() {
                         },
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.merge(TextStyle(textDirection = TextDirection.Content))) {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides LocalTextStyle.current.merge(
+                            TextStyle(
+                                textDirection = TextDirection.Content,
+                                fontFamily = when(settingsStateHolder.settingFont.value) {
+                                    DropdownSettingOption.FONT_ROBOTO -> robotoFont
+                                    DropdownSettingOption.FONT_NOTO -> notoFont
+                                    else -> robotoFont
+                                }
+                            )
+                        )
+                    ) {
                         MainNavHost(this, globalStateHolder, settingsStateHolder)
                     }
                 }
