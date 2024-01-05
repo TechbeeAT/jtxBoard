@@ -384,6 +384,11 @@ Dank u!"</string>
     <string name="back">"Terug"</string>
     <string name="details">"Details"</string>
     <string name="date">"Datum"</string>
+    <string name="group_by_date_day">"Datum (dag)"</string>
+    <string name="group_by_date_week">"Datum (week)"</string>
+    <string name="group_by_date_month">"Datum (maand)"</string>
+    <string name="group_by_started_day">"Gestart (dag)"</string>
+    <string name="group_by_started_week">"Gestart (week)"</string>
     <string name="summary_description">"Samenvatting/beschrijving"</string>
     <string name="status_classification_priority">"Status/Classificatie/Prioriteit"</string>
     <string name="timezone">"Tijdzone"</string>
