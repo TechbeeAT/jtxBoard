@@ -86,7 +86,8 @@ fun ListBottomAppBar(
     onDeleteSelectedClicked: () -> Unit,
     onUpdateSelectedClicked: () -> Unit,
     onToggleBiometricAuthentication: () -> Unit,
-    onDeleteDone: () -> Unit
+    onDeleteDone: () -> Unit,
+    onListSettingsChanged: () -> Unit
 ) {
 
     var showGoToDatePicker by rememberSaveable { mutableStateOf(false) }
@@ -234,6 +235,7 @@ fun ListBottomAppBar(
                                 text = { Text(text = stringResource(R.string.clear_filters)) },
                                 onClick = {
                                     listSettings.reset()
+                                    onListSettingsChanged()
                                     showMoreActionsMenu.value = false
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.FilterListOff, null) }
@@ -354,7 +356,8 @@ fun ListBottomAppBar_Preview_Journal() {
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
             onToggleBiometricAuthentication = { },
-            onDeleteDone = { }
+            onDeleteDone = { },
+            onListSettingsChanged = { }
         )
     }
 }
@@ -385,7 +388,8 @@ fun ListBottomAppBar_Preview_Note() {
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
             onToggleBiometricAuthentication = { },
-            onDeleteDone = { }
+            onDeleteDone = { },
+            onListSettingsChanged = { }
         )
     }
 }
@@ -416,7 +420,8 @@ fun ListBottomAppBar_Preview_Todo() {
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
             onToggleBiometricAuthentication = { },
-            onDeleteDone = { }
+            onDeleteDone = { },
+            onListSettingsChanged = { }
         )
     }
 }
@@ -448,7 +453,8 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
             onToggleBiometricAuthentication = { },
-            onDeleteDone = { }
+            onDeleteDone = { },
+            onListSettingsChanged = { }
         )
     }
 }
