@@ -389,6 +389,11 @@ Dank u!"</string>
     <string name="group_by_date_month">"Datum (maand)"</string>
     <string name="group_by_started_day">"Gestart (dag)"</string>
     <string name="group_by_started_week">"Gestart (week)"</string>
+    <string name="group_by_started_month">"Gestart (maand)"</string>
+    <string name="group_by_due_day">"Vervalt (dag)"</string>
+    <string name="group_by_due_week">"Vervalt (week)"</string>
+    <string name="group_by_due_month">"Vervalt (maand)"</string>
+    <string name="week_number_year">"Week %1$d/%2$d"</string>
     <string name="summary_description">"Samenvatting/beschrijving"</string>
     <string name="status_classification_priority">"Status/Classificatie/Prioriteit"</string>
     <string name="timezone">"Tijdzone"</string>
