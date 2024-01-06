@@ -58,6 +58,7 @@ import at.techbee.jtx.flavored.MapComposable
 import at.techbee.jtx.ui.reusable.dialogs.LocationPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
+import at.techbee.jtx.util.UiUtil
 import com.google.accompanist.permissions.*
 import java.net.URLEncoder
 import java.util.*
@@ -92,14 +93,23 @@ fun DetailsCardLocation(
     var geoLongText by rememberSaveable { mutableStateOf(initialGeoLong?.toString() ?: "") }
     var geofenceRadius by rememberSaveable { mutableStateOf(initialGeofenceRadius) }
 
-    val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao().getAllLocationsLatLng().observeAsState(emptyList())
-
     val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
     ) else null
+
+    val contactsPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.READ_CONTACTS) else null
+
+    val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao().getAllLocationsLatLng().observeAsState(emptyList())
+    val allLocalAddresses by remember { derivedStateOf {
+        if(contactsPermissionState?.status?.isGranted == true)
+            UiUtil.getLocalAddresses(context, location)
+        else
+            emptySet()
+    } }
+
 
     val geofencePermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -246,13 +256,12 @@ fun DetailsCardLocation(
                     }
                 } else {
                     Column {
-                        if (BuildFlavor.getCurrent() == BuildFlavor.GPLAY && allLocations.isNotEmpty()) {
+                        if (allLocations.isNotEmpty() || allLocalAddresses.isNotEmpty()) {
                             LazyRow(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-
-                                items(allLocations) { locationLatLng ->
+                                items(allLocations.filter { it.location?.lowercase()?.contains(location.lowercase()) == true }) { locationLatLng ->
                                     AssistChip(
                                         onClick = {
                                             location = locationLatLng.location ?: ""
@@ -275,6 +284,24 @@ fun DetailsCardLocation(
                                         },
                                         modifier = Modifier.alpha(
                                             if (locationLatLng.location == location && locationLatLng.geoLat == geoLat && locationLatLng.geoLong == geoLong) 1f else 0.4f
+                                        )
+                                    )
+                                }
+
+                                items(allLocalAddresses.toList()) { addressBookLocation ->
+                                    AssistChip(
+                                        onClick = {
+                                            location = addressBookLocation
+                                            geoLat = null
+                                            geoLong = null
+                                            geoLatText = ""
+                                            geoLongText = ""
+                                            onLocationUpdated(location, null, null)
+                                        },
+                                        label = { Text(addressBookLocation) },
+                                        leadingIcon = { Icon(Icons.Outlined.Contacts, null) },
+                                        modifier = Modifier.alpha(
+                                            if (addressBookLocation == location) 1f else 0.4f
                                         )
                                     )
                                 }
