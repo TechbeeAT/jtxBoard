@@ -38,7 +38,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -94,22 +93,18 @@ fun DetailsCardContact(
     val coroutineScope = rememberCoroutineScope()
     val searchContacts = remember { mutableStateListOf<Attendee>() }
 
-    val foundTelephoneNumber by derivedStateOf {
-        contact.let {
-            PhoneNumberUtil.getInstance().findNumbers(
-                it, Locale.getDefault().country
-            ).firstOrNull()?.rawString()
-        }
+    val foundTelephoneNumber = contact.let {
+        PhoneNumberUtil.getInstance().findNumbers(
+            it, Locale.getDefault().country
+        ).firstOrNull()?.rawString()
     }
 
-    val foundEmail by derivedStateOf {
-        contact.let {
-            val matcher = PatternsCompat.EMAIL_ADDRESS.matcher(it)
-            if(matcher.find())
-                matcher.group()
-            else
-                null
-        }
+    val foundEmail = contact.let {
+        val matcher = PatternsCompat.EMAIL_ADDRESS.matcher(it)
+        if(matcher.find())
+            matcher.group()
+        else
+            null
     }
 
 
