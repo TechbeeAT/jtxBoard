@@ -56,7 +56,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.util.PatternsCompat
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
@@ -66,9 +65,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import com.google.i18n.phonenumbers.PhoneNumberUtil
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 
 @OptIn(ExperimentalFoundationApi::class,
@@ -93,20 +90,8 @@ fun DetailsCardContact(
     val coroutineScope = rememberCoroutineScope()
     val searchContacts = remember { mutableStateListOf<Attendee>() }
 
-    val foundTelephoneNumber = contact.let {
-        PhoneNumberUtil.getInstance().findNumbers(
-            it, Locale.getDefault().country
-        ).firstOrNull()?.rawString()
-    }
-
-    val foundEmail = contact.let {
-        val matcher = PatternsCompat.EMAIL_ADDRESS.matcher(it)
-        if(matcher.find())
-            matcher.group()
-        else
-            null
-    }
-
+    val foundTelephoneNumber = UiUtil.extractTelephoneNumbers(contact)
+    val foundEmail = UiUtil.extractEmailAddresses(contact)
 
     ElevatedCard(modifier = modifier) {
     Column(
@@ -131,7 +116,7 @@ fun DetailsCardContact(
                             )
                         }
 
-                        foundTelephoneNumber?.let {
+                        foundTelephoneNumber.firstOrNull()?.let {
                             IconButton(onClick = {
                                 val intent = Intent(Intent.ACTION_DIAL).apply {
                                     data = Uri.parse("tel:$it")
@@ -147,7 +132,7 @@ fun DetailsCardContact(
                             }
                         }
 
-                        foundEmail?.let {
+                        foundEmail.firstOrNull()?.let {
                             IconButton(onClick = {
                                 val intent = Intent(Intent.ACTION_SEND)
                                 intent.type = "message/rfc822"

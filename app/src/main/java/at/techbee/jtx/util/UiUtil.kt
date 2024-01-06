@@ -14,8 +14,10 @@ import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.core.util.PatternsCompat
 import at.techbee.jtx.database.properties.Attendee
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import net.fortuna.ical4j.model.WeekDay
 import java.time.DayOfWeek
+import java.util.Locale
 import java.util.regex.Matcher
 
 
@@ -46,6 +48,31 @@ object UiUtil {
             links.add(url)
         }
         return links
+    }
+
+    /**
+     * Extracts telephone numbers from a string
+     * @param string Input String
+     * @return a list of found telephone numbers
+     */
+    fun extractTelephoneNumbers(string: String, defaultRegion: String = Locale.getDefault().country) =
+        PhoneNumberUtil
+            .getInstance()
+            .findNumbers(string, defaultRegion)
+            ?.map { it.rawString()  } ?: emptyList()
+
+    /**
+     * Extracts emails numbers from a string
+     * @param string Input String
+     * @return a list of found e-mail addresses
+     */
+    fun extractEmailAddresses(string: String): List<String> {
+        val matcher = PatternsCompat.EMAIL_ADDRESS.matcher(string)
+        val foundEmails = mutableListOf<String>()
+        while(matcher.find()) {
+            foundEmails.add(matcher.group())
+        }
+        return foundEmails
     }
 
 
