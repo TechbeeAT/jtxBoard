@@ -100,6 +100,7 @@ fun ListBottomAppBar(
             datetime = DateTimeUtils.getTodayAsLong(),
             timezone = ZoneId.systemDefault().id,
             allowNull = false,
+            titleTextRes = R.string.menu_list_gotodate,
             onConfirm = { selectedDate, _ ->
                 val selectedZoned = selectedDate?.let {ZonedDateTime.ofInstant(Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault()) } ?: return@DatePickerDialog
 
@@ -122,6 +123,11 @@ fun ListBottomAppBar(
             dateOnly = true,
             minDate = iCal4ListRel.minByOrNull { it.iCal4List.dtstart ?: Long.MAX_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC"))},
             //maxDate = iCal4List.maxByOrNull { it.iCal4List.dtstart ?: Long.MIN_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())},
+            allowedDates = iCal4ListRel
+                .filter { it.iCal4List.dtstart != null }
+                .map {
+                ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.iCal4List.dtstart!!), DateTimeUtils.requireTzId(it.iCal4List.dtstartTimezone))
+            }
         )
     }
 
@@ -178,7 +184,7 @@ fun ListBottomAppBar(
                         }
                     }
 
-                    AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null && listSettings.orderBy.value == OrderBy.START_VJOURNAL) {
+                    AnimatedVisibility(visible = (module == Module.JOURNAL || module == Module.TODO) && listSettings.groupBy.value == null && (listSettings.orderBy.value == OrderBy.START_VJOURNAL || listSettings.orderBy.value == OrderBy.START_VTODO)) {
                         IconButton(onClick = { showGoToDatePicker = true }) {
                             Icon(
                                 Icons.Outlined.DateRange,
