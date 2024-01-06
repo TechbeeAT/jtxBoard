@@ -356,6 +356,7 @@
     <string name="settings_timezone_display_local">"Toon tijd in lokale tijdzone"</string>
     <string name="settings_timezone_display_original">"Toon tijd in de oorspronkelijke tijdzone"</string>
     <string name="settings_timezone_display_local_and_original">"Toon tijd in lokale en originele tijdzone (alleen de detailweergave)"</string>
+    <string name="settings_font">"Lettertype"</string>
     <string name="donate_dialog_title">"Vind je het jtx Board leuk?"</string>
     <string name="donate_dialog_message">"De ontwikkeling van een app is complex, en ontwikkeling, onderhoud en ondersteuning is hard werk. Als u deze app leuk vindt en ontwikkeling wilt ondersteunen, overweeg dan een donatie :-)
 Dank u!"</string>
