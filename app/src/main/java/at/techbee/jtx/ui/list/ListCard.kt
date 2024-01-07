@@ -135,7 +135,8 @@ fun ListCard(
 
     Card(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
+            containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+            contentColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
         ),
         elevation = CardDefaults.elevatedCardElevation(),
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
@@ -908,7 +909,7 @@ fun ICalObjectListCardPreview_NOTE_one_liner() {
             storedCategories = emptyList(),
             storedResources = emptyList(),
             storedStatuses = emptyList(),
-            selected = listOf(),
+            selected = listOf(icalobject.id),
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             attachments = listOf(),
