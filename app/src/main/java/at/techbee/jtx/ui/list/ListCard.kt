@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
@@ -134,7 +135,8 @@ fun ListCard(
 
     Card(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
+            containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+            contentColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
         ),
         elevation = CardDefaults.elevatedCardElevation(),
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
@@ -171,6 +173,7 @@ fun ListCard(
                             start = 4.dp,
                             end = 12.dp
                         )
+                            .widthIn(min = 48.dp)
                     )
 
                 Column(
@@ -906,7 +909,7 @@ fun ICalObjectListCardPreview_NOTE_one_liner() {
             storedCategories = emptyList(),
             storedResources = emptyList(),
             storedStatuses = emptyList(),
-            selected = listOf(),
+            selected = listOf(icalobject.id),
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             attachments = listOf(),
