@@ -9,17 +9,17 @@
 package at.techbee.jtx.ui.list
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.ChevronRight
@@ -29,13 +29,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
@@ -71,24 +72,21 @@ import java.util.Locale
 @Composable
 fun ListScreenWeek(
     list: List<ICal4ListRel>,
-    isPullRefreshEnabled: Boolean,
+    selectedEntries: SnapshotStateList<Long>,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onSyncRequested: () -> Unit
 ) {
-
 
     val currentDate = remember { LocalDate.now() }
     val currentMonth = remember(currentDate) { currentDate.yearMonth }
     val startMonth = remember(currentDate) { currentMonth.minusMonths(500) }
     val endMonth = remember(currentDate) { currentMonth.plusMonths(500) }
-    //val selections = remember { mutableStateListOf<LocalDate>() }
     val daysOfWeek = remember { daysOfWeek() }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            //.background(Color.White)
     ) {
         val weekState = rememberWeekCalendarState(
             startDate = startMonth.atStartOfMonth(),
@@ -126,10 +124,11 @@ fun ListScreenWeek(
                 Day(
                     day = day.date,
                     list = list,
+                    selectedEntries = selectedEntries,
                     onClick = onClick,
                     onLongClick = onLongClick
                 )
-            },
+            }
         )
     }
 }
@@ -144,7 +143,6 @@ fun MonthAndWeekCalendarTitle(
     val coroutineScope = rememberCoroutineScope()
 
     Row(
-        modifier = Modifier.height(40.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(onClick = {
@@ -155,13 +153,26 @@ fun MonthAndWeekCalendarTitle(
         }) {
             Icon(Icons.Outlined.ChevronLeft, stringResource(id = R.string.previous))
         }
-        Text(
-            modifier = Modifier.weight(1f),
-            text = currentMonth.month.getDisplayName(TextStyle.SHORT, Locale.getDefault()),  //currentMonth.displayText(),
-            fontSize = 22.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Medium,
-        )
+
+        Column(
+            modifier = Modifier.weight(1f).padding(vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = currentMonth.year.toString(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleSmall,
+            )
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()),  //currentMonth.displayText(),
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
+            )
+        }
+
         IconButton(onClick = {
             coroutineScope.launch {
                 val targetDate = weekState.firstVisibleWeek.days.last().date.plusDays(1)
@@ -178,32 +189,25 @@ fun MonthAndWeekCalendarTitle(
 fun Day(
     day: LocalDate,
     list: List<ICal4ListRel>,
+    selectedEntries: SnapshotStateList<Long>,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
-    //isSelected: Boolean,
-    //isSelectable: Boolean,
-    //onClick: (LocalDate) -> Unit,
 ) {
 
     val list4day = list.filter {
-        val localDateTime = LocalDate.ofInstant(Instant.ofEpochMilli(it.iCal4List.dtstart?:0L), DateTimeUtils.requireTzId(it.iCal4List.dtstartTimezone))
-        localDateTime.atStartOfDay() == day.atStartOfDay()
+        val localDateTimeStart = LocalDate.ofInstant(Instant.ofEpochMilli(it.iCal4List.dtstart?:0L), DateTimeUtils.requireTzId(it.iCal4List.dtstartTimezone))
+        val localDateTimeDueStart = LocalDate.ofInstant(Instant.ofEpochMilli(it.iCal4List.due?:0L), DateTimeUtils.requireTzId(it.iCal4List.dueTimezone))
+        localDateTimeStart.atStartOfDay() == day.atStartOfDay()
+                || localDateTimeDueStart.atStartOfDay() == day.atStartOfDay()
     }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
             modifier = Modifier
                 .aspectRatio(1f) // This is important for square-sizing!
-                .padding(6.dp)
-                .clip(CircleShape)
-                //.background(color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
-                /*.clickable(
-                    enabled = isSelectable,
-                    //showRipple = !isSelected,
-                    onClick = { onClick(day) },
-                )*/,
+                .padding(6.dp),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -212,22 +216,39 @@ fun Day(
             )
         }
 
-        list4day.forEach { iCal4ListRel ->
-            ListCardWeek(
-                iCalObject = iCal4ListRel.iCal4List,
-                categories = iCal4ListRel.categories,
-                //resources = iCal4ListRel.resources,
-                //progressUpdateDisabled = false,
-                modifier = Modifier
-                    .combinedClickable(
-                        onClick = { onClick(iCal4ListRel.iCal4List.id, list4day.map { it.iCal4List }, iCal4ListRel.iCal4List.isReadOnly) },
-                        onLongClick = {
-                            if (!iCal4ListRel.iCal4List.isReadOnly)
-                                onLongClick(iCal4ListRel.iCal4List.id, list4day.map { it.iCal4List })
-                        }
-                    )
-                    .padding(2.dp),
-            )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
+            list4day.forEach { iCal4ListRel ->
+                ListCardWeek(
+                    iCalObject = iCal4ListRel.iCal4List,
+                    isDueDate = day.atStartOfDay() == LocalDate.ofInstant(
+                        Instant.ofEpochMilli(
+                            iCal4ListRel.iCal4List.due ?: 0L
+                        ), DateTimeUtils.requireTzId(iCal4ListRel.iCal4List.dueTimezone)
+                    ).atStartOfDay(),
+                    selected = selectedEntries.contains(iCal4ListRel.iCal4List.id),
+                    modifier = Modifier
+                        .combinedClickable(
+                            onClick = {
+                                onClick(
+                                    iCal4ListRel.iCal4List.id,
+                                    list4day.map { it.iCal4List },
+                                    iCal4ListRel.iCal4List.isReadOnly
+                                )
+                            },
+                            onLongClick = {
+                                if (!iCal4ListRel.iCal4List.isReadOnly)
+                                    onLongClick(
+                                        iCal4ListRel.iCal4List.id,
+                                        list4day.map { it.iCal4List })
+                            }
+                        )
+                        .aspectRatio(1f)
+                        .padding(2.dp)
+                )
+            }
         }
     }
 }
@@ -288,10 +309,11 @@ fun ListScreenWeek_TODO() {
                 ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
-            isPullRefreshEnabled = true,
+            selectedEntries = remember { mutableStateListOf() },
+            //isPullRefreshEnabled = true,
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onSyncRequested = { }
+            //onSyncRequested = { }
         )
     }
 }
@@ -335,10 +357,11 @@ fun ListScreenWeek_JOURNAL() {
                 ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
-            isPullRefreshEnabled = true,
+            selectedEntries = remember { mutableStateListOf() },
+            //isPullRefreshEnabled = true,
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onSyncRequested = { }
+            //onSyncRequested = { }
         )
     }
 }
