@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
@@ -171,6 +172,7 @@ fun ListCard(
                             start = 4.dp,
                             end = 12.dp
                         )
+                            .widthIn(min = 48.dp)
                     )
 
                 Column(
