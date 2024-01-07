@@ -10,6 +10,8 @@
     <string name="link_jtx_support" translatable="false">"https://jtx.techbee.at/support"</string>
     <string name="link_jtx_privacy_policy" translatable="false">"https://jtx.techbee.at/privacy"</string>
     <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
+    <string name="font_roboto" translatable="false">"Roboto"</string>
+    <string name="font_noto" translatable="false">"Noto"</string>
     <!-- Global Strings -->
     <string name="save">"Save"</string>
     <string name="update">"Update"</string>
@@ -365,6 +367,7 @@
     <string name="settings_timezone_display_local">"Show time in local timezone"</string>
     <string name="settings_timezone_display_original">"Show time in original timezone"</string>
     <string name="settings_timezone_display_local_and_original">"Show time in local and in original timezone (detail view only)"</string>
+    <string name="settings_font">"Font"</string>
     <string name="donate_dialog_title">"Do you like jtx Board?"</string>
     <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
 Thank you!"</string>

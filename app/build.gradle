@@ -31,8 +31,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 207000002
-        versionName "2.07.00-alpha02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 207000005
+        versionName "2.07.00-beta02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love always wins ❤️💪\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -245,6 +245,7 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:1.5.4"
     implementation "androidx.compose.material:material:1.5.4"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
+    implementation "androidx.compose.ui:ui-text-google-fonts:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
@@ -270,4 +271,5 @@ dependencies {
     implementation "com.kizitonwose.calendar:compose:2.4.1"
 
     implementation "com.googlecode.libphonenumber:libphonenumber:8.13.27"
+
 }

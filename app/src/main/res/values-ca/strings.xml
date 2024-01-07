@@ -356,6 +356,7 @@
     <string name="settings_timezone_display_local">"Mostra l'hora a la zona horària local"</string>
     <string name="settings_timezone_display_original">"Mostra l'hora a la zona horària original"</string>
     <string name="settings_timezone_display_local_and_original">"Mostra l'hora a la zona horària actual i original (només a la vista detallada)"</string>
+    <string name="settings_font">"Tipus de lletra"</string>
     <string name="donate_dialog_title">"T'agrada jtx Board?"</string>
     <string name="donate_dialog_message">"El desenvolupament d'una aplicació és un tema complex, i tant el manteniment com el mateix desenvolupament és un treball dur. Si t'agrada l'aplicació, i t'agradaria que no es detingués el desenvolupament, per favor, considera una donació :-)
 Gràcies!"</string>

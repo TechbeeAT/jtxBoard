@@ -12,10 +12,13 @@ import android.content.Context
 import android.provider.ContactsContract
 import android.util.Log
 import androidx.compose.ui.graphics.Color
+import androidx.core.database.getStringOrNull
 import androidx.core.util.PatternsCompat
 import at.techbee.jtx.database.properties.Attendee
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import net.fortuna.ical4j.model.WeekDay
 import java.time.DayOfWeek
+import java.util.Locale
 import java.util.regex.Matcher
 
 
@@ -46,6 +49,31 @@ object UiUtil {
             links.add(url)
         }
         return links
+    }
+
+    /**
+     * Extracts telephone numbers from a string
+     * @param string Input String
+     * @return a list of found telephone numbers
+     */
+    fun extractTelephoneNumbers(string: String, defaultRegion: String = Locale.getDefault().country) =
+        PhoneNumberUtil
+            .getInstance()
+            .findNumbers(string, defaultRegion)
+            ?.map { it.rawString()  } ?: emptyList()
+
+    /**
+     * Extracts emails numbers from a string
+     * @param string Input String
+     * @return a list of found e-mail addresses
+     */
+    fun extractEmailAddresses(string: String): List<String> {
+        val matcher = PatternsCompat.EMAIL_ADDRESS.matcher(string)
+        val foundEmails = mutableListOf<String>()
+        while(matcher.find()) {
+            foundEmails.add(matcher.group())
+        }
+        return foundEmails
     }
 
 
@@ -82,10 +110,45 @@ object UiUtil {
                     caladdress = if(isValidEmail(cur.getString(2))) "mailto:" + cur.getString(2) else ""
                 ))
             }
-            cur.close()
         }
         return allContacts.toList()
     }
+
+
+    /**
+     * Returns addresses from the local phone contact storage
+     * @param context
+     * @param searchString to search in the DISPLAYNAME and E-MAIL field
+     * @return a list of addresses as [String]
+     */
+    fun getLocalAddresses(context: Context, searchString: String): Set<String> {
+
+        val addresses = mutableSetOf<String>()
+        if(searchString.length < 2)
+            return addresses
+
+        val cr = context.contentResolver
+        val projection = arrayOf(
+            ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS
+        )
+        val order = ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS
+        val filter = ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS + " LIKE '%$searchString%'"
+        cr.query(
+            ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI,
+            projection,
+            filter,
+            null,
+            order
+        )?.use { cursor ->
+            while (cursor.count > 0 && cursor.moveToNext()) {
+                val address = cursor.getStringOrNull(0)
+                if(!address.isNullOrEmpty())
+                    addresses.add(address)
+            }
+        }
+        return addresses
+    }
+
 
     /**
      * @param [filesize] in Bytes that should be transformed in the shortest possible Bytes, KB or MB units

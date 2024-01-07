@@ -602,7 +602,13 @@ fun ListScreenTabContainer(
                         }
                         listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
                     },
-                    onDeleteDone = { listViewModel.deleteDone() }
+                    onDeleteDone = { listViewModel.deleteDone() },
+                    onListSettingsChanged = {
+                        listViewModel.updateSearch(
+                            saveListSettings = true,
+                            isAuthenticated = globalStateHolder.isAuthenticated.value
+                        )
+                    }
                 )
             } else if(timeout) {
                 BottomAppBar {
