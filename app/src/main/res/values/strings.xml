@@ -557,6 +557,10 @@ Thank you!"</string>
     <string name="filter_any">"Any"</string>
     <string name="filter_all">"All"</string>
     <string name="filter_none">"None"</string>
+    <string name="filter_date_from_to">"Date: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Start(ed): %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Due: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Completed: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>
