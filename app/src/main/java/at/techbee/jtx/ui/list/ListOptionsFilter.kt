@@ -26,7 +26,6 @@ import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -65,7 +64,6 @@ import at.techbee.jtx.util.DateTimeUtils
 
 const val MAX_ITEMS_PER_SECTION = 5
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListOptionsFilter(
     module: Module,
@@ -253,15 +251,17 @@ fun ListOptionsFilter(
                     listSettings.isFilterDueTomorrow.value = false
                     listSettings.isFilterDueWithin7Days.value = false
                     listSettings.isFilterDueFuture.value = false
+                    listSettings.isFilterNoDatesSet.value = false
+                    listSettings.isFilterNoStartDateSet.value = false
+                    listSettings.isFilterNoDueDateSet.value = false
+                    listSettings.isFilterNoCompletedDateSet.value = false
+                }
+                if (module == Module.TODO || module == Module.JOURNAL) {
                     listSettings.isFilterStartInPast.value = false
                     listSettings.isFilterStartToday.value = false
                     listSettings.isFilterStartTomorrow.value = false
                     listSettings.isFilterStartWithin7Days.value = false
                     listSettings.isFilterStartFuture.value = false
-                    listSettings.isFilterNoDatesSet.value = false
-                    listSettings.isFilterNoStartDateSet.value = false
-                    listSettings.isFilterNoDueDateSet.value = false
-                    listSettings.isFilterNoCompletedDateSet.value = false
                 }
                 onListSettingsChanged()
             },
@@ -271,17 +271,24 @@ fun ListOptionsFilter(
                     listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
                     listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
                     listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
-                    listSettings.isFilterDueWithin7Days.value = !listSettings.isFilterDueWithin7Days.value
+                    listSettings.isFilterDueWithin7Days.value =
+                        !listSettings.isFilterDueWithin7Days.value
                     listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
+                    listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
+                    listSettings.isFilterNoStartDateSet.value =
+                        !listSettings.isFilterNoStartDateSet.value
+                    listSettings.isFilterNoDueDateSet.value =
+                        !listSettings.isFilterNoDueDateSet.value
+                    listSettings.isFilterNoCompletedDateSet.value =
+                        !listSettings.isFilterNoCompletedDateSet.value
+                }
+                if (module == Module.TODO || module == Module.JOURNAL) {
                     listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
                     listSettings.isFilterStartToday.value = !listSettings.isFilterStartToday.value
                     listSettings.isFilterStartTomorrow.value = !listSettings.isFilterStartTomorrow.value
                     listSettings.isFilterStartWithin7Days.value = !listSettings.isFilterStartWithin7Days.value
                     listSettings.isFilterStartFuture.value = !listSettings.isFilterStartFuture.value
-                    listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
-                    listSettings.isFilterNoStartDateSet.value = !listSettings.isFilterNoStartDateSet.value
-                    listSettings.isFilterNoDueDateSet.value = !listSettings.isFilterNoDueDateSet.value
-                    listSettings.isFilterNoCompletedDateSet.value = !listSettings.isFilterNoCompletedDateSet.value
+
                 }
                 onListSettingsChanged()
             })
@@ -425,20 +432,24 @@ fun ListOptionsFilter(
                 )
             }
 
-            FilterChip(
-                selected = listSettings.filterStartRangeStart.value != null || listSettings.filterStartRangeEnd.value != null,
-                onClick = {
-                    showFilterDateRangeStartDialog = true
-                },
-                label = {
-                    var text = if(module == Module.TODO) stringResource(id = R.string.started) else stringResource(id = R.string.date)
-                    text += ": "
-                    text += listSettings.filterStartRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
-                    text += " - "
-                    text += listSettings.filterStartRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
-                    Text(text)
-                }
-            )
+            if (module == Module.TODO || module == Module.JOURNAL) {
+
+                FilterChip(
+                    selected = listSettings.filterStartRangeStart.value != null || listSettings.filterStartRangeEnd.value != null,
+                    onClick = {
+                        showFilterDateRangeStartDialog = true
+                    },
+                    label = {
+                        val dateFrom = listSettings.filterStartRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+                        val dateTo = listSettings.filterStartRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+                        val text = if(module == Module.TODO)
+                            stringResource(id = R.string.filter_started_from_to, dateFrom, dateTo)
+                        else
+                            stringResource(id = R.string.filter_date_from_to, dateFrom, dateTo)
+                        Text(text)
+                    }
+                )
+            }
 
             if(module == Module.TODO) {
                 FilterChip(
@@ -447,11 +458,9 @@ fun ListOptionsFilter(
                         showFilterDateRangeDueDialog = true
                     },
                     label = {
-                        var text = stringResource(id = R.string.due)
-                        text += ": "
-                        text += listSettings.filterDueRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
-                        text += " - "
-                        text += listSettings.filterDueRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                        val dueFrom =  listSettings.filterDueRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+                        val dueTo = listSettings.filterDueRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+                        val text = stringResource(id = R.string.filter_due_from_to, dueFrom, dueTo)
                         Text(text)
                     }
                 )
@@ -461,11 +470,9 @@ fun ListOptionsFilter(
                         showFilterDateRangeCompletedDialog = true
                     },
                     label = {
-                        var text = stringResource(id = R.string.completed)
-                        text += ": "
-                        text += listSettings.filterCompletedRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)} ?: "..."
-                        text += " - "
-                        text += listSettings.filterCompletedRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                        val completedFrom = listSettings.filterCompletedRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)} ?: "…"
+                        val completedTo = listSettings.filterCompletedRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+                        val text = stringResource(id = R.string.filter_completed_from_to, completedFrom, completedTo)
                         Text(text)
                     }
                 )
