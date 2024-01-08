@@ -541,6 +541,10 @@ Danke!"</string>
     <string name="filter_any">"Irgendeine"</string>
     <string name="filter_all">"Alle"</string>
     <string name="filter_none">"Keine"</string>
+    <string name="filter_date_from_to">"Datum: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Start: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Fällig: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Fertiggestellt: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
     <string name="list_date_today">"Heute"</string>
