@@ -384,6 +384,16 @@
     <string name="back">"Πίσω"</string>
     <string name="details">"Λεπτομέριες"</string>
     <string name="date">"Ημερομηνία"</string>
+    <string name="group_by_date_day">"Ημερομηνία (ημέρα)"</string>
+    <string name="group_by_date_week">"Ημερομηνία (εβδομάδα)"</string>
+    <string name="group_by_date_month">"Ημερομηνία (μήνας)"</string>
+    <string name="group_by_started_day">"Έναρξη (ημέρα)"</string>
+    <string name="group_by_started_week">"Έναρξη (εβδομάδα)"</string>
+    <string name="group_by_started_month">"Έναρξη (μήνας)"</string>
+    <string name="group_by_due_day">"Μέχρι (ημέρα)"</string>
+    <string name="group_by_due_week">"Μέχρι (εβδομάδα)"</string>
+    <string name="group_by_due_month">"Μέχρι (μήνας)"</string>
+    <string name="week_number_year">"Εβδομάδα %1$d/%2$d"</string>
     <string name="summary_description">"Περίληψη/Περιγραφή"</string>
     <string name="status_classification_priority">"Κατάσταση/Ταξινόμηση/Προτεραιότητα"</string>
     <string name="timezone">"Ζώνη ώρας"</string>
