@@ -12,6 +12,7 @@
     <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
     <string name="font_roboto" translatable="false">"Roboto"</string>
     <string name="font_noto" translatable="false">"Noto"</string>
+    <string name="font_montserrat_alternates" translatable="false">"Montserrat Alternates"</string>
     <!-- Global Strings -->
     <string name="save">"Save"</string>
     <string name="update">"Update"</string>

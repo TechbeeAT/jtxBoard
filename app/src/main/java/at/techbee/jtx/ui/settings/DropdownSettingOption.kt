@@ -67,7 +67,8 @@ enum class DropdownSettingOption(
     DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL("settings_timezone_display_local_and_original", R.string.settings_timezone_display_local_and_original),
 
     FONT_ROBOTO("font_roboto", R.string.font_roboto),
-    FONT_NOTO("font_noto", R.string.font_noto)
+    FONT_NOTO("font_noto", R.string.font_noto),
+    FONT_MONTSERRAT_ALTERNATES("font_montserrat_alternates", R.string.font_montserrat_alternates)
     ;
 
     fun getProgressStepKeyAsInt(): Int {

@@ -70,6 +70,7 @@ import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.ui.theme.montserratAlternatesFont
 import at.techbee.jtx.ui.theme.notoFont
 import at.techbee.jtx.ui.theme.robotoFont
 import at.techbee.jtx.util.SyncUtil
@@ -203,6 +204,7 @@ class MainActivity2 : AppCompatActivity() {
                                 fontFamily = when(settingsStateHolder.settingFont.value) {
                                     DropdownSettingOption.FONT_ROBOTO -> robotoFont
                                     DropdownSettingOption.FONT_NOTO -> notoFont
+                                    DropdownSettingOption.FONT_MONTSERRAT_ALTERNATES -> montserratAlternatesFont
                                     else -> robotoFont
                                 }
                             )
