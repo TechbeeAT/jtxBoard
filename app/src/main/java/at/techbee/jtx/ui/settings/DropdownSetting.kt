@@ -166,7 +166,8 @@ enum class DropdownSetting(
         title = R.string.settings_font,
         options = listOf(
             DropdownSettingOption.FONT_ROBOTO,
-            DropdownSettingOption.FONT_NOTO
+            DropdownSettingOption.FONT_NOTO,
+            DropdownSettingOption.FONT_MONTSERRAT_ALTERNATES
         ),
         default = DropdownSettingOption.FONT_ROBOTO
     )
