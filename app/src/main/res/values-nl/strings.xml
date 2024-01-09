@@ -540,6 +540,10 @@ Dank u!"</string>
     <string name="filter_any">"Elke"</string>
     <string name="filter_all">"Alle"</string>
     <string name="filter_none">"Geen"</string>
+    <string name="filter_date_from_to">"Datum: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"(Ge)start: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Vervalt: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Voltooid: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in het verleden"</string>
     <string name="list_date_today">"Vandaag"</string>

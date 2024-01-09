@@ -356,6 +356,7 @@
     <string name="settings_timezone_display_local">"Местный часовой пояс"</string>
     <string name="settings_timezone_display_original">"Указанный часовой пояс"</string>
     <string name="settings_timezone_display_local_and_original">"Местный и указанный часовые пояса (только в детальном просмотре записи)"</string>
+    <string name="settings_font">"Шрифт"</string>
     <string name="donate_dialog_title">"Вам нравится jtx Board?"</string>
     <string name="donate_dialog_message">"Разработка приложения – непростая вещь, и его обслуживание и поддержка – тяжелая работа. Если вам нравится наш проект, вы можете поддержать его пожертвованием :-)
 Спасибо большое!"</string>
@@ -384,6 +385,16 @@
     <string name="back">"Назад"</string>
     <string name="details">"Подробности"</string>
     <string name="date">"Дата"</string>
+    <string name="group_by_date_day">"Дата (день)"</string>
+    <string name="group_by_date_week">"Дата (неделя)"</string>
+    <string name="group_by_date_month">"Дата (месяц)"</string>
+    <string name="group_by_started_day">"Начало (день)"</string>
+    <string name="group_by_started_week">"Начало (неделя)"</string>
+    <string name="group_by_started_month">"Начало (месяц)"</string>
+    <string name="group_by_due_day">"Завершение (день)"</string>
+    <string name="group_by_due_week">"Завершение (неделя)"</string>
+    <string name="group_by_due_month">"Завершение (месяц)"</string>
+    <string name="week_number_year">"Неделя %1$d/%2$d"</string>
     <string name="summary_description">"Название/Описание"</string>
     <string name="status_classification_priority">"Статус/Классификация/Приоритет"</string>
     <string name="timezone">"Часовой пояс"</string>
@@ -529,6 +540,10 @@
     <string name="filter_any">"Любое из"</string>
     <string name="filter_all">"Все из"</string>
     <string name="filter_none">"Ничего из"</string>
+    <string name="filter_date_from_to">"Дата: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Даты начала: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Даты завершения: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Даты выполнения: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Дата в прошлом"</string>
     <string name="list_date_today">"Сегодня"</string>
@@ -647,4 +662,6 @@
     <string name="geofence_request_permission_dialog_message">"jtx Board будет отправлять вам уведомления, когда вы приближаетесь к указанным координатам. Пожалуйста, установите права доступа к местоположению на «Разрешать всегда» и предоставьте разрешение на уведомления для использования этой функции."</string>
     <string name="geofence_notification_summary">"Геозона активирована"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board требуется разрешение для установки точного времени напоминания, в противном случае уведомления могут быть задержаны. Пожалуйста, предоставьте это разрешение для использования этой функции."</string>
+    <string name="call_contact">"Позвонить %1$s"</string>
+    <string name="email_contact">"E-Mail %1$s"</string>
 </resources>
