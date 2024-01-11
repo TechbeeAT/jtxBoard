@@ -561,6 +561,7 @@ fun DetailsScreen(
                     linkEntryDialogModule = modules
                     linkEntryDialogReltype = reltype
                 },
+                onUpdateSortOrder = { detailViewModel.updateSortOrder(it) },
                 modifier = Modifier.padding(paddingValues)
             )
         },

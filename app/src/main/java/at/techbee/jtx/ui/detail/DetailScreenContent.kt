@@ -188,7 +188,8 @@ fun DetailScreenContent(
     goToFilteredList:  (StoredListSettingData) -> Unit,
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit,
     onShowLinkExistingDialog: (modules: List<Module>, reltype: Reltype) -> Unit,
-) {
+    onUpdateSortOrder: (List<ICal4List>) -> Unit,
+    ) {
     if(iCalObject == null)
         return
 
@@ -742,6 +743,7 @@ fun DetailScreenContent(
                                     Reltype.CHILD
                                 )
                             },
+                            onUpdateSortOrder = onUpdateSortOrder,
                             modifier = detailElementModifier
                         )
                     }
@@ -1101,7 +1103,8 @@ fun DetailScreenContent_JOURNAL() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { }, 
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -1165,7 +1168,8 @@ fun DetailScreenContent_TODO_editInitially() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -1229,7 +1233,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -1287,7 +1292,8 @@ fun DetailScreenContent_failedLoading() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }

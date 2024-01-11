@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -48,6 +49,7 @@ fun SubtaskCard(
     sliderIncrement: Int,
     blockProgressUpdates: Boolean = false,
     allowDeletion: Boolean = true,
+    dragHandle:@Composable () -> Unit = { },
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onDeleteClicked: () -> Unit,
     onUnlinkClicked: () -> Unit
@@ -76,6 +78,10 @@ fun SubtaskCard(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
+
+            if(isEditMode) {
+                dragHandle()
+            }
 
             var subtaskText = subtask.summary ?: subtask.description ?: ""
             if (subtask.numSubtasks > 0)
@@ -227,6 +233,9 @@ fun SubtaskCardPreview_edit() {
             onUnlinkClicked = { },
             isEditMode = true,
             sliderIncrement = 10,
+            dragHandle = { IconButton(onClick = {  }) {
+                Icon(Icons.Outlined.DragHandle, null)
+            }},
             modifier = Modifier.fillMaxWidth()
         )
     }
