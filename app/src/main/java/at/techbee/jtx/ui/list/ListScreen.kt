@@ -186,6 +186,14 @@ fun ListScreen(
                     onSyncRequested = { listViewModel.syncAccounts() }
                 )
             }
+            ViewMode.WEEK -> {
+                ListScreenWeek(
+                    list = list,
+                    selectedEntries = listViewModel.selectedEntries,
+                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
+                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                )
+            }
         }
     }
 }
