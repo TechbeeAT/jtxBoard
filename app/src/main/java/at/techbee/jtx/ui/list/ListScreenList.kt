@@ -109,7 +109,8 @@ fun ListScreenList(
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
     onSyncRequested: () -> Unit,
     onSaveListSettings: () -> Unit,
-) {
+    onUpdateSortOrder: (List<ICal4List>) -> Unit
+    ) {
 
     val subtasks by subtasksLive.observeAsState(emptyList())
     val subnotes by subnotesLive.observeAsState(emptyList())
@@ -237,6 +238,7 @@ fun ListScreenList(
                             onLongClick = onLongClick,
                             onProgressChanged = onProgressChanged,
                             onExpandedChanged = onExpandedChanged,
+                            onUpdateSortOrder = onUpdateSortOrder,
                             player = player,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -366,7 +368,8 @@ fun ListScreenList_TODO() {
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
             onSyncRequested = { },
-            onSaveListSettings = { }
+            onSaveListSettings = { },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -446,7 +449,8 @@ fun ListScreenList_JOURNAL() {
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
             onSyncRequested = { },
-            onSaveListSettings = { }
+            onSaveListSettings = { },
+            onUpdateSortOrder = { }
         )
     }
 }

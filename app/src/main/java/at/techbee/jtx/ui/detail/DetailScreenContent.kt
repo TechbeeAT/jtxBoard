@@ -785,6 +785,7 @@ fun DetailScreenContent(
                                     ), Reltype.CHILD
                                 )
                             },
+                            onUpdateSortOrder = onUpdateSortOrder,
                             modifier = detailElementModifier
                         )
                     }

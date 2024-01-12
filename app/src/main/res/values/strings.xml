@@ -330,6 +330,7 @@
     <string name="filter_no_resource">Without resources</string>
     <string name="filter_subtasks_order_by">Order subtasks by</string>
     <string name="filter_subnotes_order_by">Order linked notes by</string>
+    <string name="order_by_drag_and_drop">"Drag &amp; Drop"</string>
     <string name="filter_no_filter">"No filter"</string>
     <string name="filter_options_more_entries">"More (%1$d)"</string>
     <string name="filter_options_less_entries">"Less"</string>

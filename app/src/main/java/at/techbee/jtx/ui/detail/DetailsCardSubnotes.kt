@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -55,9 +56,11 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
+import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
+import sh.calvin.reorderable.ReorderableColumn
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -73,6 +76,7 @@ fun DetailsCardSubnotes(
     player: MediaPlayer?,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     onShowLinkExistingDialog: () -> Unit,
+    onUpdateSortOrder: (List<ICal4List>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -165,12 +169,18 @@ fun DetailsCardSubnotes(
             }
 
             AnimatedVisibility(subnotes.isNotEmpty()) {
-                Column(
+                ReorderableColumn(
+                    list = subnotes,
+                    onSettle = { fromIndex, toIndex ->
+                        val reordered = subnotes.toMutableList().apply {
+                            add(toIndex, removeAt(fromIndex))
+                        }
+                        onUpdateSortOrder(reordered)
+                    },
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    subnotes.forEach { subnote ->
+                    modifier = Modifier.fillMaxWidth()
+                ) {index, subnote, isDragging ->
+                    key(subnote.id) {
 
                         var showEditSubnoteDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -189,6 +199,7 @@ fun DetailsCardSubnotes(
                             onDeleteClicked = { onSubnoteDeleted(subnote.id) },
                             onUnlinkClicked = { onUnlinkSubEntry(subnote.id) },
                             player = player,
+                            dragHandle = { DragHandle(scope = this) },
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
@@ -231,7 +242,8 @@ fun DetailsCardSubnotes_Preview() {
             onUnlinkSubEntry = { },
             player = null,
             goToDetail = { _, _, _ -> },
-            onShowLinkExistingDialog = {}
+            onShowLinkExistingDialog = {},
+            onUpdateSortOrder = {}
         )
     }
 }
@@ -257,7 +269,8 @@ fun DetailsCardSubnotes_Preview_edit() {
             onUnlinkSubEntry = { },
             player = null,
             goToDetail = { _, _, _ -> },
-            onShowLinkExistingDialog = {}
+            onShowLinkExistingDialog = {},
+            onUpdateSortOrder = { }
         )
     }
 }

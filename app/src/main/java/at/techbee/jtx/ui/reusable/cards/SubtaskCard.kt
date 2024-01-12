@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -37,6 +36,7 @@ import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.dialogs.UnlinkEntryDialog
+import at.techbee.jtx.ui.reusable.elements.DragHandle_Preview_without_Scope
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 
 @Composable
@@ -79,7 +79,7 @@ fun SubtaskCard(
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            if(isEditMode) {
+            if(!isEditMode) {
                 dragHandle()
             }
 
@@ -139,6 +139,7 @@ fun SubtaskCardPreview() {
             onDeleteClicked = { },
             onUnlinkClicked = { },
             sliderIncrement = 10,
+            dragHandle = { DragHandle_Preview_without_Scope() },
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -164,6 +165,7 @@ fun SubtaskCardPreview_selected() {
             onDeleteClicked = { },
             onUnlinkClicked = { },
             sliderIncrement = 10,
+            dragHandle = { DragHandle_Preview_without_Scope() },
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -186,6 +188,7 @@ fun SubtaskCardPreview_readonly() {
             onDeleteClicked = { },
             onUnlinkClicked = { },
             sliderIncrement = 20,
+            dragHandle = { DragHandle_Preview_without_Scope() },
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -207,6 +210,7 @@ fun SubtaskCardPreview_without_progress() {
             onProgressChanged = { _, _ -> },
             onDeleteClicked = { },
             onUnlinkClicked = { },
+            dragHandle = { DragHandle_Preview_without_Scope() },
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -233,9 +237,7 @@ fun SubtaskCardPreview_edit() {
             onUnlinkClicked = { },
             isEditMode = true,
             sliderIncrement = 10,
-            dragHandle = { IconButton(onClick = {  }) {
-                Icon(Icons.Outlined.DragHandle, null)
-            }},
+            dragHandle = { DragHandle_Preview_without_Scope() },
             modifier = Modifier.fillMaxWidth()
         )
     }

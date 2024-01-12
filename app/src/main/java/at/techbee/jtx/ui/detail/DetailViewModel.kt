@@ -232,6 +232,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 iCalObject.makeDirty()
                 database.update(iCalObject)
             }
+            onChangeDone()
         }
     }
 

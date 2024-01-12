@@ -113,7 +113,8 @@ fun ListScreen(
                         )
                     },
                     onSyncRequested = { listViewModel.syncAccounts() },
-                    onSaveListSettings = { listViewModel.saveListSettings() }
+                    onSaveListSettings = { listViewModel.saveListSettings() },
+                    onUpdateSortOrder = { listViewModel.updateSortOrder(it) }
                 )
             }
             ViewMode.GRID -> {

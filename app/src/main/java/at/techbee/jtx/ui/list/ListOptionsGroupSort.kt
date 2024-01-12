@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.outlined.ViewHeadline
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +35,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListOptionsGroupSort(
     module: Module,
@@ -200,6 +199,7 @@ fun ListOptionsGroupSort(
             SortOrder.entries.forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.subtasksSortOrder.value == sortOrder,
+                    enabled = listSettings.subtasksOrderBy.value != OrderBy.DRAG_AND_DROP,
                     onClick = {
                         if (listSettings.subtasksSortOrder.value != sortOrder)
                             listSettings.subtasksSortOrder.value = sortOrder
@@ -239,6 +239,7 @@ fun ListOptionsGroupSort(
             SortOrder.entries.forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.subnotesSortOrder.value == sortOrder,
+                    enabled = listSettings.subnotesOrderBy.value != OrderBy.DRAG_AND_DROP,
                     onClick = {
                         if (listSettings.subnotesSortOrder.value != sortOrder)
                             listSettings.subnotesSortOrder.value = sortOrder
