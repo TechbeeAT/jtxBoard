@@ -356,6 +356,7 @@
     <string name="settings_timezone_display_local">"Zobrazit čas v místním časovém pásmu"</string>
     <string name="settings_timezone_display_original">"Zobrazit čas v původním časovém pásmu"</string>
     <string name="settings_timezone_display_local_and_original">"Zobrazit čas v místním a původním časovém pásmu (pouze v podrobném zobrazení)"</string>
+    <string name="settings_font">"Písmo"</string>
     <string name="donate_dialog_title">"Líbí se vám jtx Board?"</string>
     <string name="donate_dialog_message">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud se vám tato aplikace líbí a pokud chcete zajistit její neustálý vývoj, zvažte prosím příspěvek :-)
 Děkujeme vám!"</string>
@@ -384,6 +385,16 @@ Děkujeme vám!"</string>
     <string name="back">"Zpět"</string>
     <string name="details">"Podrobnosti"</string>
     <string name="date">"Datum"</string>
+    <string name="group_by_date_day">"Datum (den)"</string>
+    <string name="group_by_date_week">"Datum (týden)"</string>
+    <string name="group_by_date_month">"Datum (měsíc)"</string>
+    <string name="group_by_started_day">"Zahájeno (den)"</string>
+    <string name="group_by_started_week">"Zahájeno (týden)"</string>
+    <string name="group_by_started_month">"Zahájeno (měsíc)"</string>
+    <string name="group_by_due_day">"Termín (den)"</string>
+    <string name="group_by_due_week">"Termín (týden)"</string>
+    <string name="group_by_due_month">"Termín (měsíc)"</string>
+    <string name="week_number_year">"Týden %1$d/%2$d"</string>
     <string name="summary_description">"Souhrn/Popis"</string>
     <string name="status_classification_priority">"Stav/Klasifikace/Priorita"</string>
     <string name="timezone">"Časové pásmo"</string>
@@ -529,6 +540,10 @@ Děkujeme vám!"</string>
     <string name="filter_any">"Jakýkoliv"</string>
     <string name="filter_all">"Vše"</string>
     <string name="filter_none">"Žádný"</string>
+    <string name="filter_date_from_to">"Datum: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Zahájeno: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Termín: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Dokončeno: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum v minulosti"</string>
     <string name="list_date_today">"Dnes"</string>
@@ -647,4 +662,6 @@ Děkujeme vám!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board vás může upozornit, když se nacházíte v blízkosti zadaných souřadnic. Nastavte oprávnění k poloze na ‚Vždy povolit‘ a udělte oprávnění k oznámením pro použití této funkce."</string>
     <string name="geofence_notification_summary">"Sledovaná oblast aktivována"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board potřebuje oprávnění k plánování přesných budíků, jinak může dojít ke zpoždění oznámení z budíků. Pro použití funkce udělte toto oprávnění."</string>
+    <string name="call_contact">"Zavolat %1$s"</string>
+    <string name="email_contact">"E-mail pro %1$s"</string>
 </resources>

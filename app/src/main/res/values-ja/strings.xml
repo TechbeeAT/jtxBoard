@@ -538,6 +538,10 @@
     <string name="filter_any">"選択したもの"</string>
     <string name="filter_all">"すべて"</string>
     <string name="filter_none">"なし"</string>
+    <string name="filter_date_from_to">"日付: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"着手: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"締切: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"完了: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"過去の日付"</string>
     <string name="list_date_today">"今日"</string>

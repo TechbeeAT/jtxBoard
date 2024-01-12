@@ -103,8 +103,8 @@ fun DetailsCardRecur(
 
     var isRecurActivated by rememberSaveable { mutableStateOf(icalObject.getRecur() != null) }
     var frequency by rememberSaveable { mutableStateOf(icalObject.getRecur()?.frequency) }
-    var interval by rememberSaveable { mutableStateOf(icalObject.getRecur()?.interval) }
-    var count by rememberSaveable { mutableStateOf(icalObject.getRecur()?.count) }
+    var interval by rememberSaveable { mutableStateOf(icalObject.getRecur()?.interval?.let { if(it<=0) null else it }) }
+    var count by rememberSaveable { mutableStateOf(icalObject.getRecur()?.count?.let { if (it<=0) null else it }) }
     var until by rememberSaveable { mutableStateOf(icalObject.getRecur()?.until) }
     val dayList = remember { icalObject.getRecur()?.dayList?.toMutableStateList() ?: mutableStateListOf() }
     val monthDayList = remember { mutableStateListOf(icalObject.getRecur()?.monthDayList?.firstOrNull() ?: 1) }

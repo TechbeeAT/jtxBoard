@@ -12,6 +12,7 @@
     <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
     <string name="font_roboto" translatable="false">"Roboto"</string>
     <string name="font_noto" translatable="false">"Noto"</string>
+    <string name="font_montserrat_alternates" translatable="false">"Montserrat Alternates"</string>
     <!-- Global Strings -->
     <string name="save">"Save"</string>
     <string name="update">"Update"</string>
@@ -558,6 +559,10 @@ Thank you!"</string>
     <string name="filter_any">"Any"</string>
     <string name="filter_all">"All"</string>
     <string name="filter_none">"None"</string>
+    <string name="filter_date_from_to">"Date: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Start(ed): %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Due: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Completed: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>

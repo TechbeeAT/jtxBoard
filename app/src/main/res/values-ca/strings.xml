@@ -531,6 +531,10 @@ Gràcies!"</string>
     <string name="filter_any">"Cualsevol"</string>
     <string name="filter_all">"Tots"</string>
     <string name="filter_none">"Cap"</string>
+    <string name="filter_date_from_to">"Data: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Inici(at): %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Venç: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Completat: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data al passat"</string>
     <string name="list_date_today">"Avui"</string>

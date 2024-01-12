@@ -29,3 +29,5 @@ val fontProvider = GoogleFont.Provider(
 val robotoFont = FontFamily(Font(googleFont = GoogleFont("Roboto"), fontProvider = fontProvider))
 
 val notoFont = FontFamily(Font(googleFont = GoogleFont("Noto Sans"), fontProvider = fontProvider))
+
+val montserratAlternatesFont = FontFamily(Font(googleFont = GoogleFont("Montserrat Alternates"), fontProvider = fontProvider))
