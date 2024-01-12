@@ -473,6 +473,10 @@ fun ListScreenTabContainer(
                             HorizontalDivider()
                         }
                         ViewMode.entries.forEach { viewMode ->
+
+                            if(getActiveViewModel().module == Module.NOTE && viewMode == ViewMode.WEEK)
+                                return@forEach
+
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
                                 isSelected = getActiveViewModel().listSettings.viewMode.value == viewMode,
