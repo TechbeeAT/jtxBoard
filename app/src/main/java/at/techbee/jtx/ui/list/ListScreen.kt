@@ -190,6 +190,7 @@ fun ListScreen(
                 ListScreenWeek(
                     list = list,
                     selectedEntries = listViewModel.selectedEntries,
+                    scrollOnceId = listViewModel.scrollOnceId,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                 )

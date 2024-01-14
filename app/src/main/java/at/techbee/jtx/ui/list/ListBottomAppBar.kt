@@ -184,7 +184,10 @@ fun ListBottomAppBar(
                         }
                     }
 
-                    AnimatedVisibility(visible = (module == Module.JOURNAL || module == Module.TODO) && listSettings.groupBy.value == null && (listSettings.orderBy.value == OrderBy.START_VJOURNAL || listSettings.orderBy.value == OrderBy.START_VTODO)) {
+                    AnimatedVisibility(visible = (module == Module.JOURNAL || module == Module.TODO)
+                            && (((listSettings.viewMode.value == ViewMode.LIST || listSettings.viewMode.value == ViewMode.COMPACT) && listSettings.groupBy.value == null) || listSettings.viewMode.value == ViewMode.WEEK)
+                            && (listSettings.orderBy.value == OrderBy.START_VJOURNAL || listSettings.orderBy.value == OrderBy.START_VTODO  || listSettings.viewMode.value == ViewMode.WEEK)
+                    ) {
                         IconButton(onClick = { showGoToDatePicker = true }) {
                             Icon(
                                 Icons.Outlined.DateRange,
