@@ -34,6 +34,24 @@ class UiUtilTest {
         assertEquals("https://www.techbee.at/", extracted[1])
     }
 
+    @Test
+    fun extractEMailAddresses_Test() {
+        val string = "asdf@jkl.com and something else with another 122@techbee.at and whatever"
+        val found = UiUtil.extractEmailAddresses(string)
+        assertEquals(2, found.size)
+        assertEquals("asdf@jkl.com", found.first())
+        assertEquals("122@techbee.at", found.last())
+    }
+
+    @Test
+    fun extractTelephoneNumbers_Test() {
+        val string = "0043 676 1234567 and something else with another +436641243321 and whatever"
+        val found = UiUtil.extractTelephoneNumbers(string, "AT")
+        assertEquals(2, found.size)
+        assertEquals("0043 676 1234567", found.first())
+        assertEquals("+436641243321", found.last())
+    }
+
 
     @Test fun isValidEmail_testTrue() = assertTrue(isValidEmail("valid@email.com"))
     @Test fun isValidEmail_testFalse1() = assertFalse(isValidEmail("invalid.com"))

@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -69,9 +71,11 @@ fun DatePickerDialog(
     datetime: Long?,
     timezone: String?,
     allowNull: Boolean,
+    @StringRes titleTextRes: Int = R.string.edit_datepicker_dialog_select_date,
     dateOnly: Boolean = false,
     minDate: ZonedDateTime? = null,
     maxDate: ZonedDateTime? = null,
+    allowedDates: List<ZonedDateTime> = emptyList(),
     onConfirm: (newDateTime: Long?, newTimezone: String?) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -99,12 +103,17 @@ fun DatePickerDialog(
         ?: minDate
 
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = initialZonedDateTime?.toInstant()?.toEpochMilli()?.plus(initialZonedDateTime.offset.totalSeconds*1000)
-                /*
+        initialSelectedDateMillis = initialZonedDateTime?.toInstant()?.toEpochMilli()?.plus(initialZonedDateTime.offset.totalSeconds*1000),
         selectableDates = object: SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long) = isValidDate((utcTimeMillis))
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return if (allowedDates.isNotEmpty())
+                    allowedDates.any {
+                        utcTimeMillis == it.toLocalDate().atStartOfDay().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()
+                    }
+                else
+                    true
+            }
         }
-                 */
     )
     val timePickerState = rememberTimePickerState(initialZonedDateTime?.hour?:0, initialZonedDateTime?.minute?:0)
 
@@ -115,7 +124,7 @@ fun DatePickerDialog(
     AlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
         onDismissRequest = { onDismiss() },
-        title = { Text(stringResource(id = R.string.edit_datepicker_dialog_select_date)) },
+        title = { Text(stringResource(id = titleTextRes)) },
         text = {
 
             Column(

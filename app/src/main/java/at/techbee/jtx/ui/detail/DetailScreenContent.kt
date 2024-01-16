@@ -31,6 +31,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -462,7 +463,10 @@ fun DetailScreenContent(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .padding(8.dp),
-                                            style = TextStyle(textDirection = TextDirection.Content),
+                                            style = TextStyle(
+                                                textDirection = TextDirection.Content,
+                                                fontFamily = LocalTextStyle.current.fontFamily
+                                                ),
                                             onClick = {
                                                 if (observedICalEntity.value?.ICalCollection?.readonly == false)
                                                     isEditMode.value = true

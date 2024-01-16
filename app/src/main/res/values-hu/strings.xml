@@ -357,6 +357,7 @@
     <string name="settings_timezone_display_original">"Idő megjelenítése az eredeti időzónában"</string>
     <string name="settings_timezone_display_local_and_original">"Idő megjelenítése a helyi és 
 az eredeti időzónában (csak részletes nézet)"</string>
+    <string name="settings_font">"Betűtípus"</string>
     <string name="donate_dialog_title">"Tetszik Önnek a jtx Board?"</string>
     <string name="donate_dialog_message">"Egy alkalmazás fejlesztése összetett feladat, a fejlesztés, karbantartás és támogatás pedig kemény munka. Ha tetszik önnek ez az alkalmazás és szeretne tenni a folyamatos fejlesztés biztosításáért, kérjük, fontolja meg a támogatást :-)
 Köszönjük!"</string>
@@ -385,6 +386,16 @@ Köszönjük!"</string>
     <string name="back">"Vissza"</string>
     <string name="details">"Részletek"</string>
     <string name="date">"Dátum"</string>
+    <string name="group_by_date_day">"Dátum (nap)"</string>
+    <string name="group_by_date_week">"Dátum (hét)"</string>
+    <string name="group_by_date_month">"Dátum (hónap)"</string>
+    <string name="group_by_started_day">"Kezdés (nap)"</string>
+    <string name="group_by_started_week">"Kezdés (hét)"</string>
+    <string name="group_by_started_month">"Kezdés (hónap)"</string>
+    <string name="group_by_due_day">"Határidő (nap)"</string>
+    <string name="group_by_due_week">"Határidő (hét)"</string>
+    <string name="group_by_due_month">"Határidő (hónap)"</string>
+    <string name="week_number_year">"%1$d. hét/%2$d"</string>
     <string name="summary_description">"Összefoglaló/leírás"</string>
     <string name="status_classification_priority">"Állapot/besorolás/prioritás"</string>
     <string name="timezone">"Időzóna"</string>
@@ -471,6 +482,7 @@ Köszönjük!"</string>
     <string name="dialog_add_audio_entry_title">"Hangjegyzet hozzáadása"</string>
     <string name="menu_list_viewmode_compact">"Kompakt nézet"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-nézet"</string>
+    <string name="menu_list_viewmode_week">"Heti nézet"</string>
     <string name="settings_tasks">"Feladat beállítások"</string>
     <string name="settings_alarms">"Riasztások beállításai"</string>
     <string name="settings_tasks_status_progress">"Feladatok beállításai (státusz/készültség)"</string>
@@ -530,6 +542,10 @@ Köszönjük!"</string>
     <string name="filter_any">"Bármelyik"</string>
     <string name="filter_all">"Mind"</string>
     <string name="filter_none">"Egyik sem"</string>
+    <string name="filter_date_from_to">"Dátum %1$s és %2$s között"</string>
+    <string name="filter_started_from_to">"Kezdés %1$s és %2$s között"</string>
+    <string name="filter_due_from_to">"Határidő %1$s és %2$s között"</string>
+    <string name="filter_completed_from_to">"Befejezve %1$s és %2$s között"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Múltbéli kezdés"</string>
     <string name="list_date_today">"Ma"</string>

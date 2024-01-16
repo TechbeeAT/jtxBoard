@@ -39,6 +39,7 @@ import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.ui.reusable.elements.ListBadge
+import at.techbee.jtx.util.DateTimeUtils
 
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -257,6 +258,40 @@ fun ListActiveFiltersRow(
                     AnimatedVisibility(listSettings.isFilterNoCompletedDateSet.value) {
                         ListBadge(
                             text = stringResource(id = R.string.list_without_completed_date),
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            isAccessibilityMode = isAccessibilityMode
+                        )
+                    }
+                    AnimatedVisibility(listSettings.filterStartRangeStart.value != null && listSettings.filterStartRangeEnd.value != null) {
+                        val dateFrom = listSettings.filterStartRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+                        val dateTo = listSettings.filterStartRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+                        val text = if(module == Module.TODO)
+                            stringResource(id = R.string.filter_started_from_to, dateFrom, dateTo)
+                        else
+                            stringResource(id = R.string.filter_date_from_to, dateFrom, dateTo)
+
+                        ListBadge(
+                            text = text,
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            isAccessibilityMode = isAccessibilityMode
+                        )
+                    }
+                    AnimatedVisibility(listSettings.filterDueRangeStart.value != null && listSettings.filterDueRangeEnd.value != null) {
+                        val dateFrom = listSettings.filterDueRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+                        val dateTo = listSettings.filterDueRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+
+                        ListBadge(
+                            text = stringResource(id = R.string.filter_due_from_to, dateFrom, dateTo),
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            isAccessibilityMode = isAccessibilityMode
+                        )
+                    }
+                    AnimatedVisibility(listSettings.filterCompletedRangeStart.value != null && listSettings.filterCompletedRangeEnd.value != null) {
+                        val dateFrom = listSettings.filterCompletedRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+                        val dateTo = listSettings.filterCompletedRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "…"
+
+                        ListBadge(
+                            text = stringResource(id = R.string.filter_completed_from_to, dateFrom, dateTo),
                             modifier = Modifier.padding(vertical = 2.dp),
                             isAccessibilityMode = isAccessibilityMode
                         )

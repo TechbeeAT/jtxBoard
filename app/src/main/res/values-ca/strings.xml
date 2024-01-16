@@ -356,6 +356,7 @@
     <string name="settings_timezone_display_local">"Mostra l'hora a la zona horària local"</string>
     <string name="settings_timezone_display_original">"Mostra l'hora a la zona horària original"</string>
     <string name="settings_timezone_display_local_and_original">"Mostra l'hora a la zona horària actual i original (només a la vista detallada)"</string>
+    <string name="settings_font">"Tipus de lletra"</string>
     <string name="donate_dialog_title">"T'agrada jtx Board?"</string>
     <string name="donate_dialog_message">"El desenvolupament d'una aplicació és un tema complex, i tant el manteniment com el mateix desenvolupament és un treball dur. Si t'agrada l'aplicació, i t'agradaria que no es detingués el desenvolupament, per favor, considera una donació :-)
 Gràcies!"</string>
@@ -385,6 +386,16 @@ Gràcies!"</string>
     <string name="back">"Enrere"</string>
     <string name="details">"Detalls"</string>
     <string name="date">"Data"</string>
+    <string name="group_by_date_day">"Data (dia)"</string>
+    <string name="group_by_date_week">"Data (setmana)"</string>
+    <string name="group_by_date_month">"Data (mes)"</string>
+    <string name="group_by_started_day">"Inici(at) (dia)"</string>
+    <string name="group_by_started_week">"Inici(at) (setmana)"</string>
+    <string name="group_by_started_month">"Inici(at) (mes)"</string>
+    <string name="group_by_due_day">"Venç (dia)"</string>
+    <string name="group_by_due_week">"Venç (setmana)"</string>
+    <string name="group_by_due_month">"Venç (mes)"</string>
+    <string name="week_number_year">"Setmana %1$d/%2$d"</string>
     <string name="summary_description">"Sumari/Descripció"</string>
     <string name="status_classification_priority">"Estat/Classificació/Prioritat"</string>
     <string name="timezone">"Fus horari"</string>
@@ -471,6 +482,7 @@ Gràcies!"</string>
     <string name="dialog_add_audio_entry_title">"Afegeix una entrada d'àudio"</string>
     <string name="menu_list_viewmode_compact">"Vista compacta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
+    <string name="menu_list_viewmode_week">"Vista setmanal"</string>
     <string name="settings_tasks">"Configuració de tasques"</string>
     <string name="settings_alarms">"Configuració d'Alarmes"</string>
     <string name="settings_tasks_status_progress">"Configuració de Tasques (estat/progrés)"</string>
@@ -530,6 +542,10 @@ Gràcies!"</string>
     <string name="filter_any">"Cualsevol"</string>
     <string name="filter_all">"Tots"</string>
     <string name="filter_none">"Cap"</string>
+    <string name="filter_date_from_to">"Data: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Inici(at): %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Venç: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Completat: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data al passat"</string>
     <string name="list_date_today">"Avui"</string>
@@ -648,4 +664,6 @@ Gràcies!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board et pot notificar quan estàs prop de les coordenades indicades. Per favor, estableix el permís d'ubicació a \"Permet tota l'estona\", i dona permís per a enviar notificacions, i podràs fer ús d'aquesta funció."</string>
     <string name="geofence_notification_summary">"Geo-tanca activada"</string>
     <string name="exact_alarm_permission_dialog_message">"Cal que jtx Board tingui permís per a programar alarmes exactes, en cas de no ser així, les notificacions podrien endarrerir-se. Per favor, dona aquest permís per a fer servir aquesta funció."</string>
+    <string name="call_contact">"Truca a %1$s"</string>
+    <string name="email_contact">"Correu a %1$s"</string>
 </resources>

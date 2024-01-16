@@ -356,6 +356,7 @@
     <string name="settings_timezone_display_local">"Toon tijd in lokale tijdzone"</string>
     <string name="settings_timezone_display_original">"Toon tijd in de oorspronkelijke tijdzone"</string>
     <string name="settings_timezone_display_local_and_original">"Toon tijd in lokale en originele tijdzone (alleen de detailweergave)"</string>
+    <string name="settings_font">"Lettertype"</string>
     <string name="donate_dialog_title">"Vind je het jtx Board leuk?"</string>
     <string name="donate_dialog_message">"De ontwikkeling van een app is complex, en ontwikkeling, onderhoud en ondersteuning is hard werk. Als u deze app leuk vindt en ontwikkeling wilt ondersteunen, overweeg dan een donatie :-)
 Dank u!"</string>
@@ -384,6 +385,16 @@ Dank u!"</string>
     <string name="back">"Terug"</string>
     <string name="details">"Details"</string>
     <string name="date">"Datum"</string>
+    <string name="group_by_date_day">"Datum (dag)"</string>
+    <string name="group_by_date_week">"Datum (week)"</string>
+    <string name="group_by_date_month">"Datum (maand)"</string>
+    <string name="group_by_started_day">"Gestart (dag)"</string>
+    <string name="group_by_started_week">"Gestart (week)"</string>
+    <string name="group_by_started_month">"Gestart (maand)"</string>
+    <string name="group_by_due_day">"Vervalt (dag)"</string>
+    <string name="group_by_due_week">"Vervalt (week)"</string>
+    <string name="group_by_due_month">"Vervalt (maand)"</string>
+    <string name="week_number_year">"Week %1$d/%2$d"</string>
     <string name="summary_description">"Samenvatting/beschrijving"</string>
     <string name="status_classification_priority">"Status/Classificatie/Prioriteit"</string>
     <string name="timezone">"Tijdzone"</string>
@@ -470,6 +481,7 @@ Dank u!"</string>
     <string name="dialog_add_audio_entry_title">"Audio-item toevoegen"</string>
     <string name="menu_list_viewmode_compact">"Compacte weergave"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-weergave"</string>
+    <string name="menu_list_viewmode_week">"Weekweergave"</string>
     <string name="settings_tasks">"Taken instellen"</string>
     <string name="settings_alarms">"Meldingen instellen"</string>
     <string name="settings_tasks_status_progress">"Taken voortgang instellen"</string>
@@ -529,6 +541,10 @@ Dank u!"</string>
     <string name="filter_any">"Elke"</string>
     <string name="filter_all">"Alle"</string>
     <string name="filter_none">"Geen"</string>
+    <string name="filter_date_from_to">"Datum: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"(Ge)start: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Vervalt: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Voltooid: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in het verleden"</string>
     <string name="list_date_today">"Vandaag"</string>

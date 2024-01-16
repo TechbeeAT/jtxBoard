@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.AccountBalance
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DashboardCustomize
+import androidx.compose.material.icons.outlined.DoneOutline
 import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.MoreVert
@@ -26,7 +28,6 @@ import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -65,7 +66,6 @@ import at.techbee.jtx.util.DateTimeUtils
 
 const val MAX_ITEMS_PER_SECTION = 5
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListOptionsFilter(
     module: Module,
@@ -84,8 +84,20 @@ fun ListOptionsFilter(
     val allCollectionsState = allCollectionsLive.observeAsState(emptyList())
     val allCategories by allCategoriesLive.observeAsState(emptyList())
     val allResources by allResourcesLive.observeAsState(emptyList())
-    val allCollections by remember { derivedStateOf { allCollectionsState.value.map { it.displayName ?: "" }.sortedBy { it.lowercase() } } }
-    val allAccounts by remember { derivedStateOf { allCollectionsState.value.map { it.accountName ?: "" }.distinct().sortedBy { it.lowercase() } } }
+    val allCollections by remember {
+        derivedStateOf {
+            allCollectionsState.value.map {
+                it.displayName ?: ""
+            }.sortedBy { it.lowercase() }
+        }
+    }
+    val allAccounts by remember {
+        derivedStateOf {
+            allCollectionsState.value.map {
+                it.accountName ?: ""
+            }.distinct().sortedBy { it.lowercase() }
+        }
+    }
     val storedListSettings by storedListSettingLive.observeAsState(emptyList())
     val extendedStatuses by extendedStatusesLive.observeAsState(initial = emptyList())
     var showSaveListSettingsPresetDialog by rememberSaveable { mutableStateOf(false) }
@@ -94,19 +106,24 @@ fun ListOptionsFilter(
     var showFilterDateRangeDueDialog by rememberSaveable { mutableStateOf(false) }
     var showFilterDateRangeCompletedDialog by rememberSaveable { mutableStateOf(false) }
 
-    if(showSaveListSettingsPresetDialog) {
+    if (showSaveListSettingsPresetDialog) {
         val currentListSettingData = StoredListSettingData.fromListSettings(listSettings)
-        val currentListSetting = storedListSettings.firstOrNull { it.module == module && it.storedListSettingData == currentListSettingData } ?:
-            StoredListSetting(module = module, name = "", storedListSettingData = currentListSettingData)
+        val currentListSetting =
+            storedListSettings.firstOrNull { it.module == module && it.storedListSettingData == currentListSettingData }
+                ?: StoredListSetting(
+                    module = module,
+                    name = "",
+                    storedListSettingData = currentListSettingData
+                )
         SaveListSettingsPresetDialog(
             currentSetting = currentListSetting,
             storedListSettings = storedListSettings,
-            onConfirm = { newStoredListSetting ->  onSaveStoredListSetting(newStoredListSetting) },
+            onConfirm = { newStoredListSetting -> onSaveStoredListSetting(newStoredListSetting) },
             onDismiss = { showSaveListSettingsPresetDialog = false }
         )
     }
 
-    if(showFilterDateRangeStartDialog) {
+    if (showFilterDateRangeStartDialog) {
         DateRangePickerDialog(
             dateRangeStart = listSettings.filterStartRangeStart.value,
             dateRangeEnd = listSettings.filterStartRangeEnd.value,
@@ -120,7 +137,7 @@ fun ListOptionsFilter(
             }
         )
     }
-    if(showFilterDateRangeDueDialog) {
+    if (showFilterDateRangeDueDialog) {
         DateRangePickerDialog(
             dateRangeStart = listSettings.filterDueRangeStart.value,
             dateRangeEnd = listSettings.filterDueRangeEnd.value,
@@ -134,7 +151,7 @@ fun ListOptionsFilter(
             }
         )
     }
-    if(showFilterDateRangeCompletedDialog) {
+    if (showFilterDateRangeCompletedDialog) {
         DateRangePickerDialog(
             dateRangeStart = listSettings.filterCompletedRangeStart.value,
             dateRangeEnd = listSettings.filterCompletedRangeEnd.value,
@@ -162,7 +179,7 @@ fun ListOptionsFilter(
             onInvertSelection = { },
             showDefaultMenu = false,
             customMenu = {
-                if(!isWidgetConfig) {
+                if (!isWidgetConfig) {
                     var expanded by remember { mutableStateOf(false) }
                     Row {
                         IconButton(onClick = { expanded = !expanded }) {
@@ -197,16 +214,16 @@ fun ListOptionsFilter(
             var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
 
             storedListSettings.forEachIndexed { index, storedListSetting ->
-                if(index > maxEntries-1)
+                if (index > maxEntries - 1)
                     return@forEachIndexed
 
                 var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
-                if(showDeleteDialog) {
+                if (showDeleteDialog) {
                     DeleteFilterPresetDialog(
                         storedListSetting = storedListSetting,
                         onConfirm = { onDeleteStoredListSetting(storedListSetting) },
-                        onDismiss = { showDeleteDialog = false}
+                        onDismiss = { showDeleteDialog = false }
                     )
                 }
 
@@ -214,12 +231,14 @@ fun ListOptionsFilter(
                     onClick = {
                         storedListSetting.storedListSettingData.applyToListSettings(listSettings)
                         onListSettingsChanged()
-                              },
+                    },
                     label = { Text(storedListSetting.name) },
-                    selected = storedListSetting.module == module && storedListSetting.storedListSettingData == StoredListSettingData.fromListSettings(listSettings),
+                    selected = storedListSetting.module == module && storedListSetting.storedListSettingData == StoredListSettingData.fromListSettings(
+                        listSettings
+                    ),
                     trailingIcon = {
 
-                        if(!isWidgetConfig) {
+                        if (!isWidgetConfig) {
                             Icon(
                                 Icons.Outlined.Close,
                                 contentDescription = stringResource(id = R.string.delete),
@@ -229,60 +248,34 @@ fun ListOptionsFilter(
                     }
                 )
             }
-            if(storedListSettings.size > maxEntries) {
+            if (storedListSettings.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
-                    Text(stringResource(R.string.filter_options_more_entries, storedListSettings.size-maxEntries))
+                    Text(
+                        stringResource(
+                            R.string.filter_options_more_entries,
+                            storedListSettings.size - maxEntries
+                        )
+                    )
                 }
             }
-            if(maxEntries == Int.MAX_VALUE) {
+            if (maxEntries == Int.MAX_VALUE) {
                 TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
                     Text(stringResource(R.string.filter_options_less_entries))
                 }
             }
         }
 
-        ////// QuickFilters
+        ////// Special Filters
         FilterSection(
             icon = Icons.Outlined.FilterAlt,
             headline = stringResource(id = R.string.filter_special),
             onResetSelection = {
                 listSettings.isExcludeDone.value = false
-                if (module == Module.TODO) {
-                    listSettings.isFilterOverdue.value = false
-                    listSettings.isFilterDueToday.value = false
-                    listSettings.isFilterDueTomorrow.value = false
-                    listSettings.isFilterDueWithin7Days.value = false
-                    listSettings.isFilterDueFuture.value = false
-                    listSettings.isFilterStartInPast.value = false
-                    listSettings.isFilterStartToday.value = false
-                    listSettings.isFilterStartTomorrow.value = false
-                    listSettings.isFilterStartWithin7Days.value = false
-                    listSettings.isFilterStartFuture.value = false
-                    listSettings.isFilterNoDatesSet.value = false
-                    listSettings.isFilterNoStartDateSet.value = false
-                    listSettings.isFilterNoDueDateSet.value = false
-                    listSettings.isFilterNoCompletedDateSet.value = false
-                }
+                listSettings.isFilterNoDatesSet.value = false
                 onListSettingsChanged()
             },
             onInvertSelection = {
                 listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
-                if (module == Module.TODO) {
-                    listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
-                    listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
-                    listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
-                    listSettings.isFilterDueWithin7Days.value = !listSettings.isFilterDueWithin7Days.value
-                    listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
-                    listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
-                    listSettings.isFilterStartToday.value = !listSettings.isFilterStartToday.value
-                    listSettings.isFilterStartTomorrow.value = !listSettings.isFilterStartTomorrow.value
-                    listSettings.isFilterStartWithin7Days.value = !listSettings.isFilterStartWithin7Days.value
-                    listSettings.isFilterStartFuture.value = !listSettings.isFilterStartFuture.value
-                    listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
-                    listSettings.isFilterNoStartDateSet.value = !listSettings.isFilterNoStartDateSet.value
-                    listSettings.isFilterNoDueDateSet.value = !listSettings.isFilterNoDueDateSet.value
-                    listSettings.isFilterNoCompletedDateSet.value = !listSettings.isFilterNoCompletedDateSet.value
-                }
                 onListSettingsChanged()
             })
         {
@@ -290,16 +283,64 @@ fun ListOptionsFilter(
                 selected = listSettings.isExcludeDone.value,
                 onClick = {
                     listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
+                    if (module == Module.TODO || module == Module.JOURNAL)
+                        listSettings.isFilterNoDatesSet.value =
+                            !listSettings.isFilterNoDatesSet.value
                     onListSettingsChanged()
                 },
                 label = { Text(stringResource(id = R.string.list_hide_completed_tasks)) }
             )
 
-            if (module == Module.TODO || module == Module.JOURNAL) {
+            if(module == Module.TODO || module == Module.JOURNAL)
+                FilterChip(
+                    selected = listSettings.isFilterNoDatesSet.value,
+                    onClick = {
+                        listSettings.isFilterNoDatesSet.value =
+                            !listSettings.isFilterNoDatesSet.value
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = R.string.list_no_dates_set)) }
+                )
+        }
+
+        ////// Filter by DtStart
+        if (module == Module.TODO || module == Module.JOURNAL) {
+
+            FilterSection(
+                icon = Icons.Outlined.CalendarMonth,
+                headline = stringResource(id = if (module == Module.TODO) R.string.started else R.string.date),
+                onResetSelection = {
+                    listSettings.isFilterNoStartDateSet.value = false
+                    listSettings.isFilterStartInPast.value = false
+                    listSettings.isFilterStartToday.value = false
+                    listSettings.isFilterStartTomorrow.value = false
+                    listSettings.isFilterStartWithin7Days.value = false
+                    listSettings.isFilterStartFuture.value = false
+                    listSettings.filterStartRangeStart.value = null
+                    listSettings.filterStartRangeEnd.value = null
+                    onListSettingsChanged()
+                },
+                onInvertSelection = {
+                    listSettings.isFilterNoStartDateSet.value =
+                        !listSettings.isFilterNoStartDateSet.value
+                    listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
+                    listSettings.isFilterStartToday.value = !listSettings.isFilterStartToday.value
+                    listSettings.isFilterStartTomorrow.value =
+                        !listSettings.isFilterStartTomorrow.value
+                    listSettings.isFilterStartWithin7Days.value =
+                        !listSettings.isFilterStartWithin7Days.value
+                    listSettings.isFilterStartFuture.value = !listSettings.isFilterStartFuture.value
+                    listSettings.filterStartRangeStart.value = null
+                    listSettings.filterStartRangeEnd.value = null
+                    onListSettingsChanged()
+                })
+            {
+
                 FilterChip(
                     selected = listSettings.isFilterStartInPast.value,
                     onClick = {
-                        listSettings.isFilterStartInPast.value = !listSettings.isFilterStartInPast.value
+                        listSettings.isFilterStartInPast.value =
+                            !listSettings.isFilterStartInPast.value
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = if (module == Module.TODO) R.string.list_start_date_in_past else R.string.list_date_start_in_past)) }
@@ -340,9 +381,81 @@ fun ListOptionsFilter(
                     },
                     label = { Text(stringResource(id = if (module == Module.TODO) R.string.list_start_date_future else R.string.list_date_future)) }
                 )
-            }
 
-            if (module == Module.TODO) {
+                FilterChip(
+                    selected = listSettings.isFilterNoStartDateSet.value,
+                    onClick = {
+                        listSettings.isFilterNoStartDateSet.value =
+                            !listSettings.isFilterNoStartDateSet.value
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = R.string.list_without_start_date)) }
+                )
+
+                FilterChip(
+                    selected = listSettings.filterStartRangeStart.value != null || listSettings.filterStartRangeEnd.value != null,
+                    onClick = {
+                        showFilterDateRangeStartDialog = true
+                    },
+                    label = {
+                        val dateFrom = listSettings.filterStartRangeStart.value?.let {
+                            DateTimeUtils.convertLongToShortDateString(
+                                it,
+                                null
+                            )
+                        } ?: "…"
+                        val dateTo = listSettings.filterStartRangeEnd.value?.let {
+                            DateTimeUtils.convertLongToShortDateString(
+                                it,
+                                null
+                            )
+                        } ?: "…"
+                        val text = if (module == Module.TODO)
+                            stringResource(
+                                id = R.string.filter_started_from_to,
+                                dateFrom,
+                                dateTo
+                            )
+                        else
+                            stringResource(id = R.string.filter_date_from_to, dateFrom, dateTo)
+                        Text(text)
+                    }
+                )
+            }
+        }
+
+
+        ////// Filter by Due
+        if (module == Module.TODO) {
+            FilterSection(
+                icon = Icons.Outlined.CalendarMonth,
+                headline = stringResource(id = R.string.due),
+                onResetSelection = {
+                    listSettings.isFilterOverdue.value = false
+                    listSettings.isFilterDueToday.value = false
+                    listSettings.isFilterDueTomorrow.value = false
+                    listSettings.isFilterDueWithin7Days.value = false
+                    listSettings.isFilterDueFuture.value = false
+                    listSettings.isFilterNoDueDateSet.value = false
+                    listSettings.filterDueRangeStart.value = null
+                    listSettings.filterDueRangeEnd.value = null
+                    onListSettingsChanged()
+                },
+                onInvertSelection = {
+                    listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
+                    listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
+                    listSettings.isFilterDueTomorrow.value =
+                        !listSettings.isFilterDueTomorrow.value
+                    listSettings.isFilterDueWithin7Days.value =
+                        !listSettings.isFilterDueWithin7Days.value
+                    listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
+                    listSettings.isFilterNoDueDateSet.value =
+                        !listSettings.isFilterNoDueDateSet.value
+                    listSettings.filterDueRangeStart.value = null
+                    listSettings.filterDueRangeEnd.value = null
+                    onListSettingsChanged()
+                })
+            {
                 FilterChip(
                     selected = listSettings.isFilterOverdue.value,
                     onClick = {
@@ -387,24 +500,54 @@ fun ListOptionsFilter(
                     },
                     label = { Text(stringResource(id = R.string.list_due_future)) }
                 )
+
                 FilterChip(
-                    selected = listSettings.isFilterNoStartDateSet.value,
+                    selected = listSettings.filterDueRangeStart.value != null || listSettings.filterDueRangeEnd.value != null,
                     onClick = {
-                        listSettings.isFilterNoStartDateSet.value =
-                            !listSettings.isFilterNoStartDateSet.value
-                        onListSettingsChanged()
+                        showFilterDateRangeDueDialog = true
                     },
-                    label = { Text(stringResource(id = R.string.list_without_start_date)) }
+                    label = {
+                        val dueFrom = listSettings.filterDueRangeStart.value?.let {
+                            DateTimeUtils.convertLongToShortDateString(
+                                it,
+                                null
+                            )
+                        } ?: "…"
+                        val dueTo = listSettings.filterDueRangeEnd.value?.let {
+                            DateTimeUtils.convertLongToShortDateString(
+                                it,
+                                null
+                            )
+                        } ?: "…"
+                        val text =
+                            stringResource(id = R.string.filter_due_from_to, dueFrom, dueTo)
+                        Text(text)
+                    }
                 )
-                FilterChip(
-                    selected = listSettings.isFilterNoDueDateSet.value,
-                    onClick = {
-                        listSettings.isFilterNoDueDateSet.value =
-                            !listSettings.isFilterNoDueDateSet.value
-                        onListSettingsChanged()
-                    },
-                    label = { Text(stringResource(id = R.string.list_without_due_date)) }
-                )
+            }
+        }
+
+        ////// Filter by Completed
+        if (module == Module.TODO) {
+            FilterSection(
+                icon = Icons.Outlined.DoneOutline,
+                headline = stringResource(id = R.string.completed),
+                onResetSelection = {
+                    listSettings.isFilterNoCompletedDateSet.value = false
+                    listSettings.filterCompletedRangeStart.value = null
+                    listSettings.filterCompletedRangeEnd.value = null
+                    onListSettingsChanged()
+                },
+                onInvertSelection = {
+                    listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
+                    listSettings.isFilterNoCompletedDateSet.value =
+                        !listSettings.isFilterNoCompletedDateSet.value
+                    listSettings.filterCompletedRangeStart.value = null
+                    listSettings.filterCompletedRangeEnd.value = null
+                    onListSettingsChanged()
+                })
+            {
+
                 FilterChip(
                     selected = listSettings.isFilterNoCompletedDateSet.value,
                     onClick = {
@@ -414,58 +557,31 @@ fun ListOptionsFilter(
                     },
                     label = { Text(stringResource(id = R.string.list_without_completed_date)) }
                 )
-                FilterChip(
-                    selected = listSettings.isFilterNoDatesSet.value,
-                    onClick = {
-                        listSettings.isFilterNoDatesSet.value =
-                            !listSettings.isFilterNoDatesSet.value
-                        onListSettingsChanged()
-                    },
-                    label = { Text(stringResource(id = R.string.list_no_dates_set)) }
-                )
-            }
 
-            FilterChip(
-                selected = listSettings.filterStartRangeStart.value != null || listSettings.filterStartRangeEnd.value != null,
-                onClick = {
-                    showFilterDateRangeStartDialog = true
-                },
-                label = {
-                    var text = if(module == Module.TODO) stringResource(id = R.string.started) else stringResource(id = R.string.date)
-                    text += ": "
-                    text += listSettings.filterStartRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
-                    text += " - "
-                    text += listSettings.filterStartRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
-                    Text(text)
-                }
-            )
 
-            if(module == Module.TODO) {
-                FilterChip(
-                    selected = listSettings.filterDueRangeStart.value != null || listSettings.filterDueRangeEnd.value != null,
-                    onClick = {
-                        showFilterDateRangeDueDialog = true
-                    },
-                    label = {
-                        var text = stringResource(id = R.string.due)
-                        text += ": "
-                        text += listSettings.filterDueRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
-                        text += " - "
-                        text += listSettings.filterDueRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
-                        Text(text)
-                    }
-                )
                 FilterChip(
                     selected = listSettings.filterCompletedRangeStart.value != null || listSettings.filterCompletedRangeEnd.value != null,
                     onClick = {
                         showFilterDateRangeCompletedDialog = true
                     },
                     label = {
-                        var text = stringResource(id = R.string.completed)
-                        text += ": "
-                        text += listSettings.filterCompletedRangeStart.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)} ?: "..."
-                        text += " - "
-                        text += listSettings.filterCompletedRangeEnd.value?.let { DateTimeUtils.convertLongToShortDateString(it, null)}  ?: "..."
+                        val completedFrom = listSettings.filterCompletedRangeStart.value?.let {
+                            DateTimeUtils.convertLongToShortDateString(
+                                it,
+                                null
+                            )
+                        } ?: "…"
+                        val completedTo = listSettings.filterCompletedRangeEnd.value?.let {
+                            DateTimeUtils.convertLongToShortDateString(
+                                it,
+                                null
+                            )
+                        } ?: "…"
+                        val text = stringResource(
+                            id = R.string.filter_completed_from_to,
+                            completedFrom,
+                            completedTo
+                        )
                         Text(text)
                     }
                 )
@@ -483,7 +599,9 @@ fun ListOptionsFilter(
             },
             onInvertSelection = {
                 listSettings.isFilterNoCategorySet.value = !listSettings.isFilterNoCategorySet.value
-                val missing = allCategories.filter { category -> !listSettings.searchCategories.contains(category) }
+                val missing = allCategories.filter { category ->
+                    !listSettings.searchCategories.contains(category)
+                }
                 listSettings.searchCategories.clear()
                 listSettings.searchCategories.addAll(missing)
                 onListSettingsChanged()
@@ -497,16 +615,18 @@ fun ListOptionsFilter(
             FilterChip(
                 selected = listSettings.isFilterNoCategorySet.value,
                 onClick = {
-                    listSettings.isFilterNoCategorySet.value = !listSettings.isFilterNoCategorySet.value
+                    listSettings.isFilterNoCategorySet.value =
+                        !listSettings.isFilterNoCategorySet.value
                     onListSettingsChanged()
                 },
                 label = { Text(stringResource(id = R.string.filter_no_category)) }
             )
 
             var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
-            val allCategoriesSorted = if(allCategories.size > maxEntries) allCategories else allCategories.sortedBy { it.lowercase() }
+            val allCategoriesSorted =
+                if (allCategories.size > maxEntries) allCategories else allCategories.sortedBy { it.lowercase() }
             allCategoriesSorted.forEachIndexed { index, category ->
-                if(index > maxEntries-1)
+                if (index > maxEntries - 1)
                     return@forEachIndexed
 
                 FilterChip(
@@ -522,12 +642,17 @@ fun ListOptionsFilter(
                 )
             }
 
-            if(allCategories.size > maxEntries) {
+            if (allCategories.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
-                    Text(stringResource(R.string.filter_options_more_entries, allCategories.size-maxEntries))
+                    Text(
+                        stringResource(
+                            R.string.filter_options_more_entries,
+                            allCategories.size - maxEntries
+                        )
+                    )
                 }
             }
-            if(maxEntries == Int.MAX_VALUE) {
+            if (maxEntries == Int.MAX_VALUE) {
                 TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
                     Text(stringResource(R.string.filter_options_less_entries))
                 }
@@ -543,7 +668,8 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             },
             onInvertSelection = {
-                val missing = allAccounts.toMutableList().apply { removeAll(listSettings.searchAccount) }
+                val missing =
+                    allAccounts.toMutableList().apply { removeAll(listSettings.searchAccount) }
                 listSettings.searchAccount.clear()
                 listSettings.searchAccount.addAll(missing)
                 onListSettingsChanged()
@@ -552,7 +678,7 @@ fun ListOptionsFilter(
             var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
 
             allAccounts.forEachIndexed { index, account ->
-                if(index > maxEntries-1)
+                if (index > maxEntries - 1)
                     return@forEachIndexed
 
                 FilterChip(
@@ -568,12 +694,17 @@ fun ListOptionsFilter(
                 )
             }
 
-            if(allAccounts.size > maxEntries) {
+            if (allAccounts.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
-                    Text(stringResource(R.string.filter_options_more_entries, allAccounts.size-maxEntries))
+                    Text(
+                        stringResource(
+                            R.string.filter_options_more_entries,
+                            allAccounts.size - maxEntries
+                        )
+                    )
                 }
             }
-            if(maxEntries == Int.MAX_VALUE) {
+            if (maxEntries == Int.MAX_VALUE) {
                 TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
                     Text(stringResource(R.string.filter_options_less_entries))
                 }
@@ -589,7 +720,8 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             },
             onInvertSelection = {
-                val missing = allCollections.toMutableList().apply { removeAll(listSettings.searchCollection) }
+                val missing = allCollections.toMutableList()
+                    .apply { removeAll(listSettings.searchCollection) }
                 listSettings.searchCollection.clear()
                 listSettings.searchCollection.addAll(missing)
                 onListSettingsChanged()
@@ -598,7 +730,7 @@ fun ListOptionsFilter(
             var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
 
             allCollections.forEachIndexed { index, collection ->
-                if(index > maxEntries-1)
+                if (index > maxEntries - 1)
                     return@forEachIndexed
 
                 FilterChip(
@@ -614,12 +746,17 @@ fun ListOptionsFilter(
                 )
             }
 
-            if(allCollections.size > maxEntries) {
+            if (allCollections.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
-                    Text(stringResource(R.string.filter_options_more_entries, allCollections.size-maxEntries))
+                    Text(
+                        stringResource(
+                            R.string.filter_options_more_entries,
+                            allCollections.size - maxEntries
+                        )
+                    )
                 }
             }
-            if(maxEntries == Int.MAX_VALUE) {
+            if (maxEntries == Int.MAX_VALUE) {
                 TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
                     Text(stringResource(R.string.filter_options_less_entries))
                 }
@@ -635,7 +772,8 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             },
             onInvertSelection = {
-                val missing = Status.valuesFor(module).filter { status -> !listSettings.searchStatus.contains(status)}
+                val missing = Status.valuesFor(module)
+                    .filter { status -> !listSettings.searchStatus.contains(status) }
                 listSettings.searchStatus.clear()
                 listSettings.searchStatus.addAll(missing)
                 onListSettingsChanged()
@@ -645,10 +783,10 @@ fun ListOptionsFilter(
                 FilterChip(
                     selected = listSettings.searchStatus.contains(status),
                     onClick = {
-                            if (listSettings.searchStatus.contains(status))
-                                listSettings.searchStatus.remove(status)
-                            else
-                                listSettings.searchStatus.add(status)
+                        if (listSettings.searchStatus.contains(status))
+                            listSettings.searchStatus.remove(status)
+                        else
+                            listSettings.searchStatus.add(status)
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = status.stringResource)) }
@@ -656,7 +794,7 @@ fun ListOptionsFilter(
             }
         }
 
-        if(extendedStatuses.any { it.module == module }) {
+        if (extendedStatuses.any { it.module == module }) {
             FilterSection(
                 icon = Icons.Outlined.PublishedWithChanges,
                 headline = stringResource(id = R.string.extended_status),
@@ -665,7 +803,9 @@ fun ListOptionsFilter(
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    val missing = extendedStatuses.filter { xstatus -> !listSettings.searchXStatus.contains(xstatus.xstatus) }
+                    val missing = extendedStatuses.filter { xstatus ->
+                        !listSettings.searchXStatus.contains(xstatus.xstatus)
+                    }
                     listSettings.searchXStatus.clear()
                     listSettings.searchXStatus.addAll(missing.map { it.xstatus })
                     onListSettingsChanged()
@@ -674,7 +814,7 @@ fun ListOptionsFilter(
                 var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
 
                 extendedStatuses.filter { it.module == module }.forEachIndexed { index, xstatus ->
-                    if(index > maxEntries-1)
+                    if (index > maxEntries - 1)
                         return@forEachIndexed
 
                     FilterChip(
@@ -690,12 +830,17 @@ fun ListOptionsFilter(
                     )
                 }
 
-                if(extendedStatuses.size > maxEntries) {
+                if (extendedStatuses.size > maxEntries) {
                     TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
-                        Text(stringResource(R.string.filter_options_more_entries, extendedStatuses.size-maxEntries))
+                        Text(
+                            stringResource(
+                                R.string.filter_options_more_entries,
+                                extendedStatuses.size - maxEntries
+                            )
+                        )
                     }
                 }
-                if(maxEntries == Int.MAX_VALUE) {
+                if (maxEntries == Int.MAX_VALUE) {
                     TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
                         Text(stringResource(R.string.filter_options_less_entries))
                     }
@@ -713,7 +858,9 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             },
             onInvertSelection = {
-                val missing = Classification.entries.filter { classification -> !listSettings.searchClassification.contains(classification) }
+                val missing = Classification.entries.filter { classification ->
+                    !listSettings.searchClassification.contains(classification)
+                }
                 listSettings.searchClassification.clear()
                 listSettings.searchClassification.addAll(missing)
                 onListSettingsChanged()
@@ -724,9 +871,9 @@ fun ListOptionsFilter(
                     selected = listSettings.searchClassification.contains(classification),
                     onClick = {
                         if (listSettings.searchClassification.contains(classification))
-                                listSettings.searchClassification.remove(classification)
-                            else
-                                listSettings.searchClassification.add(classification)
+                            listSettings.searchClassification.remove(classification)
+                        else
+                            listSettings.searchClassification.add(classification)
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = classification.stringResource)) }
@@ -746,8 +893,11 @@ fun ListOptionsFilter(
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
-                    val missing = allResources.filter { resource -> !listSettings.searchResources.contains(resource) }
+                    listSettings.isFilterNoResourceSet.value =
+                        !listSettings.isFilterNoResourceSet.value
+                    val missing = allResources.filter { resource ->
+                        !listSettings.searchResources.contains(resource)
+                    }
                     listSettings.searchResources.clear()
                     listSettings.searchResources.addAll(missing)
                     onListSettingsChanged()
@@ -761,16 +911,18 @@ fun ListOptionsFilter(
                 FilterChip(
                     selected = listSettings.isFilterNoResourceSet.value,
                     onClick = {
-                        listSettings.isFilterNoResourceSet.value = !listSettings.isFilterNoResourceSet.value
+                        listSettings.isFilterNoResourceSet.value =
+                            !listSettings.isFilterNoResourceSet.value
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = R.string.filter_no_resource)) }
                 )
 
                 var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
-                val allResourcesSorted = if(allResources.size > maxEntries) allResources else allResources.sortedBy { it.lowercase() }
+                val allResourcesSorted =
+                    if (allResources.size > maxEntries) allResources else allResources.sortedBy { it.lowercase() }
                 allResourcesSorted.forEachIndexed { index, resource ->
-                    if(index > maxEntries-1)
+                    if (index > maxEntries - 1)
                         return@forEachIndexed
 
                     FilterChip(
@@ -786,12 +938,17 @@ fun ListOptionsFilter(
                     )
                 }
 
-                if(allResources.size > maxEntries) {
+                if (allResources.size > maxEntries) {
                     TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
-                        Text(stringResource(R.string.filter_options_more_entries, allResources.size-maxEntries))
+                        Text(
+                            stringResource(
+                                R.string.filter_options_more_entries,
+                                allResources.size - maxEntries
+                            )
+                        )
                     }
                 }
-                if(maxEntries == Int.MAX_VALUE) {
+                if (maxEntries == Int.MAX_VALUE) {
                     TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
                         Text(stringResource(R.string.filter_options_less_entries))
                     }
@@ -834,8 +991,25 @@ fun ListOptionsFilter_Preview_TODO() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
-            storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
+            extendedStatusesLive = MutableLiveData(
+                listOf(
+                    ExtendedStatus(
+                        "individual",
+                        Module.JOURNAL,
+                        Status.FINAL,
+                        null
+                    )
+                )
+            ),
+            storedListSettingLive = MutableLiveData(
+                listOf(
+                    StoredListSetting(
+                        module = Module.JOURNAL,
+                        name = "test",
+                        storedListSettingData = StoredListSettingData()
+                    )
+                )
+            ),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }
@@ -875,8 +1049,25 @@ fun ListOptionsFilter_Preview_JOURNAL() {
             ),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
-            extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
+            storedListSettingLive = MutableLiveData(
+                listOf(
+                    StoredListSetting(
+                        module = Module.JOURNAL,
+                        name = "test",
+                        storedListSettingData = StoredListSettingData()
+                    )
+                )
+            ),
+            extendedStatusesLive = MutableLiveData(
+                listOf(
+                    ExtendedStatus(
+                        "individual",
+                        Module.JOURNAL,
+                        Status.FINAL,
+                        null
+                    )
+                )
+            ),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }

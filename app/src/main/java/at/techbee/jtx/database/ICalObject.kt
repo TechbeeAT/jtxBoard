@@ -1328,7 +1328,7 @@ data class ICalObject(
                     Recur.Frequency.DAILY -> it - (365).days.inWholeMilliseconds
                     Recur.Frequency.WEEKLY -> it - (365).days.inWholeMilliseconds
                     Recur.Frequency.MONTHLY -> it - (3650).days.inWholeMilliseconds
-                    Recur.Frequency.YEARLY -> it - (3650).days.inWholeMilliseconds
+                    Recur.Frequency.YEARLY -> it - (36500).days.inWholeMilliseconds
                     else -> it - (365).days.inWholeMilliseconds
                 }
             })
@@ -1340,7 +1340,7 @@ data class ICalObject(
                     Recur.Frequency.DAILY -> it + (365).days.inWholeMilliseconds
                     Recur.Frequency.WEEKLY -> it + (365).days.inWholeMilliseconds
                     Recur.Frequency.MONTHLY -> it + (3650).days.inWholeMilliseconds
-                    Recur.Frequency.YEARLY -> it + (3650).days.inWholeMilliseconds
+                    Recur.Frequency.YEARLY -> it + (36500).days.inWholeMilliseconds
                     else -> it + (365).days.inWholeMilliseconds
                 }
             })

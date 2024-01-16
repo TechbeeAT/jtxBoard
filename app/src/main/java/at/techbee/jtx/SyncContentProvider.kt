@@ -666,7 +666,7 @@ class SyncContentProvider : ContentProvider() {
 
         val isSyncAdapter = uri.getBooleanQueryParameter(CALLER_IS_SYNCADAPTER, false)
         if (isSyncAdapter) {
-            val syncApp = SyncApp.values().firstOrNull { it.packageName == callingPackage }
+            val syncApp = SyncApp.entries.firstOrNull { it.packageName == callingPackage }
             if(syncApp != null && !SyncUtil.isSyncAppCompatible(syncApp, context!!))
                 throw java.lang.IllegalArgumentException(context!!.getString(R.string.dialog_sync_app_outdated_message, syncApp.appName, syncApp.minVersionName ))
              else

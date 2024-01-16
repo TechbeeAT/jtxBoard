@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.EditCalendar
 import androidx.compose.material.icons.outlined.Fingerprint
+import androidx.compose.material.icons.outlined.FontDownload
 import androidx.compose.material.icons.outlined.FormatPaint
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Public
@@ -158,6 +159,17 @@ enum class DropdownSetting(
             DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL
         ),
         default = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL
+    ),
+    SETTING_FONT(
+        key = "setting_font",
+        icon = Icons.Outlined.FontDownload,
+        title = R.string.settings_font,
+        options = listOf(
+            DropdownSettingOption.FONT_ROBOTO,
+            DropdownSettingOption.FONT_NOTO,
+            DropdownSettingOption.FONT_MONTSERRAT_ALTERNATES
+        ),
+        default = DropdownSettingOption.FONT_ROBOTO
     )
     ;
 

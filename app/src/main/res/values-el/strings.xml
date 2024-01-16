@@ -354,6 +354,7 @@
     <string name="settings_timezone_display_local">"Εμφάνιση ώρας στην τοπική ζώνη ώρας"</string>
     <string name="settings_timezone_display_original">"Εμφάνιση ώρας στην αρχική ζώνη ώρας"</string>
     <string name="settings_timezone_display_local_and_original">"Εμφάνιση ώρας στην τοπική και στην αρχική ζώνη ώρας (προβολή λεπτομερειών μόνο)"</string>
+    <string name="settings_font">"Γραμματοσειρά"</string>
     <string name="donate_dialog_title">"Σας αρέσει το jtx Board;"</string>
     <string name="donate_dialog_message">"Η δημιουργία μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μια σκληρή δουλειά. Εάν σας αρέσει αυτή η εφαρμογή και εάν θέλετε να εξασφαλίσετε την συνεχή ανάπτυξη της, σκεφτείτε για μια δωρεά :-)
  Ευχαριστώ!"</string>
@@ -383,6 +384,16 @@
     <string name="back">"Πίσω"</string>
     <string name="details">"Λεπτομέριες"</string>
     <string name="date">"Ημερομηνία"</string>
+    <string name="group_by_date_day">"Ημερομηνία (ημέρα)"</string>
+    <string name="group_by_date_week">"Ημερομηνία (εβδομάδα)"</string>
+    <string name="group_by_date_month">"Ημερομηνία (μήνας)"</string>
+    <string name="group_by_started_day">"Έναρξη (ημέρα)"</string>
+    <string name="group_by_started_week">"Έναρξη (εβδομάδα)"</string>
+    <string name="group_by_started_month">"Έναρξη (μήνας)"</string>
+    <string name="group_by_due_day">"Μέχρι (ημέρα)"</string>
+    <string name="group_by_due_week">"Μέχρι (εβδομάδα)"</string>
+    <string name="group_by_due_month">"Μέχρι (μήνας)"</string>
+    <string name="week_number_year">"Εβδομάδα %1$d/%2$d"</string>
     <string name="summary_description">"Περίληψη/Περιγραφή"</string>
     <string name="status_classification_priority">"Κατάσταση/Ταξινόμηση/Προτεραιότητα"</string>
     <string name="timezone">"Ζώνη ώρας"</string>
@@ -469,6 +480,7 @@
     <string name="dialog_add_audio_entry_title">"Προσθήκη καταχώρησης ήχου"</string>
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
+    <string name="menu_list_viewmode_week">"Προβολή εβδομάδας"</string>
     <string name="settings_tasks">"Ρυθμίσεις εργασιών"</string>
     <string name="settings_alarms">"Ρυθμίσεις ξυπνητηριού"</string>
     <string name="settings_tasks_status_progress">"Ρυθμίσεις εργασιών (κατάσταση/πρόοδος)"</string>
@@ -528,6 +540,10 @@
     <string name="filter_any">"Οποιαδήποτε"</string>
     <string name="filter_all">"Όλα"</string>
     <string name="filter_none">"Καμία"</string>
+    <string name="filter_date_from_to">"Ημερομηνία: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Έναρξη: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Λήξη: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Ολοκληρώθηκε: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Παρελθοντική ημερομηνία"</string>
     <string name="list_date_today">"Σήμερα"</string>

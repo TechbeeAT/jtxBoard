@@ -473,6 +473,10 @@ fun ListScreenTabContainer(
                             HorizontalDivider()
                         }
                         ViewMode.entries.forEach { viewMode ->
+
+                            if(getActiveViewModel().module == Module.NOTE && viewMode == ViewMode.WEEK)
+                                return@forEach
+
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
                                 isSelected = getActiveViewModel().listSettings.viewMode.value == viewMode,
@@ -598,7 +602,13 @@ fun ListScreenTabContainer(
                         }
                         listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
                     },
-                    onDeleteDone = { listViewModel.deleteDone() }
+                    onDeleteDone = { listViewModel.deleteDone() },
+                    onListSettingsChanged = {
+                        listViewModel.updateSearch(
+                            saveListSettings = true,
+                            isAuthenticated = globalStateHolder.isAuthenticated.value
+                        )
+                    }
                 )
             } else if(timeout) {
                 BottomAppBar {

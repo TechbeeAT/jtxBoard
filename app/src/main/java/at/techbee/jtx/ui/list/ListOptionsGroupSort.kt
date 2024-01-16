@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.outlined.ViewHeadline
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +35,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListOptionsGroupSort(
     module: Module,
@@ -50,52 +49,56 @@ fun ListOptionsGroupSort(
         horizontalAlignment = Alignment.Start
     ) {
 
-        HeadlineWithIcon(
-            icon = Icons.Outlined.ViewHeadline,
-            iconDesc = stringResource(id = R.string.filter_group_by),
-            text = stringResource(id = R.string.filter_group_by),
-            modifier = Modifier.padding(top = 8.dp)
-        )
+        if(listSettings.viewMode.value == ViewMode.LIST
+            || listSettings.viewMode.value == ViewMode.COMPACT
+        ) {
+            HeadlineWithIcon(
+                icon = Icons.Outlined.ViewHeadline,
+                iconDesc = stringResource(id = R.string.filter_group_by),
+                text = stringResource(id = R.string.filter_group_by),
+                modifier = Modifier.padding(top = 8.dp)
+            )
 
-        Text(
-            text = stringResource(id = R.string.filter_group_by_info),
-            modifier = Modifier.padding(8.dp),
-            style = MaterialTheme.typography.bodySmall,
-            fontStyle = FontStyle.Italic
-        )
+            Text(
+                text = stringResource(id = R.string.filter_group_by_info),
+                modifier = Modifier.padding(8.dp),
+                style = MaterialTheme.typography.bodySmall,
+                fontStyle = FontStyle.Italic
+            )
 
-        FlowRow(modifier = Modifier.fillMaxWidth()) {
-            GroupBy.getValuesFor(module).forEach { groupBy ->
-                FilterChip(
-                    selected = listSettings.groupBy.value == groupBy,
-                    onClick = {
-                        if (listSettings.groupBy.value != groupBy)
-                            listSettings.groupBy.value = groupBy
-                        else
-                            listSettings.groupBy.value = null
+            FlowRow(modifier = Modifier.fillMaxWidth()) {
+                GroupBy.getValuesFor(module).forEach { groupBy ->
+                    FilterChip(
+                        selected = listSettings.groupBy.value == groupBy,
+                        onClick = {
+                            if (listSettings.groupBy.value != groupBy)
+                                listSettings.groupBy.value = groupBy
+                            else
+                                listSettings.groupBy.value = null
 
-                        listSettings.orderBy.value = when(listSettings.groupBy.value) {
-                            GroupBy.CATEGORY -> listSettings.orderBy.value
-                            GroupBy.RESOURCE -> listSettings.orderBy.value
-                            GroupBy.START, GroupBy.START_WEEK, GroupBy.START_MONTH -> OrderBy.START_VTODO
-                            GroupBy.DATE, GroupBy.DATE_WEEK, GroupBy.DATE_MONTH -> OrderBy.START_VJOURNAL
-                            GroupBy.CLASSIFICATION -> OrderBy.CLASSIFICATION
-                            GroupBy.PRIORITY -> OrderBy.PRIORITY
-                            GroupBy.STATUS -> OrderBy.STATUS
-                            GroupBy.DUE, GroupBy.DUE_WEEK, GroupBy.DUE_MONTH -> OrderBy.DUE
-                            GroupBy.ACCOUNT -> OrderBy.ACCOUNT
-                            GroupBy.COLLECTION -> OrderBy.COLLECTION
-                            null -> listSettings.orderBy.value
-                        }
-                        onListSettingsChanged()
-                    },
-                    label = { Text(stringResource(id = groupBy.stringResource)) },
-                    modifier = Modifier.padding(end = 4.dp)
-                )
+                            listSettings.orderBy.value = when (listSettings.groupBy.value) {
+                                GroupBy.CATEGORY -> listSettings.orderBy.value
+                                GroupBy.RESOURCE -> listSettings.orderBy.value
+                                GroupBy.START, GroupBy.START_WEEK, GroupBy.START_MONTH -> OrderBy.START_VTODO
+                                GroupBy.DATE, GroupBy.DATE_WEEK, GroupBy.DATE_MONTH -> OrderBy.START_VJOURNAL
+                                GroupBy.CLASSIFICATION -> OrderBy.CLASSIFICATION
+                                GroupBy.PRIORITY -> OrderBy.PRIORITY
+                                GroupBy.STATUS -> OrderBy.STATUS
+                                GroupBy.DUE, GroupBy.DUE_WEEK, GroupBy.DUE_MONTH -> OrderBy.DUE
+                                GroupBy.ACCOUNT -> OrderBy.ACCOUNT
+                                GroupBy.COLLECTION -> OrderBy.COLLECTION
+                                null -> listSettings.orderBy.value
+                            }
+                            onListSettingsChanged()
+                        },
+                        label = { Text(stringResource(id = groupBy.stringResource)) },
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                }
             }
-        }
 
-        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+        }
 
         HeadlineWithIcon(
             icon = Icons.AutoMirrored.Outlined.Sort,

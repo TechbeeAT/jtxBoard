@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
@@ -30,7 +31,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedFilterChip
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -77,7 +77,7 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import com.arnyminerz.markdowntext.MarkdownText
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListCard(
     iCalObject: ICal4List,
@@ -134,7 +134,8 @@ fun ListCard(
 
     Card(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
+            containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+            contentColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
         ),
         elevation = CardDefaults.elevatedCardElevation(),
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
@@ -171,6 +172,7 @@ fun ListCard(
                             start = 4.dp,
                             end = 12.dp
                         )
+                            .widthIn(min = 48.dp)
                     )
 
                 Column(
@@ -906,7 +908,7 @@ fun ICalObjectListCardPreview_NOTE_one_liner() {
             storedCategories = emptyList(),
             storedResources = emptyList(),
             storedStatuses = emptyList(),
-            selected = listOf(),
+            selected = listOf(icalobject.id),
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             attachments = listOf(),

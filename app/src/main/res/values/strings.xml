@@ -10,6 +10,9 @@
     <string name="link_jtx_support" translatable="false">"https://jtx.techbee.at/support"</string>
     <string name="link_jtx_privacy_policy" translatable="false">"https://jtx.techbee.at/privacy"</string>
     <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
+    <string name="font_roboto" translatable="false">"Roboto"</string>
+    <string name="font_noto" translatable="false">"Noto"</string>
+    <string name="font_montserrat_alternates" translatable="false">"Montserrat Alternates"</string>
     <!-- Global Strings -->
     <string name="save">"Save"</string>
     <string name="update">"Update"</string>
@@ -365,6 +368,7 @@
     <string name="settings_timezone_display_local">"Show time in local timezone"</string>
     <string name="settings_timezone_display_original">"Show time in original timezone"</string>
     <string name="settings_timezone_display_local_and_original">"Show time in local and in original timezone (detail view only)"</string>
+    <string name="settings_font">"Font"</string>
     <string name="donate_dialog_title">"Do you like jtx Board?"</string>
     <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
 Thank you!"</string>
@@ -491,6 +495,7 @@ Thank you!"</string>
     <string name="dialog_add_audio_entry_title">"Add audio entry"</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
+    <string name="menu_list_viewmode_week">"Week view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>
     <string name="settings_audio_format_aac" translatable="false">"AAC (audio/aac)"</string>
     <string name="settings_audio_format_ogg" translatable="false">"OGG (audio/ogg)"</string>
@@ -554,6 +559,10 @@ Thank you!"</string>
     <string name="filter_any">"Any"</string>
     <string name="filter_all">"All"</string>
     <string name="filter_none">"None"</string>
+    <string name="filter_date_from_to">"Date: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Start(ed): %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Due: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Completed: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>

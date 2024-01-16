@@ -25,7 +25,6 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.SwapHoriz
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.list.AnyAllNone
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FilterSection(
     icon: ImageVector,
@@ -95,7 +94,7 @@ fun FilterSection(
                 FilterChip(
                     selected = false,
                     onClick = {
-                        onAnyAllNoneChanged(AnyAllNone.values()[(AnyAllNone.values().indexOf(anyAllNone)+1)%AnyAllNone.values().size])
+                        onAnyAllNoneChanged(AnyAllNone.entries[(AnyAllNone.entries.indexOf(anyAllNone)+1)%AnyAllNone.entries.size])
                     },
                     label = { Text(stringResource(id = anyAllNone.stringResource)) }
                 )

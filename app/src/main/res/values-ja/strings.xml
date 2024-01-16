@@ -354,6 +354,7 @@
     <string name="settings_timezone_display_local">"現地時間で時刻を表示する"</string>
     <string name="settings_timezone_display_original">"元のタイムゾーンで時間を表示"</string>
     <string name="settings_timezone_display_local_and_original">"現地時間および元のタイムゾーンで時間を表示 (詳細表示のみ)"</string>
+    <string name="settings_font">"フォント"</string>
     <string name="donate_dialog_title">"jtx Board を気に入っていただけましたか？"</string>
     <string name="donate_dialog_message">"アプリの開発は複雑で、開発・メンテナンス・サポートは大変な仕事です。このアプリを気に入り、継続的な開発をご支援いただける場合は、寄付をご検討ください :-)
 ありがとうございます！"</string>
@@ -382,6 +383,16 @@
     <string name="back">"戻る"</string>
     <string name="details">"詳細"</string>
     <string name="date">"日付"</string>
+    <string name="group_by_date_day">"日付 (日)"</string>
+    <string name="group_by_date_week">"日付 (週)"</string>
+    <string name="group_by_date_month">"日付 (月)"</string>
+    <string name="group_by_started_day">"開始 (日)"</string>
+    <string name="group_by_started_week">"開始 (週)"</string>
+    <string name="group_by_started_month">"開始 (月)"</string>
+    <string name="group_by_due_day">"期限 (日)"</string>
+    <string name="group_by_due_week">"期限 (週)"</string>
+    <string name="group_by_due_month">"期限 (月)"</string>
+    <string name="week_number_year">"第 %1$d 週/%2$d 年"</string>
     <string name="summary_description">"概要/詳細"</string>
     <string name="status_classification_priority">"ステータス/公開設定/優先度"</string>
     <string name="timezone">"タイムゾーン"</string>
@@ -527,6 +538,10 @@
     <string name="filter_any">"選択したもの"</string>
     <string name="filter_all">"すべて"</string>
     <string name="filter_none">"なし"</string>
+    <string name="filter_date_from_to">"日付: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"着手: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"締切: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"完了: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"過去の日付"</string>
     <string name="list_date_today">"今日"</string>

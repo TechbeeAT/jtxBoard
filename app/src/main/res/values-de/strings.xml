@@ -356,6 +356,7 @@
     <string name="settings_timezone_display_local">"Zeit in lokaler Zeitzone anzeigen"</string>
     <string name="settings_timezone_display_original">"Zeit in der ursprünglichen Zeitzone anzeigen"</string>
     <string name="settings_timezone_display_local_and_original">"Zeit in lokaler und in ursprünglicher Zeitzone anzeigen (nur Detailansicht)"</string>
+    <string name="settings_font">"Schriftart"</string>
     <string name="donate_dialog_title">"Gefällt dir jtx Board?"</string>
     <string name="donate_dialog_message">"Die Entwicklung und Wartung einer App sind viel Arbeit. Wenn dir jtx Board gefällt und du die kontinuierliche Entwicklung sicherstellen möchtest, dann denke bitte auch an die Möglichkeit einer Spende! :-)
 Vielen Dank!"</string>
@@ -385,6 +386,16 @@ Danke!"</string>
     <string name="back">"Zurück"</string>
     <string name="details">"Details"</string>
     <string name="date">"Datum"</string>
+    <string name="group_by_date_day">"Datum (Tag)"</string>
+    <string name="group_by_date_week">"Datum (Woche)"</string>
+    <string name="group_by_date_month">"Datum (Monat)"</string>
+    <string name="group_by_started_day">"Start (Tag)"</string>
+    <string name="group_by_started_week">"Start (Woche)"</string>
+    <string name="group_by_started_month">"Start (Monat)"</string>
+    <string name="group_by_due_day">"Fällig (Tag)"</string>
+    <string name="group_by_due_week">"Fällig (Woche)"</string>
+    <string name="group_by_due_month">"Fällig (Monat)"</string>
+    <string name="week_number_year">"KW %1$d/%2$d"</string>
     <string name="summary_description">"Zusammenfassung/Beschreibung"</string>
     <string name="status_classification_priority">"Status/Klassifizierung/Priorität"</string>
     <string name="timezone">"Zeitzone"</string>
@@ -471,6 +482,7 @@ Danke!"</string>
     <string name="dialog_add_audio_entry_title">"Audio-Eintrag hinzufügen"</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
+    <string name="menu_list_viewmode_week">"Wochenansicht"</string>
     <string name="settings_tasks">"Aufgaben-Einstellungen"</string>
     <string name="settings_alarms">"Alarm-Einstellungen"</string>
     <string name="settings_tasks_status_progress">"Aufgaben-Einstellungen (Status/Fortschritt)"</string>
@@ -530,6 +542,10 @@ Danke!"</string>
     <string name="filter_any">"Irgendeine"</string>
     <string name="filter_all">"Alle"</string>
     <string name="filter_none">"Keine"</string>
+    <string name="filter_date_from_to">"Datum: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Start: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Fällig: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Fertiggestellt: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
     <string name="list_date_today">"Heute"</string>

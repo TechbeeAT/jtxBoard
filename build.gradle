@@ -23,12 +23,12 @@ buildscript {
         version_coroutine = "1.8.0-RC2"
         version_appcompat = "1.6.1"
         version_gradle = '8.2.1'
-        version_kotlin = "1.9.21"
+        version_kotlin = "1.9.22"
         version_room = "2.6.1"
         version_work = "2.9.0"
         version_billing = "6.1.0"
         version_review = "2.0.1"
-        version_compose = "1.6.0-beta03"
+        version_compose = "1.6.0-rc01"
         version_about_libraries = "10.10.0"
         version_huawei = "1.9.0.300"
         version_huawei_iap = "6.10.0.300"
@@ -58,7 +58,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.google.devtools.ksp' version '1.9.21-1.0.16' apply false
+    id 'com.google.devtools.ksp' version '1.9.22-1.0.16' apply false
 }
 
 allprojects {

@@ -767,5 +767,6 @@ enum class ViewMode(@StringRes val stringResource: Int) {
     LIST(R.string.menu_list_viewmode_list),
     GRID(R.string.menu_list_viewmode_grid),
     COMPACT(R.string.menu_list_viewmode_compact),
-    KANBAN(R.string.menu_list_viewmode_kanban)
+    KANBAN(R.string.menu_list_viewmode_kanban),
+    WEEK(R.string.menu_list_viewmode_week)
 }
