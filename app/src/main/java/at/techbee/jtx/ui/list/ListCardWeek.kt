@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextDecoration
@@ -58,9 +59,14 @@ fun ListCardWeek(
             modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
         ) {
             val isOverdue = ICalObject.isOverdue(iCalObject.status, iCalObject.percent, iCalObject.due, iCalObject.dueTimezone) ?: false
+            var text = if (iCalObject.status == Status.COMPLETED.status || iCalObject.percent == 100)
+                "✔"
+            else if (isDueDate) "❗"
+            else ""
+            text += if(iCalObject.summary?.isNotBlank() == true) iCalObject.summary!!.trim() else iCalObject.description ?: ""
 
             Text(
-                text = if(iCalObject.summary?.isNotBlank() == true) iCalObject.summary!!.trim() else iCalObject.description ?: "",
+                text = text,
                 textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
@@ -70,7 +76,8 @@ fun ListCardWeek(
                     else -> MaterialTheme.colorScheme.onSurface
                 },
                 style = MaterialTheme.typography.bodySmall, 
-                lineHeight = 12.sp
+                lineHeight = 12.sp,
+                modifier = if (iCalObject.status == Status.CANCELLED.status) Modifier.alpha(0.5F) else Modifier
             )
         }
     }
@@ -150,6 +157,28 @@ fun ListCardWeek_TODO_overdue() {
             due = System.currentTimeMillis() - (1).days.inWholeMilliseconds
             summary =
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+        ListCardWeek(
+            iCalObject = icalobject,
+            selected = false,
+            isDueDate = true
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ListCardWeek_TODO_overdue_done() {
+    MaterialTheme {
+
+        val icalobject = ICal4List.getSample().apply {
+            component = Component.VTODO.name
+            module = Module.TODO.name
+            dtstart = System.currentTimeMillis()
+            due = System.currentTimeMillis() - (1).days.inWholeMilliseconds
+            summary =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            status = Status.COMPLETED.status
         }
         ListCardWeek(
             iCalObject = icalobject,
