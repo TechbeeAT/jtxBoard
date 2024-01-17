@@ -107,6 +107,8 @@ fun ListCard(
     progressIncrement: Int,
     linkProgressToSubtasks: Boolean,
     markdownEnabled: Boolean,
+    isSubtaskDragAndDropEnabled: Boolean,
+    isSubnoteDragAndDropEnabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -452,7 +454,7 @@ fun ListCard(
                             onDeleteClicked = { },   // no edit possible here
                             onUnlinkClicked = { },
                             sliderIncrement = progressIncrement,
-                            dragHandle = { DragHandle(scope = this) },
+                            dragHandle = { if(isSubtaskDragAndDropEnabled) DragHandle(scope = this) },
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
@@ -497,7 +499,7 @@ fun ListCard(
                                             onLongClick(subnote.id, subnotes)
                                     },
                                 ),
-                            dragHandle = { DragHandle(scope = this) },
+                            dragHandle = { if(isSubnoteDragAndDropEnabled) DragHandle(scope = this) },
                             isEditMode = false, //no editing here
                             onDeleteClicked = { }, //no editing here
                             onUnlinkClicked = { }, //no editing here
@@ -608,6 +610,8 @@ fun ICalObjectListCardPreview_JOURNAL() {
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             onUpdateSortOrder = { }
         )
     }
@@ -654,6 +658,8 @@ fun ICalObjectListCardPreview_NOTE() {
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             onUpdateSortOrder = { }
         )
     }
@@ -706,6 +712,8 @@ fun ICalObjectListCardPreview_TODO() {
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             onUpdateSortOrder = { }
         )
     }
@@ -757,6 +765,8 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             onUpdateSortOrder = { }
         )
     }
@@ -810,6 +820,8 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             onUpdateSortOrder = { }
         )
     }
@@ -864,6 +876,8 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             onUpdateSortOrder = { }
         )
     }
@@ -918,6 +932,8 @@ fun ICalObjectListCardPreview_TASK_one_liner() {
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             onUpdateSortOrder = { }
         )
     }
@@ -972,6 +988,8 @@ fun ICalObjectListCardPreview_NOTE_one_liner() {
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
             player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             onUpdateSortOrder = { }
         )
     }

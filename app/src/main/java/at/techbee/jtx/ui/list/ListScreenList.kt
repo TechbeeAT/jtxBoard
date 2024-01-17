@@ -103,6 +103,8 @@ fun ListScreenList(
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
+    isSubtaskDragAndDropEnabled: Boolean,
+    isSubnoteDragAndDropEnabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -240,6 +242,8 @@ fun ListScreenList(
                             onExpandedChanged = onExpandedChanged,
                             onUpdateSortOrder = onUpdateSortOrder,
                             player = player,
+                            isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
+                            isSubnoteDragAndDropEnabled = isSubnoteDragAndDropEnabled,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 8.dp)
@@ -362,6 +366,8 @@ fun ListScreenList_TODO() {
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
@@ -443,6 +449,8 @@ fun ListScreenList_JOURNAL() {
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },

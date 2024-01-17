@@ -98,6 +98,8 @@ fun ListScreen(
                     isPullRefreshEnabled = isPullRefreshEnabled,
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
+                    isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
+                    isSubnoteDragAndDropEnabled = listViewModel.listSettings.subnotesOrderBy.value == OrderBy.DRAG_AND_DROP,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent ->
@@ -154,11 +156,13 @@ fun ListScreen(
                     isPullRefreshEnabled = isPullRefreshEnabled,
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
+                    isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent -> processOnProgressChanged(itemId, newPercent) },
                     onSyncRequested = { listViewModel.syncAccounts() },
-                    onSaveListSettings = { listViewModel.saveListSettings() }
+                    onSaveListSettings = { listViewModel.saveListSettings() },
+                    onUpdateSortOrder = { listViewModel.updateSortOrder(it) }
                 )
             }
             ViewMode.KANBAN -> {
