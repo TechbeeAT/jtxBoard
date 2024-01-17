@@ -61,6 +61,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
@@ -523,6 +524,8 @@ fun DetailsScreen(
                                 else -> false
                             }
                     } else false,
+                isSubtaskDragAndDropEnabled = detailViewModel.detailSettings.listSettings?.subtasksOrderBy?.value == OrderBy.DRAG_AND_DROP,
+                isSubnoteDragAndDropEnabled = detailViewModel.detailSettings.listSettings?.subnotesOrderBy?.value == OrderBy.DRAG_AND_DROP,
                 markdownState = markdownState,
                 scrollToSectionState = scrollToSection,
                 saveEntry = {

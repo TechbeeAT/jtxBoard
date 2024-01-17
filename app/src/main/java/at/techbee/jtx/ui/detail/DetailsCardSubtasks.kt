@@ -69,6 +69,7 @@ fun DetailsCardSubtasks(
     enforceSavingSubtask: Boolean,
     sliderIncrement: Int,
     showSlider: Boolean,
+    isSubtaskDragAndDropEnabled: Boolean,
     onSubtaskAdded: (subtask: ICalObject) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
@@ -177,7 +178,7 @@ fun DetailsCardSubtasks(
                             onProgressChanged = onProgressChanged,
                             onDeleteClicked = { onSubtaskDeleted(subtask.id) },
                             onUnlinkClicked = { onUnlinkSubEntry(subtask.id) },
-                            dragHandle = { DragHandle(this) },
+                            dragHandle = { if(isSubtaskDragAndDropEnabled) DragHandle(this) },
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
@@ -217,6 +218,7 @@ fun DetailsCardSubtasks_Preview() {
             enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = true,
+            isSubtaskDragAndDropEnabled = true,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
@@ -246,6 +248,7 @@ fun DetailsCardSubtasks_Preview_edit() {
             enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = true,
+            isSubtaskDragAndDropEnabled = true,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
@@ -275,6 +278,7 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
             enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = false,
+            isSubtaskDragAndDropEnabled = true,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },

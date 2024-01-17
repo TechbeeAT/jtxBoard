@@ -74,6 +74,7 @@ fun DetailsCardSubnotes(
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
     player: MediaPlayer?,
+    isSubnoteDragAndDropEnabled: Boolean,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     onShowLinkExistingDialog: () -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit,
@@ -199,7 +200,7 @@ fun DetailsCardSubnotes(
                             onDeleteClicked = { onSubnoteDeleted(subnote.id) },
                             onUnlinkClicked = { onUnlinkSubEntry(subnote.id) },
                             player = player,
-                            dragHandle = { DragHandle(scope = this) },
+                            dragHandle = { if(isSubnoteDragAndDropEnabled) DragHandle(scope = this) },
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
@@ -241,6 +242,7 @@ fun DetailsCardSubnotes_Preview() {
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
             player = null,
+            isSubnoteDragAndDropEnabled = true,
             goToDetail = { _, _, _ -> },
             onShowLinkExistingDialog = {},
             onUpdateSortOrder = {}
@@ -268,6 +270,7 @@ fun DetailsCardSubnotes_Preview_edit() {
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
             player = null,
+            isSubnoteDragAndDropEnabled = true,
             goToDetail = { _, _, _ -> },
             onShowLinkExistingDialog = {},
             onUpdateSortOrder = { }
