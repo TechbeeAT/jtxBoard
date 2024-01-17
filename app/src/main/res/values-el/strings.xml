@@ -480,6 +480,7 @@
     <string name="dialog_add_audio_entry_title">"Προσθήκη καταχώρησης ήχου"</string>
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
+    <string name="menu_list_viewmode_week">"Προβολή εβδομάδας"</string>
     <string name="settings_tasks">"Ρυθμίσεις εργασιών"</string>
     <string name="settings_alarms">"Ρυθμίσεις ξυπνητηριού"</string>
     <string name="settings_tasks_status_progress">"Ρυθμίσεις εργασιών (κατάσταση/πρόοδος)"</string>

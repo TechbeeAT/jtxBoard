@@ -29,6 +29,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
@@ -73,6 +76,7 @@ import java.util.Locale
 fun ListScreenWeek(
     list: List<ICal4ListRel>,
     selectedEntries: SnapshotStateList<Long>,
+    scrollOnceId: MutableLiveData<Long?>,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
 ) {
@@ -83,23 +87,35 @@ fun ListScreenWeek(
     val endMonth = remember(currentDate) { currentMonth.plusMonths(500) }
     val daysOfWeek = remember { daysOfWeek() }
 
+    val scrollId by scrollOnceId.observeAsState(null)
+    val weekState = rememberWeekCalendarState(
+        startDate = startMonth.atStartOfMonth(),
+        endDate = endMonth.atEndOfMonth(),
+        firstVisibleWeekDate = currentDate,
+        firstDayOfWeek = daysOfWeek.first(),
+    )
+    val visibleWeek = rememberFirstVisibleWeekAfterScroll(weekState)
+    MonthAndWeekCalendarTitle(
+        currentMonth = visibleWeek.days.first().date.yearMonth,
+        weekState = weekState,
+    )
+
+    LaunchedEffect(list, scrollId) {
+        if (scrollId == null)
+            return@LaunchedEffect
+
+        val foundItem = list.find { it.iCal4List.id == scrollId }?: return@LaunchedEffect
+        val date = foundItem.iCal4List.dtstart?:return@LaunchedEffect
+        val localDate = LocalDate.ofInstant(Instant.ofEpochMilli(date), DateTimeUtils.requireTzId(foundItem.iCal4List.dtstartTimezone))
+        weekState.animateScrollToWeek(localDate)
+        scrollOnceId.postValue(null)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             //.background(Color.White)
     ) {
-        val weekState = rememberWeekCalendarState(
-            startDate = startMonth.atStartOfMonth(),
-            endDate = endMonth.atEndOfMonth(),
-            firstVisibleWeekDate = currentDate,
-            firstDayOfWeek = daysOfWeek.first(),
-        )
-
-        val visibleWeek = rememberFirstVisibleWeekAfterScroll(weekState)
-        MonthAndWeekCalendarTitle(
-            currentMonth = visibleWeek.days.first().date.yearMonth,
-            weekState = weekState,
-        )
 
         //CalendarHeader
         Row(
@@ -310,6 +326,7 @@ fun ListScreenWeek_TODO() {
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
             selectedEntries = remember { mutableStateListOf() },
+            scrollOnceId = MutableLiveData(null),
             //isPullRefreshEnabled = true,
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
@@ -358,6 +375,7 @@ fun ListScreenWeek_JOURNAL() {
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
             selectedEntries = remember { mutableStateListOf() },
+            scrollOnceId = MutableLiveData(null),
             //isPullRefreshEnabled = true,
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },

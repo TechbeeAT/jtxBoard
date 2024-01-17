@@ -482,6 +482,7 @@ Köszönjük!"</string>
     <string name="dialog_add_audio_entry_title">"Hangjegyzet hozzáadása"</string>
     <string name="menu_list_viewmode_compact">"Kompakt nézet"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-nézet"</string>
+    <string name="menu_list_viewmode_week">"Heti nézet"</string>
     <string name="settings_tasks">"Feladat beállítások"</string>
     <string name="settings_alarms">"Riasztások beállításai"</string>
     <string name="settings_tasks_status_progress">"Feladatok beállításai (státusz/készültség)"</string>
