@@ -24,7 +24,7 @@
     <string name="toolbar_text_add_journal">"Přidat Deník"</string>
     <string name="toolbar_text_add_note">"Přidat Poznámku"</string>
     <string name="toolbar_text_add_task">"Přidat Úkol"</string>
-    <string name="toast_sync_requested">"Vyžadována synchronizace"</string>
+    <string name="toast_sync_requested">"Vyžádána synchronizace"</string>
     <string name="default_local_collection_name">"Místní"</string>
     <string name="default_local_account_name">"Místní"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -64,7 +64,7 @@
     <string name="list_due_within_7_days">"Termín do 7 dní"</string>
     <string name="list_due_inXhours">"Termín za %d hodin"</string>
     <string name="list_due_on_weekday">"Splnit do %s"</string>
-    <string name="list_start_past">"Začít v minulosti"</string>
+    <string name="list_start_past">"Začíná v minulosti"</string>
     <string name="list_start_shortly">"Brzy začne"</string>
     <string name="list_start_today">"Naplánováno začít dnes"</string>
     <string name="list_start_tomorrow">"Začít zítra"</string>
@@ -481,6 +481,7 @@ Děkujeme vám!"</string>
     <string name="dialog_add_audio_entry_title">"Přidat zvukový záznam"</string>
     <string name="menu_list_viewmode_compact">"Kompaktní zobrazení"</string>
     <string name="menu_list_viewmode_kanban">"Zobrazení Kanban"</string>
+    <string name="menu_list_viewmode_week">"Týdenní přehled"</string>
     <string name="settings_tasks">"Nastavení Úkolů"</string>
     <string name="settings_alarms">"Nastavení budíků"</string>
     <string name="settings_tasks_status_progress">"Nastavení úkolů (stav nebo průběh)"</string>
@@ -550,7 +551,7 @@ Děkujeme vám!"</string>
     <string name="list_date_tomorrow">"Zítra"</string>
     <string name="list_date_within_7_days">"Do 7 dní"</string>
     <string name="list_date_future">"Datum v budoucnosti"</string>
-    <string name="list_start_date_in_past">"Začít v minulosti"</string>
+    <string name="list_start_date_in_past">"Začíná v minulosti"</string>
     <string name="list_start_date_today">"Začít dnes"</string>
     <string name="list_start_date_tomorrow">"Začít zítra"</string>
     <string name="list_start_date_within_7_days">"Začne do 7 dní"</string>
