@@ -95,6 +95,7 @@ fun ListScreenWeek(
     )
     val visibleWeek = rememberFirstVisibleWeekAfterScroll(weekState)
 
+
     LaunchedEffect(list, scrollId) {
         if (scrollId == null)
             return@LaunchedEffect
@@ -128,7 +129,8 @@ fun ListScreenWeek(
                     onClick = onClick,
                     onLongClick = onLongClick
                 )
-            }
+            },
+            modifier = Modifier.weight(1f, true)
         )
     }
 }
@@ -159,18 +161,21 @@ fun MonthAndWeekCalendarTitle(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            /*
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = currentMonth.year.toString(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleSmall,
             )
+             */
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()),  //currentMonth.displayText(),
+                text = currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()) + " '" + currentMonth.year.toString().substring(2),  //currentMonth.displayText(),
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
-            )
+                fontWeight = FontWeight.Bold
+                )
         }
 
         IconButton(onClick = {
@@ -358,7 +363,6 @@ fun ListScreenWeek_JOURNAL() {
             status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
-            due = System.currentTimeMillis()
             summary =
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             colorItem = Color.Blue.toArgb()
@@ -377,4 +381,3 @@ fun ListScreenWeek_JOURNAL() {
         )
     }
 }
-
