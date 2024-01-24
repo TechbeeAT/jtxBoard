@@ -40,6 +40,7 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.CheckboxPosition
 import at.techbee.jtx.util.DateTimeUtils
 
 @Composable
@@ -48,7 +49,7 @@ fun ListEntry(
     entryColor: ColorProvider,
     textColor: ColorProvider,
     textColorOverdue: ColorProvider,
-    checkboxEnd: Boolean,
+    checkboxPosition: CheckboxPosition,
     showDescription: Boolean,
     onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
     modifier: GlanceModifier = GlanceModifier
@@ -81,7 +82,7 @@ fun ListEntry(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            if (obj.module == Module.TODO.name && !checkboxEnd && !obj.isReadOnly){
+            if (obj.module == Module.TODO.name && checkboxPosition == CheckboxPosition.START && !obj.isReadOnly){
                 CheckBox(
                     checked = checked,
                     onCheckedChange = { onCheckedChange(obj.id, checked) }
@@ -148,7 +149,7 @@ fun ListEntry(
                 }
             }
 
-            if (obj.module == Module.TODO.name && checkboxEnd && !obj.isReadOnly) {
+            if (obj.module == Module.TODO.name && checkboxPosition == CheckboxPosition.END && !obj.isReadOnly) {
                 CheckBox(
                     checked = checked,
                     onCheckedChange = { onCheckedChange(obj.id, checked) }

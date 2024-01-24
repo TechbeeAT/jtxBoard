@@ -161,7 +161,7 @@ fun ListWidgetContent(
                                 entryColor = entryColor,
                                 textColor = entryTextColor,
                                 textColorOverdue = entryOverdueTextColor,
-                                checkboxEnd = listWidgetConfig.checkboxPositionEnd,
+                                checkboxPosition = listWidgetConfig.checkboxPosition,
                                 showDescription = listWidgetConfig.showDescription,
                                 onCheckedChange = onCheckedChange,
                                 modifier = GlanceModifier
@@ -190,7 +190,7 @@ fun ListWidgetContent(
                                         entryColor = entryColor,
                                         textColor = entryTextColor,
                                         textColorOverdue = entryOverdueTextColor,
-                                        checkboxEnd = listWidgetConfig.checkboxPositionEnd,
+                                        checkboxPosition = listWidgetConfig.checkboxPosition,
                                         showDescription = listWidgetConfig.showDescription,
                                         onCheckedChange = onCheckedChange,
                                         modifier = GlanceModifier
@@ -218,7 +218,7 @@ fun ListWidgetContent(
                                         entryColor = entryColor,
                                         textColor = entryTextColor,
                                         textColorOverdue = entryOverdueTextColor,
-                                        checkboxEnd = listWidgetConfig.checkboxPositionEnd,
+                                        checkboxPosition = listWidgetConfig.checkboxPosition,
                                         showDescription = listWidgetConfig.showDescription,
                                         onCheckedChange = onCheckedChange,
                                         modifier = GlanceModifier
