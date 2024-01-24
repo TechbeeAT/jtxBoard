@@ -39,6 +39,7 @@ import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.list.CheckboxPosition
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.UiUtil
@@ -68,6 +69,10 @@ class ListWidget : GlanceAppWidget() {
                     Json.decodeFromString<ListWidgetConfig>(it)
                 } ?: ListWidgetConfig()
             }
+
+            // legacy handling
+            if(listWidgetConfig.checkboxPositionEnd)
+                listWidgetConfig.checkboxPosition = CheckboxPosition.END
 
             val listQuery = remember(listWidgetConfig) {
                 ICal4List.constructQuery(
