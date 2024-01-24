@@ -52,6 +52,7 @@ import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.ui.list.AnyAllNone
+import at.techbee.jtx.ui.list.CheckboxPosition
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.ListOptionsFilter
 import at.techbee.jtx.ui.list.ListOptionsGroupSort
@@ -242,7 +243,8 @@ fun ListWidgetConfigContent(
                                     subnotesOrderBy = listSettings.subnotesOrderBy.value
                                     subnotesSortOrder = listSettings.subnotesSortOrder.value
                                     flatView = listSettings.flatView.value
-                                    checkboxPositionEnd = listSettings.checkboxPositionEnd.value
+                                    checkboxPositionEnd = false  // reset to false for legacy handling
+                                    checkboxPosition = listSettings.checkboxPosition.value
                                     showOneRecurEntryInFuture = listSettings.showOneRecurEntryInFuture.value
                                     widgetAlpha = listSettings.widgetAlpha.value
                                     widgetAlphaEntries = listSettings.widgetAlphaEntries.value
@@ -367,7 +369,8 @@ data class ListWidgetConfig(
     var viewMode: ViewMode = ViewMode.LIST,
     var flatView: Boolean = false,
     var showOneRecurEntryInFuture: Boolean = false,
-    var checkboxPositionEnd: Boolean = false,
+    @Deprecated("Use Checkbox Position instead") var checkboxPositionEnd: Boolean = false,
+    var checkboxPosition: CheckboxPosition = CheckboxPosition.START,
     var widgetAlpha: Float = 1F,
     var widgetAlphaEntries: Float = 1F,
     var showDescription: Boolean = true,

@@ -24,6 +24,7 @@ import at.techbee.jtx.widgets.ListWidgetConfig
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+enum class CheckboxPosition { START, END, OFF }
 
 class ListSettings {
 
@@ -88,7 +89,7 @@ class ListSettings {
 
 
     var widgetHeader: MutableState<String> = mutableStateOf("") //widgetOnly
-    var checkboxPositionEnd: MutableState<Boolean> = mutableStateOf(false)  // widget only
+    var checkboxPosition: MutableState<CheckboxPosition> = mutableStateOf(CheckboxPosition.START)  // widget only
     var widgetAlpha: MutableState<Float> = mutableFloatStateOf(1F)  // widget only
     var widgetAlphaEntries: MutableState<Float> = mutableFloatStateOf(1F)  // widget only
     var widgetColor: MutableState<Int?> = mutableStateOf(null)  // widget only
@@ -292,7 +293,7 @@ class ListSettings {
             flatView.value = listWidgetConfig.flatView
             viewMode.value = listWidgetConfig.viewMode
             showOneRecurEntryInFuture.value = listWidgetConfig.showOneRecurEntryInFuture
-            checkboxPositionEnd.value = listWidgetConfig.checkboxPositionEnd
+            checkboxPosition.value = if(listWidgetConfig.checkboxPositionEnd) CheckboxPosition.END else listWidgetConfig.checkboxPosition
             showDescription.value = listWidgetConfig.showDescription
             showSubtasks.value = listWidgetConfig.showSubtasks
             showSubnotes.value = listWidgetConfig.showSubnotes
