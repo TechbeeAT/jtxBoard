@@ -7,6 +7,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.locals.StoredListSettingData
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.util.Base64
 
 
 sealed class FilteredListDestination (
@@ -30,7 +31,7 @@ sealed class FilteredListDestination (
             module: Module,
             storedListSettingData: StoredListSettingData?
         ): String {
-            return "filteredList/${module.name}?" + storedListSettingData?.let { "$argStoredListSettingData=${Json.encodeToString(it)}" }
+            return "filteredList/${module.name}?" + storedListSettingData?.let { "$argStoredListSettingData=${Base64.getEncoder().encode(Json.encodeToString(it).toByteArray()).decodeToString()}" }
         }
     }
 }
