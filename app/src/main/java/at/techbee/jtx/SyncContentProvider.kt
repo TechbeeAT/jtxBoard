@@ -22,7 +22,6 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.FileProvider
-import androidx.glance.appwidget.updateAll
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_NAME
 import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_TYPE
@@ -80,10 +79,6 @@ import at.techbee.jtx.database.properties.Unknown
 import at.techbee.jtx.flavored.GeofenceClient
 import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
-import at.techbee.jtx.widgets.ListWidget
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.io.File
 import java.io.IOException
@@ -250,10 +245,6 @@ class SyncContentProvider : ContentProvider() {
         )
             database.removeOrphans()    // remove orpahns (recurring instances of a deleted original item)
 
-        CoroutineScope(Dispatchers.Default).launch {
-            context?.let { ListWidget().updateAll(it) }
-        }
-
         return count
     }
 
@@ -357,10 +348,6 @@ class SyncContentProvider : ContentProvider() {
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
-
-        CoroutineScope(Dispatchers.Default).launch {
-            context?.let { ListWidget().updateAll(it) }
-        }
 
         return ContentUris.withAppendedId(uri, id)
     }
@@ -631,10 +618,6 @@ class SyncContentProvider : ContentProvider() {
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
-
-        CoroutineScope(Dispatchers.Default).launch {
-            context?.let { ListWidget().updateAll(it) }
-        }
 
         return 1
     }
