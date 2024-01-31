@@ -270,5 +270,5 @@ dependencies {
 
     implementation "com.kizitonwose.calendar:compose:2.5.0-beta01"
 
-    implementation "com.googlecode.libphonenumber:libphonenumber:8.13.28"
+    implementation "com.googlecode.libphonenumber:libphonenumber:8.13.29"
 }
