@@ -13,7 +13,7 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: gradle
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: gradle/wrapper-validation-action@v2
 
       - name: Run lint and unit tests
         run: ./gradlew app:lintOseDebug app:testGplayDebugUnitTest
