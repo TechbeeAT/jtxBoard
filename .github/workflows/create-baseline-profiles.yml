@@ -67,7 +67,7 @@ jobs:
           run: yes | "$ANDROID_HOME"/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
         - name: Generate profile
-          run: ./gradlew :benchmark:generateBaselineProfile -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect"
+          run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest
 
         # Generates Baseline Profile
         #- name: Generate Baseline Profile
