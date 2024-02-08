@@ -60,8 +60,17 @@ jobs:
         - name: Clean Managed Devices
           run: ./gradlew cleanManagedDevices --unused-only
 
+        - name: Install GMD image for baseline profile generation
+          run: yes | "$ANDROID_HOME"/cmdline-tools/latest/bin/sdkmanager "system-images;android-33;aosp_atd;x86_64"
+
+        - name: Accept Android licenses
+          run: yes | "$ANDROID_HOME"/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
+        - name: Generate profile
+          run: ./gradlew :benchmark:generateBaselineProfile -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect"
+
         # Generates Baseline Profile
-        - name: Generate Baseline Profile
+        #- name: Generate Baseline Profile
 
           ## swiftshader_indirect: 
           ## Required to use software acceleration on machines that can't use hardware acceleration
@@ -74,7 +83,7 @@ jobs:
           ## gradle.workers.max: 
           ## Required to avoid running multiple managed device tests concurrently. Read more at https://issuetracker.google.com/issues/193118030
           
-          run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -P android.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -P android.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile
+          #run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -P android.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -P android.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile
 
         # Sets the Baseline Profile on its proper place so it gets correctly bundled into Play Store
         - name: Move & Rename Baseline Profiles
