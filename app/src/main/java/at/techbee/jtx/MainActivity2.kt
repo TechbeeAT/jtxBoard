@@ -82,7 +82,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
-import java.net.URLDecoder
 import java.time.ZonedDateTime
 import kotlin.time.Duration.Companion.minutes
 
@@ -360,8 +359,8 @@ fun MainNavHost(
             val module = Module.entries.find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.argModule) } ?: return@composable
             val storedListSettingData = backStackEntry.arguments?.getString(
                 FilteredListDestination.argStoredListSettingData)?.let {
-                Json.decodeFromString<StoredListSettingData>(URLDecoder.decode(it, "utf-8")
-                ) }
+                    Json.decodeFromString<StoredListSettingData>(it)
+                }
 
             ListScreenTabContainer(
                 navController = navController,
