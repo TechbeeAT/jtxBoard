@@ -20,7 +20,7 @@ jobs:
       - uses: gradle/wrapper-validation-action@v2
 
       - name: Cache gradle dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: ${{ runner.os }}
           path: |
