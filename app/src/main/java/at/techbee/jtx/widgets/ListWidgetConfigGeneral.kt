@@ -27,7 +27,6 @@ import androidx.compose.material.icons.outlined.Opacity
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -58,13 +57,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.ui.list.CheckboxPosition
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListWidgetConfigGeneral(
     listSettings: ListSettings,
@@ -188,17 +188,20 @@ fun ListWidgetConfigGeneral(
                 modifier = Modifier.padding(horizontal = 2.dp)
             )
 
-            FilterChip(
-                selected = listSettings.checkboxPositionEnd.value,
+            AssistChip(
                 onClick = {
-                    listSettings.checkboxPositionEnd.value = !listSettings.checkboxPositionEnd.value
+                    listSettings.checkboxPosition.value = when(listSettings.checkboxPosition.value) {
+                        CheckboxPosition.START -> CheckboxPosition.END
+                        CheckboxPosition.END -> CheckboxPosition.OFF
+                        CheckboxPosition.OFF -> CheckboxPosition.START
+                    }
                 },
                 label = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        if (!listSettings.checkboxPositionEnd.value)
+                        if (listSettings.checkboxPosition.value == CheckboxPosition.START)
                             Icon(Icons.Outlined.CheckBox, "Start", modifier = Modifier.padding(end = 4.dp))
                         Text(stringResource(id = R.string.widget_list_configuration_checkbox_position))
-                        if (listSettings.checkboxPositionEnd.value)
+                        if (listSettings.checkboxPosition.value == CheckboxPosition.END)
                             Icon(Icons.Outlined.CheckBox, "End", modifier = Modifier.padding(start = 4.dp))
                     }
                 },

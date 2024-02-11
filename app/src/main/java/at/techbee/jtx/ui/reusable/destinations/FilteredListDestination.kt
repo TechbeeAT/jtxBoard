@@ -1,5 +1,6 @@
 package at.techbee.jtx.ui.reusable.destinations
 
+import android.net.Uri
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -7,7 +8,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.locals.StoredListSettingData
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.net.URLEncoder
 
 
 sealed class FilteredListDestination (
@@ -31,7 +31,11 @@ sealed class FilteredListDestination (
             module: Module,
             storedListSettingData: StoredListSettingData?
         ): String {
-            return "filteredList/${module.name}?" + storedListSettingData?.let { "$argStoredListSettingData=${URLEncoder.encode(Json.encodeToString(it), "utf-8")}" }
+            return Uri.parse("filteredList/${module.name}")
+                .buildUpon()
+                .appendQueryParameter(argStoredListSettingData, storedListSettingData?.let { Json.encodeToString(it)})
+                .build()
+                .toString()
         }
     }
 }

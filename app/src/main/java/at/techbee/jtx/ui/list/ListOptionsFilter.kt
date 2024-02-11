@@ -502,6 +502,16 @@ fun ListOptionsFilter(
                 )
 
                 FilterChip(
+                    selected = listSettings.isFilterNoDueDateSet.value,
+                    onClick = {
+                        listSettings.isFilterNoDueDateSet.value =
+                            !listSettings.isFilterNoDueDateSet.value
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = R.string.list_without_due_date)) }
+                )
+
+                FilterChip(
                     selected = listSettings.filterDueRangeStart.value != null || listSettings.filterDueRangeEnd.value != null,
                     onClick = {
                         showFilterDateRangeDueDialog = true

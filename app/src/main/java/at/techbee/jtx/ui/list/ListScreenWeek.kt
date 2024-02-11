@@ -11,7 +11,6 @@ package at.techbee.jtx.ui.list
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -95,10 +94,7 @@ fun ListScreenWeek(
         firstDayOfWeek = daysOfWeek.first(),
     )
     val visibleWeek = rememberFirstVisibleWeekAfterScroll(weekState)
-    MonthAndWeekCalendarTitle(
-        currentMonth = visibleWeek.days.first().date.yearMonth,
-        weekState = weekState,
-    )
+
 
     LaunchedEffect(list, scrollId) {
         if (scrollId == null)
@@ -117,21 +113,10 @@ fun ListScreenWeek(
             //.background(Color.White)
     ) {
 
-        //CalendarHeader
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            for (dayOfWeek in daysOfWeek) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center,
-                    fontSize = 15.sp,
-                    text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
-                    fontWeight = FontWeight.Medium,
-                )
-            }
-        }
+        MonthAndWeekCalendarTitle(
+            currentMonth = visibleWeek.days.first().date.yearMonth,
+            weekState = weekState,
+        )
 
         WeekCalendar(
             state = weekState,
@@ -144,7 +129,8 @@ fun ListScreenWeek(
                     onClick = onClick,
                     onLongClick = onLongClick
                 )
-            }
+            },
+            modifier = Modifier.weight(1f, true)
         )
     }
 }
@@ -175,18 +161,21 @@ fun MonthAndWeekCalendarTitle(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            /*
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = currentMonth.year.toString(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleSmall,
             )
+             */
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()),  //currentMonth.displayText(),
+                text = currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()) + " '" + currentMonth.year.toString().substring(2),  //currentMonth.displayText(),
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
-            )
+                fontWeight = FontWeight.Bold
+                )
         }
 
         IconButton(onClick = {
@@ -220,12 +209,22 @@ fun Day(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Box(
+        Column(
             modifier = Modifier
-                .aspectRatio(1f) // This is important for square-sizing!
-                .padding(6.dp),
-            contentAlignment = Alignment.Center,
+                .padding(6.dp)
+                .fillMaxWidth(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally
+            //contentAlignment = Alignment.Center,
         ) {
+
+            Text(
+                text = day.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                textAlign = TextAlign.Center,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium,
+            )
+
             Text(
                 text = day.dayOfMonth.toString(),
                 fontSize = 14.sp,
@@ -364,7 +363,6 @@ fun ListScreenWeek_JOURNAL() {
             status = Status.IN_PROCESS.status
             classification = Classification.CONFIDENTIAL.classification
             dtstart = System.currentTimeMillis()
-            due = System.currentTimeMillis()
             summary =
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             colorItem = Color.Blue.toArgb()
@@ -383,4 +381,3 @@ fun ListScreenWeek_JOURNAL() {
         )
     }
 }
-
