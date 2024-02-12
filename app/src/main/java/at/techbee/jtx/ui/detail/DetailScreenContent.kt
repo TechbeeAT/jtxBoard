@@ -142,7 +142,6 @@ enum class DetailsScreenSection(
 @Composable
 fun DetailScreenContent(
     observedICalEntity: State<ICalEntity?>,
-    initialEntity: ICalEntity?,
     iCalObject: ICalObject?,
     categories: SnapshotStateList<Category>,
     resources: SnapshotStateList<Resource>,
@@ -247,14 +246,8 @@ fun DetailScreenContent(
     }
 
     val color = rememberSaveable { mutableStateOf(observedICalEntity.value?.property?.color) }
-    var summary by rememberSaveable { mutableStateOf(initialEntity?.property?.summary ?: "") }
-    var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(initialEntity?.property?.description ?: "")) }
-    if(summary.isEmpty() && initialEntity?.property?.summary?.isNotEmpty() == true
-        || description.text.isEmpty() && initialEntity?.property?.description?.isNotEmpty() == true) {
-        summary = initialEntity.property.summary ?: ""
-        description = TextFieldValue(initialEntity.property.description ?: "")
-    }
-
+    var summary by rememberSaveable { mutableStateOf(observedICalEntity.value?.property?.summary ?: "") }
+    var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(observedICalEntity.value?.property?.description ?: "")) }
 
     // make sure the values get propagated in the iCalObject again when the orientation changes
     if(iCalObject.summary != summary.ifEmpty { null } || iCalObject.description != description.text.ifEmpty { null } || iCalObject.color != color.value) {
@@ -1057,7 +1050,6 @@ fun DetailScreenContent_JOURNAL() {
 
         DetailScreenContent(
             observedICalEntity = remember { mutableStateOf(entity) },
-            initialEntity = null,
             iCalObject = entity.property,
             categories = remember { mutableStateListOf<Category>().apply { this.addAll(entity.categories ?: emptyList()) } },
             resources = remember { mutableStateListOf() },
@@ -1121,7 +1113,6 @@ fun DetailScreenContent_TODO_editInitially() {
 
         DetailScreenContent(
             observedICalEntity = remember { mutableStateOf(entity) },
-            initialEntity = null,
             iCalObject = entity.property,
             categories = remember { mutableStateListOf() },
             resources = remember { mutableStateListOf() },
@@ -1185,7 +1176,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
 
         DetailScreenContent(
             observedICalEntity = remember { mutableStateOf(entity) },
-            initialEntity = null,
             iCalObject = entity.property,
             categories = remember { mutableStateListOf() },
             resources = remember { mutableStateListOf() },
@@ -1243,7 +1233,6 @@ fun DetailScreenContent_failedLoading() {
 
         DetailScreenContent(
             observedICalEntity = remember { mutableStateOf(null) },
-            initialEntity = null,
             iCalObject = ICalObject.createJournal(),
             categories = remember { mutableStateListOf() },
             resources = remember { mutableStateListOf() },
