@@ -481,7 +481,6 @@ fun DetailsScreen(
 
             DetailScreenContent(
                 observedICalEntity = icalEntity,
-                initialEntity = detailViewModel.initialEntity.value,
                 iCalObject = detailViewModel.mutableICalObject,
                 categories = detailViewModel.mutableCategories,
                 resources = detailViewModel.mutableResources,
