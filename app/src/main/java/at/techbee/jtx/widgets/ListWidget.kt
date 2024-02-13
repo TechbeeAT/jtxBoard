@@ -42,6 +42,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.CheckboxPosition
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.UiUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -211,6 +212,7 @@ class ListWidget : GlanceAppWidget() {
                                 }
                             }
                             NotificationPublisher.scheduleNextNotifications(context)
+                            SyncUtil.notifyContentObservers(context)
                             //super.update(context, id)
                             //ListWidget().updateAll(context)
                             //ListWidget().compose(context, glanceId)
