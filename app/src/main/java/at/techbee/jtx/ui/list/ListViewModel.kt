@@ -41,6 +41,7 @@ import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.COLUMN_LAST_MODIFIED
 import at.techbee.jtx.database.COLUMN_PERCENT
 import at.techbee.jtx.database.COLUMN_PRIORITY
+import at.techbee.jtx.database.COLUMN_SORT_INDEX
 import at.techbee.jtx.database.COLUMN_STATUS
 import at.techbee.jtx.database.COLUMN_SUMMARY
 import at.techbee.jtx.database.Classification
@@ -581,6 +582,23 @@ open class ListViewModel(application: Application, val module: Module) : Android
         SyncUtil.showSyncRequestedToast(_application)
     }
 
+
+    /**
+     * Updates the sort order of entries in the database
+     * @param list of entries, the index of the entry in the list corresponds to the sort order
+     */
+    fun updateSortOrder(list: List<ICal4List>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            list.forEachIndexed { index, iCal4List ->
+                val iCalObject = database.getICalObjectById(iCal4List.id) ?: return@forEachIndexed
+                iCalObject.sortIndex = index
+                iCalObject.makeDirty()
+                database.update(iCalObject)
+            }
+            onChangeDone()
+        }
+    }
+
     /**
      * Notifies the contentObservers
      * schedules the notifications
@@ -665,7 +683,8 @@ enum class OrderBy(@StringRes val stringResource: Int) {
     STATUS(R.string.status),
     PROGRESS(R.string.progress),
     ACCOUNT(R.string.account),
-    COLLECTION(R.string.collection);
+    COLLECTION(R.string.collection),
+    DRAG_AND_DROP(R.string.order_by_drag_and_drop);
 
     fun getQueryAppendix(sortOrder: SortOrder): String {
         return when(this) {
@@ -682,15 +701,16 @@ enum class OrderBy(@StringRes val stringResource: Int) {
             PROGRESS -> "$COLUMN_PERCENT ${sortOrder.name} "
             ACCOUNT -> "$COLUMN_COLLECTION_ACCOUNT_NAME ${sortOrder.name} "
             COLLECTION -> "$COLUMN_COLLECTION_DISPLAYNAME ${sortOrder.name} "
+            DRAG_AND_DROP -> "$COLUMN_SORT_INDEX "
         }
     }
 
     companion object {
         fun getValuesFor(module: Module): Array<OrderBy> =
             when(module) {
-                Module.JOURNAL -> arrayOf(START_VJOURNAL, CREATED, LAST_MODIFIED, SUMMARY, STATUS, CLASSIFICATION)
-                Module.NOTE -> arrayOf(CREATED, LAST_MODIFIED, SUMMARY, STATUS, CLASSIFICATION)
-                Module.TODO -> arrayOf(START_VTODO, DUE, COMPLETED, CREATED, LAST_MODIFIED, SUMMARY, PRIORITY, PROGRESS, STATUS, CLASSIFICATION)
+                Module.JOURNAL -> arrayOf(START_VJOURNAL, CREATED, LAST_MODIFIED, SUMMARY, STATUS, CLASSIFICATION, DRAG_AND_DROP)
+                Module.NOTE -> arrayOf(CREATED, LAST_MODIFIED, SUMMARY, STATUS, CLASSIFICATION, DRAG_AND_DROP)
+                Module.TODO -> arrayOf(START_VTODO, DUE, COMPLETED, CREATED, LAST_MODIFIED, SUMMARY, PRIORITY, PROGRESS, STATUS, CLASSIFICATION, DRAG_AND_DROP)
             }
     }
 }

@@ -271,4 +271,6 @@ dependencies {
     implementation "com.kizitonwose.calendar:compose:2.5.0"
 
     implementation "com.googlecode.libphonenumber:libphonenumber:8.13.30"
+
+    implementation "sh.calvin.reorderable:reorderable:1.2.0"
 }

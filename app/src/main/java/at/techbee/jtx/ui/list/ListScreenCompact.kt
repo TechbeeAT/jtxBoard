@@ -90,11 +90,13 @@ fun ListScreenCompact(
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
+    isSubtaskDragAndDropEnabled: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onSyncRequested: () -> Unit,
-    onSaveListSettings: () -> Unit
+    onSaveListSettings: () -> Unit,
+    onUpdateSortOrder: (List<ICal4List>) -> Unit
 ) {
 
     val subtasks by subtasksLive.observeAsState(emptyList())
@@ -195,6 +197,7 @@ fun ListScreenCompact(
                             markdownEnabled = markdownEnabled,
                             selected = selectedEntries,
                             player = player,
+                            isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 4.dp, bottom = 4.dp)
@@ -220,8 +223,9 @@ fun ListScreenCompact(
                                 ),
                             onProgressChanged = onProgressChanged,
                             onClick = onClick,
-                            onLongClick = onLongClick
-                        )
+                            onLongClick = onLongClick,
+                            onUpdateSortOrder = onUpdateSortOrder
+                            )
 
                         if (iCal4ListRelObject != group.last())
                             HorizontalDivider(
@@ -316,11 +320,13 @@ fun ListScreenCompact_TODO() {
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { },
-            onSaveListSettings = { }
+            onSaveListSettings = { },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -383,11 +389,13 @@ fun ListScreenCompact_JOURNAL() {
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { },
-            onSaveListSettings = { }
+            onSaveListSettings = { },
+            onUpdateSortOrder = { }
         )
     }
 }

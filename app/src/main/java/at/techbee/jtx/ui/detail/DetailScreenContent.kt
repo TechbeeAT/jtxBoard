@@ -175,6 +175,8 @@ fun DetailScreenContent(
     scrollToSectionState: MutableState<DetailsScreenSection?>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
+    isSubtaskDragAndDropEnabled: Boolean,
+    isSubnoteDragAndDropEnabled: Boolean,
     saveEntry: () -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onMoveToNewCollection: (newCollection: ICalCollection) -> Unit,
@@ -187,7 +189,8 @@ fun DetailScreenContent(
     goToFilteredList:  (StoredListSettingData) -> Unit,
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit,
     onShowLinkExistingDialog: (modules: List<Module>, reltype: Reltype) -> Unit,
-) {
+    onUpdateSortOrder: (List<ICal4List>) -> Unit,
+    ) {
     if(iCalObject == null)
         return
 
@@ -709,6 +712,7 @@ fun DetailScreenContent(
                             enforceSavingSubtask = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
                             sliderIncrement = sliderIncrement,
                             showSlider = showProgressForSubTasks,
+                            isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
                             onProgressChanged = { itemId, newPercent ->
                                 onProgressChanged(itemId, newPercent)
                             },
@@ -735,6 +739,7 @@ fun DetailScreenContent(
                                     Reltype.CHILD
                                 )
                             },
+                            onUpdateSortOrder = onUpdateSortOrder,
                             modifier = detailElementModifier
                         )
                     }
@@ -745,6 +750,7 @@ fun DetailScreenContent(
                             subnotes = subnotes.value,
                             isEditMode = isEditMode,
                             enforceSavingSubnote = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
+                            isSubnoteDragAndDropEnabled = isSubnoteDragAndDropEnabled,
                             onSubnoteAdded = { subnote, attachment ->
                                 onSubEntryAdded(
                                     subnote,
@@ -776,6 +782,7 @@ fun DetailScreenContent(
                                     ), Reltype.CHILD
                                 )
                             },
+                            onUpdateSortOrder = onUpdateSortOrder,
                             modifier = detailElementModifier
                         )
                     }
@@ -1072,6 +1079,8 @@ fun DetailScreenContent_JOURNAL() {
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             scrollToSectionState = remember { mutableStateOf(null) },
             allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
@@ -1093,7 +1102,8 @@ fun DetailScreenContent_JOURNAL() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { }, 
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -1143,6 +1153,8 @@ fun DetailScreenContent_TODO_editInitially() {
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             scrollToSectionState = remember { mutableStateOf(null) },
             saveEntry = { },
@@ -1156,7 +1168,8 @@ fun DetailScreenContent_TODO_editInitially() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -1206,6 +1219,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             scrollToSectionState = remember { mutableStateOf(null) },
             saveEntry = { },
@@ -1219,7 +1234,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -1263,6 +1279,8 @@ fun DetailScreenContent_failedLoading() {
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
             setCurrentLocation = false,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             scrollToSectionState = remember { mutableStateOf(null) },
             saveEntry = { },
@@ -1276,7 +1294,8 @@ fun DetailScreenContent_failedLoading() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }

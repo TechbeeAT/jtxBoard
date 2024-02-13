@@ -32,8 +32,9 @@ fun SubtaskCardCompact(
     subtask: ICal4List,
     selected: Boolean,
     modifier: Modifier = Modifier,
-    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit
-) {
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
+    dragHandle:@Composable () -> Unit = { }
+    ) {
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -42,6 +43,9 @@ fun SubtaskCardCompact(
             .fillMaxWidth()
             .background(if(selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface)
     ) {
+
+        dragHandle()    //never edit mode, always show dragHandle
+
 
         var subtaskText = subtask.summary?:subtask.description?:""
         if(subtask.numSubtasks > 0)

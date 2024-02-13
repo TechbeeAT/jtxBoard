@@ -222,6 +222,18 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun updateSortOrder(list: List<ICal4List>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            list.forEachIndexed { index, iCal4List ->
+                val iCalObject = database.getICalObjectById(iCal4List.id) ?: return@forEachIndexed
+                iCalObject.sortIndex = index
+                iCalObject.makeDirty()
+                database.update(iCalObject)
+            }
+            onChangeDone()
+        }
+    }
+
     fun unlinkFromSeries(instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
