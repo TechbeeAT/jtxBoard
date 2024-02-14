@@ -318,6 +318,7 @@
     <string name="filter_no_resource">Ohne Materialien</string>
     <string name="filter_subtasks_order_by">Unteraufgaben sortieren nach</string>
     <string name="filter_subnotes_order_by">Verlinkte Notizen sortieren nach</string>
+    <string name="order_by_drag_and_drop">"Drag &amp; Drop"</string>
     <string name="filter_no_filter">"Kein Filter"</string>
     <string name="filter_options_more_entries">"Mehr (%1$d)"</string>
     <string name="filter_options_less_entries">"Weniger"</string>
