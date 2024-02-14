@@ -28,6 +28,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import androidx.room.withTransaction
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.NotificationPublisher
@@ -223,14 +224,18 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun updateSortOrder(list: List<ICal4List>) {
+
         viewModelScope.launch(Dispatchers.IO) {
-            list.forEachIndexed { index, iCal4List ->
-                val iCalObject = database.getICalObjectById(iCal4List.id) ?: return@forEachIndexed
-                iCalObject.sortIndex = index
-                iCalObject.makeDirty()
-                database.update(iCalObject)
+            ICalDatabase.getInstance(_application).withTransaction {
+                list.forEachIndexed { index, iCal4List ->
+                    val iCalObject =
+                        database.getICalObjectById(iCal4List.id) ?: return@forEachIndexed
+                    iCalObject.sortIndex = index
+                    iCalObject.makeDirty()
+                    database.update(iCalObject)
+                }
             }
-            onChangeDone()
+        onChangeDone()
         }
     }
 

@@ -26,6 +26,7 @@ import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
+import androidx.room.withTransaction
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import at.techbee.jtx.NotificationPublisher
@@ -589,11 +590,14 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun updateSortOrder(list: List<ICal4List>) {
         viewModelScope.launch(Dispatchers.IO) {
-            list.forEachIndexed { index, iCal4List ->
-                val iCalObject = database.getICalObjectById(iCal4List.id) ?: return@forEachIndexed
-                iCalObject.sortIndex = index
-                iCalObject.makeDirty()
-                database.update(iCalObject)
+            ICalDatabase.getInstance(_application).withTransaction {
+                list.forEachIndexed { index, iCal4List ->
+                    val iCalObject =
+                        database.getICalObjectById(iCal4List.id) ?: return@forEachIndexed
+                    iCalObject.sortIndex = index
+                    iCalObject.makeDirty()
+                    database.update(iCalObject)
+                }
             }
             onChangeDone()
         }
