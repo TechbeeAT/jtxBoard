@@ -318,6 +318,7 @@
     <string name="filter_no_resource">Sense recursos</string>
     <string name="filter_subtasks_order_by">Ordena sub-tasques per</string>
     <string name="filter_subnotes_order_by">Ordena les notes enllaçades per</string>
+    <string name="order_by_drag_and_drop">"Arrossega &amp; Deixa Anar"</string>
     <string name="filter_no_filter">"Sense filtres"</string>
     <string name="filter_options_more_entries">"Més (%1$d)"</string>
     <string name="filter_options_less_entries">"Menys"</string>
