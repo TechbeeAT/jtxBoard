@@ -107,6 +107,7 @@
     <string name="edit_recur_on_weekday">"曜日:"</string>
     <string name="edit_recur_on_the_x_day_of_month">"月の"</string>
     <string name="edit_recur_x_day_of_the_month">"日目"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"末日"</string>
     <string name="edit_recur_x_times">"回"</string>
     <string name="edit_recur_toast_requires_start_date">"繰り返すには着手日を設定してください！"</string>
     <string name="edit_datepicker_dialog_select_date">"日付を選択"</string>
@@ -316,6 +317,7 @@
     <string name="filter_no_resource">必要なものなし</string>
     <string name="filter_subtasks_order_by">サブ ToDo の並べ替え</string>
     <string name="filter_subnotes_order_by">リンクされたメモの並べ替え</string>
+    <string name="order_by_drag_and_drop">"ドラッグ &amp; ドロップ"</string>
     <string name="filter_no_filter">"フィルターなし"</string>
     <string name="filter_options_more_entries">"詳細 (%1$d)"</string>
     <string name="filter_options_less_entries">"表示を減らす"</string>
