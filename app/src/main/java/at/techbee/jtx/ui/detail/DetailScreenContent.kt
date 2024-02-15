@@ -170,7 +170,6 @@ fun DetailScreenContent(
     showProgressForSubTasks: Boolean,
     keepStatusProgressCompletedInSync: Boolean,
     linkProgressToSubtasks: Boolean,
-    setCurrentLocation: Boolean,
     markdownState: MutableState<MarkdownState>,
     scrollToSectionState: MutableState<DetailsScreenSection?>,
     modifier: Modifier = Modifier,
@@ -848,7 +847,6 @@ fun DetailScreenContent(
                             initialGeoLong = iCalObject.geoLong,
                             initialGeofenceRadius = iCalObject.geofenceRadius,
                             isEditMode = isEditMode.value,
-                            setCurrentLocation = setCurrentLocation,
                             onLocationUpdated = { newLocation, newGeoLat, newGeoLong ->
                                 if (newGeoLat != null && newGeoLong != null) {
                                     iCalObject.geoLat = newGeoLat
@@ -1078,7 +1076,6 @@ fun DetailScreenContent_JOURNAL() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
             isSubtaskDragAndDropEnabled = true,
             isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
@@ -1152,7 +1149,6 @@ fun DetailScreenContent_TODO_editInitially() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
             isSubtaskDragAndDropEnabled = true,
             isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
@@ -1218,7 +1214,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             showProgressForSubTasks = false,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
             isSubtaskDragAndDropEnabled = true,
             isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
@@ -1278,7 +1273,6 @@ fun DetailScreenContent_failedLoading() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
             isSubtaskDragAndDropEnabled = true,
             isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },

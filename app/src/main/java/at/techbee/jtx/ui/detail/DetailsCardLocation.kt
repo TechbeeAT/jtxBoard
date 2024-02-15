@@ -74,7 +74,6 @@ fun DetailsCardLocation(
     initialGeoLong: Double?,
     initialGeofenceRadius: Int?,
     isEditMode: Boolean,
-    setCurrentLocation: Boolean,
     onLocationUpdated: (String, Double?, Double?) -> Unit,
     onGeofenceRadiusUpdatd: (Int?) -> Unit,
     modifier: Modifier = Modifier
@@ -120,14 +119,8 @@ fun DetailsCardLocation(
             listOf(Manifest.permission.ACCESS_FINE_LOCATION)
     ) else null
 
-    var locationUpdateState by remember { mutableStateOf(
-        if(setCurrentLocation && locationPermissionState?.permissions?.any { it.status.isGranted } == true)
-                LocationUpdateState.LOCATION_REQUESTED
-        else if(setCurrentLocation)
-                LocationUpdateState.PERMISSION_NEEDED
-        else
-            LocationUpdateState.IDLE
-    )}
+
+    var locationUpdateRequested by rememberSaveable { mutableStateOf(false) }
 
     if (showLocationPickerDialog) {
         if (locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted }) {   // second part = permission is NOT permanently denied!
@@ -169,10 +162,9 @@ fun DetailsCardLocation(
         )
     }
 
-    LaunchedEffect(locationUpdateState, locationPermissionState?.permissions?.any { it.status.isGranted }) {
-        when (locationUpdateState) {
-            LocationUpdateState.IDLE -> {}
-            LocationUpdateState.LOCATION_REQUESTED -> {
+    LaunchedEffect(locationUpdateRequested, locationPermissionState?.permissions?.any { it.status.isGranted }) {
+        if(locationUpdateRequested) {
+            if(locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
                 // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
                 val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                 val bestProvider = locationManager.getProviders(true).firstOrNull() ?: return@LaunchedEffect
@@ -184,12 +176,10 @@ fun DetailsCardLocation(
                     geoLatText = lastKnownLocation.latitude.toString()
                     geoLongText = lastKnownLocation.longitude.toString()
                     onLocationUpdated(location, geoLat, geoLong)
-                    locationUpdateState = LocationUpdateState.IDLE
+                    locationUpdateRequested = false
                 }
-            }
-            LocationUpdateState.PERMISSION_NEEDED -> {
+            } else {
                 locationPermissionState?.launchMultiplePermissionRequest()
-                locationUpdateState = LocationUpdateState.LOCATION_REQUESTED
             }
         }
     }
@@ -402,11 +392,7 @@ fun DetailsCardLocation(
                     )
 
                     IconButton(onClick = {
-                        locationUpdateState = if (locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
-                            LocationUpdateState.LOCATION_REQUESTED
-                        } else {
-                            LocationUpdateState.PERMISSION_NEEDED
-                        }
+                        locationUpdateRequested = true
                     }) {
                         Icon(Icons.Outlined.MyLocation, stringResource(R.string.current_location))
                     }
@@ -531,8 +517,6 @@ data class LocationLatLng(
     @ColumnInfo(name = COLUMN_GEO_LONG) val geoLong: Double?
 )
 
-enum class LocationUpdateState { IDLE, LOCATION_REQUESTED, PERMISSION_NEEDED }
-
 @Preview(showBackground = true)
 @Composable
 fun DetailsCardLocation_Preview() {
@@ -543,7 +527,6 @@ fun DetailsCardLocation_Preview() {
             initialGeoLong = null,
             initialGeofenceRadius = null,
             isEditMode = false,
-            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
             onGeofenceRadiusUpdatd = {}
         )
@@ -560,7 +543,6 @@ fun DetailsCardLocation_Preview_withGeo() {
             initialGeoLong = 73.272838,
             initialGeofenceRadius = null,
             isEditMode = false,
-            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
             onGeofenceRadiusUpdatd = {}
         )
@@ -577,7 +559,6 @@ fun DetailsCardLocation_Preview_withGeoDE() {
             initialGeoLong = 73.272838,
             initialGeofenceRadius = null,
             isEditMode = false,
-            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
             onGeofenceRadiusUpdatd = {}
         )
@@ -595,7 +576,6 @@ fun DetailsCardLocation_Preview_edit() {
             initialGeoLong = null,
             initialGeofenceRadius = null,
             isEditMode = true,
-            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
             onGeofenceRadiusUpdatd = {}
         )
@@ -613,7 +593,6 @@ fun DetailsCardLocation_Preview_edit_with_geo() {
             initialGeoLong = 73.272838,
             initialGeofenceRadius = null,
             isEditMode = true,
-            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
             onGeofenceRadiusUpdatd = {}
         )
