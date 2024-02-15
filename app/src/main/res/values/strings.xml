@@ -28,6 +28,7 @@
     <string name="longitude">"Longitude"</string>
     <string name="unlink">"Unlink"</string>
     <string name="off">"Off"</string>
+    <string name="location_permission_denied">"Location permission denied"</string>
     <string name="permissions">"Permissions"</string>
     <string name="current_location">"Current location"</string>
     <string name="toolbar_text_add_journal">"Add Journal"</string>
@@ -532,6 +533,7 @@ Thank you!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Keep status, progress &amp; completed in sync"</string>
     <string name="settings_attention_experimental_feature">"Attention: This is an experimental feature"</string>
     <string name="settings_create_with_current_location">"Create new entries with current location"</string>
+    <string name="settings_create_with_current_location_sub">"Please grant access to your location while using this app to use this feature."</string>
     <string name="settings_sticky_alarms">"Sticky alarms"</string>
     <string name="settings_sticky_alarms_sub">"Keep notifications until done or postponed"</string>
     <string name="settings_fullscreen_alarms">"Full screen alarms"</string>

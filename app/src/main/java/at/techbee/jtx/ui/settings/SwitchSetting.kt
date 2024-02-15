@@ -120,18 +120,21 @@ enum class SwitchSetting(
         key = "settings_journals_set_default_current_location",
         icon = { Icon(Icons.Outlined.MyLocation, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_create_with_current_location,
+        subtitle = R.string.settings_create_with_current_location_sub,
         default = false
     ),
     SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION(
         key = "settings_notes_set_default_current_location",
         icon = { Icon(Icons.Outlined.MyLocation, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_create_with_current_location,
+        subtitle = R.string.settings_create_with_current_location_sub,
         default = false
     ),
     SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION(
         key = "settings_tasks_set_default_current_location",
         icon = { Icon(Icons.Outlined.MyLocation, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_create_with_current_location,
+        subtitle = R.string.settings_create_with_current_location_sub,
         default = false
     ),
     SETTING_STICKY_ALARMS(
