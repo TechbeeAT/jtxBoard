@@ -318,6 +318,7 @@
     <string name="filter_no_resource">Без ресурсов</string>
     <string name="filter_subtasks_order_by">Сортировать подзадачи по</string>
     <string name="filter_subnotes_order_by">Сортировать связанные заметки по</string>
+    <string name="order_by_drag_and_drop">"Перетаскивание"</string>
     <string name="filter_no_filter">"Без фильтра"</string>
     <string name="filter_options_more_entries">"Развернуть (%1$d)"</string>
     <string name="filter_options_less_entries">"Свернуть"</string>

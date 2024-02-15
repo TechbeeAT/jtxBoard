@@ -317,6 +317,7 @@
     <string name="filter_no_resource">Χωρίς πηγές</string>
     <string name="filter_subtasks_order_by">Ταξινόμηση υποεργασιών κατά</string>
     <string name="filter_subnotes_order_by">Ταξινόμηση συνδεδεμένων σημειώσεων κατά</string>
+    <string name="order_by_drag_and_drop">"Σύρσιμο &amp; απόθεση"</string>
     <string name="filter_no_filter">"Χωρίς φίλτρο"</string>
     <string name="filter_options_more_entries">"Περισσότερα (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Κάντε κλικ στη συλλογή στην οποία πρέπει να προστεθούν οι καταχωρήσεις/καταχωρήσεις!"</string>
