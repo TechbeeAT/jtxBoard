@@ -400,10 +400,10 @@ fun SettingsScreen(
                         SwitchSettingElement(
                             setting = SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION,
                             checked = settingsStateHolder.settingSetDefaultCurrentLocationJournals,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingSetDefaultCurrentLocationJournals.value = it
-                                SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
-                                if(it && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
+                            onCheckedChanged = { checked ->
+                                settingsStateHolder.settingSetDefaultCurrentLocationJournals.value = checked
+                                SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(checked, settingsStateHolder.prefs)
+                                if(checked && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
                                     locationPermissionState.launchMultiplePermissionRequest()
                             })
                     }
@@ -417,10 +417,10 @@ fun SettingsScreen(
                         SwitchSettingElement(
                             setting = SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION,
                             checked = settingsStateHolder.settingSetDefaultCurrentLocationNotes,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingSetDefaultCurrentLocationNotes.value = it
-                                SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
-                                if(it && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
+                            onCheckedChanged = { checked ->
+                                settingsStateHolder.settingSetDefaultCurrentLocationNotes.value = checked
+                                SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.saveSetting(checked, settingsStateHolder.prefs)
+                                if(checked && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
                                     locationPermissionState.launchMultiplePermissionRequest()
                             })
                     }
@@ -513,10 +513,10 @@ fun SettingsScreen(
                         SwitchSettingElement(
                             setting = SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION,
                             checked = settingsStateHolder.settingSetDefaultCurrentLocationTasks,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = it
-                                SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
-                                if(it && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
+                            onCheckedChanged = { checked ->
+                                settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = checked
+                                SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(checked, settingsStateHolder.prefs)
+                                if(checked && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
                                     locationPermissionState.launchMultiplePermissionRequest()
                             }
                         )
