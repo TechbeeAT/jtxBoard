@@ -161,7 +161,7 @@ dependencies {
 
     // Android KTX
     implementation "androidx.core:core-ktx:$version_core"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
 
     // Android Annotations
     implementation "androidx.annotation:annotation:1.7.1"
