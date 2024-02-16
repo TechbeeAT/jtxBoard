@@ -19,6 +19,7 @@
     <string name="longitude">"Longitude"</string>
     <string name="unlink">"Dissocier"</string>
     <string name="off">"Désactivé"</string>
+    <string name="location_permission_denied">"Autorisation de localisation refusée"</string>
     <string name="permissions">"Permissions"</string>
     <string name="current_location">"Localisation actuelle"</string>
     <string name="toolbar_text_add_journal">"Ajouter un journal"</string>
@@ -501,6 +502,7 @@ Merci !"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Garder le statut, la progression &amp; terminée à la synchronisation"</string>
     <string name="settings_attention_experimental_feature">"Attention : Ceci est une fonctionnalité expérimentale"</string>
     <string name="settings_create_with_current_location">"Créer de nouvelles entrées avec l'emplacement actuel"</string>
+    <string name="settings_create_with_current_location_sub">"Veuillez accorder l'accès à votre position lors de l'utilisation de cette application pour utiliser cette fonctionnalité."</string>
     <string name="settings_sticky_alarms">"Alarmes épinglées"</string>
     <string name="settings_sticky_alarms_sub">"Garder les notifications jusqu'à la fin ou les reporter"</string>
     <string name="settings_fullscreen_alarms">"Alarmes en plein écran"</string>
