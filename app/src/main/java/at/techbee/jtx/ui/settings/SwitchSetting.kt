@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.settings
 
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.EventNote
@@ -155,7 +156,7 @@ enum class SwitchSetting(
         key = "settings_sync_on_start",
         icon = { Icon(Icons.Outlined.RestartAlt, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_sync_on_start,
-        default = false
+        default = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU   // only newer phones have that option enabled by default for performance reasons
     ),
     SETTING_SYNC_ON_PULL_REFRESH(
         key = "settings_sync_on_pull_refresh",
