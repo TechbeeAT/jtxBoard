@@ -19,6 +19,7 @@
     <string name="longitude">"Γεωγραφικό μήκος"</string>
     <string name="unlink">"Κατάργηση σύνδεσης"</string>
     <string name="off">"Ανενεργό"</string>
+    <string name="location_permission_denied">"Η άδεια χρήσης τοποθεσίας απορρίφθηκε"</string>
     <string name="permissions">"Εξουσιοδότηση"</string>
     <string name="current_location">"Τρέχουσα τοποθεσία"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
@@ -513,6 +514,7 @@
     <string name="settings_keep_status_progress_completed_in_sync">"Διατήρηση κατάστασης, προόδου &amp; ολοκλήρωση συγχρονισμού"</string>
     <string name="settings_attention_experimental_feature">"Προσοχή: Αυτό είναι ένα πειραματικό χαρακτηριστικό"</string>
     <string name="settings_create_with_current_location">"Δημιουργήστε νέες καταχωρήσεις με την τρέχουσα τοποθεσία"</string>
+    <string name="settings_create_with_current_location_sub">"Για να χρησιμοποιήσετε αυτήν τη δυνατότητα, παρακαλούμε επιτρέψτε την πρόσβαση στην τοποθεσία σας ενώ χρησιμοποιείτε αυτήν την εφαρμογή."</string>
     <string name="settings_sticky_alarms">"Κολλημένες ειδοποιήσεις"</string>
     <string name="settings_sticky_alarms_sub">"Διατήρηση ειδοποιήσεων μέχρι να ολοκληρωθούν ή αναβληθούν"</string>
     <string name="settings_fullscreen_alarms">"Αφύπνιση σε πλήρη οθόνη"</string>
