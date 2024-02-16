@@ -19,6 +19,7 @@
     <string name="longitude">"Lengtegraad"</string>
     <string name="unlink">"Ontkoppel"</string>
     <string name="off">"Uit"</string>
+    <string name="location_permission_denied">"Toegang tot locatie geweigerd"</string>
     <string name="permissions">"Machtigingen"</string>
     <string name="current_location">"Huidige locatie"</string>
     <string name="toolbar_text_add_journal">"Logboek toevoegen"</string>
@@ -318,6 +319,7 @@
     <string name="filter_no_resource">Zonder hulpmiddelen</string>
     <string name="filter_subtasks_order_by">Sorteer subtaken op</string>
     <string name="filter_subnotes_order_by">Sorteer gelinkte notities op</string>
+    <string name="order_by_drag_and_drop">"Drag &amp; Drop"</string>
     <string name="filter_no_filter">"Geen filter"</string>
     <string name="filter_options_more_entries">"Meer (%1$d)"</string>
     <string name="filter_options_less_entries">"Minder"</string>
@@ -513,6 +515,7 @@ Dank u!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Hou status, voortgang &amp; voltooidstatus gesynchoniseerd"</string>
     <string name="settings_attention_experimental_feature">"Let op: Dit is een experimentele functie"</string>
     <string name="settings_create_with_current_location">"Nieuwe items maken met de huidige locatie"</string>
+    <string name="settings_create_with_current_location_sub">"Verleen toegang tot je locatie wanneer je deze app gebruikt om deze functie te gebruiken."</string>
     <string name="settings_sticky_alarms">"Kleverige meldingen"</string>
     <string name="settings_sticky_alarms_sub">"Behoud berichten tot klaar of uitgesteld"</string>
     <string name="settings_fullscreen_alarms">"Volledig scherm meldingen"</string>

@@ -19,6 +19,7 @@
     <string name="longitude">"経度"</string>
     <string name="unlink">"リンク解除"</string>
     <string name="off">"オフ"</string>
+    <string name="location_permission_denied">"位置情報の権限が拒否されました"</string>
     <string name="permissions">"権限"</string>
     <string name="current_location">"現在地"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
@@ -513,6 +514,7 @@
     <string name="settings_keep_status_progress_completed_in_sync">"同期でステータス、進捗状況、完了を維持"</string>
     <string name="settings_attention_experimental_feature">"注意: これは試験運用中の機能です"</string>
     <string name="settings_create_with_current_location">"新規作成するエントリーに現在の位置情報を設定"</string>
+    <string name="settings_create_with_current_location_sub">"この機能を使用するには、アプリに位置情報へのアクセス権限を付与してください。"</string>
     <string name="settings_sticky_alarms">"固定アラーム"</string>
     <string name="settings_sticky_alarms_sub">"完了または延期されるまで通知を維持します"</string>
     <string name="settings_fullscreen_alarms">"全画面アラーム"</string>

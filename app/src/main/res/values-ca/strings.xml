@@ -19,6 +19,7 @@
     <string name="longitude">"Longitud"</string>
     <string name="unlink">"Desvincular"</string>
     <string name="off">"Desconnectat"</string>
+    <string name="location_permission_denied">"S'ha denegat l'accés a la ubicació"</string>
     <string name="permissions">"Permisos"</string>
     <string name="current_location">"Ubicació actual"</string>
     <string name="toolbar_text_add_journal">"Afegir Entrada"</string>
@@ -515,6 +516,7 @@ Gràcies!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Mantè l'estat, progrés i completat en sincronització"</string>
     <string name="settings_attention_experimental_feature">"Atenció: Aquesta és una funció experimental"</string>
     <string name="settings_create_with_current_location">"Crea noves entrades amb la ubicació actual"</string>
+    <string name="settings_create_with_current_location_sub">"Per favor, dona permís per accedir a la teva ubicació en fer servir aquesta app per a fer servir la funció."</string>
     <string name="settings_sticky_alarms">"Alarmes fixades"</string>
     <string name="settings_sticky_alarms_sub">"Manté les notificacions fins que es marquen com a completades o es posposen"</string>
     <string name="settings_fullscreen_alarms">"Alarmes a pantalla completa"</string>

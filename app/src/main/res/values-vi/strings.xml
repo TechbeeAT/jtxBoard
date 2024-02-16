@@ -19,6 +19,7 @@
     <string name="longitude">"Vĩ độ"</string>
     <string name="unlink">"Gỡ liên kết"</string>
     <string name="off">"Tắt"</string>
+    <string name="location_permission_denied">"Quyền vị trí bị từ chối"</string>
     <string name="permissions">"Cấp phép"</string>
     <string name="current_location">"Vị trí hiện tại"</string>
     <string name="toolbar_text_add_journal">"Thêm Nhật ký"</string>
@@ -221,6 +222,7 @@
     <string name="priority_1_highest">"1 - Cao nhất"</string>
     <!-- Buy Pro fragment -->
     <!-- alarms -->
+    <string name="settings_create_with_current_location_sub">"Vui lòng cấp quyền truy cập vào vị trí của bạn trong khi sử dụng ứng dụng này để sử dụng tính năng này."</string>
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
 </resources>
