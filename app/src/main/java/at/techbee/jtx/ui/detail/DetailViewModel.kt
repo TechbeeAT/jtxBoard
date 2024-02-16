@@ -155,6 +155,22 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             seriesInstances = icalEntity.switchMap { database.getSeriesInstancesICalObjectsByUID(it?.property?.uid) }
             isChild = database.isChild(icalObjectId)
 
+            withContext(Dispatchers.IO) {
+                val immutableICalEntity = database.getSync(icalObjectId)
+                mutableICalObject = immutableICalEntity?.property
+                mutableCategories.clear()
+                mutableCategories.addAll(immutableICalEntity?.categories ?: emptyList())
+                mutableResources.clear()
+                mutableResources.addAll(immutableICalEntity?.resources ?: emptyList())
+                mutableAttendees.clear()
+                mutableAttendees.addAll(immutableICalEntity?.attendees ?: emptyList())
+                mutableComments.clear()
+                mutableComments.addAll(immutableICalEntity?.comments ?: emptyList())
+                mutableAttachments.clear()
+                mutableAttachments.addAll(immutableICalEntity?.attachments ?: emptyList())
+                mutableAlarms.clear()
+                mutableAlarms.addAll(immutableICalEntity?.alarms ?: emptyList())
+            }
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
         }
 

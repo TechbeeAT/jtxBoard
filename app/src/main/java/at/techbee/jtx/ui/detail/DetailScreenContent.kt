@@ -247,9 +247,10 @@ fun DetailScreenContent(
         return
     }
 
-    val color = rememberSaveable { mutableStateOf(observedICalEntity.value?.property?.color) }
-    var summary by rememberSaveable { mutableStateOf(observedICalEntity.value?.property?.summary ?: "") }
-    var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(observedICalEntity.value?.property?.description ?: "")) }
+    val color = rememberSaveable { mutableStateOf(iCalObject.color) }
+    var summary by rememberSaveable { mutableStateOf(iCalObject.summary ?:"") }
+    var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(iCalObject.description ?: "")) }
+
 
     // make sure the values get propagated in the iCalObject again when the orientation changes
     if(iCalObject.summary != summary.ifEmpty { null } || iCalObject.description != description.text.ifEmpty { null } || iCalObject.color != color.value) {

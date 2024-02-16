@@ -121,19 +121,6 @@ fun DetailsScreen(
         detailViewModel.detailSettings.load(it, context)
     }
 
-    // load objects into states for editing
-    LaunchedEffect(detailViewModel.changeState.value, icalEntity.value, icalEntity.value?.property) {
-        if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED) {
-            detailViewModel.mutableICalObject = icalEntity.value?.property
-            if(detailViewModel.mutableCategories.isEmpty()) detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
-            if(detailViewModel.mutableResources.isEmpty()) detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
-            if(detailViewModel.mutableAttendees.isEmpty()) detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
-            if(detailViewModel.mutableComments.isEmpty()) detailViewModel.mutableComments.addAll(icalEntity.value?.comments ?: emptyList())
-            if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttachments.addAll(icalEntity.value?.attachments ?: emptyList())
-            if(detailViewModel.mutableAlarms.isEmpty()) detailViewModel.mutableAlarms.addAll(icalEntity.value?.alarms ?: emptyList())
-        }
-    }
-
     BackHandler {
         navigateUp = true
     }
