@@ -19,6 +19,7 @@
     <string name="longitude">"Längengrad"</string>
     <string name="unlink">"Verlinkung aufheben"</string>
     <string name="off">"Aus"</string>
+    <string name="location_permission_denied">"Standortberechtigung abgelehnt"</string>
     <string name="permissions">"Berechtigungen"</string>
     <string name="current_location">"Aktueller Standort"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
@@ -515,6 +516,7 @@ Danke!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Status, Fortschritt und Fertiggestellt synchron halten"</string>
     <string name="settings_attention_experimental_feature">"Achtung: Dies ist eine experimentelle Funktion"</string>
     <string name="settings_create_with_current_location">"Neue Einträge mit aktuellem Standort erstellen"</string>
+    <string name="settings_create_with_current_location_sub">"Bitte erteilen Sie beim Verwenden dieser App Zugriff auf Ihren Standort um dieses Feature zu nutzen."</string>
     <string name="settings_sticky_alarms">"Fixierte Alarme"</string>
     <string name="settings_sticky_alarms_sub">"Benachrichtigungen erhalten bis erledigt oder verschoben"</string>
     <string name="settings_fullscreen_alarms">"Vollbild-Alarme"</string>
