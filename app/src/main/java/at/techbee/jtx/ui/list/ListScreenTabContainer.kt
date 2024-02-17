@@ -590,6 +590,7 @@ fun ListScreenTabContainer(
                 ListBottomAppBar(
                     module = listViewModel.module,
                     iCal4ListRel = iCal4ListRel,
+                    isSyncInProgress = globalStateHolder.isSyncInProgress.value,
                     allowNewEntries = allUsableCollections.any { collection ->
                         ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
@@ -788,10 +789,6 @@ fun ListScreenTabContainer(
                                         },
                                         navController = navController
                                     )
-                                }
-
-                                if(globalStateHolder.isSyncInProgress.value) {
-                                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                                 }
                             }
                         }
