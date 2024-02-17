@@ -11,6 +11,10 @@ package at.techbee.jtx.ui.list
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -27,6 +31,7 @@ import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FilterListOff
 import androidx.compose.material.icons.outlined.LibraryAddCheck
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.SyncProblem
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DropdownMenuItem
@@ -49,6 +54,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -72,6 +79,7 @@ import java.time.ZonedDateTime
 fun ListBottomAppBar(
     module: Module,
     iCal4ListRel: List<ICal4ListRel>,
+    isSyncInProgress: Boolean,
     listSettings: ListSettings,
     showQuickEntry: MutableState<Boolean>,
     multiselectEnabled: MutableState<Boolean>,
@@ -94,6 +102,17 @@ fun ListBottomAppBar(
     var showSyncAppIncompatibleDialog by rememberSaveable { mutableStateOf(false) }
     var showDeleteDoneDialog by rememberSaveable { mutableStateOf(false) }
     val showMoreActionsMenu = rememberSaveable { mutableStateOf(false) }
+
+    val syncIconAnimation = rememberInfiniteTransition(label = "syncIconAnimation")
+    val angle by syncIconAnimation.animateFloat(
+        initialValue = 0f,
+        targetValue = -360f,
+        animationSpec = infiniteRepeatable(
+            animation = keyframes {
+                durationMillis = 2000
+            }
+        ), label = "syncIconAnimationAngle"
+    )
 
     if(showGoToDatePicker) {
         DatePickerDialog(
@@ -215,6 +234,20 @@ fun ListBottomAppBar(
                             }
                         }
                     }
+
+                    AnimatedVisibility(isSyncInProgress) {
+                        Icon(
+                            Icons.Outlined.Sync,
+                            contentDescription = stringResource(id = R.string.sync_in_progress),
+                            modifier = Modifier
+                                .graphicsLayer {
+                                    rotationZ = angle
+                                }
+                                .alpha(0.3f),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+
 
                     AnimatedVisibility(incompatibleSyncApps.isNotEmpty()) {
                         IconButton(onClick = { showSyncAppIncompatibleDialog = true }) {
@@ -351,6 +384,7 @@ fun ListBottomAppBar_Preview_Journal() {
         ListBottomAppBar(
             module = Module.JOURNAL,
             iCal4ListRel = emptyList(),
+            isSyncInProgress = true,
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = false,
@@ -383,6 +417,7 @@ fun ListBottomAppBar_Preview_Note() {
         ListBottomAppBar(
             module = Module.NOTE,
             iCal4ListRel = emptyList(),
+            isSyncInProgress = true,
             listSettings = listSettings,
             allowNewEntries = false,
             isBiometricsEnabled = false,
@@ -415,6 +450,7 @@ fun ListBottomAppBar_Preview_Todo() {
         ListBottomAppBar(
             module = Module.TODO,
             iCal4ListRel = emptyList(),
+            isSyncInProgress = true,
             listSettings = listSettings,
             allowNewEntries = true,
             incompatibleSyncApps = listOf(SyncApp.DAVX5),
@@ -448,6 +484,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
         ListBottomAppBar(
             module = Module.TODO,
             iCal4ListRel = emptyList(),
+            isSyncInProgress = true,
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = true,
