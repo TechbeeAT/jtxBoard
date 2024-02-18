@@ -1359,118 +1359,129 @@ data class ICalObject(
 
 
     fun recreateRecurring(context: Context) {
-        val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
+        val database = ICalDatabase.getInstance(context)
+        val databaseDao = database.iCalDatabaseDao()
 
         if(recurid?.isNotEmpty() == true) {
-            database.getRecurSeriesElement(uid)?.recreateRecurring(context)
+            databaseDao.getRecurSeriesElement(uid)?.recreateRecurring(context)
             return
         }
 
-        database.deleteUnchangedRecurringInstances(uid)
-        // delete also exceptions (as recurring instances might still exist):
-        val exceptions = getLongListfromCSVString(this.exdate)
-        exceptions.forEach { exceptionDate ->
-            database.getRecurInstance(uid, getAsRecurId(exceptionDate, dtstartTimezone))?.let {
-                database.delete(it)
+        database.runInTransaction {
+            databaseDao.deleteUnchangedRecurringInstances(uid)
+            // delete also exceptions (as recurring instances might still exist):
+            val exceptions = getLongListfromCSVString(this.exdate)
+            exceptions.forEach { exceptionDate ->
+                databaseDao.getRecurInstance(uid, getAsRecurId(exceptionDate, dtstartTimezone))?.let {
+                    databaseDao.delete(it)
+                }
             }
-        }
 
-        if(dtstart == null || rrule.isNullOrEmpty())
-            return
+            if(dtstart == null || rrule.isNullOrEmpty())
+                return@runInTransaction
 
-        val original = database.getSync(id) ?: return
-        val timeToDue = if(original.property.component == Component.VTODO.name && original.property.due != null)
-            original.property.due!! - original.property.dtstart!!
-        else
-            0L
+            val original = databaseDao.getSync(id) ?: return@runInTransaction
+            val timeToDue = if(original.property.component == Component.VTODO.name && original.property.due != null)
+                original.property.due!! - original.property.dtstart!!
+            else
+                0L
 
-        getInstancesFromRrule().forEach { recurrenceDate ->
-            val instance = original.copy()
+            getInstancesFromRrule().forEach { recurrenceDate ->
+                val instance = original.copy()
 
-            instance.property.dtstart = recurrenceDate
-            instance.property.recurid = getAsRecurId(recurrenceDate, instance.property.dtstartTimezone)
-            instance.property.recuridTimezone = instance.property.dtstartTimezone
+                instance.property.dtstart = recurrenceDate
+                instance.property.recurid =
+                    getAsRecurId(recurrenceDate, instance.property.dtstartTimezone)
+                instance.property.recuridTimezone = instance.property.dtstartTimezone
 
-            if(database.getRecurInstance(uid = uid, recurid = instance.property.recurid!!) != null)
-                return@forEach   // skip the entry if there is an existing linked entry that was changed (and therefore not deleted before)
+                if (databaseDao.getRecurInstance(
+                        uid = uid,
+                        recurid = instance.property.recurid!!
+                    ) != null
+                )
+                    return@forEach   // skip the entry if there is an existing linked entry that was changed (and therefore not deleted before)
 
-            instance.property.id = 0L
-            //instance.property.uid = generateNewUID()
-            instance.property.dtstamp = System.currentTimeMillis()
-            instance.property.created = System.currentTimeMillis()
-            instance.property.lastModified = System.currentTimeMillis()
-            instance.property.rrule = null
-            instance.property.rdate = null
-            instance.property.exdate = null
-            instance.property.sequence = 0
-            instance.property.fileName = null
-            instance.property.eTag = null
-            instance.property.scheduleTag = null
-            instance.property.dirty = false
+                instance.property.id = 0L
+                //instance.property.uid = generateNewUID()
+                instance.property.dtstamp = System.currentTimeMillis()
+                instance.property.created = System.currentTimeMillis()
+                instance.property.lastModified = System.currentTimeMillis()
+                instance.property.rrule = null
+                instance.property.rdate = null
+                instance.property.exdate = null
+                instance.property.sequence = 0
+                instance.property.fileName = null
+                instance.property.eTag = null
+                instance.property.scheduleTag = null
+                instance.property.dirty = false
 
 
-            if(instance.property.component == Component.VTODO.name && original.property.due != null)
-                instance.property.due = recurrenceDate + timeToDue
+                if (instance.property.component == Component.VTODO.name && original.property.due != null)
+                    instance.property.due = recurrenceDate + timeToDue
 
-            val instanceId = database.insertICalObjectSync(instance.property)
+                val instanceId = databaseDao.insertICalObjectSync(instance.property)
 
-            instance.categories?.forEach {
-                it.categoryId = 0L
-                it.icalObjectId = instanceId
-                database.insertCategorySync(it)
-            }
-            instance.comments?.forEach {
-                it.commentId = 0L
-                it.icalObjectId = instanceId
-                database.insertCommentSync(it)
-            }
-            instance.attachments?.forEach {
-                it.attachmentId = 0L
-                it.icalObjectId = instanceId
-                database.insertAttachmentSync(it)
-            }
-            instance.organizer.apply {
-                this?.organizerId = 0L
-                this?.icalObjectId = instanceId
-                this?.let { database.insertOrganizerSync(it) }
-            }
-            instance.attendees?.forEach {
-                it.attendeeId = 0L
-                it.icalObjectId = instanceId
-                database.insertAttendeeSync(it)
-            }
-            instance.resources?.forEach {
-                it.resourceId = 0L
-                it.icalObjectId = instanceId
-                database.insertResourceSync(it)
-            }
-            instance.relatedto?.forEach {
-                it.relatedtoId = 0L
-                it.icalObjectId = instanceId
-                database.insertRelatedtoSync(it)
-            }
-            instance.alarms?.forEach {
-                if(it.triggerRelativeDuration != null) {    // only relative alarms are considered
-                    it.alarmId = 0L
+                instance.categories?.forEach {
+                    it.categoryId = 0L
                     it.icalObjectId = instanceId
+                    databaseDao.insertCategorySync(it)
+                }
+                instance.comments?.forEach {
+                    it.commentId = 0L
+                    it.icalObjectId = instanceId
+                    databaseDao.insertCommentSync(it)
+                }
+                instance.attachments?.forEach {
+                    it.attachmentId = 0L
+                    it.icalObjectId = instanceId
+                    databaseDao.insertAttachmentSync(it)
+                }
+                instance.organizer.apply {
+                    this?.organizerId = 0L
+                    this?.icalObjectId = instanceId
+                    this?.let { databaseDao.insertOrganizerSync(it) }
+                }
+                instance.attendees?.forEach {
+                    it.attendeeId = 0L
+                    it.icalObjectId = instanceId
+                    databaseDao.insertAttendeeSync(it)
+                }
+                instance.resources?.forEach {
+                    it.resourceId = 0L
+                    it.icalObjectId = instanceId
+                    databaseDao.insertResourceSync(it)
+                }
+                instance.relatedto?.forEach {
+                    it.relatedtoId = 0L
+                    it.icalObjectId = instanceId
+                    databaseDao.insertRelatedtoSync(it)
+                }
+                instance.alarms?.forEach {
+                    if (it.triggerRelativeDuration != null) {    // only relative alarms are considered
+                        it.alarmId = 0L
+                        it.icalObjectId = instanceId
 
-                    try {
-                        val dur = Duration.parse(it.triggerRelativeDuration!!)
-                        if(it.triggerRelativeTo == AlarmRelativeTo.END.name) {
-                            it.triggerTime = instance.property.due!! + dur.inWholeMilliseconds
-                            it.triggerTimezone = instance.property.dueTimezone
-                        } else {
-                            it.triggerTime = instance.property.dtstart!! + dur.inWholeMilliseconds
-                            it.triggerTimezone = instance.property.dtstartTimezone
+                        try {
+                            val dur = Duration.parse(it.triggerRelativeDuration!!)
+                            if (it.triggerRelativeTo == AlarmRelativeTo.END.name) {
+                                it.triggerTime = instance.property.due!! + dur.inWholeMilliseconds
+                                it.triggerTimezone = instance.property.dueTimezone
+                            } else {
+                                it.triggerTime = instance.property.dtstart!! + dur.inWholeMilliseconds
+                                it.triggerTimezone = instance.property.dtstartTimezone
+                            }
+                            databaseDao.insertAlarmSync(it)
+                        } catch (e: IllegalArgumentException) {
+                            Log.w(
+                                "DurationParsing",
+                                "Duration could not be parsed for instance, skipping this alarm."
+                            )
                         }
-                        database.insertAlarmSync(it)
-                    } catch (e: IllegalArgumentException) {
-                        Log.w("DurationParsing", "Duration could not be parsed for instance, skipping this alarm.")
                     }
                 }
             }
-            NotificationPublisher.scheduleNextNotifications(context)
         }
+        NotificationPublisher.scheduleNextNotifications(context)
     }
 
 
