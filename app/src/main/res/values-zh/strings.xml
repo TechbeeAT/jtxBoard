@@ -19,6 +19,7 @@
     <string name="longitude">"经度"</string>
     <string name="unlink">"取消关联"</string>
     <string name="off">"关闭"</string>
+    <string name="location_permission_denied">"位置权限被拒绝"</string>
     <string name="current_location">"当前位置"</string>
     <string name="toolbar_text_add_journal">"添加日志"</string>
     <string name="toolbar_text_add_note">"添加笔记"</string>
@@ -58,6 +59,7 @@
     <string name="list_due_overdue">"超期"</string>
     <string name="list_due_today">"今天到期"</string>
     <string name="list_due_tomorrow">"明天到期"</string>
+    <string name="list_due_within_7_days">"7天内到期"</string>
     <string name="list_due_inXhours">"%d 小时到期"</string>
     <string name="list_due_on_weekday">"到期时间：%s"</string>
     <string name="list_start_past">"已开始"</string>
@@ -313,6 +315,7 @@
     <string name="settings_protect_biometric_all">"全部"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"请进行身份验证以更改此设置！"</string>
     <string name="settings_protect_biometric_info_on_unlock">"请进行身份验证以显示受保护的条目！"</string>
+    <string name="settings_font">"字体"</string>
     <string name="donate_dialog_title">"喜欢 jtx Board 吗？"</string>
     <string name="donate_dialog_message">"应用程序开发是一项复杂的工作，开发、维护和提供支持是一项艰巨的工作。如您喜欢此应用程序，并且希望其持续发展，请考虑捐赠 :-)
 非常感谢。"</string>
