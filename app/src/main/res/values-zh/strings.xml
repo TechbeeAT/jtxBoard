@@ -20,6 +20,7 @@
     <string name="unlink">"取消关联"</string>
     <string name="off">"关闭"</string>
     <string name="location_permission_denied">"位置权限被拒绝"</string>
+    <string name="permissions">"权限"</string>
     <string name="current_location">"当前位置"</string>
     <string name="toolbar_text_add_journal">"添加日志"</string>
     <string name="toolbar_text_add_note">"添加笔记"</string>
@@ -34,7 +35,7 @@
     <string name="todo_status_completed">"已经完成"</string>
     <string name="todo_status_inprocess">"正在进行"</string>
     <string name="todo_status_cancelled">"已经取消"</string>
-    <string name="classification_public">"公正"</string>
+    <string name="classification_public">"公开"</string>
     <string name="classification_private">"私有"</string>
     <string name="classification_confidential">"保密"</string>
     <string name="attendee_role_chair">"主持"</string>
@@ -96,6 +97,8 @@
     <string name="edit_take_picture_button_text">"拍照"</string>
     <string name="edit_add_link_button_text">"添加附件链接"</string>
     <string name="edit_subtasks_add_helper">"添加子任务"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"快速添加子任务"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"快速添加子笔记"</string>
     <string name="edit_attachment_add_link_dialog">"添加附件连接"</string>
     <string name="edit_recur_repeat_every_x">"回复每个"</string>
     <string name="edit_recur_on_weekday">"在"</string>
@@ -148,7 +151,9 @@
     <string name="settings_app">"应用设置"</string>
     <string name="settings_select_mimetype_for_audio">"选择音频笔记的Mimetype"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"使用 %1$s 同步"</string>
     <string name="sync_basic_info">"jtx Board 本身不提供服务器同步，但支持通过 DAVx⁵ 进行同步。此方法允许选择任何兼容的 CalDAV 服务器来存储、备份和同步数据。"</string>
+    <string name="sync_ksync_basic_info">"kSync 是一款基于 DAVx⁵ 、由 Infomaniak 开发并提供服务的应用。虽然 DAVx⁵ 兼容任何 CalDAV 服务器，但是 kSync 只允许 Infomaniak 账户进行同步。"</string>
     <string name="sync_congratulations">"恭喜！ :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"已在手机上检测到 %1$s。"</string>
     <string name="sync_setup_instructions">"设置指南"</string>
@@ -265,6 +270,8 @@
     <string name="search_notes">搜索笔记</string>
     <string name="search_todos">搜索任务</string>
     <string name="filter">"过滤"</string>
+    <string name="visibility">"可见性"</string>
+    <string name="order">"排序"</string>
     <string name="sync_now">"立即同步"</string>
     <string name="due">"到期"</string>
     <string name="completed">"完成"</string>
@@ -273,6 +280,7 @@
     <string name="progress">"进度"</string>
     <string name="categories">"类别"</string>
     <string name="subtasks">"子任务"</string>
+    <string name="linked_parents">"链接的父笔记"</string>
     <string name="priority_7_low">"7 - 低"</string>
     <string name="priority_8_lower">"8 - 更低"</string>
     <string name="priority_9_lowest">"9 - 最低"</string>
@@ -280,6 +288,7 @@
     <string name="view_share_part_of_series">"此条目是系列的一部分。"</string>
     <string name="view_share_repeats">"此条目重复，每"</string>
     <string name="collections_dialog_move_title">"从“%1$s”移动所有条目到"</string>
+    <string name="collection_dialog_move_info">"请注意：只能选择可写合集和支持相同组件（日记、笔记、任务）的合集。"</string>
     <string name="menu_collections_popup_move_entries">"移动条目"</string>
     <string name="list_no_dates_set">"未设置日期"</string>
     <string name="list_without_start_date">"没有开始日期"</string>
@@ -294,6 +303,9 @@
     <string name="filter_no_resource">没有资源</string>
     <string name="filter_subtasks_order_by">子任务排序方式</string>
     <string name="filter_subnotes_order_by">关联笔记排序方式</string>
+    <string name="filter_no_filter">"无过滤"</string>
+    <string name="filter_options_more_entries">"更多 (%1$d)"</string>
+    <string name="filter_options_less_entries">"更少"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"请单击要添加条目的合集！"</string>
     <string name="collections_snackbar_x_items_added">"%1$d已添加，%2$d已跳过。（重复条目的独占实例。）"</string>
     <string name="collections_toast_x_items_added">"添加了 %1$d 条记录！"</string>
@@ -305,7 +317,14 @@
     <string name="edit_recur_ends_never">"从不结束"</string>
     <string name="edit_recur_ends_on">"结束，在"</string>
     <string name="edit_recur_ends_after">"结束，在此后"</string>
+    <string name="collections_toast_export_success">"合集导出成功"</string>
     <string name="menu_collections_export_all">"全部导出"</string>
+    <string name="menu_presets_export_presets">"导出预设"</string>
+    <string name="menu_presets_import_presets">"导入预设"</string>
+    <string name="presets_imported">"预设已导入"</string>
+    <string name="presets_import_invalid_file">"无效文件"</string>
+    <string name="presets_saved">"预设已保存"</string>
+    <string name="presets_export_error">"保存预设时出错"</string>
     <string name="more">"更多"</string>
     <string name="navigation_drawer_buypro">"购买Pro版"</string>
     <string name="settings_select_theme">"选择主题"</string>
@@ -404,6 +423,7 @@
     <string name="dialog_edit_stored_status_title">"添加/修改预设状态"</string>
     <string name="menu_list_viewmode_compact">"紧凑视图"</string>
     <string name="menu_list_viewmode_kanban">"看板视图"</string>
+    <string name="menu_list_viewmode_week">"周视图"</string>
     <string name="settings_tasks">"任务设置"</string>
     <string name="settings_default_start_date">"设置任务的默认开始日期"</string>
     <string name="settings_default_due_date">"设置任务的默认到期日期"</string>
@@ -438,10 +458,12 @@
     <string name="settings_select_language_system">"系统默认"</string>
     <string name="filter_special">"特殊过滤器"</string>
     <string name="filter_presets">"过滤预设"</string>
+    <string name="filter_presets_edit_info">"请在列表视图的过滤器菜单中添加/更新/删除过滤器预设。"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"往日"</string>
     <string name="list_date_today">"今天"</string>
     <string name="list_date_tomorrow">"明天"</string>
+    <string name="list_date_within_7_days">"7天内"</string>
     <string name="list_date_future">"未来"</string>
     <string name="list_start_date_in_past">"已开始"</string>
     <string name="list_start_date_today">"今天开始"</string>
@@ -453,6 +475,7 @@
     <string name="settings_auto_alarm">"自动提醒"</string>
     <string name="alarms_always_ondue">"总是到期"</string>
     <string name="settings_auto_alarm_sub">"启用该选项可自动创建提醒。选择“总是到期”不创建提醒，但在任何情况下都会在任务到期时收到通知。"</string>
+    <string name="settings_protect_biometric">"受生物识别保护的条目"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"无状态"</string>
     <string name="classification_no_classification">"无分类（公开）"</string>
@@ -467,6 +490,8 @@
     <string name="filter_save_as_preset">"保存为预设"</string>
     <string name="menu_list_flat_view">"平铺视图"</string>
     <string name="menu_list_flat_view_sub">"总是在列表的顶级显示子条目"</string>
+    <string name="menu_list_limit_recur_entries">"限制重复"</string>
+    <string name="menu_list_limit_recur_entries_sub">"将来只显示一个重复条目"</string>
     <string name="menu_view_markdown_formatting">"Markdown 格式"</string>
     <string name="menu_view_autosave">"自动保存"</string>
     <string name="x_selected">已选取 %1$d 个，共 %2$d 个</string>
@@ -503,7 +528,17 @@
     <string name="markdown_code">"代码"</string>
     <string name="preset_categories">"预设类别"</string>
     <string name="preset_resources">"预设资源"</string>
+    <string name="extended_statuses">"扩展状态"</string>
+    <string name="extended_statuses_for_journals">"日记的…"</string>
+    <string name="extended_statuses_for_notes">"笔记的…"</string>
+    <string name="extended_statuses_for_tasks">"任务的…"</string>
+    <string name="extended_status_attention">"注意：扩展状态与其他应用不兼容，而是映射到标准状态。其他应用将只显示对应的标准状态。"</string>
+    <string name="extended_status">\"扩展状态</string>
     <string name="active_filters">活动过滤器：</string>
+    <string name="kanban_settings">"看板"</string>
+    <string name="kanban_columns">"看板栏"</string>
+    <string name="kanban_columns_based_on_standard_status">基于标准状态</string>
+    <string name="kanban_columns_based_on_extended_status">基于扩展状态</string>
     <string name="kanban_columns_based_on_first_category">基于第一个类别</string>
     <string name="clear_filters">"清除过滤规则"</string>
     <string name="geofence_radius_meter">"半径 %1$d 米"</string>
