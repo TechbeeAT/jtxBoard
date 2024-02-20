@@ -257,27 +257,27 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun unlinkFromSeries(instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
 
-            database.withTransaction {
+            withContext(Dispatchers.IO) {
+                database.withTransaction {
 
-                instances.forEach { instance ->
-                    val children = databaseDao.getRelatedChildren(instance.id)
-                    val updatedEntry = ICalObject.unlinkFromSeries(instance, databaseDao)
-                    children.forEach forEachChild@{ child ->
-                        val childEntity = databaseDao.getSync(child.id) ?: return@forEachChild
-                        createCopy(childEntity, child.getModuleFromString(), updatedEntry.uid)
+                    instances.forEach { instance ->
+                        val children = databaseDao.getRelatedChildren(instance.id)
+                        val updatedEntry = ICalObject.unlinkFromSeries(instance, databaseDao)
+                        children.forEach forEachChild@{ child ->
+                            val childEntity = databaseDao.getSync(child.id) ?: return@forEachChild
+                            createCopy(childEntity, child.getModuleFromString(), updatedEntry.uid)
+                        }
+                        instance.makeSeriesDirty(databaseDao)
                     }
-                    instance.makeSeriesDirty(databaseDao)
                 }
 
                 if (deleteAfterUnlink) {
-                    series?.id?.let {
-                        deleteById(it)
-                        withContext(Dispatchers.Main) {
-                            changeState.value = DetailChangeState.DELETED
-                        }
+                    series?.id?.let { deleteById(it, false) }
+                    withContext(Dispatchers.Main) {
+                        changeState.value = DetailChangeState.DELETED_BACK_TO_LIST
                     }
                 } else {
                     withContext(Dispatchers.Main) {
@@ -285,8 +285,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
             }
-            onChangeDone()
-
+            withContext(Dispatchers.IO) {
+                onChangeDone()
+            }
         }
     }
 
@@ -593,26 +594,32 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * Deletes the current entry with its children
      */
     fun delete() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.DELETING }
             try {
-                database.withTransaction {
+                withContext(Dispatchers.IO) {
+                    database.withTransaction {
 
-                    if (icalEntity.value?.property?.recurid != null) {
-                        ICalObject.unlinkFromSeries(icalEntity.value?.property!!, databaseDao)
-                    }
-                    icalEntity.value?.property?.id?.let { id ->
-                        ICalObject.deleteItemWithChildren(id, databaseDao)
+                        if (icalEntity.value?.property?.recurid != null) {
+                            ICalObject.unlinkFromSeries(icalEntity.value?.property!!, databaseDao)
+                        }
+                        icalEntity.value?.property?.id?.let { id ->
+                            ICalObject.deleteItemWithChildren(id, databaseDao)
+                        }
                     }
                 }
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.DELETED }
-                toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
+                withContext (Dispatchers.Main) {
+                    changeState.value = DetailChangeState.DELETED
+                    toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
+                }
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: ${icalEntity.value?.property?.id}")
                 Log.d("SQLConstraint", e.stackTraceToString())
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             } finally {
-                onChangeDone()
+                withContext(Dispatchers.IO) {
+                    onChangeDone()
+                }
             }
         }
     }
@@ -621,21 +628,28 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * Delete function for subtasks and subnotes
      * @param [icalObjectId] of the subtask/subnote to be deleted
      */
-    fun deleteById(icalObjectId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun deleteById(icalObjectId: Long, showToast: Boolean) {
+        viewModelScope.launch {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
             try {
-                database.withTransaction {
-                    ICalObject.deleteItemWithChildren(icalObjectId, databaseDao)
+                withContext(Dispatchers.IO) {
+                    database.withTransaction {
+                        ICalObject.deleteItemWithChildren(icalObjectId, databaseDao)
+                    }
                 }
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-                toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
+                withContext (Dispatchers.Main) {
+                    changeState.value = DetailChangeState.CHANGESAVED
+                    if(showToast)
+                        toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
+                }
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
                 Log.d("SQLConstraint", e.stackTraceToString())
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             } finally {
-                onChangeDone()
+                withContext(Dispatchers.IO) {
+                    onChangeDone()
+                }
             }
         }
     }
@@ -916,6 +930,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * Notifies the contentObservers
      * schedules the notifications
+     * sets geofences
      * updates the widget
      */
     private suspend fun onChangeDone() {
@@ -925,5 +940,5 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         ListWidget().updateAll(getApplication())
     }
 
-    enum class DetailChangeState { LOADING, UNCHANGED, CHANGEUNSAVED, SAVINGREQUESTED, CHANGESAVING, CHANGESAVED, DELETING, DELETED, SQLERROR }
+    enum class DetailChangeState { LOADING, UNCHANGED, CHANGEUNSAVED, SAVINGREQUESTED, CHANGESAVING, CHANGESAVED, DELETING, DELETED, DELETED_BACK_TO_LIST, SQLERROR }
 }
