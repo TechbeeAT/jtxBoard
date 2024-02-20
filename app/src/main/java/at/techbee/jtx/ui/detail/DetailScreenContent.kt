@@ -213,7 +213,7 @@ fun DetailScreenContent(
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, observedICalEntity.value) {
         if (observedICalEntity.value == null && !timeout) {
-            delay((2).seconds)
+            delay((10).seconds)
             timeout = true
         }
     }

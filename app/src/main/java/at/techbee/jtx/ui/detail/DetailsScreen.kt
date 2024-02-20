@@ -154,8 +154,20 @@ fun DetailsScreen(
             DetailViewModel.DetailChangeState.SAVINGREQUESTED -> { /* do nothing, wait until saved */ }
             DetailViewModel.DetailChangeState.CHANGESAVING -> { /* do nothing, wait until saved */ }
             DetailViewModel.DetailChangeState.DELETING -> { /* do nothing, wait until deleted */ }
-            DetailViewModel.DetailChangeState.DELETED -> { navController.navigateUp() }
-            DetailViewModel.DetailChangeState.SQLERROR -> { navController.navigateUp() }
+            DetailViewModel.DetailChangeState.DELETED -> {
+                Attachment.scheduleCleanupJob(context)
+                onRequestReview()
+                navController.navigateUp()
+                navigateUp = false
+            }
+            DetailViewModel.DetailChangeState.DELETED_BACK_TO_LIST -> {
+                navController.popBackStack(NavigationDrawerDestination.BOARD.name, false)
+                navigateUp = false
+            }
+            DetailViewModel.DetailChangeState.SQLERROR -> {
+                navController.navigateUp()
+                navigateUp = false
+            }
             DetailViewModel.DetailChangeState.CHANGESAVED -> {
                 showUnsavedChangesDialog = false
                 if(isEditMode.value)
@@ -168,15 +180,8 @@ fun DetailsScreen(
         }
     }
 
-    if (detailViewModel.changeState.value == DetailViewModel.DetailChangeState.DELETED) {
-        Attachment.scheduleCleanupJob(context)
-        onRequestReview()
-        navigateUp = true
-    }
-
-    if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.SQLERROR) {
+    if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.SQLERROR)
         ErrorOnUpdateDialog(onConfirm = { navigateUp = true })
-    }
 
     detailViewModel.toastMessage.value?.let {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -195,6 +200,7 @@ fun DetailsScreen(
                 onConfirm = {
                     showDeleteDialog = false
                     detailViewModel.delete()
+                    navigateUp = true
                 },
                 onDismiss = { showDeleteDialog = false }
             )
@@ -515,7 +521,7 @@ fun DetailsScreen(
                         Module.TODO -> scrollToSection.value = DetailsScreenSection.SUBTASKS
                     }
                                   },
-                onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
+                onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId, true) },
                 onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                 onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },
                 player = detailViewModel.mediaPlayer,
@@ -532,7 +538,12 @@ fun DetailsScreen(
                         )
                     )
                 },
-                unlinkFromSeries = { instances, series, deleteAfterUnlink -> detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink) },
+                unlinkFromSeries = { instances, series, deleteAfterUnlink ->
+                    detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink)
+                    detailViewModel.changeState.value = DetailViewModel.DetailChangeState.CHANGESAVING
+                    if(deleteAfterUnlink)
+                        navigateUp = true
+                },
                 onShowLinkExistingDialog = { modules, reltype ->
                     linkEntryDialogModule = modules
                     linkEntryDialogReltype = reltype
