@@ -32,8 +32,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -657,7 +659,13 @@ fun DetailsCardRecur(
                         }
                     }
                 } else {
-                    seriesInstances.forEach { instance ->
+                    var instanceLimit by remember { mutableIntStateOf(5) }
+
+                    seriesInstances.forEachIndexed { index, instance ->
+
+                        if(index > instanceLimit-1)
+                            return@forEachIndexed
+
                         ElevatedCard(
                             onClick = {
                                 goToDetail(instance.id, false, seriesInstances.map { it.id })
@@ -692,6 +700,12 @@ fun DetailsCardRecur(
                                     )
                                 }
                             }
+                        }
+                    }
+
+                    if(seriesInstances.size > instanceLimit) {
+                        TextButton(onClick = { instanceLimit = Int.MAX_VALUE }) {
+                            Text(stringResource(id = R.string.details_show_all_instances, seriesInstances.size))
                         }
                     }
                 }
