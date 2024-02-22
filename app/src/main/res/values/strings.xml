@@ -456,6 +456,7 @@ Thank you!"</string>
     <string name="details_go_to_series">"Go to series"</string>
     <string name="details_detach_from_series">"Detach from series"</string>
     <string name="details_detach_all_instances">"Detach all instances"</string>
+    <string name="details_show_all_instances">"Show all instances (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Unlink from parent"</string>
     <string name="dialog_unlink_from_parent_message">"Remove the relation as a sub-entry? The entry will remain as a standalone entry."</string>
     <string name="edit_comment">"Edit comment"</string>
