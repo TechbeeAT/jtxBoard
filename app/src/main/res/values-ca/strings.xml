@@ -443,6 +443,7 @@ Gràcies!"</string>
     <string name="details_go_to_series">"Vés a la sèrie"</string>
     <string name="details_detach_from_series">"Desenllaçar de la sèrie"</string>
     <string name="details_detach_all_instances">"Desenllaça totes les instàncies"</string>
+    <string name="details_show_all_instances">"Mostra totes les instàncies (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Desenllaça del superior"</string>
     <string name="dialog_unlink_from_parent_message">"Eliminar la relació com a subentrada? Es quedarà com una independent."</string>
     <string name="edit_comment">"Editar comentari"</string>
