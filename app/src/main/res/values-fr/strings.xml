@@ -385,6 +385,16 @@ Merci !"</string>
     <string name="back">"Retour"</string>
     <string name="details">"Détails"</string>
     <string name="date">"Date"</string>
+    <string name="group_by_date_day">"Date (jour)"</string>
+    <string name="group_by_date_week">"Date (semaine)"</string>
+    <string name="group_by_date_month">"Date (mois)"</string>
+    <string name="group_by_started_day">"Début (jour)"</string>
+    <string name="group_by_started_week">"Début (semaine)"</string>
+    <string name="group_by_started_month">"Début (mois)"</string>
+    <string name="group_by_due_day">"Echéance (jour)"</string>
+    <string name="group_by_due_week">"Echéance (semaine)"</string>
+    <string name="group_by_due_month">"Echéance (mois)"</string>
+    <string name="week_number_year">"Semaine %1$d/%2$d"</string>
     <string name="summary_description">"Résumé/Description"</string>
     <string name="status_classification_priority">"Statut/Classification/Priorité"</string>
     <string name="timezone">"Fuseau horaire"</string>
@@ -430,6 +440,7 @@ Merci !"</string>
     <string name="details_go_to_series">"Aller à la série"</string>
     <string name="details_detach_from_series">"Détacher de la série"</string>
     <string name="details_detach_all_instances">"Détacher toutes les instances"</string>
+    <string name="details_show_all_instances">"Afficher toutes les instances (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Dissocier du parent"</string>
     <string name="dialog_unlink_from_parent_message">"Supprimer la relation en tant que sous-entrée ? L'entrée restera comme entrée autonome."</string>
     <string name="edit_comment">"Modifier le commentaire"</string>
@@ -530,6 +541,10 @@ Merci !"</string>
     <string name="filter_any">"N'importe laquelle"</string>
     <string name="filter_all">"Toutes"</string>
     <string name="filter_none">"Aucune"</string>
+    <string name="filter_date_from_to">"Date: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Début : %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Échéance : %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Complété : %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date dans le passé"</string>
     <string name="list_date_today">"Aujourd'hui"</string>
