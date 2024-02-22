@@ -442,6 +442,7 @@ Dank u!"</string>
     <string name="details_go_to_series">"Ga naar serie"</string>
     <string name="details_detach_from_series">"Loskoppelen van serie"</string>
     <string name="details_detach_all_instances">"Alle items loskoppelen"</string>
+    <string name="details_show_all_instances">"Toon alle instanties (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Ontkoppel van bovenliggend element"</string>
     <string name="dialog_unlink_from_parent_message">"Verwijder de relatie als subitem? De vermelding blijft zelfstandig bestaan."</string>
     <string name="edit_comment">"Commentaar bewerken"</string>
