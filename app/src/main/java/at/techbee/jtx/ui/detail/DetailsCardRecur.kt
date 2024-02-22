@@ -35,7 +35,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -659,52 +658,51 @@ fun DetailsCardRecur(
                         }
                     }
                 } else {
-                    var instanceLimit by remember { mutableIntStateOf(5) }
+                    var showAllInstances by remember { mutableStateOf(false) }
 
-                    seriesInstances.forEachIndexed { index, instance ->
-
-                        if(index > instanceLimit-1)
-                            return@forEachIndexed
-
-                        ElevatedCard(
-                            onClick = {
-                                goToDetail(instance.id, false, seriesInstances.map { it.id })
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(min = 48.dp)
-                        ) {
-                            Row(
+                    if(showAllInstances) {
+                        seriesInstances.forEach { instance ->
+                            ElevatedCard(
+                                onClick = {
+                                    goToDetail(instance.id, false, seriesInstances.map { it.id })
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 16.dp, horizontal = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                                    .heightIn(min = 48.dp)
                             ) {
-                                Text(
-                                    text = DateTimeUtils.convertLongToFullDateTimeString(instance.dtstart, instance.dtstartTimezone),
-                                    modifier = Modifier.weight(1f)
-                                )
-                                if (instance.sequence == 0L) {
-                                    Icon(
-                                        Icons.Outlined.EventRepeat,
-                                        stringResource(R.string.list_item_recurring),
-                                        modifier = Modifier
-                                            .size(14.dp)
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 16.dp, horizontal = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = DateTimeUtils.convertLongToFullDateTimeString(
+                                            instance.dtstart,
+                                            instance.dtstartTimezone
+                                        ),
+                                        modifier = Modifier.weight(1f)
                                     )
-                                } else {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_recur_exception),
-                                        stringResource(R.string.list_item_edited_recurring),
-                                        modifier = Modifier
-                                            .size(14.dp)
-                                    )
+                                    if (instance.sequence == 0L) {
+                                        Icon(
+                                            Icons.Outlined.EventRepeat,
+                                            stringResource(R.string.list_item_recurring),
+                                            modifier = Modifier
+                                                .size(14.dp)
+                                        )
+                                    } else {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_recur_exception),
+                                            stringResource(R.string.list_item_edited_recurring),
+                                            modifier = Modifier
+                                                .size(14.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
-
-                    if(seriesInstances.size > instanceLimit) {
-                        TextButton(onClick = { instanceLimit = Int.MAX_VALUE }) {
+                    } else {
+                        TextButton(onClick = { showAllInstances = true }) {
                             Text(stringResource(id = R.string.details_show_all_instances, seriesInstances.size))
                         }
                     }
