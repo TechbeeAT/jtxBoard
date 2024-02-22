@@ -443,6 +443,7 @@ Danke!"</string>
     <string name="details_go_to_series">"Gehe zur Serie"</string>
     <string name="details_detach_from_series">"Von der Serie trennen"</string>
     <string name="details_detach_all_instances">"Alle Instanzen trennen"</string>
+    <string name="details_show_all_instances">"Alle Instanzen anzeigen (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Von übergeordnetem Element trennen"</string>
     <string name="dialog_unlink_from_parent_message">"Die Beziehung als Untereintrag entfernen? Der Eintrag bleibt als eigenständiger Eintrag."</string>
     <string name="edit_comment">"Kommentar bearbeiten"</string>
