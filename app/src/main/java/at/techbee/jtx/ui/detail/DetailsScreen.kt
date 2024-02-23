@@ -61,6 +61,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.detail.models.DetailsScreenSection
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
