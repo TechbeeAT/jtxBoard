@@ -57,8 +57,7 @@ const val COLUMN_CATEGORY_OTHER = "other"
                 parentColumns = arrayOf(COLUMN_ID),
                 childColumns = arrayOf(COLUMN_CATEGORY_ICALOBJECT_ID),
                 onDelete = ForeignKey.CASCADE)],
-        indices = [Index(value = [COLUMN_CATEGORY_ID, COLUMN_CATEGORY_ICALOBJECT_ID]),
-                Index(value = [COLUMN_CATEGORY_TEXT])])
+)
 
 data class Category (
 
@@ -67,7 +66,7 @@ data class Category (
         var categoryId: Long = 0L,
 
         @ColumnInfo(index = true, name = COLUMN_CATEGORY_ICALOBJECT_ID)     var icalObjectId: Long = 0L,
-        @ColumnInfo(name = COLUMN_CATEGORY_TEXT)                       var text: String = "",
+        @ColumnInfo(index = true, name = COLUMN_CATEGORY_TEXT)                       var text: String = "",
         @ColumnInfo(name = COLUMN_CATEGORY_LANGUAGE)                   var language: String? = null,
         @ColumnInfo(name = COLUMN_CATEGORY_OTHER)                      var other: String? = null
 ): Parcelable

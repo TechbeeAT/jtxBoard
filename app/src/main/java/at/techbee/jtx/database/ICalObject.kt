@@ -450,7 +450,9 @@ const val COLUMN_GEOFENCE_RADIUS = "geofenceRadius"
 @Parcelize
 @Entity(
     tableName = TABLE_NAME_ICALOBJECT,
-    indices = [Index(value = ["_id", "summary", "description"])],
+    indices = [
+        Index(value = [COLUMN_SUMMARY, COLUMN_DESCRIPTION])
+    ],
     foreignKeys = [ForeignKey(
         entity = ICalCollection::class,
         parentColumns = arrayOf(COLUMN_COLLECTION_ID),
@@ -464,17 +466,17 @@ data class ICalObject(
     @ColumnInfo(index = true, name = COLUMN_ID)
     var id: Long = 0L,
 
-    @ColumnInfo(name = COLUMN_MODULE) var module: String = Module.NOTE.name,
+    @ColumnInfo(index = true, name = COLUMN_MODULE) var module: String = Module.NOTE.name,
     @ColumnInfo(name = COLUMN_COMPONENT) var component: String = Component.VJOURNAL.name,
     @ColumnInfo(name = COLUMN_SUMMARY) var summary: String? = null,
     @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String? = null,
-    @ColumnInfo(name = COLUMN_DTSTART) var dtstart: Long? = null,
+    @ColumnInfo(index = true, name = COLUMN_DTSTART) var dtstart: Long? = null,
     @ColumnInfo(name = COLUMN_DTSTART_TIMEZONE) var dtstartTimezone: String? = null,
 
     @ColumnInfo(name = COLUMN_DTEND) var dtend: Long? = null,
     @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String? = null,
 
-    @ColumnInfo(name = COLUMN_STATUS) var status: String? = null,
+    @ColumnInfo(index = true, name = COLUMN_STATUS) var status: String? = null,
     @ColumnInfo(name = COLUMN_EXTENDED_STATUS) var xstatus: String? = null,
     @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String? = null,
 
@@ -489,9 +491,9 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_PERCENT) var percent: Int? = null,    // VTODO only!
     @ColumnInfo(name = COLUMN_PRIORITY) var priority: Int? = null,   // VTODO and VEVENT
 
-    @ColumnInfo(name = COLUMN_DUE) var due: Long? = null,      // VTODO only!
+    @ColumnInfo(index = true, name = COLUMN_DUE) var due: Long? = null,      // VTODO only!
     @ColumnInfo(name = COLUMN_DUE_TIMEZONE) var dueTimezone: String? = null, //VTODO only!
-    @ColumnInfo(name = COLUMN_COMPLETED) var completed: Long? = null, // VTODO only!
+    @ColumnInfo(index = true, name = COLUMN_COMPLETED) var completed: Long? = null, // VTODO only!
     @ColumnInfo(name = COLUMN_COMPLETED_TIMEZONE) var completedTimezone: String? = null, //VTODO only!
     @ColumnInfo(name = COLUMN_DURATION) var duration: String? = null, //VTODO only!
 
@@ -502,8 +504,8 @@ data class ICalObject(
      The following properties specify change management information in  calendar components.
      https://tools.ietf.org/html/rfc5545#section-3.8.7
      */
-    @ColumnInfo(name = COLUMN_CREATED) var created: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.1
-    @ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.2
+    @ColumnInfo(index = true, name = COLUMN_CREATED) var created: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.1
+    @ColumnInfo(index = true, name = COLUMN_DTSTAMP) var dtstamp: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.2
     @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long = System.currentTimeMillis(), // see https://tools.ietf.org/html/rfc5545#section-3.8.7.3
     @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long = 0,                             // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
 
