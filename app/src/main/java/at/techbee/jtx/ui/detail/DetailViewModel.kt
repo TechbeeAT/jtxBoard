@@ -119,6 +119,24 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         _isAuthenticated = isAuthenticated
         viewModelScope.launch {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
+
+            withContext(Dispatchers.Default) {
+                originalEntry = databaseDao.getSync(icalObjectId)
+                mutableICalObject = originalEntry?.property
+                mutableCategories.clear()
+                mutableCategories.addAll(originalEntry?.categories ?: emptyList())
+                mutableResources.clear()
+                mutableResources.addAll(originalEntry?.resources ?: emptyList())
+                mutableAttendees.clear()
+                mutableAttendees.addAll(originalEntry?.attendees ?: emptyList())
+                mutableComments.clear()
+                mutableComments.addAll(originalEntry?.comments ?: emptyList())
+                mutableAttachments.clear()
+                mutableAttachments.addAll(originalEntry?.attachments ?: emptyList())
+                mutableAlarms.clear()
+                mutableAlarms.addAll(originalEntry?.alarms ?: emptyList())
+            }
+
             icalEntity = databaseDao.get(icalObjectId)
 
             relatedParents = icalEntity.switchMap {
@@ -156,22 +174,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             seriesInstances = icalEntity.switchMap { databaseDao.getSeriesInstancesICalObjectsByUID(it?.property?.uid) }
             isChild = databaseDao.isChild(icalObjectId)
 
-            withContext(Dispatchers.IO) {
-                originalEntry = databaseDao.getSync(icalObjectId)
-                mutableICalObject = originalEntry?.property
-                mutableCategories.clear()
-                mutableCategories.addAll(originalEntry?.categories ?: emptyList())
-                mutableResources.clear()
-                mutableResources.addAll(originalEntry?.resources ?: emptyList())
-                mutableAttendees.clear()
-                mutableAttendees.addAll(originalEntry?.attendees ?: emptyList())
-                mutableComments.clear()
-                mutableComments.addAll(originalEntry?.comments ?: emptyList())
-                mutableAttachments.clear()
-                mutableAttachments.addAll(originalEntry?.attachments ?: emptyList())
-                mutableAlarms.clear()
-                mutableAlarms.addAll(originalEntry?.alarms ?: emptyList())
-            }
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
         }
 
