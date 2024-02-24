@@ -157,26 +157,22 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             isChild = databaseDao.isChild(icalObjectId)
 
             withContext(Dispatchers.IO) {
-                val immutableICalEntity = databaseDao.getSync(icalObjectId)
-                mutableICalObject = immutableICalEntity?.property
+                originalEntry = databaseDao.getSync(icalObjectId)
+                mutableICalObject = originalEntry?.property
                 mutableCategories.clear()
-                mutableCategories.addAll(immutableICalEntity?.categories ?: emptyList())
+                mutableCategories.addAll(originalEntry?.categories ?: emptyList())
                 mutableResources.clear()
-                mutableResources.addAll(immutableICalEntity?.resources ?: emptyList())
+                mutableResources.addAll(originalEntry?.resources ?: emptyList())
                 mutableAttendees.clear()
-                mutableAttendees.addAll(immutableICalEntity?.attendees ?: emptyList())
+                mutableAttendees.addAll(originalEntry?.attendees ?: emptyList())
                 mutableComments.clear()
-                mutableComments.addAll(immutableICalEntity?.comments ?: emptyList())
+                mutableComments.addAll(originalEntry?.comments ?: emptyList())
                 mutableAttachments.clear()
-                mutableAttachments.addAll(immutableICalEntity?.attachments ?: emptyList())
+                mutableAttachments.addAll(originalEntry?.attachments ?: emptyList())
                 mutableAlarms.clear()
-                mutableAlarms.addAll(immutableICalEntity?.alarms ?: emptyList())
+                mutableAlarms.addAll(originalEntry?.alarms ?: emptyList())
             }
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            originalEntry = databaseDao.getSync(icalObjectId)  // store original entry for revert option
         }
 
         //remove notification (if not sticky)
