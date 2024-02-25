@@ -2,10 +2,9 @@ name: Create release
 on:
   push:
     tags:
-      - v*
-    tags-ignore:
-      - v*alpha*
-      - v*beta*
+      - 'v*'
+      - '!v*alpha*'
+      - '!v*beta*'
 jobs:
   build:
     name: Create release
