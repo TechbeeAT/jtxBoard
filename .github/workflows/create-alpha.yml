@@ -1,4 +1,4 @@
-name: Create release
+name: Create alpha
 on:
   push:
     tags:
