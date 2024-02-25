@@ -33,11 +33,6 @@ jobs:
           GOOGLE_GEO_API_KEY: ${{ secrets.google_geo_api_key }}
           GH_CONTRIBUTORS_API_KEY: ${{ secrets.gh_contributors_api_key }}
 
-      - name: Generate archive
-        run: tar -cJvf release-${{ github.ref_name }}.tar.xz app/build/outputs/apk/ app/build/outputs/mapping/*/mapping.txt app/build/outputs/bundle/gplayRelease/
-        env:
-          XZ_OPT: -9
-
       - name: Upload jtxBoard-gplay to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
