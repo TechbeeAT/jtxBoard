@@ -65,8 +65,7 @@ const val COLUMN_RESOURCE_OTHER = "other"
         foreignKeys = [ForeignKey(entity = ICalObject::class,
                 parentColumns = arrayOf(COLUMN_ID),
                 childColumns = arrayOf(COLUMN_RESOURCE_ICALOBJECT_ID),
-                onDelete = ForeignKey.CASCADE)]
-)
+                onDelete = ForeignKey.CASCADE)])
 data class Resource (
 
         @PrimaryKey(autoGenerate = true)
@@ -74,7 +73,7 @@ data class Resource (
         var resourceId: Long = 0L,
 
         @ColumnInfo(index = true, name = COLUMN_RESOURCE_ICALOBJECT_ID)var icalObjectId: Long = 0L,
-        @ColumnInfo(index = true, name = COLUMN_RESOURCE_TEXT)            var text: String? = "",
+        @ColumnInfo(name = COLUMN_RESOURCE_TEXT)            var text: String? = "",
         @ColumnInfo(name = COLUMN_RESOURCE_ALTREP)                 var altrep: String? = null,
         @ColumnInfo(name = COLUMN_RESOURCE_LANGUAGE)               var language: String? = null,
         @ColumnInfo(name = COLUMN_RESOURCE_OTHER)                      var other: String? = null
