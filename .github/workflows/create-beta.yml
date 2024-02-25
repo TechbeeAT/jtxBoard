@@ -2,12 +2,10 @@ name: Create release
 on:
   push:
     tags:
-      - 'v*'
-      - '!v*alpha*'
-      - '!v*beta*'
+      - 'v*beta*'
 jobs:
   build:
-    name: Create release
+    name: Create beta
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -35,17 +33,6 @@ jobs:
           GOOGLE_GEO_API_KEY: ${{ secrets.google_geo_api_key }}
           GH_CONTRIBUTORS_API_KEY: ${{ secrets.gh_contributors_api_key }}
 
-      - name: Build signed package for Amazon
-        run: ./gradlew app:assembleAmazonRelease
-        env:
-          ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.android_keystore_password }}
-          ANDROID_KEY_ALIAS: ${{ secrets.android_key_alias }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
-          CROWDIN_API_KEY: ${{ secrets.crowdin_api_key }}
-          GOOGLE_GEO_API_KEY: ${{ secrets.google_geo_api_key }}
-          GH_CONTRIBUTORS_API_KEY: ${{ secrets.gh_contributors_api_key }}
-          
       - name: Build app bundle release (AAB) for Gplay
         run: ./gradlew app:bundleGplayRelease
         env:
