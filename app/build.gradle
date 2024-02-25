@@ -272,5 +272,5 @@ dependencies {
 
     implementation "com.googlecode.libphonenumber:libphonenumber:8.13.31"
 
-    implementation "sh.calvin.reorderable:reorderable:1.3.1"
+    implementation "sh.calvin.reorderable:reorderable:1.3.2"
 }
