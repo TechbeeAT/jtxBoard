@@ -512,7 +512,7 @@ DELETEs by Object
     suspend fun updateOrder(id: Long, index: Int?)
 
 
-    //@Transaction
+    @Transaction
     @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_UID in (SELECT $COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $COLUMN_DELETED = 0)")
     fun getAllParents(): LiveData<List<ICal4ListRel>>
 
@@ -556,7 +556,7 @@ DELETEs by Object
     @RawQuery(observedEntities = [ICal4ListRel::class])
     fun getSubEntriesFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
 
-    //@Transaction
+    @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")
     fun get(key: Long): LiveData<ICalEntity?>
 
