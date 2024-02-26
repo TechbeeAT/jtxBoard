@@ -108,8 +108,9 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun DetailScreenContent(
-    observedICalEntity: State<ICalEntity?>,
+    observedICalObject: State<ICalObject?>,
     iCalObject: ICalObject?,
+    collection: ICalCollection?,
     categories: SnapshotStateList<Category>,
     resources: SnapshotStateList<Resource>,
     attendees: SnapshotStateList<Attendee>,
@@ -178,15 +179,15 @@ fun DetailScreenContent(
     }
 
     var timeout by remember { mutableStateOf(false) }
-    LaunchedEffect(timeout, observedICalEntity.value) {
-        if (observedICalEntity.value == null && !timeout) {
+    LaunchedEffect(timeout, observedICalObject.value) {
+        if (observedICalObject.value == null && !timeout) {
             delay((10).seconds)
             timeout = true
         }
     }
 
     // item was not loaded yet or was deleted in the background
-    if (observedICalEntity.value == null && timeout) {
+    if (observedICalObject.value == null && timeout) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -201,7 +202,7 @@ fun DetailScreenContent(
             }
         }
         return
-    } else if (observedICalEntity.value == null && !timeout) {
+    } else if (observedICalObject.value == null && !timeout) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -238,18 +239,18 @@ fun DetailScreenContent(
     }
 
     // Update some fields in the background that might have changed (e.g. by creating a copy)
-    if ((observedICalEntity.value?.property?.sequence ?: 0) > iCalObject.sequence) {
-        iCalObject.status = observedICalEntity.value?.property?.status
-        iCalObject.percent = observedICalEntity.value?.property?.percent
-        iCalObject.completed = observedICalEntity.value?.property?.completed
-        iCalObject.completedTimezone = observedICalEntity.value?.property?.completedTimezone
-        iCalObject.sequence = observedICalEntity.value?.property?.sequence ?: 0
-        iCalObject.recurid = observedICalEntity.value?.property?.recurid
-        iCalObject.uid = observedICalEntity.value?.property?.uid!!
+    if ((observedICalObject.value?.sequence ?: 0) > iCalObject.sequence) {
+        iCalObject.status = observedICalObject.value?.status
+        iCalObject.percent = observedICalObject.value?.percent
+        iCalObject.completed = observedICalObject.value?.completed
+        iCalObject.completedTimezone = observedICalObject.value?.completedTimezone
+        iCalObject.sequence = observedICalObject.value?.sequence ?: 0
+        iCalObject.recurid = observedICalObject.value?.recurid
+        iCalObject.uid = observedICalObject.value?.uid!!
     }
-    observedICalEntity.value?.property?.id?.let { iCalObject.id = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
-    observedICalEntity.value?.property?.uid?.let { iCalObject.uid = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
-    observedICalEntity.value?.property?.collectionId?.let { iCalObject.collectionId = it }   //  the collectionId might also have changed (when moving the entry to a new collection)!
+    observedICalObject.value?.id?.let { iCalObject.id = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
+    observedICalObject.value?.uid?.let { iCalObject.uid = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
+    observedICalObject.value?.collectionId?.let { iCalObject.collectionId = it }   //  the collectionId might also have changed (when moving the entry to a new collection)!
 
     var showAllOptions by rememberSaveable { mutableStateOf(false) }
 
@@ -345,16 +346,19 @@ fun DetailScreenContent(
 
             when(detailsScreenSection) {
                 DetailsScreenSection.COLLECTION -> {
+                    if(collection == null)
+                        return@items
+
                     DetailsCardCollections(
                         iCalObject = iCalObject,
                         isEditMode = isEditMode.value,
                         isChild = isChild.value,
-                        originalICalEntity = observedICalEntity.value,
+                        originalCollection = collection,
                         color = color,
                         changeState = changeState,
                         allPossibleCollections = allPossibleCollections,
-                        includeVJOURNAL = if (observedICalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
-                        includeVTODO = if (observedICalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
+                        includeVJOURNAL = if (observedICalObject.value?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
+                        includeVTODO = if (observedICalObject.value?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
                         onMoveToNewCollection = onMoveToNewCollection,
                         modifier = detailElementModifier
                     )
@@ -402,7 +406,7 @@ fun DetailScreenContent(
                         SelectionContainer(modifier = detailElementModifier) {
                             ElevatedCard(
                                 onClick = {
-                                    if (observedICalEntity.value?.ICalCollection?.readonly == false)
+                                    if (collection?.readonly == false)
                                         isEditMode.value = true
                                 },
                                 modifier = Modifier
@@ -431,7 +435,7 @@ fun DetailScreenContent(
                                                 fontFamily = LocalTextStyle.current.fontFamily
                                                 ),
                                             onClick = {
-                                                if (observedICalEntity.value?.ICalCollection?.readonly == false)
+                                                if (collection?.readonly == false)
                                                     isEditMode.value = true
                                             }
                                         )
@@ -555,7 +559,7 @@ fun DetailScreenContent(
                                 iCalObjectId = iCalObject.id,
                                 progress = iCalObject.percent,
                                 status = iCalObject.status,
-                                isReadOnly = observedICalEntity.value?.ICalCollection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
+                                isReadOnly = collection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
                                 sliderIncrement = sliderIncrement,
                                 onProgressChanged = { itemId, newPercent ->
                                     iCalObject.setUpdatedProgress(
@@ -672,7 +676,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.SUBTASKS -> {
-                    if(subtasks.value.isNotEmpty() || (isEditMode.value && observedICalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false || showAllOptions))) {
+                    if(subtasks.value.isNotEmpty() || (isEditMode.value && collection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false || showAllOptions))) {
                         DetailsCardSubtasks(
                             subtasks = subtasks.value,
                             isEditMode = isEditMode,
@@ -712,7 +716,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.SUBNOTES -> {
-                    if(subnotes.value.isNotEmpty() || (isEditMode.value && observedICalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] == true || showAllOptions))) {
+                    if(subnotes.value.isNotEmpty() || (isEditMode.value && collection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] == true || showAllOptions))) {
                         DetailsCardSubnotes(
                             subnotes = subnotes.value,
                             isEditMode = isEditMode,
@@ -848,7 +852,7 @@ fun DetailScreenContent(
                         DetailsCardAttachments(
                             attachments = attachments,
                             isEditMode = isEditMode.value,
-                            isRemoteCollection = observedICalEntity.value?.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE,
+                            isRemoteCollection = collection?.accountType != LOCAL_ACCOUNT_TYPE,
                             player = player,
                             onAttachmentsUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
@@ -951,7 +955,7 @@ fun DetailScreenContent(
 
         if(!isEditMode.value) {
             item {
-                val curIndex = icalObjectIdList.indexOf(observedICalEntity.value?.property?.id ?: 0)
+                val curIndex = icalObjectIdList.indexOf(observedICalObject.value?.id ?: 0)
                 if (icalObjectIdList.size > 1 && curIndex >= 0) {
                     Row(
                         modifier = Modifier
@@ -978,7 +982,7 @@ fun DetailScreenContent(
                         } else {
                             Spacer(modifier = Modifier.size(48.dp))
                         }
-                        Text(text = "${icalObjectIdList.indexOf(observedICalEntity.value?.property?.id ?: 0) + 1}/${icalObjectIdList.size}")
+                        Text(text = "${icalObjectIdList.indexOf(observedICalObject.value?.id ?: 0) + 1}/${icalObjectIdList.size}")
                         if (curIndex != icalObjectIdList.lastIndex) {
                             IconButton(onClick = {
                                 goToDetail(
@@ -1022,7 +1026,8 @@ fun DetailScreenContent_JOURNAL() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            observedICalEntity = remember { mutableStateOf(entity) },
+            observedICalObject = remember { mutableStateOf(entity.property) },
+            collection = entity.ICalCollection,
             iCalObject = entity.property,
             categories = remember { mutableStateListOf<Category>().apply { this.addAll(entity.categories ?: emptyList()) } },
             resources = remember { mutableStateListOf() },
@@ -1087,7 +1092,8 @@ fun DetailScreenContent_TODO_editInitially() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            observedICalEntity = remember { mutableStateOf(entity) },
+            observedICalObject = remember { mutableStateOf(entity.property) },
+            collection = entity.ICalCollection,
             iCalObject = entity.property,
             categories = remember { mutableStateListOf() },
             resources = remember { mutableStateListOf() },
@@ -1152,7 +1158,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            observedICalEntity = remember { mutableStateOf(entity) },
+            observedICalObject = remember { mutableStateOf(entity.property) },
+            collection = entity.ICalCollection,
             iCalObject = entity.property,
             categories = remember { mutableStateListOf() },
             resources = remember { mutableStateListOf() },
@@ -1211,7 +1218,8 @@ fun DetailScreenContent_failedLoading() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            observedICalEntity = remember { mutableStateOf(null) },
+            observedICalObject = remember { mutableStateOf(null) },
+            collection = null,
             iCalObject = ICalObject.createJournal(),
             categories = remember { mutableStateListOf() },
             resources = remember { mutableStateListOf() },

@@ -35,7 +35,7 @@ SELECTs (global selects without parameter)
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
      * @return a list of [Category.text] as LiveData<List<String>>
      */
-    //@Transaction
+    @Transaction
     @Query("SELECT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_CATEGORY_TEXT ORDER BY count(*) DESC, $COLUMN_CATEGORY_TEXT ASC")
     fun getAllCategoriesAsText(): LiveData<List<String>>
 
@@ -43,7 +43,7 @@ SELECTs (global selects without parameter)
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
      * @return a list of [Category.text] as LiveData<List<String>>
      */
-    //@Transaction
+    @Transaction
     @Query("SELECT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_RESOURCE_TEXT ORDER BY count(*) DESC, $COLUMN_RESOURCE_TEXT ASC")
     fun getAllResourcesAsText(): LiveData<List<String>>
 
@@ -77,7 +77,7 @@ SELECTs (global selects without parameter)
      * @param module (Module.name) for which there are existing entries for a collection
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
-    //@Transaction
+    @Transaction
     @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID IN (SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollections(module: String): LiveData<List<ICalCollection>>
 
@@ -184,6 +184,12 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
     fun getICalObject(id: Long): LiveData<ICalObject?>
 
+    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :iCalObjectId")
+    fun getRelatedTo(iCalObjectId: Long): LiveData<List<Relatedto>>
+
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ID = :collectionId")
+    fun getCollection(collectionId: Long): LiveData<ICalCollection>
+
 
     /**
      * Retrieve an [ICalObject] by Id asynchronously (suspend)
@@ -239,11 +245,28 @@ SELECTs (global selects without parameter)
     fun getCollectionByIdSync(id: Long): ICalCollection?
 
 
+    @Query("SELECT * FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :iCalObjectId")
+    fun getCategoriesSync(iCalObjectId: Long): List<Category>
+
+    @Query("SELECT * FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID = :iCalObjectId")
+    fun getCommentsSync(iCalObjectId: Long): List<Comment>
+
+    @Query("SELECT * FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID = :iCalObjectId")
+    fun getAttendeesSync(iCalObjectId: Long): List<Attendee>
+
+    @Query("SELECT * FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = :iCalObjectId")
+    fun getResourcesSync(iCalObjectId: Long): List<Resource>
+
+    @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = :iCalObjectId")
+    fun getAttachmentsSync(iCalObjectId: Long): List<Attachment>
+
+    @Query("SELECT * FROM $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = :iCalObjectId")
+    fun getAlarmsSync(iCalObjectId: Long): List<Alarm>
 
 
-/*
-INSERTs (Asyncronously / Suspend)
- */
+    /*
+    INSERTs (Asyncronously / Suspend)
+     */
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertICalObject(iCalObject: ICalObject): Long
@@ -527,12 +550,12 @@ DELETEs by Object
     @RawQuery
     fun executeRAW(query: SupportSQLiteQuery): Int
 
-    //@Transaction
+    @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4List(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
 
 
-    //@Transaction
+    @Transaction
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4ListRel(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
 
@@ -544,7 +567,7 @@ DELETEs by Object
     @RawQuery(observedEntities = [ICal4List::class])
     fun getIcal4ListFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
 
-    //@Transaction
+    @Transaction
     @RawQuery(observedEntities = [ICal4ListRel::class])
     fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
 
@@ -571,10 +594,6 @@ DELETEs by Object
 
     @Query("SELECT * from $TABLE_NAME_ALARM WHERE _id = :key")
     fun getAlarmSync(key: Long): Alarm?
-
-    @Query("SELECT * from $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = :icalobjectId")
-    fun getAlarmsSync(icalobjectId: Long): List<Alarm>
-
 
     @Query("SELECT * from $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :iCalObjectId AND $COLUMN_CATEGORY_TEXT = :category")
     fun getCategoryForICalObjectByName(iCalObjectId: Long, category: String): Category?
@@ -648,7 +667,7 @@ DELETEs by Object
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertStoredListSetting(storedListSetting: StoredListSetting): Long
 
-    //@Transaction
+    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_STORED_LIST_SETTINGS WHERE $COLUMN_STORED_LIST_SETTING_MODULE IN (:modules) ORDER BY $COLUMN_STORED_LIST_SETTING_ID DESC")
     fun getStoredListSettings(modules: List<String>): LiveData<List<StoredListSetting>>
 
@@ -686,7 +705,7 @@ DELETEs by Object
      * StoredStatus
      */
 
-    //@Transaction
+    @Transaction
     @Query("SELECT * FROM $TABLE_NAME_EXTENDED_STATUS")
     fun getStoredStatuses(): LiveData<List<ExtendedStatus>>
 

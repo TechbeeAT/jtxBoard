@@ -34,6 +34,7 @@ import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.ICalObject
@@ -72,7 +73,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     private val database = ICalDatabase.getInstance(application)
     private var databaseDao: ICalDatabaseDao = database.iCalDatabaseDao()
 
-    var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
+    var mainICalObjectId: Long? = null
+
+   //var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
+    var icalObject: LiveData<ICalObject?> = MutableLiveData(null)
+    var relatedTo: LiveData<List<Relatedto>> = MutableLiveData(emptyList())
+    var collection: LiveData<ICalCollection> = MutableLiveData(null)
     var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var relatedSubtasks: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var relatedParents: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
@@ -116,6 +122,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun load(icalObjectId: Long, isAuthenticated: Boolean) {
+        mainICalObjectId = icalObjectId
         _isAuthenticated = isAuthenticated
         viewModelScope.launch {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
@@ -137,15 +144,22 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 mutableAlarms.addAll(originalEntry?.alarms ?: emptyList())
             }
 
-            icalEntity = databaseDao.get(icalObjectId)
+            //icalEntity = databaseDao.get(icalObjectId)
+            icalObject = databaseDao.getICalObject(icalObjectId)
+            relatedTo = databaseDao.getRelatedTo(icalObjectId)
 
-            relatedParents = icalEntity.switchMap {
-                it?.relatedto?.map { relatedto ->  relatedto.text }?.let { uids ->
+            collection = icalObject.switchMap {
+                it?.let { cur -> databaseDao.getCollection(cur.collectionId)  }
+
+            }
+
+            relatedParents = relatedTo.switchMap {
+                it.map { relatedto ->  relatedto.text }.let { uids ->
                     databaseDao.getICal4ListByUIDs(uids)
                 }
             }
-            relatedSubtasks = icalEntity.switchMap {
-                it?.property?.uid?.let { parentUid ->
+            relatedSubtasks = icalObject.switchMap {
+                it?.uid?.let { parentUid ->
                     databaseDao.getIcal4List(
                         ICal4List.getQueryForAllSubentriesForParentUID(
                             parentUid = parentUid,
@@ -157,8 +171,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     )
                 }
             }
-            relatedSubnotes = icalEntity.switchMap {
-                it?.property?.uid?.let { parentUid ->
+            relatedSubnotes = icalObject.switchMap {
+                it?.uid?.let { parentUid ->
                     databaseDao.getIcal4List(
                         ICal4List.getQueryForAllSubentriesForParentUID(
                             parentUid = parentUid,
@@ -170,8 +184,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     )
                 }
             }
-            seriesElement = icalEntity.switchMap { databaseDao.getSeriesICalObjectIdByUID(it?.property?.uid) }
-            seriesInstances = icalEntity.switchMap { databaseDao.getSeriesInstancesICalObjectsByUID(it?.property?.uid) }
+            seriesElement = icalObject.switchMap { databaseDao.getSeriesICalObjectIdByUID(it?.uid) }
+            seriesInstances = icalObject.switchMap { databaseDao.getSeriesInstancesICalObjectsByUID(it?.uid) }
             isChild = databaseDao.isChild(icalObjectId)
 
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
@@ -186,8 +200,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         selectFromAllListQuery.postValue(ICal4List.constructQuery(
             modules = modules,
             searchText = searchText,
-            searchCollection = if(sameCollection) icalEntity.value?.ICalCollection?.displayName?.let { listOf(it) }?: emptyList() else emptyList(),
-            searchAccount = if(sameAccount) icalEntity.value?.ICalCollection?.accountName?.let { listOf(it) }?: emptyList() else emptyList(),
+            searchCollection = if(sameCollection) collection.value?.displayName?.let { listOf(it) }?: emptyList() else emptyList(),
+            searchAccount = if(sameAccount) collection.value?.accountName?.let { listOf(it) }?: emptyList() else emptyList(),
             orderBy = OrderBy.LAST_MODIFIED,
             sortOrder = SortOrder.DESC,
             hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
@@ -298,13 +312,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             database.withTransaction {
 
                 newSubEntries.forEach { newSubEntry ->
-                    if (icalEntity.value?.property?.uid == null)
+                    if (icalObject.value?.uid == null)
                         return@forEach
 
-                    if (newSubEntry.uid == icalEntity.value?.property?.uid)
+                    if (newSubEntry.uid == icalObject.value?.uid)
                         return@forEach
 
-                    val existing = icalEntity.value?.property?.uid?.let {
+                    val existing = icalObject.value?.uid?.let {
                         databaseDao.findRelatedTo(
                             newSubEntry.id,
                             it,
@@ -315,7 +329,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         databaseDao.insertRelatedto(
                             Relatedto(
                                 icalObjectId = newSubEntry.id,
-                                text = icalEntity.value?.property?.uid!!,
+                                text = icalObject.value?.uid!!,
                                 reltype = Reltype.PARENT.name
                             )
                         )
@@ -340,19 +354,19 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 if(newParent.uid == null)
                     return@forEach
 
-                if(newParent.uid == icalEntity.value?.property?.uid)
+                if(newParent.uid == icalObject.value?.uid)
                     return@forEach
 
-                val existing = newParent.uid?.let { databaseDao.findRelatedTo(icalEntity.value?.property?.id!!, it, Reltype.PARENT.name) != null } ?: return@forEach
+                val existing = newParent.uid?.let { databaseDao.findRelatedTo(icalObject.value?.id!!, it, Reltype.PARENT.name) != null } ?: return@forEach
                 if(!existing) {
                     databaseDao.insertRelatedto(
                         Relatedto(
-                            icalObjectId = icalEntity.value?.property?.id!!,
+                            icalObjectId = mainICalObjectId!!,
                             text = newParent.uid,
                             reltype = Reltype.PARENT.name
                         )
                     )
-                    databaseDao.getICalObjectById(icalEntity.value?.property?.id!!)?.let {
+                    databaseDao.getICalObjectById(mainICalObjectId!!)?.let {
                         it.makeDirty()
                         databaseDao.update(it)
                     }
@@ -440,10 +454,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
             mutableICalObject?.let {
                 // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
-                icalEntity.value?.property?.eTag.let { currentETag -> it.eTag = currentETag }
-                icalEntity.value?.property?.flags.let { currentFlags -> it.flags = currentFlags }
-                icalEntity.value?.property?.scheduleTag.let { currentScheduleTag -> it.scheduleTag = currentScheduleTag }
-                icalEntity.value?.property?.fileName.let { currentFileName -> it.fileName = currentFileName }
+                icalObject.value?.eTag.let { currentETag -> it.eTag = currentETag }
+                icalObject.value?.flags.let { currentFlags -> it.flags = currentFlags }
+                icalObject.value?.scheduleTag.let { currentScheduleTag -> it.scheduleTag = currentScheduleTag }
+                icalObject.value?.fileName.let { currentFileName -> it.fileName = currentFileName }
 
                 save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
             }
@@ -464,7 +478,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         try {
             database.withTransaction {
 
-                if (icalEntity.value?.categories != categories || icalEntity.value?.property?.id != icalObject.id) {
+                if (databaseDao.getCategoriesSync(icalObject.id) != categories || mainICalObjectId != icalObject.id) {
                     icalObject.makeDirty()
                     databaseDao.deleteCategories(icalObject.id)
                     categories.forEach { changedCategory ->
@@ -473,7 +487,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                if (icalEntity.value?.comments != comments || icalEntity.value?.property?.id != icalObject.id) {
+                if (databaseDao.getCommentsSync(icalObject.id) != comments || mainICalObjectId != icalObject.id) {
                     icalObject.makeDirty()
                     databaseDao.deleteComments(icalObject.id)
                     comments.forEach { changedComment ->
@@ -482,7 +496,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                if (icalEntity.value?.attendees != attendees || icalEntity.value?.property?.id != icalObject.id) {
+                if (databaseDao.getAttendeesSync(icalObject.id) != attendees || mainICalObjectId != icalObject.id) {
                     icalObject.makeDirty()
                     databaseDao.deleteAttendees(icalObject.id)
                     attendees.forEach { changedAttendee ->
@@ -491,7 +505,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                if (icalEntity.value?.resources != resources || icalEntity.value?.property?.id != icalObject.id) {
+                if (databaseDao.getResourcesSync(icalObject.id) != resources || mainICalObjectId != icalObject.id) {
                     icalObject.makeDirty()
                     databaseDao.deleteResources(icalObject.id)
                     resources.forEach { changedResource ->
@@ -500,7 +514,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 }
 
-                if (icalEntity.value?.attachments != attachments || icalEntity.value?.property?.id != icalObject.id) {
+                if (databaseDao.getAttachmentsSync(icalObject.id) != attachments || mainICalObjectId != icalObject.id) {
                     icalObject.makeDirty()
                     databaseDao.deleteAttachments(icalObject.id)
                     attachments.forEach { changedAttachment ->
@@ -510,7 +524,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     Attachment.scheduleCleanupJob(getApplication())
                 }
 
-                if (icalEntity.value?.alarms != alarms || icalEntity.value?.property?.id != icalObject.id) {
+                if (databaseDao.getAlarmsSync(icalObject.id) != alarms || mainICalObjectId != icalObject.id) {
                     icalObject.makeDirty()
                     databaseDao.deleteAlarms(icalObject.id)
                     alarms.forEach { changedAlarm ->
@@ -541,18 +555,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
             save(
                 icalObject = originalICalObject.apply {
-                    eTag = icalEntity.value?.property?.eTag
-                    sequence = (icalEntity.value?.property?.sequence?:0)+1
+                    eTag = icalObject.value?.eTag
+                    sequence = (icalObject.value?.sequence?:0)+1
                 },
                 categories = originalEntry?.categories ?: emptyList(),
                 comments = originalEntry?.comments ?: emptyList(),
-
                 attendees = originalEntry?.attendees ?: emptyList(),
                 resources = originalEntry?.resources ?: emptyList(),
                 attachments = originalEntry?.attachments ?: emptyList(),
                 alarms = originalEntry?.alarms ?: emptyList()
             )
-            navigateToId.value = icalEntity.value?.property?.id
+            navigateToId.value = icalObject.value?.id
             onChangeDone()
         }
     }
@@ -561,7 +574,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun addSubEntry(subEntry: ICalObject, attachment: Attachment?) {
         viewModelScope.launch(Dispatchers.IO) {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
-            subEntry.collectionId = icalEntity.value?.property?.collectionId!!
+            subEntry.collectionId = icalObject.value?.collectionId!!
 
             try {
                 database.withTransaction {
@@ -574,7 +587,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         Relatedto(
                             icalObjectId = subEntryId,
                             reltype = Reltype.PARENT.name,
-                            text = icalEntity.value?.property?.uid!!
+                            text = icalObject.value?.uid!!
                         )
                     )
                 }
@@ -598,10 +611,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 withContext(Dispatchers.IO) {
                     database.withTransaction {
 
-                        if (icalEntity.value?.property?.recurid != null) {
-                            ICalObject.unlinkFromSeries(icalEntity.value?.property!!, databaseDao)
+                        if (icalObject.value?.recurid != null) {
+                            ICalObject.unlinkFromSeries(icalObject.value!!, databaseDao)
                         }
-                        icalEntity.value?.property?.id?.let { id ->
+                        icalObject.value?.id?.let { id ->
                             ICalObject.deleteItemWithChildren(id, databaseDao)
                         }
                     }
@@ -611,7 +624,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
                 }
             } catch (e: SQLiteConstraintException) {
-                Log.d("SQLConstraint", "Corrupted ID: ${icalEntity.value?.property?.id}")
+                Log.d("SQLConstraint", "Corrupted ID: ${mainICalObjectId}")
                 Log.d("SQLConstraint", e.stackTraceToString())
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             } finally {
@@ -669,7 +682,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun createCopy(newModule: Module) {
-        icalEntity.value?.let { createCopy(it, newModule) }
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseDao.getSync(mainICalObjectId!!)?.let {
+                createCopy(it, newModule)
+            }
+        }
     }
 
     private fun createCopy(icalEntityToCopy: ICalEntity, newModule: Module, newParentUID: String? = null) {
@@ -784,8 +801,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun shareAsICS(context: Context) {
         viewModelScope.launch(Dispatchers.IO)  {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
-            val iCalEntity = icalEntity.value ?: return@launch
-            val icsContentUri = createContentUri(iCalEntity) ?: return@launch
+            val icsContentUri = databaseDao.getSync(mainICalObjectId!!)?.let {
+                createContentUri(it)
+            } ?: return@launch
 
             try {
                 ShareCompat.IntentBuilder(context)
@@ -808,7 +826,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun shareAsText(context: Context) {
         viewModelScope.launch(Dispatchers.IO)  {
-            val iCalEntity = icalEntity.value ?: return@launch
+            val iCalEntity = databaseDao.getSync(mainICalObjectId!!) ?: return@launch
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
 
             val shareText = iCalEntity.getShareText(context)

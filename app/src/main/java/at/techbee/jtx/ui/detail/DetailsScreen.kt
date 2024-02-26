@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
@@ -73,6 +74,7 @@ import at.techbee.jtx.ui.reusable.dialogs.LinkExistingEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -108,7 +110,9 @@ fun DetailsScreen(
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
     val scrollToSection = remember { mutableStateOf<DetailsScreenSection?>(null) }
 
-    val icalEntity = detailViewModel.icalEntity.observeAsState(null)
+    //val icalEntity = detailViewModel.icalEntity.observeAsState(null)
+    val iCalObject = detailViewModel.icalObject.observeAsState(null)
+    val collection = detailViewModel.collection.observeAsState()
 
     val seriesElement = detailViewModel.seriesElement.observeAsState(null)
     val storedCategories by detailViewModel.storedCategories.observeAsState(emptyList())
@@ -116,9 +120,9 @@ fun DetailsScreen(
     val storedStatuses by detailViewModel.storedStatuses.observeAsState(emptyList())
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
-    val isProActionAvailable by remember(isProPurchased, icalEntity) { derivedStateOf { isProPurchased.value || icalEntity.value?.ICalCollection?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
+    val isProActionAvailable by remember(isProPurchased, collection) { derivedStateOf { isProPurchased.value || collection.value?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
 
-    icalEntity.value?.property?.getModuleFromString()?.let {
+    iCalObject.value?.getModuleFromString()?.let {
         detailViewModel.detailSettings.load(it, context)
     }
 
@@ -134,12 +138,12 @@ fun DetailsScreen(
 
         when(detailViewModel.changeState.value) {
             DetailViewModel.DetailChangeState.UNCHANGED -> {
-                if (isEditMode.value
-                    && detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED
-                    && icalEntity.value?.property?.sequence == 0L
-                    && icalEntity.value?.property?.summary == null
-                    && icalEntity.value?.property?.description == null
-                    && icalEntity.value?.attachments?.isEmpty() == true
+                if (
+                    (isEditMode.value
+                            && detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED
+                            && iCalObject.value?.sequence == 0L
+                            && iCalObject.value?.summary == null
+                            && iCalObject.value?.description == null) && detailViewModel.mutableAttachments.isEmpty()
                 ) {
                     showDeleteDialog = true
                 } else if(!detailViewModel.mutableICalObject?.rrule.isNullOrEmpty())  {
@@ -195,7 +199,7 @@ fun DetailsScreen(
     }
 
     if (showDeleteDialog) {
-        icalEntity.value?.property?.let {
+        iCalObject.value?.let {
             DeleteEntryDialog(
                 icalObject = it,
                 onConfirm = {
@@ -233,7 +237,7 @@ fun DetailsScreen(
     }
     if(showLinkEntryDialog) {
         LinkExistingEntryDialog(
-            excludeCurrentId = detailViewModel.icalEntity.value?.property?.id,
+            excludeCurrentId = iCalObject.value?.id,
             preselectedLinkEntryModules = linkEntryDialogModule,
             preselectedLinkEntryReltype = linkEntryDialogReltype ?: Reltype.CHILD,
             allEntriesLive = detailViewModel.selectFromAllList,
@@ -265,7 +269,7 @@ fun DetailsScreen(
             }) {
             DetailOptionsBottomSheet(
                 module = try {
-                    Module.valueOf(icalEntity.value?.property?.module ?: Module.NOTE.name)
+                    Module.valueOf(iCalObject.value?.module ?: Module.NOTE.name)
                 } catch (e: Exception) {
                     Module.NOTE
                 },
@@ -279,7 +283,7 @@ fun DetailsScreen(
     Scaffold(
         topBar = {
             DetailsTopAppBar(
-                readonly = icalEntity.value?.ICalCollection?.readonly ?: true,
+                readonly = collection.value?.readonly ?: true,
                 goBack = {
                     navigateUp = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
@@ -383,11 +387,20 @@ fun DetailsScreen(
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
                                 onClick = {
-                                    val text = icalEntity.value?.getShareText(context) ?: ""
-                                    val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-                                    clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
-                                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
-                                        Toast.makeText(context, context.getText(R.string.menu_view_copy_to_clipboard_copied), Toast.LENGTH_SHORT).show()
+                                    scope.launch(Dispatchers.IO) {
+                                        ICalDatabase
+                                            .getInstance(context)
+                                            .iCalDatabaseDao()
+                                            .getSync(iCalObject.value?.id!!)
+                                            ?.let {
+                                                val text = it.getShareText(context)
+                                                val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                                                clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
+                                                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
+                                                    Toast.makeText(context, context.getText(R.string.menu_view_copy_to_clipboard_copied), Toast.LENGTH_SHORT).show()
+
+                                            }
+                                    }
                                     menuExpanded.value = false
                                 },
                                 leadingIcon = {
@@ -425,8 +438,8 @@ fun DetailsScreen(
 
                         HorizontalDivider()
 
-                        if(icalEntity.value?.ICalCollection?.readonly == false && icalEntity.value?.ICalCollection?.supportsVJOURNAL == true) {
-                            if (icalEntity.value?.property?.module != Module.JOURNAL.name) {
+                        if(collection.value?.readonly == false && collection.value?.supportsVJOURNAL == true) {
+                            if (iCalObject.value?.module != Module.JOURNAL.name) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_journal)) },
                                     onClick = { detailViewModel.convertTo(Module.JOURNAL) },
@@ -439,7 +452,7 @@ fun DetailsScreen(
                                     }
                                 )
                             }
-                            if (icalEntity.value?.property?.module != Module.NOTE.name) {
+                            if (iCalObject.value?.module != Module.NOTE.name) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_note)) },
                                     onClick = { detailViewModel.convertTo(Module.NOTE) },
@@ -453,8 +466,8 @@ fun DetailsScreen(
                                 )
                             }
                         }
-                        if(icalEntity.value?.ICalCollection?.readonly == false && icalEntity.value?.ICalCollection?.supportsVTODO == true) {
-                            if(icalEntity.value?.property?.module != Module.TODO.name) {
+                        if(collection.value?.readonly == false && collection.value?.supportsVTODO == true) {
+                            if(iCalObject.value?.module != Module.TODO.name) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_task)) },
                                     onClick = { detailViewModel.convertTo(Module.TODO) },
@@ -475,7 +488,8 @@ fun DetailsScreen(
         content = { paddingValues ->
 
             DetailScreenContent(
-                observedICalEntity = icalEntity,
+                observedICalObject = iCalObject,
+                collection = collection.value,
                 iCalObject = detailViewModel.mutableICalObject,
                 categories = detailViewModel.mutableCategories,
                 resources = detailViewModel.mutableResources,
@@ -534,7 +548,7 @@ fun DetailsScreen(
                 goToFilteredList = {
                     navController.navigate(
                         FilteredListDestination.FilteredList.getRoute(
-                            module = icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE,
+                            module = iCalObject.value?.getModuleFromString() ?: Module.NOTE,
                             storedListSettingData = it
                         )
                     )
@@ -555,9 +569,9 @@ fun DetailsScreen(
         },
         bottomBar = {
             DetailBottomAppBar(
-                icalObject = icalEntity.value?.property,
+                icalObject = iCalObject.value,
                 seriesElement = seriesElement.value,
-                collection = icalEntity.value?.ICalCollection,
+                collection = collection.value,
                 isEditMode = isEditMode,
                 markdownState = markdownState,
                 isProActionAvailable = isProActionAvailable,
