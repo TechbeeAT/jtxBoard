@@ -25,7 +25,7 @@
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
     <string name="toolbar_text_add_task">"ToDo を追加"</string>
-    <string name="toast_sync_requested">"同期が要求されました"</string>
+    <string name="toast_sync_requested">"同期をリクエストしました"</string>
     <string name="default_local_collection_name">"ローカル"</string>
     <string name="default_local_account_name">"ローカル"</string>
     <!-- Strings for values in properties of an ICalObject -->
