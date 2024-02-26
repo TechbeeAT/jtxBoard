@@ -73,11 +73,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     private val database = ICalDatabase.getInstance(application)
     private var databaseDao: ICalDatabaseDao = database.iCalDatabaseDao()
 
-    var mainICalObjectId: Long? = null
+    private var mainICalObjectId: Long? = null
 
    //var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
     var icalObject: LiveData<ICalObject?> = MutableLiveData(null)
-    var relatedTo: LiveData<List<Relatedto>> = MutableLiveData(emptyList())
+    private var relatedTo: LiveData<List<Relatedto>> = MutableLiveData(emptyList())
     var collection: LiveData<ICalCollection> = MutableLiveData(null)
     var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var relatedSubtasks: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
@@ -624,7 +624,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
                 }
             } catch (e: SQLiteConstraintException) {
-                Log.d("SQLConstraint", "Corrupted ID: ${mainICalObjectId}")
+                Log.d("SQLConstraint", "Corrupted ID: $mainICalObjectId")
                 Log.d("SQLConstraint", e.stackTraceToString())
                 withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             } finally {
