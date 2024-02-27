@@ -75,7 +75,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     private var mainICalObjectId: Long? = null
 
-   //var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
     var icalObject: LiveData<ICalObject?> = MutableLiveData(null)
     private var relatedTo: LiveData<List<Relatedto>> = MutableLiveData(emptyList())
     var collection: LiveData<ICalCollection> = MutableLiveData(null)
@@ -127,7 +126,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
 
-            withContext(Dispatchers.Default) {
+            withContext(Dispatchers.IO) {
                 originalEntry = databaseDao.getSync(icalObjectId)
                 mutableICalObject = originalEntry?.property
                 mutableCategories.clear()
