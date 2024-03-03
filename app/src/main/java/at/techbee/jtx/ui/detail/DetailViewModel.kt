@@ -28,7 +28,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import androidx.room.withTransaction
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.NotificationPublisher
@@ -46,7 +45,6 @@ import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Comment
 import at.techbee.jtx.database.properties.Relatedto
-import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
@@ -70,7 +68,6 @@ import java.io.FileOutputStream
 class DetailViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _application = application
-    //private val database = ICalDatabase.getInstance(application)   // TODO: remove
     private var databaseDao: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao()
 
     private var mainICalObjectId: Long? = null
