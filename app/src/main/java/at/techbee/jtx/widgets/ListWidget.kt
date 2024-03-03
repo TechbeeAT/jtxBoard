@@ -36,7 +36,6 @@ import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.CheckboxPosition
@@ -203,19 +202,15 @@ class ListWidget : GlanceAppWidget() {
                     onCheckedChange = { iCalObjectId, checked ->
                         scope.launch(Dispatchers.IO) {
                             val settingsStateHolder = SettingsStateHolder(context)
-                            val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return@launch
-                            iCalObject.setUpdatedProgress(if(checked) null else 100, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-                            database.update(iCalObject)
-                            if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
-                                ICalObject.findTopParent(iCalObject.id, database)?.let {
-                                    ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-                                }
-                            }
+                            //val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return@launch
+                            database.updateProgress(
+                                id = iCalObjectId,
+                                newPercent = if(checked) null else 100,
+                                settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
+                                settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
+                            )
                             NotificationPublisher.scheduleNextNotifications(context)
                             SyncUtil.notifyContentObservers(context)
-                            //super.update(context, id)
-                            //ListWidget().updateAll(context)
-                            //ListWidget().compose(context, glanceId)
                         }
                     },
                     onOpenWidgetConfig = {
