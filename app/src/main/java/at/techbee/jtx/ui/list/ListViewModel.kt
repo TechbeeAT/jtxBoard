@@ -500,24 +500,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-
-                val wj = databaseDao.insertICalObject(welcomeJournal)
-                val wn = databaseDao.insertICalObject(welcomeNote)
-                val wt = databaseDao.insertICalObject(welcomeTodo)
-
-                databaseDao.insertCategory(Category().apply {
-                    this.icalObjectId = wj
-                    this.text = context.getString(R.string.list_welcome_category)
-                })
-                databaseDao.insertCategory(Category().apply {
-                    this.icalObjectId = wn
-                    this.text = context.getString(R.string.list_welcome_category)
-                })
-                databaseDao.insertCategory(Category().apply {
-                    this.icalObjectId = wt
-                    this.text = context.getString(R.string.list_welcome_category)
-                })
-
+            databaseDao.insertQuickItem(welcomeJournal, listOf(Category(text = context.getString(R.string.list_welcome_category))), emptyList(), null)
+            databaseDao.insertQuickItem(welcomeNote, listOf(Category(text = context.getString(R.string.list_welcome_category))), emptyList(), null)
+            databaseDao.insertQuickItem(welcomeTodo, listOf(Category(text = context.getString(R.string.list_welcome_category))), emptyList(), null)
         }
     }
 }
