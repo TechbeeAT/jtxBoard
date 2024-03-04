@@ -504,7 +504,7 @@ interface ICalDatabaseDao {
      * Exchanges a category with another
      */
     @Query("UPDATE $TABLE_NAME_CATEGORY SET $COLUMN_CATEGORY_TEXT = :newCategory WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :icalObjectId AND $COLUMN_CATEGORY_TEXT = :oldCategory")
-    fun swapCategories(icalObjectId: Long, oldCategory: String, newCategory: String)
+    fun swapCategoriesUpdate(icalObjectId: Long, oldCategory: String, newCategory: String)
 
 
     @Update(onConflict = OnConflictStrategy.ABORT)
@@ -1042,6 +1042,40 @@ interface ICalDatabaseDao {
     }
 
 
+
+    @Transaction
+    suspend fun updateStatus(iCalObjectIds: List<Long>, newStatus: Status, newXStatus: ExtendedStatus?, settingKeepStatusProgressCompletedInSync: Boolean) {
+        iCalObjectIds.forEach { iCalObjectId ->
+            val currentItem = getICalObjectById(iCalObjectId) ?: return@forEach
+            currentItem.status = newStatus.status
+            currentItem.xstatus = newXStatus?.xstatus
+            if(settingKeepStatusProgressCompletedInSync) {
+                when(newStatus) {
+                    Status.IN_PROCESS -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
+                    Status.COMPLETED -> currentItem.setUpdatedProgress(100, true)
+                    else -> { }
+                }
+            }
+            currentItem.makeDirty()
+            update(currentItem)
+            makeSeriesDirty(currentItem)
+        }
+    }
+
+    suspend fun updateStatus(iCalObjectId: Long, newStatus: Status, newXStatus: ExtendedStatus?, settingKeepStatusProgressCompletedInSync: Boolean) =
+        updateStatus(listOf(iCalObjectId), newStatus, newXStatus, settingKeepStatusProgressCompletedInSync)
+
+
+    @Transaction
+    suspend fun swapCategories(iCalObjectId: Long, oldCategory: String, newCategory: String) {
+        swapCategoriesUpdate(iCalObjectId, oldCategory, newCategory)
+        val currentItem = getICalObjectById(iCalObjectId) ?: return
+        currentItem.makeDirty()
+        update(currentItem)
+        makeSeriesDirty(currentItem)
+    }
+
+
     private suspend fun updateProgressOfParents(
         parentId: Long,
         keepInSync: Boolean
@@ -1515,6 +1549,146 @@ interface ICalDatabaseDao {
             } catch (e: SQLiteConstraintException) {
             Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
             Log.d("SQLConstraint", e.stackTraceToString())
+        }
+    }
+
+
+    /**
+     * Adds new categories to the selected entries (if they don't exist already)
+     * @param iCalObjectIds for which the categories should be added/removed
+     * @param addedCategories that should be added
+     * @param removedCategories that should be deleted
+     */
+    @Transaction
+    suspend fun updateCategories(iCalObjectIds: List<Long>, addedCategories: List<String>, removedCategories: List<String>) {
+
+        if (removedCategories.isNotEmpty())
+            deleteCategoriesForICalObjects(removedCategories, iCalObjectIds)
+
+        addedCategories.forEach { category ->
+            iCalObjectIds.forEach { selected ->
+                if (getCategoryForICalObjectByName(selected, category) == null)
+                    insertCategory(
+                        Category(
+                            icalObjectId = selected,
+                            text = category
+                        )
+                    )
+            }
+        }
+
+        iCalObjectIds.forEach {iCalObjectId ->
+            getICalObjectById(iCalObjectId)?.let {
+                it.makeDirty()
+                update(it)
+                makeSeriesDirty(it)
+            }
+        }
+    }
+
+    /**
+     * Adds new resources to the selected entries (if they don't exist already)
+     * @param iCalObjectIds for which the resources should be added/removed
+     * @param addedResources that should be added
+     * @param removedResources that should be deleted
+     */
+    @Transaction
+    suspend fun updateResources(iCalObjectIds: List<Long>, addedResources: List<String>, removedResources: List<String>) {
+
+        if (removedResources.isNotEmpty())
+            deleteResourcesForICalObjects(removedResources, iCalObjectIds)
+
+        addedResources.forEach { resource ->
+            iCalObjectIds.forEach { selected ->
+                if (getResourceForICalObjectByName(selected, resource) == null)
+                    insertResource(
+                        Resource(
+                            icalObjectId = selected,
+                            text = resource
+                        )
+                    )
+            }
+        }
+
+        iCalObjectIds.forEach {iCalObjectId ->
+            getICalObjectById(iCalObjectId)?.let {
+                it.makeDirty()
+                update(it)
+                makeSeriesDirty(it)
+            }
+        }
+    }
+
+    /**
+     * Updates the classification of the selected entries
+     * @param iCalObjectIds for which the classification should be updated
+     * @param newClassification to be set
+     */
+    @Transaction
+    suspend fun updateClassification(iCalObjectIds: List<Long>, newClassification: Classification) {
+
+        iCalObjectIds.forEach { iCalObjectId ->
+            getICalObjectByIdSync(iCalObjectId)?.let {
+                it.classification = newClassification.classification
+                it.makeDirty()
+                update(it)
+                makeSeriesDirty(it)
+            }
+        }
+    }
+
+    /**
+     * Updates the priority of the selected entries
+     * @param iCalObjectIds for which the priority should be updated
+     * @param newPriority to be set
+     */
+    suspend fun updatePriority(iCalObjectIds: List<Long>, newPriority: Int?) {
+
+        iCalObjectIds.forEach { iCalObjectId ->
+            getICalObjectByIdSync(iCalObjectId)?.let {
+                it.priority = newPriority
+                it.makeDirty()
+                update(it)
+                makeSeriesDirty(it)
+            }
+        }
+    }
+
+
+    /**
+     * Inserts a new icalobject with categories
+     * @param icalObject to be inserted
+     * @param categories the list of categories that should be linked to the icalObject
+     * @param attachments to be added
+     * @param alarm to be added
+     */
+    @Transaction
+    suspend fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachments: List<Attachment>, alarm: Alarm?): Long? {
+
+        try {
+            val newId = insertICalObject(icalObject)
+            icalObject.id = newId
+
+            categories.forEach {
+                it.icalObjectId = newId
+                insertCategory(it)
+            }
+
+            attachments.forEach { attachment ->
+                attachment.icalObjectId = newId
+                insertAttachment(attachment)
+            }
+
+            alarm?.let {
+                it.icalObjectId = newId
+                insertAlarm(it)
+            }
+            return newId
+
+        } catch (e: SQLiteConstraintException) {
+            Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
+            Log.d("SQLConstraint", e.stackTraceToString())
+            return null
         }
     }
 }

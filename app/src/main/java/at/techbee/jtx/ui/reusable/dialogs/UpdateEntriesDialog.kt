@@ -114,7 +114,8 @@ fun UpdateEntriesDialog(
     //onCollectionChanged: (ICalCollection) -> Unit,
     onCategoriesChanged: (addedCategories: List<String>, removedCategories: List<String>) -> Unit,
     onResourcesChanged: (addedResources: List<String>, removedResources: List<String>) -> Unit,
-    onStatusChanged: (String) -> Unit,
+    onStatusChanged: (Status) -> Unit,
+    onXStatusChanged: (ExtendedStatus) -> Unit,
     onClassificationChanged: (Classification) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     onCollectionChanged: (ICalCollection) -> Unit,
@@ -134,7 +135,8 @@ fun UpdateEntriesDialog(
     val removedCategories = remember { mutableStateListOf<String>() }
     val addedResources = remember { mutableStateListOf<String>() }
     val removedResources = remember { mutableStateListOf<String>() }
-    var newStatus by remember { mutableStateOf<String?>(null) }
+    var newStatus by remember { mutableStateOf<Status?>(null) }
+    var newXStatus by remember { mutableStateOf<ExtendedStatus?>(null) }
     var newClassification by remember { mutableStateOf<Classification?>(null) }
     var newPriority by remember { mutableStateOf<Int?>(null) }
     var newCollection by remember { mutableStateOf<ICalCollection?>(null) }
@@ -305,9 +307,12 @@ fun UpdateEntriesDialog(
 
                         Status.valuesFor(module).forEach { status ->
                             InputChip(
-                                onClick = { newStatus = status.status?:status.name },
+                                onClick = {
+                                    newStatus = status
+                                    newXStatus = null
+                                          },
                                 label = { Text(stringResource(id = status.stringResource)) },
-                                selected = newStatus == status.status || newStatus ==status.name,
+                                selected = newStatus == status,
                             )
                         }
                         storedStatuses
@@ -315,9 +320,12 @@ fun UpdateEntriesDialog(
                             .filter { it.module == module }
                             .forEach { storedStatus ->
                                 InputChip(
-                                    onClick = { newStatus = storedStatus.xstatus },
+                                    onClick = {
+                                        newStatus = null
+                                        newXStatus = storedStatus
+                                              },
                                     label = { Text(storedStatus.xstatus) },
-                                    selected = newStatus == storedStatus.xstatus,
+                                    selected = newXStatus == storedStatus,
                                 )
                             }
                     }
@@ -468,7 +476,7 @@ fun UpdateEntriesDialog(
                     when (updateEntriesDialogMode) {
                         UpdateEntriesDialogMode.CATEGORIES -> onCategoriesChanged(addedCategories, removedCategories)
                         UpdateEntriesDialogMode.RESOURCES -> onResourcesChanged(addedResources, removedResources)
-                        UpdateEntriesDialogMode.STATUS -> newStatus?.let { onStatusChanged(it) }
+                        UpdateEntriesDialogMode.STATUS -> if(newXStatus != null) onXStatusChanged(newXStatus!!) else newStatus?.let { onStatusChanged(it) }
                         UpdateEntriesDialogMode.CLASSIFICATION -> newClassification?.let { onClassificationChanged(it) }
                         UpdateEntriesDialogMode.PRIORITY -> onPriorityChanged(if(newPriority == 0) null else newPriority)
                         UpdateEntriesDialogMode.COLLECTION -> newCollection?.let { onCollectionChanged(it) }
@@ -479,7 +487,7 @@ fun UpdateEntriesDialog(
                 enabled = when(updateEntriesDialogMode) {
                     UpdateEntriesDialogMode.CATEGORIES -> addedCategories.isNotEmpty() || removedCategories.isNotEmpty()
                     UpdateEntriesDialogMode.RESOURCES -> addedResources.isNotEmpty() || removedResources.isNotEmpty()
-                    UpdateEntriesDialogMode.STATUS -> newStatus != null
+                    UpdateEntriesDialogMode.STATUS -> newStatus != null || newXStatus != null
                     UpdateEntriesDialogMode.CLASSIFICATION -> newClassification != null
                     UpdateEntriesDialogMode.PRIORITY -> true
                     UpdateEntriesDialogMode.COLLECTION -> newCollection != null
@@ -521,6 +529,7 @@ fun UpdateEntriesDialog_Preview() {
             onCategoriesChanged = { _, _ -> },
             onResourcesChanged = { _, _ -> },
             onStatusChanged = {},
+            onXStatusChanged = {},
             onClassificationChanged = {},
             onPriorityChanged = {},
             onCollectionChanged = {},
