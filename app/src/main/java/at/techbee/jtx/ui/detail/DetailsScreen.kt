@@ -536,7 +536,7 @@ fun DetailsScreen(
                         Module.TODO -> scrollToSection.value = DetailsScreenSection.SUBTASKS
                     }
                                   },
-                onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId, true) },
+                onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                 onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                 onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },
                 player = detailViewModel.mediaPlayer,

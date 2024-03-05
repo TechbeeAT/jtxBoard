@@ -55,7 +55,16 @@ class NotificationPublisher : BroadcastReceiver() {
         when (intent.action) {
             ACTION_SNOOZE_1D -> CoroutineScope(Dispatchers.IO).launch { addPostponedAlarm(alarmId, (1).days.inWholeMilliseconds, context) }
             ACTION_SNOOZE_1H -> CoroutineScope(Dispatchers.IO).launch { addPostponedAlarm(alarmId, (1).hours.inWholeMilliseconds, context) }
-            ACTION_DONE -> CoroutineScope(Dispatchers.IO).launch { setToDone(icalObjectId, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value, settingsStateHolder.settingLinkProgressToSubtasks.value, context) }
+            ACTION_DONE -> CoroutineScope(Dispatchers.IO).launch {
+                database.updateProgress(
+                    id = icalObjectId,
+                    newPercent = 100,
+                    settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
+                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
+                )
+                SyncUtil.notifyContentObservers(context)
+                scheduleNextNotifications(context)
+            }
             else -> {
                 // no action, so here we notify. if we offer snooze depends on the intent (this was decided already on creation of the intent)
                 CoroutineScope(Dispatchers.IO).launch {
@@ -160,20 +169,6 @@ class NotificationPublisher : BroadcastReceiver() {
             scheduleNextNotifications(context)
         }
 
-        suspend fun setToDone(icalObjectId: Long, keepStatusProgressCompletedInSync: Boolean, linkProgressToSubtasks: Boolean, context: Context) {
-            val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
-            val icalobject = database.getICalObjectByIdSync(icalObjectId) ?: return
-            icalobject.setUpdatedProgress(100, keepStatusProgressCompletedInSync)
-            database.update(icalobject)
-
-            if(linkProgressToSubtasks) {
-                ICalObject.findTopParent(icalobject.id, database)?.let {
-                    ICalObject.updateProgressOfParents(it.id, database, keepStatusProgressCompletedInSync)
-                }
-            }
-            SyncUtil.notifyContentObservers(context)
-            scheduleNextNotifications(context)
-        }
 
         fun triggerImmediateAlarm(iCalObject: ICalObject, context: Context) {
             if((iCalObject.summary.isNullOrEmpty() && iCalObject.description.isNullOrEmpty())

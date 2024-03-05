@@ -330,7 +330,9 @@ class SyncContentProvider : ContentProvider() {
         if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
             && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true)
         )
-            database.getRecurringToPopulate(id)?.recreateRecurring(context!!)
+            database.getRecurringToPopulate(id)?.let {
+                database.recreateRecurring(it)
+            }
 
         if (sUriMatcher.match(uri) == CODE_ALARM_DIR) {
             val alarm = database.getAlarmSync(id) ?: return null
@@ -586,7 +588,9 @@ class SyncContentProvider : ContentProvider() {
             try {
                 val id: Long = uri.lastPathSegment?.toLong()
                     ?: throw NumberFormatException("Last path segment was null")
-                database.getRecurringToPopulate(id)?.recreateRecurring(context!!)
+                database.getRecurringToPopulate(id)?.let {
+                    database.recreateRecurring(it)
+                }
             } catch (e: NumberFormatException) {
                 throw  java.lang.IllegalArgumentException("Could not convert path segment to Long: $uri\n$e")
             }

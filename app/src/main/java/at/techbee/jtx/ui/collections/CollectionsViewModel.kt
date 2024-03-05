@@ -77,13 +77,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             val objectsToMove = database.getICalObjectIdsToMove(oldCollectionId)
-            objectsToMove.forEach {
-                val newId = ICalObject.updateCollectionWithChildren(it, null, newCollectionId, database, getApplication()) ?: return@forEach
-                database.getICalObjectByIdSync(newId)?.recreateRecurring(_application)
-            }
-            objectsToMove.forEach {
-                ICalObject.deleteItemWithChildren(it, database)
-            }
+            database.moveToCollection(objectsToMove, newCollectionId)
             SyncUtil.notifyContentObservers(getApplication())
             isProcessing.postValue(false)
         }
