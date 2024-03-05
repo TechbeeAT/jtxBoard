@@ -49,6 +49,8 @@ import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
 import com.mikepenz.aboutlibraries.entity.Organization
 import com.mikepenz.aboutlibraries.ui.compose.util.author
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 
 
 @Composable
@@ -85,17 +87,17 @@ fun AboutLibraries_Preview() {
     MaterialTheme {
         AboutLibraries(
             libraries = Libs(
-                libraries = listOf(
+                libraries = persistentListOf(
                     Library(
                         uniqueId = "uniqueId",
                         artifactVersion = "v2.2.0",
                         name = "jtx Board",
                         description = "Description",
                         website = "https://jtx.techbee.at",
-                        developers = emptyList(),
+                        developers = persistentListOf(),
                         organization = Organization("Techbee e.U.", "https://techbee.at"),
                         scm = null,
-                        licenses = setOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
+                        licenses = persistentSetOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
                         //...
                     ),
                     Library(
@@ -104,14 +106,14 @@ fun AboutLibraries_Preview() {
                         name = "jtx Board",
                         description = "Description",
                         website = "https://jtx.techbee.at",
-                        developers = emptyList(),
+                        developers = persistentListOf(),
                         organization = Organization("Techbee e.U.", "https://techbee.at"),
                         scm = null,
-                        licenses = setOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
+                        licenses = persistentSetOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
                         //...
                     )
                 ),
-                licenses = emptySet()
+                licenses = persistentSetOf()
             )
         )
     }
@@ -234,10 +236,10 @@ fun AboutLibrariesLib_Preview() {
                 name = "jtx Board",
                 description = "Description",
                 website = "https://jtx.techbee.at",
-                developers = emptyList(),
+                developers = persistentListOf(),
                 organization = Organization("Techbee e.U.", "https://techbee.at"),
                 scm = null,
-                licenses = setOf(License("jtx License", "https://jtx.techbee.at", hash = ""))
+                licenses = persistentSetOf(License("jtx License", "https://jtx.techbee.at", hash = ""))
                 //...
             )
         )
