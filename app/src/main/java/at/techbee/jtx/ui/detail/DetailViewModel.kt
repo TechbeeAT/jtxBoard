@@ -400,6 +400,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun saveEntry() {
         viewModelScope.launch(Dispatchers.IO) {
             mutableICalObject?.let {
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
                 // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
                 icalObject.value?.eTag.let { currentETag -> it.eTag = currentETag }
                 icalObject.value?.flags.let { currentFlags -> it.flags = currentFlags }
@@ -420,6 +421,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     mutableAlarms,
                     mutableICalObject!!.id != mainICalObjectId
                 )
+                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             }
         }
     }
@@ -432,6 +434,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun revert() {
         val originalICalObject = originalEntry?.property ?: return
         viewModelScope.launch(Dispatchers.IO) {
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
             databaseDao.saveAll(
                 icalObject = originalICalObject.apply {
                     eTag = icalObject.value?.eTag
@@ -446,6 +449,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 enforceUpdateAll = mutableICalObject!!.id != mainICalObjectId
 
             )
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             navigateToId.value = icalObject.value?.id
             onChangeDone()
         }
