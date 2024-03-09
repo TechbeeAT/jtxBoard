@@ -2,7 +2,7 @@
 <resources>
     <!-- App title and fragment titles -->
     <string name="app_permission_label">"jtx Board sincroniza Diarios, Notas y Tareas"</string>
-    <string name="app_permission_desc">"Sincronizar el contenido de jtx Board con otras aplicaciones como DAVx⁵"</string>
+    <string name="app_permission_desc">"Sincronice el contenido de jtx Board con otras aplicaciones como DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Guardar"</string>
