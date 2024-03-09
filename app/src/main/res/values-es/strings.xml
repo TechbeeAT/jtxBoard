@@ -19,6 +19,7 @@
     <string name="longitude">"Longitud"</string>
     <string name="unlink">"Desvincular"</string>
     <string name="off">"Desactivado"</string>
+    <string name="location_permission_denied">"Permiso de ubicación denegado"</string>
     <string name="permissions">"Permisos"</string>
     <string name="current_location">"Ubicación actual"</string>
     <string name="toolbar_text_add_journal">"Añadir Diario"</string>
@@ -107,9 +108,11 @@
     <string name="edit_recur_on_weekday">"en"</string>
     <string name="edit_recur_on_the_x_day_of_month">"en el"</string>
     <string name="edit_recur_x_day_of_the_month">"Día del mes"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"último"</string>
     <string name="edit_recur_x_times">"veces"</string>
     <string name="edit_recur_toast_requires_start_date">"¡La repetición requiere que se establezca una fecha de inicio!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleccionar fecha"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Seleccione el intervalo de fechas"</string>
     <string name="edit_datepicker_dialog_add_time">"Añadir hora"</string>
     <string name="edit_datepicker_dialog_edit_time">"Editar hora"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Añadir zona horaria"</string>
@@ -281,6 +284,8 @@
     <string name="search_notes">Buscar notas</string>
     <string name="search_todos">Buscar tareas</string>
     <string name="filter">"Filtro"</string>
+    <string name="visibility">"Visibilidad"</string>
+    <string name="order">"Orden"</string>
     <string name="sync_now">"Sincronizar ahora"</string>
     <string name="due">"Vencimiento"</string>
     <string name="completed">"Completado"</string>
@@ -289,6 +294,7 @@
     <string name="progress">"Progreso"</string>
     <string name="categories">"Categorías"</string>
     <string name="subtasks">"Subtareas"</string>
+    <string name="linked_parents">"Vincular al nivel superior"</string>
     <string name="priority_7_low">"7 - Baja"</string>
     <string name="priority_8_lower">"8 - Muy baja"</string>
     <string name="priority_9_lowest">"9 - Extremadamente baja"</string>
