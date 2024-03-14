@@ -585,9 +585,9 @@
     <string name="filter_group_by_info">"リスト表示とコンパクト表示のみグループ化に対応しています"</string>
     <string name="filter_save_as_preset">"プリセットとして保存"</string>
     <string name="menu_list_flat_view">"フラット表示"</string>
-    <string name="menu_list_flat_view_sub">"リストの最上位に子エントリーを常に表示"</string>
-    <string name="menu_list_limit_recur_entries">"繰り返しを制限"</string>
-    <string name="menu_list_limit_recur_entries_sub">"将来の繰り返しエントリーは 1 つだけ表示"</string>
+    <string name="menu_list_flat_view_sub">"リストの最上位に子エントリーを常に表示します"</string>
+    <string name="menu_list_limit_recur_entries">"繰り返しを制限する"</string>
+    <string name="menu_list_limit_recur_entries_sub">"将来の繰り返しエントリーは 1 つだけ表示します"</string>
     <string name="menu_view_markdown_formatting">"Markdown 記法"</string>
     <string name="menu_view_autosave">"自動保存"</string>
     <string name="next">"次へ"</string>
