@@ -221,6 +221,7 @@
     <string name="priority_0_no_priority">"Không có mức độ ưu tiên"</string>
     <string name="priority_1_highest">"1 - Cao nhất"</string>
     <!-- Buy Pro fragment -->
+    <string name="details_show_all_instances">"Hiển thị tất cả các phiên bản (%1$d)"</string>
     <!-- alarms -->
     <string name="settings_create_with_current_location_sub">"Vui lòng cấp quyền truy cập vào vị trí của bạn trong khi sử dụng ứng dụng này để sử dụng tính năng này."</string>
     <!-- fragment_ical_list -->

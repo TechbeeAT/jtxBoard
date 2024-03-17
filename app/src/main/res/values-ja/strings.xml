@@ -179,7 +179,7 @@
     <string name="donate_other_donation_methods">"その他の寄付方法は、私たちのウェブサイトからご確認ください:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"この ファイル/URL を開けるアプリが見つかりませんでした。"</string>
     <string name="toast_item_is_now_recu_exception">"繰り返しのあるアイテムが例外になりました。"</string>
-    <string name="toast_done_tasks_deleted">"完了した ToDo が削除されました (%d)。"</string>
+    <string name="toast_done_tasks_deleted">"完了した ToDo (%d) が削除されました。"</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Thanks to"</string>
     <string name="about_translations_basic_info">"jtx Board は、オープンソースコミュニティへの参加と貢献を評価するオープンソースアプリです。このページではコミュニティメンバーの翻訳への取り組みを紹介します。"</string>
@@ -585,9 +585,9 @@
     <string name="filter_group_by_info">"リスト表示とコンパクト表示のみグループ化に対応しています"</string>
     <string name="filter_save_as_preset">"プリセットとして保存"</string>
     <string name="menu_list_flat_view">"フラット表示"</string>
-    <string name="menu_list_flat_view_sub">"リストの最上位に子エントリーを常に表示"</string>
-    <string name="menu_list_limit_recur_entries">"繰り返しを制限"</string>
-    <string name="menu_list_limit_recur_entries_sub">"将来の繰り返しエントリーは 1 つだけ表示"</string>
+    <string name="menu_list_flat_view_sub">"リストの最上位に子エントリーを常に表示します"</string>
+    <string name="menu_list_limit_recur_entries">"繰り返しを制限する"</string>
+    <string name="menu_list_limit_recur_entries_sub">"将来の繰り返しエントリーは 1 つだけ表示します"</string>
     <string name="menu_view_markdown_formatting">"Markdown 記法"</string>
     <string name="menu_view_autosave">"自動保存"</string>
     <string name="next">"次へ"</string>
