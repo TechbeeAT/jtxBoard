@@ -115,6 +115,7 @@
     <string name="edit_datepicker_dialog_add_timezone">"Adicionar fuso horário"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Editar fuso horário"</string>
     <string name="edit_dialog_sure_to_delete_title">"Excluir \"%1$s\"?"</string>
+    <string name="edit_dialog_sure_to_delete_message">"Você tem certeza de que quer deletar \"%1$s\"?"</string>
     <string name="edit_fragment_app_permission">"Permissão da aplicação"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Traduções"</string>
