@@ -77,8 +77,8 @@ fun ListOptionsGroupSort(
                                 listSettings.groupBy.value = null
 
                             listSettings.orderBy.value = when (listSettings.groupBy.value) {
-                                GroupBy.CATEGORY -> listSettings.orderBy.value
-                                GroupBy.RESOURCE -> listSettings.orderBy.value
+                                GroupBy.CATEGORY -> OrderBy.CATEGORIES
+                                GroupBy.RESOURCE -> OrderBy.RESOURCES
                                 GroupBy.START, GroupBy.START_WEEK, GroupBy.START_MONTH -> OrderBy.START_VTODO
                                 GroupBy.DATE, GroupBy.DATE_WEEK, GroupBy.DATE_MONTH -> OrderBy.START_VJOURNAL
                                 GroupBy.CLASSIFICATION -> OrderBy.CLASSIFICATION
@@ -115,7 +115,7 @@ fun ListOptionsGroupSort(
 
                 FilterChip(
                     selected = listSettings.orderBy.value == orderBy,
-                    enabled = listSettings.groupBy.value == null || listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE,
+                    enabled = listSettings.groupBy.value == null,
                     onClick = {
                         if (listSettings.orderBy.value != orderBy)
                             listSettings.orderBy.value = orderBy
