@@ -527,7 +527,9 @@ enum class OrderBy(@StringRes val stringResource: Int) {
     PROGRESS(R.string.progress),
     ACCOUNT(R.string.account),
     COLLECTION(R.string.collection),
-    DRAG_AND_DROP(R.string.order_by_drag_and_drop);
+    DRAG_AND_DROP(R.string.order_by_drag_and_drop),
+    CATEGORIES(R.string.categories),
+    RESOURCES(R.string.resources);
 
     fun getQueryAppendix(sortOrder: SortOrder): String {
         return when(this) {
@@ -545,6 +547,8 @@ enum class OrderBy(@StringRes val stringResource: Int) {
             ACCOUNT -> "$COLUMN_COLLECTION_ACCOUNT_NAME ${sortOrder.name} "
             COLLECTION -> "$COLUMN_COLLECTION_DISPLAYNAME ${sortOrder.name} "
             DRAG_AND_DROP -> "$COLUMN_SORT_INDEX "
+            CATEGORIES -> "categories ${sortOrder.name} "
+            RESOURCES -> "resources ${sortOrder.name} "
         }
     }
 
