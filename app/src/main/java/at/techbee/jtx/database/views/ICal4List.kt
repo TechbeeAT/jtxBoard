@@ -645,4 +645,13 @@ data class ICal4List(
             null
         }
     }
+
+    /***
+     * @return Module of the current entry
+     */
+    fun getModule() = when(this.module) {
+        Module.TODO.name -> Module.TODO
+        Module.JOURNAL.name -> Module.JOURNAL
+        else -> Module.NOTE
+    }
 }

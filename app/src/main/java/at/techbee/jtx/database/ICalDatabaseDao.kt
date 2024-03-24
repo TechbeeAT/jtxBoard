@@ -1022,25 +1022,33 @@ interface ICalDatabaseDao {
     }
 
 
-    @Transaction
     suspend fun updateProgress(id: Long, newPercent: Int?, settingKeepStatusProgressCompletedInSync: Boolean, settingLinkProgressToSubtasks: Boolean) {
-
+        val item = getICalObjectById(id) ?: return
         try {
-            val item = getICalObjectById(id) ?: return
-            item.setUpdatedProgress(newPercent, settingKeepStatusProgressCompletedInSync)
-            update(item)
-            makeSeriesDirty(item)
-            if(settingLinkProgressToSubtasks) {
-                findTopParent(id)?.let {
-                    updateProgressOfParents(it.id, settingKeepStatusProgressCompletedInSync)
-                }
-            }
+            //splitting update in two transaction to make the update on checkbox-click faster
+            updateProgressOfSingleEntry(item, newPercent, settingKeepStatusProgressCompletedInSync)
+            updateProgressOfSeriesAndParents(item, newPercent, settingKeepStatusProgressCompletedInSync, settingLinkProgressToSubtasks)
         } catch (e: SQLiteConstraintException) {
             Log.d("SQLConstraint", "Corrupted ID: $id")
             Log.d("SQLConstraint", e.stackTraceToString())
         }
     }
 
+    @Transaction
+    suspend fun updateProgressOfSingleEntry(item: ICalObject, newPercent: Int?, settingKeepStatusProgressCompletedInSync: Boolean) {
+        item.setUpdatedProgress(newPercent, settingKeepStatusProgressCompletedInSync)
+        update(item)
+    }
+
+    @Transaction
+    suspend fun updateProgressOfSeriesAndParents(item: ICalObject, newPercent: Int?, settingKeepStatusProgressCompletedInSync: Boolean, settingLinkProgressToSubtasks: Boolean) {
+        makeSeriesDirty(item)
+        if(settingLinkProgressToSubtasks) {
+            findTopParent(item.id)?.let {
+                updateProgressOfParents(it.id, settingKeepStatusProgressCompletedInSync)
+            }
+        }
+    }
 
 
     @Transaction

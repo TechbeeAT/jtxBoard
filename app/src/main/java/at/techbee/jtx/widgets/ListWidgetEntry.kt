@@ -41,7 +41,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.CheckboxPosition
-import at.techbee.jtx.util.DateTimeUtils
 
 @Composable
 fun ListEntry(
@@ -106,9 +105,11 @@ fun ListEntry(
                                 colorFilter = ColorFilter.tint(textColor)
                             )
                             Text(
-                                text = DateTimeUtils.convertLongToMediumDateShortTimeString(
-                                    obj.dtstart,
-                                    obj.dtstartTimezone
+                                text = ICalObject.getDtstartTextInfo(
+                                    module = obj.getModule(),
+                                    dtstart = obj.dtstart,
+                                    dtstartTimezone = obj.dtstartTimezone,
+                                    context = context
                                 ),
                                 style = textStyleDate,
                                 modifier = GlanceModifier.padding(end = 8.dp)
@@ -122,9 +123,12 @@ fun ListEntry(
                                 colorFilter = ColorFilter.tint(textColor)
                             )
                             Text(
-                                text = DateTimeUtils.convertLongToMediumDateShortTimeString(
-                                    obj.due,
-                                    obj.dueTimezone
+                                text = ICalObject.getDueTextInfo(
+                                    status = obj.status,
+                                    due = obj.due,
+                                    dueTimezone = obj.dueTimezone,
+                                    percent = obj.percent,
+                                    context = context
                                 ),
                                 style = if(ICalObject.isOverdue(obj.status, obj.percent, obj.due, obj.dueTimezone) == true) textStyleDateOverdue else textStyleDate,
                             )
