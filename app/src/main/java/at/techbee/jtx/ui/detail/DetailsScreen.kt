@@ -397,8 +397,7 @@ fun DetailsScreen(
                                                 val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                                                 clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
                                                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
-                                                    Toast.makeText(context, context.getText(R.string.menu_view_copy_to_clipboard_copied), Toast.LENGTH_SHORT).show()
-
+                                                    detailViewModel.toastMessage.value = context.getString(R.string.menu_view_copy_to_clipboard_copied)
                                             }
                                     }
                                     menuExpanded.value = false
