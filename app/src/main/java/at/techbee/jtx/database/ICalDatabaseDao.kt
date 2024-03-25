@@ -1050,6 +1050,24 @@ interface ICalDatabaseDao {
         }
     }
 
+    private suspend fun updateProgressOfParents(
+        parentId: Long,
+        keepInSync: Boolean
+    ) {
+
+        val children =
+            getRelatedChildren(parentId).filter { it.module == Module.TODO.name }
+        if (children.isNotEmpty()) {
+            children.forEach { child ->
+                updateProgressOfParents(child.id, keepInSync)
+            }
+            val newProgress = children.map { it.percent ?: 0 }.average().toInt()
+            val parent = getICalObjectByIdSync(parentId)
+            parent?.setUpdatedProgress(newProgress, keepInSync)
+            parent?.let { update(it) }
+        }
+    }
+
 
     @Transaction
     suspend fun updateStatus(iCalObjectIds: List<Long>, newStatus: Status, newXStatus: ExtendedStatus?, settingKeepStatusProgressCompletedInSync: Boolean) {
@@ -1081,25 +1099,6 @@ interface ICalDatabaseDao {
         currentItem.makeDirty()
         update(currentItem)
         makeSeriesDirty(currentItem)
-    }
-
-
-    private suspend fun updateProgressOfParents(
-        parentId: Long,
-        keepInSync: Boolean
-    ) {
-
-        val children =
-            getRelatedChildren(parentId).filter { it.module == Module.TODO.name }
-        if (children.isNotEmpty()) {
-            children.forEach { child ->
-                updateProgressOfParents(child.id, keepInSync)
-            }
-            val newProgress = children.map { it.percent ?: 0 }.average().toInt()
-            val parent = getICalObjectByIdSync(parentId)
-            parent?.setUpdatedProgress(newProgress, keepInSync)
-            parent?.let { update(it) }
-        }
     }
 
 
