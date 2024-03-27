@@ -58,7 +58,7 @@ fun ListBadge(
                     imageVector = it,
                     contentDescription = iconDesc,
                     tint = contentColor,
-                    modifier = if(isAccessibilityMode) Modifier.size(16.dp) else Modifier.size(12.dp)
+                    modifier = if(isAccessibilityMode) Modifier.size(12.dp) else Modifier.size(11.dp)
                 )
             }
             iconRes?.let {
@@ -66,7 +66,7 @@ fun ListBadge(
                     painterResource(id = it),
                     contentDescription = iconDesc,
                     tint = contentColor,
-                    modifier = if(isAccessibilityMode) Modifier.size(16.dp) else Modifier.size(12.dp)
+                    modifier = if(isAccessibilityMode) Modifier.size(12.dp) else Modifier.size(11.dp)
                 )
             }
             text?.let {
@@ -107,6 +107,37 @@ fun ListBadge_Preview_accessibility() {
                 iconDesc = "Collections",
                 text = "Collections",
                 isAccessibilityMode = true
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ListBadge_Preview_icon_only_accessibility() {
+    MaterialTheme {
+        ElevatedCard {
+            ListBadge(
+                icon = Icons.Outlined.Folder,
+                iconDesc = "Collections",
+                text = null,
+                isAccessibilityMode = true
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ListBadge_Preview_icon_only() {
+    MaterialTheme {
+        ElevatedCard {
+            ListBadge(
+                icon = Icons.Outlined.Folder,
+                iconDesc = "Collections",
+                text = null,
+                isAccessibilityMode = false
             )
         }
     }
