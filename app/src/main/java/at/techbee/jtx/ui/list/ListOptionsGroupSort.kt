@@ -110,6 +110,9 @@ fun ListOptionsGroupSort(
         // SORT ORDER 1
         FlowRow(modifier = Modifier.fillMaxWidth()) {
             OrderBy.getValuesFor(module).forEach { orderBy ->
+                if(orderBy == OrderBy.DRAG_AND_DROP)
+                    return@forEach  //TODO
+
                 FilterChip(
                     selected = listSettings.orderBy.value == orderBy,
                     enabled = listSettings.groupBy.value == null || listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE,
@@ -203,6 +206,7 @@ fun ListOptionsGroupSort(
             SortOrder.entries.forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.subtasksSortOrder.value == sortOrder,
+                    enabled = listSettings.subtasksOrderBy.value != OrderBy.DRAG_AND_DROP,
                     onClick = {
                         if (listSettings.subtasksSortOrder.value != sortOrder)
                             listSettings.subtasksSortOrder.value = sortOrder
@@ -242,6 +246,7 @@ fun ListOptionsGroupSort(
             SortOrder.entries.forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.subnotesSortOrder.value == sortOrder,
+                    enabled = listSettings.subnotesOrderBy.value != OrderBy.DRAG_AND_DROP,
                     onClick = {
                         if (listSettings.subnotesSortOrder.value != sortOrder)
                             listSettings.subnotesSortOrder.value = sortOrder

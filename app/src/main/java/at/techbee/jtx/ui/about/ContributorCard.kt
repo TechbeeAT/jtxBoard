@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,7 +35,6 @@ import at.techbee.jtx.ui.theme.Typography
 import coil.compose.AsyncImage
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContributorCard(
     contributor: Contributor,

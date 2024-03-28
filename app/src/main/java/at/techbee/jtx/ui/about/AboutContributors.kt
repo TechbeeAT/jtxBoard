@@ -28,7 +28,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutContributors(
     contributors: List<Contributor>,

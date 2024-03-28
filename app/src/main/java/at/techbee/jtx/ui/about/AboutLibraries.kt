@@ -25,7 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -50,6 +49,8 @@ import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
 import com.mikepenz.aboutlibraries.entity.Organization
 import com.mikepenz.aboutlibraries.ui.compose.util.author
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 
 
 @Composable
@@ -86,17 +87,17 @@ fun AboutLibraries_Preview() {
     MaterialTheme {
         AboutLibraries(
             libraries = Libs(
-                libraries = listOf(
+                libraries = persistentListOf(
                     Library(
                         uniqueId = "uniqueId",
                         artifactVersion = "v2.2.0",
                         name = "jtx Board",
                         description = "Description",
                         website = "https://jtx.techbee.at",
-                        developers = emptyList(),
+                        developers = persistentListOf(),
                         organization = Organization("Techbee e.U.", "https://techbee.at"),
                         scm = null,
-                        licenses = setOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
+                        licenses = persistentSetOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
                         //...
                     ),
                     Library(
@@ -105,14 +106,14 @@ fun AboutLibraries_Preview() {
                         name = "jtx Board",
                         description = "Description",
                         website = "https://jtx.techbee.at",
-                        developers = emptyList(),
+                        developers = persistentListOf(),
                         organization = Organization("Techbee e.U.", "https://techbee.at"),
                         scm = null,
-                        licenses = setOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
+                        licenses = persistentSetOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
                         //...
                     )
                 ),
-                licenses = emptySet()
+                licenses = persistentSetOf()
             )
         )
     }
@@ -120,7 +121,7 @@ fun AboutLibraries_Preview() {
 
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AboutLibrariesLib(
     library: Library
@@ -235,10 +236,10 @@ fun AboutLibrariesLib_Preview() {
                 name = "jtx Board",
                 description = "Description",
                 website = "https://jtx.techbee.at",
-                developers = emptyList(),
+                developers = persistentListOf(),
                 organization = Organization("Techbee e.U.", "https://techbee.at"),
                 scm = null,
-                licenses = setOf(License("jtx License", "https://jtx.techbee.at", hash = ""))
+                licenses = persistentSetOf(License("jtx License", "https://jtx.techbee.at", hash = ""))
                 //...
             )
         )

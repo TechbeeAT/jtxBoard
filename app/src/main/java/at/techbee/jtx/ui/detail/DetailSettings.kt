@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.ui.detail.models.DetailsScreenSection
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.ListViewModel
 import kotlinx.serialization.encodeToString

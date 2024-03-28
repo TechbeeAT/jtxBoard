@@ -61,7 +61,7 @@ class SyncUtil {
          */
         fun availableSyncApps(context: Context): List<SyncApp> {
             val availableSyncApps = mutableListOf<SyncApp>()
-            SyncApp.values().forEach { syncApp ->
+            SyncApp.entries.forEach { syncApp ->
                 try {
                     if(context.packageManager?.getPackageInfoCompat(syncApp.packageName, 0) != null)
                         availableSyncApps.add(syncApp)
@@ -222,24 +222,11 @@ enum class SyncApp(
         "4.3.3",
         "https://www.davx5.com/organizations/managed-davx5",
         "https://www.davx5.com/organizations/deployment"
-    ),
-    /*
-    CLOUDSYNC(
-        "MultiSync for Cloud",
-        R.drawable.logo_multisync,
-        T0D0,
-    "at.bitfire.cloudsync",
-    "at.bitfire.cloudsync",
-        "at.bitfire.davdroid",
-        403010000L,
-        "4.3.1",
-        "https://multisync.cloud/",
-        "https://multisync.cloud/configuration/"
-    )*/;
+    );
 
     companion object {
         fun fromAccountType(accountType: String?): SyncApp? {
-            return values().firstOrNull { it.accountType == accountType }
+            return entries.firstOrNull { it.accountType == accountType }
         }
     }
 }

@@ -1,142 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board sincroniza Diários, Notas &amp; Tarefas"</string>
-    <string name="app_permission_desc">"sincronizar conteúdo do jtx Board com outras aplicações, como o DAVx5"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
-    <string name="save">"Guardar"</string>
-    <string name="update">"Atualizar"</string>
-    <string name="cancel">"Cancelar"</string>
-    <string name="ok">"OK"</string>
-    <string name="delete">"Eliminar"</string>
-    <string name="discard">"Rejeitar"</string>
-    <string name="dismiss">"Descartar"</string>
-    <string name="open">"Abrir"</string>
-    <string name="cont">"Continuar"</string>
-    <string name="website">"Página web"</string>
-    <string name="latitude">"Latitude"</string>
-    <string name="longitude">"Longitude"</string>
-    <string name="unlink">"Desfazer ligação"</string>
-    <string name="off">"Desligado"</string>
-    <string name="permissions">"Permissões"</string>
-    <string name="current_location">"Localização actual"</string>
-    <string name="toolbar_text_add_journal">"Adicionar Diário"</string>
-    <string name="toolbar_text_add_note">"Adicionar Nota"</string>
-    <string name="toolbar_text_add_task">"Adicionar Tarefa"</string>
-    <string name="toast_sync_requested">"Sincronização solicitada"</string>
-    <string name="default_local_collection_name">"Local"</string>
-    <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
-    <string name="journal_status_draft">"Rascunho"</string>
-    <string name="journal_status_final">"Final"</string>
-    <string name="journal_status_cancelled">"Cancelado"</string>
-    <string name="todo_status_needsaction">"Ação Necessária"</string>
-    <string name="todo_status_completed">"Concluído"</string>
-    <string name="todo_status_inprocess">"Em execução"</string>
-    <string name="todo_status_cancelled">"Cancelado"</string>
-    <string name="classification_public">"Público"</string>
-    <string name="classification_private">"Privado"</string>
-    <string name="classification_confidential">"Confidencial"</string>
-    <string name="attendee_role_required_participant">"Participante necessário"</string>
-    <string name="attendee_role_optional_participant">"Participante opcional"</string>
-    <string name="attendee_role_non_participant">"Não participante / Info"</string>
     <!-- Navigation Drawer -->
-    <string name="navigation_drawer_open">"Abrir painel de navegação"</string>
-    <string name="navigation_drawer_close">"Fechar painel de navegação"</string>
-    <string name="navigation_drawer_board">"Quadro"</string>
-    <string name="navigation_drawer_synchronization">"Sincronização"</string>
-    <string name="navigation_drawer_about">"Sobre / Licença"</string>
-    <string name="navigation_drawer_subtitle">"diários, notas &amp; tarefas"</string>
-    <string name="navigation_drawer_settings">"Definições"</string>
-    <string name="navigation_drawer_news_updates">"Notícias &amp; atualizações"</string>
-    <string name="navigation_drawer_external_links">"Ligações externas"</string>
-    <string name="navigation_drawer_website">"Página web"</string>
-    <string name="navigation_drawer_support">"Suporte"</string>
-    <string name="navigation_drawer_donate">"Faça um donativo"</string>
-    <string name="navigation_drawer_privacy_policy">"Política de Privacidade"</string>
     <!-- fragment_ical_list -->
-    <string name="list_due_overdue">"Em atraso"</string>
-    <string name="list_due_shortly">"Vencimento em breve"</string>
-    <string name="list_due_today">"Vencimento hoje"</string>
-    <string name="list_due_tomorrow">"Vencimento amanhã"</string>
-    <string name="list_due_within_7_days">"Vencimento dentro de 7 dias"</string>
-    <string name="list_due_inXhours">"Termina em %d horas"</string>
-    <string name="list_due_on_weekday">"Vencimento em %s"</string>
-    <string name="list_start_past">"Iniciar no passado"</string>
-    <string name="list_start_shortly">"Começa em breve"</string>
-    <string name="list_start_today">"Início planejado hoje"</string>
-    <string name="list_start_tomorrow">"Começa amanhã"</string>
-    <string name="list_start_inXhours">"O horário previsto começa em %d horas"</string>
-    <string name="list_start_on_weekday">"Planejado para começar em %s"</string>
-    <string name="list_tabitem_journals">"Diários"</string>
-    <string name="list_tabitem_notes">"Notas"</string>
-    <string name="list_tabitem_todos">"Tarefas"</string>
-    <string name="list_expand">"Expandir"</string>
-    <string name="list_dialog_delete_selected_title">Eliminar entradas selecionadas?</string>
-    <string name="list_dialog_delete_selected_message">Esta ação exclui todas as entradas selecionadas (%1$d). Tem certeza que deseja continuar? Esta operação não pode ser desfeita!</string>
-    <string name="list_quickadd_dialog_summary_description_hint">"Resumo/Descrição"</string>
-    <string name="list_quickadd_dialog_summary_description_helper">"A primeira linha é interpretada como resumo, o resto como descrição. Hashtags são interpretadas como categorias (por exemplo, #categoria)."</string>
-    <string name="list_item_recurring">"Entrada recorrente"</string>
-    <string name="list_item_edited_recurring">"Entrada recorrente editada"</string>
-    <string name="list_scroll_to_top">"Ir para o topo"</string>
     <!-- fragment_ical_view -->
-    <string name="view_fragment_audio_permission">"Permissões da aplicação"</string>
-    <string name="view_fragment_audio_permission_message">"jtx Board precisa de permissão para gravar áudio ou usar as funcionalidades da fala em texto. Por favor, conceda permissão para usar este recurso."</string>
-    <string name="view_reccurrence_note_is_exception">"Este item é uma exceção para uma entrada recorrente."</string>
-    <string name="view_feedback_linked_notes">"Comentários / Notas Vinculadas"</string>
-    <string name="view_subtask_of">"Subtarefa de"</string>
-    <string name="view_linked_note_of">"Nota vinculada de"</string>
-    <string name="view_add_audio_note">"Adicionar áudio"</string>
-    <string name="view_created_text">"Criado: %1$s"</string>
-    <string name="view_last_modified_text">"Última modificação: %1$s"</string>
-    <string name="view_due">"Vencimento"</string>
-    <string name="view_completed">"Concluído"</string>
-    <string name="view_started">"Iniciar(do)"</string>
     <!-- fragment_ical_edit -->
-    <string name="edit_comment_helper">"Adicionar comentário"</string>
-    <string name="edit_attachment_button_text">"Adicionar anexo"</string>
-    <string name="edit_take_picture_button_text">"Tirar foto"</string>
-    <string name="edit_add_link_button_text">"Adicionar link de anexo"</string>
-    <string name="edit_subtasks_add_helper">"Adicionar uma subtarefa"</string>
-    <string name="detail_top_app_bar_quick_add_subtask">"Adição rápida de subtarefa"</string>
-    <string name="detail_top_app_bar_quick_add_subnote">"Adição rápida de subnota"</string>
-    <string name="edit_attachment_add_link_dialog">"Adicionar link de anexo"</string>
-    <string name="edit_recur_repeat_every_x">"Repetir a cada"</string>
-    <string name="edit_recur_on_weekday">"em"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"no"</string>
-    <string name="edit_recur_x_day_of_the_month">"dia do mês"</string>
-    <string name="edit_recur_x_times">"vezes"</string>
-    <string name="edit_recur_toast_requires_start_date">"A recorrência requer uma data inicial para ser definida!"</string>
-    <string name="edit_datepicker_dialog_select_date">"Selecionar data"</string>
-    <string name="edit_date_range_picker_dialog_select_date_range">"Selecione o intervalo de datas"</string>
-    <string name="edit_datepicker_dialog_add_time">"Adicionar horário"</string>
-    <string name="edit_datepicker_dialog_edit_time">"Alterar hora"</string>
-    <string name="edit_datepicker_dialog_add_timezone">"Adicionar fuso horário"</string>
-    <string name="edit_datepicker_dialog_edit_timezone">"Editar fuso horário"</string>
-    <string name="edit_dialog_sure_to_delete_title">"Excluir \"%1$s\"?"</string>
-    <string name="edit_fragment_app_permission">"Permissão da aplicação"</string>
     <!-- fragment_about -->
-    <string name="about_tabitem_translations">"Traduções"</string>
-    <string name="about_tabitem_libraries">"Bibliotecas"</string>
-    <string name="about_tabitem_contributors">"Contribuidores"</string>
-    <string name="about_special_thanks">"Agradecimentos especiais"</string>
     <!-- menus -->
     <!-- Shortcuts -->
     <!-- Settings fragment -->
     <!-- Sync fragment -->
     <!-- Donate fragment -->
-    <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nenhum aplicativo foi encontrado para abrir este arquivo/URL."</string>
-    <string name="toast_item_is_now_recu_exception">"Item recorrente agora é uma exceção."</string>
-    <string name="toast_done_tasks_deleted">"Tarefas concluídas excluídas (%d)."</string>
     <!-- sync content provider -->
-    <string name="about_translations_thanks_to">"Agradecimentos"</string>
-    <string name="about_translations_basic_info">"jtx Board é um aplicativo de código aberto que aprecia a participação e contribuição da comunidade de código aberto. Nesta página gostaríamos de agradecer os esforços dos membros da comunidade pelas traduções."</string>
-    <string name="about_translations_contribution_info">"Caso queira editar/adicionar traduções ou adicionar novos idiomas a este aplicativo, sinta-se livre para se juntar ao projeto jtx Board na plataforma de tradução Crowdin:"</string>
-    <string name="about_translations_contribution_button">"Junte-se em Crowdin.com"</string>
-    <string name="list_welcome_entry_journal_summary">"Parabéns, esta é a sua primeira entrada no diário :-)"</string>
-    <string name="list_welcome_entry_journal_description">"Os diários podem ser usados para guardar as suas notas para uma data específica. Utilizar esta funcionalidade por exemplo para protocolos, atas de reunião, entradas do diário e assim por diante. Se você editar esta postagem, você verá as opções para adicionar categorias, participantes, anexos, … Sinta-se à vontade para apagar esta entrada quando quiser!"</string>
-    <string name="list_welcome_entry_note_summary">"Parabéns, esta é a sua primeira nota :-)"</string>
     <!-- Permissions -->
     <!-- alarms -->
     <!-- fragment_collections -->

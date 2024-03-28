@@ -36,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -68,6 +69,7 @@ import at.techbee.jtx.ui.reusable.cards.AttachmentCard
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
+import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.reusable.elements.VerticalDateBlock
 import at.techbee.jtx.ui.settings.DropdownSettingOption
@@ -75,6 +77,7 @@ import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import com.arnyminerz.markdowntext.MarkdownText
+import sh.calvin.reorderable.ReorderableColumn
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -104,11 +107,14 @@ fun ListCard(
     progressIncrement: Int,
     linkProgressToSubtasks: Boolean,
     markdownEnabled: Boolean,
+    isSubtaskDragAndDropEnabled: Boolean,
+    isSubnoteDragAndDropEnabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
-    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
-) {
+    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
+    onUpdateSortOrder: (List<ICal4List>) -> Unit,
+    ) {
 
     var isSubtasksExpanded by remember {
         mutableStateOf(
@@ -168,10 +174,11 @@ fun ListCard(
                         datetime = iCalObject.dtstart,
                         timezone = iCalObject.dtstartTimezone,
                         settingDisplayTimezone = settingDisplayTimezone,
-                        modifier = Modifier.padding(
-                            start = 4.dp,
-                            end = 12.dp
-                        )
+                        modifier = Modifier
+                            .padding(
+                                start = 4.dp,
+                                end = 12.dp
+                            )
                             .widthIn(min = 48.dp)
                     )
 
@@ -424,8 +431,20 @@ fun ListCard(
             }
 
             AnimatedVisibility(visible = isSubtasksExpanded) {
-                Column(modifier = Modifier.padding(top = 4.dp)) {
-                    subtasks.forEach { subtask ->
+                ReorderableColumn(
+                    list = subtasks,
+                    onSettle = { fromIndex, toIndex ->
+                        val reordered = subtasks.toMutableList().apply {
+                            add(toIndex, removeAt(fromIndex))
+                        }
+                        onUpdateSortOrder(reordered)
+                    },
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp)
+                ) { index, subtask, isDragging ->
+                    key(subtask.id) {
 
                         SubtaskCard(
                             subtask = subtask,
@@ -435,6 +454,7 @@ fun ListCard(
                             onDeleteClicked = { },   // no edit possible here
                             onUnlinkClicked = { },
                             sliderIncrement = progressIncrement,
+                            dragHandle = { if(isSubtaskDragAndDropEnabled) DragHandle(scope = this) },
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
@@ -450,8 +470,21 @@ fun ListCard(
             }
 
             AnimatedVisibility(visible = isSubnotesExpanded) {
-                Column(modifier = Modifier.padding(top = 4.dp)) {
-                    subnotes.forEach { subnote ->
+                ReorderableColumn(
+                    list = subnotes,
+                    onSettle = { fromIndex, toIndex ->
+                        val reordered = subnotes.toMutableList().apply {
+                            add(toIndex, removeAt(fromIndex))
+                        }
+                        onUpdateSortOrder(reordered)
+                    },
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp)
+                ) { index, subnote, isDragging ->
+                    key(subnote.id) {
+
 
                         SubnoteCard(
                             subnote = subnote,
@@ -466,6 +499,7 @@ fun ListCard(
                                             onLongClick(subnote.id, subnotes)
                                     },
                                 ),
+                            dragHandle = { if(isSubnoteDragAndDropEnabled) DragHandle(scope = this) },
                             isEditMode = false, //no editing here
                             onDeleteClicked = { }, //no editing here
                             onUnlinkClicked = { }, //no editing here
@@ -491,7 +525,13 @@ fun ListCard(
                                 modifier = Modifier
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
-                                        onClick = { onClick(parent.id, parents, parent.isReadOnly) },
+                                        onClick = {
+                                            onClick(
+                                                parent.id,
+                                                parents,
+                                                parent.isReadOnly
+                                            )
+                                        },
                                         onLongClick = {
                                             if (!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                                 onLongClick(parent.id, parents)
@@ -506,7 +546,13 @@ fun ListCard(
                                 modifier = Modifier
                                     .clip(jtxCardCornerShape)
                                     .combinedClickable(
-                                        onClick = { onClick(parent.id, parents, parent.isReadOnly) },
+                                        onClick = {
+                                            onClick(
+                                                parent.id,
+                                                parents,
+                                                parent.isReadOnly
+                                            )
+                                        },
                                         onLongClick = {
                                             if (!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                                 onLongClick(parent.id, parents)
@@ -563,7 +609,10 @@ fun ICalObjectListCardPreview_JOURNAL() {
             onLongClick = { _, _ -> },
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
-            player = null
+            player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -608,7 +657,10 @@ fun ICalObjectListCardPreview_NOTE() {
             onLongClick = { _, _ -> },
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
-            player = null
+            player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -659,7 +711,10 @@ fun ICalObjectListCardPreview_TODO() {
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
-            player = null
+            player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -709,7 +764,10 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
-            player = null
+            player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -761,7 +819,10 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
-            player = null
+            player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -814,7 +875,10 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
-            player = null
+            player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -867,7 +931,10 @@ fun ICalObjectListCardPreview_TASK_one_liner() {
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
-            player = null
+            player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -920,7 +987,10 @@ fun ICalObjectListCardPreview_NOTE_one_liner() {
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             onExpandedChanged = { _, _, _, _, _ -> },
-            player = null
+            player = null,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
+            onUpdateSortOrder = { }
         )
     }
 }

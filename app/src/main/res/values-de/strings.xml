@@ -19,6 +19,7 @@
     <string name="longitude">"Längengrad"</string>
     <string name="unlink">"Verlinkung aufheben"</string>
     <string name="off">"Aus"</string>
+    <string name="location_permission_denied">"Standortberechtigung abgelehnt"</string>
     <string name="permissions">"Berechtigungen"</string>
     <string name="current_location">"Aktueller Standort"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
@@ -318,6 +319,7 @@
     <string name="filter_no_resource">Ohne Materialien</string>
     <string name="filter_subtasks_order_by">Unteraufgaben sortieren nach</string>
     <string name="filter_subnotes_order_by">Verlinkte Notizen sortieren nach</string>
+    <string name="order_by_drag_and_drop">"Drag &amp; Drop"</string>
     <string name="filter_no_filter">"Kein Filter"</string>
     <string name="filter_options_more_entries">"Mehr (%1$d)"</string>
     <string name="filter_options_less_entries">"Weniger"</string>
@@ -441,6 +443,7 @@ Danke!"</string>
     <string name="details_go_to_series">"Gehe zur Serie"</string>
     <string name="details_detach_from_series">"Von der Serie trennen"</string>
     <string name="details_detach_all_instances">"Alle Instanzen trennen"</string>
+    <string name="details_show_all_instances">"Alle Instanzen anzeigen (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Von übergeordnetem Element trennen"</string>
     <string name="dialog_unlink_from_parent_message">"Die Beziehung als Untereintrag entfernen? Der Eintrag bleibt als eigenständiger Eintrag."</string>
     <string name="edit_comment">"Kommentar bearbeiten"</string>
@@ -514,6 +517,7 @@ Danke!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Status, Fortschritt und Fertiggestellt synchron halten"</string>
     <string name="settings_attention_experimental_feature">"Achtung: Dies ist eine experimentelle Funktion"</string>
     <string name="settings_create_with_current_location">"Neue Einträge mit aktuellem Standort erstellen"</string>
+    <string name="settings_create_with_current_location_sub">"Bitte erteilen Sie beim Verwenden dieser App Zugriff auf Ihren Standort um dieses Feature zu nutzen."</string>
     <string name="settings_sticky_alarms">"Fixierte Alarme"</string>
     <string name="settings_sticky_alarms_sub">"Benachrichtigungen erhalten bis erledigt oder verschoben"</string>
     <string name="settings_fullscreen_alarms">"Vollbild-Alarme"</string>

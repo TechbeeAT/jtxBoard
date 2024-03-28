@@ -19,6 +19,7 @@
     <string name="longitude">"Γεωγραφικό μήκος"</string>
     <string name="unlink">"Κατάργηση σύνδεσης"</string>
     <string name="off">"Ανενεργό"</string>
+    <string name="location_permission_denied">"Η άδεια χρήσης τοποθεσίας απορρίφθηκε"</string>
     <string name="permissions">"Εξουσιοδότηση"</string>
     <string name="current_location">"Τρέχουσα τοποθεσία"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
@@ -317,6 +318,7 @@
     <string name="filter_no_resource">Χωρίς πηγές</string>
     <string name="filter_subtasks_order_by">Ταξινόμηση υποεργασιών κατά</string>
     <string name="filter_subnotes_order_by">Ταξινόμηση συνδεδεμένων σημειώσεων κατά</string>
+    <string name="order_by_drag_and_drop">"Σύρσιμο &amp; απόθεση"</string>
     <string name="filter_no_filter">"Χωρίς φίλτρο"</string>
     <string name="filter_options_more_entries">"Περισσότερα (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Κάντε κλικ στη συλλογή στην οποία πρέπει να προστεθούν οι καταχωρήσεις/καταχωρήσεις!"</string>
@@ -439,6 +441,7 @@
     <string name="details_go_to_series">"Μετάβαση στη ακολουθία"</string>
     <string name="details_detach_from_series">"Αποκόλληση από την ακολουθία"</string>
     <string name="details_detach_all_instances">"Αποσύνδεση όλων των περιπτώσεων"</string>
+    <string name="details_show_all_instances">"Εμφάνιση όλων των περιπτώσεων (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Αποσύνδεση από την κύρια εγγραφή"</string>
     <string name="dialog_unlink_from_parent_message">"Αφαιρέστε τη σχέση ως υποκαταχώρηση? Η καταχώρηση θα παραμείνει ως αυτόνομη."</string>
     <string name="edit_comment">"Επεξεργασία σημείωσης"</string>
@@ -512,6 +515,7 @@
     <string name="settings_keep_status_progress_completed_in_sync">"Διατήρηση κατάστασης, προόδου &amp; ολοκλήρωση συγχρονισμού"</string>
     <string name="settings_attention_experimental_feature">"Προσοχή: Αυτό είναι ένα πειραματικό χαρακτηριστικό"</string>
     <string name="settings_create_with_current_location">"Δημιουργήστε νέες καταχωρήσεις με την τρέχουσα τοποθεσία"</string>
+    <string name="settings_create_with_current_location_sub">"Για να χρησιμοποιήσετε αυτήν τη δυνατότητα, παρακαλούμε επιτρέψτε την πρόσβαση στην τοποθεσία σας ενώ χρησιμοποιείτε αυτήν την εφαρμογή."</string>
     <string name="settings_sticky_alarms">"Κολλημένες ειδοποιήσεις"</string>
     <string name="settings_sticky_alarms_sub">"Διατήρηση ειδοποιήσεων μέχρι να ολοκληρωθούν ή αναβληθούν"</string>
     <string name="settings_fullscreen_alarms">"Αφύπνιση σε πλήρη οθόνη"</string>

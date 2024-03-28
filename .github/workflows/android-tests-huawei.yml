@@ -14,21 +14,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: 17
-      - uses: gradle/gradle-build-action@v2
 
-      - name: Enable KVM group perms
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
+      - uses: gradle/wrapper-validation-action@v2
 
-      - name: Cache AVD and APKs
-        uses: actions/cache@v3
-        id: avd-cache
+      - name: Cache gradle dependencies
+        uses: actions/cache@v4
         with:
           path: |
             ~/.android/avd/*

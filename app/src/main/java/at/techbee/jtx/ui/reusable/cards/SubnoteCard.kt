@@ -42,6 +42,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.dialogs.UnlinkEntryDialog
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
+import at.techbee.jtx.ui.reusable.elements.DragHandle_Preview_without_Scope
 import at.techbee.jtx.util.DateTimeUtils
 
 
@@ -52,6 +53,7 @@ fun SubnoteCard(
     player: MediaPlayer?,
     isEditMode: Boolean,
     modifier: Modifier = Modifier,
+    dragHandle:@Composable () -> Unit = { },
     allowDeletion: Boolean = true,
     onDeleteClicked: () -> Unit,
     onUnlinkClicked: () -> Unit
@@ -75,10 +77,17 @@ fun SubnoteCard(
     ) {
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
+
+            if(!isEditMode)
+                dragHandle()
+
+
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -145,7 +154,8 @@ fun SubnoteCardPreview() {
             player = null,
             isEditMode = false,
             onDeleteClicked = { },
-            onUnlinkClicked = { }
+            onUnlinkClicked = { },
+            dragHandle = { DragHandle_Preview_without_Scope() }
         )
     }
 }
@@ -168,7 +178,8 @@ fun SubnoteCardPreview_selected() {
             player = null,
             isEditMode = false,
             onDeleteClicked = { },
-            onUnlinkClicked = { }
+            onUnlinkClicked = { },
+            dragHandle = { DragHandle_Preview_without_Scope() }
         )
     }
 }
@@ -191,7 +202,8 @@ fun SubnoteCardPreview_audio() {
             player = null,
             isEditMode = false,
             onDeleteClicked = { },
-            onUnlinkClicked = { }
+            onUnlinkClicked = { },
+            dragHandle = { DragHandle_Preview_without_Scope() }
         )
     }
 }
@@ -211,7 +223,8 @@ fun SubnoteCardPreview_audio_with_text() {
             player = null,
             isEditMode = false,
             onDeleteClicked = { },
-            onUnlinkClicked = { }
+            onUnlinkClicked = { },
+            dragHandle = { DragHandle_Preview_without_Scope() }
         )
     }
 }
@@ -233,7 +246,8 @@ fun SubnoteCardPreview_edit() {
             player = null,
             isEditMode = true,
             onDeleteClicked = { },
-            onUnlinkClicked = { }
+            onUnlinkClicked = { },
+            dragHandle = { DragHandle_Preview_without_Scope() }
         )
     }
 }
@@ -256,7 +270,8 @@ fun SubnoteCardPreview_journal() {
             player = null,
             isEditMode = false,
             onDeleteClicked = { },
-            onUnlinkClicked = { }
+            onUnlinkClicked = { },
+            dragHandle = { DragHandle_Preview_without_Scope() }
         )
     }
 }

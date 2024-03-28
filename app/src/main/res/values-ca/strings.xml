@@ -19,6 +19,7 @@
     <string name="longitude">"Longitud"</string>
     <string name="unlink">"Desvincular"</string>
     <string name="off">"Desconnectat"</string>
+    <string name="location_permission_denied">"S'ha denegat l'accés a la ubicació"</string>
     <string name="permissions">"Permisos"</string>
     <string name="current_location">"Ubicació actual"</string>
     <string name="toolbar_text_add_journal">"Afegir Entrada"</string>
@@ -318,6 +319,7 @@
     <string name="filter_no_resource">Sense recursos</string>
     <string name="filter_subtasks_order_by">Ordena sub-tasques per</string>
     <string name="filter_subnotes_order_by">Ordena les notes enllaçades per</string>
+    <string name="order_by_drag_and_drop">"Arrossega &amp; Deixa Anar"</string>
     <string name="filter_no_filter">"Sense filtres"</string>
     <string name="filter_options_more_entries">"Més (%1$d)"</string>
     <string name="filter_options_less_entries">"Menys"</string>
@@ -441,6 +443,7 @@ Gràcies!"</string>
     <string name="details_go_to_series">"Vés a la sèrie"</string>
     <string name="details_detach_from_series">"Desenllaçar de la sèrie"</string>
     <string name="details_detach_all_instances">"Desenllaça totes les instàncies"</string>
+    <string name="details_show_all_instances">"Mostra totes les instàncies (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Desenllaça del superior"</string>
     <string name="dialog_unlink_from_parent_message">"Eliminar la relació com a subentrada? Es quedarà com una independent."</string>
     <string name="edit_comment">"Editar comentari"</string>
@@ -514,6 +517,7 @@ Gràcies!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Mantè l'estat, progrés i completat en sincronització"</string>
     <string name="settings_attention_experimental_feature">"Atenció: Aquesta és una funció experimental"</string>
     <string name="settings_create_with_current_location">"Crea noves entrades amb la ubicació actual"</string>
+    <string name="settings_create_with_current_location_sub">"Per favor, dona permís per accedir a la teva ubicació en fer servir aquesta app per a fer servir la funció."</string>
     <string name="settings_sticky_alarms">"Alarmes fixades"</string>
     <string name="settings_sticky_alarms_sub">"Manté les notificacions fins que es marquen com a completades o es posposen"</string>
     <string name="settings_fullscreen_alarms">"Alarmes a pantalla completa"</string>

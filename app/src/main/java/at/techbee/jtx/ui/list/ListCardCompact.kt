@@ -24,6 +24,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -47,9 +48,11 @@ import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
+import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import com.arnyminerz.markdowntext.MarkdownText
+import sh.calvin.reorderable.ReorderableColumn
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -67,11 +70,13 @@ fun ListCardCompact(
     settingIsAccessibilityMode: Boolean,
     selected: List<Long>,
     player: MediaPlayer?,
+    isSubtaskDragAndDropEnabled: Boolean,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
-) {
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onUpdateSortOrder: (List<ICal4List>) -> Unit
+    ) {
 
     Card(
         colors = CardDefaults.cardColors(
@@ -172,13 +177,26 @@ fun ListCardCompact(
                     )
             }
 
-            Column(modifier = Modifier.padding(horizontal = 8.dp)) {
-                subtasks.forEach { subtask ->
+            ReorderableColumn(
+                list = subtasks,
+                onSettle = { fromIndex, toIndex ->
+                    val reordered = subtasks.toMutableList().apply {
+                        add(toIndex, removeAt(fromIndex))
+                    }
+                    onUpdateSortOrder(reordered)
+                },
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            ) { index, subtask, isDragging ->
+                key(subtask.id) {
 
                     SubtaskCardCompact(
                         subtask = subtask,
                         selected = selected.contains(subtask.id),
                         onProgressChanged = onProgressChanged,
+                        dragHandle = { if(isSubtaskDragAndDropEnabled) DragHandle(scope = this) },
                         modifier = Modifier
                             .clip(jtxCardCornerShape)
                             .combinedClickable(
@@ -221,9 +239,11 @@ fun ListCardCompact_JOURNAL() {
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -252,9 +272,11 @@ fun ListCardCompact_JOURNAL2() {
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -284,9 +306,11 @@ fun ListCardCompact_NOTE() {
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -320,9 +344,11 @@ fun ListCardCompact_TODO() {
             markdownEnabled = false,
             selected = emptyList(),
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -370,9 +396,11 @@ fun ListCardCompact_TODO_only_summary() {
             markdownEnabled = false,
             selected = listOf(icalobject.id),
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
