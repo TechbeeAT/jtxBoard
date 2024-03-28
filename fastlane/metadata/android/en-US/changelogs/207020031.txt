@@ -1,0 +1,3 @@
+- Order subtasks and linked notes by Drag & Drop
+- Efficiency and stability updates
+- Bugfixes
