@@ -116,7 +116,7 @@ fun ListTopRow(
                     dtstartTimezone = ical4List.dtstartTimezone,
                     context = LocalContext.current
                 ),
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
@@ -131,7 +131,7 @@ fun ListTopRow(
                     dtstartTimezone = ical4List.dtstartTimezone,
                     context = LocalContext.current
                 ),
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
@@ -153,7 +153,7 @@ fun ListTopRow(
                         ical4List.due,
                         ical4List.dueTimezone
                     ) == true
-                ) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.secondaryContainer,
+                ) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
@@ -335,7 +335,8 @@ fun ListTopRow_Preview() {
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
-            isAccessibilityMode = false
+            isAccessibilityMode = false,
+            includeJournalDate = true
         )
     }
 }
