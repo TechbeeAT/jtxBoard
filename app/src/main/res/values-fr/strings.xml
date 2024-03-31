@@ -72,7 +72,7 @@
     <string name="list_start_inXhours">"Début planifié dans %d heures"</string>
     <string name="list_start_on_weekday">"Début prévu dans %s"</string>
     <string name="list_tabitem_journals">"Journaux"</string>
-    <string name="list_tabitem_notes">"Remarques"</string>
+    <string name="list_tabitem_notes">"Notes"</string>
     <string name="list_tabitem_todos">"Tâches"</string>
     <string name="list_expand">"Développer"</string>
     <string name="list_dialog_delete_selected_title">Supprimer les entrées sélectionnées ?</string>
