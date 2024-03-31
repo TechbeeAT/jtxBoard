@@ -88,22 +88,19 @@ interface ICalDatabaseDao {
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
      * @return a list of [Category.text] as LiveData<List<String>>
      */
-    @Transaction
-    @Query("SELECT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_CATEGORY_TEXT ORDER BY count(*) DESC, $COLUMN_CATEGORY_TEXT ASC")
+    @Query("SELECT DISTINCT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_CATEGORY_TEXT ORDER BY count(*) DESC, $COLUMN_CATEGORY_TEXT ASC")
     fun getAllCategoriesAsText(): LiveData<List<String>>
 
     /**
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
      * @return a list of [Category.text] as LiveData<List<String>>
      */
-    @Transaction
-    @Query("SELECT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_RESOURCE_TEXT ORDER BY count(*) DESC, $COLUMN_RESOURCE_TEXT ASC")
+    @Query("SELECT DISTINCT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_RESOURCE_TEXT ORDER BY count(*) DESC, $COLUMN_RESOURCE_TEXT ASC")
     fun getAllResourcesAsText(): LiveData<List<String>>
 
 
     /**
      * Retrieve an list of all Attachment Uris
-     *
      * @return a list of [Attachment.uri] as List<String>
      */
     @Query("SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT")
