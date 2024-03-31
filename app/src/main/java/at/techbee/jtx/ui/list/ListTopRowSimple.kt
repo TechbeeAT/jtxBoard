@@ -5,6 +5,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.CloudSync
 import androidx.compose.material.icons.outlined.ContactMail
 import androidx.compose.material.icons.outlined.EventRepeat
+import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Map
@@ -24,38 +26,121 @@ import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
-import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.views.ICal4List
+import kotlin.time.Duration.Companion.days
 
 
 @Composable
 fun ListTopRowSimple(
     ical4List: ICal4List,
-    categories: List<Category>,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
 
     val defaultIconModifier = Modifier.size(12.dp)
 
     Row(
-        horizontalArrangement = Arrangement.spacedBy(3.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.horizontalScroll(rememberScrollState())
     ) {
 
+        if(ical4List.dtstart != null) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                if(ical4List.getModule() == Module.JOURNAL) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_start2),
+                        contentDescription = stringResource(id = R.string.date),
+                        modifier = defaultIconModifier
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_widget_start),
+                        contentDescription = stringResource(id = R.string.started),
+                        modifier = defaultIconModifier
+                    )
+                }
+                Text(
+                    text = ICalObject.getDtstartTextInfo(
+                        module = ical4List.getModule(),
+                        dtstart = ical4List.dtstart,
+                        dtstartTimezone = ical4List.dtstartTimezone,
+                        context = LocalContext.current
+                    ),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+
+        if(ical4List.due != null) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_widget_due),
+                    contentDescription = stringResource(id = R.string.due),
+                    modifier = defaultIconModifier
+                )
+                Text(
+                    text = ICalObject.getDueTextInfo(
+                        due = ical4List.due,
+                        dueTimezone = ical4List.dueTimezone,
+                        percent = ical4List.percent,
+                        status = ical4List.status,
+                        context = LocalContext.current
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (ICalObject.isOverdue(
+                            ical4List.status,
+                            ical4List.percent,
+                            ical4List.due,
+                            ical4List.dueTimezone
+                        ) == true
+                    ) MaterialTheme.colorScheme.error else Color.Unspecified,
+                )
+            }
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.FolderOpen,
+                contentDescription = stringResource(id = R.string.collection),
+                modifier = defaultIconModifier,
+                tint = ical4List.colorCollection?.let { Color(it) } ?: LocalContentColor.current
+            )
+            Text(
+                text = ical4List.collectionDisplayName ?:"",
+                style = MaterialTheme.typography.bodySmall,
+                color = ical4List.colorCollection?.let { Color(it) } ?: Color.Unspecified,
+                modifier = Modifier.widthIn(max = 50.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
 
         if(ical4List.isReadOnly) {
             Icon(
@@ -89,7 +174,7 @@ fun ListTopRowSimple(
             )
         }
 
-        AnimatedVisibility(categories.isNotEmpty()) {
+        AnimatedVisibility(!ical4List.categories.isNullOrEmpty()) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -100,7 +185,7 @@ fun ListTopRowSimple(
                     modifier = defaultIconModifier
                 )
                 Text(
-                    text = categories.size.toString(),
+                    text = ical4List.categories ?:"",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -290,9 +375,8 @@ fun ListTopRowSimple_Preview() {
             ical4List = ICal4List.getSample().apply {
                 module = Module.TODO.name
                 dtstart = System.currentTimeMillis()
-                due = System.currentTimeMillis()
-            },
-            categories = listOf(Category(text = "Category"), Category(text = "Test"), Category(text = "Another"))
+                due = System.currentTimeMillis()-(1).days.inWholeMilliseconds
+            }
         )
     }
 }

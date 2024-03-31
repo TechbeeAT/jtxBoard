@@ -69,8 +69,6 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
-import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
@@ -102,16 +100,9 @@ fun UpdateEntriesDialog(
     allResourcesLive: LiveData<List<String>>,
     allCollectionsLive: LiveData<List<ICalCollection>>,
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
-    storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedResourcesLive: LiveData<List<StoredResource>>,
     extendedStatusesLive: LiveData<List<ExtendedStatus>>,
-    settingIsAccessibilityMode: Boolean,
     player: MediaPlayer?,
     onSelectFromAllListSearchTextUpdated: (String) -> Unit,
-    //currentCategories: List<String>,
-    //currentResources: List<String>
-    //current: ICalCollection,
-    //onCollectionChanged: (ICalCollection) -> Unit,
     onCategoriesChanged: (addedCategories: List<String>, removedCategories: List<String>) -> Unit,
     onResourcesChanged: (addedResources: List<String>, removedResources: List<String>) -> Unit,
     onStatusChanged: (Status) -> Unit,
@@ -127,8 +118,6 @@ fun UpdateEntriesDialog(
     val allResources by allResourcesLive.observeAsState(emptyList())
     val allCollections by allCollectionsLive.observeAsState(emptyList())
     val selectFromAllList by selectFromAllListLive.observeAsState(emptyList())
-    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
-    val storedResources by storedResourcesLive.observeAsState(emptyList())
     val storedStatuses by extendedStatusesLive.observeAsState(emptyList())
 
     val addedCategories = remember { mutableStateListOf<String>() }
@@ -441,15 +430,9 @@ fun UpdateEntriesDialog(
                                 return@forEachIndexed
                             ListCardGrid(
                                 iCalObject = entry.iCal4List,
-                                categories = entry.categories,
-                                resources = entry.resources,
-                                storedCategories = storedCategories,
-                                storedResources = storedResources,
-                                storedStatuses = storedStatuses,
                                 selected = entry.iCal4List == selectFromAllListSelectedEntry,
                                 progressUpdateDisabled = true,
                                 markdownEnabled = false,
-                                settingIsAccessibilityMode = settingIsAccessibilityMode,
                                 player = player,
                                 onProgressChanged = {_, _ -> },
                                 modifier = Modifier.clickable {
@@ -520,10 +503,7 @@ fun UpdateEntriesDialog_Preview() {
             allResourcesLive = MutableLiveData(listOf("1234", "aaa")),
             allCollectionsLive = MutableLiveData(listOf(ICalCollection())),
             selectFromAllListLive = MutableLiveData(listOf()),
-            storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
-            storedResourcesLive = MutableLiveData(listOf(StoredResource("1234", Color.Green.toArgb()))),
             extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))),
-            settingIsAccessibilityMode = false,
             player = null,
             onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },

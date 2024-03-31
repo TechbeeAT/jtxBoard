@@ -63,9 +63,6 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
-import at.techbee.jtx.database.locals.ExtendedStatus
-import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -79,16 +76,11 @@ import java.util.UUID
 fun ListScreenCompact(
     groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
-    storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedResourcesLive: LiveData<List<StoredResource>>,
-    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
     settingLinkProgressToSubtasks: Boolean,
-    settingIsAccessibilityMode: Boolean,
     isPullRefreshEnabled: Boolean,
-    markdownEnabled: Boolean,
     player: MediaPlayer?,
     isSubtaskDragAndDropEnabled: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -101,9 +93,6 @@ fun ListScreenCompact(
 
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
-    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
-    val storedResources by storedResourcesLive.observeAsState(emptyList())
-    val storedStatuses by extendedStatusesLive.observeAsState(emptyList())
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
@@ -186,15 +175,8 @@ fun ListScreenCompact(
 
                         ListCardCompact(
                             iCal4ListRelObject.iCal4List,
-                            categories = iCal4ListRelObject.categories,
-                            resources = iCal4ListRelObject.resources,
                             subtasks = currentSubtasks,
-                            storedCategories = storedCategories,
-                            storedResources = storedResources,
-                            storedStatuses = storedStatuses,
                             progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
-                            settingIsAccessibilityMode = settingIsAccessibilityMode,
-                            markdownEnabled = markdownEnabled,
                             selected = selectedEntries,
                             player = player,
                             isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
@@ -309,16 +291,11 @@ fun ListScreenCompact_TODO() {
             )
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
-            storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
-            extendedStatusesLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
-            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
-            markdownEnabled = false,
             player = null,
             isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
@@ -378,16 +355,11 @@ fun ListScreenCompact_JOURNAL() {
             )
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
-            storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
-            extendedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
-            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
-            markdownEnabled = false,
             player = null,
             isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },

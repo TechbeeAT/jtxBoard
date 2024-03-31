@@ -241,10 +241,6 @@ fun DetailsScreen(
             preselectedLinkEntryModules = linkEntryDialogModule,
             preselectedLinkEntryReltype = linkEntryDialogReltype ?: Reltype.CHILD,
             allEntriesLive = detailViewModel.selectFromAllList,
-            storedCategories = storedCategories,
-            storedResources = storedResources,
-            extendedStatuses = storedStatuses,
-            settingIsAccessibilityMode = detailViewModel.settingsStateHolder.settingAccessibilityMode.value,
             player = detailViewModel.mediaPlayer,
             onAllEntriesSearchTextUpdated = { searchText, modules, sameCollection, sameAccount -> detailViewModel.updateSelectFromAllListQuery(searchText, modules, sameCollection, sameAccount) },
             onEntriesToLinkConfirmed = { selected, reltype ->

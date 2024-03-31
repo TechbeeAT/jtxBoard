@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,11 +32,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
-import at.techbee.jtx.database.locals.ExtendedStatus
-import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
@@ -47,13 +42,7 @@ import com.arnyminerz.markdowntext.MarkdownText
 @Composable
 fun ListCardKanban(
     iCalObject: ICal4List,
-    categories: List<Category>,
-    resources: List<Resource>,
-    storedCategories: List<StoredCategory>,
-    storedResources: List<StoredResource>,
-    storedStatuses: List<ExtendedStatus>,
     markdownEnabled: Boolean,
-    settingIsAccessibilityMode: Boolean,
     selected: Boolean,
     player: MediaPlayer?,
     modifier: Modifier = Modifier
@@ -69,20 +58,12 @@ fun ListCardKanban(
         modifier = modifier
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
+            verticalArrangement = Arrangement.spacedBy(3.dp, Alignment.Top),
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         ) {
 
-            ListTopRow(
-                ical4List = iCalObject,
-                categories = categories,
-                resources = resources,
-                storedCategories = storedCategories,
-                storedResources = storedResources,
-                extendedStatuses = storedStatuses,
-                includeJournalDate = true,
-                enableScroll = false,
-                isAccessibilityMode = settingIsAccessibilityMode
+            ListTopRowSimple(
+                ical4List = iCalObject
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
@@ -132,14 +113,8 @@ fun ListCardKanban_JOURNAL() {
         }
         ListCardKanban(
             icalobject,
-            categories = emptyList(),
-            resources = emptyList(),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             markdownEnabled = false,
-            settingIsAccessibilityMode = false,
             player = null,
             modifier = Modifier
                 .width(150.dp)
@@ -162,14 +137,8 @@ fun ListCardKanban_NOTE() {
         }
         ListCardKanban(
             icalobject,
-            categories = emptyList(),
-            resources = emptyList(),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = true,
             markdownEnabled = false,
-            settingIsAccessibilityMode = false,
             player = null,
             modifier = Modifier
                 .width(150.dp)
@@ -200,14 +169,8 @@ fun ListCardKanban_TODO() {
         }
         ListCardKanban(
             icalobject,
-            categories = emptyList(),
-            resources = emptyList(),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
             selected = false,
             markdownEnabled = false,
-            settingIsAccessibilityMode = false,
             player = null,
         )
     }
