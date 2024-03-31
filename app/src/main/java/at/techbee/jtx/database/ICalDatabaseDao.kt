@@ -614,27 +614,27 @@ interface ICalDatabaseDao {
 
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     fun getIcal4ListRel(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     suspend fun getIcal4ListRelSync(query: SupportSQLiteQuery): List<ICal4ListRel>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     fun getIcal4ListFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4ListRel::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4ListRel::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4ListRel>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4ListRel::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     fun getSubEntriesFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
 
     @Transaction
