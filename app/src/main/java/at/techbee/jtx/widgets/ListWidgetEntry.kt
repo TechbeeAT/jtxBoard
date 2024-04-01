@@ -109,6 +109,7 @@ fun ListEntry(
                                     module = obj.getModule(),
                                     dtstart = obj.dtstart,
                                     dtstartTimezone = obj.dtstartTimezone,
+                                    shortStyle = true,
                                     context = context
                                 ),
                                 style = textStyleDate,

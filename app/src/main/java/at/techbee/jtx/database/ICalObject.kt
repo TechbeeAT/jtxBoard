@@ -705,7 +705,7 @@ data class ICalObject(
             return ChronoUnit.MINUTES.between(localNow, localDue) < 0L
         }
 
-        fun getDtstartTextInfo(module: Module, dtstart: Long?, dtstartTimezone: String?, daysOnly: Boolean = false, context: Context): String {
+        fun getDtstartTextInfo(module: Module, dtstart: Long?, dtstartTimezone: String?, daysOnly: Boolean = false, shortStyle: Boolean = false, context: Context): String {
 
             if(dtstart == null && module == Module.TODO)
                 return context.getString(R.string.list_start_without)
@@ -734,7 +734,7 @@ data class ICalObject(
                 return timeAndTimezone
             }
 
-            if(module == Module.TODO) {
+            if(module == Module.TODO && !shortStyle) {
                  when {
                      localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_start_today)
                      ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> finalString += context.getString(R.string.list_start_past)

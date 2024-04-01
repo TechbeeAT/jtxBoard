@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -59,7 +60,9 @@ fun ListTopRowSimple(
     Row(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.horizontalScroll(rememberScrollState())
+        modifier = modifier
+            .horizontalScroll(rememberScrollState())
+            .alpha(0.5f)
     ) {
 
         if(ical4List.dtstart != null) {
@@ -85,6 +88,7 @@ fun ListTopRowSimple(
                         module = ical4List.getModule(),
                         dtstart = ical4List.dtstart,
                         dtstartTimezone = ical4List.dtstartTimezone,
+                        shortStyle = true,
                         context = LocalContext.current
                     ),
                     style = MaterialTheme.typography.bodySmall
