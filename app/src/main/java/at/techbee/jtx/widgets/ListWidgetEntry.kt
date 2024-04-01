@@ -112,6 +112,7 @@ fun ListEntry(
                                     context = context
                                 ),
                                 style = textStyleDate,
+                                maxLines = 1,
                                 modifier = GlanceModifier.padding(end = 8.dp)
                             )
                         }
@@ -130,6 +131,7 @@ fun ListEntry(
                                     percent = obj.percent,
                                     context = context
                                 ),
+                                maxLines = 1,
                                 style = if(ICalObject.isOverdue(obj.status, obj.percent, obj.due, obj.dueTimezone) == true) textStyleDateOverdue else textStyleDate,
                             )
                         }
