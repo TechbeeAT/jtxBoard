@@ -24,11 +24,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -81,10 +77,6 @@ fun ListCardCompact(
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit
     ) {
-
-    var isChecked by remember {
-        mutableStateOf(iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status)
-    }
 
     Card(
         colors = CardDefaults.cardColors(
@@ -157,10 +149,9 @@ fun ListCardCompact(
 
                 if (iCalObject.module == Module.TODO.name) {
                     Checkbox(
-                        checked = isChecked,
+                        checked = iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status,
                         enabled = !iCalObject.isReadOnly && !progressUpdateDisabled,
                         onCheckedChange = {
-                            isChecked = !isChecked
                             onProgressChanged(
                                 iCalObject.id,
                                 if (it) 100 else 0

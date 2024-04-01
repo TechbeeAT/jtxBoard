@@ -22,10 +22,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -66,11 +62,6 @@ fun ListCardGrid(
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit
 ) {
-
-    var isChecked by remember {
-        mutableStateOf(iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status)
-    }
-
     Card(
         colors = CardDefaults.elevatedCardColors(
             containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
@@ -127,10 +118,9 @@ fun ListCardGrid(
 
                 if (iCalObject.module == Module.TODO.name)
                     Checkbox(
-                        checked = isChecked,
+                        checked = iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status,
                         enabled = !iCalObject.isReadOnly && !progressUpdateDisabled,
                         onCheckedChange = {
-                            isChecked = !isChecked
                             onProgressChanged(
                                 iCalObject.id,
                                 if (it) 100 else 0
