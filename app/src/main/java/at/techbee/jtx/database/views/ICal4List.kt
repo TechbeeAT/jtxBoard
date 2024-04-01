@@ -209,7 +209,7 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long,
     @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long,
     @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long,
-    @ColumnInfo(name = COLUMN_UID) var uid: String?,
+    @ColumnInfo(index = true, name = COLUMN_UID) var uid: String?,
     @ColumnInfo(name = COLUMN_RRULE) var rrule: String?,
     @ColumnInfo(name = COLUMN_RECURID) var recurid: String?,
 
@@ -217,7 +217,7 @@ data class ICal4List(
     @ColumnInfo var colorItem: Int?,
 
 
-    @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long?,
+    @ColumnInfo(name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long?,
     @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME) var accountName: String?,
     @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME) var collectionDisplayName: String?,
 
