@@ -14,6 +14,8 @@
     <string name="cont">"Kontynuuj"</string>
     <string name="unlink">"Rozłącz"</string>
     <string name="location_permission_denied">"Brak dostępu do lokalizacji"</string>
+    <string name="permissions">"Uprawnienia"</string>
+    <string name="current_location">"Bieżąca lokalizacja"</string>
     <string name="toolbar_text_add_journal">"Dodaj Dziennik"</string>
     <string name="toolbar_text_add_note">"Dodaj Notatkę"</string>
     <string name="toolbar_text_add_task">"Dodaj Zadanie"</string>
