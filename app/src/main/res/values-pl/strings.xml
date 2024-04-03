@@ -7,9 +7,13 @@
     <!-- Global Strings -->
     <string name="save">"Zapisz"</string>
     <string name="cancel">"Anuluj"</string>
+    <string name="ok">"OK"</string>
     <string name="delete">"Usuń"</string>
     <string name="discard">"Odrzuć"</string>
+    <string name="dismiss">"Odrzuć"</string>
     <string name="cont">"Kontynuuj"</string>
+    <string name="unlink">"Rozłącz"</string>
+    <string name="location_permission_denied">"Brak dostępu do lokalizacji"</string>
     <string name="toolbar_text_add_journal">"Dodaj Dziennik"</string>
     <string name="toolbar_text_add_note">"Dodaj Notatkę"</string>
     <string name="toolbar_text_add_task">"Dodaj Zadanie"</string>
