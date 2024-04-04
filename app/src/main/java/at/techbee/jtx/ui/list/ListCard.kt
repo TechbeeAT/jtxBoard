@@ -137,10 +137,6 @@ fun ListCard(
         )
     }
 
-    var isChecked by remember {
-        mutableStateOf(iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status)
-    }
-
 
     Card(
         colors = CardDefaults.elevatedCardColors(
@@ -223,10 +219,9 @@ fun ListCard(
 
                         if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
                             Checkbox(
-                                checked = isChecked,
+                                checked = iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.status,
                                 enabled = !iCalObject.isReadOnly && !(linkProgressToSubtasks && subtasks.isNotEmpty()),
                                 onCheckedChange = {
-                                    isChecked = !isChecked
                                     onProgressChanged(
                                         iCalObject.id,
                                         if (it) 100 else 0

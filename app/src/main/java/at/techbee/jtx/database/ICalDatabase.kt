@@ -65,7 +65,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 36,
+    version = 37,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -101,6 +101,7 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 33, to = 34),  // new last sync column in ICalCollection
         AutoMigration (from = 34, to = 35),  // new/updated indices
         AutoMigration (from = 35, to = 36),  // new/updated indices
+        AutoMigration (from = 36, to = 37),  // new/updated indices
     ]
 )
 @TypeConverters(Converters::class)
@@ -241,13 +242,14 @@ abstract class ICalDatabase : RoomDatabase() {
                                 super.onOpen(db)
                                  */
                             }
-
                         })
+                        // see https://developer.android.com/topic/performance/sqlite-performance-best-practices#consider-without
+                        .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
                         .build()
+
                     // Assign INSTANCE to the newly created database.
                     INSTANCE = instance
                 }
-
                 // Return instance; smart cast to be non-null.
                 return instance
             }
