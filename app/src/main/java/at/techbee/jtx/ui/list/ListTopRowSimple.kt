@@ -30,6 +30,8 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -42,9 +44,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
+import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
 import kotlin.time.Duration.Companion.days
 
@@ -54,6 +59,18 @@ fun ListTopRowSimple(
     ical4List: ICal4List,
     modifier: Modifier = Modifier
 ) {
+
+    val context = LocalContext.current
+    val db = ICalDatabase.getInstance(context).iCalDatabaseDao()
+
+    val storedCategories by db.getStoredCategories().observeAsState(emptyList())
+    //val storedResources by db.getStoredResources().observeAsState(emptyList())
+    val extendedStatusesAll by db.getStoredStatuses().observeAsState(emptyList())
+    val extendedStatuses = extendedStatusesAll.filter { it.module == ical4List.getModule() }
+
+
+    val splitCategories = ical4List.categories?.split(", ") ?: emptyList()
+    //val splitResources = ical4List.resources?.split(", ") ?: emptyList()
 
     val defaultIconModifier = Modifier.size(12.dp)
 
@@ -178,7 +195,7 @@ fun ListTopRowSimple(
             )
         }
 
-        AnimatedVisibility(!ical4List.categories.isNullOrEmpty()) {
+        splitCategories.forEach { category ->
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -186,21 +203,50 @@ fun ListTopRowSimple(
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.Label,
                     contentDescription = stringResource(id = R.string.category),
-                    modifier = defaultIconModifier
+                    modifier = defaultIconModifier,
+                    tint = StoredCategory.getColorForCategory(category, storedCategories) ?: LocalContentColor.current
                 )
                 Text(
-                    text = ical4List.categories ?:"",
-                    style = MaterialTheme.typography.bodySmall
+                    text = category,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = StoredCategory.getColorForCategory(category, storedCategories) ?: Color.Unspecified
                 )
             }
         }
 
-        AnimatedVisibility(ical4List.xstatus?.isNotEmpty() == true || ical4List.status in listOf(Status.DRAFT.status)) {
-            Icon(
-                imageVector = Icons.Outlined.PublishedWithChanges,
-                contentDescription = stringResource(R.string.status),
-                modifier = defaultIconModifier
-            )
+        AnimatedVisibility(ical4List.xstatus.isNullOrEmpty() && ical4List.status !in listOf(Status.FINAL.status, Status.NO_STATUS.status)) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.PublishedWithChanges,
+                    contentDescription = stringResource(id = R.string.status),
+                    modifier = defaultIconModifier
+                )
+                Text(
+                    text = Status.getStatusFromString(ical4List.status)?.stringResource?.let { stringResource(id = it) } ?: ical4List.status?:"",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+        AnimatedVisibility(!ical4List.xstatus.isNullOrEmpty()) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.PublishedWithChanges,
+                    contentDescription = stringResource(id = R.string.status),
+                    modifier = defaultIconModifier,
+                    tint = ExtendedStatus.getColorForStatus(ical4List.xstatus, extendedStatuses, ical4List.module) ?: LocalContentColor.current
+                )
+                Text(
+                    text = ical4List.xstatus?:"",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = ExtendedStatus.getColorForStatus(ical4List.xstatus, extendedStatuses, ical4List.module) ?: Color.Unspecified
+                )
+            }
         }
 
         AnimatedVisibility(ical4List.classification in listOf(Classification.CONFIDENTIAL.classification, Classification.PRIVATE.classification)) {
