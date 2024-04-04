@@ -61,6 +61,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
@@ -98,6 +99,8 @@ fun ListScreenCompact(
     onSaveListSettings: () -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit
 ) {
+
+    val databaseDao = ICalDatabase.getInstance(LocalContext.current).iCalDatabaseDao()
 
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
@@ -186,8 +189,10 @@ fun ListScreenCompact(
 
                         ListCardCompact(
                             iCal4ListRelObject.iCal4List,
-                            categories = iCal4ListRelObject.categories,
-                            resources = iCal4ListRelObject.resources,
+                            categories = databaseDao.getCategoriesLive(iCal4ListRelObject.iCal4List.id).observeAsState(
+                                emptyList()).value,
+                            resources = databaseDao.getResourcesLive(iCal4ListRelObject.iCal4List.id).observeAsState(
+                                emptyList()).value,
                             subtasks = currentSubtasks,
                             storedCategories = storedCategories,
                             storedResources = storedResources,
@@ -304,8 +309,8 @@ fun ListScreenCompact_TODO() {
         }
         ListScreenCompact(
             groupedList = listOf(
-                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+                ICal4ListRel(icalobject, emptyList()),
+                ICal4ListRel(icalobject2, emptyList())
             )
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
@@ -373,8 +378,8 @@ fun ListScreenCompact_JOURNAL() {
         }
         ListScreenCompact(
             groupedList = listOf(
-                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+                ICal4ListRel(icalobject, emptyList()),
+                ICal4ListRel(icalobject2, emptyList())
             )
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),

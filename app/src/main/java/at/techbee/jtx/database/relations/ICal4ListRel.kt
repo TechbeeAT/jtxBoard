@@ -17,12 +17,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
-import at.techbee.jtx.database.properties.COLUMN_CATEGORY_ICALOBJECT_ID
 import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_ICALOBJECT_ID
-import at.techbee.jtx.database.properties.COLUMN_RESOURCE_ICALOBJECT_ID
-import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Relatedto
-import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.SortOrder
@@ -41,11 +37,6 @@ data class ICal4ListRel(
     @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_RELATEDTO_ICALOBJECT_ID, entity = Relatedto::class)
     var relatedto: List<Relatedto>,
 
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_CATEGORY_ICALOBJECT_ID, entity = Category::class)
-    var categories: List<Category>,
-
-    @Relation(parentColumn = COLUMN_ID, entityColumn = COLUMN_RESOURCE_ICALOBJECT_ID, entity = Resource::class)
-    var resources: List<Resource>
 ) {
     companion object {
 
@@ -83,12 +74,12 @@ data class ICal4ListRel(
                 GroupBy.CATEGORY -> mutableMapOf<String, MutableList<ICal4ListRel>>().apply {
 
                     sortedList.forEach { sortedEntry ->
-                        if (sortedEntry.categories.isNotEmpty()) {
-                            sortedEntry.categories.forEach { category ->
-                                if (this.containsKey(category.text))
-                                    this[category.text]?.add(sortedEntry)
+                        if (!sortedEntry.iCal4List.categories.isNullOrBlank()) {
+                            sortedEntry.iCal4List.categories?.split(", ")?.forEach { category ->
+                                if (this.containsKey(category))
+                                    this[category]?.add(sortedEntry)
                                 else
-                                    this[category.text] = mutableListOf(sortedEntry)
+                                    this[category] = mutableListOf(sortedEntry)
                             }
                         } else {
                             if (this.containsKey(context.getString(R.string.filter_no_category)))
@@ -100,12 +91,12 @@ data class ICal4ListRel(
                 }
                 GroupBy.RESOURCE -> mutableMapOf<String, MutableList<ICal4ListRel>>().apply {
                     sortedList.forEach { sortedEntry ->
-                        if (sortedEntry.resources.isNotEmpty()) {
-                            sortedEntry.resources.forEach { resource ->
-                                if (this.containsKey(resource.text))
-                                    this[resource.text]?.add(sortedEntry)
+                        if (!sortedEntry.iCal4List.resources.isNullOrBlank()) {
+                            sortedEntry.iCal4List.resources?.split(", ")?.forEach { resource ->
+                                if (this.containsKey(resource))
+                                    this[resource]?.add(sortedEntry)
                                 else
-                                    this[resource.text ?: context.getString(R.string.filter_no_resource)] = mutableListOf(sortedEntry)
+                                    this[resource] = mutableListOf(sortedEntry)
                             }
                         } else {
                             if (this.containsKey(context.getString(R.string.filter_no_resource)))

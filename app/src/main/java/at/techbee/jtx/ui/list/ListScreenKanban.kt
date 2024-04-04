@@ -60,6 +60,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
@@ -101,11 +102,13 @@ fun ListScreenKanban(
 ) {
 
     val context = LocalContext.current
+    val databaseDao = ICalDatabase.getInstance(context).iCalDatabaseDao()
+
     val scrollId by scrollOnceId.observeAsState(null)
     val groupedList = list.groupBy {
         when {
             kanbanColumnsXStatus.isNotEmpty() -> it.iCal4List.xstatus
-            kanbanColumnsCategory.isNotEmpty() -> it.categories.firstOrNull()?.text
+            kanbanColumnsCategory.isNotEmpty() -> it.iCal4List.categories?.split(", ")?.firstOrNull()
             else -> {   // this covers also kanbanColumnsStatus.isNotEmpty() and the fallback for default kanbanColumns based on the status
                 if (it.iCal4List.status.isNullOrEmpty()) {
                     when {
@@ -199,8 +202,10 @@ fun ListScreenKanban(
 
                         ListCardKanban(
                             iCal4ListRelObject.iCal4List,
-                            categories = iCal4ListRelObject.categories,
-                            resources = iCal4ListRelObject.resources,
+                            categories = databaseDao.getCategoriesLive(iCal4ListRelObject.iCal4List.id).observeAsState(
+                                emptyList()).value,
+                            resources = databaseDao.getResourcesLive(iCal4ListRelObject.iCal4List.id).observeAsState(
+                                emptyList()).value,
                             storedCategories = storedCategories,
                             storedResources = storedResources,
                             storedStatuses = extendedStatuses,
@@ -325,8 +330,8 @@ fun ListScreenKanban_TODO() {
         ListScreenKanban(
             module = Module.TODO,
             list = listOf(
-                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+                ICal4ListRel(icalobject, emptyList()),
+                ICal4ListRel(icalobject2, emptyList())
             ),
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
@@ -389,8 +394,8 @@ fun ListScreenKanban_JOURNAL() {
         ListScreenKanban(
             module = Module.JOURNAL,
             list = listOf(
-                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+                ICal4ListRel(icalobject, emptyList()),
+                ICal4ListRel(icalobject2, emptyList())
             ),
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),

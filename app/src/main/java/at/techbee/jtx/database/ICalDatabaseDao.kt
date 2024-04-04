@@ -297,6 +297,10 @@ interface ICalDatabaseDao {
     @Query("SELECT * FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :iCalObjectId")
     fun getCategoriesSync(iCalObjectId: Long): List<Category>
 
+    @Query("SELECT * FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :iCalObjectId")
+    fun getCategoriesLive(iCalObjectId: Long): LiveData<List<Category>>
+
+
     @Query("SELECT * FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID = :iCalObjectId")
     fun getCommentsSync(iCalObjectId: Long): List<Comment>
 
@@ -305,6 +309,10 @@ interface ICalDatabaseDao {
 
     @Query("SELECT * FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = :iCalObjectId")
     fun getResourcesSync(iCalObjectId: Long): List<Resource>
+
+    @Query("SELECT * FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = :iCalObjectId")
+    fun getResourcesLive(iCalObjectId: Long): LiveData<List<Resource>>
+
 
     @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = :iCalObjectId")
     fun getAttachmentsSync(iCalObjectId: Long): List<Attachment>

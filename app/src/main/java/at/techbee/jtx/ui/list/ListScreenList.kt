@@ -61,6 +61,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
@@ -113,6 +114,8 @@ fun ListScreenList(
     onSaveListSettings: () -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit
     ) {
+
+    val databaseDao = ICalDatabase.getInstance(LocalContext.current).iCalDatabaseDao()
 
     val subtasks by subtasksLive.observeAsState(emptyList())
     val subnotes by subnotesLive.observeAsState(emptyList())
@@ -216,8 +219,10 @@ fun ListScreenList(
 
                         ListCard(
                             iCalObject = iCal4ListRelObject.iCal4List,
-                            categories = iCal4ListRelObject.categories,
-                            resources = iCal4ListRelObject.resources,
+                            categories = databaseDao.getCategoriesLive(iCal4ListRelObject.iCal4List.id).observeAsState(
+                                emptyList()).value,
+                            resources = databaseDao.getResourcesLive(iCal4ListRelObject.iCal4List.id).observeAsState(
+                                emptyList()).value,
                             subtasks = currentSubtasks,
                             subnotes = currentSubnotes,
                             parents = currentParents,
@@ -290,7 +295,9 @@ fun ListScreenList(
                             scope.launch { listState.scrollToItem(0) }
                         },
                         colors = ButtonDefaults.filledTonalButtonColors(),
-                        modifier = Modifier.padding(8.dp).alpha(0.33f)
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .alpha(0.33f)
                     ) {
                         Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
                     }
@@ -342,8 +349,8 @@ fun ListScreenList_TODO() {
         }
         ListScreenList(
             groupedList = listOf(
-                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
+                ICal4ListRel(icalobject, emptyList()),
+                ICal4ListRel(icalobject2, emptyList()))
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             subnotesLive = MutableLiveData(emptyList()),
@@ -425,8 +432,8 @@ fun ListScreenList_JOURNAL() {
         }
         ListScreenList(
             groupedList = listOf(
-                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList()))
+                ICal4ListRel(icalobject, emptyList()),
+                ICal4ListRel(icalobject2, emptyList()))
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             subnotesLive = MutableLiveData(emptyList()),

@@ -321,8 +321,8 @@ fun ListScreenWeek_TODO() {
         }
         ListScreenWeek(
             list = listOf(
-                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+                ICal4ListRel(icalobject, emptyList()),
+                ICal4ListRel(icalobject2, emptyList())
             ),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
@@ -369,8 +369,8 @@ fun ListScreenWeek_JOURNAL() {
         }
         ListScreenWeek(
             list = listOf(
-                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+                ICal4ListRel(icalobject, emptyList()),
+                ICal4ListRel(icalobject2, emptyList())
             ),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),

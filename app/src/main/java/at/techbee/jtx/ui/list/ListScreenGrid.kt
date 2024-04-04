@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,6 +55,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
@@ -86,6 +88,8 @@ fun ListScreenGrid(
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onSyncRequested: () -> Unit
 ) {
+
+    val databaseDao = ICalDatabase.getInstance(LocalContext.current).iCalDatabaseDao()
 
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
@@ -133,8 +137,10 @@ fun ListScreenGrid(
 
                 ListCardGrid(
                     iCal4ListRelObject.iCal4List,
-                    categories = iCal4ListRelObject.categories,
-                    resources = iCal4ListRelObject.resources,
+                    categories = databaseDao.getCategoriesLive(iCal4ListRelObject.iCal4List.id).observeAsState(
+                        emptyList()).value,
+                    resources = databaseDao.getResourcesLive(iCal4ListRelObject.iCal4List.id).observeAsState(
+                        emptyList()).value,
                     storedCategories = storedCategories,
                     storedResources = storedResources,
                     storedStatuses = storedStatuses,
@@ -221,8 +227,8 @@ fun ListScreenGrid_TODO() {
         }
         ListScreenGrid(
             list = listOf(
-                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+                ICal4ListRel(icalobject, emptyList()),
+                ICal4ListRel(icalobject2, emptyList())
             ),
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
@@ -279,8 +285,8 @@ fun ListScreenGrid_JOURNAL() {
         }
         ListScreenGrid(
             list = listOf(
-                ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
-                ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
+                ICal4ListRel(icalobject, emptyList()),
+                ICal4ListRel(icalobject2, emptyList())
             ),
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),

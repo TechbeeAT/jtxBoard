@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +47,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
@@ -74,6 +76,9 @@ fun LinkExistingEntryDialog(
     onEntriesToLinkConfirmed: (newSubentries: List<ICal4List>, linkEntryReltype: Reltype) -> Unit,
     onDismiss: () -> Unit
 ) {
+
+    val databaseDao = ICalDatabase.getInstance(LocalContext.current).iCalDatabaseDao()
+
     val allEntries by allEntriesLive.observeAsState(emptyList())
     val linkEntryModules = remember { mutableStateListOf<Module>() }
     LaunchedEffect(preselectedLinkEntryModules) {
@@ -209,8 +214,10 @@ fun LinkExistingEntryDialog(
 
                             ListCardGrid(
                                 iCalObject = entry.iCal4List,
-                                categories = entry.categories,
-                                resources = entry.resources,
+                                categories = databaseDao.getCategoriesLive(entry.iCal4List.id).observeAsState(
+                                    emptyList()).value,
+                                resources = databaseDao.getResourcesLive(entry.iCal4List.id).observeAsState(
+                                    emptyList()).value,
                                 storedCategories = storedCategories,
                                 storedResources = storedResources,
                                 storedStatuses = extendedStatuses,
@@ -273,9 +280,9 @@ fun LinkExistingEntryDialog_Preview_CHILD() {
             preselectedLinkEntryReltype = Reltype.PARENT,
             allEntriesLive = MutableLiveData(
                 listOf(
-                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList()),
-                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList()),
-                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList())
+                    ICal4ListRel(ICal4List.getSample(), emptyList()),
+                    ICal4ListRel(ICal4List.getSample(), emptyList()),
+                    ICal4ListRel(ICal4List.getSample(), emptyList())
                 )
             ),
             storedCategories = emptyList(),
@@ -301,9 +308,9 @@ fun LinkExistingEntryDialog_Preview_PARENT() {
             preselectedLinkEntryReltype = Reltype.PARENT,
             allEntriesLive = MutableLiveData(
                 listOf(
-                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList()),
-                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList()),
-                    ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList())
+                    ICal4ListRel(ICal4List.getSample(), emptyList()),
+                    ICal4ListRel(ICal4List.getSample(), emptyList()),
+                    ICal4ListRel(ICal4List.getSample(), emptyList())
                 )
             ),
             storedCategories = emptyList(),

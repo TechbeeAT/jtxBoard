@@ -55,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -66,6 +67,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
@@ -122,6 +124,8 @@ fun UpdateEntriesDialog(
     onParentAdded: (parent: ICal4List) -> Unit,
     onDismiss: () -> Unit
 ) {
+
+    val databaseDao = ICalDatabase.getInstance(LocalContext.current).iCalDatabaseDao()
 
     val allCategories by allCategoriesLive.observeAsState(emptyList())
     val allResources by allResourcesLive.observeAsState(emptyList())
@@ -441,8 +445,10 @@ fun UpdateEntriesDialog(
                                 return@forEachIndexed
                             ListCardGrid(
                                 iCalObject = entry.iCal4List,
-                                categories = entry.categories,
-                                resources = entry.resources,
+                                categories = databaseDao.getCategoriesLive(entry.iCal4List.id).observeAsState(
+                                    emptyList()).value,
+                                resources = databaseDao.getResourcesLive(entry.iCal4List.id).observeAsState(
+                                    emptyList()).value,
                                 storedCategories = storedCategories,
                                 storedResources = storedResources,
                                 storedStatuses = storedStatuses,
