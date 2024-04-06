@@ -49,6 +49,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 const val MAX_WIDGET_ENTRIES = 50
+const val MIN_ALPHA_FOR_TEXT = 0.8f
 
 class ListWidget : GlanceAppWidget() {
 
@@ -157,10 +158,10 @@ class ListWidget : GlanceAppWidget() {
                     defaultTextColor
                 else
                     ColorProvider(
-                        if(UiUtil.isDarkColor(defaultBackgroundColor.getColor(context)))
-                            Color.White.copy(alpha = listWidgetConfig.widgetAlpha)
+                        if(UiUtil.isDarkColor(backgorundColor.getColor(context)))
+                            Color.White.copy(alpha = if(listWidgetConfig.widgetAlpha < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlpha)
                         else
-                            Color.Black.copy(alpha = listWidgetConfig.widgetAlpha)
+                            Color.Black.copy(alpha = if(listWidgetConfig.widgetAlpha < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlpha)
                     )
             }
 
@@ -180,10 +181,10 @@ class ListWidget : GlanceAppWidget() {
                     defaultOnSurfaceColor
                 else
                     ColorProvider(
-                        if(UiUtil.isDarkColor(defaultSurfaceColor.getColor(context)))
-                            Color.White.copy(alpha = listWidgetConfig.widgetAlphaEntries)
+                        if(UiUtil.isDarkColor(entryColor.getColor(context)))
+                            Color.White.copy(alpha = if(listWidgetConfig.widgetAlphaEntries < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlphaEntries)
                         else
-                            Color.Black.copy(alpha = listWidgetConfig.widgetAlphaEntries)
+                            Color.Black.copy(alpha = if(listWidgetConfig.widgetAlphaEntries < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlphaEntries)
                     )
             }
 

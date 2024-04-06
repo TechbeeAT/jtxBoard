@@ -10,6 +10,7 @@ package at.techbee.jtx.widgets
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.ColorFilter
@@ -47,7 +48,6 @@ fun ListEntry(
     obj: ICal4List,
     entryColor: ColorProvider,
     textColor: ColorProvider,
-    textColorOverdue: ColorProvider,
     checkboxPosition: CheckboxPosition,
     showDescription: Boolean,
     onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
@@ -56,7 +56,7 @@ fun ListEntry(
 
     val context = LocalContext.current
     val textStyleDate = TextStyle(fontStyle = FontStyle.Italic, fontSize = 12.sp, color = textColor)
-    val textStyleDateOverdue = textStyleDate.copy(color = textColorOverdue, fontWeight = FontWeight.Bold)
+    val textStyleDateOverdue = textStyleDate.copy(color = ColorProvider(Color.Red), fontWeight = FontWeight.Bold)
     val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
     val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp)
 

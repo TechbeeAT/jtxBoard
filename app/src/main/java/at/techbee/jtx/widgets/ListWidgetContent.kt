@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
-import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
@@ -98,7 +97,7 @@ fun ListWidgetContent(
                     }
                 },
                 style = TextStyle(
-                    color = GlanceTheme.colors.onPrimaryContainer,
+                    color = textColor,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 ),
@@ -139,7 +138,7 @@ fun ListWidgetContent(
                             Text(
                                 text = key,
                                 style = TextStyle(
-                                    color = GlanceTheme.colors.onPrimaryContainer,
+                                    color = textColor,
                                     //fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold
                                 ),
@@ -160,7 +159,6 @@ fun ListWidgetContent(
                                 obj = entry.iCal4List,
                                 entryColor = entryColor,
                                 textColor = entryTextColor,
-                                textColorOverdue = entryOverdueTextColor,
                                 checkboxPosition = listWidgetConfig.checkboxPosition,
                                 showDescription = listWidgetConfig.showDescription,
                                 onCheckedChange = onCheckedChange,
@@ -189,7 +187,6 @@ fun ListWidgetContent(
                                         obj = subtask.iCal4List,
                                         entryColor = entryColor,
                                         textColor = entryTextColor,
-                                        textColorOverdue = entryOverdueTextColor,
                                         checkboxPosition = listWidgetConfig.checkboxPosition,
                                         showDescription = listWidgetConfig.showDescription,
                                         onCheckedChange = onCheckedChange,
@@ -217,7 +214,6 @@ fun ListWidgetContent(
                                         obj = subnote.iCal4List,
                                         entryColor = entryColor,
                                         textColor = entryTextColor,
-                                        textColorOverdue = entryOverdueTextColor,
                                         checkboxPosition = listWidgetConfig.checkboxPosition,
                                         showDescription = listWidgetConfig.showDescription,
                                         onCheckedChange = onCheckedChange,
