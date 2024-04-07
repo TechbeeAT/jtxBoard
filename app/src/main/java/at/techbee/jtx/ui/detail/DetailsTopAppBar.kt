@@ -1,5 +1,6 @@
 package at.techbee.jtx.ui.detail
 
+import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -38,7 +39,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-
+import at.techbee.jtx.ui.reusable.dialogs.CreateMultipleSubtasksDialog
+import kotlinx.parcelize.Parcelize
 
 enum class DetailTopAppBarMode { ADD_SUBTASK, ADD_SUBNOTE }
 
@@ -54,6 +56,21 @@ fun DetailsTopAppBar(
 ) {
 
     var textFieldText by rememberSaveable { mutableStateOf("") }
+    var previousText by rememberSaveable { mutableStateOf(emptyPreviousText) }
+
+    fun onSubtaskDone(value: String) {
+        val listOfSubtasks = value.split("\r\n", "\n", "\r")
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+
+        if (listOfSubtasks.size <= 1) {
+            // handle single sub task right now
+            onAddSubtask(value)
+        } else {
+            // handle multiple sub tasks within a dialog
+            previousText = SingleOrMultipleSubtasks(single = value, listOfSubtasks = listOfSubtasks)
+        }
+    }
 
     CenterAlignedTopAppBar(
         title = {
@@ -98,7 +115,7 @@ fun DetailsTopAppBar(
                             IconButton(onClick = {
                                 if(textFieldText.isNotBlank()) {
                                     when(detailTopAppBarMode) {
-                                        DetailTopAppBarMode.ADD_SUBTASK -> onAddSubtask(textFieldText)
+                                        DetailTopAppBarMode.ADD_SUBTASK -> onSubtaskDone(textFieldText)
                                         DetailTopAppBarMode.ADD_SUBNOTE -> onAddSubnote(textFieldText)
                                     }
                                 }
@@ -119,7 +136,7 @@ fun DetailsTopAppBar(
                 keyboardActions = KeyboardActions(onDone = {
                     if(textFieldText.isNotBlank()) {
                         when(detailTopAppBarMode) {
-                            DetailTopAppBarMode.ADD_SUBTASK -> onAddSubtask(textFieldText)
+                            DetailTopAppBarMode.ADD_SUBTASK -> onSubtaskDone(textFieldText)
                             DetailTopAppBarMode.ADD_SUBNOTE -> onAddSubnote(textFieldText)
                         }
                     }
@@ -128,9 +145,29 @@ fun DetailsTopAppBar(
             )
         }
     )
+
+    if (previousText != emptyPreviousText) {
+        CreateMultipleSubtasksDialog(
+            numberOfSubtasksDetected = previousText.listOfSubtasks.size,
+            onCreateSingle = {
+                onAddSubtask(previousText.single)
+                previousText = emptyPreviousText
+            },
+            onCreateMultiple = {
+                previousText.listOfSubtasks.forEach(onAddSubtask)
+                previousText = emptyPreviousText
+            },
+        )
+    }
 }
 
+@Parcelize
+data class SingleOrMultipleSubtasks(
+    val single: String,
+    val listOfSubtasks: List<String>
+) : Parcelable
 
+val emptyPreviousText = SingleOrMultipleSubtasks("", emptyList())
 
 @Preview(showBackground = true)
 @Composable
