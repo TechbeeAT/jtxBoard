@@ -53,6 +53,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
+import at.techbee.jtx.ui.reusable.dialogs.CreateMultipleSubtasksDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubtaskDialog
 import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
@@ -83,10 +84,25 @@ fun DetailsCardSubtasks(
 
     val headline = stringResource(id = R.string.subtasks)
     var newSubtaskText by rememberSaveable { mutableStateOf("") }
+    var previousText by rememberSaveable { mutableStateOf(emptyPreviousText) }
 
     if(enforceSavingSubtask && newSubtaskText.isNotEmpty()) {
         onSubtaskAdded(ICalObject.createTask(newSubtaskText))
         newSubtaskText = ""
+    }
+
+    fun onSubtaskDone(value: String) {
+        val listOfSubtasks = value.split("\r\n", "\n", "\r")
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+
+        if (listOfSubtasks.size <= 1) {
+            // handle single sub task right now
+            onSubtaskAdded(ICalObject.createTask(value))
+        } else {
+            // handle multiple sub tasks within a dialog
+            previousText = SingleOrMultipleSubtasks(single = value, listOfSubtasks = listOfSubtasks)
+        }
     }
 
     ElevatedCard(modifier = modifier) {
@@ -116,8 +132,9 @@ fun DetailsCardSubtasks(
                     trailingIcon = {
                         AnimatedVisibility(newSubtaskText.isNotEmpty()) {
                             IconButton(onClick = {
-                                if(newSubtaskText.isNotEmpty())
-                                    onSubtaskAdded(ICalObject.createTask(newSubtaskText))
+                                if (newSubtaskText.isNotEmpty()) {
+                                    onSubtaskDone(newSubtaskText)
+                                }
                                 newSubtaskText = ""
                             }) {
                                 Icon(
@@ -136,8 +153,9 @@ fun DetailsCardSubtasks(
                         .padding(bottom = 8.dp),
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
-                        if(newSubtaskText.isNotEmpty())
-                            onSubtaskAdded(ICalObject.createTask(newSubtaskText))
+                        if (newSubtaskText.isNotEmpty()) {
+                            onSubtaskDone(newSubtaskText)
+                        }
                         newSubtaskText = ""
                     })
                 )
@@ -198,6 +216,20 @@ fun DetailsCardSubtasks(
                 }
             }
         }
+    }
+
+    if (previousText != emptyPreviousText) {
+        CreateMultipleSubtasksDialog(
+            numberOfSubtasksDetected = previousText.listOfSubtasks.size,
+            onCreateSingle = {
+                onSubtaskAdded(ICalObject.createTask(previousText.single))
+                previousText = emptyPreviousText
+            },
+            onCreateMultiple = {
+                previousText.listOfSubtasks.forEach { onSubtaskAdded(ICalObject.createTask(it)) }
+                previousText = emptyPreviousText
+            },
+        )
     }
 }
 
