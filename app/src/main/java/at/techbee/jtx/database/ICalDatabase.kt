@@ -65,7 +65,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 38,
+    version = 39,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -103,6 +103,8 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 35, to = 36),  // new/updated indices
         AutoMigration (from = 36, to = 37),  // new/updated indices
         AutoMigration (from = 37, to = 38),  // new column isAlarmNotificationActive + migration spec to remove indices
+        // 38 to 39 migration spec to remove indices
+
     ]
 )
 @TypeConverters(Converters::class)
@@ -167,7 +169,7 @@ abstract class ICalDatabase : RoomDatabase() {
             }
         }
 
-        private val MIGRATION_37_38 = object : Migration(37, 38) {
+        private val MIGRATION_38_39 = object : Migration(38, 39) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("DROP INDEX IF EXISTS index_attendee__id")
                 db.execSQL("DROP INDEX IF EXISTS index_attendee_icalObjectId")
@@ -238,7 +240,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19, MIGRATION_30_31, MIGRATION_37_38)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19, MIGRATION_30_31, MIGRATION_38_39)
 
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about
