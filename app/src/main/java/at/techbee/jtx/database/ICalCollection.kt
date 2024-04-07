@@ -109,7 +109,7 @@ const val COLUMN_COLLECTION_LAST_SYNC = "lastsync"
 @Entity(tableName = TABLE_NAME_COLLECTION)
 data class ICalCollection(
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(index = true, name = COLUMN_COLLECTION_ID)   var collectionId: Long = 0L,
+        @ColumnInfo(name = COLUMN_COLLECTION_ID)   var collectionId: Long = 0L,
 
         @ColumnInfo(name = COLUMN_COLLECTION_URL)               var url: String = LOCAL_COLLECTION_URL,
 

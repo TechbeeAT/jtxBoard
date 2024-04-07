@@ -29,7 +29,7 @@ const val COLUMN_STORED_CATEGORY_COLOR = "color"
 data class StoredCategory (
 
     @PrimaryKey(autoGenerate = false)
-    @ColumnInfo(index = true, name = COLUMN_STORED_CATEGORY_NAME)
+    @ColumnInfo(name = COLUMN_STORED_CATEGORY_NAME)
     var category: String,
 
     @ColumnInfo(name = COLUMN_STORED_CATEGORY_COLOR) var color: Int?

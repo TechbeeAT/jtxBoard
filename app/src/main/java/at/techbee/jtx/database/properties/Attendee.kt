@@ -144,9 +144,10 @@ const val COLUMN_ATTENDEE_OTHER = "other"
 data class Attendee (
 
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(index = true, name = COLUMN_ATTENDEE_ID)    var attendeeId: Long = 0L,
+        @ColumnInfo(name = COLUMN_ATTENDEE_ID)
+        var attendeeId: Long = 0L,
 
-        @ColumnInfo(index = true, name = COLUMN_ATTENDEE_ICALOBJECT_ID)       var icalObjectId: Long = 0L,
+        @ColumnInfo(name = COLUMN_ATTENDEE_ICALOBJECT_ID)       var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_ATTENDEE_CALADDRESS)     var caladdress: String = "",
         @ColumnInfo(name = COLUMN_ATTENDEE_CUTYPE)         var cutype: String? = Cutype.INDIVIDUAL.name,
         @ColumnInfo(name = COLUMN_ATTENDEE_MEMBER)         var member: String? = null,

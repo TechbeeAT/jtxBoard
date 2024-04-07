@@ -176,10 +176,10 @@ const val COLUMN_ALARM_TRIGGER_RELATIVE_DURATION = "triggerRelativeDuration"
 data class Alarm(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(index = true, name = COLUMN_ALARM_ID)
+    @ColumnInfo(name = COLUMN_ALARM_ID)
     var alarmId: Long = 0L,
 
-    @ColumnInfo(index = true, name = COLUMN_ALARM_ICALOBJECT_ID) var icalObjectId: Long = 0L,
+    @ColumnInfo(name = COLUMN_ALARM_ICALOBJECT_ID) var icalObjectId: Long = 0L,
     @ColumnInfo(name = COLUMN_ALARM_ACTION) var action: String? = null,
     @ColumnInfo(name = COLUMN_ALARM_DESCRIPTION) var description: String? = "",
     @ColumnInfo(name = COLUMN_ALARM_SUMMARY) var summary: String? = null,

@@ -29,7 +29,7 @@ const val COLUMN_STORED_RESOURCE_COLOR = "color"
 data class StoredResource (
 
     @PrimaryKey(autoGenerate = false)
-    @ColumnInfo(index = true, name = COLUMN_STORED_RESOURCE_NAME)
+    @ColumnInfo(name = COLUMN_STORED_RESOURCE_NAME)
     var resource: String,
 
     @ColumnInfo(name = COLUMN_STORED_RESOURCE_COLOR) var color: Int?

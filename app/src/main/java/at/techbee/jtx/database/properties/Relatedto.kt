@@ -68,22 +68,18 @@ const val COLUMN_RELATEDTO_OTHER = "other"
         foreignKeys = [ForeignKey(entity = ICalObject::class,
                 parentColumns = arrayOf(COLUMN_ID),
                 childColumns = arrayOf(COLUMN_RELATEDTO_ICALOBJECT_ID),
-                onDelete = ForeignKey.CASCADE)],
-                indices = [
-                        Index(value = [COLUMN_RELATEDTO_ICALOBJECT_ID, COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, COLUMN_RELATEDTO_RELTYPE, COLUMN_RELATEDTO_TEXT], unique = true),
-                        Index(value = [COLUMN_RELATEDTO_TEXT], unique = false)
-                        ]
+                onDelete = ForeignKey.CASCADE)]
         )
 data class Relatedto (
 
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(index = true, name = COLUMN_RELATEDTO_ID)
+        @ColumnInfo(name = COLUMN_RELATEDTO_ID)
         var relatedtoId: Long = 0L,
 
-        @ColumnInfo(index = true, name = COLUMN_RELATEDTO_ICALOBJECT_ID)    var icalObjectId: Long = 0L,
+        @ColumnInfo(name = COLUMN_RELATEDTO_ICALOBJECT_ID)    var icalObjectId: Long = 0L,
 
         @Deprecated("This field should not be used anymore")
-        @ColumnInfo(index = true, name = COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) var linkedICalObjectId: Long? = 0L,
+        @ColumnInfo(name = COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) var linkedICalObjectId: Long? = 0L,
         @ColumnInfo(name = COLUMN_RELATEDTO_TEXT)                var text: String? = null,
         @ColumnInfo(name = COLUMN_RELATEDTO_RELTYPE)        var reltype: String? = null,
         @ColumnInfo(name = COLUMN_RELATEDTO_OTHER)          var other: String? = null

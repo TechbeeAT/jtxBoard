@@ -31,7 +31,7 @@ const val COLUMN_EXTENDED_STATUS_MODULE = "module"
 @Entity(tableName = TABLE_NAME_EXTENDED_STATUS, primaryKeys = [COLUMN_EXTENDED_STATUS_NAME, COLUMN_EXTENDED_STATUS_MODULE])
 data class ExtendedStatus (
 
-    @ColumnInfo(index = true, name = COLUMN_EXTENDED_STATUS_NAME)    var xstatus: String,
+    @ColumnInfo(name = COLUMN_EXTENDED_STATUS_NAME)    var xstatus: String,
     @ColumnInfo(name = COLUMN_EXTENDED_STATUS_MODULE)                var module: Module,
     @ColumnInfo(name = COLUMN_EXTENDED_STATUS_RFCSTATUS)             var rfcStatus: Status,
     @ColumnInfo(name = COLUMN_EXTENDED_STATUS_COLOR)                 var color: Int?

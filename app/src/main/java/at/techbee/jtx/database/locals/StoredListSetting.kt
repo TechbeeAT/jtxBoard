@@ -45,7 +45,7 @@ const val COLUMN_STORED_LIST_SETTING_SETTINGS = "list_settings"
 data class StoredListSetting (
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(index = true, name = COLUMN_STORED_LIST_SETTING_ID)
+    @ColumnInfo(name = COLUMN_STORED_LIST_SETTING_ID)
     var id: Long = 0L,
 
     @ColumnInfo(name = COLUMN_STORED_LIST_SETTING_MODULE) var module: Module,

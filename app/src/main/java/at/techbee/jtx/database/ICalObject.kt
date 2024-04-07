@@ -21,7 +21,6 @@ import androidx.core.util.PatternsCompat
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
 import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.JtxContract
@@ -440,10 +439,16 @@ const val COLUMN_EXTENDED_STATUS = "xstatus"
  */
 const val COLUMN_GEOFENCE_RADIUS = "geofenceRadius"
 
+/**
+ * Purpose:  Defines the radius for a geofence in meters
+ * This is put into an extended property in the iCalendar-file
+ * Type: [String]
+ */
+const val COLUMN_IS_ALARM_NOTIFICATION_ACTIVE = "isAlarmNotificationActive"
+
 @Parcelize
 @Entity(
     tableName = TABLE_NAME_ICALOBJECT,
-    indices = [Index(value = ["_id", "summary", "description"])],
     foreignKeys = [ForeignKey(
         entity = ICalCollection::class,
         parentColumns = arrayOf(COLUMN_COLLECTION_ID),
@@ -454,7 +459,7 @@ const val COLUMN_GEOFENCE_RADIUS = "geofenceRadius"
 data class ICalObject(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(index = true, name = COLUMN_ID)
+    @ColumnInfo(name = COLUMN_ID)
     var id: Long = 0L,
 
     @ColumnInfo(name = COLUMN_MODULE) var module: String = Module.NOTE.name,
@@ -512,7 +517,7 @@ data class ICalObject(
     @ColorInt
     var color: Int? = null,
 
-    @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long = 1L,
+    @ColumnInfo(name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long = 1L,
 
     @ColumnInfo(name = COLUMN_DIRTY) var dirty: Boolean = false,
     @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean = false,
@@ -526,9 +531,9 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_SUBNOTES_EXPANDED) var isSubnotesExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_PARENTS_EXPANDED) var isParentsExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
-    @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null
-
-) : Parcelable {
+    @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null,
+    @ColumnInfo(name = COLUMN_IS_ALARM_NOTIFICATION_ACTIVE, defaultValue = "0") var isAlarmNotificationActive: Boolean = false
+    ) : Parcelable {
 
 
     companion object {

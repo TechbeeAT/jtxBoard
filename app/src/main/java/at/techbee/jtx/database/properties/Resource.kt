@@ -69,10 +69,10 @@ const val COLUMN_RESOURCE_OTHER = "other"
 data class Resource (
 
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(index = true, name = COLUMN_RESOURCE_ID)
+        @ColumnInfo(name = COLUMN_RESOURCE_ID)
         var resourceId: Long = 0L,
 
-        @ColumnInfo(index = true, name = COLUMN_RESOURCE_ICALOBJECT_ID)var icalObjectId: Long = 0L,
+        @ColumnInfo(name = COLUMN_RESOURCE_ICALOBJECT_ID)var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_RESOURCE_TEXT)            var text: String? = "",
         @ColumnInfo(name = COLUMN_RESOURCE_ALTREP)                 var altrep: String? = null,
         @ColumnInfo(name = COLUMN_RESOURCE_LANGUAGE)               var language: String? = null,
