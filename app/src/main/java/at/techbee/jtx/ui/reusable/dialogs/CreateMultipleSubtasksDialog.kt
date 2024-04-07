@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
+import android.os.Parcelable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
+import kotlinx.parcelize.Parcelize
 
 
 @Composable
@@ -50,8 +52,15 @@ fun CreateMultipleSubtasksDialog(
             }
         },
     )
-
 }
+
+@Parcelize
+data class SingleOrMultipleSubtasks(
+    val single: String,
+    val listOfSubtasks: List<String>
+) : Parcelable
+
+val emptyPreviousText = SingleOrMultipleSubtasks("", emptyList())
 
 @Preview(showBackground = true)
 @Composable

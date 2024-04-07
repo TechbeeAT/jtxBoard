@@ -55,6 +55,8 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.dialogs.CreateMultipleSubtasksDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubtaskDialog
+import at.techbee.jtx.ui.reusable.dialogs.SingleOrMultipleSubtasks
+import at.techbee.jtx.ui.reusable.dialogs.emptyPreviousText
 import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape

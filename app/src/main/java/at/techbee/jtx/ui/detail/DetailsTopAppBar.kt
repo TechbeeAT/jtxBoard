@@ -1,6 +1,5 @@
 package at.techbee.jtx.ui.detail
 
-import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -40,7 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.reusable.dialogs.CreateMultipleSubtasksDialog
-import kotlinx.parcelize.Parcelize
+import at.techbee.jtx.ui.reusable.dialogs.SingleOrMultipleSubtasks
+import at.techbee.jtx.ui.reusable.dialogs.emptyPreviousText
 
 enum class DetailTopAppBarMode { ADD_SUBTASK, ADD_SUBNOTE }
 
@@ -160,14 +160,6 @@ fun DetailsTopAppBar(
         )
     }
 }
-
-@Parcelize
-data class SingleOrMultipleSubtasks(
-    val single: String,
-    val listOfSubtasks: List<String>
-) : Parcelable
-
-val emptyPreviousText = SingleOrMultipleSubtasks("", emptyList())
 
 @Preview(showBackground = true)
 @Composable
