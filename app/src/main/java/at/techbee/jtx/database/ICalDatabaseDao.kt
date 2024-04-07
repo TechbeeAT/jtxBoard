@@ -312,6 +312,23 @@ interface ICalDatabaseDao {
     @Query("SELECT * FROM $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = :iCalObjectId")
     fun getAlarmsSync(iCalObjectId: Long): List<Alarm>
 
+    /**
+     * Returns a list of (distinct) ICalObjects that have an active alarm
+     * (an alarm, that was already triggered but not removed)
+     * The list contains only elements that haven't been completed (status, percent)
+     */
+    @Query("SELECT DISTINCT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT " +
+            "WHERE $COLUMN_IS_ALARM_NOTIFICATION_ACTIVE = 1 " +
+            "AND ($COLUMN_PERCENT IS NULL OR $COLUMN_PERCENT < 100) " +
+            "AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS != 'COMPLETED') ")
+    fun getICalObjectsWithActiveAlarms(): List<ICalObject>
+
+/*
+iCalObject.percent != 100
+                            && iCalObject.status != Status.COMPLETED.status
+ */
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_IS_ALARM_NOTIFICATION_ACTIVE = :active WHERE $COLUMN_ID = :iCalObjectId")
+    fun setAlarmNotification(iCalObjectId: Long, active: Boolean)
 
     /*
     INSERTs (Asyncronously / Suspend)
@@ -527,12 +544,12 @@ interface ICalDatabaseDao {
                 "INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
                 "WHERE $COLUMN_DELETED = 0 " +
                 "AND $COLUMN_RRULE IS NULL " +
-                "AND $COLUMN_ALARM_TRIGGER_TIME > :minDate " +
+                "AND $COLUMN_ALARM_TRIGGER_TIME > :now " +
                 "AND ($COLUMN_PERCENT IS NULL OR $COLUMN_PERCENT < 100) " +
                 "AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS != 'COMPLETED')" +
                 "ORDER BY $COLUMN_ALARM_TRIGGER_TIME ASC LIMIT :limit"
     )
-    fun getNextAlarms(limit: Int, minDate: Long = System.currentTimeMillis()): List<Alarm>
+    fun getNextAlarms(limit: Int = 10, now: Long = System.currentTimeMillis()): List<Alarm>
 
     /**
      * Gets ICalObjects with lat/long and geofence radius
@@ -574,11 +591,11 @@ interface ICalDatabaseDao {
     @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun updateCollection(collection: ICalCollection)
 
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = 1, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:id)")
-    suspend fun updateToDeleted(id: Long, lastModified: Long)
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = 1, $COLUMN_LAST_MODIFIED = :now, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:id)")
+    suspend fun updateToDeleted(id: Long, now: Long = System.currentTimeMillis())
 
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
-    suspend fun updateSetDirty(id: Long, lastModified: Long)
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_LAST_MODIFIED = :now, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
+    suspend fun updateSetDirty(id: Long, now: Long = System.currentTimeMillis())
 
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SUBTASKS_EXPANDED = :isSubtasksExpanded, $COLUMN_SUBNOTES_EXPANDED = :isSubnotesExpanded, $COLUMN_ATTACHMENTS_EXPANDED = :isAttachmentsExpanded, $COLUMN_PARENTS_EXPANDED = :isParentsExpanded WHERE $COLUMN_ID = :id")
     suspend fun updateExpanded(
@@ -840,7 +857,7 @@ interface ICalDatabaseDao {
             item.ICalCollection?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE -> deleteICalObjectsbyId(
                 item.property.id
             ) // Elements in local collection are physically deleted
-            else -> updateToDeleted(item.property.id, System.currentTimeMillis())
+            else -> updateToDeleted(item.property.id)
         }
     }
 
