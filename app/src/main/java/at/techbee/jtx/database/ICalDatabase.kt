@@ -227,24 +227,12 @@ abstract class ICalDatabase : RoomDatabase() {
                             }
 
                             override fun onOpen(db: SupportSQLiteDatabase) {
-                                /*
-                                val cv = ContentValues()
-                                cv.put(COLUMN_COLLECTION_ID, "1")
-                                cv.put(COLUMN_COLLECTION_ACCOUNT_TYPE, ICalCollection.LOCAL_ACCOUNT_TYPE)
-                                cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, context.getString(R.string.default_local_account_name))
-                                cv.put(COLUMN_COLLECTION_DISPLAYNAME, context.getString(R.string.default_local_collection_name))
-                                cv.put(COLUMN_COLLECTION_URL, ICalCollection.LOCAL_COLLECTION_URL)
-                                cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, 1)
-                                cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, 1)
-                                cv.put(COLUMN_COLLECTION_SUPPORTSVTODO, 1)
-                                cv.put(COLUMN_COLLECTION_READONLY, 0)
-                                db.insert(TABLE_NAME_COLLECTION, SQLiteDatabase.CONFLICT_IGNORE, cv)
                                 super.onOpen(db)
-                                 */
+                                db.execSQL("PRAGMA synchronous = OFF")
                             }
                         })
                         // see https://developer.android.com/topic/performance/sqlite-performance-best-practices#consider-without
-                        .setJournalMode(JournalMode.AUTOMATIC)
+                        .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
                         .build()
 
                     // Assign INSTANCE to the newly created database.
