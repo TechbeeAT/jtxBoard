@@ -270,7 +270,7 @@ dependencies {
 
     implementation "com.kizitonwose.calendar:compose:2.5.0"
 
-    implementation "com.googlecode.libphonenumber:libphonenumber:8.13.33"
+    implementation "com.googlecode.libphonenumber:libphonenumber:8.13.34"
 
     implementation "sh.calvin.reorderable:reorderable:1.4.0"
 }
