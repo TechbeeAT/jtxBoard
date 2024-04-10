@@ -250,7 +250,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             val icalObject = databaseDao.getICalObjectById(icalObjectId) ?: return@launch
             icalObject.summary = newSummary
             icalObject.makeDirty()
-            databaseDao.makeSeriesDirty(icalObject)
+            databaseDao.makeSeriesDirty(icalObject.uid)
             try {
                 databaseDao.update(icalObject)
                 withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }

@@ -7,12 +7,21 @@
     <!-- Global Strings -->
     <string name="save">"Zapisz"</string>
     <string name="cancel">"Anuluj"</string>
+    <string name="ok">"OK"</string>
     <string name="delete">"Usuń"</string>
     <string name="discard">"Odrzuć"</string>
+    <string name="dismiss">"Odrzuć"</string>
+    <string name="open">"Otwórz"</string>
     <string name="cont">"Kontynuuj"</string>
+    <string name="website">"Strona WWW"</string>
+    <string name="unlink">"Rozłącz"</string>
+    <string name="location_permission_denied">"Brak dostępu do lokalizacji"</string>
+    <string name="permissions">"Uprawnienia"</string>
+    <string name="current_location">"Bieżąca lokalizacja"</string>
     <string name="toolbar_text_add_journal">"Dodaj Dziennik"</string>
     <string name="toolbar_text_add_note">"Dodaj Notatkę"</string>
     <string name="toolbar_text_add_task">"Dodaj Zadanie"</string>
+    <string name="toast_sync_requested">"Żądana synchronizacja"</string>
     <string name="default_local_collection_name">"Lokalne"</string>
     <string name="default_local_account_name">"Lokalne"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -30,27 +39,65 @@
     <string name="attendee_role_required_participant">"Uczestnik wymagany"</string>
     <string name="attendee_role_optional_participant">"Uczestnik opcjonalny"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Otwórz panel nawigacyjny"</string>
+    <string name="navigation_drawer_close">"Zamknij panel nawigacyjny"</string>
+    <string name="navigation_drawer_board">"Tablica"</string>
+    <string name="navigation_drawer_synchronization">"Synchronizacja"</string>
+    <string name="navigation_drawer_about">"O autorze / Licencja"</string>
     <string name="navigation_drawer_subtitle">"dzienniki, notatki i zadania"</string>
     <string name="navigation_drawer_settings">"Ustawienia"</string>
     <string name="navigation_drawer_external_links">"Linki zewnętrzne"</string>
     <string name="navigation_drawer_website">"Strona"</string>
     <string name="navigation_drawer_support">"Wsparcie"</string>
     <string name="navigation_drawer_donate">"Dotacja"</string>
+    <string name="navigation_drawer_privacy_policy">"Polityka Prywatności"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"Zaległe"</string>
+    <string name="list_due_shortly">"Wkrótce termin"</string>
+    <string name="list_due_today">"Termin upływa dzisiaj"</string>
+    <string name="list_due_tomorrow">"Termin na jutro"</string>
+    <string name="list_due_within_7_days">"Termin w ciągu 7 dni"</string>
+    <string name="list_due_inXhours">"Termin za %d godzin"</string>
+    <string name="list_start_shortly">"Rozpoczyna się wkrótce"</string>
+    <string name="list_start_today">"Planowany start dzisiaj"</string>
+    <string name="list_start_tomorrow">"Start jutro"</string>
+    <string name="list_start_inXhours">"Planowany start za %d godzin"</string>
+    <string name="list_start_on_weekday">"Planowany start za %s"</string>
     <string name="list_tabitem_journals">"Dzienniki"</string>
     <string name="list_tabitem_notes">"Notatki"</string>
     <string name="list_tabitem_todos">"Zadania"</string>
+    <string name="list_expand">"Rozwiń"</string>
+    <string name="list_dialog_delete_selected_title">Usunąć wybrane pozycje?</string>
+    <string name="list_dialog_delete_selected_message">Ta akcja usuwa wszystkie zaznaczone pozycje (%1$d). Czy na pewno chcesz kontynuować? Tej operacji nie można cofnąć!</string>
+    <string name="list_quickadd_dialog_summary_description_hint">"Podsumowanie/Opis"</string>
+    <string name="list_quickadd_dialog_summary_description_helper">"Pierwszy wiersz jest interpretowany jako podsumowanie, reszta jako opis. Hashtagi są interpretowane jako kategorie (np. #category)."</string>
+    <string name="list_item_recurring">"Cykliczny wpis"</string>
+    <string name="list_item_edited_recurring">"Edytowano wpis cykliczny"</string>
+    <string name="list_scroll_to_top">"Przewiń na górę"</string>
     <!-- fragment_ical_view -->
+    <string name="view_fragment_audio_permission">"Uprawnienie Aplikacji"</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board potrzebuje uprawnienia do nagrywania audio lub do korzystania z funkcji mowa-tekst. Proszę udzielić pozwolenia, by korzystać z tej funkcji."</string>
+    <string name="view_reccurrence_note_is_exception">"Ten element jest wyjątkiem dla wpisu cyklicznego."</string>
+    <string name="view_feedback_linked_notes">"Opinie / Podłączone notatki"</string>
+    <string name="view_subtask_of">"Podzadanie"</string>
+    <string name="view_linked_note_of">"Powiązane notatki"</string>
     <string name="view_add_audio_note">"Dodaj audio"</string>
+    <string name="view_created_text">"Utworzono: %1$s"</string>
     <string name="view_last_modified_text">"Ostatnio zmodyfikowano: %1$s"</string>
+    <string name="view_due">"Termin"</string>
+    <string name="view_completed">"Ukończone"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_comment_helper">"Dodaj komentarz"</string>
     <string name="edit_attachment_button_text">"Dodaj załącznik"</string>
     <string name="edit_take_picture_button_text">"Zrób zdjęcie"</string>
     <string name="edit_add_link_button_text">"Dodaj link załącznika"</string>
     <string name="edit_subtasks_add_helper">"Dodaj podzadanie"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Szybkie dodawanie podzadania"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Szybkie dodawanie subnotatki"</string>
     <string name="edit_attachment_add_link_dialog">"Dodaj link załącznika"</string>
     <string name="edit_recur_repeat_every_x">"Powtarzaj każdego"</string>
+    <string name="edit_recur_on_weekday">"w"</string>
+    <string name="edit_recur_on_the_x_day_of_month">"w dniu"</string>
     <string name="edit_recur_x_times">"razy"</string>
     <string name="edit_datepicker_dialog_select_date">"Wybierz datę"</string>
     <string name="edit_dialog_sure_to_delete_title">"Usunąć \"%1$s\"?"</string>
@@ -70,10 +117,23 @@
     <string name="settings_app">"Ustawienia aplikacji"</string>
     <!-- Sync fragment -->
     <string name="sync_congratulations">"Gratulacje! :-)"</string>
+    <string name="sync_sync_app_not_found">"Nie wykryliśmy %1$s na Twoim telefonie."</string>
+    <string name="sync_more_about_sync_app">"Więcej o %1$s"</string>
+    <string name="sync_download_sync_app">"Pobierz %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Dodaj konto w %1$s"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Nie udało się otworzyć %1$s, proszę otworzyć aplikację ręcznie."</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"Cześć, jestem Patrick, twórca jtx Board. Praca nad tą darmową aplikacją kosztuje mnie wiele wysiłku. Jeżeli lubisz moją aplikację, wyślij mi trochę miłości i wesprzyj projekt niewielką dotacją!"</string>
     <string name="donate_thank_you">"Dziękujemy!"</string>
+    <string name="donate_donate_with">"Wesprzyj przez"</string>
+    <string name="donate_other_donation_methods">"Jeśli chcesz rozważyć inną metodę darowizny, sprawdź naszą stronę internetową:"</string>
+    <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nie znaleziono aplikacji do otwarcia tego pliku/URL."</string>
+    <string name="toast_item_is_now_recu_exception">"Wpis cykliczny jest teraz wyjątkiem."</string>
+    <string name="toast_done_tasks_deleted">"Wykonane zadania usunięte (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Podziękowania dla"</string>
+    <string name="about_translations_basic_info">"jtx Board to aplikacja o otwartym źródle, która docenia uczestnictwo i wkład społeczności open source. Na tej stronie chcielibyśmy wyróżnić wysiłki naszych tłumaczy."</string>
+    <string name="about_translations_contribution_info">"Jeśli chcesz edytować/dodawać tłumaczenia lub dodawać nowe języki do tej aplikacji, możesz dołączyć do projektu jtx Board na platformie tłumaczeniowej Crowdin:"</string>
     <string name="about_translations_contribution_button">"Dołącz do POEditor.com"</string>
     <string name="list_welcome_entry_journal_summary">"Gratulacje, to Twój pierwszy wpis dziennika :-)"</string>
     <string name="list_welcome_entry_note_summary">"Gratulacje, to Twoja pierwsza notatka :-)"</string>

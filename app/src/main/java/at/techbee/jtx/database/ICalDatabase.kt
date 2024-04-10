@@ -244,7 +244,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             }
                         })
                         // see https://developer.android.com/topic/performance/sqlite-performance-best-practices#consider-without
-                        .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
+                        .setJournalMode(JournalMode.AUTOMATIC)
                         .build()
 
                     // Assign INSTANCE to the newly created database.

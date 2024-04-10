@@ -28,7 +28,7 @@ buildscript {
         version_work = "2.9.0"
         version_billing = "6.2.0"
         version_review = "2.0.1"
-        version_compose = "1.6.4"
+        version_compose = "1.6.5"
         version_about_libraries = "11.1.1"
         version_huawei = "1.8.1.300"
         version_huawei_iap = "6.10.0.300"
@@ -58,7 +58,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.google.devtools.ksp' version '1.9.23-1.0.19' apply false
+    id 'com.google.devtools.ksp' version '1.9.23-1.0.20' apply false
 }
 
 allprojects {

@@ -1,0 +1,2 @@
+- Re-order elements on details screen with drag&drop
+- Minor improvements and bugfixes

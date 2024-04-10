@@ -31,8 +31,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 207030007
-        versionName "2.07.03-beta03"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 207040002
+        versionName "2.07.04-alpha02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love always wins ❤️💪\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -242,8 +242,8 @@ dependencies {
     // jetpack compose
     implementation "androidx.compose.ui:ui:$version_compose"
     implementation "androidx.compose.material3:material3:1.2.1"
-    implementation "androidx.compose.material:material-icons-extended:1.6.4"
-    implementation "androidx.compose.material:material:1.6.4"
+    implementation "androidx.compose.material:material-icons-extended:1.6.5"
+    implementation "androidx.compose.material:material:1.6.5"
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     implementation "androidx.compose.ui:ui-text-google-fonts:$version_compose"
     //implementation "androidx.activity:activity-compose:1.6.0"
@@ -270,7 +270,7 @@ dependencies {
 
     implementation "com.kizitonwose.calendar:compose:2.5.0"
 
-    implementation "com.googlecode.libphonenumber:libphonenumber:8.13.33"
+    implementation "com.googlecode.libphonenumber:libphonenumber:8.13.34"
 
-    implementation "sh.calvin.reorderable:reorderable:1.3.3"
+    implementation "sh.calvin.reorderable:reorderable:1.4.0"
 }
