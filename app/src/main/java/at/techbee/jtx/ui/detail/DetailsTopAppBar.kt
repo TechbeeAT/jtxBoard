@@ -59,7 +59,7 @@ fun DetailsTopAppBar(
     var previousText by rememberSaveable { mutableStateOf(emptyPreviousText) }
 
     fun onSubtaskDone(value: String) {
-        val listOfSubtasks = value.split("\r\n", "\n", "\r")
+        val listOfSubtasks = value.split(System.lineSeparator())
             .map { it.trim() }
             .filter { it.isNotEmpty() }
 
