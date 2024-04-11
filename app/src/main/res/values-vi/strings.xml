@@ -108,6 +108,7 @@
     <string name="edit_recur_on_weekday">"vào"</string>
     <string name="edit_recur_on_the_x_day_of_month">"vào ngày"</string>
     <string name="edit_recur_x_day_of_the_month">"ngày của tháng"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"cuối"</string>
     <string name="edit_recur_x_times">"lần"</string>
     <string name="edit_recur_toast_requires_start_date">"Sự lặp lại yêu cầu phải thiết lập ngày bắt đầu!"</string>
     <string name="edit_datepicker_dialog_select_date">"Chọn ngày"</string>
@@ -201,6 +202,7 @@
     <string name="edit">"Chỉnh sửa"</string>
     <string name="reset">"Đặt lại"</string>
     <string name="apply">"Áp dụng"</string>
+    <string name="not_available_abbreviation">"n/a"</string>
     <string name="collection">"Bộ sưu tập"</string>
     <string name="collection_owner_displayname">"Chủ sở hữu: %1$s"</string>
     <string name="link_to_parent">"Liên kết tới cấp trên"</string>
@@ -208,10 +210,22 @@
     <string name="link_selected_as_subtask_note">"Nhiệm vụ phụ/-ghi chú"</string>
     <string name="link_selected_as">"Liên kết được chọn là …"</string>
     <string name="navigation_drawer_collections">"Bộ sưu tập"</string>
+    <string name="navigation_drawer_presets">"Cài đặt trước"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Ngày tháng/Thời gian"</string>
+    <string name="alarms_duration">"Thời lượng"</string>
+    <string name="alarms_onstart">"Khi bắt đầu"</string>
+    <string name="alarms_ondue">"Đúng kỳ hạn"</string>
+    <string name="alarms_before_start">"trước khi Bắt đầu"</string>
+    <string name="alarms_after_start">"sau khi Bắt đầu"</string>
+    <string name="alarms_before_due">"trước Kỳ hạn"</string>
+    <string name="alarms_after_due">"sau Kỳ hạn"</string>
     <!-- fragment_collections -->
     <!-- Fuzzy -->
+    <string name="collections_notes_num">"Ghi chú: %1$s"</string>
+    <string name="collections_tasks_num">"Nhiệm vụ: %1$s"</string>
+    <string name="collections_info">"Bộ sưu tập là sự tích lũy các mục như thư mục chứa tệp. Bạn có thể tạo các bộ sưu tập cục bộ mới thông qua thực đơn hoặc bạn có thể thiết lập các bộ sưu tập từ xa mới để đồng bộ hóa nếu bạn đã cài đặt ứng dụng đồng bộ hóa (ví dụ: DAVx⁵)."</string>
+    <string name="collections_collection_menu">"Trình đơn bộ sưu tập"</string>
     <string name="collections_dialog_edit_local_collection_title">"Chỉnh sửa Bộ sưu tập cục bộ"</string>
     <string name="collections_dialog_delete_local_title">"Xóa %1$s?"</string>
     <string name="collections_dialog_delete_local_message">"Xóa bộ sưu tập cũng sẽ xóa tất cả nhật ký, ghi chú và nhiệm vụ trong bộ sưu tập này. Điều này không thể được hoàn tác. Bạn có chắc chắn muốn tiếp tục không?"</string>
@@ -220,10 +234,21 @@
     <string name="color">"Màu"</string>
     <string name="priority_0_no_priority">"Không có mức độ ưu tiên"</string>
     <string name="priority_1_highest">"1 - Cao nhất"</string>
+    <string name="priority_2_higher">"2 - Cao hơn"</string>
+    <string name="priority_3_high">"3 - Cao"</string>
+    <string name="priority_4_medium_high">"4 - Trung bình khá"</string>
+    <string name="priority_5_medium">"5 - Trung bình"</string>
+    <string name="priority_6_medium_low">"6 - Trung bình thấp"</string>
+    <string name="attachment_export_saved_successfully">"Đã lưu thành công"</string>
+    <string name="attachment_export_error_error_occurred">"Một lỗi xảy ra khi lưu tệp được chọn!"</string>
+    <string name="menu_collections_export_all">"Xuất tất cả"</string>
     <!-- Buy Pro fragment -->
     <string name="details_show_all_instances">"Hiển thị tất cả các phiên bản (%1$d)"</string>
     <!-- alarms -->
     <string name="settings_create_with_current_location_sub">"Vui lòng cấp quyền truy cập vào vị trí của bạn trong khi sử dụng ứng dụng này để sử dụng tính năng này."</string>
+    <string name="filter_presets_edit_info">"Vui lòng thêm/cập nhật/xóa các thiết đặt trước của bộ lọc khỏi trình đơn bộ lọc trong chế độ xem danh sách."</string>
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="menu_view_markdown_formatting">"Định dạng markdown"</string>
+    <string name="menu_view_autosave">"Lưu tự động"</string>
 </resources>
