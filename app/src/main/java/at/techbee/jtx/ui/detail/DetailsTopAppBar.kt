@@ -40,14 +40,13 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.detail.DetailTopAppBarMode.ADD_SUBNOTE
 import at.techbee.jtx.ui.detail.DetailTopAppBarMode.ADD_SUBTASK
-import at.techbee.jtx.ui.reusable.dialogs.onSingleOrMultipleItemCreation
 
 enum class DetailTopAppBarMode { ADD_SUBTASK, ADD_SUBNOTE }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsTopAppBar(
-    detailTopAppBarMode: DetailTopAppBarMode = DetailTopAppBarMode.ADD_SUBTASK,
+    detailTopAppBarMode: DetailTopAppBarMode = ADD_SUBTASK,
     readonly: Boolean,
     goBack: () -> Unit,
     onAddSubtask: (String) -> Unit,
@@ -55,8 +54,6 @@ fun DetailsTopAppBar(
     actions: @Composable () -> Unit = { }
 ) {
     var textFieldText by rememberSaveable { mutableStateOf("") }
-    val onSubnoteCreation = onSingleOrMultipleItemCreation(ADD_SUBNOTE, onAddSubnote)
-    val onSubtaskCreation = onSingleOrMultipleItemCreation(ADD_SUBTASK, onAddSubtask)
 
     CenterAlignedTopAppBar(
         title = {
@@ -101,8 +98,8 @@ fun DetailsTopAppBar(
                             IconButton(onClick = {
                                 if(textFieldText.isNotBlank()) {
                                     when(detailTopAppBarMode) {
-                                        ADD_SUBTASK -> onSubtaskCreation(textFieldText)
-                                        ADD_SUBNOTE -> onSubnoteCreation(textFieldText)
+                                        ADD_SUBTASK -> onAddSubtask(textFieldText)
+                                        ADD_SUBNOTE -> onAddSubnote(textFieldText)
                                     }
                                 }
                                 textFieldText = ""
@@ -122,8 +119,8 @@ fun DetailsTopAppBar(
                 keyboardActions = KeyboardActions(onDone = {
                     if(textFieldText.isNotBlank()) {
                         when(detailTopAppBarMode) {
-                            ADD_SUBTASK -> onSubtaskCreation(textFieldText)
-                            ADD_SUBNOTE -> onSubnoteCreation(textFieldText)
+                            ADD_SUBTASK -> onAddSubtask(textFieldText)
+                            ADD_SUBNOTE -> onAddSubnote(textFieldText)
                         }
                     }
                     textFieldText = ""
@@ -142,8 +139,8 @@ fun DetailsTopAppBar_Preview_withSubtitle() {
                 DetailsTopAppBar(
                     readonly = false,
                     goBack = { },
-                    onAddSubnote = { },
-                    onAddSubtask = { }
+                    onAddSubnote = {},
+                    onAddSubtask = {}
                 )
             },
             content = { paddingValues ->

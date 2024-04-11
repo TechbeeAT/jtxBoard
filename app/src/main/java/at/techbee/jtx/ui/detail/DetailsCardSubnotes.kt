@@ -53,11 +53,9 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.detail.DetailTopAppBarMode.ADD_SUBNOTE
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
-import at.techbee.jtx.ui.reusable.dialogs.onSingleOrMultipleItemCreation
 import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
@@ -71,7 +69,8 @@ fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
     enforceSavingSubnote: Boolean,
-    onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
+    onAudioSubnoteAdded: (subnote: ICalObject, attachment: Attachment) -> Unit,
+    onSubnoteAdded: (subnote: String) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
@@ -85,20 +84,19 @@ fun DetailsCardSubnotes(
 
     val headline = stringResource(id = R.string.view_feedback_linked_notes)
     var newSubnoteText by rememberSaveable { mutableStateOf("") }
-    val onSubnoteCreation = onSingleOrMultipleItemCreation(ADD_SUBNOTE) { onSubnoteAdded(ICalObject.createNote(it), null) }
 
     var showAddAudioNoteDialog by rememberSaveable { mutableStateOf(false) }
     if(showAddAudioNoteDialog) {
         AddAudioEntryDialog(
             module = Module.NOTE,
             player = player,
-            onConfirm = { newEntry, attachment -> onSubnoteAdded(newEntry, attachment) },
+            onConfirm = { newEntry, attachment -> onAudioSubnoteAdded(newEntry, attachment) },
             onDismiss = { showAddAudioNoteDialog = false }
         )
     }
 
     if (enforceSavingSubnote && newSubnoteText.isNotEmpty()) {
-        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+        onSubnoteAdded(newSubnoteText)
         newSubnoteText = ""
     }
 
@@ -139,7 +137,7 @@ fun DetailsCardSubnotes(
                             AnimatedVisibility(newSubnoteText.isNotEmpty()) {
                                 IconButton(onClick = {
                                     if (newSubnoteText.isNotEmpty()) {
-                                        onSubnoteCreation(newSubnoteText)
+                                        onSubnoteAdded(newSubnoteText)
                                     }
                                     newSubnoteText = ""
                                 }) {
@@ -163,7 +161,7 @@ fun DetailsCardSubnotes(
                         ),
                         keyboardActions = KeyboardActions(onDone = {
                             if (newSubnoteText.isNotEmpty()) {
-                                onSubnoteCreation(newSubnoteText)
+                                onSubnoteAdded(newSubnoteText)
                             }
                             newSubnoteText = ""
                         })
@@ -185,7 +183,7 @@ fun DetailsCardSubnotes(
                     },
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
-                ) {index, subnote, isDragging ->
+                ) {_, subnote, _ ->
                     key(subnote.id) {
 
                         var showEditSubnoteDialog by rememberSaveable { mutableStateOf(false) }
@@ -242,7 +240,8 @@ fun DetailsCardSubnotes_Preview() {
                     ),
             isEditMode = remember { mutableStateOf(false) },
             enforceSavingSubnote = false,
-            onSubnoteAdded = { _, _ -> },
+            onAudioSubnoteAdded = { _, _ -> },
+            onSubnoteAdded = { },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
@@ -270,7 +269,8 @@ fun DetailsCardSubnotes_Preview_edit() {
             ),
             isEditMode = remember { mutableStateOf(true) },
             enforceSavingSubnote = false,
-            onSubnoteAdded = { _, _ -> },
+            onAudioSubnoteAdded = { _, _ -> },
+            onSubnoteAdded = { },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },

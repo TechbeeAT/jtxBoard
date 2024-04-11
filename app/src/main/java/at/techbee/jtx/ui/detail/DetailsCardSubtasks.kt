@@ -48,14 +48,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.detail.DetailTopAppBarMode.ADD_SUBTASK
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.dialogs.EditSubtaskDialog
-import at.techbee.jtx.ui.reusable.dialogs.onSingleOrMultipleItemCreation
 import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
@@ -72,7 +69,7 @@ fun DetailsCardSubtasks(
     sliderIncrement: Int,
     showSlider: Boolean,
     isSubtaskDragAndDropEnabled: Boolean,
-    onSubtaskAdded: (subtask: ICalObject) -> Unit,
+    onSubtaskAdded: (subtask: String) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubtaskDeleted: (subtaskId: Long) -> Unit,
@@ -85,10 +82,9 @@ fun DetailsCardSubtasks(
 
     val headline = stringResource(id = R.string.subtasks)
     var newSubtaskText by rememberSaveable { mutableStateOf("") }
-    val onSubtaskCreation = onSingleOrMultipleItemCreation(ADD_SUBTASK) { onSubtaskAdded(ICalObject.createTask(it)) }
 
     if(enforceSavingSubtask && newSubtaskText.isNotEmpty()) {
-        onSubtaskAdded(ICalObject.createTask(newSubtaskText))
+        onSubtaskAdded(newSubtaskText)
         newSubtaskText = ""
     }
 
@@ -120,7 +116,7 @@ fun DetailsCardSubtasks(
                         AnimatedVisibility(newSubtaskText.isNotEmpty()) {
                             IconButton(onClick = {
                                 if (newSubtaskText.isNotEmpty()) {
-                                    onSubtaskCreation(newSubtaskText)
+                                    onSubtaskAdded(newSubtaskText)
                                 }
                                 newSubtaskText = ""
                             }) {
@@ -141,7 +137,7 @@ fun DetailsCardSubtasks(
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
                         if (newSubtaskText.isNotEmpty()) {
-                            onSubtaskCreation(newSubtaskText)
+                            onSubtaskAdded(newSubtaskText)
                         }
                         newSubtaskText = ""
                     })
@@ -161,7 +157,7 @@ fun DetailsCardSubtasks(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                ) {index, subtask, isDragging ->
+                ) {_, subtask, _ ->
                     key(subtask.id) {
 
                         var showEditSubtaskDialog by rememberSaveable { mutableStateOf(false) }
