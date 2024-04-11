@@ -53,9 +53,11 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.detail.DetailTopAppBarMode.ADD_SUBNOTE
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
+import at.techbee.jtx.ui.reusable.dialogs.onSingleOrMultipleItemCreation
 import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
@@ -83,6 +85,7 @@ fun DetailsCardSubnotes(
 
     val headline = stringResource(id = R.string.view_feedback_linked_notes)
     var newSubnoteText by rememberSaveable { mutableStateOf("") }
+    val onSubnoteCreation = onSingleOrMultipleItemCreation(ADD_SUBNOTE) { onSubnoteAdded(ICalObject.createNote(it), null) }
 
     var showAddAudioNoteDialog by rememberSaveable { mutableStateOf(false) }
     if(showAddAudioNoteDialog) {
@@ -135,8 +138,9 @@ fun DetailsCardSubnotes(
                         trailingIcon = {
                             AnimatedVisibility(newSubnoteText.isNotEmpty()) {
                                 IconButton(onClick = {
-                                    if (newSubnoteText.isNotEmpty())
-                                        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+                                    if (newSubnoteText.isNotEmpty()) {
+                                        onSubnoteCreation(newSubnoteText)
+                                    }
                                     newSubnoteText = ""
                                 }) {
                                     Icon(
@@ -158,8 +162,9 @@ fun DetailsCardSubnotes(
                             imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions(onDone = {
-                            if (newSubnoteText.isNotEmpty())
-                                onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+                            if (newSubnoteText.isNotEmpty()) {
+                                onSubnoteCreation(newSubnoteText)
+                            }
                             newSubnoteText = ""
                         })
                     )

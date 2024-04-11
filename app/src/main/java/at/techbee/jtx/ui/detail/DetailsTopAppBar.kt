@@ -38,9 +38,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.reusable.dialogs.CreateMultipleSubtasksDialog
-import at.techbee.jtx.ui.reusable.dialogs.SingleOrMultipleSubtasks
-import at.techbee.jtx.ui.reusable.dialogs.emptyPreviousText
+import at.techbee.jtx.ui.detail.DetailTopAppBarMode.ADD_SUBNOTE
+import at.techbee.jtx.ui.detail.DetailTopAppBarMode.ADD_SUBTASK
+import at.techbee.jtx.ui.reusable.dialogs.onSingleOrMultipleItemCreation
 
 enum class DetailTopAppBarMode { ADD_SUBTASK, ADD_SUBNOTE }
 
@@ -54,23 +54,9 @@ fun DetailsTopAppBar(
     onAddSubnote: (String) -> Unit,
     actions: @Composable () -> Unit = { }
 ) {
-
     var textFieldText by rememberSaveable { mutableStateOf("") }
-    var previousText by rememberSaveable { mutableStateOf(emptyPreviousText) }
-
-    fun onSubtaskDone(value: String) {
-        val listOfSubtasks = value.split(System.lineSeparator())
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
-
-        if (listOfSubtasks.size <= 1) {
-            // handle single sub task right now
-            onAddSubtask(value)
-        } else {
-            // handle multiple sub tasks within a dialog
-            previousText = SingleOrMultipleSubtasks(single = value, listOfSubtasks = listOfSubtasks)
-        }
-    }
+    val onSubnoteCreation = onSingleOrMultipleItemCreation(ADD_SUBNOTE, onAddSubnote)
+    val onSubtaskCreation = onSingleOrMultipleItemCreation(ADD_SUBTASK, onAddSubtask)
 
     CenterAlignedTopAppBar(
         title = {
@@ -94,8 +80,8 @@ fun DetailsTopAppBar(
                 placeholder = {
                 Crossfade(detailTopAppBarMode, label = "detailTopAppBarMode") {
                     when(it) {
-                        DetailTopAppBarMode.ADD_SUBTASK -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
-                        DetailTopAppBarMode.ADD_SUBNOTE -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
+                        ADD_SUBTASK -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
+                        ADD_SUBNOTE -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
                     }
                 }
                     },
@@ -115,16 +101,16 @@ fun DetailsTopAppBar(
                             IconButton(onClick = {
                                 if(textFieldText.isNotBlank()) {
                                     when(detailTopAppBarMode) {
-                                        DetailTopAppBarMode.ADD_SUBTASK -> onSubtaskDone(textFieldText)
-                                        DetailTopAppBarMode.ADD_SUBNOTE -> onAddSubnote(textFieldText)
+                                        ADD_SUBTASK -> onSubtaskCreation(textFieldText)
+                                        ADD_SUBNOTE -> onSubnoteCreation(textFieldText)
                                     }
                                 }
                                 textFieldText = ""
                             }) {
                                 Crossfade(detailTopAppBarMode, label = "detailTopAppBarMode") {
                                     when(it) {
-                                        DetailTopAppBarMode.ADD_SUBTASK -> Icon(Icons.Outlined.AddTask, stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
-                                        DetailTopAppBarMode.ADD_SUBNOTE -> Icon(Icons.AutoMirrored.Outlined.NoteAdd, stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
+                                        ADD_SUBTASK -> Icon(Icons.Outlined.AddTask, stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
+                                        ADD_SUBNOTE -> Icon(Icons.AutoMirrored.Outlined.NoteAdd, stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
                                     }
                                 }
                             }
@@ -136,8 +122,8 @@ fun DetailsTopAppBar(
                 keyboardActions = KeyboardActions(onDone = {
                     if(textFieldText.isNotBlank()) {
                         when(detailTopAppBarMode) {
-                            DetailTopAppBarMode.ADD_SUBTASK -> onSubtaskDone(textFieldText)
-                            DetailTopAppBarMode.ADD_SUBNOTE -> onAddSubnote(textFieldText)
+                            ADD_SUBTASK -> onSubtaskCreation(textFieldText)
+                            ADD_SUBNOTE -> onSubnoteCreation(textFieldText)
                         }
                     }
                     textFieldText = ""
@@ -145,20 +131,6 @@ fun DetailsTopAppBar(
             )
         }
     )
-
-    if (previousText != emptyPreviousText) {
-        CreateMultipleSubtasksDialog(
-            numberOfSubtasksDetected = previousText.listOfSubtasks.size,
-            onCreateSingle = {
-                onAddSubtask(previousText.single)
-                previousText = emptyPreviousText
-            },
-            onCreateMultiple = {
-                previousText.listOfSubtasks.forEach(onAddSubtask)
-                previousText = emptyPreviousText
-            },
-        )
-    }
 }
 
 @Preview(showBackground = true)
