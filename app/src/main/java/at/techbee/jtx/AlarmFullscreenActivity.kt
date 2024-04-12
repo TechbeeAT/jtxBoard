@@ -261,6 +261,7 @@ fun FullscreenAlarmScreen(
                         scope.launch(Dispatchers.IO) {
                             ICalDatabase.getInstance(context).iCalDatabaseDao().updateProgress(
                                 id = iCalObject.id,
+                                uid = iCalObject.uid,
                                 newPercent = 100,
                                 settingKeepStatusProgressCompletedInSync = settingKeepStatusProgressCompletedInSync,
                                 settingLinkProgressToSubtasks = settingLinkProgressToSubtasks

@@ -96,7 +96,13 @@ class GeofenceClient(context: Context) : GeofenceClientDefinition(context) {
 
             triggeringGeofences.forEach { geofence ->
                 val iCalObjectId = geofence.requestId.toLongOrNull() ?: return@forEach
-                val iCalObject = db.getICalObjectById(iCalObjectId) ?: return@forEach
+                val iCalObject = db.getICalObjectById(iCalObjectId)
+
+                if(iCalObject?.geofenceRadius == null || iCalObject.geoLat == null || iCalObject.geoLong == null) {
+                    removeGeofence(listOf(iCalObjectId))
+                    return@forEach
+                }
+
                 // Test that the reported transition was of interest.
                 when (geofenceTransition) {
                     Geofence.GEOFENCE_TRANSITION_ENTER -> {
