@@ -12,6 +12,7 @@ import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.automirrored.outlined.Note
 import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.Alarm
+import androidx.compose.material.icons.outlined.AssignmentLate
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.CloudSync
 import androidx.compose.material.icons.outlined.ContactMail
@@ -213,14 +214,13 @@ fun ListTopRow(
 
         AnimatedVisibility(ical4List.priority in 1..9) {
             ListBadge(
-                icon = Icons.Outlined.WorkOutline,
+                icon = Icons.Outlined.AssignmentLate,
                 iconDesc = stringResource(id = R.string.priority),
                 text = if (ical4List.priority in 1..9) stringArrayResource(id = R.array.priority)[ical4List.priority!!] else null,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-
 
         AnimatedVisibility(ical4List.numAttendees > 0) {
             ListBadge(

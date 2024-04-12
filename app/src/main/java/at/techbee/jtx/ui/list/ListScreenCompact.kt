@@ -63,6 +63,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
+import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -76,6 +78,8 @@ import java.util.UUID
 fun ListScreenCompact(
     groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
+    storedCategoriesLive: LiveData<List<StoredCategory>>,
+    storedStatusesLive: LiveData<List<ExtendedStatus>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
@@ -95,6 +99,9 @@ fun ListScreenCompact(
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
+
+    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
+    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
@@ -175,6 +182,8 @@ fun ListScreenCompact(
 
                         ListCardCompact(
                             iCal4ListRelObject.iCal4List,
+                            storedCategories = storedCategories,
+                            storedStatuses = storedStatuses,
                             subtasks = currentSubtasks,
                             progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
                             selected = selectedEntries,
@@ -291,6 +300,8 @@ fun ListScreenCompact_TODO() {
             )
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
@@ -355,6 +366,8 @@ fun ListScreenCompact_JOURNAL() {
             )
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
+            storedCategoriesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,

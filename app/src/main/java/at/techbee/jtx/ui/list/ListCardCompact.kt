@@ -40,6 +40,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
+import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
@@ -54,6 +56,8 @@ import sh.calvin.reorderable.ReorderableColumn
 fun ListCardCompact(
     iCalObject: ICal4List,
     subtasks: List<ICal4List>,
+    storedCategories: List<StoredCategory>,
+    storedStatuses: List<ExtendedStatus>,
     progressUpdateDisabled: Boolean,
     selected: List<Long>,
     player: MediaPlayer?,
@@ -94,7 +98,9 @@ fun ListCardCompact(
                 ) {
 
                     ListTopRowSimple(
-                        ical4List = iCalObject
+                        ical4List = iCalObject,
+                        storedCategories = storedCategories,
+                        extendedStatusesAll = storedStatuses
                     )
 
                     iCalObject.getAudioAttachmentAsUri()?.let {
@@ -145,7 +151,7 @@ fun ListCardCompact(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp)
-            ) { index, subtask, isDragging ->
+            ) { _, subtask, _ ->
                 key(subtask.id) {
 
                     SubtaskCardCompact(
@@ -185,6 +191,8 @@ fun ListCardCompact_JOURNAL() {
         ListCardCompact(
             icalobject,
             subtasks = emptyList(),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             progressUpdateDisabled = true,
             selected = emptyList(),
             player = null,
@@ -211,6 +219,8 @@ fun ListCardCompact_JOURNAL2() {
         ListCardCompact(
             icalobject,
             subtasks = emptyList(),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             progressUpdateDisabled = true,
             selected = emptyList(),
             player = null,
@@ -238,6 +248,8 @@ fun ListCardCompact_NOTE() {
         ListCardCompact(
             icalobject,
             subtasks = emptyList(),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             progressUpdateDisabled = true,
             selected = emptyList(),
             player = null,
@@ -269,6 +281,8 @@ fun ListCardCompact_TODO() {
         ListCardCompact(
             icalobject,
             subtasks = listOf(icalobject, icalobject),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             progressUpdateDisabled = true,
             selected = emptyList(),
             player = null,
@@ -314,6 +328,8 @@ fun ListCardCompact_TODO_only_summary() {
         ListCardCompact(
             icalobject,
             subtasks = listOf(icalobject, icalobject),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             progressUpdateDisabled = true,
             selected = listOf(icalobject.id),
             player = null,

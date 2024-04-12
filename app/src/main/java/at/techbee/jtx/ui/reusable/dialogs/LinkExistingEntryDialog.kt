@@ -206,6 +206,8 @@ fun LinkExistingEntryDialog(
                                 markdownEnabled = false,
                                 onProgressChanged = { _, _ -> },
                                 player = player,
+                                storedCategories = emptyList(),
+                                storedStatuses = emptyList(),
                                 modifier = Modifier.clickable {
                                     if (selectedEntries.contains(entry.iCal4List))
                                         selectedEntries.remove(entry.iCal4List)

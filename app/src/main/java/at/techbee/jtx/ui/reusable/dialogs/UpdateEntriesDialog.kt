@@ -435,6 +435,8 @@ fun UpdateEntriesDialog(
                                 markdownEnabled = false,
                                 player = player,
                                 onProgressChanged = {_, _ -> },
+                                storedCategories = emptyList(),
+                                storedStatuses = emptyList(),
                                 modifier = Modifier.clickable {
                                     selectFromAllListSelectedEntry = if(entry.iCal4List == selectFromAllListSelectedEntry)
                                         null

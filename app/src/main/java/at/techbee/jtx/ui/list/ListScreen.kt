@@ -123,6 +123,8 @@ fun ListScreen(
                 ListScreenGrid(
                     list = list,
                     subtasksLive = listViewModel.allSubtasks,
+                    storedCategoriesLive = listViewModel.storedCategories,
+                    storedStatusesLive = listViewModel.extendedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
@@ -141,6 +143,8 @@ fun ListScreen(
                 ListScreenCompact(
                     groupedList = groupedList,
                     subtasksLive = listViewModel.allSubtasks,
+                    storedCategoriesLive = listViewModel.storedCategories,
+                    storedStatusesLive = listViewModel.extendedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
@@ -161,7 +165,8 @@ fun ListScreen(
                     module = listViewModel.module,
                     list = list,
                     subtasksLive = listViewModel.allSubtasks,
-                    extendedStatusesLive = listViewModel.extendedStatuses,
+                    storedCategoriesLive = listViewModel.storedCategories,
+                    storedStatusesLive = listViewModel.extendedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
                     kanbanColumnsStatus = listViewModel.listSettings.kanbanColumnsStatus,
                     kanbanColumnsXStatus = listViewModel.listSettings.kanbanColumnsXStatus,

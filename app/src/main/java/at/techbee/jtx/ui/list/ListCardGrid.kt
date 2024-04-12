@@ -35,6 +35,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
+import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
@@ -44,6 +46,8 @@ import com.arnyminerz.markdowntext.MarkdownText
 @Composable
 fun ListCardGrid(
     iCalObject: ICal4List,
+    storedCategories: List<StoredCategory>,
+    storedStatuses: List<ExtendedStatus>,
     selected: Boolean,
     progressUpdateDisabled: Boolean,
     markdownEnabled: Boolean,
@@ -67,7 +71,9 @@ fun ListCardGrid(
         ) {
 
             ListTopRowSimple(
-                ical4List = iCalObject
+                ical4List = iCalObject,
+                storedCategories = storedCategories,
+                extendedStatusesAll = storedStatuses
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
@@ -147,6 +153,8 @@ fun ListCardGrid_JOURNAL() {
         }
         ListCardGrid(
             icalobject,
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = false,
             progressUpdateDisabled = false,
             markdownEnabled = false,
@@ -171,6 +179,8 @@ fun ListCardGrid_NOTE() {
         }
         ListCardGrid(
             icalobject,
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = true,
             progressUpdateDisabled = false,
             markdownEnabled = false,
@@ -204,6 +214,8 @@ fun ListCardGrid_TODO() {
         }
         ListCardGrid(
             icalobject,
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = false,
             progressUpdateDisabled = false,
             markdownEnabled = false,
@@ -238,11 +250,14 @@ fun ListCardGrid_TODO_short() {
         }
         ListCardGrid(
             icalobject,
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = false,
             progressUpdateDisabled = false,
             markdownEnabled = false,
             player = null,
-            onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
+            onProgressChanged = { _, _ -> },
+            modifier = Modifier.width(150.dp)
         )
     }
 }

@@ -32,6 +32,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
+import at.techbee.jtx.database.locals.ExtendedStatus
+import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
@@ -42,6 +44,8 @@ import com.arnyminerz.markdowntext.MarkdownText
 @Composable
 fun ListCardKanban(
     iCalObject: ICal4List,
+    storedCategories: List<StoredCategory>,
+    storedStatuses: List<ExtendedStatus>,
     markdownEnabled: Boolean,
     selected: Boolean,
     player: MediaPlayer?,
@@ -63,7 +67,9 @@ fun ListCardKanban(
         ) {
 
             ListTopRowSimple(
-                ical4List = iCalObject
+                ical4List = iCalObject,
+                storedCategories = storedCategories,
+                extendedStatusesAll = storedStatuses
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
@@ -113,6 +119,8 @@ fun ListCardKanban_JOURNAL() {
         }
         ListCardKanban(
             icalobject,
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = false,
             markdownEnabled = false,
             player = null,
@@ -137,6 +145,8 @@ fun ListCardKanban_NOTE() {
         }
         ListCardKanban(
             icalobject,
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = true,
             markdownEnabled = false,
             player = null,
@@ -169,6 +179,8 @@ fun ListCardKanban_TODO() {
         }
         ListCardKanban(
             icalobject,
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = false,
             markdownEnabled = false,
             player = null,
