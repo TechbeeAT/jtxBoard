@@ -69,7 +69,8 @@ fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
     enforceSavingSubnote: Boolean,
-    onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
+    onAudioSubnoteAdded: (subnote: ICalObject, attachment: Attachment) -> Unit,
+    onSubnoteAdded: (subnote: String) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
@@ -89,13 +90,13 @@ fun DetailsCardSubnotes(
         AddAudioEntryDialog(
             module = Module.NOTE,
             player = player,
-            onConfirm = { newEntry, attachment -> onSubnoteAdded(newEntry, attachment) },
+            onConfirm = { newEntry, attachment -> onAudioSubnoteAdded(newEntry, attachment) },
             onDismiss = { showAddAudioNoteDialog = false }
         )
     }
 
     if (enforceSavingSubnote && newSubnoteText.isNotEmpty()) {
-        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+        onSubnoteAdded(newSubnoteText)
         newSubnoteText = ""
     }
 
@@ -135,8 +136,9 @@ fun DetailsCardSubnotes(
                         trailingIcon = {
                             AnimatedVisibility(newSubnoteText.isNotEmpty()) {
                                 IconButton(onClick = {
-                                    if (newSubnoteText.isNotEmpty())
-                                        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+                                    if (newSubnoteText.isNotEmpty()) {
+                                        onSubnoteAdded(newSubnoteText)
+                                    }
                                     newSubnoteText = ""
                                 }) {
                                     Icon(
@@ -158,8 +160,9 @@ fun DetailsCardSubnotes(
                             imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions(onDone = {
-                            if (newSubnoteText.isNotEmpty())
-                                onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+                            if (newSubnoteText.isNotEmpty()) {
+                                onSubnoteAdded(newSubnoteText)
+                            }
                             newSubnoteText = ""
                         })
                     )
@@ -180,7 +183,7 @@ fun DetailsCardSubnotes(
                     },
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
-                ) {index, subnote, isDragging ->
+                ) {_, subnote, _ ->
                     key(subnote.id) {
 
                         var showEditSubnoteDialog by rememberSaveable { mutableStateOf(false) }
@@ -237,7 +240,8 @@ fun DetailsCardSubnotes_Preview() {
                     ),
             isEditMode = remember { mutableStateOf(false) },
             enforceSavingSubnote = false,
-            onSubnoteAdded = { _, _ -> },
+            onAudioSubnoteAdded = { _, _ -> },
+            onSubnoteAdded = { },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
@@ -265,7 +269,8 @@ fun DetailsCardSubnotes_Preview_edit() {
             ),
             isEditMode = remember { mutableStateOf(true) },
             enforceSavingSubnote = false,
-            onSubnoteAdded = { _, _ -> },
+            onAudioSubnoteAdded = { _, _ -> },
+            onSubnoteAdded = { },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },

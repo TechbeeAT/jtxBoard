@@ -455,6 +455,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun addSubEntries(subEntries: List<ICalObject>) {
+        subEntries.forEach { addSubEntry(it, null) }
+    }
 
     fun addSubEntry(subEntry: ICalObject, attachment: Attachment?) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -464,7 +467,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             databaseDao.addSubEntry(
                 parentUID = icalObject.value?.uid!!,
                 subEntry = subEntry,
-                attachment = attachment)
+                attachment = attachment
+            )
 
             withContext(Dispatchers.Main) {
                     changeState.value = DetailChangeState.CHANGESAVED
