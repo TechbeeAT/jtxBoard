@@ -160,23 +160,11 @@ fun ListTopRow(
             )
         }
 
-        categories.forEach { category ->
+        AnimatedVisibility(ical4List.priority in 1..9) {
             ListBadge(
-                icon = Icons.AutoMirrored.Outlined.Label,
-                iconDesc = stringResource(id = R.string.category),
-                text = category.text,
-                containerColor = StoredCategory.getColorForCategory(category.text, storedCategories) ?: MaterialTheme.colorScheme.primaryContainer,
-                isAccessibilityMode = isAccessibilityMode,
-                modifier = Modifier.padding(vertical = 2.dp)
-            )
-        }
-
-        resources.forEach { resource ->
-            ListBadge(
-                icon = Icons.Outlined.WorkOutline,
-                iconDesc = stringResource(id = R.string.resources),
-                text = resource.text,
-                containerColor = StoredResource.getColorForResource(resource.text?:"", storedResources) ?: MaterialTheme.colorScheme.primaryContainer,
+                icon = Icons.Outlined.AssignmentLate,
+                iconDesc = stringResource(id = R.string.priority),
+                text = if (ical4List.priority in 1..9) stringArrayResource(id = R.array.priority)[ical4List.priority!!] else null,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
@@ -212,11 +200,23 @@ fun ListTopRow(
             )
         }
 
-        AnimatedVisibility(ical4List.priority in 1..9) {
+        categories.forEach { category ->
             ListBadge(
-                icon = Icons.Outlined.AssignmentLate,
-                iconDesc = stringResource(id = R.string.priority),
-                text = if (ical4List.priority in 1..9) stringArrayResource(id = R.array.priority)[ical4List.priority!!] else null,
+                icon = Icons.AutoMirrored.Outlined.Label,
+                iconDesc = stringResource(id = R.string.category),
+                text = category.text,
+                containerColor = StoredCategory.getColorForCategory(category.text, storedCategories) ?: MaterialTheme.colorScheme.primaryContainer,
+                isAccessibilityMode = isAccessibilityMode,
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        }
+
+        resources.forEach { resource ->
+            ListBadge(
+                icon = Icons.Outlined.WorkOutline,
+                iconDesc = stringResource(id = R.string.resources),
+                text = resource.text,
+                containerColor = StoredResource.getColorForResource(resource.text?:"", storedResources) ?: MaterialTheme.colorScheme.primaryContainer,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
