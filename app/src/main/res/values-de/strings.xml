@@ -670,4 +670,10 @@ Danke!"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board benötigt die Berechtigung, genaue Erinnerungen zu planen, da sonst Alarme verzögert ausgegeben werden könnten. Bitte erteilen Sie diese Berechtigung, um diese Funktion zu nutzen."</string>
     <string name="call_contact">"%1$s anrufen"</string>
     <string name="email_contact">"E-Mail an %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Mehrere Unteraufgaben erstellen</string>
+    <string name="dialog_create_multiple_subnotes">Mehrere verknüpfte Notizen erstellen</string>
+    <string name="dialog_detected_multiple_subtasks">Der Text enthält möglicherweise mehrere Unteraufgaben. Möchten Sie %d Unteraufgaben erstellen?</string>
+    <string name="dialog_detected_multiple_subnotes">Der Text enthält möglicherweise mehrere verknüpfte Notizen. Möchten Sie %d verknüpfte Notizen erstellen?</string>
+    <string name="dialog_confirm_create_multiple">Mehrere erstellen</string>
+    <string name="dialog_confirm_create_single">Einzeln erstellen</string>
 </resources>
