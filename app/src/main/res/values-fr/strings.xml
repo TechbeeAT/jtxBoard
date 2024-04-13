@@ -665,4 +665,10 @@ Merci !"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board a besoin de l'autorisation pour programmer des alarmes exactes, sinon les notifications d'alarme pourraient être retardées. Veuillez accorder cette autorisation afin d'utiliser cette fonctionnalité."</string>
     <string name="call_contact">"Appeler %1$s"</string>
     <string name="email_contact">"E-Mail %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Créer des sous-tâches en masse</string>
+    <string name="dialog_create_multiple_subnotes">Créer des notes liées en masse</string>
+    <string name="dialog_detected_multiple_subtasks">Le texte contient probablement plusieurs sous-tâches. Voulez-vous créer des sous-tâches %d?</string>
+    <string name="dialog_detected_multiple_subnotes">Le texte contient probablement plusieurs notes liées. Voulez-vous créer des notes liées à %d?</string>
+    <string name="dialog_confirm_create_multiple">Créer plusieurs</string>
+    <string name="dialog_confirm_create_single">Créer une seule</string>
 </resources>
