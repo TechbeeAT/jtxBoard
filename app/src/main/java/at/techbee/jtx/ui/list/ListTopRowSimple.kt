@@ -49,9 +49,6 @@ import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.reusable.elements.DragHandle
-import sh.calvin.reorderable.ReorderableColumn
-import sh.calvin.reorderable.ReorderableScope
 import kotlin.time.Duration.Companion.days
 
 
@@ -61,7 +58,6 @@ fun ListTopRowSimple(
     storedCategories: List<StoredCategory>,
     extendedStatusesAll: List<ExtendedStatus>,
     modifier: Modifier = Modifier,
-    reorderableScope: ReorderableScope? = null
 ) {
 
     val extendedStatuses = extendedStatusesAll.filter { it.module == ical4List.getModule() }
@@ -77,11 +73,6 @@ fun ListTopRowSimple(
             .horizontalScroll(rememberScrollState())
             .alpha(0.5f)
     ) {
-
-        if(reorderableScope != null) {
-            DragHandle(scope = reorderableScope)
-        }
-
         if(ical4List.dtstart != null) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -441,23 +432,16 @@ fun ListTopRowSimple_Preview() {
 @Composable
 fun ListTopRowSimple_with_DragHandle_Preview() {
     MaterialTheme {
-
-        ReorderableColumn(
-            list = listOf(1),
-            onSettle = { _, _ -> },
-        ) { _, _, _ ->
-            ListTopRowSimple(
-                ical4List = ICal4List.getSample().apply {
-                    module = Module.TODO.name
-                    dtstart = System.currentTimeMillis()
-                    due = System.currentTimeMillis() - (1).days.inWholeMilliseconds
-                    priority = 5
-                },
-                storedCategories = emptyList(),
-                extendedStatusesAll = emptyList(),
-                reorderableScope = this
-            )
-        }
+        ListTopRowSimple(
+            ical4List = ICal4List.getSample().apply {
+                module = Module.TODO.name
+                dtstart = System.currentTimeMillis()
+                due = System.currentTimeMillis() - (1).days.inWholeMilliseconds
+                priority = 5
+            },
+            storedCategories = emptyList(),
+            extendedStatusesAll = emptyList()
+        )
     }
 }
 

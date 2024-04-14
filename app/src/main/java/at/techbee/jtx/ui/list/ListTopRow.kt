@@ -47,10 +47,7 @@ import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.ListBadge
-import sh.calvin.reorderable.ReorderableColumn
-import sh.calvin.reorderable.ReorderableScope
 
 
 @Composable
@@ -68,8 +65,6 @@ fun ListTopRow(
     showAttachments: Boolean = true,
     showSubtasks: Boolean = true,
     showSubnotes: Boolean = true,
-    reorderableScope: ReorderableScope? = null
-
 ) {
 
     Row(
@@ -77,10 +72,6 @@ fun ListTopRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = if(enableScroll) modifier.horizontalScroll(rememberScrollState()) else modifier
     ) {
-
-        if(reorderableScope != null) {
-            DragHandle(scope = reorderableScope)
-        }
 
         ListBadge(
             icon = Icons.Outlined.FolderOpen,
@@ -340,21 +331,15 @@ fun ListTopRow(
 @Composable
 fun ListTopRow_Preview() {
     MaterialTheme {
-        ReorderableColumn(
-            list = listOf(1),
-            onSettle = { _, _ -> },
-        ) { _, _, _ ->
-            ListTopRow(
-                ical4List = ICal4List.getSample(),
-                categories = listOf(Category(text = "Category"), Category(text = "Test"), Category(text = "Another")),
-                resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
-                storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-                storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-                extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
-                isAccessibilityMode = false,
-                includeJournalDate = true,
-                reorderableScope = this
-            )
-        }
+        ListTopRow(
+            ical4List = ICal4List.getSample(),
+            categories = listOf(Category(text = "Category"), Category(text = "Test"), Category(text = "Another")),
+            resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            isAccessibilityMode = false,
+            includeJournalDate = true,
+        )
     }
 }

@@ -17,10 +17,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,6 +53,7 @@ import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import sh.calvin.reorderable.ReorderableColumn
+import sh.calvin.reorderable.ReorderableItemScope
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -66,8 +71,9 @@ fun ListCardCompact(
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onUpdateSortOrder: (List<ICal4List>) -> Unit
-    ) {
+    onUpdateSortOrder: (List<ICal4List>) -> Unit,
+    dragHandle:@Composable () -> Unit = { }
+) {
 
     Card(
         colors = CardDefaults.cardColors(
@@ -91,6 +97,8 @@ fun ListCardCompact(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
+
+                dragHandle()
 
                 Column(
                     verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.Top),
@@ -200,7 +208,10 @@ fun ListCardCompact_JOURNAL() {
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            dragHandle = { IconButton(onClick = {  }) {
+                Icon(Icons.Outlined.DragHandle, null)
+            } }
         )
     }
 }

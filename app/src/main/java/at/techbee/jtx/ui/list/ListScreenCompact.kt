@@ -68,8 +68,11 @@ import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlinx.coroutines.launch
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyColumnState
 import java.util.UUID
 
 
@@ -98,6 +101,9 @@ fun ListScreenCompact(
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
+    val reorderableLazyListState = rememberReorderableLazyColumnState(listState) { from, to ->
+        // TODO
+    }
     val scope = rememberCoroutineScope()
 
     val storedStatuses by storedStatusesLive.observeAsState(emptyList())
@@ -180,43 +186,46 @@ fun ListScreenCompact(
                             }
                         }
 
-                        ListCardCompact(
-                            iCal4ListRelObject.iCal4List,
-                            storedCategories = storedCategories,
-                            storedStatuses = storedStatuses,
-                            subtasks = currentSubtasks,
-                            progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
-                            selected = selectedEntries,
-                            player = player,
-                            isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 4.dp, bottom = 4.dp)
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = {
-                                        onClick(
-                                            iCal4ListRelObject.iCal4List.id,
-                                            groupedList
-                                                .flatMap { it.value }
-                                                .map { it.iCal4List },
-                                            iCal4ListRelObject.iCal4List.isReadOnly,
-                                        )
-                                    },
-                                    onLongClick = {
-                                        if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                            onLongClick(
+                        ReorderableItem(reorderableLazyListState, key = iCal4ListRelObject.iCal4List.id) { isDragging ->
+                            ListCardCompact(
+                                iCal4ListRelObject.iCal4List,
+                                storedCategories = storedCategories,
+                                storedStatuses = storedStatuses,
+                                subtasks = currentSubtasks,
+                                progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                                selected = selectedEntries,
+                                player = player,
+                                isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
+                                dragHandle = { DragHandleLazy(this) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp, bottom = 4.dp)
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = {
+                                            onClick(
                                                 iCal4ListRelObject.iCal4List.id,
                                                 groupedList
                                                     .flatMap { it.value }
-                                                    .map { it.iCal4List })
-                                    }
-                                ),
-                            onProgressChanged = onProgressChanged,
-                            onClick = onClick,
-                            onLongClick = onLongClick,
-                            onUpdateSortOrder = onUpdateSortOrder
+                                                    .map { it.iCal4List },
+                                                iCal4ListRelObject.iCal4List.isReadOnly,
+                                            )
+                                        },
+                                        onLongClick = {
+                                            if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                                onLongClick(
+                                                    iCal4ListRelObject.iCal4List.id,
+                                                    groupedList
+                                                        .flatMap { it.value }
+                                                        .map { it.iCal4List })
+                                        }
+                                    ),
+                                onProgressChanged = onProgressChanged,
+                                onClick = onClick,
+                                onLongClick = onLongClick,
+                                onUpdateSortOrder = onUpdateSortOrder
                             )
+                        }
 
                         if (iCal4ListRelObject != group.last())
                             HorizontalDivider(
