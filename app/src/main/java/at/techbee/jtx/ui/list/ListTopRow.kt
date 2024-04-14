@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -46,7 +47,10 @@ import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.ListBadge
+import sh.calvin.reorderable.ReorderableColumn
+import sh.calvin.reorderable.ReorderableScope
 
 
 @Composable
@@ -63,13 +67,21 @@ fun ListTopRow(
     enableScroll: Boolean = true,
     showAttachments: Boolean = true,
     showSubtasks: Boolean = true,
-    showSubnotes: Boolean = true
+    showSubnotes: Boolean = true,
+    reorderableScope: ReorderableScope? = null
+
 ) {
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(3.dp),
+        verticalAlignment = Alignment.CenterVertically,
         modifier = if(enableScroll) modifier.horizontalScroll(rememberScrollState()) else modifier
     ) {
+
+        if(reorderableScope != null) {
+            DragHandle(scope = reorderableScope)
+        }
+
         ListBadge(
             icon = Icons.Outlined.FolderOpen,
             iconDesc = stringResource(id = R.string.collection),
@@ -328,15 +340,21 @@ fun ListTopRow(
 @Composable
 fun ListTopRow_Preview() {
     MaterialTheme {
-        ListTopRow(
-            ical4List = ICal4List.getSample(),
-            categories = listOf(Category(text = "Category"), Category(text = "Test"), Category(text = "Another")),
-            resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
-            isAccessibilityMode = false,
-            includeJournalDate = true
-        )
+        ReorderableColumn(
+            list = listOf(1),
+            onSettle = { _, _ -> },
+        ) { _, _, _ ->
+            ListTopRow(
+                ical4List = ICal4List.getSample(),
+                categories = listOf(Category(text = "Category"), Category(text = "Test"), Category(text = "Another")),
+                resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
+                storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+                storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+                extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+                isAccessibilityMode = false,
+                includeJournalDate = true,
+                reorderableScope = this
+            )
+        }
     }
 }
