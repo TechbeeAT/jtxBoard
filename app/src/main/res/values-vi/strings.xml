@@ -326,6 +326,10 @@
     <string name="notification_done">"Xong"</string>
     <string name="notification_add_1h">"+ 1 giờ"</string>
     <string name="notification_add_1d">"+ 1 ngày"</string>
+    <string name="edit_recur_ends_on">"kết thúc vào"</string>
+    <string name="edit_recur_ends_after">"kết thúc sau"</string>
+    <string name="collections_toast_export_success">"Đã xuất thành công bộ sưu tập"</string>
+    <string name="collections_toast_export_error">"Lỗi khi xuất bộ sưu tập"</string>
     <string name="menu_collections_export_all">"Xuất tất cả"</string>
     <string name="menu_presets_export_presets">"Xuất các thiết đặt sẵn"</string>
     <string name="menu_presets_import_presets">"Nhập các thiết đặt sẵn"</string>
@@ -346,7 +350,10 @@
     <string name="settings_timezone_display_local">"Hiển thị thời gian theo múi giờ địa phương"</string>
     <string name="settings_timezone_display_original">"Hiển thị thời gian theo múi giờ gốc"</string>
     <string name="settings_timezone_display_local_and_original">"Hiển thị thời gian theo địa phương và theo múi giờ gốc (chỉ xem chi tiết)"</string>
+    <string name="donate_dialog_title">"Bạn có thích jtx Board?"</string>
     <!-- Buy Pro fragment -->
+    <string name="buypro_purchase_header">"Nâng cấp lên jtx Board Pro"</string>
+    <string name="buypro_purchase_date">"Đã mua lúc %1$s"</string>
     <string name="buypro_success_thankyou">"Cảm ơn!"</string>
     <string name="menu_list_viewmode_list">"Hiển thị danh sách"</string>
     <string name="menu_list_viewmode_grid">"Hiển thị lưới"</string>
@@ -364,7 +371,11 @@
     <string name="group_by_date_month">"Ngày tháng (tháng)"</string>
     <string name="timezone">"Múi giờ"</string>
     <string name="clear_selection">"Xóa lựa chọn"</string>
+    <string name="audio_play">"Phát"</string>
+    <string name="audio_stop">"Dừng"</string>
+    <string name="audio_pause">"Tạm dừng"</string>
     <string name="sync_in_progress">"Đang đồng bộ hóa"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Đang nghe …"</string>
     <string name="list_update_entries_dialog_title">"Cập nhật các mục"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Chú ý: Các phiên bản định kỳ phải được hủy liên kết khỏi chuỗi của nó trước khi được chuyển sang bộ sưu tập khác và sẽ bị bỏ qua trong quá trình này."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Chọn cấp độ cha mà các mục đã chọn sẽ được liên kết dưới dạng nhiệm vụ con/ghi chú được liên kết."</string>
