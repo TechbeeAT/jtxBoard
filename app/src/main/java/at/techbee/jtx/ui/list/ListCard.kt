@@ -137,7 +137,6 @@ fun ListCard(
         )
     }
 
-
     Card(
         colors = CardDefaults.elevatedCardColors(
             containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
@@ -147,6 +146,7 @@ fun ListCard(
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
         modifier = modifier
     ) {
+
         Column(
             modifier = Modifier.padding(top = 4.dp, bottom = 0.dp, start = 8.dp, end = 8.dp)
         ) {
@@ -168,6 +168,7 @@ fun ListCard(
                 verticalAlignment = Alignment.Top,
                 modifier = Modifier.padding(vertical = 2.dp)
             ) {
+
 
                 if (iCalObject.module == Module.JOURNAL.name)
                     VerticalDateBlock(
@@ -443,7 +444,7 @@ fun ListCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp)
-                ) { index, subtask, isDragging ->
+                ) { _, subtask, _ ->
                     key(subtask.id) {
 
                         SubtaskCard(
@@ -482,7 +483,7 @@ fun ListCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp)
-                ) { index, subnote, isDragging ->
+                ) { _, subnote, _ ->
                     key(subnote.id) {
 
 
