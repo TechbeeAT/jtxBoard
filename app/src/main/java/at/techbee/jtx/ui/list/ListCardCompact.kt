@@ -53,7 +53,6 @@ import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import sh.calvin.reorderable.ReorderableColumn
-import sh.calvin.reorderable.ReorderableItemScope
 
 
 @OptIn(ExperimentalFoundationApi::class)

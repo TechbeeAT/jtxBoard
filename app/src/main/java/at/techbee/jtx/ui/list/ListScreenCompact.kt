@@ -102,7 +102,10 @@ fun ListScreenCompact(
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyColumnState(listState) { from, to ->
-        // TODO
+        val reordered = groupedList.flatMap { it.value }.map { it.iCal4List }.toMutableList().apply {
+            add(to.index, removeAt(from.index))
+        }
+        onUpdateSortOrder(reordered)
     }
     val scope = rememberCoroutineScope()
 
@@ -115,10 +118,14 @@ fun ListScreenCompact(
     )
 
     Box(
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
-            modifier = if(isPullRefreshEnabled) Modifier.padding(start = 2.dp, end = 2.dp).pullRefresh(pullRefreshState) else Modifier.padding(start = 2.dp, end = 2.dp),
+            modifier = if(isPullRefreshEnabled)
+                Modifier.padding(start = 2.dp, end = 2.dp).fillMaxSize().pullRefresh(pullRefreshState)
+            else
+                Modifier.padding(start = 2.dp, end = 2.dp).fillMaxSize(),
             state = listState,
         ) {
 
@@ -159,7 +166,7 @@ fun ListScreenCompact(
 
                 if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !listSettings.collapsedGroups.contains(groupName))) {
                     items(
-                        items = group,
+                        items = group.toList(),
                         key = { item ->
                             if(listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE)
                                 item.iCal4List.id.toString() + UUID.randomUUID()
@@ -186,7 +193,13 @@ fun ListScreenCompact(
                             }
                         }
 
-                        ReorderableItem(reorderableLazyListState, key = iCal4ListRelObject.iCal4List.id) { isDragging ->
+                        ReorderableItem(
+                            reorderableLazyListState,
+                            key = if(listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE)
+                                iCal4ListRelObject.iCal4List.id.toString() + UUID.randomUUID()
+                            else
+                                iCal4ListRelObject.iCal4List.id
+                        ) { _ ->
                             ListCardCompact(
                                 iCal4ListRelObject.iCal4List,
                                 storedCategories = storedCategories,

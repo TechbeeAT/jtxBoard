@@ -129,7 +129,10 @@ fun ListScreenList(
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyColumnState(listState) { from, to ->
-        // TODO
+        val reordered = groupedList.flatMap { it.value }.map { it.iCal4List }.toMutableList().apply {
+            add(to.index, removeAt(from.index))
+        }
+        onUpdateSortOrder(reordered)
     }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
@@ -220,7 +223,7 @@ fun ListScreenList(
                             }
                         }
 
-                        ReorderableItem(reorderableLazyListState, key = iCal4ListRelObject.iCal4List.id) { isDragging ->
+                        ReorderableItem(reorderableLazyListState, key = iCal4ListRelObject.iCal4List.id) {
                             ListCard(
                                 iCalObject = iCal4ListRelObject.iCal4List,
                                 categories = iCal4ListRelObject.categories,
