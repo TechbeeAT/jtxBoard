@@ -537,7 +537,7 @@ enum class OrderBy(@StringRes val stringResource: Int) {
             START_VJOURNAL -> "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
             DUE -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100), $COLUMN_DUE IS NULL, $COLUMN_DUE ${sortOrder.name} "
             COMPLETED -> "IFNULL($COLUMN_COMPLETED, 0) ${sortOrder.name} "
-            CREATED -> "$COLUMN_CREATED ${sortOrder.name} "
+            CREATED -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100), $COLUMN_CREATED ${sortOrder.name} "
             LAST_MODIFIED -> "$COLUMN_LAST_MODIFIED ${sortOrder.name} "
             SUMMARY -> "UPPER($COLUMN_SUMMARY) ${sortOrder.name} "
             PRIORITY -> "CASE WHEN $COLUMN_PRIORITY IS NULL THEN 1 WHEN $COLUMN_PRIORITY = 0 THEN 1 ELSE 0 END, $COLUMN_PRIORITY ${sortOrder.name} "
