@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.CheckBox
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Colorize
@@ -37,9 +38,12 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -55,10 +59,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.list.CheckboxPosition
 import at.techbee.jtx.ui.list.ListSettings
+import at.techbee.jtx.ui.list.MAX_ITEMS_PER_SECTION
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
@@ -69,11 +76,13 @@ import at.techbee.jtx.ui.theme.getContrastSurfaceColorFor
 fun ListWidgetConfigGeneral(
     listSettings: ListSettings,
     selectedModule: MutableState<Module>,
+    allCategoriesLive: LiveData<List<String>>,
     modifier: Modifier = Modifier
 ) {
 
     var showColorPickerBackground by rememberSaveable { mutableStateOf(false) }
     var showColorPickerEntryBackground by rememberSaveable { mutableStateOf(false) }
+    val allCategories by allCategoriesLive.observeAsState(emptyList())
 
     val widgetColorCalculated = listSettings.widgetColor.value?.let { Color(it).copy(alpha = listSettings.widgetAlpha.value) } ?: MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value)
     val widgetColorEntriesCalculated = listSettings.widgetColorEntries.value?.let { Color(it).copy(alpha = listSettings.widgetAlphaEntries.value) } ?: MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value)
@@ -349,6 +358,61 @@ fun ListWidgetConfigGeneral(
                 label = { Text(stringResource(R.string.widget_list_configuration_entries_background), modifier = Modifier.padding(horizontal = 8.dp)) }
             )
         }
+
+
+        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+        HeadlineWithIcon(
+            icon = Icons.AutoMirrored.Outlined.Label,
+            iconDesc = stringResource(id = R.string.category),
+            text = stringResource(id = R.string.category)
+        )
+
+        Text(
+            text = stringResource(R.string.widget_list_default_category),
+            style = MaterialTheme.typography.labelMedium,
+            fontStyle = FontStyle.Italic
+        )
+
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
+            val allCategoriesSorted =
+                if (allCategories.size > maxEntries) allCategories else allCategories.sortedBy { it.lowercase() }
+            allCategoriesSorted.forEachIndexed { index, category ->
+                if (index > maxEntries - 1)
+                    return@forEachIndexed
+
+                FilterChip(
+                    selected = listSettings.defaultCategory.value == category,
+                    onClick = {
+                              if(listSettings.defaultCategory.value != category || listSettings.defaultCategory.value.isNullOrEmpty())
+                                  listSettings.defaultCategory.value = category
+                              else
+                                  listSettings.defaultCategory.value = null
+                    },
+                    label = { Text(category) }
+                )
+            }
+
+            if (allCategories.size > maxEntries) {
+                TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
+                    Text(
+                        stringResource(
+                            R.string.filter_options_more_entries,
+                            allCategories.size - maxEntries
+                        )
+                    )
+                }
+            }
+            if (maxEntries == Int.MAX_VALUE) {
+                TextButton(onClick = { maxEntries = MAX_ITEMS_PER_SECTION }) {
+                    Text(stringResource(R.string.filter_options_less_entries))
+                }
+            }
+        }
     }
 }
 
@@ -360,6 +424,7 @@ fun ListWidgetConfigGeneral_Preview() {
         ListWidgetConfigGeneral(
             listSettings = ListSettings(),
             selectedModule = remember { mutableStateOf(Module.TODO)},
+            allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
             modifier = Modifier.fillMaxSize()
         )
     }
