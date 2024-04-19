@@ -8,15 +8,12 @@
     <string name="save">"Guardar"</string>
     <string name="update">"Atualizar"</string>
     <string name="cancel">"Cancelar"</string>
-    <string name="ok">"OK"</string>
     <string name="delete">"Eliminar"</string>
     <string name="discard">"Rejeitar"</string>
     <string name="dismiss">"Descartar"</string>
     <string name="open">"Abrir"</string>
     <string name="cont">"Continuar"</string>
     <string name="website">"Página web"</string>
-    <string name="latitude">"Latitude"</string>
-    <string name="longitude">"Longitude"</string>
     <string name="unlink">"Desfazer ligação"</string>
     <string name="off">"Desligado"</string>
     <string name="permissions">"Permissões"</string>
@@ -25,11 +22,8 @@
     <string name="toolbar_text_add_note">"Adicionar Nota"</string>
     <string name="toolbar_text_add_task">"Adicionar Tarefa"</string>
     <string name="toast_sync_requested">"Sincronização solicitada"</string>
-    <string name="default_local_collection_name">"Local"</string>
-    <string name="default_local_account_name">"Local"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Rascunho"</string>
-    <string name="journal_status_final">"Final"</string>
     <string name="journal_status_cancelled">"Cancelado"</string>
     <string name="todo_status_needsaction">"Ação Necessária"</string>
     <string name="todo_status_completed">"Concluído"</string>
