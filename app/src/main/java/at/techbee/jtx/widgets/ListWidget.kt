@@ -232,9 +232,9 @@ class ListWidget : GlanceAppWidget() {
                             listWidgetConfig.searchCollection.firstOrNull()?.let {
                                 putExtra(MainActivity2.INTENT_EXTRA_COLLECTION2PRESELECT, it)
                             }
-                            listWidgetConfig.defaultCategory?.let {
-                                putExtra(MainActivity2.INTENT_EXTRA_CATEGORY2PRESELECT, it)
-                            }
+                            val categoriesArray = arrayListOf<String>()
+                            categoriesArray.addAll(listWidgetConfig.defaultCategories)
+                            putStringArrayListExtra(MainActivity2.INTENT_EXTRA_CATEGORIES2PRESELECT, categoriesArray)
                         }
                         context.startActivity(addNewIntent)
                     },

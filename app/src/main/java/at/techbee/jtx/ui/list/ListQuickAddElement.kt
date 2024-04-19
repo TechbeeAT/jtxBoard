@@ -26,6 +26,8 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,6 +38,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.MicOff
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -83,6 +86,7 @@ import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import java.util.Locale
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListQuickAddElement(
     presetModule: Module?,
@@ -92,9 +96,9 @@ fun ListQuickAddElement(
     presetAttachment: Attachment? = null,
     allWriteableCollections: List<ICalCollection>,
     presetCollectionId: Long,
-    presetCategory: String?,
+    presetCategories: List<String>,
     player: MediaPlayer?,
-    onSaveEntry: (module: Module, newEntryText: String, category: String?, attachments: List<Attachment>, collectionId: Long, editAfterSaving: Boolean) -> Unit,
+    onSaveEntry: (module: Module, newEntryText: String, categories: List<String>, attachments: List<Attachment>, collectionId: Long, editAfterSaving: Boolean) -> Unit,
     onDismiss: (String) -> Unit,
     keepDialogOpen: () -> Unit
 ) {
@@ -193,7 +197,7 @@ fun ListQuickAddElement(
         if(currentCollection == null || currentModule == null)
             return
 
-        onSaveEntry(currentModule!!, currentText.text, presetCategory, currentAttachments.filterNotNull(), currentCollection!!.collectionId, goToEdit)
+        onSaveEntry(currentModule!!, currentText.text, presetCategories, currentAttachments.filterNotNull(), currentCollection!!.collectionId, goToEdit)
         currentText = TextFieldValue(text = "")
         if(goToEdit)
             onDismiss("")
@@ -334,6 +338,17 @@ fun ListQuickAddElement(
 
                 }
 
+                if(presetCategories.isNotEmpty()) {
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        presetCategories.forEach { category ->
+                            ElevatedAssistChip(
+                                onClick = {},
+                                label = { Text(category) }
+                            )
+                        }
+                    }
+                }
+
 
                 currentAttachments.forEach { attachment ->
                     if(attachment == null)
@@ -462,7 +477,7 @@ fun ListQuickAddElement_Preview() {
             presetText = "This is my preset text",
             presetAttachment = Attachment(filename = "My File.PDF"),
             presetCollectionId = 0L,
-            presetCategory = null,
+            presetCategories = emptyList(),
             player = null,
             modifier = Modifier
                 .fillMaxWidth()
@@ -498,7 +513,7 @@ fun ListQuickAddElement_Preview_empty() {
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
-            presetCategory = null,
+            presetCategories = emptyList(),
             player = null,
             modifier = Modifier
                 .fillMaxWidth()
@@ -534,7 +549,7 @@ fun ListQuickAddElement_Preview_only_one_enabled() {
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
-            presetCategory = null,
+            presetCategories = listOf("abc", "def"),
             player = null,
             modifier = Modifier
                 .fillMaxWidth()

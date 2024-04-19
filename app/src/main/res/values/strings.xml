@@ -629,7 +629,7 @@ Thank you!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Updating widget"</string>
     <string name="widget_list_opacity_warning">"Note: This is an experimental feature! With reduced opacity changes in the color theme might not be reflected immediately!"</string>
     <string name="widget_list_color_warning">"Note: This is an experimental feature! Changes in the color theme will not be reflected! Choose no color to return to system default."</string>
-    <string name="widget_list_default_category">"Set a default category for new entries from widget"</string>
+    <string name="widget_list_default_categories">"Set default categories for new entries from widget"</string>
     <string name="opacity">"Opacity"</string>
     <string name="link_jtx_mastodon" translatable="false">"https://fosstodon.org/@jtx"</string>
     <string name="mastodon_account_name" translatable="false">"@jtx@fosstodon.org"</string>
