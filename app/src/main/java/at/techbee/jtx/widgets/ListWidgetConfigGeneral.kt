@@ -369,7 +369,7 @@ fun ListWidgetConfigGeneral(
         )
 
         Text(
-            text = stringResource(R.string.widget_list_default_category),
+            text = stringResource(R.string.widget_list_default_categories),
             style = MaterialTheme.typography.labelMedium,
             fontStyle = FontStyle.Italic
         )
@@ -386,12 +386,12 @@ fun ListWidgetConfigGeneral(
                     return@forEachIndexed
 
                 FilterChip(
-                    selected = listSettings.defaultCategory.value == category,
+                    selected = listSettings.defaultCategories.contains(category),
                     onClick = {
-                              if(listSettings.defaultCategory.value != category || listSettings.defaultCategory.value.isNullOrEmpty())
-                                  listSettings.defaultCategory.value = category
+                              if(listSettings.defaultCategories.contains(category))
+                                  listSettings.defaultCategories.remove(category)
                               else
-                                  listSettings.defaultCategory.value = null
+                                  listSettings.defaultCategories.add(category)
                     },
                     label = { Text(category) }
                 )

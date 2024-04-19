@@ -255,7 +255,7 @@ fun ListWidgetConfigContent(
                                     showSubtasks = listSettings.showSubtasks.value
                                     showSubnotes = listSettings.showSubnotes.value
                                     widgetHeader = listSettings.widgetHeader.value
-                                    defaultCategory = listSettings.defaultCategory.value
+                                    defaultCategories = listSettings.defaultCategories
 
                                     isExcludeDone = listSettings.isExcludeDone.value
                                     isFilterOverdue = listSettings.isFilterOverdue.value
@@ -382,5 +382,5 @@ data class ListWidgetConfig(
     var widgetColor: Int? = null,
     var widgetColorEntries: Int? = null,
 
-    var defaultCategory: String? = null
+    var defaultCategories: List<String> = emptyList()
 )
