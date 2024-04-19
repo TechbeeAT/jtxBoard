@@ -97,6 +97,7 @@ class ListSettings {
     var showDescription: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubtasks: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubnotes: MutableState<Boolean> = mutableStateOf(true)  // widget only
+    var defaultCategory: MutableState<String?> = mutableStateOf(null) // widget only
 
     companion object {
         private const val PREFS_COLLECTION = "prefsCollection"
@@ -302,6 +303,7 @@ class ListSettings {
             widgetHeader.value = listWidgetConfig.widgetHeader
             widgetColor.value = listWidgetConfig.widgetColor
             widgetColorEntries.value = listWidgetConfig.widgetColorEntries
+            defaultCategory.value = listWidgetConfig.defaultCategory
         }
     }
 

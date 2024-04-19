@@ -92,8 +92,9 @@ fun ListQuickAddElement(
     presetAttachment: Attachment? = null,
     allWriteableCollections: List<ICalCollection>,
     presetCollectionId: Long,
+    presetCategory: String?,
     player: MediaPlayer?,
-    onSaveEntry: (module: Module, newEntryText: String, attachments: List<Attachment>, collectionId: Long, editAfterSaving: Boolean) -> Unit,
+    onSaveEntry: (module: Module, newEntryText: String, category: String?, attachments: List<Attachment>, collectionId: Long, editAfterSaving: Boolean) -> Unit,
     onDismiss: (String) -> Unit,
     keepDialogOpen: () -> Unit
 ) {
@@ -192,7 +193,7 @@ fun ListQuickAddElement(
         if(currentCollection == null || currentModule == null)
             return
 
-        onSaveEntry(currentModule!!, currentText.text, currentAttachments.filterNotNull(), currentCollection!!.collectionId, goToEdit)
+        onSaveEntry(currentModule!!, currentText.text, presetCategory, currentAttachments.filterNotNull(), currentCollection!!.collectionId, goToEdit)
         currentText = TextFieldValue(text = "")
         if(goToEdit)
             onDismiss("")
@@ -456,11 +457,12 @@ fun ListQuickAddElement_Preview() {
             enabledModules = Module.entries,
             allWriteableCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
-            onSaveEntry = { _, _, _, _, _ -> },
+            onSaveEntry = { _, _, _, _, _, _ -> },
             keepDialogOpen = { },
             presetText = "This is my preset text",
             presetAttachment = Attachment(filename = "My File.PDF"),
             presetCollectionId = 0L,
+            presetCategory = null,
             player = null,
             modifier = Modifier
                 .fillMaxWidth()
@@ -491,11 +493,12 @@ fun ListQuickAddElement_Preview_empty() {
             enabledModules = Module.entries,
             allWriteableCollections = listOf(collection3),
             onDismiss = { },
-            onSaveEntry = { _, _, _, _, _ -> },
+            onSaveEntry = { _, _, _, _, _, _ -> },
             keepDialogOpen = { },
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
+            presetCategory = null,
             player = null,
             modifier = Modifier
                 .fillMaxWidth()
@@ -526,11 +529,12 @@ fun ListQuickAddElement_Preview_only_one_enabled() {
             enabledModules = listOf(Module.JOURNAL),
             allWriteableCollections = listOf(collection3),
             onDismiss = { },
-            onSaveEntry = { _, _, _, _, _ -> },
+            onSaveEntry = { _, _, _, _, _, _ -> },
             keepDialogOpen = { },
             presetText = "",
             presetAttachment = null,
             presetCollectionId = 0L,
+            presetCategory = null,
             player = null,
             modifier = Modifier
                 .fillMaxWidth()

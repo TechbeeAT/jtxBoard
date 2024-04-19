@@ -28,6 +28,7 @@ class GlobalStateHolder(context: Context) {
     var icalFromIntentAttachment: MutableState<Attachment?> = mutableStateOf(null)
     var icalFromIntentModule: MutableState<Module?> = mutableStateOf(null)
     var icalFromIntentCollection: MutableState<String?> = mutableStateOf(null)
+    var icalFromIntentCategory: MutableState<String?> = mutableStateOf(null)
 
     var isAuthenticated = mutableStateOf(false)
     var authenticationTimeout: Long? = null

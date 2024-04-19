@@ -294,6 +294,7 @@ fun ListScreenTabContainer(
     fun addNewEntry(
         module: Module,
         text: String?,
+        category: String?,
         collectionId: Long,
         attachments: List<Attachment>,
         setLocation: Boolean,
@@ -312,7 +313,9 @@ fun ListScreenTabContainer(
             settingsStateHolder.settingDefaultDueTime.value,
             settingsStateHolder.settingDefaultDueTimezone.value,
         )
-        val categories = Category.extractHashtagsFromText(text)
+        val categories = mutableListOf<Category>()
+        category?.let { categories.add(Category(text = it)) }
+        categories.addAll(Category.extractHashtagsFromText(text))
 
         if(setLocation && locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
             // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
@@ -395,6 +398,7 @@ fun ListScreenTabContainer(
                     addNewEntry(
                         module = listViewModel.module,
                         text = newEntryText,
+                        category = null,
                         collectionId = listViewModel.listSettings.topAppBarCollectionId.value,
                         attachments = emptyList(),
                         setLocation = when(listViewModel.module) {
@@ -610,6 +614,7 @@ fun ListScreenTabContainer(
                         addNewEntry(
                             module = listViewModel.module,
                             text = listViewModel.listSettings.newEntryText.value.ifEmpty { null },
+                            category = null,
                             collectionId = proposedCollectionId,
                             attachments = emptyList(),
                             setLocation = when(listViewModel.module) {
@@ -732,13 +737,14 @@ fun ListScreenTabContainer(
                                         globalStateHolder.icalFromIntentModule.value ?: getActiveViewModel().module,   // coming from intent
                                     enabledModules = enabledTabs.map { it.module },
                                     presetText = globalStateHolder.icalFromIntentString.value ?: quickAddBackupText,    // only relevant when coming from intent
+                                    presetCategory = globalStateHolder.icalFromIntentCategory.value,   // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allWriteableCollections = allUsableCollections,
                                     presetCollectionId = globalStateHolder.icalFromIntentCollection.value?.let {fromIntent ->
                                         allUsableCollections.find { fromIntent == it.displayName }?.collectionId
                                     } ?: listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
                                     player = listViewModel.mediaPlayer,
-                                    onSaveEntry = { module, text, attachments, collectionId,  editAfterSaving ->
+                                    onSaveEntry = { module, text, category, attachments, collectionId,  editAfterSaving ->
 
                                         listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, collectionId)
                                         settingsStateHolder.lastUsedModule.value = module
@@ -748,6 +754,7 @@ fun ListScreenTabContainer(
                                         globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentModule.value = null
                                         globalStateHolder.icalFromIntentCollection.value = null
+                                        globalStateHolder.icalFromIntentCategory.value = null
 
                                         val setLocation = when(module) {
                                             Module.JOURNAL -> settingsStateHolder.settingSetDefaultCurrentLocationJournals.value
@@ -755,7 +762,7 @@ fun ListScreenTabContainer(
                                             Module.TODO -> settingsStateHolder.settingSetDefaultCurrentLocationTasks.value
                                         }
 
-                                        addNewEntry(module, text, collectionId, attachments, setLocation, editAfterSaving)
+                                        addNewEntry(module, text, category, collectionId, attachments, setLocation, editAfterSaving)
                                         scope.launch {
                                             val index = enabledTabs.indexOf(enabledTabs.find { tab -> tab.module == module })
                                             if(index >=0)
