@@ -48,7 +48,6 @@ fun ListWidgetContent(
     textColor: ColorProvider,
     entryColor: ColorProvider,
     entryTextColor: ColorProvider,
-    entryOverdueTextColor: ColorProvider,
     onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
     onOpenWidgetConfig: () -> Unit,
     onAddNew: () -> Unit,

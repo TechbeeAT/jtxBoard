@@ -188,8 +188,6 @@ class ListWidget : GlanceAppWidget() {
                     )
             }
 
-            val entryOverdueTextColor = GlanceTheme.colors.error
-
             GlanceTheme {
                 ListWidgetContent(
                     listWidgetConfig,
@@ -199,7 +197,6 @@ class ListWidget : GlanceAppWidget() {
                     textColor = textColor,
                     entryColor = entryColor,
                     entryTextColor = entryTextColor,
-                    entryOverdueTextColor = entryOverdueTextColor,
                     onCheckedChange = { iCalObjectId, checked ->
                         scope.launch(Dispatchers.IO) {
                             val settingsStateHolder = SettingsStateHolder(context)
