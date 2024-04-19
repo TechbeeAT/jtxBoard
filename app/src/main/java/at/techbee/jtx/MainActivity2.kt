@@ -117,6 +117,7 @@ class MainActivity2 : AppCompatActivity() {
         const val INTENT_ACTION_OPEN_ICALOBJECT = "openICalObject"
         const val INTENT_EXTRA_ITEM2SHOW = "item2show"
         const val INTENT_EXTRA_COLLECTION2PRESELECT = "collection2preselect"
+        const val INTENT_EXTRA_CATEGORIES2PRESELECT = "categories2preselect"
         const val INTENT_EXTRA_LISTWIDGETCONFIG = "listWidgetConfig"
     }
 
@@ -235,18 +236,24 @@ class MainActivity2 : AppCompatActivity() {
                     globalStateHolder.icalFromIntentString.value = ""
                     globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.getStringArrayListExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)?.let { globalStateHolder.icalFromIntentCategories.addAll(it) }
+                    intent.removeExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)
                 }
                 INTENT_ACTION_ADD_NOTE -> {
                     globalStateHolder.icalFromIntentModule.value = Module.NOTE
                     globalStateHolder.icalFromIntentString.value = ""
                     globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.getStringArrayListExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)?.let { globalStateHolder.icalFromIntentCategories.addAll(it) }
+                    intent.removeExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)
                 }
                 INTENT_ACTION_ADD_TODO -> {
                     globalStateHolder.icalFromIntentModule.value = Module.TODO
                     globalStateHolder.icalFromIntentString.value = ""
                     globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.getStringArrayListExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)?.let { globalStateHolder.icalFromIntentCategories.addAll(it) }
+                    intent.removeExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)
                 }
                 INTENT_ACTION_OPEN_FILTERED_LIST -> {
                     intent.getStringExtra(INTENT_EXTRA_LISTWIDGETCONFIG)?.let {

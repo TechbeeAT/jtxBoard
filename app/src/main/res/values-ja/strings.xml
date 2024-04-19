@@ -668,4 +668,6 @@
     <string name="exact_alarm_permission_dialog_message">"jtx Board はアラーム通知の遅延を避けるため、正確なアラームを設定する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
     <string name="call_contact">"%1$sに電話する"</string>
     <string name="email_contact">"%1$sにメールを送信"</string>
+    <string name="dialog_create_multiple_subtasks">サブ ToDo を一括作成</string>
+    <string name="dialog_create_multiple_subnotes">リンクされたメモを一括作成</string>
 </resources>

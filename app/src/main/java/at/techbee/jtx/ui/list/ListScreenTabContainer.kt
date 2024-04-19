@@ -291,6 +291,7 @@ fun ListScreenTabContainer(
     fun addNewEntry(
         module: Module,
         text: String?,
+        categories: List<String>,
         collectionId: Long,
         attachments: List<Attachment>,
         setLocation: Boolean,
@@ -309,7 +310,11 @@ fun ListScreenTabContainer(
             settingsStateHolder.settingDefaultDueTime.value,
             settingsStateHolder.settingDefaultDueTimezone.value,
         )
-        val categories = Category.extractHashtagsFromText(text)
+        val mergedCategories = mutableListOf<Category>()
+        categories.forEach {
+            mergedCategories.add(Category(text = it))
+        }
+        mergedCategories.addAll(Category.extractHashtagsFromText(text))
 
         if(setLocation && locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
             // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
@@ -348,7 +353,7 @@ fun ListScreenTabContainer(
 
         getActiveViewModel().insertQuickItem(
             newICalObject,
-            categories,
+            mergedCategories,
             attachments,
             autoAlarm,
             editAfterSaving
@@ -392,6 +397,7 @@ fun ListScreenTabContainer(
                     addNewEntry(
                         module = listViewModel.module,
                         text = newEntryText,
+                        categories = emptyList(),
                         collectionId = listViewModel.listSettings.topAppBarCollectionId.value,
                         attachments = emptyList(),
                         setLocation = when(listViewModel.module) {
@@ -607,6 +613,7 @@ fun ListScreenTabContainer(
                         addNewEntry(
                             module = listViewModel.module,
                             text = listViewModel.listSettings.newEntryText.value.ifEmpty { null },
+                            categories = emptyList(),
                             collectionId = proposedCollectionId,
                             attachments = emptyList(),
                             setLocation = when(listViewModel.module) {
@@ -729,22 +736,18 @@ fun ListScreenTabContainer(
                                         globalStateHolder.icalFromIntentModule.value ?: getActiveViewModel().module,   // coming from intent
                                     enabledModules = enabledTabs.map { it.module },
                                     presetText = globalStateHolder.icalFromIntentString.value ?: quickAddBackupText,    // only relevant when coming from intent
+                                    presetCategories = globalStateHolder.icalFromIntentCategories,   // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allWriteableCollections = allUsableCollections,
                                     presetCollectionId = globalStateHolder.icalFromIntentCollection.value?.let {fromIntent ->
                                         allUsableCollections.find { fromIntent == it.displayName }?.collectionId
                                     } ?: listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
                                     player = listViewModel.mediaPlayer,
-                                    onSaveEntry = { module, text, attachments, collectionId,  editAfterSaving ->
+                                    onSaveEntry = { module, text, categories, attachments, collectionId,  editAfterSaving ->
 
                                         listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, collectionId)
                                         settingsStateHolder.lastUsedModule.value = module
                                         settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
-
-                                        globalStateHolder.icalFromIntentString.value = null  // origin was state from import
-                                        globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
-                                        globalStateHolder.icalFromIntentModule.value = null
-                                        globalStateHolder.icalFromIntentCollection.value = null
 
                                         val setLocation = when(module) {
                                             Module.JOURNAL -> settingsStateHolder.settingSetDefaultCurrentLocationJournals.value
@@ -752,7 +755,13 @@ fun ListScreenTabContainer(
                                             Module.TODO -> settingsStateHolder.settingSetDefaultCurrentLocationTasks.value
                                         }
 
-                                        addNewEntry(module, text, collectionId, attachments, setLocation, editAfterSaving)
+                                        addNewEntry(module, text, categories, collectionId, attachments, setLocation, editAfterSaving)
+
+                                        globalStateHolder.icalFromIntentString.value = null  // origin was state from import
+                                        globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+                                        globalStateHolder.icalFromIntentModule.value = null
+                                        globalStateHolder.icalFromIntentCollection.value = null
+
                                         scope.launch {
                                             val index = enabledTabs.indexOf(enabledTabs.find { tab -> tab.module == module })
                                             if(index >=0)
@@ -766,6 +775,7 @@ fun ListScreenTabContainer(
                                         globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentModule.value = null
                                         globalStateHolder.icalFromIntentCollection.value = null
+                                        globalStateHolder.icalFromIntentCategories.clear()
                                     },
                                     keepDialogOpen = { showQuickAdd.value = true } // necessary when origin was intent and save&new is clicked!
                                 )

@@ -670,4 +670,10 @@ Gràcies!"</string>
     <string name="exact_alarm_permission_dialog_message">"Cal que jtx Board tingui permís per a programar alarmes exactes, en cas de no ser així, les notificacions podrien endarrerir-se. Per favor, dona aquest permís per a fer servir aquesta funció."</string>
     <string name="call_contact">"Truca a %1$s"</string>
     <string name="email_contact">"Correu a %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Crear subtasques en grup</string>
+    <string name="dialog_create_multiple_subnotes">Crea notes enllaçades en grup</string>
+    <string name="dialog_detected_multiple_subtasks">El text possiblement conté múltiples subtasques. Vols crear %d subtasques?</string>
+    <string name="dialog_detected_multiple_subnotes">El text possiblement conté múltiples notes enllaçades. Vols crear %d notes enllaçades?</string>
+    <string name="dialog_confirm_create_multiple">Crea\'n múltiples</string>
+    <string name="dialog_confirm_create_single">Crea\'n una</string>
 </resources>

@@ -78,7 +78,7 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
      */
     private fun getGitHubContributors() {
 
-        val url = "https://api.github.com/repos/TechbeeAT/jtxBoard/collaborators"
+        val url = "https://api.github.com/repos/TechbeeAT/jtxBoard/contributors"
 
         val jsonArrayRequest: JsonArrayRequest = object : JsonArrayRequest(
             Method.GET, url, null,
@@ -106,7 +106,7 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
                 headers["Accept"] = "application/vnd.github+json"
-                headers["Authorization"] = "Bearer ${BuildConfig.GITHUB_CONTRIBUTORS_API_KEY}"
+                //headers["Authorization"] = "Bearer ${BuildConfig.GITHUB_CONTRIBUTORS_API_KEY}"
                 headers["X-GitHub-Api-Version"] = "2022-11-28"
                 return headers
             }
