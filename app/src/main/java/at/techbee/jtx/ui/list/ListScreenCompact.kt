@@ -69,6 +69,7 @@ import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
@@ -89,6 +90,7 @@ fun ListScreenCompact(
     settingLinkProgressToSubtasks: Boolean,
     isPullRefreshEnabled: Boolean,
     player: MediaPlayer?,
+    isListDragAndDropEnabled: Boolean,
     isSubtaskDragAndDropEnabled: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
@@ -211,7 +213,10 @@ fun ListScreenCompact(
                                 selected = selectedEntries,
                                 player = player,
                                 isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
-                                dragHandle = { /* DragHandleLazy(this) */ },
+                                dragHandle = {
+                                    if(isListDragAndDropEnabled)
+                                        DragHandleLazy(this)
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = 4.dp, bottom = 4.dp)
@@ -334,6 +339,7 @@ fun ListScreenCompact_TODO() {
             settingLinkProgressToSubtasks = false,
             isPullRefreshEnabled = true,
             player = null,
+            isListDragAndDropEnabled = true,
             isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
@@ -400,6 +406,7 @@ fun ListScreenCompact_JOURNAL() {
             settingLinkProgressToSubtasks = false,
             isPullRefreshEnabled = true,
             player = null,
+            isListDragAndDropEnabled = true,
             isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },

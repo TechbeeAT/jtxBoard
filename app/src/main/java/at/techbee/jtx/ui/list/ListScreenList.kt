@@ -72,6 +72,7 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlinx.coroutines.launch
@@ -107,6 +108,7 @@ fun ListScreenList(
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
+    isListDragAndDropEnabled: Boolean,
     isSubtaskDragAndDropEnabled: Boolean,
     isSubnoteDragAndDropEnabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
@@ -256,7 +258,10 @@ fun ListScreenList(
                                 player = player,
                                 isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
                                 isSubnoteDragAndDropEnabled = isSubnoteDragAndDropEnabled,
-                                dragHandle = { /* DragHandleLazy(this) */ },
+                                dragHandle = {
+                                    if(isListDragAndDropEnabled)
+                                        DragHandleLazy(this)
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(bottom = 8.dp)
@@ -380,6 +385,7 @@ fun ListScreenList_TODO() {
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
+            isListDragAndDropEnabled = true,
             isSubtaskDragAndDropEnabled = true,
             isSubnoteDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
@@ -463,6 +469,7 @@ fun ListScreenList_JOURNAL() {
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
+            isListDragAndDropEnabled = true,
             isSubtaskDragAndDropEnabled = true,
             isSubnoteDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
