@@ -64,7 +64,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -80,15 +79,13 @@ fun ListScreenKanban(
     list: List<ICal4ListRel>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedResourcesLive: LiveData<List<StoredResource>>,
-    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
+    storedStatusesLive: LiveData<List<ExtendedStatus>>,
     selectedEntries: SnapshotStateList<Long>,
     kanbanColumnsStatus: SnapshotStateList<String?>,
     kanbanColumnsXStatus: SnapshotStateList<String>,
     kanbanColumnsCategory: SnapshotStateList<String>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
-    settingIsAccessibilityMode: Boolean,
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
@@ -121,9 +118,8 @@ fun ListScreenKanban(
         }
     }
     val subtasks by subtasksLive.observeAsState(emptyList())
+    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
-    val storedResources by storedResourcesLive.observeAsState(emptyList())
-    val extendedStatuses by extendedStatusesLive.observeAsState(emptyList())
 
     val columns = when {
         kanbanColumnsStatus.isNotEmpty() -> kanbanColumnsStatus.map { Status.getStatusFromString(it)?.let { status -> context.getString(status.stringResource) } ?: context.getString(Status.NO_STATUS.stringResource)}
@@ -199,14 +195,10 @@ fun ListScreenKanban(
 
                         ListCardKanban(
                             iCal4ListRelObject.iCal4List,
-                            categories = iCal4ListRelObject.categories,
-                            resources = iCal4ListRelObject.resources,
                             storedCategories = storedCategories,
-                            storedResources = storedResources,
-                            storedStatuses = extendedStatuses,
+                            storedStatuses = storedStatuses,
                             selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                             markdownEnabled = markdownEnabled,
-                            settingIsAccessibilityMode = settingIsAccessibilityMode,
                             player = player,
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
@@ -242,7 +234,7 @@ fun ListScreenKanban(
                                             }
 
                                             when {
-                                                kanbanColumnsXStatus.isNotEmpty() -> extendedStatuses
+                                                kanbanColumnsXStatus.isNotEmpty() -> storedStatuses
                                                     .find { xstatus -> xstatus.module == module && xstatus.xstatus == columns[draggedToColumn] }
                                                     ?.let { xstatus ->
                                                         onXStatusChanged(iCal4ListRelObject.iCal4List.id, xstatus, true)
@@ -328,17 +320,15 @@ fun ListScreenKanban_TODO() {
                 ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
-            subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
-            extendedStatusesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
+            subtasksLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             kanbanColumnsStatus = remember { mutableStateListOf() },
             kanbanColumnsXStatus = remember { mutableStateListOf() },
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
-            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
@@ -394,15 +384,13 @@ fun ListScreenKanban_JOURNAL() {
             ),
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
-            extendedStatusesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             kanbanColumnsStatus = remember { mutableStateListOf(Status.FINAL.status?: Status.FINAL.name)  },
             kanbanColumnsXStatus = remember { mutableStateListOf() },
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
-            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,

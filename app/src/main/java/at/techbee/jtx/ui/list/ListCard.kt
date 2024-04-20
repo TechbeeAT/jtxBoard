@@ -17,6 +17,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -114,7 +115,8 @@ fun ListCard(
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit,
-    ) {
+    dragHandle:@Composable () -> Unit = { }
+) {
 
     var isSubtasksExpanded by remember {
         mutableStateOf(
@@ -137,6 +139,23 @@ fun ListCard(
         )
     }
 
+    @Composable
+    fun getFormattedDescription() {
+        return if(markdownEnabled)
+            MarkdownText(
+                markdown = iCalObject.description?.trim() ?: "",
+                maxLines = 6,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.fillMaxWidth()
+            )
+        else
+            Text(
+                text = iCalObject.description?.trim() ?: "",
+                maxLines = 6,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.fillMaxWidth()
+            )
+    }
 
     Card(
         colors = CardDefaults.elevatedCardColors(
@@ -147,6 +166,7 @@ fun ListCard(
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
         modifier = modifier
     ) {
+
         Column(
             modifier = Modifier.padding(top = 4.dp, bottom = 0.dp, start = 8.dp, end = 8.dp)
         ) {
@@ -168,6 +188,7 @@ fun ListCard(
                 verticalAlignment = Alignment.Top,
                 modifier = Modifier.padding(vertical = 2.dp)
             ) {
+
 
                 if (iCalObject.module == Module.JOURNAL.name)
                     VerticalDateBlock(
@@ -208,7 +229,10 @@ fun ListCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        if (iCalObject.summary?.isNotBlank() == true || iCalObject.module == Module.TODO.name)
+
+                        dragHandle()
+
+                        if (iCalObject.summary?.isNotBlank() == true) {
                             Text(
                                 text = iCalObject.summary?.trim() ?: "",
                                 fontWeight = FontWeight.Bold,
@@ -216,6 +240,11 @@ fun ListCard(
                                 textDecoration = summaryTextDecoration,
                                 modifier = Modifier.weight(1f)
                             )
+                        } else if (iCalObject.description?.isNotBlank() == true) {
+                            getFormattedDescription()
+                        } else {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
 
                         if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
                             Checkbox(
@@ -231,22 +260,11 @@ fun ListCard(
                             )
                     }
 
-                    if (iCalObject.description?.isNotBlank() == true) {
-                        if(markdownEnabled)
-                            MarkdownText(
-                                markdown = iCalObject.description?.trim() ?: "",
-                                maxLines = 6,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        else
-                            Text(
-                                text = iCalObject.description?.trim() ?: "",
-                                maxLines = 6,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                    if(iCalObject.summary?.isNotBlank() == true && iCalObject.description?.isNotBlank() == true) {
+                        getFormattedDescription()
                     }
+
+
                 }
             }
 
@@ -443,7 +461,7 @@ fun ListCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp)
-                ) { index, subtask, isDragging ->
+                ) { _, subtask, _ ->
                     key(subtask.id) {
 
                         SubtaskCard(
@@ -482,7 +500,7 @@ fun ListCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp)
-                ) { index, subnote, isDragging ->
+                ) { _, subnote, _ ->
                     key(subnote.id) {
 
 

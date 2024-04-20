@@ -37,9 +37,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
@@ -49,14 +46,10 @@ import com.arnyminerz.markdowntext.MarkdownText
 @Composable
 fun ListCardGrid(
     iCalObject: ICal4List,
-    categories: List<Category>,
-    resources: List<Resource>,
     storedCategories: List<StoredCategory>,
-    storedResources: List<StoredResource>,
     storedStatuses: List<ExtendedStatus>,
     selected: Boolean,
     progressUpdateDisabled: Boolean,
-    settingIsAccessibilityMode: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
     modifier: Modifier = Modifier,
@@ -72,20 +65,15 @@ fun ListCardGrid(
         modifier = modifier
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
+            verticalArrangement = Arrangement.spacedBy(3.dp, Alignment.Top),
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
 
         ) {
 
-            ListTopRow(
+            ListTopRowSimple(
                 ical4List = iCalObject,
-                categories = categories,
-                resources = resources,
                 storedCategories = storedCategories,
-                storedResources = storedResources,
-                extendedStatuses = storedStatuses,
-                includeJournalDate = true,
-                isAccessibilityMode = settingIsAccessibilityMode
+                extendedStatusesAll = storedStatuses
             )
 
             iCalObject.getAudioAttachmentAsUri()?.let {
@@ -165,14 +153,10 @@ fun ListCardGrid_JOURNAL() {
         }
         ListCardGrid(
             icalobject,
-            categories = emptyList(),
-            resources = emptyList(),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = false,
             progressUpdateDisabled = false,
-            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier
@@ -195,14 +179,10 @@ fun ListCardGrid_NOTE() {
         }
         ListCardGrid(
             icalobject,
-            categories = emptyList(),
-            resources = emptyList(),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = true,
             progressUpdateDisabled = false,
-            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             player = null,
@@ -234,14 +214,10 @@ fun ListCardGrid_TODO() {
         }
         ListCardGrid(
             icalobject,
-            categories = emptyList(),
-            resources = emptyList(),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = false,
             progressUpdateDisabled = false,
-            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
@@ -274,17 +250,14 @@ fun ListCardGrid_TODO_short() {
         }
         ListCardGrid(
             icalobject,
-            categories = emptyList(),
-            resources = emptyList(),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selected = false,
             progressUpdateDisabled = false,
-            settingIsAccessibilityMode = false,
             markdownEnabled = false,
             player = null,
-            onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
+            onProgressChanged = { _, _ -> },
+            modifier = Modifier.width(150.dp)
         )
     }
 }

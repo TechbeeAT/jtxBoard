@@ -110,8 +110,9 @@ fun ListOptionsGroupSort(
         // SORT ORDER 1
         FlowRow(modifier = Modifier.fillMaxWidth()) {
             OrderBy.getValuesFor(module).forEach { orderBy ->
+
                 if(orderBy == OrderBy.DRAG_AND_DROP)
-                    return@forEach  //TODO
+                    return@forEach
 
                 FilterChip(
                     selected = listSettings.orderBy.value == orderBy,

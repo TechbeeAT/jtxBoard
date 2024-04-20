@@ -58,7 +58,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -72,12 +71,10 @@ fun ListScreenGrid(
     list: List<ICal4ListRel>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedResourcesLive: LiveData<List<StoredResource>>,
     storedStatusesLive: LiveData<List<ExtendedStatus>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
-    settingIsAccessibilityMode: Boolean,
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
@@ -89,11 +86,11 @@ fun ListScreenGrid(
 
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
-    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
-    val storedResources by storedResourcesLive.observeAsState(emptyList())
-    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
     val gridState = rememberLazyStaggeredGridState()
     val scope = rememberCoroutineScope()
+
+    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
+    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
 
     if (scrollId != null) {
         LaunchedEffect(list) {
@@ -133,14 +130,10 @@ fun ListScreenGrid(
 
                 ListCardGrid(
                     iCal4ListRelObject.iCal4List,
-                    categories = iCal4ListRelObject.categories,
-                    resources = iCal4ListRelObject.resources,
                     storedCategories = storedCategories,
-                    storedResources = storedResources,
                     storedStatuses = storedStatuses,
                     selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                     progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
-                    settingIsAccessibilityMode = settingIsAccessibilityMode,
                     markdownEnabled = markdownEnabled,
                     player = player,
                     modifier = Modifier
@@ -226,12 +219,10 @@ fun ListScreenGrid_TODO() {
             ),
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
             storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
-            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
@@ -284,12 +275,10 @@ fun ListScreenGrid_JOURNAL() {
             ),
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
             storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
-            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
