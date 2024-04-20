@@ -68,7 +68,6 @@ import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
@@ -209,7 +208,7 @@ fun ListScreenCompact(
                                 selected = selectedEntries,
                                 player = player,
                                 isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
-                                dragHandle = { DragHandleLazy(this) },
+                                dragHandle = { /* DragHandleLazy(this) */ },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = 4.dp, bottom = 4.dp)
