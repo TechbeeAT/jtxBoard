@@ -25,17 +25,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -72,7 +73,8 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
+)
 @Composable
 fun ListScreenKanban(
     module: Module,
@@ -134,13 +136,18 @@ fun ListScreenKanban(
         }
     }
 
-
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = false,
-        onRefresh = { onSyncRequested() }
+    val pullToRefreshState = rememberPullToRefreshState(
+        enabled = { isPullRefreshEnabled }
     )
+    LaunchedEffect(pullToRefreshState.isRefreshing) {
+        if(pullToRefreshState.isRefreshing) {
+            onSyncRequested()
+            pullToRefreshState.endRefresh()
+        }
+    }
 
     Box(
+        modifier = Modifier.fillMaxSize().nestedScroll(pullToRefreshState.nestedScrollConnection),
         contentAlignment = Alignment.TopCenter
     ) {
 
@@ -165,7 +172,7 @@ fun ListScreenKanban(
                     contentPadding = PaddingValues(4.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = if(isPullRefreshEnabled) Modifier.fillMaxWidth().weight(1F).pullRefresh(pullRefreshState) else Modifier.fillMaxWidth().weight(1F)
+                    modifier = Modifier.fillMaxWidth().weight(1F)
                 ) {
 
                     stickyHeader {
@@ -271,12 +278,10 @@ fun ListScreenKanban(
             }
         }
 
-        if(isPullRefreshEnabled) {
-            PullRefreshIndicator(
-                refreshing = false,
-                state = pullRefreshState
-            )
-        }
+        PullToRefreshContainer(
+            modifier = Modifier.align(Alignment.TopCenter).offset(y = (-30).dp),
+            state = pullToRefreshState,
+        )
     }
 }
 

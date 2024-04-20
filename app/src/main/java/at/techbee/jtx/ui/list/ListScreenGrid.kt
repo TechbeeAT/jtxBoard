@@ -17,21 +17,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.VerticalAlignTop
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,7 +66,7 @@ import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreenGrid(
     list: List<ICal4ListRel>,
@@ -101,12 +102,19 @@ fun ListScreenGrid(
             }
         }
     }
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = false,
-        onRefresh = { onSyncRequested() }
+
+    val pullToRefreshState = rememberPullToRefreshState(
+        enabled = { isPullRefreshEnabled }
     )
+    LaunchedEffect(pullToRefreshState.isRefreshing) {
+        if(pullToRefreshState.isRefreshing) {
+            onSyncRequested()
+            pullToRefreshState.endRefresh()
+        }
+    }
 
     Box(
+        modifier = Modifier.fillMaxSize().nestedScroll(pullToRefreshState.nestedScrollConnection),
         contentAlignment = Alignment.TopCenter
     ) {
 
@@ -115,8 +123,7 @@ fun ListScreenGrid(
             columns = StaggeredGridCells.Adaptive(150.dp),
             contentPadding = PaddingValues(8.dp),
             verticalItemSpacing = 8.dp,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = if(isPullRefreshEnabled) Modifier.pullRefresh(pullRefreshState) else Modifier,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(
                 items = list,
@@ -151,11 +158,10 @@ fun ListScreenGrid(
             }
         }
 
-        PullRefreshIndicator(
-            refreshing = false,
-            state = pullRefreshState
+        PullToRefreshContainer(
+            modifier = Modifier.align(Alignment.TopCenter).offset(y = (-30).dp),
+            state = pullToRefreshState,
         )
-
 
         Crossfade(gridState.canScrollBackward, label = "showScrollUp") {
             if (it) {
