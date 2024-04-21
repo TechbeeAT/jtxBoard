@@ -116,6 +116,7 @@ fun ListOptionsGroupSort(
                     onClick = {
                         if (listSettings.orderBy.value != orderBy)
                             listSettings.orderBy.value = orderBy
+                        listSettings.sortOrder.value = SortOrder.ASC
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = orderBy.stringResource)) },
@@ -127,6 +128,7 @@ fun ListOptionsGroupSort(
             SortOrder.entries.forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.sortOrder.value == sortOrder,
+                    enabled = listSettings.orderBy.value != OrderBy.DRAG_AND_DROP,
                     onClick = {
                         if (listSettings.sortOrder.value != sortOrder)
                             listSettings.sortOrder.value = sortOrder
@@ -154,6 +156,7 @@ fun ListOptionsGroupSort(
                     onClick = {
                         if (listSettings.orderBy2.value != orderBy)
                             listSettings.orderBy2.value = orderBy
+                        listSettings.sortOrder2.value = SortOrder.ASC
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = orderBy.stringResource)) },
@@ -165,6 +168,7 @@ fun ListOptionsGroupSort(
             SortOrder.entries.forEach { sortOrder2 ->
                 FilterChip(
                     selected = listSettings.sortOrder2.value == sortOrder2,
+                    enabled = listSettings.orderBy2.value != OrderBy.DRAG_AND_DROP,
                     onClick = {
                         if (listSettings.sortOrder2.value != sortOrder2)
                             listSettings.sortOrder2.value = sortOrder2
