@@ -319,6 +319,7 @@
     <string name="filter_no_resource">Sans ressources</string>
     <string name="filter_subtasks_order_by">Trier les sous-tâches par</string>
     <string name="filter_subnotes_order_by">Trier les notes liées par</string>
+    <string name="order_by_drag_and_drop">"Glisser &amp; Déposer"</string>
     <string name="filter_no_filter">"Aucun filtre"</string>
     <string name="filter_options_more_entries">"Plus (%1$d)"</string>
     <string name="filter_options_less_entries">"Moins"</string>
@@ -482,6 +483,7 @@ Merci !"</string>
     <string name="dialog_add_audio_entry_title">"Ajouter un enregistrement audio"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
+    <string name="menu_list_viewmode_week">"Vue semaine"</string>
     <string name="settings_tasks">"Paramètres des tâches"</string>
     <string name="settings_alarms">"Paramètres d'alarme"</string>
     <string name="settings_tasks_status_progress">"Paramètres des tâches (statut/progression)"</string>

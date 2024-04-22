@@ -610,6 +610,7 @@
     <string name="widget_list_compat_updating_widget_notification">"ウィジェットの更新中"</string>
     <string name="widget_list_opacity_warning">"注意: これは試験運用中の機能です！ テーマカラーの不透明度の変更が、すぐに反映されない場合があります！"</string>
     <string name="widget_list_color_warning">"注意: これは試験運用中の機能です！ テーマカラーの変更がすぐに反映されない場合があります！ 色なしを選択すると、システムのデフォルトに戻ります。"</string>
+    <string name="widget_list_default_categories">"ウィジェットで新規作成するエントリーのデフォルトのカテゴリーを設定する"</string>
     <string name="opacity">"不透明度"</string>
     <string name="general">"一般"</string>
     <string name="list_collapse">"閉じる"</string>

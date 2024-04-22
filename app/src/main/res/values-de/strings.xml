@@ -612,6 +612,7 @@ Danke!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualisiere Widget"</string>
     <string name="widget_list_opacity_warning">"Hinweis: Dies ist eine experimentelle Funktion. Mit reduzierter Deckkraft werden Änderungen im System-Farbschema möglicherweise nicht sofort übernommen!"</string>
     <string name="widget_list_color_warning">"Hinweis: Dies ist eine experimentelle Funktion. Änderungen im System-Farbschema werden nicht übernommen! Wählen Sie keine Farbe, um zum Systemstandard zurückzukehren."</string>
+    <string name="widget_list_default_categories">"Standardkategorien für neue Einträge aus dem Widget festlegen"</string>
     <string name="opacity">"Transparenz"</string>
     <string name="general">"Allgemein"</string>
     <string name="list_collapse">"Zuklappen"</string>
