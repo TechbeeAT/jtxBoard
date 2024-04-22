@@ -133,7 +133,9 @@ fun ListScreenList(
     val listState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyColumnState(listState) { from, to ->
         val reordered = groupedList.flatMap { it.value }.map { it.iCal4List }.toMutableList().apply {
-            add(to.index, removeAt(from.index))
+            val fromIndex = indexOfFirst { it.id == from.key }
+            val toIndex = indexOfFirst { it.id == to.key }
+            add(toIndex, removeAt(fromIndex))
         }
         onUpdateSortOrder(reordered)
     }
