@@ -69,6 +69,7 @@ import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
@@ -89,6 +90,7 @@ fun ListScreenCompact(
     settingLinkProgressToSubtasks: Boolean,
     isPullRefreshEnabled: Boolean,
     player: MediaPlayer?,
+    isListDragAndDropEnabled: Boolean,
     isSubtaskDragAndDropEnabled: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
@@ -103,7 +105,9 @@ fun ListScreenCompact(
     val listState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyColumnState(listState) { from, to ->
         val reordered = groupedList.flatMap { it.value }.map { it.iCal4List }.toMutableList().apply {
-            add(to.index, removeAt(from.index))
+            val fromIndex = indexOfFirst { it.id == from.key }
+            val toIndex = indexOfFirst { it.id == to.key }
+            add(toIndex, removeAt(fromIndex))
         }
         onUpdateSortOrder(reordered)
     }
@@ -197,10 +201,7 @@ fun ListScreenCompact(
 
                         ReorderableItem(
                             reorderableLazyListState,
-                            key = if(listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE)
-                                iCal4ListRelObject.iCal4List.id.toString() + UUID.randomUUID()
-                            else
-                                iCal4ListRelObject.iCal4List.id
+                            key = iCal4ListRelObject.iCal4List.id
                         ) { _ ->
                             ListCardCompact(
                                 iCal4ListRelObject.iCal4List,
@@ -211,7 +212,10 @@ fun ListScreenCompact(
                                 selected = selectedEntries,
                                 player = player,
                                 isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
-                                dragHandle = { /* DragHandleLazy(this) */ },
+                                dragHandle = {
+                                    if(isListDragAndDropEnabled)
+                                        DragHandleLazy(this)
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = 4.dp, bottom = 4.dp)
@@ -334,6 +338,7 @@ fun ListScreenCompact_TODO() {
             settingLinkProgressToSubtasks = false,
             isPullRefreshEnabled = true,
             player = null,
+            isListDragAndDropEnabled = true,
             isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
@@ -400,6 +405,7 @@ fun ListScreenCompact_JOURNAL() {
             settingLinkProgressToSubtasks = false,
             isPullRefreshEnabled = true,
             player = null,
+            isListDragAndDropEnabled = true,
             isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
