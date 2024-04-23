@@ -348,7 +348,9 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = NavigationDrawerDestination.BOARD.name
+        startDestination = if(globalStateHolder.filteredList2Load.value != null)
+            FilteredListDestination.FilteredListFromWidget.route
+            else NavigationDrawerDestination.BOARD.name
     ) {
         composable(NavigationDrawerDestination.BOARD.name) {
             ListScreenTabContainer(
@@ -363,9 +365,9 @@ fun MainNavHost(
             arguments = FilteredListDestination.FilteredList.args
         ) { backStackEntry ->
 
-            val module = Module.entries.find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.argModule) } ?: return@composable
+            val module = Module.entries.find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.ARG_MODULE) } ?: return@composable
             val storedListSettingData = backStackEntry.arguments?.getString(
-                FilteredListDestination.argStoredListSettingData)?.let {
+                FilteredListDestination.ARG_STORED_LIST_SETTING_DATA)?.let {
                     Json.decodeFromString<StoredListSettingData>(it)
                 }
 
@@ -376,6 +378,25 @@ fun MainNavHost(
                 initialModule = module,
                 storedListSettingData = storedListSettingData
             )
+        }
+        composable(
+            FilteredListDestination.FilteredListFromWidget.route,
+            arguments = emptyList()
+        ) {
+
+            val storedListSettingData = globalStateHolder.filteredList2Load.value?.let { listWidgetConfig ->
+                val listSettings = ListSettings.fromListWidgetConfig(listWidgetConfig)
+                StoredListSettingData.fromListSettings(listSettings)
+            }
+
+            ListScreenTabContainer(
+                navController = navController,
+                globalStateHolder = globalStateHolder,
+                settingsStateHolder = settingsStateHolder,
+                initialModule = globalStateHolder.filteredList2Load.value?.module ?: Module.NOTE,
+                storedListSettingData = storedListSettingData
+            )
+            //globalStateHolder.filteredList2Load.value = null
         }
         composable(
             DetailDestination.Detail.route,
@@ -492,13 +513,6 @@ fun MainNavHost(
 
     globalStateHolder.icalObject2Open.value?.let { id ->
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false, returnToLauncher = true))
-    }
-
-    globalStateHolder.filteredList2Load.value?.let { listWidgetConfig ->
-        val listSettings = ListSettings.fromListWidgetConfig(listWidgetConfig)
-        val storedListSettingData = StoredListSettingData.fromListSettings(listSettings)
-        navController.navigate(FilteredListDestination.FilteredList.getRoute(listWidgetConfig.module, storedListSettingData))
-        globalStateHolder.filteredList2Load.value = null
     }
 
     if (!settingsStateHolder.proInfoShown.value && !isProPurchased.value) {

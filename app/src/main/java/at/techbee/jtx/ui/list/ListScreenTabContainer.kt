@@ -581,9 +581,6 @@ fun ListScreenTabContainer(
             )
         },
         bottomBar = {
-            if(storedListSettingData != null)    // no bottom bar if there are preset filters
-                return@Scaffold
-
             // show the bottom bar only if there is any collection available that supports the component/module
             if (allWriteableCollections.value.any { collection ->
                     (listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
