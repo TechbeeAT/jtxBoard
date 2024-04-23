@@ -10,13 +10,13 @@
     <string name="cancel">"Hủy bỏ"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Xóa"</string>
-    <string name="discard">"Bỏ qua"</string>
+    <string name="discard">"Gạt bỏ"</string>
     <string name="dismiss">"Bỏ qua"</string>
     <string name="open">"Mở"</string>
     <string name="cont">"Tiếp tục"</string>
     <string name="website">"Trang web"</string>
     <string name="latitude">"Vĩ độ"</string>
-    <string name="longitude">"Vĩ độ"</string>
+    <string name="longitude">"Kinh độ"</string>
     <string name="unlink">"Gỡ liên kết"</string>
     <string name="off">"Tắt"</string>
     <string name="location_permission_denied">"Quyền vị trí bị từ chối"</string>
@@ -33,9 +33,9 @@
     <string name="journal_status_final">"Cuối cùng"</string>
     <string name="journal_status_cancelled">"Đã hủy"</string>
     <string name="todo_status_needsaction">"Cần thực hiện"</string>
-    <string name="todo_status_completed">"Đã hoàn thành"</string>
+    <string name="todo_status_completed">"Hoàn thành"</string>
     <string name="todo_status_inprocess">"Đang xử lý"</string>
-    <string name="todo_status_cancelled">"Đã hủy bỏ"</string>
+    <string name="todo_status_cancelled">"Đã hủy"</string>
     <string name="classification_public">"Công khai"</string>
     <string name="classification_private">"Riêng tư"</string>
     <string name="classification_confidential">"Bí mật"</string>
@@ -92,7 +92,7 @@
     <string name="view_add_audio_note">"Thêm âm thanh"</string>
     <string name="view_created_text">"Đã tạo: %1$s"</string>
     <string name="view_last_modified_text">"Sửa đổi lần cuối: %1$s"</string>
-    <string name="view_due">"Quá hạn"</string>
+    <string name="view_due">"Đến hạn"</string>
     <string name="view_completed">"Hoàn thành"</string>
     <string name="view_started">"Bắt đầu (đã)"</string>
     <!-- fragment_ical_edit -->
@@ -102,7 +102,7 @@
     <string name="edit_add_link_button_text">"Thêm liên kết đính kèm"</string>
     <string name="edit_subtasks_add_helper">"Thêm một nhiệm vụ con"</string>
     <string name="detail_top_app_bar_quick_add_subtask">"Thêm nhanh nhiệm vụ con"</string>
-    <string name="detail_top_app_bar_quick_add_subnote">"Thêm nhanh nhiệm vụ phụ"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Thêm nhanh ghi chú con"</string>
     <string name="edit_attachment_add_link_dialog">"Thêm liên kết đính kèm"</string>
     <string name="edit_recur_repeat_every_x">"Lặp lại mỗi"</string>
     <string name="edit_recur_on_weekday">"vào"</string>
@@ -130,7 +130,7 @@
     <string name="about_tabitem_translations">"Dịch thuật"</string>
     <string name="about_tabitem_libraries">"Thư viện"</string>
     <string name="about_tabitem_contributors">"Những người đóng góp"</string>
-    <string name="about_special_thanks">"Lời cảm ơn sâu sắc"</string>
+    <string name="about_special_thanks">"Đặc biệt cảm ơn"</string>
     <string name="about_app_version">"Phiên bản %1$s (%2$d)"</string>
     <string name="about_app_codename">"Tên mã: %1$s"</string>
     <string name="about_app_build_date">"Được biên soạn vào %s"</string>
@@ -285,7 +285,7 @@
     <string name="search_todos">Tìm nhiệm vụ</string>
     <string name="filter">"Bộ lọc"</string>
     <string name="visibility">"Hiển thị"</string>
-    <string name="order">"Thứ tự"</string>
+    <string name="order">"Sắp đặt"</string>
     <string name="sync_now">"Đồng bộ hóa ngay"</string>
     <string name="due">"Quá hạn"</string>
     <string name="completed">"Hoàn thành"</string>
@@ -294,6 +294,7 @@
     <string name="progress">"Tiến độ"</string>
     <string name="categories">"Danh mục"</string>
     <string name="subtasks">"Nhiệm vụ con"</string>
+    <string name="linked_parents">"Đã liên kết các mục chính"</string>
     <string name="priority_7_low">"7 - Thấp"</string>
     <string name="priority_8_lower">"8 - Thấp hơn"</string>
     <string name="priority_9_lowest">"9 - Thấp nhất"</string>
@@ -309,14 +310,14 @@
     <string name="list_without_due_date">"Không có ngày đáo hạn"</string>
     <string name="list_without_completed_date">"Không có ngày hoàn thành"</string>
     <string name="list_show_only_search_matching_subentries">"Chỉ hiển thị các mục con phù hợp với tìm kiếm"</string>
-    <string name="filter_order_by">"Thứ tự theo"</string>
+    <string name="filter_order_by">"Sắp đặt theo"</string>
     <string name="filter_asc">"Tăng dần"</string>
     <string name="filter_desc">"Giảm dần"</string>
     <string name="filter_created">"Đã tạo"</string>
     <string name="filter_last_modified">"Sửa đổi lần cuối"</string>
     <string name="filter_no_category">Không có danh mục</string>
     <string name="filter_no_resource">Không có tài nguyên</string>
-    <string name="filter_subtasks_order_by">Sắp xếp các nhiệm vụ con theo</string>
+    <string name="filter_subtasks_order_by">Sắp đặt các nhiệm vụ con theo</string>
     <string name="filter_subnotes_order_by">Sắp xếp các ghi chú được liên kết theo</string>
     <string name="order_by_drag_and_drop">"Kéo &amp; thả"</string>
     <string name="filter_no_filter">"Chưa lọc"</string>
@@ -337,6 +338,7 @@
     <string name="presets_import_invalid_file">"Tệp không hợp lệ"</string>
     <string name="presets_saved">"Đã lưu các thiết đặt sẵn"</string>
     <string name="presets_export_error">"Đã xảy ra lỗi khi lưu các thiết đặt sẵn"</string>
+    <string name="navigation_drawer_buypro">"Mua Pro"</string>
     <string name="settings_select_theme">"Chọn chủ đề"</string>
     <string name="settings_select_theme_dark">"Tối"</string>
     <string name="settings_select_theme_light">"Sáng"</string>
@@ -351,11 +353,20 @@
     <string name="settings_timezone_display_original">"Hiển thị thời gian theo múi giờ gốc"</string>
     <string name="settings_timezone_display_local_and_original">"Hiển thị thời gian theo địa phương và theo múi giờ gốc (chỉ xem chi tiết)"</string>
     <string name="donate_dialog_title">"Bạn có thích jtx Board?"</string>
+    <string name="donate_dialog_message">"Phát triển một ứng dụng là một chủ đề phức tạp và việc phát triển, bảo trì và hỗ trợ là một công việc khó khăn. Nếu bạn thích ứng dụng này và nếu bạn muốn đảm bảo sự phát triển liên tục, vui lòng xem xét quyên góp :-)
+Cảm ơn!"</string>
     <!-- Buy Pro fragment -->
+    <string name="buypro_text">"Việc phát triển một ứng dụng là một chủ đề phức tạp và việc phát triển, bảo trì và hỗ trợ là một công việc khó khăn. Nếu bạn muốn sử dụng các chức năng Pro hoặc nếu bạn muốn hỗ trợ dự án của chúng tôi, vui lòng xem xét việc mua hàng trong ứng dụng sau:"</string>
     <string name="buypro_purchase_header">"Nâng cấp lên jtx Board Pro"</string>
+    <string name="buypro_purchase_description">"Cảm ơn bạn đã xem xét jtx Board Pro. Bản nâng cấp này hỗ trợ khả năng chỉnh sửa cho các bộ sưu tập từ xa, nhập nhanh, chỉnh sửa nhanh thông qua thao tác nhấp giữ chuột và màu sắc động (có sẵn từ Android 12)."</string>
     <string name="buypro_purchase_date">"Đã mua lúc %1$s"</string>
     <string name="buypro_order_id">"ID sắp đặt: %1$s"</string>
+    <string name="buypro_success_header">"Cảm ơn bạn đã mua jtx Board Pro!"</string>
+    <string name="buypro_success_description">"Hiện đã bật khả năng chỉnh sửa bộ sưu tập từ xa, nhập nhanh, chỉnh sửa nhanh thông qua nhấp giữ chuột và màu động (có sẵn từ Android 12)."</string>
     <string name="buypro_success_thankyou">"Cảm ơn!"</string>
+    <string name="buypro_snackbar_remote_entries_blocked">"Vui lòng mua gói Pro để kích hoạt khả năng chỉnh sửa các bộ sưu tập từ xa."</string>
+    <string name="buypro_initial_dialog_message">"Xin chào! jtx Board có phiên bản tiêu chuẩn và phiên bản Pro. Vui lòng xem phần \"Mua Pro\" để tìm hiểu thêm về jtx Board Pro! Cảm ơn!"</string>
+    <string name="buypro_purchase_init_error_message">"Vui lòng kiểm tra kết nối Internet của bạn hoặc thử lại sau!"</string>
     <string name="menu_list_viewmode_list">"Hiển thị danh sách"</string>
     <string name="menu_list_viewmode_grid">"Hiển thị lưới"</string>
     <string name="settings_modules">"Kích hoạt module"</string>
@@ -363,6 +374,8 @@
     <string name="settings_modules_enable_notes">"Ghi chú"</string>
     <string name="settings_modules_enable_tasks">"Nhiệm vụ"</string>
     <string name="settings_default_expand_subtasks">"Mở rộng các nhiệm vụ con trong danh sách theo mặc định"</string>
+    <string name="settings_default_expand_subnotes">"Mở rộng ghi chú con trong danh sách theo mặc định"</string>
+    <string name="settings_default_expand_attachments">"Mở rộng tệp đính kèm trong danh sách theo mặc định"</string>
     <string name="sorry">"Xin lỗi"</string>
     <string name="back">"Quay lại"</string>
     <string name="details">"Chi tiết"</string>
@@ -370,15 +383,31 @@
     <string name="group_by_date_day">"Ngày tháng (ngày)"</string>
     <string name="group_by_date_week">"Ngày tháng (tuần)"</string>
     <string name="group_by_date_month">"Ngày tháng (tháng)"</string>
+    <string name="group_by_started_day">"(Đã) bắt đầu (ngày)"</string>
+    <string name="group_by_started_week">"(Đã) bắt đầu (tuần)"</string>
+    <string name="group_by_started_month">"(Đã) bắt đầu (tháng)"</string>
+    <string name="group_by_due_day">"Đến hạn (ngày)"</string>
+    <string name="group_by_due_week">"Đến hạn (tuần)"</string>
+    <string name="group_by_due_month">"Đến hạn (tháng)"</string>
+    <string name="week_number_year">"Tuần %1$d/%2$d"</string>
+    <string name="summary_description">"Tóm tắt/Mô tả"</string>
+    <string name="status_classification_priority">"Trạng thái/Phân loại/Ưu tiên"</string>
     <string name="timezone">"Múi giờ"</string>
+    <string name="not_set2">"Chưa đặt"</string>
     <string name="invert_selection">"Đảo ngược lựa chọn"</string>
     <string name="clear_selection">"Xóa lựa chọn"</string>
+    <string name="revert">"Đảo ngược"</string>
     <string name="audio_play">"Phát"</string>
+    <string name="audio_record">"Ghi"</string>
     <string name="audio_stop">"Dừng"</string>
     <string name="audio_pause">"Tạm dừng"</string>
+    <string name="audio_error_toast">"Rất tiếc, không thể bắt đầu phát lại."</string>
     <string name="sync_in_progress">"Đang đồng bộ hóa"</string>
     <string name="invalid_timezone_message">"Vui lòng chọn múi giờ hợp lệ!"</string>
+    <string name="invalid_url_message">"Vui lòng nhập một URL hợp lệ!"</string>
+    <string name="list_quickadd_dialog_sr_start">"Bắt đầu nhận dạng giọng nói"</string>
     <string name="list_quickadd_dialog_sr_listening">"Đang nghe …"</string>
+    <string name="collections_dialog_buypro_info">"Vui lòng mua jtx Board Pro để kích hoạt khả năng chỉnh sửa cho các bộ sưu tập từ xa."</string>
     <string name="list_update_entries_dialog_title">"Cập nhật các mục"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Chú ý: Các phiên bản định kỳ phải được hủy liên kết khỏi chuỗi của nó trước khi được chuyển sang bộ sưu tập khác và sẽ bị bỏ qua trong quá trình này."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Chọn cấp độ cha mà các mục đã chọn sẽ được liên kết dưới dạng nhiệm vụ con/ghi chú được liên kết."</string>
@@ -386,6 +415,8 @@
     <string name="link_entry_search_within">"Tìm trong …"</string>
     <string name="link_entry_search_within_same_collection">"Cùng một bộ sưu tập"</string>
     <string name="link_entry_search_within_same_account">"Cùng một tài khoản"</string>
+    <string name="details_link_existing_subentry_dialog_title">"Liên kết các mục con"</string>
+    <string name="details_link_existing_parent_dialog_title">"Liên kết các mục chính"</string>
     <string name="details_link_existing_subentry_dialog_info">"Chọn các mục con cần được liên kết."</string>
     <string name="details_link_existing_parent_dialog_info">"Chọn một mục nhập gốc cần được liên kết."</string>
     <string name="details_app_bar_behaviour">"Hành vi của thanh ứng dụng"</string>
@@ -396,20 +427,32 @@
     <string name="details_recur_unknown_rrule_dialog_title">"Đã phát hiện quy tắc lặp lại không được hỗ trợ!"</string>
     <string name="details_recur_unknown_rrule_dialog_message">"Đã phát hiện một quy tắc lặp lại không xác định hoặc không được hỗ trợ. Nếu bạn tiếp tục, quy tắc lặp lại hiện tại sẽ bị xóa/ghi đè."</string>
     <string name="details_entry_could_not_be_loaded">"Mục nhập này đã bị xóa ở chế độ nền hoặc không thể tải được."</string>
+    <string name="details_attachment_beta_info">"* Đồng bộ hóa các tệp đính kèm là một tính năng thử nghiệm. Chúng tôi đặc biệt khuyến khích chỉ sử dụng các tệp đính kèm nhỏ (tối đa 100 KB) vì các tệp đính kèm lớn hơn có thể dẫn đến thời gian đồng bộ hóa lâu và hành vi không mong muốn."</string>
+    <string name="details_unchanged_part_of_series">"Mục này là một phần của một chuỗi. Mục này sẽ sao chép mọi thay đổi được thực hiện cho chuỗi."</string>
+    <string name="details_changed_part_of_series">"Mục này là một phần của một chuỗi nhưng đã được thay đổi. Mục này sẽ không bị ảnh hưởng bởi những thay đổi của chuỗi."</string>
     <string name="details_series_attention_subentries">"Chú ý: Các phần tử của chuỗi phản ánh các nhiệm vụ con và ghi chú được liên kết từ chuỗi. Nếu bạn chỉ muốn thay đổi nhiệm vụ con và ghi chú được liên kết cho một phần tử trong chuỗi, trước tiên hãy hủy liên kết nó khỏi chuỗi."</string>
+    <string name="details_go_to_series">"Đi tới chuỗi"</string>
     <string name="details_detach_from_series">"Tách khỏi chuỗi"</string>
     <string name="details_show_all_instances">"Hiển thị tất cả các phiên bản (%1$d)"</string>
+    <string name="edit_comment">"Chỉnh sửa nhận xét"</string>
+    <string name="edit_subnote_add_helper">"Thêm một ghi chú con"</string>
     <string name="edit_subtask">"Chỉnh sửa nhiệm vụ con"</string>
+    <string name="edit_subnote">"Chỉnh sửa ghi chú con"</string>
     <string name="edit_fragment_app_notification_permission_message">"Bảng jtx hiển thị thông báo khi đến hạn báo động. Vui lòng cấp quyền thông báo để sử dụng tính năng này."</string>
+    <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board có thể sử dụng vị trí của bạn để tự động phóng to đến vị trí của bạn khi sử dụng bản đồ. Vui lòng cấp quyền vị trí thô nếu bạn muốn sử dụng tính năng này."</string>
     <!-- alarms -->
     <string name="alarms_alarm">"Báo động"</string>
     <string name="alarms_before">"trước"</string>
     <string name="alarms_after">"sau"</string>
     <string name="alarms_start">"bắt đầu"</string>
-    <string name="alarms_due">"quá hạn"</string>
+    <string name="alarms_due">"đến hạn"</string>
     <string name="about_tabitem_releasenotes">"Ghi chú phát hành"</string>
+    <string name="collections_account_not_found_info">"Không thể tìm thấy tài khoản này trong trình quản lý tài khoản. Vui lòng xóa nếu lỗi thời."</string>
     <string name="collections_account_delete_dialog_title">"Xóa \"%1$s\"?"</string>
     <string name="collections_account_delete_dialog_message">"Bạn có chắc chắn muốn xóa tài khoản này khỏi jtx Board không? Tất cả các bộ sưu tập trong tài khoản này sẽ bị xóa. Thao tác này không thể hoàn tác."</string>
+    <string name="dialog_unsaved_changes_title">"Lưu các thay đổi?"</string>
+    <string name="dialog_error_on_update_message">"Đã xảy ra lỗi khi chèn/cập nhật mục này. Mục hoặc bộ sưu tập có thể không tồn tại nữa."</string>
+    <string name="dialog_revert_changes_message">"Bạn có chắc chắn muốn hủy các thay đổi của mình và hoàn nguyên nội dung về trạng thái trước khi bắt đầu chỉnh sửa không?"</string>
     <string name="dialog_revert_changes_message2">"Chú ý: Nhiệm vụ con và chú thích con là các mục riêng biệt và không thể hoàn nguyên."</string>
     <string name="dialog_select_module_txt_dialog_title">"Nhập %1$d tệp dưới dạng"</string>
     <string name="dialog_detach_from_series_text_all">"Việc tách tất cả các thành phần sẽ xóa chuỗi và biến các phiên bản thành các mục độc lập có thể có các nhiệm vụ con hoặc ghi chú được liên kết riêng. Nhưng sẽ không còn liên kết nào đến chuỗi gốc hoặc các phiên bản khác. Bạn có muốn tiếp tục không?"</string>
@@ -449,6 +492,7 @@
     <string name="settings_fullscreen_alarms">"Báo động toàn màn hình"</string>
     <string name="settings_fullscreen_alarms_sub">"Hiển thị báo động toàn màn hình khi thiết bị bị khóa"</string>
     <string name="settings_fullscreen_alarms_toast">"Vui lòng cấp quyền thông báo toàn màn hình trong thiết đặt hệ thống."</string>
+    <string name="settings_sync_on_start">"Đồng bộ hóa khi khởi động ứng dụng"</string>
     <string name="close">"Đóng"</string>
     <string name="menu_view_share_mail">"Chia sẻ dưới dạng E-Mail"</string>
     <string name="menu_view_copy_to_clipboard">"Sao chép vào clipboard"</string>
@@ -458,9 +502,19 @@
     <string name="menu_view_convert_to_task">"Chuyển thành nhiệm vụ"</string>
     <string name="settings_select_language">"Chọn ngôn ngữ"</string>
     <string name="settings_select_language_system">"Mặc định hệ thống"</string>
+    <string name="filter_special">"Bộ lọc đặc biệt"</string>
     <string name="filter_presets">"Bộ lọc đặt sẵn"</string>
     <string name="filter_presets_edit_info">"Vui lòng thêm/cập nhật/xóa các thiết đặt sẵn của bộ lọc khỏi thực đơn bộ lọc trong chế độ xem danh sách."</string>
+    <string name="filter_any">"Bất kỳ"</string>
+    <string name="filter_started_from_to">"(Đã) bắt đầu: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Đến hạn: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
+    <string name="list_date_start_in_past">"Ngày tháng trong quá khứ"</string>
+    <string name="list_start_date_in_past">"Bắt đầu trong quá khứ"</string>
+    <string name="list_start_date_today">"Bắt đầu hôm nay"</string>
+    <string name="list_start_date_tomorrow">"Bắt đầu ngày mai"</string>
+    <string name="list_start_date_within_7_days">"Bắt đầu trong vòng 7 ngày"</string>
+    <string name="list_start_date_future">"Bắt đầu trong tương lai"</string>
     <string name="list_hide_completed_tasks">"Ẩn nhiệm vụ đã hoàn thành"</string>
     <string name="list_delete_done">"Xóa xong"</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Vui lòng xác thực và thử lại</string>
@@ -471,6 +525,9 @@
     <string name="settings_protect_biometric_sub">"Chức năng này ẩn các mục đã chọn cho đến khi chúng được mở khóa bằng sinh trắc học, nhưng không mã hóa/giải mã dữ liệu ở chế độ nền."</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"Không trạng thái"</string>
+    <string name="classification_no_classification">"Không phân loại (công khai)"</string>
+    <string name="list_start_without">"Không có ngày bắt đầu"</string>
+    <string name="list_due_without">"Không có ngày đến hạn"</string>
     <string name="filter_second_order_by">"Rồi sắp đặt theo"</string>
     <string name="filter_group_by_info">"Nhóm có sẵn cho danh sách và chế độ xem nhỏ gọn"</string>
     <string name="filter_save_as_preset">"Lưu làm thiết đặt sẵn"</string>
@@ -497,6 +554,7 @@
     <string name="settings_default_journals_date_current_5min">"5 phút hiện tại"</string>
     <string name="settings_default_journals_date_current_min">"Phút hiện tại"</string>
     <string name="widget_list_show_subtasks">"Hiển thị nhiệm vụ con"</string>
+    <string name="widget_list_show_subnotes">"Hiện các ghi chú con"</string>
     <string name="markdown_unordered_list">"Danh sách"</string>
     <string name="preset_categories">"Danh mục đặt sẵn"</string>
     <string name="preset_resources">"Tài nguyên đặt sẵn"</string>
