@@ -319,6 +319,7 @@
     <string name="filter_no_resource">Sin recursos</string>
     <string name="filter_subtasks_order_by">Ordenar subtareas por</string>
     <string name="filter_subnotes_order_by">Ordenar notas vinculadas por</string>
+    <string name="order_by_drag_and_drop">"Arrastrar &amp; Soltar"</string>
     <string name="filter_no_filter">"Sin filtro"</string>
     <string name="filter_options_more_entries">"Más (%1$d)"</string>
     <string name="filter_options_less_entries">"Menos"</string>
@@ -353,6 +354,11 @@
     <string name="settings_protect_biometric_all">"Todo"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"¡Por favor, autentifíquese para cambiar esta configuración!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"¡Por favor, identifíquese para mostrar entradas protegidas!"</string>
+    <string name="settings_timezone_display">"Seleccione la visualización del tiempo con zona horaria"</string>
+    <string name="settings_timezone_display_local">"Mostrar hora en zona horaria local"</string>
+    <string name="settings_timezone_display_original">"Mostrar hora en zona horaria original"</string>
+    <string name="settings_timezone_display_local_and_original">"Mostrar hora en zona horaria local y original (solo en vista de detalles)"</string>
+    <string name="settings_font">"Fuente"</string>
     <string name="donate_dialog_title">"¿Te gusta jtx Board?"</string>
     <string name="donate_dialog_message">"El desarrollo de una aplicación es un tema complejo y el desarrollo, mantenimiento y soporte es un trabajo duro. Si le gusta esta aplicación y desea garantizar un desarrollo continuo, considere una donación :-)
 ¡Gracias!"</string>
@@ -382,6 +388,18 @@
     <string name="back">"Retroceder"</string>
     <string name="details">"Detalles"</string>
     <string name="date">"Fecha"</string>
+    <string name="group_by_date_day">"Fecha (día)"</string>
+    <string name="group_by_date_week">"Fecha (semana)"</string>
+    <string name="group_by_date_month">"Fecha (mes)"</string>
+    <string name="group_by_started_day">"Día de inicio"</string>
+    <string name="group_by_started_week">"Semana de inicio"</string>
+    <string name="group_by_started_month">"Mes de inicio"</string>
+    <string name="group_by_due_day">"Vencimiento (día)"</string>
+    <string name="group_by_due_week">"Vencimiento (semana)"</string>
+    <string name="group_by_due_month">"Vencimiento (mes)"</string>
+    <string name="week_number_year">"Semana %1$d/%2$d"</string>
+    <string name="summary_description">"Resumen / Descripción"</string>
+    <string name="status_classification_priority">"Estado/Clasificación/Prioridad"</string>
     <string name="timezone">"Zona horaria"</string>
     <string name="not_set2">"No configurado"</string>
     <string name="invert_selection">"Invertir selección"</string>
@@ -402,6 +420,7 @@
     <string name="list_update_entries_dialog_title">"Actualizar entradas"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Atención: las instancias recurrentes deben ser desvinculadas de su serie antes de ser movidas a otra colección y serán ignoradas en este proceso."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Elija el nivel superior al que las entradas seleccionadas deben estar enlazadas como subtareas/notas enlazadas."</string>
+    <string name="link_entry">"Entrada de enlace"</string>
     <string name="link_entry_search_within">"Buscar en…"</string>
     <string name="link_entry_search_within_same_collection">"Misma colección"</string>
     <string name="link_entry_search_within_same_account">"Misma cuenta"</string>
@@ -425,6 +444,7 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="details_go_to_series">"Ir a las series"</string>
     <string name="details_detach_from_series">"Separar de la serie"</string>
     <string name="details_detach_all_instances">"Desvincular todas las instancias"</string>
+    <string name="details_show_all_instances">"Mostrar todas las instancias (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Desvincular del nivel superior"</string>
     <string name="dialog_unlink_from_parent_message">"¿Eliminar la relación como una subentrada? La entrada permanecerá como una entrada independiente."</string>
     <string name="edit_comment">"Editar comentario"</string>
@@ -466,12 +486,15 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="dialog_add_audio_entry_title">"Añadir entrada de audio"</string>
     <string name="menu_list_viewmode_compact">"Vista compacta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
+    <string name="menu_list_viewmode_week">"Vista semanal"</string>
     <string name="settings_tasks">"Ajustes de Tareas"</string>
     <string name="settings_alarms">"Configuración de las alarmas"</string>
     <string name="settings_tasks_status_progress">"Ajustes de tareas (estado/progreso)"</string>
     <string name="settings_sync">"Ajustes de sincronización"</string>
     <string name="settings_default_start_date">"Establecer una fecha de inicio por defecto para las tareas"</string>
+    <string name="settings_default_start_timezone">"Establecer zona horaria de inicio por defecto para las tareas"</string>
     <string name="settings_default_due_date">"Establecer una fecha de vencimiento por defecto para las tareas"</string>
+    <string name="settings_default_due_timezone">"Establecer zona horaria de vencimiento predeterminada para las tareas"</string>
     <string name="settings_default_start_time">"Establecer una hora de inicio por defecto para las tareas"</string>
     <string name="settings_default_due_time">"Establecer una hora de vencimiento por defecto para las tareas"</string>
     <string name="settings_default_date_none">"Ninguno"</string>
@@ -495,10 +518,13 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="settings_keep_status_progress_completed_in_sync">"Mantener estado, progreso y completado en sincronización"</string>
     <string name="settings_attention_experimental_feature">"Atención: Esta es una característica experimental"</string>
     <string name="settings_create_with_current_location">"Crear nuevas entradas con la ubicación actual"</string>
+    <string name="settings_create_with_current_location_sub">"Por favor, concede acceso a tu ubicación mientras utilizas esta aplicación para usar esta función."</string>
     <string name="settings_sticky_alarms">"Alarmas adheridas"</string>
     <string name="settings_sticky_alarms_sub">"Mantener notificaciones hasta finalizar o posponer"</string>
     <string name="settings_fullscreen_alarms">"Alarma en pantalla completa"</string>
     <string name="settings_fullscreen_alarms_sub">"Mostrar alarmas en pantalla completa cuando el dispositivo está bloqueado"</string>
+    <string name="settings_accessibility_mode">"Modo de accesibilidad"</string>
+    <string name="settings_accessibility_mode_sub">"Asegurar tamaño mínimo de la fuente para elementos pequeños"</string>
     <string name="settings_fullscreen_alarms_toast">"Por favor concede permiso de notificación en pantalla completa en la configuración del sistema."</string>
     <string name="settings_sync_on_start">"Sincronizar al iniciar la aplicación"</string>
     <string name="settings_sync_on_pull_refresh">"Sincronizar al deslizar hacia abajo"</string>
@@ -521,6 +547,10 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="filter_any">"Cualquiera"</string>
     <string name="filter_all">"Todo"</string>
     <string name="filter_none">"Ninguno"</string>
+    <string name="filter_date_from_to">"Fecha: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Iniciar(ado): %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Vencimiento: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Completado: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Fecha del pasado"</string>
     <string name="list_date_today">"Hoy"</string>
@@ -540,6 +570,7 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="list_biometric_protected_entries_unlocked">Entradas biométricas protegidas desbloqueadas</string>
     <string name="settings_auto_alarm">"Alarma automática"</string>
     <string name="alarms_always_ondue">"Siempre pendiente"</string>
+    <string name="alarms_always_on_save">"Siempre al guardar (experimental)"</string>
     <string name="settings_auto_alarm_sub">"Activar para crear alarmas automáticamente. Elija \"Siempre pendiente\" para no crear una alarma pero recibir una notificación en cualquier caso cuando vence una tarea."</string>
     <string name="settings_protect_biometric">"Proteger entradas con biométricos"</string>
     <string name="settings_protect_biometric_sub">"Esta función oculta las entradas seleccionadas hasta que estén desbloqueadas con datos biométricos, pero no encripta/desencripta datos en segundo plano."</string>
@@ -582,6 +613,7 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="widget_list_compat_updating_widget_notification">"Actualizando widget"</string>
     <string name="widget_list_opacity_warning">"Nota: ¡Esta es una característica experimental! ¡Con la opacidad reducida los cambios de color en el tema de color pueden no verse reflejados inmediatamente!"</string>
     <string name="widget_list_color_warning">"Nota: ¡Esta es una característica experimental! ¡Los cambios en el color del tema no se reflejarán! Elija sin color para volver al valor por defecto del sistema."</string>
+    <string name="widget_list_default_categories">"Establecer categorías por defecto para nuevas entradas desde el widget"</string>
     <string name="opacity">"Opacidad"</string>
     <string name="general">"General"</string>
     <string name="list_collapse">"Contraer"</string>
@@ -638,4 +670,12 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="geofence_request_permission_dialog_message">"jtx Board puede notificarle cuando esté cerca de las coordenadas dadas. Por favor, configure el permiso de ubicación para 'Permitir todo el tiempo' y conceda los permisos de notificaciones para usar esta función."</string>
     <string name="geofence_notification_summary">"Geolocalización activada"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board necesita el permiso para programar alarmas exactas, de lo contrario las notificaciones de alarma podrían retrasarse. Por favor, conceda este permiso para utilizar esta función."</string>
+    <string name="call_contact">"Llamar %1$s"</string>
+    <string name="email_contact">"Correo electrónico %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Crear subtareas en bloque</string>
+    <string name="dialog_create_multiple_subnotes">Crear notas vinculadas en bloque</string>
+    <string name="dialog_detected_multiple_subtasks">Es posible que el texto contenga múltiples subtareas. ¿Quieres crear subtareas %d?</string>
+    <string name="dialog_detected_multiple_subnotes">Es posible que el texto contenga múltiples notas vinculadas. ¿Quieres crear %d notas enlazadas?</string>
+    <string name="dialog_confirm_create_multiple">Crear múltiples</string>
+    <string name="dialog_confirm_create_single">Crear uno</string>
 </resources>
