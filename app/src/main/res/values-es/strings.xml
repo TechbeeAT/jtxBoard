@@ -319,6 +319,7 @@
     <string name="filter_no_resource">Sin recursos</string>
     <string name="filter_subtasks_order_by">Ordenar subtareas por</string>
     <string name="filter_subnotes_order_by">Ordenar notas vinculadas por</string>
+    <string name="order_by_drag_and_drop">"Arrastrar &amp; Soltar"</string>
     <string name="filter_no_filter">"Sin filtro"</string>
     <string name="filter_options_more_entries">"Más (%1$d)"</string>
     <string name="filter_options_less_entries">"Menos"</string>
@@ -353,6 +354,11 @@
     <string name="settings_protect_biometric_all">"Todo"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"¡Por favor, autentifíquese para cambiar esta configuración!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"¡Por favor, identifíquese para mostrar entradas protegidas!"</string>
+    <string name="settings_timezone_display">"Seleccione la visualización del tiempo con zona horaria"</string>
+    <string name="settings_timezone_display_local">"Mostrar hora en zona horaria local"</string>
+    <string name="settings_timezone_display_original">"Mostrar hora en zona horaria original"</string>
+    <string name="settings_timezone_display_local_and_original">"Mostrar hora en zona horaria local y original (solo en vista de detalles)"</string>
+    <string name="settings_font">"Fuente"</string>
     <string name="donate_dialog_title">"¿Te gusta jtx Board?"</string>
     <string name="donate_dialog_message">"El desarrollo de una aplicación es un tema complejo y el desarrollo, mantenimiento y soporte es un trabajo duro. Si le gusta esta aplicación y desea garantizar un desarrollo continuo, considere una donación :-)
 ¡Gracias!"</string>
@@ -382,6 +388,17 @@
     <string name="back">"Retroceder"</string>
     <string name="details">"Detalles"</string>
     <string name="date">"Fecha"</string>
+    <string name="group_by_date_day">"Fecha (día)"</string>
+    <string name="group_by_date_week">"Fecha (semana)"</string>
+    <string name="group_by_date_month">"Fecha (mes)"</string>
+    <string name="group_by_started_day">"Día de inicio"</string>
+    <string name="group_by_started_week">"Semana de inicio"</string>
+    <string name="group_by_started_month">"Mes de inicio"</string>
+    <string name="group_by_due_day">"Vencimiento (día)"</string>
+    <string name="group_by_due_week">"Vencimiento (semana)"</string>
+    <string name="group_by_due_month">"Vencimiento (mes)"</string>
+    <string name="week_number_year">"Semana %1$d/%2$d"</string>
+    <string name="summary_description">"Resumen / Descripción"</string>
     <string name="timezone">"Zona horaria"</string>
     <string name="not_set2">"No configurado"</string>
     <string name="invert_selection">"Invertir selección"</string>
