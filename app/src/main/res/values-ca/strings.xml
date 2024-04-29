@@ -612,6 +612,7 @@ Gràcies!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Actualitzant el widget"</string>
     <string name="widget_list_opacity_warning">"Nota: Aquesta és una funció experimental! Amb canvis d'opacitat subtils en el tema de color pot ser no es mostren els canvis inmediatament!"</string>
     <string name="widget_list_color_warning">"Nota: Aquesta és una funció experimental! Els canvis al tema de color no es veuran reflectits! No tries cap color per a tornar al predefinit pel sistema."</string>
+    <string name="widget_list_default_categories">"Estableix les categories per defecte per a noves entrades des del widget"</string>
     <string name="opacity">"Opacitat"</string>
     <string name="general">"General"</string>
     <string name="list_collapse">"Col·lapsa"</string>
