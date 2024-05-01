@@ -98,6 +98,13 @@ interface ICalDatabaseDao {
     @Query("SELECT DISTINCT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_RESOURCE_TEXT ORDER BY count(*) DESC, $COLUMN_RESOURCE_TEXT ASC")
     fun getAllResourcesAsText(): LiveData<List<String>>
 
+    /**
+     * Retrieve an list of all DISTINCT Colors for ICalObjects as Int in a LiveData object
+     */
+    @Query("SELECT DISTINCT $COLUMN_COLOR FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_COLOR IS NOT NULL")
+    fun getAllColors(): LiveData<List<Int>>
+
+
 
     /**
      * Retrieve an list of all Attachment Uris
