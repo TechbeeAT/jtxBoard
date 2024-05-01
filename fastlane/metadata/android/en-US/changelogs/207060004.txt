@@ -1,0 +1,1 @@
+- You can now sort/move entries of the main list when ordering by drag&drop
