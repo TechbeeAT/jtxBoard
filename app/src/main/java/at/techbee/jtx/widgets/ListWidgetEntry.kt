@@ -24,7 +24,6 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxWidth
@@ -71,7 +70,7 @@ fun ListEntry(
     val imageSize = 18.dp
     val checked = obj.percent == 100 || obj.status == Status.COMPLETED.status
 
-    Box(modifier = modifier) {
+    Column(modifier = modifier) {
 
         Row(
             modifier = GlanceModifier
@@ -94,99 +93,97 @@ fun ListEntry(
                 modifier = GlanceModifier.defaultWeight()
             ) {
 
-                if (obj.dtstart != null || obj.due != null || obj.priority in 1..9 || obj.status != null || obj.xstatus != null || (obj.classification != null && obj.classification != Classification.PUBLIC.classification)) {
-                    Row(
-                        modifier = GlanceModifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        if (obj.dtstart != null) {
-                            Image(
-                                provider = ImageProvider(if (obj.module == Module.TODO.name) R.drawable.ic_widget_start else R.drawable.ic_start2),
-                                contentDescription = context.getString(R.string.started),
-                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                                colorFilter = ColorFilter.tint(metaBarColor)
-                            )
-                            Text(
-                                text = ICalObject.getDtstartTextInfo(
-                                    module = obj.getModule(),
-                                    dtstart = obj.dtstart,
-                                    dtstartTimezone = obj.dtstartTimezone,
-                                    shortStyle = true,
-                                    context = context
-                                ),
-                                style = textStyleMetaInfo,
-                                maxLines = 1,
-                                modifier = GlanceModifier.padding(end = 8.dp)
-                            )
-                        }
-                        if (obj.due != null) {
-                            Image(
-                                provider = ImageProvider(R.drawable.ic_widget_due),
-                                contentDescription = context.getString(R.string.due),
-                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                                colorFilter = ColorFilter.tint(metaBarColor)
-                            )
-                            Text(
-                                text = ICalObject.getDueTextInfo(
-                                    status = obj.status,
-                                    due = obj.due,
-                                    dueTimezone = obj.dueTimezone,
-                                    percent = obj.percent,
-                                    context = context
-                                ),
-                                maxLines = 1,
-                                style = if(ICalObject.isOverdue(obj.status, obj.percent, obj.due, obj.dueTimezone) == true) textStyleDateOverdue else textStyleMetaInfo,
-                                modifier = GlanceModifier.padding(end = 8.dp)
-                            )
-                        }
+                Row(
+                    modifier = GlanceModifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    if (obj.dtstart != null) {
+                        Image(
+                            provider = ImageProvider(if (obj.module == Module.TODO.name) R.drawable.ic_widget_start else R.drawable.ic_start2),
+                            contentDescription = context.getString(R.string.started),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            colorFilter = ColorFilter.tint(metaBarColor)
+                        )
+                        Text(
+                            text = ICalObject.getDtstartTextInfo(
+                                module = obj.getModule(),
+                                dtstart = obj.dtstart,
+                                dtstartTimezone = obj.dtstartTimezone,
+                                shortStyle = true,
+                                context = context
+                            ),
+                            style = textStyleMetaInfo,
+                            maxLines = 1,
+                            modifier = GlanceModifier.padding(end = 8.dp)
+                        )
+                    }
+                    if (obj.due != null) {
+                        Image(
+                            provider = ImageProvider(R.drawable.ic_widget_due),
+                            contentDescription = context.getString(R.string.due),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            colorFilter = ColorFilter.tint(metaBarColor)
+                        )
+                        Text(
+                            text = ICalObject.getDueTextInfo(
+                                status = obj.status,
+                                due = obj.due,
+                                dueTimezone = obj.dueTimezone,
+                                percent = obj.percent,
+                                context = context
+                            ),
+                            maxLines = 1,
+                            style = if(ICalObject.isOverdue(obj.status, obj.percent, obj.due, obj.dueTimezone) == true) textStyleDateOverdue else textStyleMetaInfo,
+                            modifier = GlanceModifier.padding(end = 8.dp)
+                        )
+                    }
 
-                        if (obj.priority in 1..9) {
-                            Image(
-                                provider = ImageProvider(R.drawable.ic_priority),
-                                contentDescription = context.getString(R.string.priority),
-                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                                colorFilter = ColorFilter.tint(metaBarColor)
-                            )
-                            Text(
-                                text = obj.priority.toString(),
-                                maxLines = 1,
-                                style = textStyleMetaInfo,
-                                modifier = GlanceModifier.padding(end = 8.dp)
-                            )
-                        }
+                    if (obj.priority in 1..9) {
+                        Image(
+                            provider = ImageProvider(R.drawable.ic_priority),
+                            contentDescription = context.getString(R.string.priority),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            colorFilter = ColorFilter.tint(metaBarColor)
+                        )
+                        Text(
+                            text = obj.priority.toString(),
+                            maxLines = 1,
+                            style = textStyleMetaInfo,
+                            modifier = GlanceModifier.padding(end = 8.dp)
+                        )
+                    }
 
-                        if (obj.status != null || obj.xstatus != null) {
-                            Image(
-                                provider = ImageProvider(R.drawable.ic_status),
-                                contentDescription = context.getString(R.string.status),
-                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                                colorFilter = ColorFilter.tint(metaBarColor)
-                            )
-                            Text(
-                                text = obj.xstatus
-                                    ?: Status.getStatusFromString(obj.status)?.stringResource?.let { context.getString(it) }
-                                    ?:"",
-                                maxLines = 1,
-                                style = textStyleMetaInfo,
-                                modifier = GlanceModifier.padding(end = 8.dp)
-                            )
-                        }
+                    if ((obj.status != null && obj.status != Status.FINAL.status) || obj.xstatus != null) {
+                        Image(
+                            provider = ImageProvider(R.drawable.ic_status),
+                            contentDescription = context.getString(R.string.status),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            colorFilter = ColorFilter.tint(metaBarColor)
+                        )
+                        Text(
+                            text = obj.xstatus
+                                ?: Status.getStatusFromString(obj.status)?.stringResource?.let { context.getString(it) }
+                                ?:"",
+                            maxLines = 1,
+                            style = textStyleMetaInfo,
+                            modifier = GlanceModifier.padding(end = 8.dp)
+                        )
+                    }
 
-                        if (obj.classification != null && obj.classification != Classification.PUBLIC.classification) {
-                            Image(
-                                provider = ImageProvider(R.drawable.ic_classification),
-                                contentDescription = context.getString(R.string.classification),
-                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                                colorFilter = ColorFilter.tint(metaBarColor)
-                            )
-                            Text(
-                                text = Classification.getClassificationFromString(obj.classification)?.let { context.getString(it.stringResource) } ?: "",
-                                maxLines = 1,
-                                style = textStyleMetaInfo,
-                                modifier = GlanceModifier.padding(end = 8.dp)
-                            )
-                        }
+                    if (obj.classification != null && obj.classification != Classification.PUBLIC.classification) {
+                        Image(
+                            provider = ImageProvider(R.drawable.ic_classification),
+                            contentDescription = context.getString(R.string.classification),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            colorFilter = ColorFilter.tint(metaBarColor)
+                        )
+                        Text(
+                            text = Classification.getClassificationFromString(obj.classification)?.let { context.getString(it.stringResource) } ?: "",
+                            maxLines = 1,
+                            style = textStyleMetaInfo,
+                            modifier = GlanceModifier.padding(end = 8.dp)
+                        )
                     }
                 }
 
